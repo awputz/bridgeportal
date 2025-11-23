@@ -25,6 +25,13 @@ export interface Property {
   created_at: string | null;
   updated_at: string | null;
   is_represented_building: boolean | null;
+  cap_rate: number | null;
+  gross_square_feet: number | null;
+  units: number | null;
+  asset_type: string | null;
+  offering_status: string | null;
+  price_on_request: boolean | null;
+  brief_highlights: string | null;
 }
 
 export const useProperties = (filters?: {

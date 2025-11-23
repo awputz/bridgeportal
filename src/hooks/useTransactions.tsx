@@ -17,6 +17,14 @@ export interface Transaction {
   notes: string | null;
   created_at: string | null;
   updated_at: string | null;
+  price_per_unit: number | null;
+  price_per_sf: number | null;
+  role: string | null;
+  year: number | null;
+  gross_square_feet: number | null;
+  units: number | null;
+  sale_price: number | null;
+  asset_type: string | null;
 }
 
 export const useTransactions = () => {
