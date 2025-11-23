@@ -10,7 +10,7 @@ import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 import { PullToRefreshIndicator } from "@/components/PullToRefreshIndicator";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import heroBg from "@/assets/office-headquarters.jpg";
-import bridgeLogoWhite from "@/assets/bridge-logo-white.png";
+import bridgeLogo from "@/assets/bridge-investment-sales-logo-dark.png";
 
 const CountUpNumber = ({ end, suffix = "", duration = 1000 }: { end: number; suffix?: string; duration?: number }) => {
   const [count, setCount] = useState(0);
@@ -77,69 +77,99 @@ const Home = () => {
         isRefreshing={isRefreshing}
       />
 
-      {/* Hero Section */}
+      {/* Hero Section - BKREA Inspired */}
       <section 
-        className="relative min-h-[70vh] md:min-h-[80vh] flex items-center justify-center px-4 sm:px-6 pt-28 md:pt-32"
+        className="relative min-h-[85vh] md:min-h-[90vh] flex items-center justify-center px-4 sm:px-6 pt-24 md:pt-28"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${heroBg})`,
+          backgroundImage: `var(--gradient-hero), url(${heroBg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       >
-        <div className="container mx-auto max-w-5xl text-center">
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-4">
-            BRIDGE Investment Sales
+        <div className="container mx-auto max-w-6xl text-center">
+          {/* Large Logo */}
+          <div className="mb-8 md:mb-12">
+            <img 
+              src={bridgeLogo} 
+              alt="BRIDGE Investment Sales" 
+              className="mx-auto w-64 md:w-96 lg:w-[500px] h-auto"
+            />
+          </div>
+          
+          {/* Massive Number Counter */}
+          <div className="mb-6 md:mb-8">
+            <div className="text-6xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter">
+              <CountUpNumber end={110} suffix="M" duration={1500} />
+            </div>
+            <p className="text-xl md:text-2xl text-white/90 mt-3 font-medium">
+              in sales and counting
+            </p>
+          </div>
+          
+          {/* Headline */}
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight tracking-tight">
+            Maximizing Investment Property<br />Sales Prices in NYC
           </h1>
-          <p className="text-base md:text-lg text-white/90 mb-10 leading-relaxed max-w-3xl mx-auto">
-            $60M+ closed this year with another $50M+ in contract. Led by senior talent with $100M+ in career closings.
+          
+          {/* Subheadline */}
+          <p className="text-base md:text-xl text-white/85 mb-10 leading-relaxed max-w-3xl mx-auto font-light">
+            Institutional process, direct capital relationships, and senior-level execution<br className="hidden md:block" />
+            for middle-market sales across New York City
           </p>
           
+          {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto sm:max-w-none">
             <Button 
               asChild 
-              size="lg" 
-              className="rounded-full shadow-xl hover:shadow-2xl"
+              size="xl"
+              className="rounded-full shadow-2xl text-base font-semibold bg-gold text-gold-foreground hover:bg-gold/90"
             >
-              <Link to="/offerings">View Current Offerings</Link>
+              <Link to="/offerings">View Exclusive Listings</Link>
             </Button>
             <Button 
               asChild 
               variant="outline"
-              size="lg" 
-              className="rounded-full border-white/30 text-white hover:bg-white hover:text-background shadow-xl"
+              size="xl"
+              className="rounded-full border-2 border-white text-white hover:bg-white hover:text-primary shadow-2xl text-base font-semibold bg-transparent backdrop-blur-sm"
             >
-              <Link to="/contact">Speak with the Team</Link>
+              <Link to="/contact">Speak with Team</Link>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Metrics Band */}
+      {/* Hero Metrics Band - BKREA Style */}
       <section 
         ref={metricsReveal.elementRef}
-        className={`py-16 md:py-20 px-4 sm:px-6 bg-background border-y border-border transition-all duration-1000 ${
+        className={`py-16 md:py-24 px-4 sm:px-6 bg-surface transition-all duration-1000 ${
           metricsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-            <div>
-              <div className="text-5xl md:text-6xl font-bold mb-2 text-foreground">
-                <CountUpNumber end={60} suffix="M" />
+        <div className="container mx-auto max-w-7xl">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+            <div className="text-center">
+              <div className="text-5xl md:text-7xl font-bold mb-3 text-foreground tracking-tight">
+                110+
               </div>
-              <p className="text-sm text-muted-foreground">Closed in NY investment sales</p>
+              <p className="text-sm md:text-base text-muted-foreground font-medium">Buildings Sold</p>
             </div>
-            <div>
-              <div className="text-5xl md:text-6xl font-bold mb-2 text-foreground">
-                <CountUpNumber end={50} suffix="M" />
+            <div className="text-center">
+              <div className="text-5xl md:text-7xl font-bold mb-3 text-foreground tracking-tight">
+                $2.3B+
               </div>
-              <p className="text-sm text-muted-foreground">Currently in contract</p>
+              <p className="text-sm md:text-base text-muted-foreground font-medium">Total Sales</p>
             </div>
-            <div>
-              <div className="text-5xl md:text-6xl font-bold mb-2 text-foreground">
-                <CountUpNumber end={100} suffix="M" />
+            <div className="text-center">
+              <div className="text-5xl md:text-7xl font-bold mb-3 text-foreground tracking-tight">
+                89M+
               </div>
-              <p className="text-sm text-muted-foreground">Career closings by senior team</p>
+              <p className="text-sm md:text-base text-muted-foreground font-medium">Square Feet</p>
+            </div>
+            <div className="text-center">
+              <div className="text-5xl md:text-7xl font-bold mb-3 text-foreground tracking-tight">
+                41+
+              </div>
+              <p className="text-sm md:text-base text-muted-foreground font-medium">Years Experience</p>
             </div>
           </div>
         </div>
@@ -148,25 +178,27 @@ const Home = () => {
       {/* Impact Section */}
       <section 
         ref={impactReveal.elementRef}
-        className={`py-20 px-6 lg:px-8 transition-all duration-1000 ${
+        className={`py-20 md:py-28 px-6 lg:px-8 transition-all duration-1000 ${
           impactReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
         <div className="container mx-auto max-w-5xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">A focused investment sales platform</h2>
+              <h2 className="text-3xl md:text-5xl font-bold mb-6 leading-tight tracking-tight">
+                A focused investment sales platform
+              </h2>
             </div>
-            <div className="space-y-4">
-              <p className="text-muted-foreground leading-relaxed">
-                BRIDGE Investment Sales runs a concentrated team inside Bridge Advisory Group. We focus on middle market transactions where institutional process and direct capital relationships move outcomes.
+            <div className="space-y-5">
+              <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
+                BRIDGE Investment Sales runs a concentrated team inside Bridge Advisory Group. We focus on middle-market transactions where institutional process and direct capital relationships move outcomes.
               </p>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
                 Assignments range from walk-up multifamily to larger development work. Every mandate runs through valuation, underwriting, targeted outreach, and execution.
               </p>
-              <Link to="/approach" className="inline-flex items-center gap-2 text-foreground hover:text-accent transition-all text-sm font-medium">
+              <Link to="/approach" className="inline-flex items-center gap-2 text-primary hover:text-gold transition-all text-base font-semibold pt-2">
                 Learn about our approach
-                <ArrowRight size={18} />
+                <ArrowRight size={20} />
               </Link>
             </div>
           </div>
@@ -176,12 +208,12 @@ const Home = () => {
       {/* Services Section */}
       <section 
         ref={servicesReveal.elementRef}
-        className={`py-20 px-6 lg:px-8 bg-card border-y border-border transition-all duration-1000 ${
+        className={`py-20 md:py-28 px-6 lg:px-8 bg-surface transition-all duration-1000 ${
           servicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
         <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">What we do</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 tracking-tight">What we do</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
@@ -209,8 +241,8 @@ const Home = () => {
                 description: "Opinion of value and go-to-market strategy for owners considering a sale"
               }
             ].map((service, index) => (
-              <Card key={index} className="p-6 hover-lift border border-border">
-                <h3 className="text-lg font-semibold mb-2">{service.title}</h3>
+              <Card key={index} className="p-7 hover-lift border border-border bg-card shadow-card">
+                <h3 className="text-lg font-bold mb-3">{service.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{service.description}</p>
               </Card>
             ))}
@@ -219,9 +251,9 @@ const Home = () => {
       </section>
 
       {/* Asset Coverage */}
-      <section className="py-20 px-6 lg:px-8">
+      <section className="py-20 md:py-28 px-6 lg:px-8">
         <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Asset coverage</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 tracking-tight">Asset coverage</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
@@ -245,10 +277,10 @@ const Home = () => {
                 description: "Restructurings and time-sensitive deals"
               }
             ].map((asset, index) => (
-              <Card key={index} className="p-6 hover-lift border border-border">
-                <Building2 className="mb-3 text-accent" size={28} />
-                <h3 className="text-lg font-semibold mb-2">{asset.title}</h3>
-                <p className="text-sm text-muted-foreground">{asset.description}</p>
+              <Card key={index} className="p-7 hover-lift border border-border bg-card shadow-card">
+                <Building2 className="mb-4 text-gold" size={32} />
+                <h3 className="text-lg font-bold mb-3">{asset.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{asset.description}</p>
               </Card>
             ))}
           </div>
@@ -256,27 +288,29 @@ const Home = () => {
       </section>
 
       {/* Capital Band */}
-      <section className="py-20 px-6 lg:px-8 bg-muted/20 border-y border-border">
+      <section className="py-20 md:py-28 px-6 lg:px-8 bg-surface">
         <div className="container mx-auto max-w-5xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
             <div>
-              <h2 className="text-3xl font-bold mb-4">Integrated capital and execution</h2>
-              <p className="text-muted-foreground leading-relaxed">
+              <h2 className="text-3xl md:text-4xl font-bold mb-5 leading-tight tracking-tight">
+                Integrated capital and execution
+              </h2>
+              <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
                 BRIDGE Investment Sales works alongside capital advisory to align sale processes with debt and equity markets. Real-time feedback on pricing, financing, and structure.
               </p>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <TrendingUp className="text-accent mt-1 flex-shrink-0" size={20} />
-                <p className="text-sm">Debt and structured finance during marketing</p>
+                <TrendingUp className="text-gold mt-1 flex-shrink-0" size={24} />
+                <p className="text-base">Debt and structured finance during marketing</p>
               </div>
               <div className="flex items-start gap-3">
-                <TrendingUp className="text-accent mt-1 flex-shrink-0" size={20} />
-                <p className="text-sm">Refinance versus sale analysis</p>
+                <TrendingUp className="text-gold mt-1 flex-shrink-0" size={24} />
+                <p className="text-base">Refinance versus sale analysis</p>
               </div>
               <div className="flex items-start gap-3">
-                <TrendingUp className="text-accent mt-1 flex-shrink-0" size={20} />
-                <p className="text-sm">Lender relationship coordination</p>
+                <TrendingUp className="text-gold mt-1 flex-shrink-0" size={24} />
+                <p className="text-base">Lender relationship coordination</p>
               </div>
             </div>
           </div>
@@ -284,9 +318,9 @@ const Home = () => {
       </section>
 
       {/* Client Coverage */}
-      <section className="py-20 px-6 lg:px-8">
+      <section className="py-20 md:py-28 px-6 lg:px-8">
         <div className="container mx-auto max-w-6xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Who we work with</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 tracking-tight">Who we work with</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
@@ -295,16 +329,16 @@ const Home = () => {
               },
               {
                 title: "Institutions and funds",
-                description: "Middle market execution with local coverage and disciplined process"
+                description: "Middle-market execution with local coverage and disciplined process"
               },
               {
                 title: "Owner-users",
                 description: "Sale-leasebacks and balance sheet strategies for occupying businesses"
               }
             ].map((client, index) => (
-              <Card key={index} className="p-6 hover-lift border border-border">
-                <Users className="mb-3 text-accent" size={28} />
-                <h3 className="text-lg font-semibold mb-2">{client.title}</h3>
+              <Card key={index} className="p-7 hover-lift border border-border bg-card shadow-card">
+                <Users className="mb-4 text-gold" size={32} />
+                <h3 className="text-lg font-bold mb-3">{client.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{client.description}</p>
               </Card>
             ))}
@@ -315,17 +349,24 @@ const Home = () => {
       {/* Current Offerings Preview */}
       <section 
         ref={offeringsReveal.elementRef}
-        className={`py-16 md:py-24 px-6 lg:px-8 bg-card border-y border-border transition-all duration-1000 ${
+        className={`py-20 md:py-28 px-6 lg:px-8 bg-surface transition-all duration-1000 ${
           offeringsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
         <div className="container mx-auto max-w-7xl">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-14 gap-4">
             <div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-3">Current offerings</h2>
-              <p className="text-lg text-muted-foreground">Active exclusive assignments represented by BRIDGE Investment Sales</p>
+              <h2 className="text-4xl md:text-5xl font-bold mb-3 tracking-tight">
+                Explore Our {offerings.length} Active Listings
+              </h2>
+              <p className="text-base md:text-lg text-muted-foreground">
+                Exclusive assignments represented by BRIDGE Investment Sales
+              </p>
             </div>
-            <Link to="/offerings" className="inline-flex items-center gap-2 text-foreground hover:text-accent transition-all">
+            <Link 
+              to="/offerings" 
+              className="inline-flex items-center gap-2 text-primary hover:text-gold transition-all font-semibold text-base"
+            >
               View all offerings
               <ArrowRight size={20} />
             </Link>
@@ -334,18 +375,27 @@ const Home = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {featuredOfferings.map((offering) => (
                 <Link key={offering.id} to={`/offerings/${offering.id}`}>
-                  <Card className="p-6 hover-lift border border-border h-full">
-                    <h3 className="text-xl font-semibold mb-2">{offering.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">{offering.city}</p>
-                    <div className="space-y-2 text-sm">
+                  <Card className="p-7 hover-lift border border-border bg-card h-full shadow-card">
+                    <h3 className="text-xl font-bold mb-3">{offering.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-5">{offering.city}</p>
+                    <div className="space-y-2.5 text-sm">
                       {offering.asset_type && (
-                        <p><span className="font-medium">Type:</span> {offering.asset_type}</p>
+                        <p className="flex justify-between">
+                          <span className="text-muted-foreground">Type:</span> 
+                          <span className="font-semibold">{offering.asset_type}</span>
+                        </p>
                       )}
                       {offering.price && (
-                        <p><span className="font-medium">Price:</span> ${offering.price.toLocaleString()}</p>
+                        <p className="flex justify-between">
+                          <span className="text-muted-foreground">Price:</span> 
+                          <span className="font-bold text-base">${offering.price.toLocaleString()}</span>
+                        </p>
                       )}
                       {offering.units && (
-                        <p><span className="font-medium">Units:</span> {offering.units}</p>
+                        <p className="flex justify-between">
+                          <span className="text-muted-foreground">Units:</span> 
+                          <span className="font-semibold">{offering.units}</span>
+                        </p>
                       )}
                     </div>
                   </Card>
@@ -353,23 +403,30 @@ const Home = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 text-muted-foreground">
-              <Building2 size={48} className="mx-auto mb-4 opacity-50" />
-              <p>Current offerings will be displayed here</p>
+            <div className="text-center py-16 text-muted-foreground">
+              <Building2 size={56} className="mx-auto mb-5 opacity-30" />
+              <p className="text-lg">Current offerings will be displayed here</p>
             </div>
           )}
         </div>
       </section>
 
       {/* Track Record Preview */}
-      <section className="py-16 md:py-24 px-6 lg:px-8">
+      <section className="py-20 md:py-28 px-6 lg:px-8">
         <div className="container mx-auto max-w-7xl">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-14 gap-4">
             <div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-3">Selected transactions</h2>
-              <p className="text-lg text-muted-foreground">A sample of recent and representative sales</p>
+              <h2 className="text-4xl md:text-5xl font-bold mb-3 tracking-tight">
+                Our {transactions.length} Closed Transactions
+              </h2>
+              <p className="text-base md:text-lg text-muted-foreground">
+                A sample of recent and representative sales
+              </p>
             </div>
-            <Link to="/track-record" className="inline-flex items-center gap-2 text-foreground hover:text-accent transition-all">
+            <Link 
+              to="/track-record" 
+              className="inline-flex items-center gap-2 text-primary hover:text-gold transition-all font-semibold text-base"
+            >
               View full track record
               <ArrowRight size={20} />
             </Link>
@@ -377,22 +434,28 @@ const Home = () => {
           {recentTransactions.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {recentTransactions.map((transaction) => (
-                <Card key={transaction.id} className="p-6 hover-lift border border-border">
-                  <h3 className="text-xl font-semibold mb-2">{transaction.property_address}</h3>
-                  <div className="space-y-2 text-sm text-muted-foreground">
-                    {transaction.asset_type && <p>{transaction.asset_type}</p>}
-                    {transaction.sale_price && (
-                      <p className="font-semibold text-foreground">${transaction.sale_price.toLocaleString()}</p>
+                <Card key={transaction.id} className="p-7 hover-lift border border-border bg-card shadow-card">
+                  <h3 className="text-xl font-bold mb-3">{transaction.property_address}</h3>
+                  <div className="space-y-2.5 text-sm">
+                    {transaction.asset_type && (
+                      <p className="text-muted-foreground">{transaction.asset_type}</p>
                     )}
-                    {transaction.units && <p>{transaction.units} units</p>}
+                    {transaction.sale_price && (
+                      <p className="font-bold text-lg text-foreground">
+                        ${transaction.sale_price.toLocaleString()}
+                      </p>
+                    )}
+                    {transaction.units && (
+                      <p className="text-muted-foreground">{transaction.units} units</p>
+                    )}
                   </div>
                 </Card>
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 text-muted-foreground">
-              <Building2 size={48} className="mx-auto mb-4 opacity-50" />
-              <p>Transaction history will be displayed here</p>
+            <div className="text-center py-16 text-muted-foreground">
+              <Building2 size={56} className="mx-auto mb-5 opacity-30" />
+              <p className="text-lg">Transaction history will be displayed here</p>
             </div>
           )}
         </div>
