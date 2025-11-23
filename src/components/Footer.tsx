@@ -3,13 +3,13 @@ import { COMPANY_INFO } from "@/lib/constants";
 
 export const Footer = () => {
   return (
-    <footer className="bg-card text-foreground border-t border-border">
+    <footer className="bg-surface text-foreground border-t border-border">
       <div className="container mx-auto px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           {/* Company Info */}
           <div>
-            <div className="text-xl font-semibold mb-4">
-              BRIDGE<span className="font-light"> Investment Sales</span>
+            <div className="text-xl font-bold mb-4 tracking-tight">
+              BRIDGE<span className="font-normal text-muted-foreground"> Investment Sales</span>
             </div>
             <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
               {COMPANY_INFO.description.short}
@@ -17,7 +17,7 @@ export const Footer = () => {
             <div className="text-sm text-muted-foreground space-y-2">
               <p>{COMPANY_INFO.address.short}</p>
               <p>
-                <a href={`mailto:${COMPANY_INFO.contact.email}`} className="hover:text-foreground transition-colors">
+                <a href={`mailto:${COMPANY_INFO.contact.email}`} className="hover:text-primary transition-colors font-medium">
                   {COMPANY_INFO.contact.email}
                 </a>
               </p>
@@ -26,40 +26,40 @@ export const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold mb-4">Quick Links</h3>
+            <h3 className="font-bold mb-4 tracking-tight">Quick Links</h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link to="/offerings" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/offerings" className="text-muted-foreground hover:text-primary transition-colors font-medium">
                   Current Offerings
                 </Link>
               </li>
               <li>
-                <Link to="/track-record" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/track-record" className="text-muted-foreground hover:text-primary transition-colors font-medium">
                   Track Record
                 </Link>
               </li>
               <li>
-                <Link to="/approach" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/approach" className="text-muted-foreground hover:text-primary transition-colors font-medium">
                   Our Approach
                 </Link>
               </li>
               <li>
-                <Link to="/team" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/team" className="text-muted-foreground hover:text-primary transition-colors font-medium">
                   Team
                 </Link>
               </li>
               <li>
-                <Link to="/research" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/research" className="text-muted-foreground hover:text-primary transition-colors font-medium">
                   Research
                 </Link>
               </li>
               <li>
-                <Link to="/submit-deal" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/submit-deal" className="text-muted-foreground hover:text-primary transition-colors font-medium">
                   Submit a Deal
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors font-medium">
                   Contact
                 </Link>
               </li>
@@ -68,7 +68,7 @@ export const Footer = () => {
 
           {/* Legal & Resources */}
           <div>
-            <h3 className="font-semibold mb-4">Legal & Resources</h3>
+            <h3 className="font-bold mb-4 tracking-tight">Legal & Resources</h3>
             <ul className="space-y-3 text-sm">
               <li>
                 <a
