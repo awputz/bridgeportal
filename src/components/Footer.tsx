@@ -9,7 +9,7 @@ export const Footer = () => {
           {/* Company Info */}
           <div>
             <div className="text-xl font-semibold mb-4">
-              BRIDGE<span className="font-light"> Residential</span>
+              BRIDGE<span className="font-light"> Investment Sales</span>
             </div>
             <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
               {COMPANY_INFO.description.short}
@@ -29,33 +29,38 @@ export const Footer = () => {
             <h3 className="font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link to="/listings" className="text-muted-foreground hover:text-foreground transition-colors">
-                  View Listings
+                <Link to="/offerings" className="text-muted-foreground hover:text-foreground transition-colors">
+                  Current Offerings
                 </Link>
               </li>
               <li>
-                <Link to="/buildings" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Exclusive Buildings
+                <Link to="/track-record" className="text-muted-foreground hover:text-foreground transition-colors">
+                  Track Record
+                </Link>
+              </li>
+              <li>
+                <Link to="/approach" className="text-muted-foreground hover:text-foreground transition-colors">
+                  Our Approach
                 </Link>
               </li>
               <li>
                 <Link to="/team" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Our Team
+                  Team
                 </Link>
               </li>
               <li>
-                <Link to="/process" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Our Process
+                <Link to="/research" className="text-muted-foreground hover:text-foreground transition-colors">
+                  Research
+                </Link>
+              </li>
+              <li>
+                <Link to="/submit-deal" className="text-muted-foreground hover:text-foreground transition-colors">
+                  Submit a Deal
                 </Link>
               </li>
               <li>
                 <Link to="/contact" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/join" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Join BRIDGE Residential
+                  Contact
                 </Link>
               </li>
             </ul>
@@ -65,11 +70,6 @@ export const Footer = () => {
           <div>
             <h3 className="font-semibold mb-4">Legal & Resources</h3>
             <ul className="space-y-3 text-sm">
-              <li>
-                <Link to="/resources" className="text-muted-foreground hover:text-foreground transition-colors">
-                  Resources & Legal
-                </Link>
-              </li>
               <li>
                 <a
                   href="https://dos.ny.gov/system/files/documents/2024/01/1736.pdf"

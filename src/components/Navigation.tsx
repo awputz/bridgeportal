@@ -79,7 +79,7 @@ export const Navigation = () => {
           <div className="flex items-center justify-between h-20 px-8">
             {/* Logo - Left on mobile/tablet, centered on desktop */}
             <Link to="/" className="lg:absolute lg:left-1/2 lg:transform lg:-translate-x-1/2 transition-transform hover:scale-110 duration-300">
-              <img src={bridgeLogo} alt="BRIDGE Investment Sales" className="h-16" />
+              <img src={bridgeLogo} alt="BRIDGE Investment Sales" className="h-14" />
             </Link>
 
             {/* Left Navigation */}

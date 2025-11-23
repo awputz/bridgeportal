@@ -16,20 +16,20 @@ const Offerings = () => {
   });
 
   return (
-    <div className="min-h-screen pt-32 px-6 lg:px-8">
-      <div className="container mx-auto max-w-7xl">
+    <div className="min-h-screen pt-32 px-6 lg:px-8 pb-20">
+      <div className="container mx-auto max-w-6xl">
         {/* Header */}
-        <div className="mb-12">
+        <div className="mb-12 max-w-4xl">
           <h1 className="text-5xl md:text-6xl font-bold mb-4">Current Offerings</h1>
-          <p className="text-xl text-muted-foreground">
-            Active exclusive assignments represented by BRIDGE Investment Sales
+          <p className="text-lg text-muted-foreground">
+            Active exclusive assignments across New York City
           </p>
         </div>
 
         {/* Filters */}
-        <div className="flex flex-col md:flex-row gap-4 mb-8 max-w-2xl">
+        <div className="flex flex-col sm:flex-row gap-4 mb-10">
           <Select value={assetType} onValueChange={setAssetType}>
-            <SelectTrigger className="w-full md:w-64">
+            <SelectTrigger className="w-full sm:w-56">
               <SelectValue placeholder="Asset Type" />
             </SelectTrigger>
             <SelectContent>
@@ -44,7 +44,7 @@ const Offerings = () => {
           </Select>
 
           <Select value={borough} onValueChange={setBorough}>
-            <SelectTrigger className="w-full md:w-64">
+            <SelectTrigger className="w-full sm:w-56">
               <SelectValue placeholder="Borough" />
             </SelectTrigger>
             <SelectContent>
@@ -53,43 +53,42 @@ const Offerings = () => {
               <SelectItem value="Brooklyn">Brooklyn</SelectItem>
               <SelectItem value="Queens">Queens</SelectItem>
               <SelectItem value="Bronx">Bronx</SelectItem>
-              <SelectItem value="Staten Island">Staten Island</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         {/* Offerings Grid */}
         {isLoading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-foreground mx-auto"></div>
-            <p className="mt-4 text-muted-foreground">Loading offerings...</p>
+          <div className="text-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-foreground mx-auto mb-4"></div>
+            <p className="text-sm text-muted-foreground">Loading offerings</p>
           </div>
         ) : offerings.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {offerings.map((offering) => (
               <Link key={offering.id} to={`/offerings/${offering.id}`}>
-                <Card className="overflow-hidden hover-lift border border-border h-full">
+                <Card className="overflow-hidden hover-lift border border-border h-full group">
                   {offering.images && offering.images[0] && (
-                    <div className="aspect-[4/3] bg-secondary relative overflow-hidden">
+                    <div className="aspect-[4/3] bg-muted relative overflow-hidden">
                       <img 
                         src={offering.images[0]} 
                         alt={offering.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                     </div>
                   )}
                   <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2">{offering.title}</h3>
+                    <h3 className="text-lg font-semibold mb-2 group-hover:text-accent transition-colors">{offering.title}</h3>
                     <div className="flex items-start gap-2 text-muted-foreground mb-4">
-                      <MapPin size={16} className="mt-1 flex-shrink-0" />
-                      <p className="text-sm">{offering.address}, {offering.city}</p>
+                      <MapPin size={14} className="mt-1 flex-shrink-0" />
+                      <p className="text-xs">{offering.address}, {offering.city}</p>
                     </div>
                     
-                    <div className="space-y-2 text-sm">
+                    <div className="space-y-1 text-sm border-t border-border pt-4">
                       {offering.asset_type && (
                         <div className="flex items-center gap-2">
-                          <Building2 size={16} className="text-muted-foreground" />
-                          <span className="text-muted-foreground">{offering.asset_type}</span>
+                          <Building2 size={14} className="text-muted-foreground" />
+                          <span className="text-xs text-muted-foreground">{offering.asset_type}</span>
                         </div>
                       )}
                       
@@ -101,26 +100,11 @@ const Offerings = () => {
                         </p>
                       )}
                       
-                      {offering.units && (
-                        <p className="text-muted-foreground">{offering.units} units</p>
-                      )}
-                      
-                      {offering.gross_square_feet && (
-                        <p className="text-muted-foreground">
-                          {offering.gross_square_feet.toLocaleString()} SF
-                        </p>
-                      )}
-                      
-                      {offering.cap_rate && (
-                        <p className="text-muted-foreground">{offering.cap_rate}% Cap Rate</p>
-                      )}
+                      <div className="flex gap-3 text-xs text-muted-foreground">
+                        {offering.units && <span>{offering.units} units</span>}
+                        {offering.gross_square_feet && <span>{offering.gross_square_feet.toLocaleString()} SF</span>}
+                      </div>
                     </div>
-
-                    {offering.brief_highlights && (
-                      <p className="mt-4 text-sm text-muted-foreground line-clamp-2">
-                        {offering.brief_highlights}
-                      </p>
-                    )}
                   </div>
                 </Card>
               </Link>
@@ -128,11 +112,11 @@ const Offerings = () => {
           </div>
         ) : (
           <div className="text-center py-24">
-            <Building2 size={64} className="mx-auto mb-6 text-muted-foreground opacity-50" />
-            <h3 className="text-2xl font-semibold mb-2">No offerings match your criteria</h3>
-            <p className="text-muted-foreground mb-6">Try adjusting your filters or check back soon for new listings</p>
+            <Building2 size={56} className="mx-auto mb-6 text-muted-foreground opacity-30" />
+            <h3 className="text-xl font-semibold mb-2">No offerings match your criteria</h3>
+            <p className="text-sm text-muted-foreground mb-6">Adjust your filters or check back soon</p>
             <Button asChild variant="outline">
-              <Link to="/contact">Contact Us About Future Offerings</Link>
+              <Link to="/contact">Contact Us</Link>
             </Button>
           </div>
         )}
