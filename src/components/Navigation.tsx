@@ -9,29 +9,24 @@ import { useToast } from "@/hooks/use-toast";
 import { ContactSheet } from "@/components/ContactSheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 const navigationItems = [{
-  name: "Listings",
-  path: "/listings"
+  name: "Current Offerings",
+  path: "/offerings"
 }, {
-  name: "Past Transactions",
-  path: "/transactions"
+  name: "Track Record",
+  path: "/track-record"
+}, {
+  name: "Approach",
+  path: "/approach"
 }, {
   name: "Team",
   path: "/team"
 }, {
-  name: "Our Process",
-  path: "/process"
-}];
-const servicesItems = [{
-  name: "For Renters & Buyers",
-  path: "/renters-buyers"
-}, {
-  name: "For Landlords & Sellers",
-  path: "/landlords-sellers"
+  name: "Research",
+  path: "/research"
 }];
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
-  const [servicesOpen, setServicesOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -76,7 +71,7 @@ export const Navigation = () => {
     });
     navigate("/");
   };
-  const isServicesActive = servicesItems.some(item => location.pathname === item.path);
+  
   return <>
       {/* Modern Navigation Bar */}
       <div className="fixed top-6 left-0 right-0 z-50 px-6 animate-slide-down">
@@ -84,54 +79,29 @@ export const Navigation = () => {
           <div className="flex items-center justify-between h-20 px-8">
             {/* Logo - Left on mobile/tablet, centered on desktop */}
             <Link to="/" className="lg:absolute lg:left-1/2 lg:transform lg:-translate-x-1/2 transition-transform hover:scale-110 duration-300">
-              <img src={bridgeLogo} alt="BRIDGE Residential" className="h-16" />
+              <img src={bridgeLogo} alt="BRIDGE Investment Sales" className="h-16" />
             </Link>
 
             {/* Left Navigation */}
             <div className="hidden lg:flex items-center space-x-1">
-              {navigationItems.slice(0, 2).map(item => <Link key={item.path} to={item.path} className={cn("px-3 py-2 text-[15px] font-medium transition-all duration-300 rounded-lg whitespace-nowrap tracking-wide hover:scale-105", location.pathname === item.path ? "text-foreground bg-muted shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>
+              {navigationItems.slice(0, 3).map(item => <Link key={item.path} to={item.path} className={cn("px-3 py-2 text-[15px] font-medium transition-all duration-300 rounded-lg whitespace-nowrap tracking-wide hover:scale-105", location.pathname === item.path ? "text-foreground bg-muted shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>
                   {item.name}
                 </Link>)}
-
-              {/* Services Dropdown */}
-              <DropdownMenu modal={false}>
-                <DropdownMenuTrigger 
-                  onMouseEnter={(e) => {
-                    const trigger = e.currentTarget;
-                    setTimeout(() => trigger.click(), 0);
-                  }}
-                  className={cn("px-4 py-2 text-[15px] font-medium transition-all duration-300 rounded-lg whitespace-nowrap tracking-wide flex items-center gap-1 outline-none hover:scale-105", isServicesActive ? "text-foreground bg-muted shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}
-                >
-                  Services
-                  <ChevronDown size={14} className="transition-transform duration-300" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent 
-                  align="start" 
-                  className="w-56 mt-2 bg-card backdrop-blur-xl border border-border shadow-xl z-[60]"
-                  onMouseLeave={(e) => {
-                    // Close when mouse leaves the dropdown
-                    const trigger = document.querySelector('[data-radix-dropdown-menu-trigger]') as HTMLElement;
-                    if (trigger) trigger.click();
-                  }}
-                >
-                  {servicesItems.map(item => <DropdownMenuItem key={item.path} asChild>
-                      <Link to={item.path} className={cn("cursor-pointer px-3 py-2.5 text-[15px] font-medium rounded-md transition-colors", location.pathname === item.path ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>
-                        {item.name}
-                      </Link>
-                    </DropdownMenuItem>)}
-                </DropdownMenuContent>
-              </DropdownMenu>
             </div>
 
             {/* Right Navigation */}
             <div className="hidden lg:flex items-center space-x-1">
-              {navigationItems.slice(2).map(item => <Link key={item.path} to={item.path} className={cn("px-3 py-2 text-[15px] font-medium transition-all duration-300 rounded-lg whitespace-nowrap tracking-wide hover:scale-105", location.pathname === item.path ? "text-foreground bg-muted shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>
+              {navigationItems.slice(3).map(item => <Link key={item.path} to={item.path} className={cn("px-3 py-2 text-[15px] font-medium transition-all duration-300 rounded-lg whitespace-nowrap tracking-wide hover:scale-105", location.pathname === item.path ? "text-foreground bg-muted shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>
                   {item.name}
                 </Link>)}
 
               <button onClick={() => setContactOpen(true)} className="px-4 py-2 text-[15px] font-medium transition-all duration-300 rounded-lg whitespace-nowrap tracking-wide text-muted-foreground hover:text-foreground hover:bg-muted/50 hover:scale-105">
                 Contact
               </button>
+
+              <Button asChild size="sm" className="ml-2 rounded-full h-9 px-5 text-[15px] font-medium tracking-wide hover:scale-105">
+                <Link to="/submit-deal">Submit a Deal</Link>
+              </Button>
 
               {/* Auth Buttons */}
               {user && <Button onClick={handleLogout} variant="outline" size="sm" className="ml-2 rounded-xl h-9 px-5 text-[15px] font-medium tracking-wide hover:scale-105">
@@ -158,27 +128,11 @@ export const Navigation = () => {
                 {item.name}
               </Link>)}
 
-            {/* Services Dropdown */}
-            <div className="pt-2 border-t border-border/30 w-full">
-              <button onClick={() => setServicesOpen(!servicesOpen)} className={cn("flex items-center justify-between w-full text-xl font-medium transition-all duration-500 tracking-wide py-3 rounded-lg text-left px-4", isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4", isServicesActive ? "text-foreground bg-muted" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")} style={{
-              transitionDelay: isOpen ? `${100 + navigationItems.length * 40}ms` : "0ms"
-            }}>
-                <span>Services</span>
-                <ChevronRight size={18} className={cn("transition-transform duration-300", servicesOpen && "rotate-90")} />
-              </button>
-              
-              {servicesOpen && <div className="mt-2 ml-4 space-y-2 border-l-2 border-border/30 pl-4">
-                  {servicesItems.map((item, index) => <Link key={item.path} to={item.path} className={cn("block text-xl font-medium transition-all duration-300 tracking-wide py-3 rounded-lg text-left px-2", location.pathname === item.path ? "text-foreground bg-muted" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>
-                      {item.name}
-                    </Link>)}
-                </div>}
-            </div>
-
             <button onClick={() => {
             setIsOpen(false);
             setContactOpen(true);
           }} className={cn("text-xl font-medium transition-all duration-500 tracking-wide text-muted-foreground hover:text-foreground hover:bg-muted/50 w-full py-3 rounded-lg text-left px-4", isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4")} style={{
-            transitionDelay: isOpen ? `${100 + (navigationItems.length + servicesItems.length) * 40}ms` : "0ms"
+            transitionDelay: isOpen ? `${100 + navigationItems.length * 40}ms` : "0ms"
           }}>
               Contact Us
             </button>

@@ -87,19 +87,26 @@ export type Database = {
       }
       inquiries: {
         Row: {
+          approximate_size: string | null
           assignment_type: string | null
           budget: string | null
+          budget_range: string | null
           created_at: string | null
+          current_situation: string | null
           email: string
           id: string
+          inquiry_type: string | null
           matched_properties: Json | null
           name: string
           neighborhoods: string | null
           notes: string | null
           phone: string | null
           property_address: string | null
+          property_type: string | null
           requirements: string | null
           status: string | null
+          target_asset_type: string | null
+          target_boroughs: string | null
           timeline: string | null
           timing: string | null
           unit_count: string | null
@@ -108,19 +115,26 @@ export type Database = {
           user_type: string | null
         }
         Insert: {
+          approximate_size?: string | null
           assignment_type?: string | null
           budget?: string | null
+          budget_range?: string | null
           created_at?: string | null
+          current_situation?: string | null
           email: string
           id?: string
+          inquiry_type?: string | null
           matched_properties?: Json | null
           name: string
           neighborhoods?: string | null
           notes?: string | null
           phone?: string | null
           property_address?: string | null
+          property_type?: string | null
           requirements?: string | null
           status?: string | null
+          target_asset_type?: string | null
+          target_boroughs?: string | null
           timeline?: string | null
           timing?: string | null
           unit_count?: string | null
@@ -129,19 +143,26 @@ export type Database = {
           user_type?: string | null
         }
         Update: {
+          approximate_size?: string | null
           assignment_type?: string | null
           budget?: string | null
+          budget_range?: string | null
           created_at?: string | null
+          current_situation?: string | null
           email?: string
           id?: string
+          inquiry_type?: string | null
           matched_properties?: Json | null
           name?: string
           neighborhoods?: string | null
           notes?: string | null
           phone?: string | null
           property_address?: string | null
+          property_type?: string | null
           requirements?: string | null
           status?: string | null
+          target_asset_type?: string | null
+          target_boroughs?: string | null
           timeline?: string | null
           timing?: string | null
           unit_count?: string | null
@@ -193,24 +214,31 @@ export type Database = {
         Row: {
           address: string
           amenities: string[] | null
+          asset_type: string | null
           bathrooms: number | null
           bedrooms: number | null
+          brief_highlights: string | null
+          cap_rate: number | null
           city: string
           created_at: string | null
           description: string | null
           featured: boolean | null
+          gross_square_feet: number | null
           id: string
           images: string[] | null
           is_represented_building: boolean | null
           latitude: number | null
           listing_type: string | null
           longitude: number | null
+          offering_status: string | null
           price: number
+          price_on_request: boolean | null
           property_type: string | null
           square_feet: number | null
           state: string
           status: string | null
           title: string
+          units: number | null
           updated_at: string | null
           year_built: number | null
           zip_code: string | null
@@ -218,24 +246,31 @@ export type Database = {
         Insert: {
           address: string
           amenities?: string[] | null
+          asset_type?: string | null
           bathrooms?: number | null
           bedrooms?: number | null
+          brief_highlights?: string | null
+          cap_rate?: number | null
           city: string
           created_at?: string | null
           description?: string | null
           featured?: boolean | null
+          gross_square_feet?: number | null
           id?: string
           images?: string[] | null
           is_represented_building?: boolean | null
           latitude?: number | null
           listing_type?: string | null
           longitude?: number | null
+          offering_status?: string | null
           price: number
+          price_on_request?: boolean | null
           property_type?: string | null
           square_feet?: number | null
           state: string
           status?: string | null
           title: string
+          units?: number | null
           updated_at?: string | null
           year_built?: number | null
           zip_code?: string | null
@@ -243,27 +278,70 @@ export type Database = {
         Update: {
           address?: string
           amenities?: string[] | null
+          asset_type?: string | null
           bathrooms?: number | null
           bedrooms?: number | null
+          brief_highlights?: string | null
+          cap_rate?: number | null
           city?: string
           created_at?: string | null
           description?: string | null
           featured?: boolean | null
+          gross_square_feet?: number | null
           id?: string
           images?: string[] | null
           is_represented_building?: boolean | null
           latitude?: number | null
           listing_type?: string | null
           longitude?: number | null
+          offering_status?: string | null
           price?: number
+          price_on_request?: boolean | null
           property_type?: string | null
           square_feet?: number | null
           state?: string
           status?: string | null
           title?: string
+          units?: number | null
           updated_at?: string | null
           year_built?: number | null
           zip_code?: string | null
+        }
+        Relationships: []
+      }
+      research_notes: {
+        Row: {
+          category: string | null
+          content: string | null
+          created_at: string | null
+          date: string
+          download_link: string | null
+          id: string
+          summary: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string | null
+          content?: string | null
+          created_at?: string | null
+          date?: string
+          download_link?: string | null
+          id?: string
+          summary?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string | null
+          content?: string | null
+          created_at?: string | null
+          date?: string
+          download_link?: string | null
+          id?: string
+          summary?: string | null
+          title?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -330,54 +408,78 @@ export type Database = {
       transactions: {
         Row: {
           agent_name: string
+          asset_type: string | null
           borough: string | null
           building_id: string | null
           closing_date: string | null
           created_at: string
           deal_type: string
+          gross_square_feet: number | null
           id: string
           lease_term_months: number | null
           monthly_rent: number | null
           neighborhood: string | null
           notes: string | null
+          price_per_sf: number | null
+          price_per_unit: number | null
           property_address: string
           property_type: string | null
+          role: string | null
+          sale_price: number | null
           total_lease_value: number | null
+          units: number | null
           updated_at: string
+          year: number | null
         }
         Insert: {
           agent_name: string
+          asset_type?: string | null
           borough?: string | null
           building_id?: string | null
           closing_date?: string | null
           created_at?: string
           deal_type?: string
+          gross_square_feet?: number | null
           id?: string
           lease_term_months?: number | null
           monthly_rent?: number | null
           neighborhood?: string | null
           notes?: string | null
+          price_per_sf?: number | null
+          price_per_unit?: number | null
           property_address: string
           property_type?: string | null
+          role?: string | null
+          sale_price?: number | null
           total_lease_value?: number | null
+          units?: number | null
           updated_at?: string
+          year?: number | null
         }
         Update: {
           agent_name?: string
+          asset_type?: string | null
           borough?: string | null
           building_id?: string | null
           closing_date?: string | null
           created_at?: string
           deal_type?: string
+          gross_square_feet?: number | null
           id?: string
           lease_term_months?: number | null
           monthly_rent?: number | null
           neighborhood?: string | null
           notes?: string | null
+          price_per_sf?: number | null
+          price_per_unit?: number | null
           property_address?: string
           property_type?: string | null
+          role?: string | null
+          sale_price?: number | null
           total_lease_value?: number | null
+          units?: number | null
           updated_at?: string
+          year?: number | null
         }
         Relationships: [
           {

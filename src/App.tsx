@@ -14,18 +14,15 @@ import { ContactSheet } from "@/components/ContactSheet";
 import { FloatingLoginButton } from "@/components/FloatingLoginButton";
 import { AdminLayout } from "./components/admin/AdminLayout";
 import Home from "./pages/Home";
-import Listings from "./pages/Listings";
+import Offerings from "./pages/Offerings";
 import ListingDetail from "./pages/ListingDetail";
-import Buildings from "./pages/Buildings";
-import RentersBuyers from "./pages/RentersBuyers";
-import LandlordsSellers from "./pages/LandlordsSellers";
+import TrackRecord from "./pages/TrackRecord";
+import Approach from "./pages/Approach";
+import Research from "./pages/Research";
+import SubmitDeal from "./pages/SubmitDeal";
 import Team from "./pages/Team";
-import Process from "./pages/Process";
-import Resources from "./pages/Resources";
 import Contact from "./pages/Contact";
-import Join from "./pages/Join";
 import Auth from "./pages/Auth";
-import Transactions from "./pages/Transactions";
 import NotFound from "./pages/NotFound";
 import { AdminDashboard } from "./pages/admin/Dashboard";
 import { AdminInquiries } from "./pages/admin/Inquiries";
@@ -45,7 +42,7 @@ const App = () => {
         <BrowserRouter>
           <ScrollToTop />
           <Routes>
-          {/* Admin Routes - No Navigation/Footer */}
+          {/* Admin Routes */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="inquiries" element={<AdminInquiries />} />
@@ -53,44 +50,36 @@ const App = () => {
             <Route path="tours" element={<AdminTours />} />
           </Route>
 
-          {/* Public Routes - With Navigation/Footer */}
-          <Route
-            path="/*"
-            element={
-              <div className="flex flex-col min-h-screen">
-                <Navigation />
-                <PageTransition>
-                  <main className="flex-1">
-                    <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/listings" element={<Listings />} />
-                      <Route path="/listings/:id" element={<ListingDetail />} />
-                      <Route path="/buildings" element={<Buildings />} />
-                      <Route path="/renters-buyers" element={<RentersBuyers />} />
-                      <Route path="/landlords-sellers" element={<LandlordsSellers />} />
-                      <Route path="/team" element={<Team />} />
-                      <Route path="/process" element={<Process />} />
-                      <Route path="/resources" element={<Resources />} />
-                      <Route path="/contact" element={<Contact />} />
-                      <Route path="/join" element={<Join />} />
-                      <Route path="/auth" element={<Auth />} />
-                      <Route path="/transactions" element={<Transactions />} />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </main>
-                </PageTransition>
-                <Footer />
-                <FloatingChatButton />
-                <FloatingContactButton onContactClick={() => setContactOpen(true)} />
-                <FloatingLoginButton />
-                <ContactSheet open={contactOpen} onOpenChange={setContactOpen} />
-              </div>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+          {/* Public Routes */}
+          <Route path="*" element={
+            <>
+              <Navigation />
+              <PageTransition>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/offerings" element={<Offerings />} />
+                  <Route path="/offerings/:id" element={<ListingDetail />} />
+                  <Route path="/track-record" element={<TrackRecord />} />
+                  <Route path="/approach" element={<Approach />} />
+                  <Route path="/research" element={<Research />} />
+                  <Route path="/submit-deal" element={<SubmitDeal />} />
+                  <Route path="/team" element={<Team />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </PageTransition>
+              <Footer />
+              <FloatingChatButton />
+              <FloatingContactButton onClick={() => setContactOpen(true)} />
+              <FloatingLoginButton />
+              <ContactSheet open={contactOpen} onOpenChange={setContactOpen} />
+            </>
+          } />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
   );
 };
 
