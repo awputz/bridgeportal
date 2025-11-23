@@ -71,7 +71,7 @@ const App = () => {
               </PageTransition>
               <Footer />
               <FloatingChatButton />
-              <FloatingContactButton onClick={() => setContactOpen(true)} />
+              <FloatingContactButton onContactClick={() => setContactOpen(true)} />
               <FloatingLoginButton />
               <ContactSheet open={contactOpen} onOpenChange={setContactOpen} />
             </>
