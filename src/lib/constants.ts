@@ -1,5 +1,5 @@
 export const COMPANY_INFO = {
-  name: "BRIDGE Residential",
+  name: "BRIDGE Investment Sales",
   parentCompany: "Bridge Advisory Group",
   address: {
     street: "600 Third Avenue",
@@ -11,13 +11,12 @@ export const COMPANY_INFO = {
     short: "600 Third Avenue, New York NY 10016"
   },
   contact: {
-    email: "office@bridgenyre.com",
-    residentialEmail: "resi@bridgenyre.com",
-    phone: "(212) 555-0100" // Placeholder for manual update
+    email: "isales@bridgenyre.com",
+    phone: "(212) 555-0100"
   },
   description: {
-    full: "BRIDGE Residential is the dedicated residential division of Bridge Advisory Group, a New York-based real estate advisory platform covering residential, commercial, investment sales, and capital advisory. Led by Managing Director Jacob Neiderfer, who spearheads this division as Director of Residential Leasing, alongside co-founder Alex Putzer at the Bridge Advisory Group level, BRIDGE Residential operates as a platform rather than a loose collection of agents. The team manages more than 500 units and over one hundred active listings at any time, supported by direct relationships with landlords and owners across Manhattan, Brooklyn, and Queens.",
-    short: "BRIDGE Residential is the dedicated residential division of Bridge Advisory Group. We operate as a platform managing more than 500 units and over one hundred active listings at any time, supported by direct relationships with landlords and owners across Manhattan, Brooklyn, and Queens.",
-    home: "BRIDGE Residential is the dedicated residential division of Bridge Advisory Group, a New York-based real estate advisory platform. Led by Managing Director Jacob Neiderfer as Director of Residential Leasing, alongside co-founder Alex Putzer, we operate as a platform managing more than 500 units and over one hundred active listings at any time, supported by direct relationships with landlords and owners across Manhattan, Brooklyn, and Queens."
+    full: "BRIDGE Investment Sales is the dedicated building and portfolio sales group within Bridge Advisory Group. The team focuses on institutional-quality execution for middle market owners and investors across multifamily, mixed-use, and development assets in New York City.",
+    short: "BRIDGE Investment Sales focuses on institutional-quality execution for middle market owners and investors across multifamily, mixed-use, and development assets in New York City.",
+    home: "Focused investment sales platform inside Bridge Advisory Group. The team combines aggressive marketing, disciplined underwriting, and capital markets access to run full sale and recapitalization processes."
   }
 };

@@ -79,27 +79,26 @@ const Home = () => {
 
       {/* Hero Section */}
       <section 
-        className="relative min-h-[75vh] md:min-h-[85vh] flex items-center justify-center px-4 sm:px-6 pt-24 md:pt-32"
+        className="relative min-h-[70vh] md:min-h-[80vh] flex items-center justify-center px-4 sm:px-6 pt-28 md:pt-32"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${heroBg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
         }}
       >
-        <div className="container mx-auto max-w-4xl text-center">
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6">
+        <div className="container mx-auto max-w-5xl text-center">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-4">
             BRIDGE Investment Sales
           </h1>
-          <p className="text-lg md:text-xl text-white/90 mb-10 leading-relaxed max-w-3xl mx-auto px-2">
-            $60M+ in closings this year with another $50M+ currently in contract. Led by senior talent including a recent recruit from RIPCO with $100M+ in career closings.
+          <p className="text-base md:text-lg text-white/90 mb-10 leading-relaxed max-w-3xl mx-auto">
+            $60M+ closed this year with another $50M+ in contract. Led by senior talent with $100M+ in career closings.
           </p>
           
-          <div className="flex flex-col md:flex-row gap-4 justify-center max-w-md mx-auto md:max-w-none">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto sm:max-w-none">
             <Button 
               asChild 
               size="lg" 
-              className="rounded-full w-full md:w-auto text-sm md:text-base shadow-xl hover:shadow-2xl"
+              className="rounded-full shadow-xl hover:shadow-2xl"
             >
               <Link to="/offerings">View Current Offerings</Link>
             </Button>
@@ -107,7 +106,7 @@ const Home = () => {
               asChild 
               variant="outline"
               size="lg" 
-              className="rounded-full w-full md:w-auto text-sm md:text-base border-white/30 text-white hover:bg-white hover:text-background shadow-xl"
+              className="rounded-full border-white/30 text-white hover:bg-white hover:text-background shadow-xl"
             >
               <Link to="/contact">Speak with the Team</Link>
             </Button>
@@ -118,29 +117,29 @@ const Home = () => {
       {/* Metrics Band */}
       <section 
         ref={metricsReveal.elementRef}
-        className={`py-12 md:py-16 px-4 sm:px-6 bg-background border-y border-border transition-all duration-1000 ${
+        className={`py-16 md:py-20 px-4 sm:px-6 bg-background border-y border-border transition-all duration-1000 ${
           metricsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
-        <div className="container mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 text-center">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
             <div>
-              <div className="text-5xl md:text-6xl lg:text-7xl font-bold mb-3 text-foreground">
+              <div className="text-5xl md:text-6xl font-bold mb-2 text-foreground">
                 <CountUpNumber end={60} suffix="M" />
               </div>
-              <p className="text-base md:text-lg text-muted-foreground">Closed in New York investment sales this year</p>
+              <p className="text-sm text-muted-foreground">Closed in NY investment sales</p>
             </div>
             <div>
-              <div className="text-5xl md:text-6xl lg:text-7xl font-bold mb-3 text-foreground">
+              <div className="text-5xl md:text-6xl font-bold mb-2 text-foreground">
                 <CountUpNumber end={50} suffix="M" />
               </div>
-              <p className="text-base md:text-lg text-muted-foreground">Currently in contract and active mandates</p>
+              <p className="text-sm text-muted-foreground">Currently in contract</p>
             </div>
             <div>
-              <div className="text-5xl md:text-6xl lg:text-7xl font-bold mb-3 text-foreground">
+              <div className="text-5xl md:text-6xl font-bold mb-2 text-foreground">
                 <CountUpNumber end={100} suffix="M" />
               </div>
-              <p className="text-base md:text-lg text-muted-foreground">Career closings by our newest senior recruit</p>
+              <p className="text-sm text-muted-foreground">Career closings by senior team</p>
             </div>
           </div>
         </div>
@@ -149,25 +148,25 @@ const Home = () => {
       {/* Impact Section */}
       <section 
         ref={impactReveal.elementRef}
-        className={`py-16 md:py-24 px-6 lg:px-8 transition-all duration-1000 ${
+        className={`py-20 px-6 lg:px-8 transition-all duration-1000 ${
           impactReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
-        <div className="container mx-auto max-w-6xl">
+        <div className="container mx-auto max-w-5xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">A focused investment sales platform</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">A focused investment sales platform</h2>
             </div>
-            <div className="space-y-6">
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                BRIDGE Investment Sales runs a concentrated team inside a broader advisory platform. The group focuses on middle market transactions where institutional process and direct capital relationships can move the outcome.
+            <div className="space-y-4">
+              <p className="text-muted-foreground leading-relaxed">
+                BRIDGE Investment Sales runs a concentrated team inside Bridge Advisory Group. We focus on middle market transactions where institutional process and direct capital relationships move outcomes.
               </p>
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                Assignments range from walk-up multifamily and mixed-use assets to larger development and recapitalization work. Every mandate runs through a structured process from valuation and underwriting through targeted outreach, bidding, and execution.
+              <p className="text-muted-foreground leading-relaxed">
+                Assignments range from walk-up multifamily to larger development work. Every mandate runs through valuation, underwriting, targeted outreach, and execution.
               </p>
-              <Link to="/approach" className="inline-flex items-center gap-2 text-foreground hover:text-accent transition-all">
+              <Link to="/approach" className="inline-flex items-center gap-2 text-foreground hover:text-accent transition-all text-sm font-medium">
                 Learn about our approach
-                <ArrowRight size={20} />
+                <ArrowRight size={18} />
               </Link>
             </div>
           </div>
@@ -177,42 +176,42 @@ const Home = () => {
       {/* Services Section */}
       <section 
         ref={servicesReveal.elementRef}
-        className={`py-16 md:py-24 px-6 lg:px-8 bg-card border-y border-border transition-all duration-1000 ${
+        className={`py-20 px-6 lg:px-8 bg-card border-y border-border transition-all duration-1000 ${
           servicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
-        <div className="container mx-auto max-w-7xl">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">What we do</h2>
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">What we do</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
                 title: "Building and portfolio sales",
-                description: "Sell-side advisory for multifamily, mixed-use, and development assets in New York City and the surrounding region."
+                description: "Sell-side advisory for multifamily, mixed-use, and development assets across New York City"
               },
               {
-                title: "Recapitalizations and partner solutions",
-                description: "Advisory on bringing in new equity, buying out partners, or restructuring ownership while keeping control of the asset."
+                title: "Recapitalizations",
+                description: "Bringing in new equity, partner buyouts, and ownership restructuring"
               },
               {
                 title: "Note and loan sales",
-                description: "Marketing and sale of performing and non-performing loans secured by commercial and mixed-use properties."
+                description: "Marketing performing and non-performing debt secured by commercial and mixed-use properties"
               },
               {
-                title: "Sale-leasebacks for owner-users",
-                description: "Structuring and marketing sale-leasebacks for owners that want to unlock capital while retaining long-term occupancy."
+                title: "Sale-leasebacks",
+                description: "Structuring for owner-users who want capital while retaining occupancy"
               },
               {
-                title: "Development and land sales",
-                description: "Site and assemblage sales with a focus on zoning, air rights, and redevelopment potential."
+                title: "Development and land",
+                description: "Site sales with focus on zoning, air rights, and redevelopment potential"
               },
               {
-                title: "Strategic valuation and positioning",
-                description: "Broker opinion of value, underwriting, and go-to-market strategy for owners considering a sale in the next six to eighteen months."
+                title: "Strategic valuation",
+                description: "Opinion of value and go-to-market strategy for owners considering a sale"
               }
             ].map((service, index) => (
               <Card key={index} className="p-6 hover-lift border border-border">
-                <h3 className="text-xl font-semibold mb-3">{service.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{service.description}</p>
+                <h3 className="text-lg font-semibold mb-2">{service.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{service.description}</p>
               </Card>
             ))}
           </div>
@@ -220,35 +219,35 @@ const Home = () => {
       </section>
 
       {/* Asset Coverage */}
-      <section className="py-16 md:py-24 px-6 lg:px-8">
-        <div className="container mx-auto max-w-7xl">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">Asset coverage</h2>
+      <section className="py-20 px-6 lg:px-8">
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Asset coverage</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
                 title: "Multifamily and walk-ups",
-                description: "5–50 unit buildings across all boroughs with focus on $2M–$20M range"
+                description: "5–50 unit buildings, $2M–$20M range"
               },
               {
-                title: "Mixed-use and retail corridors",
-                description: "Ground floor retail with residential or office above in high-traffic locations"
+                title: "Mixed-use and retail",
+                description: "Ground floor retail in high-traffic corridors"
               },
               {
-                title: "Office and creative office",
-                description: "Smaller office buildings and conversions in emerging neighborhoods"
+                title: "Office and creative",
+                description: "Smaller buildings and conversions"
               },
               {
-                title: "Development sites and land",
-                description: "Entitled sites, assemblages, and air rights opportunities"
+                title: "Development and land",
+                description: "Entitled sites and air rights"
               },
               {
-                title: "Special situations and distressed",
-                description: "Restructurings, foreclosures, and time-sensitive transactions"
+                title: "Special situations",
+                description: "Restructurings and time-sensitive deals"
               }
             ].map((asset, index) => (
-              <Card key={index} className="p-6 hover-lift border border-border bg-card">
-                <Building2 className="mb-4 text-accent" size={32} />
-                <h3 className="text-xl font-semibold mb-2">{asset.title}</h3>
+              <Card key={index} className="p-6 hover-lift border border-border">
+                <Building2 className="mb-3 text-accent" size={28} />
+                <h3 className="text-lg font-semibold mb-2">{asset.title}</h3>
                 <p className="text-sm text-muted-foreground">{asset.description}</p>
               </Card>
             ))}
@@ -256,37 +255,28 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Capital and Financing Band */}
-      <section className="py-16 md:py-24 px-6 lg:px-8 bg-muted/30 border-y border-border">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      {/* Capital Band */}
+      <section className="py-20 px-6 lg:px-8 bg-muted/20 border-y border-border">
+        <div className="container mx-auto max-w-5xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
             <div>
-              <h2 className="text-4xl font-bold mb-6">Integrated capital and execution</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                BRIDGE Investment Sales works alongside the capital advisory group to align sale processes with debt and equity markets. Buyers and sellers get real-time feedback on pricing, financing, and structure while a deal is in motion.
+              <h2 className="text-3xl font-bold mb-4">Integrated capital and execution</h2>
+              <p className="text-muted-foreground leading-relaxed">
+                BRIDGE Investment Sales works alongside capital advisory to align sale processes with debt and equity markets. Real-time feedback on pricing, financing, and structure.
               </p>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div className="flex items-start gap-3">
-                <TrendingUp className="text-accent mt-1 flex-shrink-0" size={24} />
-                <div>
-                  <h3 className="font-semibold mb-1">Debt and structured finance support</h3>
-                  <p className="text-sm text-muted-foreground">During marketing and through closing</p>
-                </div>
+                <TrendingUp className="text-accent mt-1 flex-shrink-0" size={20} />
+                <p className="text-sm">Debt and structured finance during marketing</p>
               </div>
               <div className="flex items-start gap-3">
-                <TrendingUp className="text-accent mt-1 flex-shrink-0" size={24} />
-                <div>
-                  <h3 className="font-semibold mb-1">Refinance versus sale guidance</h3>
-                  <p className="text-sm text-muted-foreground">Or recapitalization strategy analysis</p>
-                </div>
+                <TrendingUp className="text-accent mt-1 flex-shrink-0" size={20} />
+                <p className="text-sm">Refinance versus sale analysis</p>
               </div>
               <div className="flex items-start gap-3">
-                <TrendingUp className="text-accent mt-1 flex-shrink-0" size={24} />
-                <div>
-                  <h3 className="font-semibold mb-1">Lender relationship coordination</h3>
-                  <p className="text-sm text-muted-foreground">Between sale processes and financing partners</p>
-                </div>
+                <TrendingUp className="text-accent mt-1 flex-shrink-0" size={20} />
+                <p className="text-sm">Lender relationship coordination</p>
               </div>
             </div>
           </div>
@@ -294,28 +284,28 @@ const Home = () => {
       </section>
 
       {/* Client Coverage */}
-      <section className="py-16 md:py-24 px-6 lg:px-8">
-        <div className="container mx-auto max-w-7xl">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">Who we work with</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <section className="py-20 px-6 lg:px-8">
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Who we work with</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
-                title: "Private capital and family offices",
-                description: "We help long-term owners protect and grow value across cycles with a focus on preservation and strategic positioning."
+                title: "Private capital",
+                description: "Long-term owners focused on value preservation across market cycles"
               },
               {
                 title: "Institutions and funds",
-                description: "Middle market execution for larger buyers and sellers that want local coverage and disciplined process."
+                description: "Middle market execution with local coverage and disciplined process"
               },
               {
-                title: "Owner-users and operators",
-                description: "Support for businesses that occupy their buildings with sale-leasebacks, relocations, and balance sheet strategies."
+                title: "Owner-users",
+                description: "Sale-leasebacks and balance sheet strategies for occupying businesses"
               }
             ].map((client, index) => (
-              <Card key={index} className="p-8 hover-lift border border-border">
-                <Users className="mb-4 text-accent" size={36} />
-                <h3 className="text-2xl font-semibold mb-4">{client.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{client.description}</p>
+              <Card key={index} className="p-6 hover-lift border border-border">
+                <Users className="mb-3 text-accent" size={28} />
+                <h3 className="text-lg font-semibold mb-2">{client.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{client.description}</p>
               </Card>
             ))}
           </div>
