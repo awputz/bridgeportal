@@ -22,6 +22,9 @@ const navigationItems = [{
 }, {
   name: "Research",
   path: "/research"
+}, {
+  name: "Contact",
+  path: "/contact"
 }];
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -90,15 +93,11 @@ export const Navigation = () => {
 
             {/* Right Navigation */}
             <div className="hidden lg:flex items-center space-x-1">
-              {navigationItems.slice(3).map(item => <Link key={item.path} to={item.path} className={cn("px-3 py-2 text-[15px] font-semibold transition-all duration-300 rounded-lg whitespace-nowrap tracking-tight hover:scale-105", location.pathname === item.path ? "text-primary bg-muted/80 shadow-sm" : "text-muted-foreground hover:text-primary hover:bg-muted/50")}>
+              {navigationItems.slice(3).map(item => <Link key={item.path} to={item.path} className={cn("px-3 py-2 text-[15px] font-semibold transition-all duration-300 rounded-lg whitespace-nowrap tracking-tight", location.pathname === item.path ? "text-primary bg-muted/80 shadow-sm" : "text-muted-foreground hover:text-primary hover:bg-muted/50")}>
                   {item.name}
                 </Link>)}
 
-              <button onClick={() => setContactOpen(true)} className="px-4 py-2 text-[15px] font-semibold transition-all duration-300 rounded-lg whitespace-nowrap tracking-tight text-muted-foreground hover:text-primary hover:bg-muted/50 hover:scale-105">
-                Contact
-              </button>
-
-              <Button asChild size="sm" className="ml-2 rounded-full h-9 px-5 text-[15px] font-semibold tracking-tight bg-gold text-gold-foreground hover:bg-gold/90 shadow-lg hover:scale-105">
+              <Button asChild size="sm" className="ml-2 rounded-lg h-9 px-5 text-[15px] font-semibold tracking-tight bg-primary text-primary-foreground hover:shadow-md transition-shadow">
                 <Link to="/submit-deal">Submit a Deal</Link>
               </Button>
 
@@ -127,25 +126,16 @@ export const Navigation = () => {
                 {item.name}
               </Link>)}
 
-            <button onClick={() => {
-            setIsOpen(false);
-            setContactOpen(true);
-          }} className={cn("text-xl font-semibold transition-all duration-500 tracking-tight text-muted-foreground hover:text-primary hover:bg-muted/50 w-full py-3 rounded-lg text-left px-4", isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4")} style={{
-            transitionDelay: isOpen ? `${100 + navigationItems.length * 40}ms` : "0ms"
-          }}>
-              Contact Us
-            </button>
-
             <div className={cn("transition-all duration-500 flex flex-col gap-3 pt-4 border-t border-border/30 w-full", isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4")} style={{
             transitionDelay: isOpen ? "400ms" : "0ms"
           }}>
-              {user ? <Button onClick={handleLogout} variant="outline" size="lg" className="rounded-full tracking-tight w-full font-semibold">
+              {user ? <Button onClick={handleLogout} variant="outline" size="lg" className="rounded-lg tracking-tight w-full font-semibold">
                   Logout
                 </Button> : <>
-                  <Button onClick={() => navigate("/auth")} variant="ghost" size="lg" className="rounded-full tracking-tight w-full bg-muted/50 font-semibold">
+                  <Button onClick={() => navigate("/auth")} variant="ghost" size="lg" className="rounded-lg tracking-tight w-full bg-muted/50 font-semibold">
                     Login
                   </Button>
-                  <Button asChild size="lg" className="rounded-full tracking-tight w-full bg-gold text-gold-foreground hover:bg-gold/90 font-semibold">
+                  <Button asChild size="lg" className="rounded-lg tracking-tight w-full bg-primary text-primary-foreground font-semibold">
                     <Link to="/submit-deal">Submit a Deal</Link>
                   </Button>
                 </>}

@@ -12,24 +12,22 @@ interface Message {
   content: string;
   properties?: (Property & { match_score?: number; match_reason?: string })[];
 }
-type UserType = "renter" | "buyer" | "seller" | null;
-type ConversationStep = "initial" | "location" | "timing" | "bedrooms" | "propertyType" | "budget" | "mustHaves" | "financing" | "propertyAddress" | "assignmentType" | "unitDetails" | "pricing" | "name" | "email" | "phone" | "summary" | "complete";
+type UserType = "owner" | "investor" | "team" | null;
+type ConversationStep = "initial" | "propertyAddress" | "assetType" | "unitDetails" | "currentSituation" | "timing" | "targetAssetType" | "targetBoroughs" | "budgetRange" | "name" | "email" | "phone" | "notes" | "summary" | "complete";
 interface FormData {
   userType: UserType;
-  location?: string;
-  timing?: string;
-  bedrooms?: string;
-  propertyType?: string;
-  budget?: string;
-  mustHaves?: string;
-  financing?: string;
   propertyAddress?: string;
-  assignmentType?: string;
+  assetType?: string;
   unitDetails?: string;
-  pricing?: string;
+  currentSituation?: string;
+  timing?: string;
+  targetAssetType?: string;
+  targetBoroughs?: string;
+  budgetRange?: string;
   name?: string;
   email?: string;
   phone?: string;
+  notes?: string;
 }
 interface AIChatProps {
   isOpen: boolean;
@@ -75,98 +73,81 @@ const AIChat = ({
       userType: type
     });
     let userMessage = "";
-    if (type === "renter") userMessage = "I am looking to rent";else if (type === "buyer") userMessage = "I am looking to buy";else if (type === "seller") userMessage = "I want to sell or lease my property";
+    if (type === "owner") userMessage = "I own a property and want to discuss options";
+    else if (type === "investor") userMessage = "I am looking to buy an investment property";
+    else if (type === "team") userMessage = "I want to speak with the investment sales team";
+    
     addMessage("user", userMessage);
     setTimeout(() => {
-      if (type === "buyer") {
-        addMessage("assistant", "Which neighborhoods or areas are you considering buying in?");
-      } else if (type === "seller") {
-        addMessage("assistant", "What is the property address or building name?");
-      } else {
-        addMessage("assistant", "Which neighborhoods or areas are you considering?");
+      if (type === "owner") {
+        addMessage("assistant", "What is the property address?");
+        setConversationStep("propertyAddress");
+      } else if (type === "investor") {
+        addMessage("assistant", "What type of assets are you targeting?");
+        setConversationStep("targetAssetType");
+      } else if (type === "team") {
+        addMessage("assistant", "What is your name?");
+        setConversationStep("name");
       }
-      setConversationStep(type === "seller" ? "propertyAddress" : "location");
     }, 500);
   };
   const getNextStep = (current: ConversationStep, userType: UserType): ConversationStep => {
-    if (userType === "renter") {
-      const renterFlow: ConversationStep[] = ["location", "timing", "bedrooms", "budget", "mustHaves", "name", "email", "phone", "summary"];
-      const currentIndex = renterFlow.indexOf(current);
-      return renterFlow[currentIndex + 1] || "complete";
-    } else if (userType === "buyer") {
-      const buyerFlow: ConversationStep[] = ["location", "timing", "propertyType", "budget", "financing", "name", "email", "phone", "summary"];
-      const currentIndex = buyerFlow.indexOf(current);
-      return buyerFlow[currentIndex + 1] || "complete";
-    } else if (userType === "seller") {
-      const sellerFlow: ConversationStep[] = ["propertyAddress", "assignmentType", "unitDetails", "pricing", "timing", "name", "email", "phone", "summary"];
-      const currentIndex = sellerFlow.indexOf(current);
-      return sellerFlow[currentIndex + 1] || "complete";
+    if (userType === "owner") {
+      const ownerFlow: ConversationStep[] = ["propertyAddress", "assetType", "unitDetails", "currentSituation", "timing", "name", "email", "phone", "summary"];
+      const currentIndex = ownerFlow.indexOf(current);
+      return ownerFlow[currentIndex + 1] || "complete";
+    } else if (userType === "investor") {
+      const investorFlow: ConversationStep[] = ["targetAssetType", "targetBoroughs", "budgetRange", "timing", "name", "email", "phone", "summary"];
+      const currentIndex = investorFlow.indexOf(current);
+      return investorFlow[currentIndex + 1] || "complete";
+    } else if (userType === "team") {
+      const teamFlow: ConversationStep[] = ["name", "email", "phone", "notes", "summary"];
+      const currentIndex = teamFlow.indexOf(current);
+      return teamFlow[currentIndex + 1] || "complete";
     }
     return "complete";
   };
   const getQuestionForStep = (step: ConversationStep, userType: UserType): string => {
     switch (step) {
-      case "location":
-        return userType === "buyer" ? "Which neighborhoods or areas are you considering buying in?" : "Which neighborhoods or areas are you considering?";
-      case "timing":
-        if (userType === "renter") return "What is your ideal move in date?";
-        if (userType === "buyer") return "What is your ideal timeline to purchase?";
-        if (userType === "seller") return "When would you like to bring this to market?";
-        return "";
-      case "bedrooms":
-        return "How many bedrooms do you need and how many people will live in the apartment?";
-      case "propertyType":
-        return "Are you focused on condo, co-op, townhouse, or are you open to options?";
-      case "budget":
-        if (userType === "renter") return "What is your monthly budget range? For example, two thousand five hundred to three thousand per month.";
-        if (userType === "buyer") return "What is your total purchase budget range? For example, one million to one point two million.";
-        return "";
-      case "mustHaves":
-        return "Any non-negotiables such as elevator, doorman, pets, or outdoor space?";
-      case "financing":
-        return "Will you be financing the purchase or buying in cash?";
       case "propertyAddress":
-        return "What is the property address or building name?";
-      case "assignmentType":
-        return "Are you looking to sell the property, lease individual units, or run a full building leasing program?";
+        return "What is the property address?";
+      case "assetType":
+        return "What type of asset is it?";
       case "unitDetails":
-        return "How many units or what type of property is it?";
-      case "pricing":
-        if (formData.assignmentType?.toLowerCase().includes("sell")) {
-          return "What is your target sale price range?";
-        }
-        return "What is your target monthly rent range per unit or for key unit types?";
+        return "How many units or approximate square footage?";
+      case "currentSituation":
+        return "What is your current situation? (e.g., partner buyout, estate planning, 1031 exchange)";
+      case "targetAssetType":
+        return "What type of assets are you targeting? (e.g., multifamily, mixed-use, retail, office, development, land)";
+      case "targetBoroughs":
+        return "Which boroughs or neighborhoods are you interested in?";
+      case "budgetRange":
+        return "What is your budget range?";
+      case "timing":
+        if (userType === "owner") return "What is your timeline? (e.g., immediate, 3-6 months, 6-18 months)";
+        if (userType === "investor") return "What is your investment timeline?";
+        return "What is your timeline?";
       case "name":
         return "What is your name?";
       case "email":
         return "What is your email address?";
       case "phone":
         return "What is your phone number? (optional)";
+      case "notes":
+        return "Brief description of your request?";
       default:
         return "";
     }
   };
   const generateSummary = (): string => {
-    const {
-      userType,
-      location,
-      timing,
-      bedrooms,
-      budget,
-      mustHaves,
-      propertyType,
-      financing,
-      propertyAddress,
-      assignmentType,
-      unitDetails,
-      pricing
-    } = formData;
-    if (userType === "renter") {
-      return `You are looking to rent in ${location || "specified areas"} with a budget of ${budget || "your stated range"} per month and a move-in around ${timing || "your preferred date"}. You need ${bedrooms || "the specified number of bedrooms"}${mustHaves ? ` and must have ${mustHaves}` : ""}.`;
-    } else if (userType === "buyer") {
-      return `You are looking to buy in ${location || "specified areas"} with a budget of ${budget || "your stated range"}. Your timeline is ${timing || "as discussed"} and you are interested in ${propertyType || "various property types"}. You plan to ${financing || "finance as discussed"}.`;
-    } else if (userType === "seller") {
-      return `You want to ${assignmentType || "market"} your property at ${propertyAddress || "the specified location"}. The property consists of ${unitDetails || "the units described"} with a target ${pricing || "price as discussed"}. Your timeline is ${timing || "as discussed"}.`;
+    const { userType, propertyAddress, assetType, unitDetails, currentSituation, timing, targetAssetType, targetBoroughs, budgetRange, notes } = formData;
+    
+    if (userType === "owner") {
+      return `You own a property at ${propertyAddress || "the specified location"} (${assetType || "asset type specified"}). The property has ${unitDetails || "the units described"}. Your situation: ${currentSituation || "as discussed"}. Timeline: ${timing || "as discussed"}.`;
+    } else if (userType === "investor") {
+      return `You are looking to invest in ${targetAssetType || "investment properties"} in ${targetBoroughs || "specified areas"} with a budget of ${budgetRange || "your stated range"}. Timeline: ${timing || "as discussed"}.`;
+    } else if (userType === "team") {
+      return `Request: ${notes || "General inquiry for the investment sales team"}.`;
     }
     return "";
   };
@@ -178,38 +159,29 @@ const AIChat = ({
       ...formData
     };
     switch (conversationStep) {
-      case "location":
-        updatedFormData.location = value;
-        break;
-      case "timing":
-        updatedFormData.timing = value;
-        break;
-      case "bedrooms":
-        updatedFormData.bedrooms = value;
-        break;
-      case "propertyType":
-        updatedFormData.propertyType = value;
-        break;
-      case "budget":
-        updatedFormData.budget = value;
-        break;
-      case "mustHaves":
-        updatedFormData.mustHaves = value;
-        break;
-      case "financing":
-        updatedFormData.financing = value;
-        break;
       case "propertyAddress":
         updatedFormData.propertyAddress = value;
         break;
-      case "assignmentType":
-        updatedFormData.assignmentType = value;
+      case "assetType":
+        updatedFormData.assetType = value;
         break;
       case "unitDetails":
         updatedFormData.unitDetails = value;
         break;
-      case "pricing":
-        updatedFormData.pricing = value;
+      case "currentSituation":
+        updatedFormData.currentSituation = value;
+        break;
+      case "targetAssetType":
+        updatedFormData.targetAssetType = value;
+        break;
+      case "targetBoroughs":
+        updatedFormData.targetBoroughs = value;
+        break;
+      case "budgetRange":
+        updatedFormData.budgetRange = value;
+        break;
+      case "timing":
+        updatedFormData.timing = value;
         break;
       case "name":
         updatedFormData.name = value;
@@ -220,10 +192,11 @@ const AIChat = ({
       case "phone":
         updatedFormData.phone = value || undefined;
         break;
+      case "notes":
+        updatedFormData.notes = value;
+        break;
     }
     setFormData(updatedFormData);
-    const nextStep = getNextStep(conversationStep, formData.userType!);
-    if (nextStep === "summary") {
       setTimeout(() => {
         const summary = generateSummary();
         addMessage("assistant", summary);
@@ -250,7 +223,7 @@ const AIChat = ({
       addMessage("user", "Edit");
       setTimeout(() => {
         addMessage("assistant", "Please provide your updated information:");
-        const firstStep = formData.userType === "seller" ? "propertyAddress" : "location";
+        const firstStep = formData.userType === "owner" ? "propertyAddress" : formData.userType === "investor" ? "targetAssetType" : "name";
         const question = getQuestionForStep(firstStep, formData.userType!);
         setTimeout(() => {
           addMessage("assistant", question);
@@ -267,13 +240,15 @@ const AIChat = ({
         email: formData.email || "",
         phone: formData.phone,
         user_type: formData.userType,
-        neighborhoods: formData.location,
-        timing: formData.timing,
-        requirements: formData.bedrooms || formData.propertyType || formData.unitDetails,
-        budget: formData.budget || formData.pricing,
+        inquiry_type: "Investment Sales",
         property_address: formData.propertyAddress,
-        assignment_type: formData.assignmentType,
-        notes: [formData.mustHaves && `Must-haves: ${formData.mustHaves}`, formData.financing && `Financing: ${formData.financing}`].filter(Boolean).join("; ")
+        target_asset_type: formData.assetType || formData.targetAssetType,
+        target_boroughs: formData.targetBoroughs,
+        budget_range: formData.budgetRange,
+        unit_count: formData.unitDetails,
+        current_situation: formData.currentSituation,
+        timing: formData.timing,
+        notes: formData.notes
       };
       
       const { data: inquiryResponse, error } = await supabase.functions.invoke("submit-inquiry", {
@@ -288,42 +263,10 @@ const AIChat = ({
         addMessage("assistant", "Thank you. Let me find the best matches for you...");
       }, 500);
       
-      // Match properties for renters and buyers
-      if ((formData.userType === "renter" || formData.userType === "buyer") && inquiryId) {
-        setIsMatchingProperties(true);
-        try {
-          const { data: matchData, error: matchError } = await supabase.functions.invoke("match-properties", {
-            body: { inquiryId }
-          });
-          
-          if (matchError) throw matchError;
-          
-          setTimeout(() => {
-            if (matchData?.matches && matchData.matches.length > 0) {
-              addMessage("assistant", "Here are properties that match your requirements:", matchData.matches);
-            } else {
-              addMessage("assistant", "We don't have exact matches in our current inventory, but our team will personally reach out with recommendations tailored to your needs.");
-            }
-            setTimeout(() => {
-              addMessage("assistant", "A member of the BRIDGE Residential team will follow up shortly to discuss these options and answer any questions.");
-              setConversationStep("complete");
-            }, 500);
-          }, 1000);
-        } catch (matchError) {
-          console.error("Error matching properties:", matchError);
-          setTimeout(() => {
-            addMessage("assistant", "A member of the BRIDGE Residential team will follow up shortly with personalized recommendations.");
-            setConversationStep("complete");
-          }, 500);
-        } finally {
-          setIsMatchingProperties(false);
-        }
-      } else {
-        setTimeout(() => {
-          addMessage("assistant", "A member of the BRIDGE Residential team will follow up shortly.");
-          setConversationStep("complete");
-        }, 1000);
-      }
+      setTimeout(() => {
+        addMessage("assistant", "Thank you. A member of the BRIDGE Investment Sales team will follow up shortly to discuss your requirements.");
+        setConversationStep("complete");
+      }, 1000);
       
       toast({
         title: "Inquiry submitted",
@@ -569,14 +512,14 @@ const AIChat = ({
           )}
 
           {mode === "inquiry" && conversationStep === "initial" && <div className="flex flex-col gap-2">
-              <button onClick={() => handleUserTypeSelection("renter")} className="w-full p-3 md:p-4 text-left bg-white border border-neutral-200 hover:bg-black hover:text-white hover:border-black rounded-lg transition-colors text-xs md:text-sm text-black">
-                I am looking to rent
+              <button onClick={() => handleUserTypeSelection("owner")} className="w-full p-3 md:p-4 text-left bg-white border border-neutral-200 hover:bg-black hover:text-white hover:border-black rounded-lg transition-colors text-xs md:text-sm text-black">
+                I own a property and want to discuss options
               </button>
-              <button onClick={() => handleUserTypeSelection("buyer")} className="w-full p-3 md:p-4 text-left bg-white border border-neutral-200 hover:bg-black hover:text-white hover:border-black rounded-lg transition-colors text-xs md:text-sm text-black">
-                I am looking to buy
+              <button onClick={() => handleUserTypeSelection("investor")} className="w-full p-3 md:p-4 text-left bg-white border border-neutral-200 hover:bg-black hover:text-white hover:border-black rounded-lg transition-colors text-xs md:text-sm text-black">
+                I am looking to buy an investment property
               </button>
-              <button onClick={() => handleUserTypeSelection("seller")} className="w-full p-3 md:p-4 text-left bg-white border border-neutral-200 hover:bg-black hover:text-white hover:border-black rounded-lg transition-colors text-xs md:text-sm text-black">
-                I want to sell or lease my property
+              <button onClick={() => handleUserTypeSelection("team")} className="w-full p-3 md:p-4 text-left bg-white border border-neutral-200 hover:bg-black hover:text-white hover:border-black rounded-lg transition-colors text-xs md:text-sm text-black">
+                I want to speak with the investment sales team
               </button>
             </div>}
 

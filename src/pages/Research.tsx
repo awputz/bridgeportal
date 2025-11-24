@@ -18,9 +18,9 @@ const Research = () => {
       <div className="container mx-auto max-w-7xl">
         <div className="mb-12 max-w-4xl">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">Research & Insights</h1>
-          <p className="text-xl text-muted-foreground">
-            Focused notes on New York sales volume, pricing, and capital flows for clients and investors
-          </p>
+            <p className="text-xl text-muted-foreground">
+              Focused notes on New York investment sales volume, pricing, and capital flows for clients and investors
+            </p>
         </div>
 
         <Select value={category} onValueChange={setCategory}>
@@ -29,9 +29,11 @@ const Research = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="market">Market Analysis</SelectItem>
-            <SelectItem value="pricing">Pricing Trends</SelectItem>
-            <SelectItem value="capital">Capital Flows</SelectItem>
+            <SelectItem value="Multifamily">Multifamily</SelectItem>
+            <SelectItem value="Mixed-Use">Mixed-Use</SelectItem>
+            <SelectItem value="Development">Development</SelectItem>
+            <SelectItem value="Capital Markets">Capital Markets</SelectItem>
+            <SelectItem value="Market Analysis">Market Analysis</SelectItem>
           </SelectContent>
         </Select>
 
