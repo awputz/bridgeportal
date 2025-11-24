@@ -197,6 +197,10 @@ const AIChat = ({
         break;
     }
     setFormData(updatedFormData);
+    
+    const nextStep = getNextStep(conversationStep, formData.userType!);
+    
+    if (nextStep === "summary") {
       setTimeout(() => {
         const summary = generateSummary();
         addMessage("assistant", summary);
