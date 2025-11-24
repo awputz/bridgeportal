@@ -77,7 +77,7 @@ export const Navigation = () => {
   return <>
       {/* Light Theme Navigation Bar */}
       <div className="fixed top-6 left-0 right-0 z-50 px-6 animate-slide-down">
-        <nav className="max-w-7xl mx-auto bg-white/95 backdrop-blur-xl rounded-2xl border border-border shadow-xl hover:shadow-2xl transition-all duration-300">
+        <nav className="max-w-7xl mx-auto bg-card/95 backdrop-blur-xl rounded-2xl border border-border shadow-xl hover:shadow-2xl transition-all duration-300">
           <div className="flex items-center justify-between h-20 px-8">
             {/* Logo - Left on mobile/tablet, centered on desktop */}
             <Link to="/" className="lg:absolute lg:left-1/2 lg:transform lg:-translate-x-1/2 transition-transform hover:scale-110 duration-300">
@@ -116,7 +116,7 @@ export const Navigation = () => {
       </div>
 
       {/* Mobile Full Screen Menu */}
-      <div className={cn("fixed inset-0 z-40 bg-white/98 backdrop-blur-xl lg:hidden transition-all duration-500 ease-out", isOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none")}>
+      <div className={cn("fixed inset-0 z-40 bg-card/98 backdrop-blur-xl lg:hidden transition-all duration-500 ease-out", isOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none")}>
         <div className="flex flex-col items-start justify-center min-h-screen px-8 py-24">
           {/* Navigation Links */}
           <nav className="flex flex-col items-start space-y-4 text-left w-full max-w-xs">
