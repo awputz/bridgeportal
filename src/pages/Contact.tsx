@@ -19,8 +19,8 @@ const Contact = () => {
         email: formData.get('email') as string,
         phone: formData.get('phone') as string,
         notes: formData.get('message') as string,
-        inquiry_type: 'general',
-        user_type: 'investor'
+        inquiry_type: 'Investment Sales',
+        user_type: 'team'
       }]);
       
       if (error) throw error;

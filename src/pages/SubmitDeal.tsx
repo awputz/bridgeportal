@@ -32,7 +32,7 @@ const SubmitDeal = () => {
     try {
       const { error } = await supabase.from("inquiries").insert([{
         ...formData,
-        inquiry_type: "investment_sales",
+        inquiry_type: "Investment Sales",
         user_type: "owner"
       }]);
 

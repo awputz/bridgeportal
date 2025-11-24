@@ -114,7 +114,7 @@ const Offerings = () => {
                       )}
                     </div>
 
-                    <Button variant="premium" size="sm" className="w-full">
+                    <Button variant="default" size="sm" className="w-full">
                       Request Information
                     </Button>
                   </div>

@@ -28,7 +28,7 @@ export const PropertyChatCard = ({ property }: PropertyChatCardProps) => {
       <div className="p-4 space-y-3">
         {property.match_score && (
           <div className="flex items-center gap-2 text-sm">
-            <span className="bg-gold/10 text-gold-foreground px-3 py-1 rounded-lg font-medium border border-gold/20">
+            <span className="bg-accent/10 text-accent-foreground px-3 py-1 rounded-lg font-medium border border-accent/20">
               {property.match_score}% Match
             </span>
           </div>
@@ -43,7 +43,7 @@ export const PropertyChatCard = ({ property }: PropertyChatCardProps) => {
         </div>
 
         {property.match_reason && (
-          <p className="text-sm text-muted-foreground line-clamp-2 border-l-2 border-gold pl-3">
+          <p className="text-sm text-muted-foreground line-clamp-2 border-l-2 border-accent pl-3">
             {property.match_reason}
           </p>
         )}
@@ -71,7 +71,7 @@ export const PropertyChatCard = ({ property }: PropertyChatCardProps) => {
 
         <div className="flex items-center justify-between pt-2 border-t border-border">
           <span className="text-xl font-bold font-variant-numeric-tabular">{formatPrice(property.price)}</span>
-          <Button asChild size="sm" variant="premium">
+          <Button asChild size="sm" variant="default">
             <Link to={`/listings/${property.id}`}>View Details</Link>
           </Button>
         </div>

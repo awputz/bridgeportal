@@ -33,7 +33,7 @@ export const ListingCard = ({ listing }: ListingCardProps) => {
         <div className="p-5 md:p-6">
           <div className="space-y-3">
             <div>
-              <h3 className="font-semibold text-lg mb-1 group-hover:text-gold transition-colors">{listing.address}</h3>
+              <h3 className="font-semibold text-lg mb-1 group-hover:text-accent transition-colors">{listing.address}</h3>
               <p className="text-sm text-muted-foreground">{listing.neighborhood}</p>
             </div>
             

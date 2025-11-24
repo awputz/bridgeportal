@@ -129,7 +129,7 @@ const Home = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto sm:max-w-none animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <Button 
               asChild 
-              variant="premium"
+              variant="default"
               size="xl"
               className="text-base font-semibold"
             >
@@ -205,7 +205,7 @@ const Home = () => {
               <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
                 Assignments range from walk-up multifamily to larger development work. Every mandate runs through valuation, underwriting, targeted outreach, and execution.
               </p>
-              <Link to="/approach" className="inline-flex items-center gap-2 text-primary hover:text-gold transition-all text-base font-semibold pt-2">
+              <Link to="/approach" className="inline-flex items-center gap-2 text-foreground hover:text-accent transition-all text-base font-semibold pt-2">
                 Learn about our approach
                 <ArrowRight size={20} />
               </Link>
@@ -287,7 +287,7 @@ const Home = () => {
               }
             ].map((asset, index) => (
               <Card key={index} className="p-7 hover-lift border border-border bg-card shadow-card">
-                <Building2 className="mb-4 text-gold" size={32} />
+                <Building2 className="mb-4 text-accent" size={32} />
                 <h3 className="text-lg font-bold mb-3">{asset.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{asset.description}</p>
               </Card>
@@ -310,15 +310,15 @@ const Home = () => {
             </div>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <TrendingUp className="text-gold mt-1 flex-shrink-0" size={24} />
+                <TrendingUp className="text-accent mt-1 flex-shrink-0" size={24} />
                 <p className="text-base">Debt and structured finance during marketing</p>
               </div>
               <div className="flex items-start gap-3">
-                <TrendingUp className="text-gold mt-1 flex-shrink-0" size={24} />
+                <TrendingUp className="text-accent mt-1 flex-shrink-0" size={24} />
                 <p className="text-base">Refinance versus sale analysis</p>
               </div>
               <div className="flex items-start gap-3">
-                <TrendingUp className="text-gold mt-1 flex-shrink-0" size={24} />
+                <TrendingUp className="text-accent mt-1 flex-shrink-0" size={24} />
                 <p className="text-base">Lender relationship coordination</p>
               </div>
             </div>
@@ -346,7 +346,7 @@ const Home = () => {
               }
             ].map((client, index) => (
               <Card key={index} className="p-7 hover-lift border border-border bg-card shadow-card">
-                <Users className="mb-4 text-gold" size={32} />
+                <Users className="mb-4 text-accent" size={32} />
                 <h3 className="text-lg font-bold mb-3">{client.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{client.description}</p>
               </Card>
@@ -374,7 +374,7 @@ const Home = () => {
             </div>
             <Link 
               to="/offerings" 
-              className="inline-flex items-center gap-2 text-primary hover:text-gold transition-all font-semibold text-base"
+              className="inline-flex items-center gap-2 text-foreground hover:text-accent transition-all font-semibold text-base"
             >
               View all offerings
               <ArrowRight size={20} />
@@ -434,7 +434,7 @@ const Home = () => {
             </div>
             <Link 
               to="/track-record" 
-              className="inline-flex items-center gap-2 text-primary hover:text-gold transition-all font-semibold text-base"
+              className="inline-flex items-center gap-2 text-foreground hover:text-accent transition-all font-semibold text-base"
             >
               View full track record
               <ArrowRight size={20} />
