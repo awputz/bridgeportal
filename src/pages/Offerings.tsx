@@ -19,10 +19,10 @@ const Offerings = () => {
     <div className="min-h-screen pt-32 px-6 lg:px-8 pb-20">
       <div className="container mx-auto max-w-6xl">
         {/* Header */}
-        <div className="mb-12 max-w-4xl">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4">Current Offerings</h1>
-          <p className="text-lg text-muted-foreground">
-            Active exclusive assignments across New York City
+        <div className="mb-16 max-w-4xl">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">Exclusive Listings</h1>
+          <p className="text-2xl text-muted-foreground leading-relaxed">
+            Active investment sales assignments with institutional-quality marketing and direct buyer access
           </p>
         </div>
 

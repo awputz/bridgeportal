@@ -77,108 +77,133 @@ const Home = () => {
         isRefreshing={isRefreshing}
       />
 
-      {/* Hero Section - IPRG Inspired */}
+      {/* Hero Section - BKREA Inspired with Achievement Badge */}
       <section 
-        className="relative min-h-[85vh] md:min-h-[90vh] flex items-center justify-center px-4 sm:px-6 pt-24 md:pt-28 overflow-hidden"
+        className="relative min-h-[90vh] md:min-h-[95vh] flex items-center justify-center px-4 sm:px-6 pt-24 md:pt-28 overflow-hidden"
       >
-        {/* Light Background Image */}
+        {/* Background with Professional Overlay */}
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{ 
             backgroundImage: `url(${heroBg})`,
-            filter: 'brightness(1.15)'
+            filter: 'brightness(1.1)'
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/90 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/75 via-background/80 to-background" />
+        
+        {/* Built in NYC Badge - Top Right */}
+        <div className="absolute top-32 right-8 lg:right-16 z-20 hidden md:block">
+          <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-full border-4 border-accent bg-background/30 backdrop-blur-md flex items-center justify-center shadow-2xl">
+            <div className="text-center">
+              <div className="text-xs lg:text-sm font-bold text-accent uppercase tracking-wider mb-1">Built in</div>
+              <div className="text-2xl lg:text-3xl font-bold">NYC</div>
+            </div>
+          </div>
+        </div>
         
         {/* Content */}
-        <div className="relative z-10 container mx-auto max-w-6xl text-center">
+        <div className="relative z-10 container mx-auto max-w-6xl">
           {/* Large Logo */}
-          <div className="mb-8 md:mb-12 animate-fade-in">
+          <div className="mb-10 md:mb-12 animate-fade-in text-center md:text-left">
             <img 
               src={bridgeLogo} 
               alt="BRIDGE Investment Sales" 
-              className="mx-auto w-64 md:w-96 lg:w-[500px] h-auto"
+              className="w-72 md:w-[450px] lg:w-[550px] h-auto mx-auto md:mx-0"
             />
           </div>
           
-          {/* Massive Number Counter */}
-            <div className="mb-6 md:mb-8 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-              <div className="inline-block bg-card/60 backdrop-blur-sm border border-border rounded-xl px-8 md:px-12 py-6 md:py-8 shadow-sm">
-                <div className="text-6xl md:text-8xl lg:text-9xl font-bold text-foreground tracking-tighter mb-2 font-variant-numeric-tabular">
-                  $<CountUpNumber end={110} suffix="M" duration={1500} />
-                </div>
-                <p className="text-lg md:text-xl text-muted-foreground font-medium">
-                  in sales and counting
-                </p>
-              </div>
+          {/* Achievement Counter Badge */}
+          <div className="mb-8 md:mb-10 animate-fade-in text-center md:text-left" style={{ animationDelay: '0.1s' }}>
+            <div className="inline-flex items-baseline gap-3 bg-accent/10 border-2 border-accent/30 backdrop-blur-sm rounded-full px-6 py-3">
+              <span className="text-sm font-medium text-muted-foreground">We've done it</span>
+              <span className="text-3xl md:text-4xl font-bold text-accent">60+</span>
+              <span className="text-sm font-medium text-muted-foreground">times and counting!</span>
             </div>
+          </div>
           
-          {/* Headline */}
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight tracking-tight animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            Maximizing Investment Property<br />Sales Prices in NYC
+          {/* Powerful Headline */}
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-8 leading-[1.1] tracking-tight animate-fade-in max-w-4xl" style={{ animationDelay: '0.2s' }}>
+            Maximizing Commercial Property Owner's Sales Prices in NYC!
           </h1>
           
-          {/* Subheadline */}
-          <p className="text-base md:text-xl text-foreground/80 mb-10 leading-relaxed max-w-3xl mx-auto font-light animate-fade-in" style={{ animationDelay: '0.3s' }}>
-            Institutional process, direct capital relationships, and senior-level execution<br className="hidden md:block" />
-            for middle-market sales across New York City
-          </p>
-          
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto sm:max-w-none animate-fade-in" style={{ animationDelay: '0.4s' }}>
+          {/* CTA */}
+          <div className="flex flex-col sm:flex-row gap-5 max-w-lg animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <Button 
               asChild 
-              variant="default"
-              size="xl"
-              className="text-base font-semibold"
+              size="lg"
+              className="text-base font-semibold px-8 py-7 rounded-xl bg-accent hover:bg-accent/90 text-background"
             >
-              <Link to="/offerings">View Exclusive Listings</Link>
-            </Button>
-            <Button 
-              asChild 
-              variant="secondary"
-              size="xl"
-              className="text-base font-semibold"
-            >
-              <Link to="/contact">Schedule Consultation</Link>
+              <Link to="/offerings" className="flex items-center gap-2">
+                Go to Exclusive Listings
+                <ArrowRight size={20} />
+              </Link>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Hero Metrics Band - Dark */}
+      {/* Stamp-Style Metrics Band - Matches BKREA */}
       <section 
         ref={metricsReveal.elementRef}
-        className={`py-16 md:py-20 px-4 sm:px-6 bg-dark-bg border-y border-border transition-all duration-1000 ${
+        className={`relative py-24 md:py-32 px-4 sm:px-6 bg-dark-bg border-y border-border transition-all duration-1000 ${
           metricsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
-        <div className="container mx-auto max-w-7xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+        {/* Background Decorative Elements */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-10 left-10 w-40 h-40 border-4 border-accent rounded-full" />
+          <div className="absolute bottom-10 right-10 w-32 h-32 border-4 border-accent rounded-full" />
+        </div>
+
+        <div className="container mx-auto max-w-7xl relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-16">
             <div className="text-center">
-              <div className="text-5xl md:text-6xl font-bold mb-2 text-white tracking-tight font-variant-numeric-tabular">
+              <div className="mb-4">
+                <Building2 className="w-12 h-12 text-accent mx-auto" />
+              </div>
+              <div className="text-5xl md:text-6xl font-bold mb-3 text-white tracking-tight">
                 60+
               </div>
-              <p className="text-sm md:text-base text-white/70">Buildings Sold</p>
+              <p className="text-base text-white/70 font-medium uppercase tracking-wide">Buildings Sold</p>
             </div>
             <div className="text-center">
-              <div className="text-5xl md:text-6xl font-bold mb-2 text-white tracking-tight font-variant-numeric-tabular">
+              <div className="mb-4">
+                <div className="w-12 h-12 text-accent mx-auto flex items-center justify-center">
+                  <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div className="text-5xl md:text-6xl font-bold mb-3 text-white tracking-tight">
                 $110M+
               </div>
-              <p className="text-sm md:text-base text-white/70">Total Sales</p>
+              <p className="text-base text-white/70 font-medium uppercase tracking-wide">Total Building Sales</p>
             </div>
             <div className="text-center">
-              <div className="text-5xl md:text-6xl font-bold mb-2 text-white tracking-tight font-variant-numeric-tabular">
+              <div className="mb-4">
+                <div className="w-12 h-12 text-accent mx-auto flex items-center justify-center">
+                  <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                  </svg>
+                </div>
+              </div>
+              <div className="text-5xl md:text-6xl font-bold mb-3 text-white tracking-tight">
                 8.9M+
               </div>
-              <p className="text-sm md:text-base text-white/70">Square Feet</p>
+              <p className="text-base text-white/70 font-medium uppercase tracking-wide">Total Square Feet Sold</p>
             </div>
             <div className="text-center">
-              <div className="text-5xl md:text-6xl font-bold mb-2 text-white tracking-tight font-variant-numeric-tabular">
-                41+
+              <div className="mb-4">
+                <div className="w-12 h-12 text-accent mx-auto flex items-center justify-center">
+                  <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                  </svg>
+                </div>
               </div>
-              <p className="text-sm md:text-base text-white/70">Years Experience</p>
+              <div className="text-5xl md:text-6xl font-bold mb-3 text-white tracking-tight">
+                Proven
+              </div>
+              <p className="text-base text-white/70 font-medium uppercase tracking-wide">NYC Track Record</p>
             </div>
           </div>
         </div>
