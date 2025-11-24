@@ -89,7 +89,7 @@ const Home = () => {
             filter: 'brightness(1.15)'
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/75 to-white" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/90 to-background" />
         
         {/* Content */}
         <div className="relative z-10 container mx-auto max-w-6xl text-center">
@@ -103,16 +103,16 @@ const Home = () => {
           </div>
           
           {/* Massive Number Counter */}
-          <div className="mb-6 md:mb-8 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            <div className="inline-block bg-white/80 backdrop-blur-sm border border-border rounded-xl px-8 md:px-12 py-6 md:py-8 shadow-sm">
-              <div className="text-6xl md:text-8xl lg:text-9xl font-bold text-foreground tracking-tighter mb-2 font-variant-numeric-tabular">
-                $<CountUpNumber end={110} suffix="M" duration={1500} />
+            <div className="mb-6 md:mb-8 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              <div className="inline-block bg-card/60 backdrop-blur-sm border border-border rounded-xl px-8 md:px-12 py-6 md:py-8 shadow-sm">
+                <div className="text-6xl md:text-8xl lg:text-9xl font-bold text-foreground tracking-tighter mb-2 font-variant-numeric-tabular">
+                  $<CountUpNumber end={110} suffix="M" duration={1500} />
+                </div>
+                <p className="text-lg md:text-xl text-muted-foreground font-medium">
+                  in sales and counting
+                </p>
               </div>
-              <p className="text-lg md:text-xl text-muted-foreground font-medium">
-                in sales and counting
-              </p>
             </div>
-          </div>
           
           {/* Headline */}
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight tracking-tight animate-fade-in" style={{ animationDelay: '0.2s' }}>
@@ -137,9 +137,9 @@ const Home = () => {
             </Button>
             <Button 
               asChild 
-              variant="outline"
+              variant="secondary"
               size="xl"
-              className="border-2 border-border text-foreground hover:bg-muted bg-white/80 backdrop-blur-sm text-base font-semibold"
+              className="text-base font-semibold"
             >
               <Link to="/contact">Schedule Consultation</Link>
             </Button>
@@ -147,38 +147,38 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Hero Metrics Band - Clean White */}
+      {/* Hero Metrics Band - Dark */}
       <section 
         ref={metricsReveal.elementRef}
-        className={`py-16 md:py-20 px-4 sm:px-6 bg-white border-y border-border transition-all duration-1000 ${
+        className={`py-16 md:py-20 px-4 sm:px-6 bg-dark-bg border-y border-border transition-all duration-1000 ${
           metricsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
         <div className="container mx-auto max-w-7xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
             <div className="text-center">
-              <div className="text-5xl md:text-6xl font-bold mb-2 text-foreground tracking-tight font-variant-numeric-tabular">
+              <div className="text-5xl md:text-6xl font-bold mb-2 text-white tracking-tight font-variant-numeric-tabular">
                 60+
               </div>
-              <p className="text-sm md:text-base text-muted-foreground">Buildings Sold</p>
+              <p className="text-sm md:text-base text-white/70">Buildings Sold</p>
             </div>
             <div className="text-center">
-              <div className="text-5xl md:text-6xl font-bold mb-2 text-foreground tracking-tight font-variant-numeric-tabular">
+              <div className="text-5xl md:text-6xl font-bold mb-2 text-white tracking-tight font-variant-numeric-tabular">
                 $110M+
               </div>
-              <p className="text-sm md:text-base text-muted-foreground">Total Sales</p>
+              <p className="text-sm md:text-base text-white/70">Total Sales</p>
             </div>
             <div className="text-center">
-              <div className="text-5xl md:text-6xl font-bold mb-2 text-foreground tracking-tight font-variant-numeric-tabular">
+              <div className="text-5xl md:text-6xl font-bold mb-2 text-white tracking-tight font-variant-numeric-tabular">
                 8.9M+
               </div>
-              <p className="text-sm md:text-base text-muted-foreground">Square Feet</p>
+              <p className="text-sm md:text-base text-white/70">Square Feet</p>
             </div>
             <div className="text-center">
-              <div className="text-5xl md:text-6xl font-bold mb-2 text-foreground tracking-tight font-variant-numeric-tabular">
+              <div className="text-5xl md:text-6xl font-bold mb-2 text-white tracking-tight font-variant-numeric-tabular">
                 41+
               </div>
-              <p className="text-sm md:text-base text-muted-foreground">Years Experience</p>
+              <p className="text-sm md:text-base text-white/70">Years Experience</p>
             </div>
           </div>
         </div>
