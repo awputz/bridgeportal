@@ -19,8 +19,8 @@ export const PropertyMatchDisplay = ({ properties }: PropertyMatchDisplayProps) 
 
   return (
     <div className="space-y-4 my-4">
-      <p className="text-sm font-medium">
-        Based on your requirements, here are {properties.length} {properties.length === 1 ? 'property' : 'properties'} that match:
+      <p className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+        {properties.length} {properties.length === 1 ? 'Match Found' : 'Matches Found'}
       </p>
       <div className="grid grid-cols-1 gap-4">
         {properties.map((property) => (

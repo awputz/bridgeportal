@@ -5,23 +5,23 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground border border-primary hover:opacity-90 hover:shadow-lg hover:scale-105",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 hover:shadow-md",
+        default: "bg-primary text-primary-foreground border border-primary hover:opacity-90 shadow-sm",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm",
         outline: "border border-border bg-background hover:bg-accent hover:text-accent-foreground hover:border-accent",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-foreground underline-offset-4 hover:underline hover:text-muted-foreground",
-        premium: "bg-gradient-to-r from-gold to-gold/90 text-gold-foreground border border-gold hover:shadow-glow hover:scale-105",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:shadow-md",
+        premium: "bg-gold text-gold-foreground border border-gold/20 hover:opacity-90 shadow-sm",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm",
       },
       size: {
         default: "h-10 px-4 py-2 rounded-lg",
         sm: "h-9 px-3 rounded-lg text-xs",
         lg: "h-12 px-8 rounded-lg text-base",
-        xl: "h-14 px-10 rounded-xl text-lg",
+        xl: "h-14 px-10 rounded-lg text-lg",
         icon: "h-10 w-10 rounded-lg",
       },
     },
