@@ -77,134 +77,143 @@ const Home = () => {
         isRefreshing={isRefreshing}
       />
 
-      {/* Hero Section - BKREA Inspired with Achievement Badge */}
+      {/* Cinematic Hero Section */}
       <section 
-        className="relative min-h-[90vh] md:min-h-[95vh] flex items-center justify-center px-4 sm:px-6 pt-24 md:pt-28 overflow-hidden"
+        className="relative min-h-screen flex items-center justify-center overflow-hidden"
       >
-        {/* Background with Professional Overlay */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ 
-            backgroundImage: `url(${heroBg})`,
-            filter: 'brightness(1.1)'
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/75 via-background/80 to-background" />
+        {/* Parallax Background Layers */}
+        <div className="absolute inset-0">
+          <div 
+            className="absolute inset-0 bg-cover bg-center scale-110 parallax-slow"
+            style={{ 
+              backgroundImage: `url(${heroBg})`,
+              filter: 'brightness(0.4) contrast(1.1)'
+            }}
+          />
+          <div className="absolute inset-0" style={{
+            background: 'radial-gradient(circle at 50% 50%, hsl(0 0% 0% / 0.3) 0%, hsl(0 0% 0% / 0.8) 100%)'
+          }} />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/60 to-background" />
+        </div>
         
-        {/* Built in NYC Badge - Top Right */}
-        <div className="absolute top-32 right-8 lg:right-16 z-20 hidden md:block">
-          <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-full border-4 border-accent bg-background/30 backdrop-blur-md flex items-center justify-center shadow-2xl">
-            <div className="text-center">
-              <div className="text-xs lg:text-sm font-bold text-accent uppercase tracking-wider mb-1">Built in</div>
-              <div className="text-2xl lg:text-3xl font-bold">NYC</div>
-            </div>
-          </div>
+        {/* Floating Accent Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
+          <div className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-accent/10 blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
+          <div className="absolute bottom-1/4 left-1/4 w-96 h-96 rounded-full bg-accent/10 blur-[120px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '2s' }} />
         </div>
         
         {/* Content */}
-        <div className="relative z-10 container mx-auto max-w-6xl">
-          {/* Large Logo */}
-          <div className="mb-10 md:mb-12 animate-fade-in text-center md:text-left">
+        <div className="relative z-10 container mx-auto max-w-7xl px-6 lg:px-8 py-32">
+          {/* Logo with Blur-In Effect */}
+          <div className="mb-16 opacity-0 animate-[blurIn_1s_ease-out_0.2s_forwards]">
             <img 
               src={bridgeLogo} 
               alt="BRIDGE Investment Sales" 
-              className="w-72 md:w-[450px] lg:w-[550px] h-auto mx-auto md:mx-0"
+              className="w-80 md:w-[500px] lg:w-[600px] h-auto"
             />
           </div>
           
-          {/* Achievement Counter Badge */}
-          <div className="mb-8 md:mb-10 animate-fade-in text-center md:text-left" style={{ animationDelay: '0.1s' }}>
-            <div className="inline-flex items-baseline gap-3 bg-accent/10 border-2 border-accent/30 backdrop-blur-sm rounded-full px-6 py-3">
-              <span className="text-sm font-medium text-muted-foreground">We've done it</span>
-              <span className="text-3xl md:text-4xl font-bold text-accent">60+</span>
-              <span className="text-sm font-medium text-muted-foreground">times and counting!</span>
-            </div>
+          {/* Powerful Headline with Stagger */}
+          <div className="max-w-5xl space-y-8">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-foreground leading-[1.05] tracking-[-0.02em] opacity-0 animate-[revealUp_1s_ease-out_0.5s_forwards]">
+              Maximizing Commercial Property Owner's 
+              <span className="block text-accent mt-2">Sales Prices in NYC</span>
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl leading-relaxed opacity-0 animate-[slideReveal_1s_ease-out_0.9s_forwards]">
+              Strategic investment sales platform with 60+ transactions and $110M+ in volume across New York City's most competitive markets.
+            </p>
           </div>
           
-          {/* Powerful Headline */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-foreground mb-8 leading-[1.1] tracking-tight animate-fade-in max-w-4xl" style={{ animationDelay: '0.2s' }}>
-            Maximizing Commercial Property Owner's Sales Prices in NYC!
-          </h1>
-          
-          {/* CTA */}
-          <div className="flex flex-col sm:flex-row gap-5 max-w-lg animate-fade-in" style={{ animationDelay: '0.3s' }}>
+          {/* Premium CTA */}
+          <div className="mt-12 flex flex-col sm:flex-row gap-5 opacity-0 animate-[slideReveal_1s_ease-out_1.2s_forwards]">
             <Button 
               asChild 
               size="lg"
-              className="text-base font-semibold px-8 py-7 rounded-xl bg-accent hover:bg-accent/90 text-background"
+              className="text-lg font-semibold px-10 py-8 rounded-2xl magnetic-button bg-accent hover:bg-accent/90 text-background shadow-xl"
             >
-              <Link to="/offerings" className="flex items-center gap-2">
-                Go to Exclusive Listings
-                <ArrowRight size={20} />
+              <Link to="/offerings" className="flex items-center gap-3">
+                Exclusive Listings
+                <ArrowRight size={24} />
+              </Link>
+            </Button>
+            <Button 
+              asChild 
+              size="lg"
+              variant="outline"
+              className="text-lg font-semibold px-10 py-8 rounded-2xl magnetic-button bg-background/5 backdrop-blur-sm border-border hover:bg-background/10"
+            >
+              <Link to="/approach">
+                Our Approach
               </Link>
             </Button>
           </div>
         </div>
+        
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 opacity-0 animate-[fadeIn_1s_ease-out_2s_forwards]">
+          <div className="flex flex-col items-center gap-2 text-muted-foreground">
+            <span className="text-xs uppercase tracking-widest">Scroll</span>
+            <div className="w-[1px] h-12 bg-gradient-to-b from-muted-foreground to-transparent animate-pulse" />
+          </div>
+        </div>
       </section>
 
-      {/* Stamp-Style Metrics Band - Matches BKREA */}
+      {/* Premium Metrics Section */}
       <section 
         ref={metricsReveal.elementRef}
-        className={`relative py-24 md:py-32 px-4 sm:px-6 bg-dark-bg border-y border-border transition-all duration-1000 ${
+        className={`relative py-32 md:py-40 px-6 lg:px-8 overflow-hidden transition-all duration-1000 ${
           metricsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
+        style={{
+          background: 'linear-gradient(180deg, hsl(0 0% 11%) 0%, hsl(0 0% 7%) 50%, hsl(0 0% 11%) 100%)'
+        }}
       >
-        {/* Background Decorative Elements */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-10 left-10 w-40 h-40 border-4 border-accent rounded-full" />
-          <div className="absolute bottom-10 right-10 w-32 h-32 border-4 border-accent rounded-full" />
-        </div>
+        {/* Subtle Grid Pattern */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: `linear-gradient(hsl(0 0% 100%) 1px, transparent 1px),
+                           linear-gradient(90deg, hsl(0 0% 100%) 1px, transparent 1px)`,
+          backgroundSize: '80px 80px'
+        }} />
+        
+        {/* Gradient Accents */}
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full bg-accent/5 blur-[150px]" />
+        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] rounded-full bg-accent/5 blur-[150px]" />
 
         <div className="container mx-auto max-w-7xl relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-16">
-            <div className="text-center">
-              <div className="mb-4">
-                <Building2 className="w-12 h-12 text-accent mx-auto" />
-              </div>
-              <div className="text-5xl md:text-6xl font-bold mb-3 text-white tracking-tight">
-                60+
-              </div>
-              <p className="text-base text-white/70 font-medium uppercase tracking-wide">Buildings Sold</p>
-            </div>
-            <div className="text-center">
-              <div className="mb-4">
-                <div className="w-12 h-12 text-accent mx-auto flex items-center justify-center">
-                  <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+          {/* Section Header */}
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Track Record</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Delivering results across New York City's most competitive markets
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { value: '60+', label: 'Buildings Sold', icon: Building2 },
+              { value: '$110M+', label: 'Total Sales Volume', icon: TrendingUp },
+              { value: '8.9M+', label: 'Square Feet Sold', icon: TrendingUp },
+              { value: '100%', label: 'Client Satisfaction', icon: Users }
+            ].map((metric, index) => (
+              <div 
+                key={index}
+                className="glass-card p-8 hover-3d group"
+                style={{
+                  animationDelay: `${index * 100}ms`,
+                  opacity: metricsReveal.isVisible ? 1 : 0,
+                  animation: metricsReveal.isVisible ? 'revealUp 0.8s ease-out forwards' : 'none'
+                }}
+              >
+                <metric.icon className="w-10 h-10 text-accent mb-6 transition-transform duration-500 group-hover:scale-110" />
+                <div className="text-5xl md:text-6xl font-bold mb-3 tracking-tight bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">
+                  {metric.value}
                 </div>
+                <p className="text-muted-foreground font-medium uppercase tracking-wider text-sm">
+                  {metric.label}
+                </p>
               </div>
-              <div className="text-5xl md:text-6xl font-bold mb-3 text-white tracking-tight">
-                $110M+
-              </div>
-              <p className="text-base text-white/70 font-medium uppercase tracking-wide">Total Building Sales</p>
-            </div>
-            <div className="text-center">
-              <div className="mb-4">
-                <div className="w-12 h-12 text-accent mx-auto flex items-center justify-center">
-                  <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                  </svg>
-                </div>
-              </div>
-              <div className="text-5xl md:text-6xl font-bold mb-3 text-white tracking-tight">
-                8.9M+
-              </div>
-              <p className="text-base text-white/70 font-medium uppercase tracking-wide">Total Square Feet Sold</p>
-            </div>
-            <div className="text-center">
-              <div className="mb-4">
-                <div className="w-12 h-12 text-accent mx-auto flex items-center justify-center">
-                  <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                  </svg>
-                </div>
-              </div>
-              <div className="text-5xl md:text-6xl font-bold mb-3 text-white tracking-tight">
-                Proven
-              </div>
-              <p className="text-base text-white/70 font-medium uppercase tracking-wide">NYC Track Record</p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -275,10 +284,16 @@ const Home = () => {
                 description: "Opinion of value and go-to-market strategy for owners considering a sale"
               }
             ].map((service, index) => (
-              <Card key={index} className="p-7 hover-lift border border-border bg-card shadow-card">
-                <h3 className="text-lg font-bold mb-3">{service.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{service.description}</p>
-              </Card>
+              <div 
+                key={index} 
+                className="glass-card p-8 hover-lift group cursor-pointer"
+              >
+                <div className="mb-4 w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors duration-300">
+                  <div className="w-6 h-6 rounded-full bg-accent" />
+                </div>
+                <h3 className="text-xl font-bold mb-4 group-hover:text-accent transition-colors duration-300">{service.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">{service.description}</p>
+              </div>
             ))}
           </div>
         </div>
@@ -311,11 +326,14 @@ const Home = () => {
                 description: "Restructurings and time-sensitive deals"
               }
             ].map((asset, index) => (
-              <Card key={index} className="p-7 hover-lift border border-border bg-card shadow-card">
-                <Building2 className="mb-4 text-accent" size={32} />
-                <h3 className="text-lg font-bold mb-3">{asset.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{asset.description}</p>
-              </Card>
+              <div 
+                key={index} 
+                className="glass-card p-8 hover-lift group cursor-pointer"
+              >
+                <Building2 className="mb-6 text-accent transition-transform duration-500 group-hover:scale-110" size={36} />
+                <h3 className="text-xl font-bold mb-4 group-hover:text-accent transition-colors duration-300">{asset.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">{asset.description}</p>
+              </div>
             ))}
           </div>
         </div>
@@ -370,11 +388,11 @@ const Home = () => {
                 description: "Sale-leasebacks and balance sheet strategies for occupying businesses"
               }
             ].map((client, index) => (
-              <Card key={index} className="p-7 hover-lift border border-border bg-card shadow-card">
-                <Users className="mb-4 text-accent" size={32} />
-                <h3 className="text-lg font-bold mb-3">{client.title}</h3>
+              <div key={index} className="glass-card p-8 hover-lift group cursor-pointer">
+                <Users className="mb-6 text-accent transition-transform duration-500 group-hover:scale-110" size={36} />
+                <h3 className="text-xl font-bold mb-4 group-hover:text-accent transition-colors duration-300">{client.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{client.description}</p>
-              </Card>
+              </div>
             ))}
           </div>
         </div>
