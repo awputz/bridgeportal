@@ -8,51 +8,51 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* BRIDGE Investment Sales - Monochrome System with Sage Green Accent */
+    /* BRIDGE Investment Sales - Dark Mode with Grey Background */
     
-    --background: 0 0% 100%;
-    --foreground: 0 0% 7%;
+    --background: 0 0% 11%;
+    --foreground: 0 0% 95%;
     
-    /* Card surfaces - Pure white */
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 7%;
+    /* Card surfaces - Dark grey */
+    --card: 0 0% 14%;
+    --card-foreground: 0 0% 95%;
     
     /* Popover */
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 7%;
+    --popover: 0 0% 14%;
+    --popover-foreground: 0 0% 95%;
     
-    /* Primary - Black for buttons and strong elements */
-    --primary: 0 0% 7%;
-    --primary-foreground: 0 0% 100%;
+    /* Primary - White for buttons */
+    --primary: 0 0% 95%;
+    --primary-foreground: 0 0% 11%;
     
-    /* Secondary - White with black border */
-    --secondary: 0 0% 100%;
-    --secondary-foreground: 0 0% 7%;
+    /* Secondary - Dark with light border */
+    --secondary: 0 0% 18%;
+    --secondary-foreground: 0 0% 95%;
     
-    /* Muted - Light gray for subtle backgrounds */
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 40%;
+    /* Muted - Darker gray for subtle backgrounds */
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 60%;
     
     /* Accent - Sage Green (from brand palette) */
     --accent: 140 20% 55%;
-    --accent-foreground: 0 0% 7%;
+    --accent-foreground: 0 0% 11%;
     
-    /* Surface - Very light gray */
-    --surface: 0 0% 96%;
+    /* Surface - Slightly lighter than background */
+    --surface: 0 0% 14%;
     
     /* Destructive */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     
-    /* Borders - Subtle gray */
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
+    /* Borders - Subtle grey */
+    --border: 0 0% 22%;
+    --input: 0 0% 22%;
     --ring: 140 20% 55%;
     
-    /* Dark sections */
+    /* Dark sections (even darker) */
     --dark-bg: 0 0% 7%;
-    --dark-text: 0 0% 100%;
-    --dark-muted: 0 0% 80%;
+    --dark-text: 0 0% 95%;
+    --dark-muted: 0 0% 65%;
     
     /* Radius */
     --radius: 0.5rem;
