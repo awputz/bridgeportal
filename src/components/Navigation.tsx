@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import bridgeLogo from "@/assets/bridge-investment-sales-logo-dark.png";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
 import { ContactSheet } from "@/components/ContactSheet";
 const navigationItems = [{
   name: "Current Offerings",
@@ -29,29 +27,7 @@ const navigationItems = [{
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
   const location = useLocation();
-  const navigate = useNavigate();
-  const {
-    toast
-  } = useToast();
-  useEffect(() => {
-    supabase.auth.getSession().then(({
-      data: {
-        session
-      }
-    }) => {
-      setUser(session?.user ?? null);
-    });
-    const {
-      data: {
-        subscription
-      }
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
   useEffect(() => {
     setIsOpen(false);
   }, [location.pathname]);
@@ -65,14 +41,6 @@ export const Navigation = () => {
       document.body.style.overflow = "unset";
     };
   }, [isOpen]);
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    toast({
-      title: "Logged out",
-      description: "You have been successfully logged out."
-    });
-    navigate("/");
-  };
   
   return <>
       {/* Light Theme Navigation Bar */}
@@ -100,11 +68,6 @@ export const Navigation = () => {
               <Button asChild size="sm" className="ml-2 rounded-lg h-9 px-5 text-[15px] font-semibold tracking-tight bg-primary text-primary-foreground hover:shadow-md transition-shadow">
                 <Link to="/submit-deal">Submit a Deal</Link>
               </Button>
-
-              {/* Auth Buttons */}
-              {user && <Button onClick={handleLogout} variant="outline" size="sm" className="ml-2 rounded-xl h-9 px-5 text-[15px] font-medium tracking-wide hover:scale-105">
-                  Logout
-                </Button>}
             </div>
 
             {/* Mobile Menu Button - positioned to the right */}
@@ -129,16 +92,9 @@ export const Navigation = () => {
             <div className={cn("transition-all duration-500 flex flex-col gap-3 pt-4 border-t border-border/30 w-full", isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4")} style={{
             transitionDelay: isOpen ? "400ms" : "0ms"
           }}>
-              {user ? <Button onClick={handleLogout} variant="outline" size="lg" className="rounded-lg tracking-tight w-full font-semibold">
-                  Logout
-                </Button> : <>
-                  <Button onClick={() => navigate("/auth")} variant="ghost" size="lg" className="rounded-lg tracking-tight w-full bg-muted/50 font-semibold">
-                    Login
-                  </Button>
-                  <Button asChild size="lg" className="rounded-lg tracking-tight w-full bg-primary text-primary-foreground font-semibold">
-                    <Link to="/submit-deal">Submit a Deal</Link>
-                  </Button>
-                </>}
+              <Button asChild size="lg" className="rounded-lg tracking-tight w-full bg-primary text-primary-foreground font-semibold">
+                <Link to="/submit-deal">Submit a Deal</Link>
+              </Button>
             </div>
           </nav>
         </div>
