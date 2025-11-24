@@ -26,29 +26,29 @@ const TrackRecord = () => {
     <div className="min-h-screen pt-32 px-6 lg:px-8 pb-20">
       <div className="container mx-auto max-w-6xl">
         {/* Header */}
-        <div className="mb-12 max-w-4xl">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4">Track Record</h1>
-          <p className="text-lg text-muted-foreground">
-            Recent and representative sales across the BRIDGE platform
+        <div className="mb-16 max-w-4xl">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">Proven Track Record</h1>
+          <p className="text-2xl text-muted-foreground leading-relaxed">
+            Representative transactions demonstrating our ability to maximize value for middle-market NYC property owners
           </p>
         </div>
 
         {/* Summary Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <Card className="p-6 border border-border">
-            <DollarSign className="mb-3 text-accent" size={28} />
-            <div className="text-4xl font-bold mb-1">${(totalVolume / 1000000).toFixed(1)}M</div>
-            <p className="text-sm text-muted-foreground">Total Volume</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          <Card className="p-8 border border-border hover:shadow-lg transition-shadow bg-card/50">
+            <DollarSign className="mb-4 text-accent" size={40} />
+            <div className="text-5xl font-bold mb-2">${(totalVolume / 1000000).toFixed(1)}M</div>
+            <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">Total Volume</p>
           </Card>
-          <Card className="p-6 border border-border">
-            <Building2 className="mb-3 text-accent" size={28} />
-            <div className="text-4xl font-bold mb-1">{buildingsSold}</div>
-            <p className="text-sm text-muted-foreground">Buildings Sold</p>
+          <Card className="p-8 border border-border hover:shadow-lg transition-shadow bg-card/50">
+            <Building2 className="mb-4 text-accent" size={40} />
+            <div className="text-5xl font-bold mb-2">{buildingsSold}</div>
+            <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">Buildings Sold</p>
           </Card>
-          <Card className="p-6 border border-border">
-            <Building2 className="mb-3 text-accent" size={28} />
-            <div className="text-4xl font-bold mb-1">{totalUnits.toLocaleString()}</div>
-            <p className="text-sm text-muted-foreground">Units Sold</p>
+          <Card className="p-8 border border-border hover:shadow-lg transition-shadow bg-card/50">
+            <Building2 className="mb-4 text-accent" size={40} />
+            <div className="text-5xl font-bold mb-2">{totalUnits.toLocaleString()}</div>
+            <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">Units Sold</p>
           </Card>
         </div>
 
