@@ -67,44 +67,56 @@ const Offerings = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {offerings.map((offering) => (
               <Link key={offering.id} to={`/offerings/${offering.id}`}>
-                <Card className="overflow-hidden hover-lift border border-border h-full group">
+                <Card className="overflow-hidden border border-border h-full group hover:shadow-md transition-shadow">
                   {offering.images && offering.images[0] && (
                     <div className="aspect-[4/3] bg-muted relative overflow-hidden">
                       <img 
                         src={offering.images[0]} 
                         alt={offering.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        className="w-full h-full object-cover"
                       />
                     </div>
                   )}
-                  <div className="p-6">
-                    <h3 className="text-lg font-semibold mb-2 group-hover:text-accent transition-colors">{offering.title}</h3>
-                    <div className="flex items-start gap-2 text-muted-foreground mb-4">
-                      <MapPin size={14} className="mt-1 flex-shrink-0" />
-                      <p className="text-xs">{offering.address}, {offering.city}</p>
+                  <div className="p-6 space-y-4">
+                    <div>
+                      <h3 className="text-lg font-bold mb-1">{offering.title}</h3>
+                      <div className="flex items-start gap-1 text-muted-foreground">
+                        <MapPin size={14} className="mt-0.5 flex-shrink-0" />
+                        <p className="text-sm">{offering.address}, {offering.city}</p>
+                      </div>
                     </div>
                     
-                    <div className="space-y-1 text-sm border-t border-border pt-4">
+                    <div className="space-y-2 text-sm border-t border-border pt-4">
                       {offering.asset_type && (
                         <div className="flex items-center gap-2">
                           <Building2 size={14} className="text-muted-foreground" />
-                          <span className="text-xs text-muted-foreground">{offering.asset_type}</span>
+                          <span className="text-xs uppercase tracking-wide text-muted-foreground">{offering.asset_type}</span>
                         </div>
                       )}
                       
                       {offering.price_on_request ? (
-                        <p className="font-semibold text-foreground">Price on Request</p>
+                        <p className="font-bold text-base text-foreground">Price on Request</p>
                       ) : (
-                        <p className="font-semibold text-foreground">
+                        <p className="font-bold text-xl text-foreground font-variant-numeric-tabular">
                           ${offering.price.toLocaleString()}
                         </p>
                       )}
                       
-                      <div className="flex gap-3 text-xs text-muted-foreground">
+                      <div className="flex gap-4 text-sm text-muted-foreground font-variant-numeric-tabular">
                         {offering.units && <span>{offering.units} units</span>}
                         {offering.gross_square_feet && <span>{offering.gross_square_feet.toLocaleString()} SF</span>}
                       </div>
+
+                      {offering.cap_rate && (
+                        <p className="text-sm text-muted-foreground">
+                          Cap Rate: <span className="font-semibold text-foreground">{offering.cap_rate}%</span>
+                        </p>
+                      )}
                     </div>
+
+                    <Button variant="premium" size="sm" className="w-full">
+                      Request Information
+                    </Button>
                   </div>
                 </Card>
               </Link>

@@ -77,18 +77,24 @@ const Home = () => {
         isRefreshing={isRefreshing}
       />
 
-      {/* Hero Section - BKREA Inspired */}
+      {/* Hero Section - IPRG Inspired */}
       <section 
-        className="relative min-h-[85vh] md:min-h-[90vh] flex items-center justify-center px-4 sm:px-6 pt-24 md:pt-28"
-        style={{
-          backgroundImage: `var(--gradient-hero), url(${heroBg})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
+        className="relative min-h-[85vh] md:min-h-[90vh] flex items-center justify-center px-4 sm:px-6 pt-24 md:pt-28 overflow-hidden"
       >
-        <div className="container mx-auto max-w-6xl text-center">
+        {/* Light Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ 
+            backgroundImage: `url(${heroBg})`,
+            filter: 'brightness(1.15)'
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/75 to-white" />
+        
+        {/* Content */}
+        <div className="relative z-10 container mx-auto max-w-6xl text-center">
           {/* Large Logo */}
-          <div className="mb-8 md:mb-12">
+          <div className="mb-8 md:mb-12 animate-fade-in">
             <img 
               src={bridgeLogo} 
               alt="BRIDGE Investment Sales" 
@@ -97,32 +103,35 @@ const Home = () => {
           </div>
           
           {/* Massive Number Counter */}
-          <div className="mb-6 md:mb-8">
-            <div className="text-6xl md:text-8xl lg:text-9xl font-bold text-white tracking-tighter">
-              <CountUpNumber end={110} suffix="M" duration={1500} />
+          <div className="mb-6 md:mb-8 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <div className="inline-block bg-white/80 backdrop-blur-sm border border-border rounded-xl px-8 md:px-12 py-6 md:py-8 shadow-sm">
+              <div className="text-6xl md:text-8xl lg:text-9xl font-bold text-foreground tracking-tighter mb-2 font-variant-numeric-tabular">
+                $<CountUpNumber end={110} suffix="M" duration={1500} />
+              </div>
+              <p className="text-lg md:text-xl text-muted-foreground font-medium">
+                in sales and counting
+              </p>
             </div>
-            <p className="text-xl md:text-2xl text-white/90 mt-3 font-medium">
-              in sales and counting
-            </p>
           </div>
           
           {/* Headline */}
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight tracking-tight">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight tracking-tight animate-fade-in" style={{ animationDelay: '0.2s' }}>
             Maximizing Investment Property<br />Sales Prices in NYC
           </h1>
           
           {/* Subheadline */}
-          <p className="text-base md:text-xl text-white/85 mb-10 leading-relaxed max-w-3xl mx-auto font-light">
+          <p className="text-base md:text-xl text-foreground/80 mb-10 leading-relaxed max-w-3xl mx-auto font-light animate-fade-in" style={{ animationDelay: '0.3s' }}>
             Institutional process, direct capital relationships, and senior-level execution<br className="hidden md:block" />
             for middle-market sales across New York City
           </p>
           
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto sm:max-w-none">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto sm:max-w-none animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <Button 
               asChild 
+              variant="premium"
               size="xl"
-              className="rounded-full shadow-2xl text-base font-semibold bg-gold text-gold-foreground hover:bg-gold/90"
+              className="text-base font-semibold"
             >
               <Link to="/offerings">View Exclusive Listings</Link>
             </Button>
@@ -130,46 +139,46 @@ const Home = () => {
               asChild 
               variant="outline"
               size="xl"
-              className="rounded-full border-2 border-white text-white hover:bg-white hover:text-primary shadow-2xl text-base font-semibold bg-transparent backdrop-blur-sm"
+              className="border-2 border-border text-foreground hover:bg-muted bg-white/80 backdrop-blur-sm text-base font-semibold"
             >
-              <Link to="/contact">Speak with Team</Link>
+              <Link to="/contact">Schedule Consultation</Link>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Hero Metrics Band - BKREA Style */}
+      {/* Hero Metrics Band - Clean White */}
       <section 
         ref={metricsReveal.elementRef}
-        className={`py-16 md:py-24 px-4 sm:px-6 bg-surface transition-all duration-1000 ${
+        className={`py-16 md:py-20 px-4 sm:px-6 bg-white border-y border-border transition-all duration-1000 ${
           metricsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
         <div className="container mx-auto max-w-7xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
             <div className="text-center">
-              <div className="text-5xl md:text-7xl font-bold mb-3 text-foreground tracking-tight">
-                110+
+              <div className="text-5xl md:text-6xl font-bold mb-2 text-foreground tracking-tight font-variant-numeric-tabular">
+                60+
               </div>
-              <p className="text-sm md:text-base text-muted-foreground font-medium">Buildings Sold</p>
+              <p className="text-sm md:text-base text-muted-foreground">Buildings Sold</p>
             </div>
             <div className="text-center">
-              <div className="text-5xl md:text-7xl font-bold mb-3 text-foreground tracking-tight">
-                $2.3B+
+              <div className="text-5xl md:text-6xl font-bold mb-2 text-foreground tracking-tight font-variant-numeric-tabular">
+                $110M+
               </div>
-              <p className="text-sm md:text-base text-muted-foreground font-medium">Total Sales</p>
+              <p className="text-sm md:text-base text-muted-foreground">Total Sales</p>
             </div>
             <div className="text-center">
-              <div className="text-5xl md:text-7xl font-bold mb-3 text-foreground tracking-tight">
-                89M+
+              <div className="text-5xl md:text-6xl font-bold mb-2 text-foreground tracking-tight font-variant-numeric-tabular">
+                8.9M+
               </div>
-              <p className="text-sm md:text-base text-muted-foreground font-medium">Square Feet</p>
+              <p className="text-sm md:text-base text-muted-foreground">Square Feet</p>
             </div>
             <div className="text-center">
-              <div className="text-5xl md:text-7xl font-bold mb-3 text-foreground tracking-tight">
+              <div className="text-5xl md:text-6xl font-bold mb-2 text-foreground tracking-tight font-variant-numeric-tabular">
                 41+
               </div>
-              <p className="text-sm md:text-base text-muted-foreground font-medium">Years Experience</p>
+              <p className="text-sm md:text-base text-muted-foreground">Years Experience</p>
             </div>
           </div>
         </div>

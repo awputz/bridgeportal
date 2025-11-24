@@ -90,31 +90,31 @@ const TrackRecord = () => {
         ) : filteredTransactions.length > 0 ? (
           <div className="space-y-4">
             {filteredTransactions.map((transaction) => (
-              <Card key={transaction.id} className="p-6 hover-lift border border-border">
+              <Card key={transaction.id} className="p-6 border border-border hover:shadow-md transition-shadow">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
                     <h3 className="text-lg font-semibold mb-1">{transaction.property_address}</h3>
                     <p className="text-sm text-muted-foreground">{transaction.borough}, {transaction.neighborhood}</p>
                   </div>
                   
-                  <div className="space-y-1 text-sm">
+                  <div className="space-y-1 text-sm font-variant-numeric-tabular">
                     {transaction.asset_type && (
-                      <p><span className="text-muted-foreground">Type:</span> {transaction.asset_type}</p>
+                      <p><span className="text-muted-foreground">Type:</span> <span className="font-medium">{transaction.asset_type}</span></p>
                     )}
                     {transaction.units && (
-                      <p><span className="text-muted-foreground">Units:</span> {transaction.units}</p>
+                      <p><span className="text-muted-foreground">Units:</span> <span className="font-medium">{transaction.units}</span></p>
                     )}
                     {transaction.gross_square_feet && (
-                      <p><span className="text-muted-foreground">SF:</span> {transaction.gross_square_feet.toLocaleString()}</p>
+                      <p><span className="text-muted-foreground">SF:</span> <span className="font-medium">{transaction.gross_square_feet.toLocaleString()}</span></p>
                     )}
                   </div>
                   
                   <div className="md:text-right space-y-1">
                     {transaction.sale_price && (
-                      <p className="text-2xl font-bold">${transaction.sale_price.toLocaleString()}</p>
+                      <p className="text-2xl font-bold font-variant-numeric-tabular">${transaction.sale_price.toLocaleString()}</p>
                     )}
                     {transaction.price_per_unit && (
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-muted-foreground font-variant-numeric-tabular">
                         ${transaction.price_per_unit.toLocaleString()}/unit
                       </p>
                     )}

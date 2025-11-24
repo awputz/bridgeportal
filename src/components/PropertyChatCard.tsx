@@ -17,8 +17,8 @@ export const PropertyChatCard = ({ property }: PropertyChatCardProps) => {
   };
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-      <div className="aspect-[16/9] overflow-hidden">
+    <Card className="overflow-hidden border border-border hover:shadow-md transition-shadow">
+      <div className="aspect-[16/9] overflow-hidden bg-muted">
         <img
           src={property.images?.[0] || "/placeholder.svg"}
           alt={property.title}
@@ -28,14 +28,14 @@ export const PropertyChatCard = ({ property }: PropertyChatCardProps) => {
       <div className="p-4 space-y-3">
         {property.match_score && (
           <div className="flex items-center gap-2 text-sm">
-            <span className="bg-accent text-accent-foreground px-2 py-0.5 rounded-full font-medium">
+            <span className="bg-gold/10 text-gold-foreground px-3 py-1 rounded-lg font-medium border border-gold/20">
               {property.match_score}% Match
             </span>
           </div>
         )}
         
         <div>
-          <h4 className="font-semibold text-lg mb-1">{property.title}</h4>
+          <h4 className="font-bold text-base mb-1">{property.title}</h4>
           <p className="text-sm text-muted-foreground flex items-center gap-1">
             <MapPin size={14} />
             {property.address}, {property.city}
@@ -43,12 +43,12 @@ export const PropertyChatCard = ({ property }: PropertyChatCardProps) => {
         </div>
 
         {property.match_reason && (
-          <p className="text-sm text-muted-foreground line-clamp-2">
+          <p className="text-sm text-muted-foreground line-clamp-2 border-l-2 border-gold pl-3">
             {property.match_reason}
           </p>
         )}
 
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+        <div className="flex items-center gap-4 text-sm text-muted-foreground font-variant-numeric-tabular border-t border-border pt-3">
           {property.bedrooms && (
             <span className="flex items-center gap-1">
               <Bed size={16} />
@@ -69,9 +69,9 @@ export const PropertyChatCard = ({ property }: PropertyChatCardProps) => {
           )}
         </div>
 
-        <div className="flex items-center justify-between pt-2">
-          <span className="text-xl font-semibold">{formatPrice(property.price)}</span>
-          <Button asChild size="sm">
+        <div className="flex items-center justify-between pt-2 border-t border-border">
+          <span className="text-xl font-bold font-variant-numeric-tabular">{formatPrice(property.price)}</span>
+          <Button asChild size="sm" variant="premium">
             <Link to={`/listings/${property.id}`}>View Details</Link>
           </Button>
         </div>
