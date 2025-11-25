@@ -52,14 +52,14 @@ export const Navigation = () => {
           </div>
 
           {/* Desktop Layout */}
-          <div className="hidden lg:grid grid-cols-3 items-center h-24 px-10">
+          <div className="hidden lg:grid grid-cols-[1fr_auto_1fr] items-center h-24 px-8 gap-8">
             {/* Left Navigation */}
-            <div className="flex items-center space-x-10">
+            <div className="flex items-center justify-start space-x-6">
               {leftNavItems.map((item) => (
                 <Link
                   key={item.name}
                   to={item.path}
-                  className={`text-base font-light transition-all duration-300 ${
+                  className={`text-base font-light transition-all duration-300 whitespace-nowrap ${
                     location.pathname === item.path
                       ? "text-foreground"
                       : "text-foreground/80 hover:text-foreground"
@@ -73,17 +73,17 @@ export const Navigation = () => {
             {/* Center Logo */}
             <div className="flex justify-center">
               <Link to="/" className="flex items-center">
-                <img src={logo} alt="BRIDGE Investment Sales" className="h-16 w-auto" />
+                <img src={logo} alt="BRIDGE Investment Sales" className="h-14 w-auto" />
               </Link>
             </div>
 
             {/* Right Navigation */}
-            <div className="flex items-center justify-end space-x-10">
+            <div className="flex items-center justify-end space-x-6 gap-2">
               {rightNavItems.map((item) => (
                 <Link
                   key={item.name}
                   to={item.path}
-                  className={`text-base font-light transition-all duration-300 ${
+                  className={`text-base font-light transition-all duration-300 whitespace-nowrap ${
                     location.pathname === item.path
                       ? "text-foreground"
                       : "text-foreground/80 hover:text-foreground"
@@ -94,14 +94,14 @@ export const Navigation = () => {
               ))}
               <button
                 onClick={() => setContactOpen(true)}
-                className="text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300"
+                className="text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 whitespace-nowrap"
               >
                 Contact
               </button>
               <Button
                 onClick={() => setContactOpen(true)}
                 size="sm"
-                className="ml-2 font-light"
+                className="font-light whitespace-nowrap"
               >
                 Submit a Deal
               </Button>
