@@ -33,8 +33,8 @@ All colors MUST be HSL.
     --muted: 0 0% 18%;
     --muted-foreground: 0 0% 60%;
     
-    /* Accent - Sage Green (from brand palette) */
-    --accent: 140 20% 55%;
+    /* Accent - Neutral White */
+    --accent: 0 0% 95%;
     --accent-foreground: 0 0% 11%;
     
     /* Surface - Slightly lighter than background */
@@ -47,7 +47,7 @@ All colors MUST be HSL.
     /* Borders - Subtle grey */
     --border: 0 0% 22%;
     --input: 0 0% 22%;
-    --ring: 140 20% 55%;
+    --ring: 0 0% 95%;
     
     /* Dark sections (even darker) */
     --dark-bg: 0 0% 7%;
