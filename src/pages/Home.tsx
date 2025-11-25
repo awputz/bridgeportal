@@ -21,10 +21,10 @@ export default function Home() {
           className="absolute inset-0 bg-cover bg-center"
           style={{ 
             backgroundImage: `url(${heroImage})`,
-            filter: 'brightness(0.4) contrast(1.2)'
+            filter: 'brightness(0.6) contrast(1.1)'
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
         
         <div className="relative z-10 container mx-auto text-center max-w-4xl">
           <img src={logo} alt="BRIDGE" className="h-12 md:h-16 lg:h-20 mx-auto mb-8 md:mb-12 opacity-90" />
