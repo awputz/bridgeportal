@@ -63,13 +63,22 @@ export const Navigation = () => {
             {/* Left Navigation */}
             <div className="flex items-center justify-start space-x-8">
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center gap-1 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 outline-none">
+                <DropdownMenuTrigger className="group flex items-center gap-1 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 ease-out outline-none hover:scale-105">
                   Company
-                  <ChevronDown className="h-4 w-4" />
+                  <ChevronDown className="h-4 w-4 transition-transform duration-300 ease-out group-data-[state=open]:rotate-180" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-background/95 backdrop-blur-xl border-white/10 z-50 transition-all duration-300 ease-out">
-                  {companyItems.map((item) => (
-                    <DropdownMenuItem key={item.name} asChild className="transition-colors duration-200 hover:bg-accent/10">
+                <DropdownMenuContent className="bg-background/95 backdrop-blur-xl border-white/10 z-50">
+                  {companyItems.map((item, index) => (
+                    <DropdownMenuItem 
+                      key={item.name} 
+                      asChild 
+                      className="animate-in fade-in slide-in-from-top-1"
+                      style={{
+                        animationDuration: "300ms",
+                        animationDelay: `${index * 50}ms`,
+                        animationFillMode: "backwards"
+                      }}
+                    >
                       <Link
                         to={item.path}
                         className="cursor-pointer font-light"
