@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_logs: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          entity_id: string | null
+          entity_type: string
+          id: string
+          ip_address: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          ip_address?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       chat_messages: {
         Row: {
           content: string
@@ -48,6 +84,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      email_notifications: {
+        Row: {
+          body: string
+          created_at: string
+          error_message: string | null
+          id: string
+          metadata: Json | null
+          recipient_email: string
+          recipient_name: string | null
+          sent_at: string | null
+          status: string
+          subject: string
+          template_type: string | null
+          updated_at: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          recipient_email: string
+          recipient_name?: string | null
+          sent_at?: string | null
+          status?: string
+          subject: string
+          template_type?: string | null
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          recipient_email?: string
+          recipient_name?: string | null
+          sent_at?: string | null
+          status?: string
+          subject?: string
+          template_type?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       favorites: {
         Row: {
@@ -180,6 +261,57 @@ export type Database = {
           },
         ]
       }
+      media_files: {
+        Row: {
+          alt_text: string | null
+          bucket_name: string
+          created_at: string
+          entity_id: string | null
+          entity_type: string | null
+          file_name: string
+          file_size: number | null
+          file_type: string
+          file_url: string
+          id: string
+          metadata: Json | null
+          storage_path: string
+          updated_at: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          alt_text?: string | null
+          bucket_name: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          file_name: string
+          file_size?: number | null
+          file_type: string
+          file_url: string
+          id?: string
+          metadata?: Json | null
+          storage_path: string
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          alt_text?: string | null
+          bucket_name?: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          file_name?: string
+          file_size?: number | null
+          file_type?: string
+          file_url?: string
+          id?: string
+          metadata?: Json | null
+          storage_path?: string
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string | null
@@ -308,6 +440,47 @@ export type Database = {
           zip_code?: string | null
         }
         Relationships: []
+      }
+      property_analytics: {
+        Row: {
+          created_at: string
+          id: string
+          metadata: Json | null
+          property_id: string
+          referrer: string | null
+          session_id: string | null
+          user_id: string | null
+          view_type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          property_id: string
+          referrer?: string | null
+          session_id?: string | null
+          user_id?: string | null
+          view_type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          property_id?: string
+          referrer?: string | null
+          session_id?: string | null
+          user_id?: string | null
+          view_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_analytics_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       research_notes: {
         Row: {
