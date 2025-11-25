@@ -363,8 +363,8 @@ export function TeamMemberFormDialog({ open, onOpenChange, member }: TeamMemberF
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="leadership">Leadership</SelectItem>
-                        <SelectItem value="sales_team">Sales Team</SelectItem>
+                <SelectItem value="leadership">Leadership</SelectItem>
+                <SelectItem value="sales_team">Advisors</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />

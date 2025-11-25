@@ -15,6 +15,7 @@ const companyItems = [
   { name: "Our Process", path: "/approach" },
   { name: "Team", path: "/team" },
   { name: "Track Record", path: "/transactions" },
+  { name: "Market Insights", path: "/market-insights" },
 ];
 
 const leftNavItems = [

@@ -3,6 +3,7 @@ import { CheckCircle2, TrendingUp, Users, Building2 } from "lucide-react";
 import { COMPANY_INFO } from "@/lib/constants";
 import { TeamMemberDialog } from "@/components/TeamMemberDialog";
 import { useTeamMembers } from "@/hooks/useTeamMembers";
+import { TeamPerformance } from "@/components/TeamPerformance";
 
 interface TeamMember {
   name: string;
@@ -89,10 +90,10 @@ const Team = () => {
           </div>
         </div>
 
-        {/* Investment Sales Team Section */}
+        {/* Advisors Section */}
         <div className="mb-24 md:mb-32 lg:mb-40">
           <div className="flex items-center gap-4 mb-14 md:mb-16 lg:mb-20">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light">Investment Sales Team</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light">Advisors</h2>
             <div className="h-px flex-1 bg-border" />
           </div>
           
@@ -125,24 +126,8 @@ const Team = () => {
 
         {/* Collective Credentials */}
         <section className="mb-24 md:mb-32 lg:mb-40">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-10 lg:gap-12 p-10 md:p-12 lg:p-14 rounded-xl bg-white/[0.02]">
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl lg:text-5xl font-light mb-2 text-accent">$500M+</div>
-              <div className="text-xs md:text-sm text-muted-foreground font-light">Total Career Volume</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl lg:text-5xl font-light mb-2 text-accent">40+</div>
-              <div className="text-xs md:text-sm text-muted-foreground font-light">Years Combined Experience</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl lg:text-5xl font-light mb-2 text-accent">200+</div>
-              <div className="text-xs md:text-sm text-muted-foreground font-light">NYC Buildings Sold</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl lg:text-5xl font-light mb-2 text-accent">67</div>
-              <div className="text-xs md:text-sm text-muted-foreground font-light">Avg. Days to Close</div>
-            </div>
-          </div>
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-12 text-center">Collective Credentials</h2>
+          <TeamPerformance />
         </section>
 
         {/* Our Network */}

@@ -18,6 +18,7 @@ import Services from "./pages/Services";
 import Markets from "./pages/Markets";
 import SubmitDeal from "./pages/SubmitDeal";
 import Team from "./pages/Team";
+import MarketInsights from "./pages/MarketInsights";
 import Auth from "./pages/Auth";
 import TeamAdmin from "./pages/admin/TeamAdmin";
 import TransactionsAdmin from "./pages/admin/TransactionsAdmin";
@@ -57,6 +58,7 @@ const App = () => {
                   <Route path="/approach" element={<Approach />} />
                   <Route path="/services" element={<Services />} />
                   <Route path="/markets" element={<Markets />} />
+                  <Route path="/market-insights" element={<MarketInsights />} />
                   <Route path="/submit-deal" element={<SubmitDeal />} />
                   <Route path="/team" element={<Team />} />
                   <Route path="*" element={<NotFound />} />
