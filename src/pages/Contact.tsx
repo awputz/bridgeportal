@@ -42,21 +42,21 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen pt-24 md:pt-32 lg:pt-40 pb-20">
+    <div className="min-h-screen pt-28 md:pt-36 lg:pt-44 pb-20 md:pb-28 lg:pb-36">
       {/* Header */}
-      <section className="px-6 lg:px-8 mb-12">
+      <section className="px-6 lg:px-8 mb-16 md:mb-20 lg:mb-24">
         <div className="container mx-auto max-w-5xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-4 tracking-tight">Contact</h1>
-          <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 md:mb-8 tracking-tight">Contact</h1>
+          <p className="text-xl text-muted-foreground max-w-2xl leading-loose">
             Speak with the {COMPANY_INFO.name} team. We respond within one business day.
           </p>
         </div>
       </section>
 
       <div className="container mx-auto px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 md:gap-12 max-w-6xl mx-auto">
           {/* Contact Info */}
-          <div className="space-y-8">
+          <div className="space-y-10 md:space-y-12">
             <div>
               <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mb-4">
                 <MapPin className="text-accent" size={20} />
@@ -92,8 +92,8 @@ const Contact = () => {
 
           {/* Contact Form */}
           <div className="lg:col-span-2">
-            <Card className="p-8 border border-border">
-              <form className="space-y-6" onSubmit={handleSubmit}>
+            <Card className="p-8 md:p-10 lg:p-12 border border-border">
+              <form className="space-y-6 md:space-y-7" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-2 gap-6">
                   <div>
                     <Label htmlFor="firstName">First Name</Label>

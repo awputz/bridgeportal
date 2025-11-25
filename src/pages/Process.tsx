@@ -32,11 +32,11 @@ const processSteps = [{
   deliverables: ["Executed lease or closing", "Move-in coordination", "Post-closing support"]
 }];
 const Process = () => {
-  return <div className="min-h-screen pt-24 md:pt-32 lg:pt-40 pb-20">
+  return <div className="min-h-screen pt-28 md:pt-36 lg:pt-44 pb-20 md:pb-28 lg:pb-36">
       {/* Header */}
-      <section className="px-6 lg:px-8 mb-20">
+      <section className="px-6 lg:px-8 mb-24 md:mb-28 lg:mb-32">
         <div className="container mx-auto max-w-4xl text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 tracking-tight">Our Process</h1>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-8 md:mb-10 lg:mb-12 tracking-tight">Our Process</h1>
           <p className="text-xl text-muted-foreground">
             A structured approach to New York real estate. Clear steps, transparent communication, and full support from first contact to closing.
           </p>
@@ -44,9 +44,9 @@ const Process = () => {
       </section>
 
       {/* Process Steps */}
-      <section className="px-6 lg:px-8 mb-20">
-        <div className="container mx-auto max-w-4xl space-y-12">
-          {processSteps.map((step, index) => <Card key={index} className="p-8">
+      <section className="px-6 lg:px-8 mb-24 md:mb-32 lg:mb-40">
+        <div className="container mx-auto max-w-4xl space-y-16 md:space-y-20">
+          {processSteps.map((step, index) => <Card key={index} className="p-8 md:p-10 lg:p-12">
               <div className="flex flex-col md:flex-row gap-8">
                 {/* Step Number */}
                 <div className="flex-shrink-0">
