@@ -518,6 +518,57 @@ export type Database = {
         }
         Relationships: []
       }
+      team_members: {
+        Row: {
+          bio: string | null
+          category: string
+          created_at: string | null
+          display_order: number | null
+          email: string
+          id: string
+          image_url: string | null
+          instagram_url: string | null
+          is_active: boolean | null
+          linkedin_url: string | null
+          name: string
+          phone: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          bio?: string | null
+          category: string
+          created_at?: string | null
+          display_order?: number | null
+          email: string
+          id?: string
+          image_url?: string | null
+          instagram_url?: string | null
+          is_active?: boolean | null
+          linkedin_url?: string | null
+          name: string
+          phone?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          bio?: string | null
+          category?: string
+          created_at?: string | null
+          display_order?: number | null
+          email?: string
+          id?: string
+          image_url?: string | null
+          instagram_url?: string | null
+          is_active?: boolean | null
+          linkedin_url?: string | null
+          name?: string
+          phone?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       tour_requests: {
         Row: {
           created_at: string | null
