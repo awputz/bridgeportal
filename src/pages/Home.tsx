@@ -77,41 +77,29 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <h2 className="text-center mb-16 font-light">Our Services</h2>
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <Card className="bg-card border-border hover:shadow-md transition-shadow">
-              <CardHeader>
-                <Building2 className="h-10 w-10 text-accent mb-4" />
-                <CardTitle className="font-light">Building Sales</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="font-light">
-                  Complete transaction management for multifamily and mixed-use properties
-                </CardDescription>
-              </CardContent>
-            </Card>
+            <div className="group p-8 rounded-lg transition-all hover:bg-white/5">
+              <Building2 className="h-10 w-10 text-accent mb-4 group-hover:scale-110 transition-transform" />
+              <h3 className="text-xl font-light mb-3">Building Sales</h3>
+              <p className="text-muted-foreground font-light leading-relaxed">
+                Complete transaction management for multifamily and mixed-use properties
+              </p>
+            </div>
 
-            <Card className="bg-card border-border hover:shadow-md transition-shadow">
-              <CardHeader>
-                <TrendingUp className="h-10 w-10 text-accent mb-4" />
-                <CardTitle className="font-light">Advisory</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="font-light">
-                  Strategic guidance on market positioning and transaction structuring
-                </CardDescription>
-              </CardContent>
-            </Card>
+            <div className="group p-8 rounded-lg transition-all hover:bg-white/5">
+              <TrendingUp className="h-10 w-10 text-accent mb-4 group-hover:scale-110 transition-transform" />
+              <h3 className="text-xl font-light mb-3">Advisory</h3>
+              <p className="text-muted-foreground font-light leading-relaxed">
+                Strategic guidance on market positioning and transaction structuring
+              </p>
+            </div>
 
-            <Card className="bg-card border-border hover:shadow-md transition-shadow">
-              <CardHeader>
-                <Award className="h-10 w-10 text-accent mb-4" />
-                <CardTitle className="font-light">Valuation</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="font-light">
-                  Comprehensive market analysis and property valuation services
-                </CardDescription>
-              </CardContent>
-            </Card>
+            <div className="group p-8 rounded-lg transition-all hover:bg-white/5">
+              <Award className="h-10 w-10 text-accent mb-4 group-hover:scale-110 transition-transform" />
+              <h3 className="text-xl font-light mb-3">Valuation</h3>
+              <p className="text-muted-foreground font-light leading-relaxed">
+                Comprehensive market analysis and property valuation services
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -130,21 +118,19 @@ export default function Home() {
             </div>
             <div className="grid md:grid-cols-3 gap-8">
               {activeOfferings.slice(0, 3).map((offering) => (
-                <Card key={offering.id} className="bg-card border-border hover:shadow-md transition-shadow">
+                <div key={offering.id} className="group rounded-lg overflow-hidden transition-all hover:bg-white/3 border-l-2 border-transparent hover:border-accent/30">
                   {offering.images && offering.images[0] && (
                     <div className="aspect-video overflow-hidden">
                       <img
                         src={offering.images[0]}
                         alt={offering.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-transform group-hover:scale-105"
                       />
                     </div>
                   )}
-                  <CardHeader>
-                    <CardTitle className="font-light text-xl">{offering.title}</CardTitle>
-                    <CardDescription className="font-light">{offering.city}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
+                  <div className="p-6">
+                    <h3 className="text-xl font-light mb-1">{offering.title}</h3>
+                    <p className="text-muted-foreground font-light mb-4">{offering.city}</p>
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-muted-foreground font-light">
                         {offering.property_type}
@@ -155,8 +141,8 @@ export default function Home() {
                         </span>
                       )}
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
@@ -175,26 +161,22 @@ export default function Home() {
             </div>
             <div className="grid md:grid-cols-3 gap-8">
               {recentTransactions.map((transaction) => (
-                <Card key={transaction.id} className="bg-card border-border hover:shadow-md transition-shadow">
-                  <CardHeader>
-                    <CardTitle className="font-light text-lg">{transaction.property_address}</CardTitle>
-                    <CardDescription className="font-light">{transaction.neighborhood}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground font-light">Type:</span>
-                        <span className="font-light">{transaction.property_type}</span>
-                      </div>
-                      {transaction.sale_price && (
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground font-light">Price:</span>
-                          <span className="font-light">${transaction.sale_price.toLocaleString()}</span>
-                        </div>
-                      )}
+                <div key={transaction.id} className="p-6 rounded-lg transition-all hover:bg-white/3 border-l-2 border-transparent hover:border-accent/30">
+                  <h3 className="text-lg font-light mb-1">{transaction.property_address}</h3>
+                  <p className="text-muted-foreground font-light mb-4">{transaction.neighborhood}</p>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground font-light">Type:</span>
+                      <span className="font-light">{transaction.property_type}</span>
                     </div>
-                  </CardContent>
-                </Card>
+                    {transaction.sale_price && (
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground font-light">Price:</span>
+                        <span className="font-light">${transaction.sale_price.toLocaleString()}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
               ))}
             </div>
           </div>
@@ -213,20 +195,16 @@ export default function Home() {
             </div>
             <div className="grid md:grid-cols-3 gap-8">
               {recentResearch.map((note) => (
-                <Card key={note.id} className="bg-card border-border hover:shadow-md transition-shadow">
-                  <CardHeader>
-                    <div className="text-xs text-accent mb-2 font-light">{note.category}</div>
-                    <CardTitle className="font-light text-lg">{note.title}</CardTitle>
-                    <CardDescription className="font-light text-xs">
-                      {new Date(note.date).toLocaleDateString()}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground font-light line-clamp-3">
-                      {note.summary}
-                    </p>
-                  </CardContent>
-                </Card>
+                <div key={note.id} className="p-6 rounded-lg transition-all hover:bg-white/3 border-l-2 border-transparent hover:border-accent/30">
+                  <div className="text-xs text-accent mb-2 font-light">{note.category}</div>
+                  <h3 className="text-lg font-light mb-2">{note.title}</h3>
+                  <p className="text-xs text-muted-foreground font-light mb-4">
+                    {new Date(note.date).toLocaleDateString()}
+                  </p>
+                  <p className="text-sm text-muted-foreground font-light line-clamp-3">
+                    {note.summary}
+                  </p>
+                </div>
               ))}
             </div>
           </div>

@@ -5,13 +5,16 @@ import logo from "@/assets/bridge-investment-sales-logo.png";
 import { ContactSheet } from "@/components/ContactSheet";
 import { Button } from "@/components/ui/button";
 
-const navigationItems = [
-  { name: "Approach", path: "/approach" },
+const leftNavItems = [
+  { name: "Approach", path: "/approach", external: false },
   { name: "Listings", path: "https://crexi.com", external: true },
-  { name: "Track Record", path: "/track-record" },
-  { name: "Team", path: "/team" },
-  { name: "Research", path: "/research" },
-  { name: "Contact", path: "/contact" },
+];
+
+const rightNavItems = [
+  { name: "Track Record", path: "/track-record", external: false },
+  { name: "Team", path: "/team", external: false },
+  { name: "Research", path: "/research", external: false },
+  { name: "Contact", path: "/contact", external: false },
 ];
 
 export const Navigation = () => {
@@ -30,28 +33,19 @@ export const Navigation = () => {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled 
-          ? "bg-background/40 backdrop-blur-xl border-b border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]" 
-          : "bg-background/20 backdrop-blur-lg border-b border-white/5"
-      }`}>
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-2xl border-b border-white/5 shadow-[0_8px_32px_0_rgba(0,0,0,0.6)]">
         <div className="container mx-auto px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <Link to="/" className="flex items-center space-x-3 transition-all duration-300 hover:scale-105 hover:brightness-110">
-              <img src={logo} alt="BRIDGE Investment Sales" className="h-8 w-auto" />
-            </Link>
-
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-1">
-              {navigationItems.map((item) =>
+          <div className="grid grid-cols-3 items-center h-20">
+            {/* Left Navigation */}
+            <div className="hidden lg:flex items-center space-x-8">
+              {leftNavItems.map((item) =>
                 item.external ? (
                   <a
                     key={item.name}
                     href={item.path}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="relative px-4 py-2 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 hover:scale-105"
+                    className="text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300"
                   >
                     {item.name}
                   </a>
@@ -59,9 +53,9 @@ export const Navigation = () => {
                   <Link
                     key={item.name}
                     to={item.path}
-                    className={`relative px-4 py-2 text-sm font-light transition-all duration-300 hover:scale-105 ${
+                    className={`text-base font-light transition-all duration-300 ${
                       location.pathname === item.path
-                        ? "text-foreground after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-foreground"
+                        ? "text-foreground"
                         : "text-foreground/80 hover:text-foreground"
                     }`}
                   >
@@ -69,10 +63,34 @@ export const Navigation = () => {
                   </Link>
                 )
               )}
+            </div>
+
+            {/* Center Logo */}
+            <div className="flex justify-center">
+              <Link to="/" className="flex items-center">
+                <img src={logo} alt="BRIDGE Investment Sales" className="h-8 w-auto" />
+              </Link>
+            </div>
+
+            {/* Right Navigation */}
+            <div className="hidden lg:flex items-center justify-end space-x-8">
+              {rightNavItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  className={`text-base font-light transition-all duration-300 ${
+                    location.pathname === item.path
+                      ? "text-foreground"
+                      : "text-foreground/80 hover:text-foreground"
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              ))}
               <Button
                 onClick={() => setContactOpen(true)}
                 size="sm"
-                className="ml-4 font-light transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                className="ml-2 font-light"
               >
                 Submit a Deal
               </Button>
@@ -81,7 +99,7 @@ export const Navigation = () => {
             {/* Mobile menu button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden p-2 text-foreground hover:text-foreground/80 transition-colors"
+              className="lg:hidden p-2 text-foreground hover:text-foreground/80 transition-colors ml-auto"
               aria-label="Toggle menu"
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -91,9 +109,9 @@ export const Navigation = () => {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="lg:hidden bg-background/40 backdrop-blur-xl border-t border-white/10">
+          <div className="lg:hidden bg-black/30 backdrop-blur-2xl border-t border-white/5">
             <div className="container mx-auto px-6 py-6 space-y-4">
-              {navigationItems.map((item) =>
+              {[...leftNavItems, ...rightNavItems].map((item) =>
                 item.external ? (
                   <a
                     key={item.name}
