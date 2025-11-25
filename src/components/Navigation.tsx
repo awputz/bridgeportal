@@ -30,10 +30,10 @@ export const Navigation = () => {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled 
-          ? "bg-dark-bg backdrop-blur-md border-border" 
-          : "bg-dark-bg/80 backdrop-blur-sm border-border/50"
+          ? "bg-background/40 backdrop-blur-xl border-b border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]" 
+          : "bg-background/20 backdrop-blur-lg border-b border-white/5"
       }`}>
         <div className="container mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
@@ -91,7 +91,7 @@ export const Navigation = () => {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="lg:hidden bg-dark-bg border-t border-border">
+          <div className="lg:hidden bg-background/40 backdrop-blur-xl border-t border-white/10">
             <div className="container mx-auto px-6 py-6 space-y-4">
               {navigationItems.map((item) =>
                 item.external ? (
