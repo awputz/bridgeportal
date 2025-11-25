@@ -34,8 +34,8 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/track-record" className="text-muted-foreground hover:text-accent transition-colors font-medium">
-                  Track Record
+                <Link to="/transactions" className="text-muted-foreground hover:text-accent transition-colors font-medium">
+                  Transactions
                 </Link>
               </li>
               <li>
@@ -46,11 +46,6 @@ export const Footer = () => {
               <li>
                 <Link to="/team" className="text-muted-foreground hover:text-accent transition-colors font-medium">
                   Team
-                </Link>
-              </li>
-              <li>
-                <Link to="/research" className="text-muted-foreground hover:text-accent transition-colors font-medium">
-                  Research
                 </Link>
               </li>
             </ul>
