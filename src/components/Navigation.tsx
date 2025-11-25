@@ -1,19 +1,25 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import logo from "@/assets/bridge-investment-sales-logo.png";
 import { ContactSheet } from "@/components/ContactSheet";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-const leftNavItems = [
+const companyItems = [
   { name: "Our Process", path: "/approach" },
-  { name: "Services", path: "/services" },
-  { name: "Markets", path: "/markets" },
+  { name: "Team", path: "/team" },
+  { name: "Track Record", path: "/transactions" },
 ];
 
-const rightNavItems = [
-  { name: "Transactions", path: "/transactions" },
-  { name: "Team", path: "/team" },
+const leftNavItems = [
+  { name: "Services", path: "/services" },
+  { name: "Markets", path: "/markets" },
 ];
 
 export const Navigation = () => {
@@ -55,6 +61,25 @@ export const Navigation = () => {
           <div className="hidden lg:grid grid-cols-[1fr_auto_1fr] items-center h-24 px-8 gap-8">
             {/* Left Navigation */}
             <div className="flex items-center justify-start space-x-6">
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-1 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 outline-none">
+                  Company
+                  <ChevronDown className="h-4 w-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-background/95 backdrop-blur-xl border-white/10 z-50">
+                  {companyItems.map((item) => (
+                    <DropdownMenuItem key={item.name} asChild>
+                      <Link
+                        to={item.path}
+                        className="cursor-pointer font-light"
+                      >
+                        {item.name}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              
               {leftNavItems.map((item) => (
                 <Link
                   key={item.name}
@@ -78,20 +103,7 @@ export const Navigation = () => {
             </div>
 
             {/* Right Navigation */}
-            <div className="flex items-center justify-end space-x-6 gap-2">
-              {rightNavItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  className={`text-base font-light transition-all duration-300 whitespace-nowrap ${
-                    location.pathname === item.path
-                      ? "text-foreground"
-                      : "text-foreground/80 hover:text-foreground"
-                  }`}
-                >
-                  {item.name}
-                </Link>
-              ))}
+            <div className="flex items-center justify-end space-x-6">
               <button
                 onClick={() => setContactOpen(true)}
                 className="text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 whitespace-nowrap"
@@ -114,7 +126,7 @@ export const Navigation = () => {
           <div className="lg:hidden fixed inset-0 bg-background/98 backdrop-blur-3xl top-20 md:top-24 z-40">
             <div className="container mx-auto px-6 py-8">
               <div className="space-y-6">
-                {[...leftNavItems, ...rightNavItems].map((item) => (
+                {[...companyItems, ...leftNavItems].map((item) => (
                   <Link
                     key={item.name}
                     to={item.path}
