@@ -66,11 +66,11 @@ const clientResources = [
 
 const Resources = () => {
   return (
-    <div className="min-h-screen pt-40 pb-20">
+    <div className="min-h-screen pt-24 md:pt-32 lg:pt-40 pb-20">
       {/* Header */}
       <section className="px-6 lg:px-8 mb-20">
         <div className="container mx-auto max-w-4xl text-center">
-          <h1 className="mb-6">Resources & Legal</h1>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 tracking-tight">Resources & Legal</h1>
           <p className="text-xl text-muted-foreground">
             Important information, required disclosures, and helpful resources for clients navigating New York City real estate.
           </p>

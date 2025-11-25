@@ -42,11 +42,11 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen pt-32 pb-20">
+    <div className="min-h-screen pt-24 md:pt-32 lg:pt-40 pb-20">
       {/* Header */}
       <section className="px-6 lg:px-8 mb-12">
         <div className="container mx-auto max-w-5xl">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4">Contact</h1>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-4 tracking-tight">Contact</h1>
           <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed">
             Speak with the {COMPANY_INFO.name} team. We respond within one business day.
           </p>

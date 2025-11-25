@@ -47,7 +47,7 @@ LinkedIn/Resume: ${formData.get('resume')}`
     }
   };
   return (
-    <div className="min-h-screen pt-32 md:pt-40 pb-20">
+    <div className="min-h-screen pt-24 md:pt-32 lg:pt-40 pb-20">
       {/* Hero */}
       <section className="px-4 sm:px-6 lg:px-8 mb-12 md:mb-20">
         <div className="container mx-auto max-w-4xl text-center">
