@@ -56,17 +56,17 @@ const SubmitDeal = () => {
   };
 
   return (
-    <div className="min-h-screen pt-32 md:pt-40 px-4 md:px-6 lg:px-8 pb-16 md:pb-20">
+    <div className="min-h-screen pt-28 md:pt-36 lg:pt-44 px-4 md:px-6 lg:px-8 pb-20 md:pb-28 lg:pb-36">
       <div className="container mx-auto max-w-3xl">
-        <div className="mb-12 md:mb-16">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-4 md:mb-6 tracking-tight">Submit a Deal</h1>
-          <p className="text-base md:text-lg lg:text-xl text-muted-foreground font-light leading-relaxed">
+        <div className="mb-16 md:mb-20 lg:mb-24">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 md:mb-8 lg:mb-10 tracking-tight">Submit a Deal</h1>
+          <p className="text-base md:text-lg lg:text-xl text-muted-foreground font-light leading-loose">
             Share your property information for a confidential evaluation
           </p>
         </div>
 
-        <Card className="p-6 md:p-8 lg:p-10 border border-border bg-white/[0.02]">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <Card className="p-8 md:p-10 lg:p-12 border border-border bg-white/[0.02]">
+          <form onSubmit={handleSubmit} className="space-y-6 md:space-y-7">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <Label htmlFor="name" className="font-light">Name *</Label>

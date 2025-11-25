@@ -4,20 +4,20 @@ import { Button } from "@/components/ui/button";
 
 const Approach = () => {
   return (
-    <div className="min-h-screen pt-24 md:pt-32 px-4 md:px-6 lg:px-8">
+    <div className="min-h-screen pt-28 md:pt-36 lg:pt-44 pb-20 md:pb-28 lg:pb-36 px-4 md:px-6 lg:px-8">
       <div className="container mx-auto max-w-7xl">
         {/* Header */}
-        <div className="mb-16 md:mb-20 max-w-4xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 tracking-tight">Our Process</h1>
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed font-light mb-6">
+        <div className="mb-20 md:mb-24 lg:mb-28 max-w-4xl">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-8 md:mb-10 lg:mb-12 tracking-tight">Our Process</h1>
+          <p className="text-lg md:text-xl text-muted-foreground leading-loose font-light mb-6">
             Bridge Advisory Group's Investment Sales division offers strategic advisory services for property owners, developers, and investors throughout New York City. Our team combines institutional experience with an entrepreneurial approach to ensure every asset is positioned to maximize value and close efficiently.
           </p>
         </div>
 
         {/* Three Stage Process */}
-        <section className="mb-16 md:mb-24">
-          <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">Our Process</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <section className="mb-24 md:mb-32 lg:mb-40">
+          <h2 className="text-3xl md:text-4xl font-light mb-16 md:mb-20 lg:mb-24 text-center">Our Process</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12 lg:gap-14">
             <div className="p-6 md:p-8 border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
               <div className="flex items-center justify-center w-16 h-16 rounded-full bg-white/5 mb-6">
                 <span className="text-2xl font-light">1</span>
@@ -96,10 +96,10 @@ const Approach = () => {
         </section>
 
         {/* Investment Sales Services */}
-        <section className="mb-16 md:mb-24">
-          <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">Our Services</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-            <div className="p-6 md:p-8 border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
+        <section className="mb-24 md:mb-32 lg:mb-40">
+          <h2 className="text-3xl md:text-4xl font-light mb-16 md:mb-20 lg:mb-24 text-center">Our Services</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12 lg:gap-14">
+            <div className="p-8 md:p-10 lg:p-12 border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
               <h3 className="text-xl md:text-2xl font-light mb-4">Comprehensive Valuation & Underwriting</h3>
               <p className="text-sm md:text-base text-muted-foreground font-light mb-4">
                 We provide detailed financial analysis and valuation reports tailored to each asset.
@@ -124,7 +124,7 @@ const Approach = () => {
               </ul>
             </div>
 
-            <div className="p-6 md:p-8 border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
+            <div className="p-8 md:p-10 lg:p-12 border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
               <h3 className="text-xl md:text-2xl font-light mb-4">Deal Structuring & Execution</h3>
               <p className="text-sm md:text-base text-muted-foreground font-light mb-4">
                 We specialize in complex transactions, crafting deal terms that reflect the asset's potential while aligning with client objectives.
@@ -149,7 +149,7 @@ const Approach = () => {
               </ul>
             </div>
 
-            <div className="p-6 md:p-8 border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
+            <div className="p-8 md:p-10 lg:p-12 border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
               <h3 className="text-xl md:text-2xl font-light mb-4">Targeted Buyer Outreach</h3>
               <p className="text-sm md:text-base text-muted-foreground font-light mb-4">
                 Through a curated network of qualified buyers, we ensure your asset is introduced to the right audience.
@@ -174,7 +174,7 @@ const Approach = () => {
               </ul>
             </div>
 
-            <div className="p-6 md:p-8 border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
+            <div className="p-8 md:p-10 lg:p-12 border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
               <h3 className="text-xl md:text-2xl font-light mb-4">Integrated Capital Advisory</h3>
               <p className="text-sm md:text-base text-muted-foreground font-light mb-4">
                 Leveraging our in-house capital advisory group to align debt and equity placement strategies with the sale process.
@@ -200,7 +200,7 @@ const Approach = () => {
             </div>
           </div>
 
-          <div className="mt-6 md:mt-8 p-6 md:p-8 border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
+          <div className="mt-8 md:mt-10 p-8 md:p-10 lg:p-12 border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
             <h3 className="text-xl md:text-2xl font-light mb-2">Marketing Strategy & Materials</h3>
             <p className="text-xs md:text-sm text-accent font-light mb-3">Powered by Our Fully Integrated In-House Marketing Team</p>
             <p className="text-sm md:text-base text-muted-foreground font-light mb-4">
@@ -228,8 +228,8 @@ const Approach = () => {
         </section>
 
         {/* Owner Journey */}
-        <section className="mb-16 md:mb-24 p-8 md:p-12 rounded-xl bg-white/[0.02]">
-          <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">Owner Journey</h2>
+        <section className="mb-24 md:mb-32 lg:mb-40 p-10 md:p-12 lg:p-14 rounded-xl bg-white/[0.02]">
+          <h2 className="text-3xl md:text-4xl font-light mb-16 md:mb-20 lg:mb-24 text-center">Owner Journey</h2>
           <div className="max-w-4xl mx-auto">
             <div className="relative">
               <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-white/10 hidden md:block" />
@@ -259,8 +259,8 @@ const Approach = () => {
         </section>
 
         {/* Integration with Capital Advisory */}
-        <section className="mb-16 md:mb-24">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
+        <section className="mb-24 md:mb-32 lg:mb-40">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-12 lg:gap-14 items-center">
             <div>
               <TrendingUp className="mb-6 text-accent" size={48} />
               <h2 className="text-3xl md:text-4xl font-light mb-6">Integration with Capital Advisory</h2>

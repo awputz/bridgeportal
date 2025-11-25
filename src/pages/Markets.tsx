@@ -170,20 +170,20 @@ const assetTypes = [
 
 const Markets = () => {
   return (
-    <div className="min-h-screen pt-24 md:pt-32 lg:pt-40 pb-16 md:pb-20 px-4 md:px-6 lg:px-8">
+    <div className="min-h-screen pt-28 md:pt-36 lg:pt-44 pb-20 md:pb-28 lg:pb-36 px-4 md:px-6 lg:px-8">
       <div className="container mx-auto max-w-7xl">
         {/* Header */}
-        <div className="mb-16 md:mb-20 max-w-4xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 tracking-tight">Markets & Asset Types</h1>
+        <div className="mb-20 md:mb-24 lg:mb-28 max-w-4xl">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-8 md:mb-10 lg:mb-12 tracking-tight">Markets & Asset Types</h1>
           <p className="text-lg md:text-xl text-muted-foreground leading-relaxed font-light">
             Comprehensive coverage across NYC boroughs with specialized expertise in middle-market investment properties
           </p>
         </div>
 
         {/* NYC Boroughs Coverage */}
-        <section className="mb-16 md:mb-24">
-          <h2 className="text-3xl md:text-4xl font-light mb-12">NYC Coverage</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+        <section className="mb-24 md:mb-32 lg:mb-40">
+          <h2 className="text-3xl md:text-4xl font-light mb-16 md:mb-20 lg:mb-24">NYC Coverage</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-12 lg:gap-14">
             {boroughs.map((borough, index) => (
               <div 
                 key={index}
@@ -233,9 +233,9 @@ const Markets = () => {
         </section>
 
         {/* Asset Types */}
-        <section className="mb-16 md:mb-24">
-          <h2 className="text-3xl md:text-4xl font-light mb-12">Asset Type Expertise</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+        <section className="mb-24 md:mb-32 lg:mb-40">
+          <h2 className="text-3xl md:text-4xl font-light mb-16 md:mb-20 lg:mb-24">Asset Type Expertise</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-12 lg:gap-14">
             {assetTypes.map((asset, index) => {
               const Icon = asset.icon;
               return (

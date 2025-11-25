@@ -4,8 +4,8 @@ import { COMPANY_INFO } from "@/lib/constants";
 export const Footer = () => {
   return (
     <footer className="bg-dark-bg text-foreground border-t border-border">
-      <div className="container mx-auto px-6 lg:px-8 py-20">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+      <div className="container mx-auto px-6 lg:px-8 py-24 md:py-28 lg:py-32">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-14 lg:gap-16 mb-20 md:mb-24">
           {/* Company Info */}
           <div className="md:col-span-2">
             <div className="text-3xl font-bold mb-6 tracking-tight">

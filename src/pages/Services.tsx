@@ -4,21 +4,21 @@ import { Link } from "react-router-dom";
 
 const Services = () => {
   return (
-    <div className="min-h-screen pt-24 md:pt-32 lg:pt-40 pb-16 md:pb-20 px-4 md:px-6 lg:px-8">
+    <div className="min-h-screen pt-28 md:pt-36 lg:pt-44 pb-20 md:pb-28 lg:pb-36 px-4 md:px-6 lg:px-8">
       <div className="container mx-auto max-w-7xl">
         {/* Header */}
-        <div className="mb-16 md:mb-20 max-w-4xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 tracking-tight">Investment Sales Services</h1>
+        <div className="mb-20 md:mb-24 lg:mb-28 max-w-4xl">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-8 md:mb-10 lg:mb-12 tracking-tight">Investment Sales Services</h1>
           <p className="text-lg md:text-xl text-muted-foreground leading-relaxed font-light">
             Strategic advisory for property owners, developers, and investors throughout NYC
           </p>
         </div>
 
         {/* Services Overview Grid */}
-        <section className="mb-16 md:mb-24">
-          <div className="grid grid-cols-1 gap-8 md:gap-12">
+        <section className="mb-24 md:mb-32 lg:mb-40">
+          <div className="grid grid-cols-1 gap-10 md:gap-12 lg:gap-14">
             {/* Service 1 */}
-            <div className="p-8 md:p-12 border-l-2 border-accent/30 rounded-lg bg-white/[0.02] transition-all duration-400 hover:bg-white/[0.04]">
+            <div className="p-10 md:p-12 lg:p-14 border-l-2 border-accent/30 rounded-lg bg-white/[0.02] transition-all duration-400 hover:bg-white/[0.04]">
               <div className="flex items-start gap-6 mb-6">
                 <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
                   <FileText className="text-accent" size={28} />
@@ -63,7 +63,7 @@ const Services = () => {
             </div>
 
             {/* Service 2 */}
-            <div className="p-8 md:p-12 border-l-2 border-accent/30 rounded-lg bg-white/[0.02] transition-all duration-400 hover:bg-white/[0.04]">
+            <div className="p-10 md:p-12 lg:p-14 border-l-2 border-accent/30 rounded-lg bg-white/[0.02] transition-all duration-400 hover:bg-white/[0.04]">
               <div className="flex items-start gap-6 mb-6">
                 <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
                   <TrendingUp className="text-accent" size={28} />
@@ -108,7 +108,7 @@ const Services = () => {
             </div>
 
             {/* Service 3 */}
-            <div className="p-8 md:p-12 border-l-2 border-accent/30 rounded-lg bg-white/[0.02] transition-all duration-400 hover:bg-white/[0.04]">
+            <div className="p-10 md:p-12 lg:p-14 border-l-2 border-accent/30 rounded-lg bg-white/[0.02] transition-all duration-400 hover:bg-white/[0.04]">
               <div className="flex items-start gap-6 mb-6">
                 <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
                   <Users className="text-accent" size={28} />
@@ -153,7 +153,7 @@ const Services = () => {
             </div>
 
             {/* Service 4 */}
-            <div className="p-8 md:p-12 border-l-2 border-accent/30 rounded-lg bg-white/[0.02] transition-all duration-400 hover:bg-white/[0.04]">
+            <div className="p-10 md:p-12 lg:p-14 border-l-2 border-accent/30 rounded-lg bg-white/[0.02] transition-all duration-400 hover:bg-white/[0.04]">
               <div className="flex items-start gap-6 mb-6">
                 <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
                   <Building2 className="text-accent" size={28} />
@@ -198,7 +198,7 @@ const Services = () => {
             </div>
 
             {/* Service 5 */}
-            <div className="p-8 md:p-12 border-l-2 border-accent/30 rounded-lg bg-white/[0.02] transition-all duration-400 hover:bg-white/[0.04]">
+            <div className="p-10 md:p-12 lg:p-14 border-l-2 border-accent/30 rounded-lg bg-white/[0.02] transition-all duration-400 hover:bg-white/[0.04]">
               <div className="flex items-start gap-6 mb-6">
                 <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
                   <Award className="text-accent" size={28} />

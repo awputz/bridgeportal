@@ -60,7 +60,7 @@ export const Navigation = () => {
           {/* Desktop Layout */}
           <div className="hidden lg:grid grid-cols-[1fr_auto_1fr] items-center h-24 px-8 gap-8">
             {/* Left Navigation */}
-            <div className="flex items-center justify-start space-x-6">
+            <div className="flex items-center justify-start space-x-8">
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center gap-1 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 outline-none">
                   Company
@@ -103,7 +103,7 @@ export const Navigation = () => {
             </div>
 
             {/* Right Navigation */}
-            <div className="flex items-center justify-end space-x-6">
+            <div className="flex items-center justify-end space-x-8">
               <button
                 onClick={() => setContactOpen(true)}
                 className="text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 whitespace-nowrap"
@@ -129,12 +129,12 @@ export const Navigation = () => {
         {isOpen && (
           <div className="lg:hidden fixed inset-0 bg-background/98 backdrop-blur-3xl top-20 md:top-24 z-40">
             <div className="container mx-auto px-6 py-8">
-              <div className="space-y-6">
+              <div className="space-y-8">
                 {[...companyItems, ...leftNavItems].map((item) => (
                   <Link
                     key={item.name}
                     to={item.path}
-                    className="block text-2xl font-light text-foreground/80 hover:text-foreground transition-colors py-4"
+                    className="block text-2xl font-light text-foreground/80 hover:text-foreground transition-colors py-5"
                     onClick={() => setIsOpen(false)}
                   >
                     {item.name}
@@ -145,7 +145,7 @@ export const Navigation = () => {
                     setContactOpen(true);
                     setIsOpen(false);
                   }}
-                  className="block text-2xl font-light text-foreground/80 hover:text-foreground transition-colors py-4 w-full text-left"
+                  className="block text-2xl font-light text-foreground/80 hover:text-foreground transition-colors py-5 w-full text-left"
                 >
                   Contact
                 </button>

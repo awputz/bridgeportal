@@ -22,18 +22,18 @@ const TrackRecord = () => {
   const years = Array.from(new Set(transactions.map(t => t.year).filter(Boolean))).sort((a, b) => b! - a!);
 
   return (
-    <div className="min-h-screen pt-32 md:pt-40 px-4 md:px-6 lg:px-8 pb-16 md:pb-20">
+    <div className="min-h-screen pt-28 md:pt-36 lg:pt-44 px-4 md:px-6 lg:px-8 pb-20 md:pb-28 lg:pb-36">
       <div className="container mx-auto max-w-6xl">
         {/* Header */}
-        <div className="mb-16 md:mb-20 max-w-4xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 tracking-tight">Proven Track Record</h1>
-          <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground leading-relaxed font-light">
+        <div className="mb-20 md:mb-24 lg:mb-28 max-w-4xl">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-8 md:mb-10 lg:mb-12 tracking-tight">Proven Track Record</h1>
+          <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground leading-loose font-light">
             Representative transactions demonstrating our ability to maximize value for middle-market NYC property owners
           </p>
         </div>
 
         {/* Summary Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 lg:gap-12 mb-16 md:mb-20 lg:mb-24">
           <div className="p-6 md:p-8 border-b-2 border-white/10">
             <DollarSign className="mb-4 text-accent" size={36} />
             <div className="text-4xl md:text-5xl font-light mb-2">${(totalVolume / 1000000).toFixed(1)}M</div>
@@ -52,7 +52,7 @@ const TrackRecord = () => {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-10">
+        <div className="flex flex-col sm:flex-row gap-4 mb-12 md:mb-14">
           <Select value={assetType} onValueChange={setAssetType}>
             <SelectTrigger className="w-full sm:w-56 font-light">
               <SelectValue placeholder="Asset Type" />

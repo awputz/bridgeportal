@@ -123,24 +123,24 @@ const Team = () => {
     setDialogOpen(true);
   };
   return (
-    <div className="min-h-screen pt-24 md:pt-32 lg:pt-40 pb-16 md:pb-20 px-4 md:px-6 lg:px-8">
+    <div className="min-h-screen pt-28 md:pt-36 lg:pt-44 pb-20 md:pb-28 lg:pb-36 px-4 md:px-6 lg:px-8">
       <div className="container mx-auto max-w-7xl">
         {/* Header */}
-        <div className="mb-16 md:mb-20 max-w-4xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 tracking-tight">Meet the Team</h1>
+        <div className="mb-20 md:mb-24 lg:mb-28 max-w-4xl">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-8 md:mb-10 lg:mb-12 tracking-tight">Meet the Team</h1>
           <p className="text-lg md:text-xl text-muted-foreground leading-relaxed font-light">
             Senior professionals with deep NYC market expertise and proven investment sales track records
           </p>
         </div>
 
         {/* Leadership Section */}
-        <div className="mb-16 md:mb-20">
-          <div className="flex items-center gap-4 mb-12">
+        <div className="mb-24 md:mb-32 lg:mb-40">
+          <div className="flex items-center gap-4 mb-14 md:mb-16 lg:mb-20">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-light">Leadership</h2>
             <div className="h-px flex-1 bg-border" />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-12">
             {leadership.map((member, index) => (
               <div 
                 key={index} 
@@ -169,13 +169,13 @@ const Team = () => {
         </div>
 
         {/* Investment Sales Team Section */}
-        <div className="mb-16 md:mb-20">
-          <div className="flex items-center gap-4 mb-12">
+        <div className="mb-24 md:mb-32 lg:mb-40">
+          <div className="flex items-center gap-4 mb-14 md:mb-16 lg:mb-20">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-light">Investment Sales Team</h2>
             <div className="h-px flex-1 bg-border" />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-10 lg:gap-12">
             {investmentSalesTeam.map((member, index) => (
               <div 
                 key={index}
@@ -203,8 +203,8 @@ const Team = () => {
         </div>
 
         {/* Collective Credentials */}
-        <section className="mb-16 md:mb-20">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 p-8 md:p-12 rounded-xl bg-white/[0.02]">
+        <section className="mb-24 md:mb-32 lg:mb-40">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-10 lg:gap-12 p-10 md:p-12 lg:p-14 rounded-xl bg-white/[0.02]">
             <div className="text-center">
               <div className="text-3xl md:text-4xl lg:text-5xl font-light mb-2 text-accent">$500M+</div>
               <div className="text-xs md:text-sm text-muted-foreground font-light">Total Career Volume</div>
