@@ -1,14 +1,29 @@
+import { useState } from "react";
 import { CheckCircle2, TrendingUp, Users, Building2 } from "lucide-react";
 import { COMPANY_INFO } from "@/lib/constants";
+import { TeamMemberDialog } from "@/components/TeamMemberDialog";
 
-const leadership = [
+interface TeamMember {
+  name: string;
+  title: string;
+  bio?: string;
+  email: string;
+  phone: string;
+  image: string;
+  instagram?: string;
+  linkedin?: string;
+}
+
+const leadership: TeamMember[] = [
   {
     name: "Alex W. Putzer",
     title: "Co-Founder & Managing Partner",
     bio: "Co-founder who focuses on firm-wide strategy, growth, and capital relationships. Supports investment sales platform design and major client relationships.",
     email: COMPANY_INFO.contact.email,
     phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/alex-putzer.png"
+    image: "/team-photos/alex-putzer.png",
+    instagram: "https://instagram.com/alexputzer",
+    linkedin: "https://linkedin.com/in/alexputzer"
   },
   {
     name: "Joshua S. Malekan",
@@ -16,7 +31,9 @@ const leadership = [
     bio: "Principal and senior lead for investment sales with a focus on New York multifamily, mixed-use, and development assignments.",
     email: COMPANY_INFO.contact.email,
     phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/joshua-malekan.png"
+    image: "/team-photos/joshua-malekan.png",
+    instagram: "https://instagram.com/joshuamalekan",
+    linkedin: "https://linkedin.com/in/joshuamalekan"
   },
   {
     name: "Eric Delafraz",
@@ -24,70 +41,87 @@ const leadership = [
     bio: "Leads day-to-day investment sales operations and execution across New York City with a focus on middle market and private capital transactions.",
     email: COMPANY_INFO.contact.email,
     phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/eric-delafraz.png"
+    image: "/team-photos/eric-delafraz.png",
+    instagram: "https://instagram.com/ericdelafraz",
+    linkedin: "https://linkedin.com/in/ericdelafraz"
   }
 ];
 
-const investmentSalesTeam = [
+const investmentSalesTeam: TeamMember[] = [
   {
     name: "Roy I. Oskar",
     title: "Investment Sales Director",
     email: COMPANY_INFO.contact.email,
     phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/roy-oskar.png"
+    image: "/team-photos/roy-oskar.png",
+    linkedin: "https://linkedin.com/in/royoskar"
   },
   {
     name: "Matt Dowling",
     title: "Senior Investment Sales Associate",
     email: COMPANY_INFO.contact.email,
     phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/matt-dowling.png"
+    image: "/team-photos/matt-dowling.png",
+    linkedin: "https://linkedin.com/in/mattdowling"
   },
   {
     name: "Brandon Khankhanian",
     title: "Investment Sales Associate",
     email: COMPANY_INFO.contact.email,
     phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/brandon-khankhanian.png"
+    image: "/team-photos/brandon-khankhanian.png",
+    linkedin: "https://linkedin.com/in/brandonkhankhanian"
   },
   {
     name: "Emanuel Hakami",
     title: "Investment Sales Associate",
     email: COMPANY_INFO.contact.email,
     phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/emanuel-hakami.png"
+    image: "/team-photos/emanuel-hakami.png",
+    linkedin: "https://linkedin.com/in/emanuelhakami"
   },
   {
     name: "Asher Nazar",
     title: "Investment Sales Associate",
     email: COMPANY_INFO.contact.email,
     phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/asher-nazar.png"
+    image: "/team-photos/asher-nazar.png",
+    linkedin: "https://linkedin.com/in/ashernazar"
   },
   {
     name: "Quinn Hukee",
     title: "Investment Sales Associate",
     email: COMPANY_INFO.contact.email,
     phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/quinn-hukee.png"
+    image: "/team-photos/quinn-hukee.png",
+    linkedin: "https://linkedin.com/in/quinnhukee"
   },
   {
     name: "Noah Kaplan",
     title: "Investment Sales Associate",
     email: COMPANY_INFO.contact.email,
     phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/noah-kaplan.png"
+    image: "/team-photos/noah-kaplan.png",
+    linkedin: "https://linkedin.com/in/noahkaplan"
   },
   {
     name: "Arezu Bedar",
     title: "Coordinator",
     email: COMPANY_INFO.contact.email,
     phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/arezu-bedar.png"
+    image: "/team-photos/arezu-bedar.png",
+    linkedin: "https://linkedin.com/in/arezubedar"
   }
 ];
 
 const Team = () => {
+  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleMemberClick = (member: TeamMember) => {
+    setSelectedMember(member);
+    setDialogOpen(true);
+  };
   return (
     <div className="min-h-screen pt-24 md:pt-32 lg:pt-40 pb-16 md:pb-20 px-4 md:px-6 lg:px-8">
       <div className="container mx-auto max-w-7xl">
@@ -110,7 +144,8 @@ const Team = () => {
             {leadership.map((member, index) => (
               <div 
                 key={index} 
-                className="group overflow-hidden rounded-lg transition-all duration-400 hover:transform hover:-translate-y-1"
+                onClick={() => handleMemberClick(member)}
+                className="group overflow-hidden rounded-lg transition-all duration-400 hover:transform hover:-translate-y-1 cursor-pointer active:scale-[0.98]"
               >
                 <div className="aspect-square bg-muted/20 relative overflow-hidden">
                   <img 
@@ -143,8 +178,9 @@ const Team = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
             {investmentSalesTeam.map((member, index) => (
               <div 
-                key={index} 
-                className="group overflow-hidden rounded-lg transition-all duration-400 hover:transform hover:-translate-y-1"
+                key={index}
+                onClick={() => handleMemberClick(member)}
+                className="group overflow-hidden rounded-lg transition-all duration-400 hover:transform hover:-translate-y-1 cursor-pointer active:scale-[0.98]"
               >
                 <div className="aspect-square bg-muted/20 relative overflow-hidden">
                   <img 
@@ -238,6 +274,12 @@ const Team = () => {
           </div>
         </section>
       </div>
+
+      <TeamMemberDialog 
+        member={selectedMember}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+      />
     </div>
   );
 };
