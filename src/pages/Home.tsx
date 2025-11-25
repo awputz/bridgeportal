@@ -105,29 +105,85 @@ export default function Home() {
       {/* Services Section */}
       <section className="py-16 md:py-24 lg:py-32 border-b border-white/5">
         <div className="container mx-auto px-4 md:px-6">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl text-center mb-12 md:mb-16 font-light">Services</h2>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl text-center mb-6 font-light">Our Services</h2>
+          <p className="text-base md:text-lg text-muted-foreground font-light text-center mb-12 md:mb-16 max-w-3xl mx-auto">
+            Strategic advisory services for property owners, developers, and investors throughout NYC
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
-            <div className="group p-6 md:p-8 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
-              <Building2 className="h-8 w-8 md:h-10 md:w-10 text-accent mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-400" />
-              <h3 className="text-lg md:text-xl font-light mb-2 md:mb-3">Building Sales</h3>
+            <div className="group p-6 md:p-8 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1 border-l-2 border-accent/30">
+              <CheckCircle2 className="h-8 w-8 md:h-10 md:w-10 text-accent mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-400" />
+              <h3 className="text-lg md:text-xl font-light mb-2 md:mb-3">Comprehensive Underwriting</h3>
               <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed">
-                Complete transaction management for multifamily and mixed-use properties
+                Detailed valuation and financial analysis with market comps, rent roll assessments, and projected returns
               </p>
             </div>
 
-            <div className="group p-6 md:p-8 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
+            <div className="group p-6 md:p-8 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1 border-l-2 border-accent/30">
               <TrendingUp className="h-8 w-8 md:h-10 md:w-10 text-accent mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-400" />
-              <h3 className="text-lg md:text-xl font-light mb-2 md:mb-3">Advisory</h3>
+              <h3 className="text-lg md:text-xl font-light mb-2 md:mb-3">Complex Deal Structures</h3>
               <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed">
-                Strategic guidance on market positioning and transaction structuring
+                Expertise in 1031 exchanges, off-market assignments, note sales, and value-add opportunities
               </p>
             </div>
 
-            <div className="group p-6 md:p-8 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
-              <Award className="h-8 w-8 md:h-10 md:w-10 text-accent mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-400" />
-              <h3 className="text-lg md:text-xl font-light mb-2 md:mb-3">Valuation</h3>
+            <div className="group p-6 md:p-8 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1 border-l-2 border-accent/30">
+              <Users className="h-8 w-8 md:h-10 md:w-10 text-accent mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-400" />
+              <h3 className="text-lg md:text-xl font-light mb-2 md:mb-3">Curated Buyer Network</h3>
               <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed">
-                Comprehensive market analysis and property valuation services
+                Access to institutional capital and high-net-worth individuals with active acquisition mandates
+              </p>
+            </div>
+
+            <div className="group p-6 md:p-8 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1 border-l-2 border-accent/30">
+              <Building2 className="h-8 w-8 md:h-10 md:w-10 text-accent mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-400" />
+              <h3 className="text-lg md:text-xl font-light mb-2 md:mb-3">Integrated Capital Advisory</h3>
+              <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed">
+                In-house debt and equity coordination to support optimal pricing and smooth closings
+              </p>
+            </div>
+
+            <div className="group p-6 md:p-8 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1 border-l-2 border-accent/30 md:col-span-2 lg:col-span-1">
+              <Award className="h-8 w-8 md:h-10 md:w-10 text-accent mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-400" />
+              <h3 className="text-lg md:text-xl font-light mb-2 md:mb-3">Custom Marketing</h3>
+              <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed">
+                Professional materials and digital visibility across major platforms with direct buyer engagement
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Bridge Advisory Group */}
+      <section className="py-16 md:py-24 lg:py-32 border-b border-white/5 bg-white/[0.01]">
+        <div className="container mx-auto px-4 md:px-6">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl text-center mb-12 md:mb-16 font-light">Why Bridge Advisory Group</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-6xl mx-auto">
+            <div className="text-center p-6 rounded-lg hover:bg-white/[0.02] transition-all">
+              <div className="text-4xl md:text-5xl font-light mb-4 text-accent">01</div>
+              <h3 className="text-lg md:text-xl font-light mb-3">Data-Driven Approach</h3>
+              <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed">
+                Institutional rigor combined with entrepreneurial execution
+              </p>
+            </div>
+            <div className="text-center p-6 rounded-lg hover:bg-white/[0.02] transition-all">
+              <div className="text-4xl md:text-5xl font-light mb-4 text-accent">02</div>
+              <h3 className="text-lg md:text-xl font-light mb-3">Speed to Close</h3>
+              <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed">
+                Efficient process management from listing through closing
+              </p>
+            </div>
+            <div className="text-center p-6 rounded-lg hover:bg-white/[0.02] transition-all">
+              <div className="text-4xl md:text-5xl font-light mb-4 text-accent">03</div>
+              <h3 className="text-lg md:text-xl font-light mb-3">Middle Market Specialists</h3>
+              <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed">
+                $2M–$50M sweet spot where relationships and process deliver results
+              </p>
+            </div>
+            <div className="text-center p-6 rounded-lg hover:bg-white/[0.02] transition-all">
+              <div className="text-4xl md:text-5xl font-light mb-4 text-accent">04</div>
+              <h3 className="text-lg md:text-xl font-light mb-3">Full-Service Platform</h3>
+              <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed">
+                Sales, capital advisory, and market intelligence under one roof
               </p>
             </div>
           </div>
