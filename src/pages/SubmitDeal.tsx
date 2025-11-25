@@ -56,55 +56,58 @@ const SubmitDeal = () => {
   };
 
   return (
-    <div className="min-h-screen pt-32 px-6 lg:px-8 pb-20">
+    <div className="min-h-screen pt-32 md:pt-40 px-4 md:px-6 lg:px-8 pb-16 md:pb-20">
       <div className="container mx-auto max-w-3xl">
-        <div className="mb-12">
-          <h1 className="text-5xl font-bold mb-4">Submit a Deal</h1>
-          <p className="text-lg text-muted-foreground">
+        <div className="mb-12 md:mb-16">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-4 md:mb-6 tracking-tight">Submit a Deal</h1>
+          <p className="text-base md:text-lg lg:text-xl text-muted-foreground font-light leading-relaxed">
             Share your property information for a confidential evaluation
           </p>
         </div>
 
-        <Card className="p-8 border border-border">
+        <Card className="p-6 md:p-8 lg:p-10 border border-border bg-white/[0.02]">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="name">Name *</Label>
+                <Label htmlFor="name" className="font-light">Name *</Label>
                 <Input 
                   id="name" 
                   required 
                   value={formData.name} 
-                  onChange={(e) => setFormData({...formData, name: e.target.value})} 
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  className="h-12 font-light"
                 />
               </div>
               <div>
-                <Label htmlFor="email">Email *</Label>
+                <Label htmlFor="email" className="font-light">Email *</Label>
                 <Input 
                   id="email" 
                   type="email" 
                   required 
                   value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})} 
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  className="h-12 font-light"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="phone">Phone</Label>
+                <Label htmlFor="phone" className="font-light">Phone</Label>
                 <Input 
                   id="phone" 
                   value={formData.phone}
-                  onChange={(e) => setFormData({...formData, phone: e.target.value})} 
+                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  className="h-12 font-light"
                 />
               </div>
               <div>
-                <Label htmlFor="asset_type">Asset Type *</Label>
+                <Label htmlFor="asset_type" className="font-light">Asset Type *</Label>
                 <Select 
                   value={formData.asset_type} 
                   onValueChange={(value) => setFormData({...formData, asset_type: value})}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="h-12 font-light">
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -120,55 +123,60 @@ const SubmitDeal = () => {
             </div>
 
             <div>
-              <Label htmlFor="property_address">Property Address *</Label>
+              <Label htmlFor="property_address" className="font-light">Property Address *</Label>
               <Input 
                 id="property_address" 
                 required 
                 value={formData.property_address}
-                onChange={(e) => setFormData({...formData, property_address: e.target.value})} 
+                onChange={(e) => setFormData({...formData, property_address: e.target.value})}
+                className="h-12 font-light"
               />
             </div>
 
             <div>
-              <Label htmlFor="approximate_size">Units and Approximate Size</Label>
+              <Label htmlFor="approximate_size" className="font-light">Units and Approximate Size</Label>
               <Input 
                 id="approximate_size" 
                 placeholder="e.g., 20 units, 15,000 SF" 
                 value={formData.approximate_size}
-                onChange={(e) => setFormData({...formData, approximate_size: e.target.value})} 
+                onChange={(e) => setFormData({...formData, approximate_size: e.target.value})}
+                className="h-12 font-light"
               />
             </div>
 
             <div>
-              <Label htmlFor="current_situation">Current Situation</Label>
+              <Label htmlFor="current_situation" className="font-light">Current Situation</Label>
               <Textarea 
                 id="current_situation" 
                 placeholder="e.g., Refinance test, partnership change, full sale"
                 value={formData.current_situation}
-                onChange={(e) => setFormData({...formData, current_situation: e.target.value})} 
+                onChange={(e) => setFormData({...formData, current_situation: e.target.value})}
+                className="font-light"
               />
             </div>
 
             <div>
-              <Label htmlFor="timing">Desired Timing</Label>
+              <Label htmlFor="timing" className="font-light">Desired Timing</Label>
               <Input 
                 id="timing" 
                 placeholder="e.g., 3-6 months" 
                 value={formData.timing}
-                onChange={(e) => setFormData({...formData, timing: e.target.value})} 
+                onChange={(e) => setFormData({...formData, timing: e.target.value})}
+                className="h-12 font-light"
               />
             </div>
 
             <div>
-              <Label htmlFor="notes">Additional Notes</Label>
+              <Label htmlFor="notes" className="font-light">Additional Notes</Label>
               <Textarea 
                 id="notes" 
                 value={formData.notes}
-                onChange={(e) => setFormData({...formData, notes: e.target.value})} 
+                onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                className="font-light"
               />
             </div>
 
-            <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
+            <Button type="submit" size="lg" className="w-full font-light" disabled={isSubmitting}>
               {isSubmitting ? "Submitting..." : "Submit Deal"}
             </Button>
           </form>
