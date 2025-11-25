@@ -1,4 +1,4 @@
-import { Home, FileText, Building2, Calendar, Users, LogOut } from "lucide-react";
+import { Users, DollarSign, LogOut } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,11 +16,8 @@ import {
 import { toast } from "@/hooks/use-toast";
 
 const menuItems = [
-  { title: "Dashboard", url: "/admin", icon: Home },
-  { title: "Inquiries", url: "/admin/inquiries", icon: FileText },
-  { title: "Properties", url: "/admin/properties", icon: Building2 },
-  { title: "Tour Requests", url: "/admin/tours", icon: Calendar },
   { title: "Team", url: "/admin/team", icon: Users },
+  { title: "Closed Deals", url: "/admin/transactions", icon: DollarSign },
 ];
 
 export function AdminSidebar() {

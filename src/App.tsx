@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
@@ -19,11 +19,8 @@ import Markets from "./pages/Markets";
 import SubmitDeal from "./pages/SubmitDeal";
 import Team from "./pages/Team";
 import Auth from "./pages/Auth";
-import { AdminDashboard as Dashboard } from "./pages/admin/Dashboard";
-import { AdminInquiries as Inquiries } from "./pages/admin/Inquiries";
-import { AdminProperties as Properties } from "./pages/admin/Properties";
-import { AdminTours as Tours } from "./pages/admin/Tours";
 import TeamAdmin from "./pages/admin/TeamAdmin";
+import TransactionsAdmin from "./pages/admin/TransactionsAdmin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -43,13 +40,11 @@ const App = () => {
           <Route path="/auth" element={<Auth />} />
           
           {/* Admin Routes */}
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="inquiries" element={<Inquiries />} />
-            <Route path="properties" element={<Properties />} />
-            <Route path="tours" element={<Tours />} />
-            <Route path="team" element={<TeamAdmin />} />
-          </Route>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<Navigate to="/admin/team" replace />} />
+              <Route path="team" element={<TeamAdmin />} />
+              <Route path="transactions" element={<TransactionsAdmin />} />
+            </Route>
 
           {/* Public Routes */}
           <Route path="*" element={
