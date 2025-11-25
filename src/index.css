@@ -91,24 +91,27 @@ All colors MUST be HSL.
   }
   
   h1 {
-    @apply text-4xl md:text-5xl lg:text-6xl;
-    font-weight: 400;
-    line-height: 1.2;
+    @apply text-4xl md:text-5xl lg:text-6xl xl:text-7xl;
+    font-weight: 200;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
   }
   
   h2 {
     @apply text-3xl md:text-4xl lg:text-5xl;
-    font-weight: 400;
-    line-height: 1.3;
+    font-weight: 200;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
   }
   
   h3 {
-    @apply text-2xl md:text-3xl;
-    font-weight: 400;
+    @apply text-xl md:text-2xl lg:text-3xl;
+    font-weight: 300;
   }
   
   p {
-    line-height: 1.6;
+    line-height: 1.8;
+    font-weight: 300;
   }
 }
 
@@ -157,8 +160,20 @@ All colors MUST be HSL.
     @apply bg-white/5 backdrop-blur-lg border border-white/10;
   }
   
-  .glass-hover {
-    @apply transition-all duration-300 hover:bg-white/5 hover:backdrop-blur-xl;
+  .glass-subtle {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  /* Apple-style hover */
+  .apple-hover {
+    @apply transition-all duration-400;
+  }
+  
+  .apple-hover:hover {
+    background: rgba(255, 255, 255, 0.03);
+    transform: translateY(-2px);
   }
   
   /* Smooth transitions for all elements */

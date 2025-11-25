@@ -15,8 +15,8 @@ export const COMPANY_INFO = {
     phone: "(212) 555-0100"
   },
   description: {
-    full: "BRIDGE Investment Sales is the dedicated building and portfolio sales group within Bridge Advisory Group. The team focuses on institutional-quality execution for middle market owners and investors across multifamily, mixed-use, and development assets in New York City.",
-    short: "BRIDGE Investment Sales focuses on institutional-quality execution for middle market owners and investors across multifamily, mixed-use, and development assets in New York City.",
-    home: "Focused investment sales platform inside Bridge Advisory Group. The team combines aggressive marketing, disciplined underwriting, and capital markets access to run full sale and recapitalization processes."
+    full: "Institutional-quality execution for middle market owners and investors. Specialized in multifamily, mixed-use, and development assets across New York City.",
+    short: "NYC investment sales platform focused on multifamily, mixed-use, and development properties.",
+    home: "Institutional execution for middle market multifamily and mixed-use properties"
   }
 };

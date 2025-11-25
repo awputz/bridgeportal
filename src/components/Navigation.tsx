@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 
 const leftNavItems = [
   { name: "Approach", path: "/approach", external: false },
-  { name: "Listings", path: "https://crexi.com", external: true },
   { name: "Transactions", path: "/transactions", external: false },
 ];
 
@@ -19,60 +18,66 @@ const rightNavItems = [
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isOpen]);
 
   return (
     <>
-      <nav className="fixed top-6 left-0 right-0 z-50 px-6">
-        <div className="max-w-7xl mx-auto bg-black/30 backdrop-blur-2xl border border-white/10 rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.6)]">
-          <div className="grid grid-cols-3 items-center h-20 px-8">
+      <nav className="fixed top-4 md:top-6 left-0 right-0 z-50 px-4 md:px-6">
+        <div className="max-w-6xl mx-auto bg-black/40 backdrop-blur-3xl border border-white/10 rounded-lg md:rounded-xl shadow-[0_16px_48px_0_rgba(0,0,0,0.75)]">
+          {/* Mobile & Tablet Layout */}
+          <div className="flex lg:hidden items-center justify-between h-16 md:h-20 px-4 md:px-6">
+            <div className="w-10" />
+            <Link to="/" className="flex items-center">
+              <img src={logo} alt="BRIDGE Investment Sales" className="h-10 md:h-12 w-auto" />
+            </Link>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 text-foreground hover:text-foreground/80 transition-colors"
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+
+          {/* Desktop Layout */}
+          <div className="hidden lg:grid grid-cols-3 items-center h-24 px-10">
             {/* Left Navigation */}
-            <div className="hidden lg:flex items-center space-x-8">
-              {leftNavItems.map((item) =>
-                item.external ? (
-                  <a
-                    key={item.name}
-                    href={item.path}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300"
-                  >
-                    {item.name}
-                  </a>
-                ) : (
-                  <Link
-                    key={item.name}
-                    to={item.path}
-                    className={`text-base font-light transition-all duration-300 ${
-                      location.pathname === item.path
-                        ? "text-foreground"
-                        : "text-foreground/80 hover:text-foreground"
-                    }`}
-                  >
-                    {item.name}
-                  </Link>
-                )
-              )}
+            <div className="flex items-center space-x-10">
+              {leftNavItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  className={`text-base font-light transition-all duration-300 ${
+                    location.pathname === item.path
+                      ? "text-foreground"
+                      : "text-foreground/80 hover:text-foreground"
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              ))}
             </div>
 
             {/* Center Logo */}
             <div className="flex justify-center">
               <Link to="/" className="flex items-center">
-                <img src={logo} alt="BRIDGE Investment Sales" className="h-12 w-auto" />
+                <img src={logo} alt="BRIDGE Investment Sales" className="h-16 w-auto" />
               </Link>
             </div>
 
             {/* Right Navigation */}
-            <div className="hidden lg:flex items-center justify-end space-x-8">
+            <div className="flex items-center justify-end space-x-10">
               {rightNavItems.map((item) => (
                 <Link
                   key={item.name}
@@ -94,54 +99,35 @@ export const Navigation = () => {
                 Submit a Deal
               </Button>
             </div>
-
-            {/* Mobile menu button */}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden p-2 text-foreground hover:text-foreground/80 transition-colors ml-auto"
-              aria-label="Toggle menu"
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Full-Screen Menu */}
         {isOpen && (
-          <div className="lg:hidden mt-4 mx-6">
-            <div className="bg-black/30 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.6)] px-6 py-6 space-y-4">
-              {[...leftNavItems, ...rightNavItems].map((item) =>
-                item.external ? (
-                  <a
-                    key={item.name}
-                    href={item.path}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block py-2 text-base font-light text-foreground/80 hover:text-foreground transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {item.name}
-                  </a>
-                ) : (
+          <div className="lg:hidden fixed inset-0 bg-background/98 backdrop-blur-3xl top-20 md:top-24 z-40">
+            <div className="container mx-auto px-6 py-8">
+              <div className="space-y-6">
+                {[...leftNavItems, ...rightNavItems].map((item) => (
                   <Link
                     key={item.name}
                     to={item.path}
-                    className="block py-2 text-base font-light text-foreground/80 hover:text-foreground transition-colors"
+                    className="block text-2xl font-light text-foreground/80 hover:text-foreground transition-colors py-4"
                     onClick={() => setIsOpen(false)}
                   >
                     {item.name}
                   </Link>
-                )
-              )}
-              <Button
-                onClick={() => {
-                  setContactOpen(true);
-                  setIsOpen(false);
-                }}
-                className="w-full font-light"
-              >
-                Submit a Deal
-              </Button>
+                ))}
+                <Button
+                  onClick={() => {
+                    setContactOpen(true);
+                    setIsOpen(false);
+                  }}
+                  className="w-full mt-8 font-light"
+                  size="lg"
+                >
+                  Submit a Deal
+                </Button>
+              </div>
             </div>
           </div>
         )}
