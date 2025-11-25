@@ -15,7 +15,6 @@ import TrackRecord from "./pages/TrackRecord";
 import Approach from "./pages/Approach";
 import SubmitDeal from "./pages/SubmitDeal";
 import Team from "./pages/Team";
-import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,7 +41,6 @@ const App = () => {
                   <Route path="/approach" element={<Approach />} />
                   <Route path="/submit-deal" element={<SubmitDeal />} />
                   <Route path="/team" element={<Team />} />
-                  <Route path="/contact" element={<Contact />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </PageTransition>

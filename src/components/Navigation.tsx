@@ -6,13 +6,12 @@ import { ContactSheet } from "@/components/ContactSheet";
 import { Button } from "@/components/ui/button";
 
 const leftNavItems = [
-  { name: "Approach", path: "/approach", external: false },
-  { name: "Transactions", path: "/transactions", external: false },
+  { name: "Approach", path: "/approach" },
+  { name: "Transactions", path: "/transactions" },
 ];
 
 const rightNavItems = [
-  { name: "Team", path: "/team", external: false },
-  { name: "Contact", path: "/contact", external: false },
+  { name: "Team", path: "/team" },
 ];
 
 export const Navigation = () => {
@@ -91,6 +90,12 @@ export const Navigation = () => {
                   {item.name}
                 </Link>
               ))}
+              <button
+                onClick={() => setContactOpen(true)}
+                className="text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300"
+              >
+                Contact
+              </button>
               <Button
                 onClick={() => setContactOpen(true)}
                 size="sm"
@@ -117,6 +122,15 @@ export const Navigation = () => {
                     {item.name}
                   </Link>
                 ))}
+                <button
+                  onClick={() => {
+                    setContactOpen(true);
+                    setIsOpen(false);
+                  }}
+                  className="block text-2xl font-light text-foreground/80 hover:text-foreground transition-colors py-4 w-full text-left"
+                >
+                  Contact
+                </button>
                 <Button
                   onClick={() => {
                     setContactOpen(true);
