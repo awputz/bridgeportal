@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card";
 import { CheckCircle2, TrendingUp, Users } from "lucide-react";
 
 const Approach = () => {
@@ -17,8 +16,8 @@ const Approach = () => {
         <section className="mb-24">
           <h2 className="text-4xl font-bold mb-12 text-center">Our Process</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="p-8 border border-border hover-lift">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 mb-6">
+            <div className="p-8 border-l-2 border-accent/30 rounded-lg transition-all hover:bg-white/3 backdrop-blur-sm">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-white/5 mb-6">
                 <span className="text-2xl font-bold">1</span>
               </div>
               <h3 className="text-2xl font-semibold mb-4">Preparation and Underwriting</h3>
@@ -40,10 +39,10 @@ const Approach = () => {
                   <span>Marketing materials and offering memorandum</span>
                 </li>
               </ul>
-            </Card>
+            </div>
 
-            <Card className="p-8 border border-border hover-lift">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 mb-6">
+            <div className="p-8 border-l-2 border-accent/30 rounded-lg transition-all hover:bg-white/3 backdrop-blur-sm">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-white/5 mb-6">
                 <span className="text-2xl font-bold">2</span>
               </div>
               <h3 className="text-2xl font-semibold mb-4">Market Coverage and Outreach</h3>
@@ -65,10 +64,10 @@ const Approach = () => {
                   <span>Continuous market feedback and positioning</span>
                 </li>
               </ul>
-            </Card>
+            </div>
 
-            <Card className="p-8 border border-border hover-lift">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 mb-6">
+            <div className="p-8 border-l-2 border-accent/30 rounded-lg transition-all hover:bg-white/3 backdrop-blur-sm">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-white/5 mb-6">
                 <span className="text-2xl font-bold">3</span>
               </div>
               <h3 className="text-2xl font-semibold mb-4">Bidding, Selection, and Execution</h3>
@@ -90,17 +89,17 @@ const Approach = () => {
                   <span>Closing management through completion</span>
                 </li>
               </ul>
-            </Card>
+            </div>
           </div>
         </section>
 
         {/* Owner Journey */}
-        <section className="mb-24 bg-card border border-border rounded-2xl p-12">
+        <section className="mb-24 backdrop-blur-sm rounded-2xl p-12">
           <h2 className="text-4xl font-bold mb-12 text-center">Owner Journey</h2>
           <div className="max-w-4xl mx-auto">
             <div className="relative">
               {/* Timeline Line */}
-              <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-border" />
+              <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-white/10" />
               
               {/* Steps */}
               <div className="space-y-12">
@@ -165,7 +164,7 @@ const Approach = () => {
               </p>
             </div>
             
-            <div className="space-y-6">
+              <div className="space-y-6">
               {[
                 {
                   title: "Debt and Equity Coordination",
@@ -184,17 +183,17 @@ const Approach = () => {
                   description: "Direct access to debt providers for bridge, permanent, and construction financing"
                 }
               ].map((item, index) => (
-                <Card key={index} className="p-6 border border-border">
+                <div key={index} className="p-6 border-l-2 border-accent/30 rounded-lg backdrop-blur-sm hover:bg-white/3 transition-all">
                   <h3 className="font-semibold mb-2">{item.title}</h3>
                   <p className="text-sm text-muted-foreground">{item.description}</p>
-                </Card>
+                </div>
               ))}
             </div>
           </div>
         </section>
 
         {/* What Sets Us Apart */}
-        <section className="bg-muted/30 border border-border rounded-2xl p-12">
+        <section className="backdrop-blur-sm rounded-2xl p-12">
           <h2 className="text-4xl font-bold mb-12 text-center">What Sets Us Apart</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[

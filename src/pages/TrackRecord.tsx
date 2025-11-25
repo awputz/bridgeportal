@@ -35,21 +35,21 @@ const TrackRecord = () => {
 
         {/* Summary Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          <Card className="p-8 border border-border hover:shadow-lg transition-shadow bg-card/50">
+          <div className="p-8 border-b-2 border-white/10">
             <DollarSign className="mb-4 text-accent" size={40} />
             <div className="text-5xl font-bold mb-2">${(totalVolume / 1000000).toFixed(1)}M</div>
             <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">Total Volume</p>
-          </Card>
-          <Card className="p-8 border border-border hover:shadow-lg transition-shadow bg-card/50">
+          </div>
+          <div className="p-8 border-b-2 border-white/10">
             <Building2 className="mb-4 text-accent" size={40} />
             <div className="text-5xl font-bold mb-2">{buildingsSold}</div>
             <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">Buildings Sold</p>
-          </Card>
-          <Card className="p-8 border border-border hover:shadow-lg transition-shadow bg-card/50">
+          </div>
+          <div className="p-8 border-b-2 border-white/10">
             <Building2 className="mb-4 text-accent" size={40} />
             <div className="text-5xl font-bold mb-2">{totalUnits.toLocaleString()}</div>
             <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">Units Sold</p>
-          </Card>
+          </div>
         </div>
 
         {/* Filters */}
@@ -88,9 +88,9 @@ const TrackRecord = () => {
             <p className="text-sm text-muted-foreground">Loading transactions</p>
           </div>
         ) : filteredTransactions.length > 0 ? (
-          <div className="space-y-4">
+          <div className="space-y-2">
             {filteredTransactions.map((transaction) => (
-              <Card key={transaction.id} className="p-6 border border-border hover:shadow-md transition-shadow">
+              <div key={transaction.id} className="p-6 rounded-lg transition-all hover:bg-white/3 border-l-2 border-transparent hover:border-accent/30">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
                     <h3 className="text-lg font-semibold mb-1">{transaction.property_address}</h3>
@@ -126,7 +126,7 @@ const TrackRecord = () => {
                     )}
                   </div>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         ) : (

@@ -1,7 +1,4 @@
-import { useState } from "react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import ContactPanel from "@/components/ContactPanel";
 import { COMPANY_INFO } from "@/lib/constants";
 import { CheckCircle2 } from "lucide-react";
 
@@ -33,8 +30,6 @@ const leadership = [
 ];
 
 const Team = () => {
-  const [selectedMember, setSelectedMember] = useState<typeof leadership[0] | null>(null);
-
   return (
     <div className="min-h-screen pt-32 pb-20 px-6 lg:px-8">
       <div className="container mx-auto max-w-7xl">
@@ -55,10 +50,9 @@ const Team = () => {
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {leadership.map((member, index) => (
-              <Card 
+              <div 
                 key={index} 
-                className="group overflow-hidden border border-border hover:shadow-2xl transition-all duration-300 cursor-pointer"
-                onClick={() => setSelectedMember(member)}
+                className="group overflow-hidden rounded-lg transition-all hover:bg-white/3 border-l-2 border-transparent hover:border-accent/30"
               >
                 <div className="aspect-square bg-muted/20 relative overflow-hidden">
                   <img 
@@ -76,20 +70,14 @@ const Team = () => {
                   <h3 className="text-xl font-bold mb-2">{member.name}</h3>
                   <p className="text-sm text-accent font-semibold mb-4">{member.title}</p>
                   <p className="text-sm text-muted-foreground leading-relaxed">{member.bio}</p>
-                  
-                  <div className="mt-6 pt-6 border-t border-border flex gap-3">
-                    <Button size="sm" variant="outline" className="flex-1">
-                      View Profile
-                    </Button>
-                  </div>
                 </div>
-              </Card>
+              </div>
             ))}
           </div>
         </div>
 
         {/* Expertise Section */}
-        <section className="bg-card/30 border border-border rounded-2xl p-12 mb-20">
+        <section className="backdrop-blur-sm rounded-2xl p-12 mb-20">
           <h2 className="text-3xl font-bold mb-12 text-center">Team Expertise</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {[
@@ -117,19 +105,6 @@ const Team = () => {
           </div>
         </section>
       </div>
-
-      {/* Contact Panel */}
-      {selectedMember && (
-        <ContactPanel
-          isOpen={!!selectedMember}
-          onClose={() => setSelectedMember(null)}
-          name={selectedMember.name}
-          title={selectedMember.title}
-          description={selectedMember.bio}
-          email={selectedMember.email}
-          phone={selectedMember.phone}
-        />
-      )}
     </div>
   );
 };

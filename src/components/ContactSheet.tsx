@@ -23,10 +23,10 @@ export const ContactSheet = ({ open, onOpenChange }: ContactSheetProps) => {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full sm:max-w-[540px] overflow-y-auto">
+      <SheetContent side="right" className="w-full sm:max-w-[540px] overflow-y-auto bg-background/95 backdrop-blur-3xl border-l border-white/10">
         <SheetHeader className="mb-8">
-          <SheetTitle className="text-2xl">Contact</SheetTitle>
-          <SheetDescription>
+          <SheetTitle className="text-2xl font-light">Connect with BRIDGE</SheetTitle>
+          <SheetDescription className="font-light">
             Get in touch with our team. We respond to all inquiries within one business day.
           </SheetDescription>
         </SheetHeader>

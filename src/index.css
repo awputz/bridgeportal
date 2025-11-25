@@ -151,4 +151,18 @@ All colors MUST be HSL.
     opacity: 0;
     animation: fadeIn 0.4s ease forwards;
   }
+  
+  /* Glass Morphism Utilities */
+  .glass-panel {
+    @apply bg-white/5 backdrop-blur-lg border border-white/10;
+  }
+  
+  .glass-hover {
+    @apply transition-all duration-300 hover:bg-white/5 hover:backdrop-blur-xl;
+  }
+  
+  /* Smooth transitions for all elements */
+  * {
+    @apply transition-colors duration-300;
+  }
 }
