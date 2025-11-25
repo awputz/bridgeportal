@@ -5,7 +5,7 @@ import { useInvestmentOfferings } from "@/hooks/useInvestmentOfferings";
 import { useTransactions } from "@/hooks/useTransactions";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import logo from "@/assets/bridge-investment-sales-logo.png";
-import heroImage from "@/assets/brooklyn-bridge-hero.jpg";
+import heroImage from "@/assets/brooklyn-bridge-hero-light.jpg";
 export default function Home() {
   const {
     data: offerings = []
@@ -37,13 +37,16 @@ export default function Home() {
           <img 
             src={logo} 
             alt="Bridge Investment Sales" 
-            className="mx-auto mb-8 md:mb-12 h-28 md:h-36 lg:h-44 w-auto"
+            className="mx-auto mb-8 md:mb-12 h-28 md:h-36 lg:h-44 w-auto animate-fade-in"
+            style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}
           />
           
-          <p className="text-base md:text-xl lg:text-2xl xl:text-3xl text-foreground/70 mb-8 md:mb-12 lg:mb-16 max-w-xs md:max-w-2xl lg:max-w-3xl mx-auto font-light px-4">
+          <p className="text-base md:text-xl lg:text-2xl xl:text-3xl text-foreground/70 mb-8 md:mb-12 lg:mb-16 max-w-xs md:max-w-2xl lg:max-w-3xl mx-auto font-light px-4 animate-fade-in"
+             style={{ animationDelay: '400ms', animationFillMode: 'backwards' }}>
             Institutional execution for middle market multifamily and mixed-use properties
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center px-4">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center px-4 animate-fade-in"
+               style={{ animationDelay: '600ms', animationFillMode: 'backwards' }}>
             <Button asChild size="lg" className="font-light px-8 md:px-12 w-full sm:w-auto">
               <Link to="/submit-deal">Submit a Deal</Link>
             </Button>
@@ -51,7 +54,7 @@ export default function Home() {
         </div>
         
         {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-fade-in" style={{ animationDelay: '1s' }}>
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-fade-in" style={{ animationDelay: '800ms', animationFillMode: 'backwards' }}>
           <div className="flex flex-col items-center gap-2 text-white/60 hover:text-white/90 transition-colors cursor-pointer">
             <span className="text-sm tracking-wider uppercase font-light">Scroll to Explore</span>
             <ChevronDown className="h-6 w-6 animate-bounce-gentle" />
