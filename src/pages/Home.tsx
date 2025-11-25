@@ -4,18 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useInvestmentOfferings } from "@/hooks/useInvestmentOfferings";
 import { useTransactions } from "@/hooks/useTransactions";
-import { useResearchNotes } from "@/hooks/useResearchNotes";
 import logo from "@/assets/bridge-logo-white.png";
 import heroImage from "@/assets/brooklyn-bridge-hero.jpg";
 
 export default function Home() {
   const { data: offerings = [] } = useInvestmentOfferings();
   const { data: transactions = [] } = useTransactions();
-  const { data: researchNotes = [] } = useResearchNotes();
 
   const activeOfferings = offerings.filter(o => o.offering_status === 'Active');
   const recentTransactions = transactions.slice(0, 3);
-  const recentResearch = researchNotes.slice(0, 3);
 
   return (
     <div className="min-h-screen">
@@ -156,7 +153,7 @@ export default function Home() {
             <div className="flex justify-between items-end mb-12">
               <h2 className="font-light">Recent Transactions</h2>
               <Button asChild variant="outline" className="font-light">
-                <Link to="/track-record">View All</Link>
+                <Link to="/transactions">View All</Link>
               </Button>
             </div>
             <div className="grid md:grid-cols-3 gap-8">
@@ -176,34 +173,6 @@ export default function Home() {
                       </div>
                     )}
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Research Preview */}
-      {recentResearch.length > 0 && (
-        <section className="py-24 bg-dark-bg border-y border-border">
-          <div className="container mx-auto px-6">
-            <div className="flex justify-between items-end mb-12">
-              <h2 className="font-light">Market Research</h2>
-              <Button asChild variant="outline" className="font-light">
-                <Link to="/research">View All</Link>
-              </Button>
-            </div>
-            <div className="grid md:grid-cols-3 gap-8">
-              {recentResearch.map((note) => (
-                <div key={note.id} className="p-6 rounded-lg transition-all hover:bg-white/3 border-l-2 border-transparent hover:border-accent/30">
-                  <div className="text-xs text-accent mb-2 font-light">{note.category}</div>
-                  <h3 className="text-lg font-light mb-2">{note.title}</h3>
-                  <p className="text-xs text-muted-foreground font-light mb-4">
-                    {new Date(note.date).toLocaleDateString()}
-                  </p>
-                  <p className="text-sm text-muted-foreground font-light line-clamp-3">
-                    {note.summary}
-                  </p>
                 </div>
               ))}
             </div>

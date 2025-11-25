@@ -8,12 +8,11 @@ import { Button } from "@/components/ui/button";
 const leftNavItems = [
   { name: "Approach", path: "/approach", external: false },
   { name: "Listings", path: "https://crexi.com", external: true },
+  { name: "Transactions", path: "/transactions", external: false },
 ];
 
 const rightNavItems = [
-  { name: "Track Record", path: "/track-record", external: false },
   { name: "Team", path: "/team", external: false },
-  { name: "Research", path: "/research", external: false },
   { name: "Contact", path: "/contact", external: false },
 ];
 
@@ -35,7 +34,7 @@ export const Navigation = () => {
     <>
       <nav className="fixed top-6 left-0 right-0 z-50 px-6">
         <div className="max-w-7xl mx-auto bg-black/30 backdrop-blur-2xl border border-white/10 rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.6)]">
-          <div className="grid grid-cols-3 items-center h-16 px-8">
+          <div className="grid grid-cols-3 items-center h-20 px-8">
             {/* Left Navigation */}
             <div className="hidden lg:flex items-center space-x-8">
               {leftNavItems.map((item) =>
@@ -68,7 +67,7 @@ export const Navigation = () => {
             {/* Center Logo */}
             <div className="flex justify-center">
               <Link to="/" className="flex items-center">
-                <img src={logo} alt="BRIDGE Investment Sales" className="h-8 w-auto" />
+                <img src={logo} alt="BRIDGE Investment Sales" className="h-12 w-auto" />
               </Link>
             </div>
 
