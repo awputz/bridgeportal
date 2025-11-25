@@ -8,7 +8,7 @@ const Approach = () => {
       <div className="container mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-16 md:mb-20 max-w-4xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 tracking-tight">Investment Sales</h1>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 tracking-tight">Our Process</h1>
           <p className="text-lg md:text-xl text-muted-foreground leading-relaxed font-light mb-6">
             Bridge Advisory Group's Investment Sales division offers strategic advisory services for property owners, developers, and investors throughout New York City. Our team combines institutional experience with an entrepreneurial approach to ensure every asset is positioned to maximize value and close efficiently.
           </p>

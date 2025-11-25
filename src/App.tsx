@@ -14,6 +14,7 @@ import Home from "./pages/Home";
 import TrackRecord from "./pages/TrackRecord";
 import Approach from "./pages/Approach";
 import Services from "./pages/Services";
+import Markets from "./pages/Markets";
 import SubmitDeal from "./pages/SubmitDeal";
 import Team from "./pages/Team";
 import NotFound from "./pages/NotFound";
@@ -41,6 +42,7 @@ const App = () => {
                   <Route path="/transactions" element={<TrackRecord />} />
                   <Route path="/approach" element={<Approach />} />
                   <Route path="/services" element={<Services />} />
+                  <Route path="/markets" element={<Markets />} />
                   <Route path="/submit-deal" element={<SubmitDeal />} />
                   <Route path="/team" element={<Team />} />
                   <Route path="*" element={<NotFound />} />
