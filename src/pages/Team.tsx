@@ -77,6 +77,13 @@ const investmentSalesTeam = [
     email: COMPANY_INFO.contact.email,
     phone: COMPANY_INFO.contact.phone,
     image: "/team-photos/noah-kaplan.png"
+  },
+  {
+    name: "Arezu Bedar",
+    title: "Coordinator",
+    email: COMPANY_INFO.contact.email,
+    phone: COMPANY_INFO.contact.phone,
+    image: "/team-photos/arezu-bedar.png"
   }
 ];
 
