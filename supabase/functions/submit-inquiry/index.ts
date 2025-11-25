@@ -154,6 +154,27 @@ serve(async (req) => {
 
     console.log("Inquiry submitted successfully:", data.id);
 
+    // Send notification email (non-blocking)
+    supabase.functions.invoke('send-notification', {
+      body: {
+        type: 'new_inquiry',
+        data: { ...data }
+      }
+    }).catch(err => console.error('Failed to send notification:', err));
+
+    // Log activity (non-blocking)
+    supabase.functions.invoke('log-activity', {
+      body: {
+        action: 'inquiry_submitted',
+        entity_type: 'inquiries',
+        entity_id: data.id,
+        details: { 
+          inquiry_type: data.inquiry_type || 'general',
+          source: 'website'
+        }
+      }
+    }).catch(err => console.error('Failed to log activity:', err));
+
     // Clean up old rate limit entries (basic memory management)
     if (rateLimitCache.size > 10000) {
       const now = Date.now();
