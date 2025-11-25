@@ -1,4 +1,6 @@
-import { CheckCircle2, TrendingUp, Users } from "lucide-react";
+import { CheckCircle2, TrendingUp, Users, Building2, Award } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const Approach = () => {
   return (
@@ -6,9 +8,9 @@ const Approach = () => {
       <div className="container mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-16 md:mb-20 max-w-4xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 tracking-tight">Our Approach</h1>
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed font-light">
-            BRIDGE Investment Sales combines aggressive marketing, disciplined underwriting, and capital markets access to run full sale and recapitalization processes for middle market owners and investors.
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 tracking-tight">Investment Sales</h1>
+          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed font-light mb-6">
+            Bridge Advisory Group's Investment Sales division offers strategic advisory services for property owners, developers, and investors throughout New York City. Our team combines institutional experience with an entrepreneurial approach to ensure every asset is positioned to maximize value and close efficiently.
           </p>
         </div>
 
@@ -93,6 +95,137 @@ const Approach = () => {
           </div>
         </section>
 
+        {/* Investment Sales Services */}
+        <section className="mb-16 md:mb-24">
+          <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">Our Services</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            <div className="p-6 md:p-8 border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
+              <h3 className="text-xl md:text-2xl font-light mb-4">Comprehensive Valuation & Underwriting</h3>
+              <p className="text-sm md:text-base text-muted-foreground font-light mb-4">
+                We provide detailed financial analysis and valuation reports tailored to each asset.
+              </p>
+              <ul className="space-y-2 text-sm md:text-base text-muted-foreground font-light">
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                  <span>Current market comps analysis</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                  <span>Rent roll assessments</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                  <span>Capital expenditure planning</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                  <span>Projected returns modeling</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="p-6 md:p-8 border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
+              <h3 className="text-xl md:text-2xl font-light mb-4">Deal Structuring & Execution</h3>
+              <p className="text-sm md:text-base text-muted-foreground font-light mb-4">
+                We specialize in complex transactions, crafting deal terms that reflect the asset's potential while aligning with client objectives.
+              </p>
+              <ul className="space-y-2 text-sm md:text-base text-muted-foreground font-light">
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                  <span>Value-add opportunities</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                  <span>1031 exchanges</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                  <span>Off-market assignments</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                  <span>Note sales</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="p-6 md:p-8 border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
+              <h3 className="text-xl md:text-2xl font-light mb-4">Targeted Buyer Outreach</h3>
+              <p className="text-sm md:text-base text-muted-foreground font-light mb-4">
+                Through a curated network of qualified buyers, we ensure your asset is introduced to the right audience.
+              </p>
+              <ul className="space-y-2 text-sm md:text-base text-muted-foreground font-light">
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                  <span>High-net-worth individuals to institutional capital</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                  <span>Continuously updated buyer database</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                  <span>Active mandates and acquisition criteria</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                  <span>Current capital deployment timelines</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="p-6 md:p-8 border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
+              <h3 className="text-xl md:text-2xl font-light mb-4">Integrated Capital Advisory</h3>
+              <p className="text-sm md:text-base text-muted-foreground font-light mb-4">
+                Leveraging our in-house capital advisory group to align debt and equity placement strategies with the sale process.
+              </p>
+              <ul className="space-y-2 text-sm md:text-base text-muted-foreground font-light">
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                  <span>Debt and equity placement strategies</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                  <span>Optimal pricing support</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                  <span>Smooth closing facilitation</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                  <span>Lender coordination</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-6 md:mt-8 p-6 md:p-8 border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
+            <h3 className="text-xl md:text-2xl font-light mb-4">Marketing Strategy & Materials</h3>
+            <p className="text-sm md:text-base text-muted-foreground font-light mb-4">
+              Each listing is supported by a custom marketing campaign that presents the asset with clarity and strength.
+            </p>
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm md:text-base text-muted-foreground font-light">
+              <li className="flex items-start gap-2">
+                <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                <span>Professionally designed Offering Memorandum</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                <span>Branded outreach materials</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                <span>Digital visibility across major platforms</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                <span>Direct buyer engagement</span>
+              </li>
+            </ul>
+          </div>
+        </section>
+
         {/* Owner Journey */}
         <section className="mb-16 md:mb-24 p-8 md:p-12 rounded-xl bg-white/[0.02]">
           <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">Owner Journey</h2>
@@ -154,6 +287,36 @@ const Approach = () => {
           </div>
         </section>
 
+        {/* Client Profile */}
+        <section className="mb-16 md:mb-24 p-8 md:p-12 rounded-xl bg-white/[0.02]">
+          <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">Client Profile</h2>
+          <p className="text-base md:text-lg text-muted-foreground font-light text-center mb-12 max-w-3xl mx-auto">
+            We work with a broad range of sellers to achieve their investment goals
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+            <div className="p-6 text-center border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
+              <Users className="mx-auto mb-4 text-accent" size={40} />
+              <h3 className="text-lg md:text-xl font-light mb-2">Private Owners</h3>
+              <p className="text-sm md:text-base text-muted-foreground font-light">Family offices and individual property owners</p>
+            </div>
+            <div className="p-6 text-center border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
+              <Building2 className="mx-auto mb-4 text-accent" size={40} />
+              <h3 className="text-lg md:text-xl font-light mb-2">Owner-Operators</h3>
+              <p className="text-sm md:text-base text-muted-foreground font-light">Developers and active property managers</p>
+            </div>
+            <div className="p-6 text-center border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
+              <TrendingUp className="mx-auto mb-4 text-accent" size={40} />
+              <h3 className="text-lg md:text-xl font-light mb-2">Institutional Investors</h3>
+              <p className="text-sm md:text-base text-muted-foreground font-light">Funds and institutional capital partners</p>
+            </div>
+            <div className="p-6 text-center border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
+              <Award className="mx-auto mb-4 text-accent" size={40} />
+              <h3 className="text-lg md:text-xl font-light mb-2">Distressed Assets</h3>
+              <p className="text-sm md:text-base text-muted-foreground font-light">Asset holders and receivers</p>
+            </div>
+          </div>
+        </section>
+
         {/* What Sets Us Apart */}
         <section className="p-8 md:p-12 rounded-xl bg-white/[0.02] mb-16">
           <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">What Sets Us Apart</h2>
@@ -172,6 +335,22 @@ const Approach = () => {
                 </div>
               );
             })}
+          </div>
+        </section>
+
+        {/* A Strategic Sales Partner - CTA */}
+        <section className="p-8 md:p-12 rounded-xl bg-gradient-to-br from-white/[0.03] to-white/[0.01] border border-white/5">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-light mb-6">A Strategic Sales Partner</h2>
+            <p className="text-base md:text-lg text-muted-foreground font-light leading-relaxed mb-8">
+              At Bridge Advisory Group, we take a hands-on, data-driven approach to investment sales. From pre-market analysis through closing, our focus is on providing clarity, speed, and results.
+            </p>
+            <p className="text-base md:text-lg text-muted-foreground font-light leading-relaxed mb-8">
+              If you're considering selling or recapitalizing an asset, our team is ready to advise.
+            </p>
+            <Button asChild size="lg" className="font-light px-8 md:px-12">
+              <Link to="/submit-deal">Ready to Discuss Your Asset?</Link>
+            </Button>
           </div>
         </section>
       </div>
