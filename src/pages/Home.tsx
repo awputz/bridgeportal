@@ -3,7 +3,7 @@ import { Building2, TrendingUp, Award, Users, CheckCircle2, ArrowRight } from "l
 import { Button } from "@/components/ui/button";
 import { useInvestmentOfferings } from "@/hooks/useInvestmentOfferings";
 import { useTransactions } from "@/hooks/useTransactions";
-import logo from "@/assets/bridge-logo-white.png";
+import logo from "@/assets/bridge-investment-sales-logo.png";
 import heroImage from "@/assets/brooklyn-bridge-hero.jpg";
 export default function Home() {
   const {
@@ -24,7 +24,11 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
         
         <div className="relative z-10 container mx-auto text-center max-w-4xl">
-          
+          <img 
+            src={logo} 
+            alt="Bridge Investment Sales" 
+            className="mx-auto mb-8 md:mb-12 h-20 md:h-24 lg:h-28 w-auto"
+          />
           
           <p className="text-base md:text-xl lg:text-2xl xl:text-3xl text-foreground/70 mb-8 md:mb-12 lg:mb-16 max-w-xs md:max-w-2xl lg:max-w-3xl mx-auto font-light px-4">
             Institutional execution for middle market multifamily and mixed-use properties
