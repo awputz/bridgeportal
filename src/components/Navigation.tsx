@@ -33,9 +33,9 @@ export const Navigation = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-2xl border-b border-white/5 shadow-[0_8px_32px_0_rgba(0,0,0,0.6)]">
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-3 items-center h-20">
+      <nav className="fixed top-6 left-0 right-0 z-50 px-6">
+        <div className="max-w-7xl mx-auto bg-black/30 backdrop-blur-2xl border border-white/10 rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.6)]">
+          <div className="grid grid-cols-3 items-center h-16 px-8">
             {/* Left Navigation */}
             <div className="hidden lg:flex items-center space-x-8">
               {leftNavItems.map((item) =>
@@ -109,8 +109,8 @@ export const Navigation = () => {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="lg:hidden bg-black/30 backdrop-blur-2xl border-t border-white/5">
-            <div className="container mx-auto px-6 py-6 space-y-4">
+          <div className="lg:hidden mt-4 mx-6">
+            <div className="bg-black/30 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.6)] px-6 py-6 space-y-4">
               {[...leftNavItems, ...rightNavItems].map((item) =>
                 item.external ? (
                   <a
