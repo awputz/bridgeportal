@@ -32,17 +32,11 @@ const processSteps = [{
   deliverables: ["Executed lease or closing", "Move-in coordination", "Post-closing support"]
 }];
 const Process = () => {
-  return <div className="min-h-screen pt-40 pb-20">
+  return <div className="min-h-screen pt-24 md:pt-32 lg:pt-40 pb-20">
       {/* Header */}
       <section className="px-6 lg:px-8 mb-20">
         <div className="container mx-auto max-w-4xl text-center">
-          <h1 className="mb-6 py-px pt-[30px]">
-
-
-
-
-
-Our Process</h1>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 tracking-tight">Our Process</h1>
           <p className="text-xl text-muted-foreground">
             A structured approach to New York real estate. Clear steps, transparent communication, and full support from first contact to closing.
           </p>
