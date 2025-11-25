@@ -37,7 +37,7 @@ export default function Home() {
           <img 
             src={logo} 
             alt="Bridge Investment Sales" 
-            className="mx-auto mb-8 md:mb-12 h-20 md:h-24 lg:h-28 w-auto"
+            className="mx-auto mb-8 md:mb-12 h-28 md:h-36 lg:h-44 w-auto"
           />
           
           <p className="text-base md:text-xl lg:text-2xl xl:text-3xl text-foreground/70 mb-8 md:mb-12 lg:mb-16 max-w-xs md:max-w-2xl lg:max-w-3xl mx-auto font-light px-4">
