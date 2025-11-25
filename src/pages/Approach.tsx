@@ -201,7 +201,8 @@ const Approach = () => {
           </div>
 
           <div className="mt-6 md:mt-8 p-6 md:p-8 border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1">
-            <h3 className="text-xl md:text-2xl font-light mb-4">Marketing Strategy & Materials</h3>
+            <h3 className="text-xl md:text-2xl font-light mb-2">Marketing Strategy & Materials</h3>
+            <p className="text-xs md:text-sm text-accent font-light mb-3">Powered by Our Fully Integrated In-House Marketing Team</p>
             <p className="text-sm md:text-base text-muted-foreground font-light mb-4">
               Each listing is supported by a custom marketing campaign that presents the asset with clarity and strength.
             </p>
@@ -320,11 +321,12 @@ const Approach = () => {
         {/* What Sets Us Apart */}
         <section className="p-8 md:p-12 rounded-xl bg-white/[0.02] mb-16">
           <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">What Sets Us Apart</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
             {[
               { icon: Users, title: "Senior Talent", description: "Team led by professionals with $100M+ in career transactions and deep NYC market knowledge" },
               { icon: TrendingUp, title: "Middle Market Focus", description: "Concentrated expertise in $2M–$50M transactions where process and relationships matter most" },
-              { icon: CheckCircle2, title: "Institutional Process", description: "Disciplined underwriting, targeted marketing, and structured bidding for every assignment" }
+              { icon: CheckCircle2, title: "Institutional Process", description: "Disciplined underwriting, targeted marketing, and structured bidding for every assignment" },
+              { icon: Award, title: "In-House Marketing Team", description: "Dedicated marketing professionals integrated directly into our process—no outsourcing, no delays" }
             ].map((item, index) => {
               const Icon = item.icon;
               return (

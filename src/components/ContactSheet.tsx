@@ -16,10 +16,18 @@ import { MapPin, Phone, Mail, Instagram, Linkedin } from "lucide-react";
 interface ContactSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  initialTab?: string;
 }
 
-export const ContactSheet = ({ open, onOpenChange }: ContactSheetProps) => {
-  const [activeTab, setActiveTab] = useState("general");
+export const ContactSheet = ({ open, onOpenChange, initialTab = "general" }: ContactSheetProps) => {
+  const [activeTab, setActiveTab] = useState(initialTab);
+  
+  // Update active tab when initialTab changes
+  useState(() => {
+    if (open && initialTab) {
+      setActiveTab(initialTab);
+    }
+  });
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -80,8 +88,10 @@ export const ContactSheet = ({ open, onOpenChange }: ContactSheetProps) => {
         {/* Contact Forms */}
         <div>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-1 mb-6">
+            <TabsList className="grid w-full grid-cols-3 mb-6">
               <TabsTrigger value="general">General Inquiry</TabsTrigger>
+              <TabsTrigger value="agent">Join as Agent</TabsTrigger>
+              <TabsTrigger value="deal">Submit a Deal</TabsTrigger>
             </TabsList>
 
             <TabsContent value="general">
@@ -124,6 +134,119 @@ export const ContactSheet = ({ open, onOpenChange }: ContactSheetProps) => {
 
                 <Button className="w-full font-light" size="lg">
                   Send Message
+                </Button>
+              </form>
+            </TabsContent>
+
+            <TabsContent value="agent">
+              <form className="space-y-5">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="agentFirstName" className="text-xs font-light">First Name</Label>
+                    <Input id="agentFirstName" placeholder="John" className="mt-1 h-12" />
+                  </div>
+                  <div>
+                    <Label htmlFor="agentLastName" className="text-xs font-light">Last Name</Label>
+                    <Input id="agentLastName" placeholder="Smith" className="mt-1 h-12" />
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="agentEmail" className="text-xs font-light">Email</Label>
+                  <Input id="agentEmail" type="email" placeholder="john@example.com" className="mt-1 h-12" />
+                </div>
+
+                <div>
+                  <Label htmlFor="agentPhone" className="text-xs font-light">Phone</Label>
+                  <Input id="agentPhone" type="tel" placeholder="(555) 123-4567" className="mt-1 h-12" />
+                </div>
+
+                <div>
+                  <Label htmlFor="experience" className="text-xs font-light">Years of Experience</Label>
+                  <Input id="experience" type="number" placeholder="5" className="mt-1 h-12" />
+                </div>
+
+                <div>
+                  <Label htmlFor="license" className="text-xs font-light">Real Estate License Number</Label>
+                  <Input id="license" placeholder="License #" className="mt-1 h-12" />
+                </div>
+
+                <div>
+                  <Label htmlFor="focus" className="text-xs font-light">Geographic Focus Areas</Label>
+                  <Input id="focus" placeholder="Manhattan, Brooklyn, Queens..." className="mt-1 h-12" />
+                </div>
+
+                <div>
+                  <Label htmlFor="bio" className="text-xs font-light">Brief Bio / Background</Label>
+                  <Textarea
+                    id="bio"
+                    placeholder="Tell us about your experience and why you'd like to join Bridge..."
+                    rows={5}
+                    className="mt-1"
+                  />
+                </div>
+
+                <Button className="w-full font-light" size="lg">
+                  Submit Application
+                </Button>
+              </form>
+            </TabsContent>
+
+            <TabsContent value="deal">
+              <form className="space-y-5">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="dealFirstName" className="text-xs font-light">First Name</Label>
+                    <Input id="dealFirstName" placeholder="John" className="mt-1 h-12" />
+                  </div>
+                  <div>
+                    <Label htmlFor="dealLastName" className="text-xs font-light">Last Name</Label>
+                    <Input id="dealLastName" placeholder="Smith" className="mt-1 h-12" />
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="dealEmail" className="text-xs font-light">Email</Label>
+                  <Input id="dealEmail" type="email" placeholder="john@example.com" className="mt-1 h-12" />
+                </div>
+
+                <div>
+                  <Label htmlFor="dealPhone" className="text-xs font-light">Phone</Label>
+                  <Input id="dealPhone" type="tel" placeholder="(555) 123-4567" className="mt-1 h-12" />
+                </div>
+
+                <div>
+                  <Label htmlFor="propertyAddress" className="text-xs font-light">Property Address</Label>
+                  <Input id="propertyAddress" placeholder="123 Main St, Brooklyn, NY" className="mt-1 h-12" />
+                </div>
+
+                <div>
+                  <Label htmlFor="propertyType" className="text-xs font-light">Property Type</Label>
+                  <Input id="propertyType" placeholder="Multifamily, Mixed-Use, etc." className="mt-1 h-12" />
+                </div>
+
+                <div>
+                  <Label htmlFor="estimatedValue" className="text-xs font-light">Estimated Value</Label>
+                  <Input id="estimatedValue" placeholder="$5,000,000" className="mt-1 h-12" />
+                </div>
+
+                <div>
+                  <Label htmlFor="currentUse" className="text-xs font-light">Current Use / Situation</Label>
+                  <Input id="currentUse" placeholder="Stabilized, value-add, etc." className="mt-1 h-12" />
+                </div>
+
+                <div>
+                  <Label htmlFor="dealDetails" className="text-xs font-light">Additional Details</Label>
+                  <Textarea
+                    id="dealDetails"
+                    placeholder="Tell us more about the property and your goals..."
+                    rows={5}
+                    className="mt-1"
+                  />
+                </div>
+
+                <Button className="w-full font-light" size="lg">
+                  Submit Deal
                 </Button>
               </form>
             </TabsContent>
