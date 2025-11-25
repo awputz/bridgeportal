@@ -7,13 +7,10 @@ import { useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { ScrollToTop } from "@/components/ScrollToTop";
-import FloatingChatButton from "@/components/FloatingChatButton";
 import { PageTransition } from "@/components/PageTransition";
 import { FloatingContactButton } from "@/components/FloatingContactButton";
 import { ContactSheet } from "@/components/ContactSheet";
-import { AdminLayout } from "./components/admin/AdminLayout";
 import Home from "./pages/Home";
-import Offerings from "./pages/Offerings";
 import ListingDetail from "./pages/ListingDetail";
 import TrackRecord from "./pages/TrackRecord";
 import Approach from "./pages/Approach";
@@ -43,7 +40,6 @@ const App = () => {
               <PageTransition>
                 <Routes>
                   <Route path="/" element={<Home />} />
-                  <Route path="/offerings" element={<Offerings />} />
                   <Route path="/offerings/:id" element={<ListingDetail />} />
                   <Route path="/track-record" element={<TrackRecord />} />
                   <Route path="/approach" element={<Approach />} />
@@ -55,7 +51,6 @@ const App = () => {
                 </Routes>
               </PageTransition>
               <Footer />
-              <FloatingChatButton />
               <FloatingContactButton onContactClick={() => setContactOpen(true)} />
               <ContactSheet open={contactOpen} onOpenChange={setContactOpen} />
             </>
