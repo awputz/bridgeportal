@@ -25,6 +25,7 @@ const leftNavItems = [
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("general");
   const location = useLocation();
 
   useEffect(() => {
@@ -44,7 +45,6 @@ export const Navigation = () => {
         <div className="max-w-6xl mx-auto bg-black/40 backdrop-blur-3xl border border-white/10 rounded-lg md:rounded-xl shadow-[0_16px_48px_0_rgba(0,0,0,0.75)]">
           {/* Mobile & Tablet Layout */}
           <div className="flex lg:hidden items-center justify-between h-16 md:h-20 px-4 md:px-6">
-            <div className="w-10" />
             <Link to="/" className="flex items-center">
               <img src={logo} alt="BRIDGE Investment Sales" className="h-10 md:h-12 w-auto" />
             </Link>
@@ -66,9 +66,9 @@ export const Navigation = () => {
                   Company
                   <ChevronDown className="h-4 w-4" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-background/95 backdrop-blur-xl border-white/10 z-50">
+                <DropdownMenuContent className="bg-background/95 backdrop-blur-xl border-white/10 z-50 transition-all duration-300 ease-out">
                   {companyItems.map((item) => (
-                    <DropdownMenuItem key={item.name} asChild>
+                    <DropdownMenuItem key={item.name} asChild className="transition-colors duration-200 hover:bg-accent/10">
                       <Link
                         to={item.path}
                         className="cursor-pointer font-light"
@@ -111,7 +111,11 @@ export const Navigation = () => {
                 Contact
               </button>
               <Button
-                onClick={() => setContactOpen(true)}
+                onClick={() => {
+                  setContactOpen(true);
+                  // Small delay to ensure sheet is open before setting tab
+                  setTimeout(() => setActiveTab("deal"), 50);
+                }}
                 size="sm"
                 className="font-light whitespace-nowrap"
               >
@@ -149,6 +153,7 @@ export const Navigation = () => {
                   onClick={() => {
                     setContactOpen(true);
                     setIsOpen(false);
+                    setTimeout(() => setActiveTab("deal"), 50);
                   }}
                   className="w-full mt-8 font-light"
                   size="lg"
@@ -161,7 +166,14 @@ export const Navigation = () => {
         )}
       </nav>
 
-      <ContactSheet open={contactOpen} onOpenChange={setContactOpen} />
+      <ContactSheet 
+        open={contactOpen} 
+        onOpenChange={(open) => {
+          setContactOpen(open);
+          if (!open) setActiveTab("general");
+        }} 
+        initialTab={activeTab}
+      />
     </>
   );
 };

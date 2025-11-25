@@ -146,9 +146,9 @@ export default function Home() {
 
             <div className="group p-6 md:p-8 rounded-lg transition-all duration-400 hover:bg-white/3 hover:transform hover:-translate-y-1 border-l-2 border-accent/30 md:col-span-2 lg:col-span-1">
               <Award className="h-8 w-8 md:h-10 md:w-10 text-accent mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-400" />
-              <h3 className="text-lg md:text-xl font-light mb-2 md:mb-3">Custom Marketing</h3>
+              <h3 className="text-lg md:text-xl font-light mb-2 md:mb-3">Fully Integrated In-House Marketing Team</h3>
               <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed">
-                Professional materials and digital visibility across major platforms with direct buyer engagement
+                Professional materials created by our dedicated in-house marketing team with expertise in real estate presentation, digital visibility, and direct buyer engagement
               </p>
             </div>
           </div>

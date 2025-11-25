@@ -205,12 +205,19 @@ const Services = () => {
                 </div>
                 <div>
                   <h2 className="text-2xl md:text-3xl font-light mb-3">Marketing Strategy & Materials</h2>
+                  <p className="text-sm md:text-base text-accent font-light mb-2">Powered by Our Fully Integrated In-House Marketing Team</p>
                   <p className="text-base md:text-lg text-muted-foreground font-light">
                     Each listing is supported by a custom marketing campaign that presents the asset with clarity, professionalism, and strategic positioning.
                   </p>
                 </div>
               </div>
               
+              <div className="p-4 mb-4 rounded-lg bg-accent/10 border border-accent/20">
+                <p className="text-sm md:text-base font-light">
+                  <span className="font-semibold text-accent">Competitive Advantage:</span> Unlike brokers who outsource marketing, our <span className="font-semibold">fully integrated in-house marketing team</span> ensures consistent, high-quality materials and faster turnaround times.
+                </p>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <h3 className="text-sm font-light uppercase tracking-wider text-muted-foreground mb-3">Marketing Components</h3>
@@ -230,6 +237,10 @@ const Services = () => {
                     <li className="flex items-start gap-2">
                       <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
                       <span>Direct buyer engagement and outreach</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 size={18} className="mt-0.5 text-accent flex-shrink-0" />
+                      <span>Dedicated in-house designers and marketers (not outsourced)</span>
                     </li>
                   </ul>
                 </div>
@@ -282,7 +293,12 @@ const Services = () => {
                   <td className="p-4 md:p-6 text-center text-muted-foreground">Template Based</td>
                   <td className="p-4 md:p-6 text-center text-accent">Fully Branded & Custom</td>
                 </tr>
-                <tr className="bg-white/[0.01]">
+                <tr className="border-b border-white/5 bg-white/[0.01]">
+                  <td className="p-4 md:p-6">Marketing Team</td>
+                  <td className="p-4 md:p-6 text-center text-muted-foreground">Outsourced</td>
+                  <td className="p-4 md:p-6 text-center text-accent">Fully Integrated In-House Team</td>
+                </tr>
+                <tr>
                   <td className="p-4 md:p-6">Transaction Support</td>
                   <td className="p-4 md:p-6 text-center text-muted-foreground">Agent Only</td>
                   <td className="p-4 md:p-6 text-center text-accent">Full Team Platform</td>
