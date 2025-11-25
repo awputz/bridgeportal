@@ -7,7 +7,7 @@ interface TeamMember {
   title: string;
   bio?: string;
   email: string;
-  phone: string;
+  phone?: string;
   image: string;
   instagram?: string;
   linkedin?: string;
@@ -25,7 +25,7 @@ VERSION:3.0
 FN:${member.name}
 ORG:Bridge Advisory Group
 TITLE:${member.title}
-TEL:${member.phone}
+TEL:${member.phone || ''}
 EMAIL:${member.email}
 ${member.linkedin ? `URL:${member.linkedin}\n` : ''}END:VCARD`;
 
@@ -40,7 +40,7 @@ ${member.linkedin ? `URL:${member.linkedin}\n` : ''}END:VCARD`;
 
 const contactActions = [
   { icon: Mail, label: "Email", action: (member: TeamMember) => window.location.href = `mailto:${member.email}` },
-  { icon: Phone, label: "Phone", action: (member: TeamMember) => window.location.href = `tel:${member.phone}` },
+  { icon: Phone, label: "Phone", action: (member: TeamMember) => member.phone && (window.location.href = `tel:${member.phone}`) },
   { icon: Instagram, label: "Instagram", action: (member: TeamMember) => member.instagram && window.open(member.instagram, '_blank') },
   { icon: Linkedin, label: "LinkedIn", action: (member: TeamMember) => member.linkedin && window.open(member.linkedin, '_blank') },
   { icon: Download, label: "Save", action: (member: TeamMember) => generateVCard(member) },
@@ -92,6 +92,7 @@ export const TeamMemberDialog = ({ member, open, onOpenChange }: TeamMemberDialo
             {contactActions.map((action, index) => {
               const Icon = action.icon;
               const isDisabled = 
+                (action.label === "Phone" && !member.phone) ||
                 (action.label === "Instagram" && !member.instagram) ||
                 (action.label === "LinkedIn" && !member.linkedin);
               

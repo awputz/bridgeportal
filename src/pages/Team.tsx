@@ -2,121 +2,42 @@ import { useState } from "react";
 import { CheckCircle2, TrendingUp, Users, Building2 } from "lucide-react";
 import { COMPANY_INFO } from "@/lib/constants";
 import { TeamMemberDialog } from "@/components/TeamMemberDialog";
+import { useTeamMembers } from "@/hooks/useTeamMembers";
 
 interface TeamMember {
   name: string;
   title: string;
   bio?: string;
   email: string;
-  phone: string;
+  phone?: string;
   image: string;
   instagram?: string;
   linkedin?: string;
 }
 
-const leadership: TeamMember[] = [
-  {
-    name: "Alex W. Putzer",
-    title: "Co-Founder & Managing Partner",
-    bio: "Co-founder who focuses on firm-wide strategy, growth, and capital relationships. Supports investment sales platform design and major client relationships.",
-    email: COMPANY_INFO.contact.email,
-    phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/alex-putzer.png",
-    instagram: "https://instagram.com/alexputzer",
-    linkedin: "https://linkedin.com/in/alexputzer"
-  },
-  {
-    name: "Joshua S. Malekan",
-    title: "Co-Founder & Principal",
-    bio: "Principal and senior lead for investment sales with a focus on New York multifamily, mixed-use, and development assignments.",
-    email: COMPANY_INFO.contact.email,
-    phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/joshua-malekan.png",
-    instagram: "https://instagram.com/joshuamalekan",
-    linkedin: "https://linkedin.com/in/joshuamalekan"
-  },
-  {
-    name: "Eric Delafraz",
-    title: "Managing Director / Investment Sales",
-    bio: "Leads day-to-day investment sales operations and execution across New York City with a focus on middle market and private capital transactions.",
-    email: COMPANY_INFO.contact.email,
-    phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/eric-delafraz.png",
-    instagram: "https://instagram.com/ericdelafraz",
-    linkedin: "https://linkedin.com/in/ericdelafraz"
-  }
-];
-
-const investmentSalesTeam: TeamMember[] = [
-  {
-    name: "Roy I. Oskar",
-    title: "Investment Sales Director",
-    email: COMPANY_INFO.contact.email,
-    phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/roy-oskar.png",
-    linkedin: "https://linkedin.com/in/royoskar"
-  },
-  {
-    name: "Matt Dowling",
-    title: "Senior Investment Sales Associate",
-    email: COMPANY_INFO.contact.email,
-    phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/matt-dowling.png",
-    linkedin: "https://linkedin.com/in/mattdowling"
-  },
-  {
-    name: "Brandon Khankhanian",
-    title: "Investment Sales Associate",
-    email: COMPANY_INFO.contact.email,
-    phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/brandon-khankhanian.png",
-    linkedin: "https://linkedin.com/in/brandonkhankhanian"
-  },
-  {
-    name: "Emanuel Hakami",
-    title: "Investment Sales Associate",
-    email: COMPANY_INFO.contact.email,
-    phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/emanuel-hakami.png",
-    linkedin: "https://linkedin.com/in/emanuelhakami"
-  },
-  {
-    name: "Asher Nazar",
-    title: "Investment Sales Associate",
-    email: COMPANY_INFO.contact.email,
-    phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/asher-nazar.png",
-    linkedin: "https://linkedin.com/in/ashernazar"
-  },
-  {
-    name: "Quinn Hukee",
-    title: "Investment Sales Associate",
-    email: COMPANY_INFO.contact.email,
-    phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/quinn-hukee.png",
-    linkedin: "https://linkedin.com/in/quinnhukee"
-  },
-  {
-    name: "Noah Kaplan",
-    title: "Investment Sales Associate",
-    email: COMPANY_INFO.contact.email,
-    phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/noah-kaplan.png",
-    linkedin: "https://linkedin.com/in/noahkaplan"
-  },
-  {
-    name: "Arezu Bedar",
-    title: "Coordinator",
-    email: COMPANY_INFO.contact.email,
-    phone: COMPANY_INFO.contact.phone,
-    image: "/team-photos/arezu-bedar.png",
-    linkedin: "https://linkedin.com/in/arezubedar"
-  }
-];
-
 const Team = () => {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  
+  const { data: leadershipData = [], isLoading: leadershipLoading } = useTeamMembers('leadership');
+  const { data: salesTeamData = [], isLoading: salesTeamLoading } = useTeamMembers('sales_team');
+  
+  // Map database fields to component format
+  const leadership = leadershipData.map(member => ({
+    ...member,
+    image: member.image_url || '/team-photos/placeholder.png',
+    instagram: member.instagram_url,
+    linkedin: member.linkedin_url,
+    phone: member.phone || COMPANY_INFO.contact.phone,
+  }));
+  
+  const investmentSalesTeam = salesTeamData.map(member => ({
+    ...member,
+    image: member.image_url || '/team-photos/placeholder.png',
+    instagram: member.instagram_url,
+    linkedin: member.linkedin_url,
+    phone: member.phone || COMPANY_INFO.contact.phone,
+  }));
 
   const handleMemberClick = (member: TeamMember) => {
     setSelectedMember(member);

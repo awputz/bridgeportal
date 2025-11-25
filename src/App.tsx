@@ -10,6 +10,7 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import { PageTransition } from "@/components/PageTransition";
 import { FloatingContactButton } from "@/components/FloatingContactButton";
 import { ContactSheet } from "@/components/ContactSheet";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import Home from "./pages/Home";
 import TrackRecord from "./pages/TrackRecord";
 import Approach from "./pages/Approach";
@@ -17,6 +18,12 @@ import Services from "./pages/Services";
 import Markets from "./pages/Markets";
 import SubmitDeal from "./pages/SubmitDeal";
 import Team from "./pages/Team";
+import Auth from "./pages/Auth";
+import { AdminDashboard as Dashboard } from "./pages/admin/Dashboard";
+import { AdminInquiries as Inquiries } from "./pages/admin/Inquiries";
+import { AdminProperties as Properties } from "./pages/admin/Properties";
+import { AdminTours as Tours } from "./pages/admin/Tours";
+import TeamAdmin from "./pages/admin/TeamAdmin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +39,18 @@ const App = () => {
         <BrowserRouter>
           <ScrollToTop />
           <Routes>
+          {/* Auth Route */}
+          <Route path="/auth" element={<Auth />} />
+          
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="inquiries" element={<Inquiries />} />
+            <Route path="properties" element={<Properties />} />
+            <Route path="tours" element={<Tours />} />
+            <Route path="team" element={<TeamAdmin />} />
+          </Route>
+
           {/* Public Routes */}
           <Route path="*" element={
             <>
