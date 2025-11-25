@@ -11,7 +11,6 @@ import { PageTransition } from "@/components/PageTransition";
 import { FloatingContactButton } from "@/components/FloatingContactButton";
 import { ContactSheet } from "@/components/ContactSheet";
 import Home from "./pages/Home";
-import ListingDetail from "./pages/ListingDetail";
 import TrackRecord from "./pages/TrackRecord";
 import Approach from "./pages/Approach";
 import SubmitDeal from "./pages/SubmitDeal";
@@ -39,7 +38,6 @@ const App = () => {
               <PageTransition>
                 <Routes>
                   <Route path="/" element={<Home />} />
-                  <Route path="/offerings/:id" element={<ListingDetail />} />
                   <Route path="/transactions" element={<TrackRecord />} />
                   <Route path="/approach" element={<Approach />} />
                   <Route path="/submit-deal" element={<SubmitDeal />} />

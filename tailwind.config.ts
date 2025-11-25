@@ -53,10 +53,11 @@ export default {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-        full: "var(--radius-pill)",
+        lg: "0.5rem",
+        md: "0.375rem",
+        sm: "0.25rem",
+        xl: "0.75rem",
+        full: "9999px",
       },
       keyframes: {
         "accordion-down": {

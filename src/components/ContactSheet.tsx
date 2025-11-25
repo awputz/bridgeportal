@@ -23,10 +23,10 @@ export const ContactSheet = ({ open, onOpenChange }: ContactSheetProps) => {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full sm:max-w-[540px] overflow-y-auto bg-background/95 backdrop-blur-3xl border-l border-white/10">
+      <SheetContent side="right" className="w-full sm:max-w-[600px] overflow-y-auto bg-background/98 backdrop-blur-3xl border-l border-white/10">
         <SheetHeader className="mb-8">
-          <SheetTitle className="text-2xl font-light">Connect with BRIDGE</SheetTitle>
-          <SheetDescription className="font-light">
+          <SheetTitle className="text-xl md:text-2xl font-light">Connect with BRIDGE</SheetTitle>
+          <SheetDescription className="font-light text-sm md:text-base">
             Get in touch with our team. We respond to all inquiries within one business day.
           </SheetDescription>
         </SheetHeader>
@@ -59,26 +59,18 @@ export const ContactSheet = ({ open, onOpenChange }: ContactSheetProps) => {
               <Mail className="text-accent" size={18} />
             </div>
             <h3 className="font-semibold mb-1 text-sm">Email</h3>
-            <a href="mailto:hello@bridgeresidential.com" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              hello@bridgeresidential.com
+            <a href="mailto:isales@bridgenyre.com" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              isales@bridgenyre.com
             </a>
           </div>
 
           {/* Social Links */}
           <div className="flex gap-4 pt-4">
             <a
-              href="https://instagram.com/bridgeresidential"
+              href="https://linkedin.com/company/bridge-advisory-group"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-12 h-12 rounded-full border border-border flex items-center justify-center hover:bg-foreground hover:text-background transition-colors"
-            >
-              <Instagram size={20} />
-            </a>
-            <a
-              href="https://linkedin.com/company/bridge-residential"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-12 h-12 rounded-full border border-border flex items-center justify-center hover:bg-foreground hover:text-background transition-colors"
+              className="w-12 h-12 rounded-full border border-border flex items-center justify-center hover:bg-foreground hover:text-background transition-all duration-300"
             >
               <Linkedin size={20} />
             </a>
@@ -88,102 +80,50 @@ export const ContactSheet = ({ open, onOpenChange }: ContactSheetProps) => {
         {/* Contact Forms */}
         <div>
           <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="general">General</TabsTrigger>
-              <TabsTrigger value="agent">Join As Agent</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-1 mb-6">
+              <TabsTrigger value="general">General Inquiry</TabsTrigger>
             </TabsList>
 
             <TabsContent value="general">
-              <form className="space-y-4">
+              <form className="space-y-5">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="firstName" className="text-xs">First Name</Label>
-                    <Input id="firstName" placeholder="John" className="mt-1" />
+                    <Label htmlFor="firstName" className="text-xs font-light">First Name</Label>
+                    <Input id="firstName" placeholder="John" className="mt-1 h-12" />
                   </div>
                   <div>
-                    <Label htmlFor="lastName" className="text-xs">Last Name</Label>
-                    <Input id="lastName" placeholder="Smith" className="mt-1" />
+                    <Label htmlFor="lastName" className="text-xs font-light">Last Name</Label>
+                    <Input id="lastName" placeholder="Smith" className="mt-1 h-12" />
                   </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="email" className="text-xs">Email</Label>
-                  <Input id="email" type="email" placeholder="john@example.com" className="mt-1" />
+                  <Label htmlFor="email" className="text-xs font-light">Email</Label>
+                  <Input id="email" type="email" placeholder="john@example.com" className="mt-1 h-12" />
                 </div>
 
                 <div>
-                  <Label htmlFor="phone" className="text-xs">Phone</Label>
-                  <Input id="phone" type="tel" placeholder="(555) 123-4567" className="mt-1" />
+                  <Label htmlFor="phone" className="text-xs font-light">Phone</Label>
+                  <Input id="phone" type="tel" placeholder="(555) 123-4567" className="mt-1 h-12" />
                 </div>
 
                 <div>
-                  <Label htmlFor="subject" className="text-xs">Subject</Label>
-                  <Input id="subject" placeholder="How can we help?" className="mt-1" />
+                  <Label htmlFor="subject" className="text-xs font-light">Subject</Label>
+                  <Input id="subject" placeholder="How can we help?" className="mt-1 h-12" />
                 </div>
 
                 <div>
-                  <Label htmlFor="message" className="text-xs">Message</Label>
+                  <Label htmlFor="message" className="text-xs font-light">Message</Label>
                   <Textarea
                     id="message"
                     placeholder="Tell us more about your inquiry..."
-                    rows={4}
+                    rows={5}
                     className="mt-1"
                   />
                 </div>
 
-                <Button className="w-full rounded-full" size="lg">
+                <Button className="w-full font-light" size="lg">
                   Send Message
-                </Button>
-              </form>
-            </TabsContent>
-
-            <TabsContent value="agent">
-              <div className="mb-4 p-3 bg-muted/50 rounded-lg border">
-                <p className="text-xs text-muted-foreground">
-                  Interested in joining BRIDGE Residential? Fill out this form or visit our{" "}
-                  <a href="/join" className="text-foreground hover:underline underline-offset-4">dedicated careers page</a>.
-                </p>
-              </div>
-
-              <form className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="agentFirstName" className="text-xs">First Name</Label>
-                    <Input id="agentFirstName" placeholder="John" className="mt-1" />
-                  </div>
-                  <div>
-                    <Label htmlFor="agentLastName" className="text-xs">Last Name</Label>
-                    <Input id="agentLastName" placeholder="Smith" className="mt-1" />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="agentEmail" className="text-xs">Email</Label>
-                  <Input id="agentEmail" type="email" placeholder="john@example.com" className="mt-1" />
-                </div>
-
-                <div>
-                  <Label htmlFor="agentPhone" className="text-xs">Phone</Label>
-                  <Input id="agentPhone" type="tel" placeholder="(555) 123-4567" className="mt-1" />
-                </div>
-
-                <div>
-                  <Label htmlFor="experience" className="text-xs">Years of Experience</Label>
-                  <Input id="experience" placeholder="5" className="mt-1" />
-                </div>
-
-                <div>
-                  <Label htmlFor="agentMessage" className="text-xs">Why BRIDGE Residential?</Label>
-                  <Textarea
-                    id="agentMessage"
-                    placeholder="Tell us about your background and interest..."
-                    rows={4}
-                    className="mt-1"
-                  />
-                </div>
-
-                <Button className="w-full rounded-full" size="lg">
-                  Submit Application
                 </Button>
               </form>
             </TabsContent>

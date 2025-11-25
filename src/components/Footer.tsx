@@ -26,25 +26,20 @@ export const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-bold mb-6 tracking-tight text-lg">Quick Links</h3>
+            <h3 className="font-light mb-6 tracking-tight text-base md:text-lg">Quick Links</h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link to="/offerings" className="text-muted-foreground hover:text-accent transition-colors font-medium">
-                  Current Offerings
-                </Link>
-              </li>
-              <li>
-                <Link to="/transactions" className="text-muted-foreground hover:text-accent transition-colors font-medium">
+                <Link to="/transactions" className="text-muted-foreground hover:text-accent transition-colors font-light">
                   Transactions
                 </Link>
               </li>
               <li>
-                <Link to="/approach" className="text-muted-foreground hover:text-accent transition-colors font-medium">
+                <Link to="/approach" className="text-muted-foreground hover:text-accent transition-colors font-light">
                   Our Approach
                 </Link>
               </li>
               <li>
-                <Link to="/team" className="text-muted-foreground hover:text-accent transition-colors font-medium">
+                <Link to="/team" className="text-muted-foreground hover:text-accent transition-colors font-light">
                   Team
                 </Link>
               </li>
@@ -53,37 +48,17 @@ export const Footer = () => {
 
           {/* Resources */}
           <div>
-            <h3 className="font-bold mb-6 tracking-tight text-lg">Resources</h3>
+            <h3 className="font-light mb-6 tracking-tight text-base md:text-lg">Resources</h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link to="/submit-deal" className="text-muted-foreground hover:text-accent transition-colors font-medium">
+                <Link to="/submit-deal" className="text-muted-foreground hover:text-accent transition-colors font-light">
                   Submit a Deal
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-muted-foreground hover:text-accent transition-colors font-medium">
+                <Link to="/contact" className="text-muted-foreground hover:text-accent transition-colors font-light">
                   Contact Us
                 </Link>
-              </li>
-              <li>
-                <a
-                  href="https://dos.ny.gov/system/files/documents/2024/01/1736.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-accent transition-colors font-medium"
-                >
-                  NY Operating Procedures
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.hud.gov/program_offices/fair_housing_equal_opp"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-accent transition-colors font-medium"
-                >
-                  Fair Housing Info
-                </a>
               </li>
             </ul>
           </div>
