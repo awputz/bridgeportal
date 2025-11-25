@@ -1,4 +1,4 @@
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, TrendingUp, Users, Building2 } from "lucide-react";
 import { COMPANY_INFO } from "@/lib/constants";
 
 const leadership = [
@@ -177,6 +177,36 @@ const Team = () => {
             <div className="text-center">
               <div className="text-3xl md:text-4xl lg:text-5xl font-light mb-2 text-accent">67</div>
               <div className="text-xs md:text-sm text-muted-foreground font-light">Avg. Days to Close</div>
+            </div>
+          </div>
+        </section>
+
+        {/* Our Network */}
+        <section className="mb-16 md:mb-20">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-12 text-center">Our Network</h2>
+          <p className="text-base md:text-lg text-muted-foreground font-light text-center mb-12 max-w-3xl mx-auto">
+            Strategic partnerships with industry leaders across capital markets, legal, and service providers
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+            <div className="p-6 text-center border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/[0.02]">
+              <Users className="mx-auto mb-4 text-accent" size={40} />
+              <h3 className="text-base md:text-lg font-light mb-2">Institutional Buyers</h3>
+              <p className="text-xs md:text-sm text-muted-foreground font-light">Private equity, REITs, family offices with active NYC acquisition mandates</p>
+            </div>
+            <div className="p-6 text-center border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/[0.02]">
+              <TrendingUp className="mx-auto mb-4 text-accent" size={40} />
+              <h3 className="text-base md:text-lg font-light mb-2">Private Capital</h3>
+              <p className="text-xs md:text-sm text-muted-foreground font-light">High-net-worth individuals, syndicators, and active developers</p>
+            </div>
+            <div className="p-6 text-center border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/[0.02]">
+              <Building2 className="mx-auto mb-4 text-accent" size={40} />
+              <h3 className="text-base md:text-lg font-light mb-2">Lender Relationships</h3>
+              <p className="text-xs md:text-sm text-muted-foreground font-light">Banks, debt funds, credit unions, and agency lenders</p>
+            </div>
+            <div className="p-6 text-center border-l-2 border-accent/30 rounded-lg transition-all duration-400 hover:bg-white/[0.02]">
+              <CheckCircle2 className="mx-auto mb-4 text-accent" size={40} />
+              <h3 className="text-base md:text-lg font-light mb-2">Service Providers</h3>
+              <p className="text-xs md:text-sm text-muted-foreground font-light">Real estate attorneys, title companies, engineers, and architects</p>
             </div>
           </div>
         </section>

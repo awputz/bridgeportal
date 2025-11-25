@@ -6,11 +6,13 @@ import { ContactSheet } from "@/components/ContactSheet";
 import { Button } from "@/components/ui/button";
 
 const leftNavItems = [
-  { name: "Approach", path: "/approach" },
-  { name: "Transactions", path: "/transactions" },
+  { name: "Our Process", path: "/approach" },
+  { name: "Services", path: "/services" },
+  { name: "Markets", path: "/markets" },
 ];
 
 const rightNavItems = [
+  { name: "Transactions", path: "/transactions" },
   { name: "Team", path: "/team" },
 ];
 

@@ -71,7 +71,7 @@ export default function Home() {
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">Our Approach</h2>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">Our Process</h2>
               <p className="text-base md:text-lg text-muted-foreground font-light leading-relaxed mb-8">
                 BRIDGE Investment Sales combines aggressive marketing, disciplined underwriting, and capital markets access to run full sale and recapitalization processes for middle market owners and investors.
               </p>
