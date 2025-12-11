@@ -7,9 +7,11 @@ import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { DIVISIONS } from "@/lib/constants";
 import { InvestmentCalculator } from "@/components/InvestmentCalculator";
+import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 
 export default function CapitalAdvisory() {
   const { openContactSheet } = useContactSheet();
+  const heroReveal = useScrollReveal(0.1);
   const introReveal = useScrollReveal(0.1);
   const debtReveal = useScrollReveal(0.1);
   const equityReveal = useScrollReveal(0.1);
@@ -17,14 +19,24 @@ export default function CapitalAdvisory() {
   const calculatorReveal = useScrollReveal(0.1);
 
   return (
-    <div className="min-h-screen pt-32 md:pt-40">
-      {/* Hero */}
-      <section className="pb-16 md:pb-24 border-b border-white/5">
-        <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 animate-fade-in">
+    <div className="min-h-screen">
+      {/* Hero with Image */}
+      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={PLACEHOLDER_IMAGES.finance.charts} 
+            alt="Capital markets and finance" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+        </div>
+        <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${
+          heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6">
             Bridge Capital Advisory
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground font-light animate-fade-in" style={{ animationDelay: '100ms' }}>
+          <p className="text-lg md:text-xl text-muted-foreground font-light">
             {DIVISIONS.capitalAdvisory.tagline}
           </p>
         </div>
@@ -46,62 +58,80 @@ export default function CapitalAdvisory() {
 
       {/* Section 1: Debt Placement */}
       <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={debtReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`transition-all duration-700 ${
+        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+          <div className={`grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${
             debtReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <div className="flex items-center gap-4 mb-6">
-              <Building2 className="h-10 w-10 text-accent" />
-              <h2 className="text-3xl md:text-4xl font-light">Debt Placement</h2>
+            <div>
+              <div className="flex items-center gap-4 mb-6">
+                <Building2 className="h-10 w-10 text-accent" />
+                <h2 className="text-3xl md:text-4xl font-light">Debt Placement</h2>
+              </div>
+              <p className="text-muted-foreground font-light mb-8 max-w-3xl leading-relaxed">
+                Sourcing and structuring financing across a broad lender network.
+              </p>
+              <ul className="space-y-4 text-muted-foreground font-light">
+                <li className="flex items-start gap-3">
+                  <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
+                  <span>Senior loans from banks and credit unions</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
+                  <span>Bridge and transitional financing</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
+                  <span>Construction and redevelopment financing</span>
+                </li>
+              </ul>
             </div>
-            <p className="text-muted-foreground font-light mb-8 max-w-3xl leading-relaxed">
-              Sourcing and structuring financing across a broad lender network.
-            </p>
-            <ul className="space-y-4 text-muted-foreground font-light">
-              <li className="flex items-start gap-3">
-                <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                <span>Senior loans from banks and credit unions</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                <span>Bridge and transitional financing</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                <span>Construction and redevelopment financing</span>
-              </li>
-            </ul>
+            <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
+              <img 
+                src={PLACEHOLDER_IMAGES.finance.documents} 
+                alt="Financial analysis and documentation" 
+                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+              />
+            </div>
           </div>
         </div>
       </section>
 
       {/* Section 2: Equity And Joint Ventures */}
       <section className="py-20 md:py-28 border-b border-white/5" ref={equityReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`transition-all duration-700 ${
+        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+          <div className={`grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${
             equityReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <div className="flex items-center gap-4 mb-6">
-              <Users className="h-10 w-10 text-accent" />
-              <h2 className="text-3xl md:text-4xl font-light">Equity And Joint Ventures</h2>
+            <div className="relative aspect-[4/3] rounded-lg overflow-hidden order-2 md:order-1">
+              <img 
+                src={PLACEHOLDER_IMAGES.finance.handshake} 
+                alt="Partnership and collaboration" 
+                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+              />
             </div>
-            <p className="text-muted-foreground font-light mb-8 max-w-3xl leading-relaxed">
-              Matching operators with aligned capital partners.
-            </p>
-            <ul className="space-y-4 text-muted-foreground font-light">
-              <li className="flex items-start gap-3">
-                <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                <span>Common equity for acquisitions and developments</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                <span>Programmatic partnerships for repeat transactions</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                <span>Joint venture structures that align risk and return</span>
-              </li>
-            </ul>
+            <div className="order-1 md:order-2">
+              <div className="flex items-center gap-4 mb-6">
+                <Users className="h-10 w-10 text-accent" />
+                <h2 className="text-3xl md:text-4xl font-light">Equity And Joint Ventures</h2>
+              </div>
+              <p className="text-muted-foreground font-light mb-8 max-w-3xl leading-relaxed">
+                Matching operators with aligned capital partners.
+              </p>
+              <ul className="space-y-4 text-muted-foreground font-light">
+                <li className="flex items-start gap-3">
+                  <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
+                  <span>Common equity for acquisitions and developments</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
+                  <span>Programmatic partnerships for repeat transactions</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
+                  <span>Joint venture structures that align risk and return</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>

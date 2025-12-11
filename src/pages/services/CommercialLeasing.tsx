@@ -7,6 +7,7 @@ import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { DIVISIONS } from "@/lib/constants";
 import LeaseCalculator from "@/components/LeaseCalculator";
+import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 
 const stats = [
   { label: "Spaces Leased", value: "100+" },
@@ -99,6 +100,7 @@ const serviceDetails = [
 
 export default function CommercialLeasing() {
   const { openContactSheet } = useContactSheet();
+  const heroReveal = useScrollReveal(0.1);
   const statsReveal = useScrollReveal(0.1);
   const introReveal = useScrollReveal(0.1);
   const processReveal = useScrollReveal(0.1);
@@ -111,17 +113,27 @@ export default function CommercialLeasing() {
   const teamReveal = useScrollReveal(0.1);
 
   return (
-    <div className="min-h-screen pt-32 md:pt-40">
-      {/* Hero */}
-      <section className="pb-16 md:pb-24 border-b border-white/5">
-        <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 animate-fade-in">
+    <div className="min-h-screen">
+      {/* Hero with Image */}
+      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={PLACEHOLDER_IMAGES.retail.street} 
+            alt="NYC retail and commercial streets" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+        </div>
+        <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${
+          heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6">
             Bridge Commercial
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground font-light animate-fade-in max-w-2xl mx-auto mb-10" style={{ animationDelay: '100ms' }}>
+          <p className="text-lg md:text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-10">
             NYC Retail & Office Leasing Specialists
           </p>
-          <Button size="lg" className="font-light animate-fade-in" style={{ animationDelay: '200ms' }} onClick={openContactSheet}>
+          <Button size="lg" className="font-light" onClick={openContactSheet}>
             List Your Space
           </Button>
         </div>
@@ -211,28 +223,39 @@ export default function CommercialLeasing() {
         </div>
       </section>
 
-      {/* Who We Serve */}
+      {/* Who We Serve with Image */}
       <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={categoriesReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`transition-all duration-700 ${
+        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+          <div className={`grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${
             categoriesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-4 text-center">Who We Serve</h2>
-            <p className="text-muted-foreground font-light mb-12 text-center max-w-2xl mx-auto">
-              Experience across a wide range of commercial tenant types.
-            </p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {tenantCategories.map((category, index) => (
-                <div 
-                  key={category.title} 
-                  className="p-6 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-300 hover:bg-white/[0.04]"
-                  style={{ transitionDelay: `${index * 50}ms` }}
-                >
-                  <category.icon className="h-10 w-10 text-accent mb-4" />
-                  <h3 className="text-lg font-light mb-2">{category.title}</h3>
-                  <p className="text-muted-foreground font-light text-sm">{category.description}</p>
-                </div>
-              ))}
+            <div>
+              <h2 className="text-3xl md:text-4xl font-light mb-4">Who We Serve</h2>
+              <p className="text-muted-foreground font-light mb-8">
+                Experience across a wide range of commercial tenant types.
+              </p>
+              <div className="grid grid-cols-1 gap-4">
+                {tenantCategories.map((category, index) => (
+                  <div 
+                    key={category.title} 
+                    className="p-4 rounded-lg border border-white/10 bg-white/[0.02] flex items-start gap-4"
+                    style={{ transitionDelay: `${index * 50}ms` }}
+                  >
+                    <category.icon className="h-6 w-6 text-accent flex-shrink-0 mt-1" />
+                    <div>
+                      <h3 className="text-base font-light mb-1">{category.title}</h3>
+                      <p className="text-muted-foreground font-light text-sm">{category.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
+              <img 
+                src={PLACEHOLDER_IMAGES.retail.storefront} 
+                alt="NYC retail storefront" 
+                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+              />
             </div>
           </div>
         </div>
@@ -328,19 +351,11 @@ export default function CommercialLeasing() {
               {comparisonItems.map((item, index) => (
                 <div key={item.feature} className="grid grid-cols-3 p-4 border-t border-white/10">
                   <div className="text-muted-foreground font-light text-sm">{item.feature}</div>
-                  <div className="flex justify-center">
-                    {item.bridge ? (
-                      <CheckCircle className="h-5 w-5 text-accent" />
-                    ) : (
-                      <XCircle className="h-5 w-5 text-muted-foreground/50" />
-                    )}
+                  <div className="text-center">
+                    {item.bridge ? <CheckCircle className="h-5 w-5 text-accent mx-auto" /> : <XCircle className="h-5 w-5 text-muted-foreground/30 mx-auto" />}
                   </div>
-                  <div className="flex justify-center">
-                    {item.basic ? (
-                      <CheckCircle className="h-5 w-5 text-accent" />
-                    ) : (
-                      <XCircle className="h-5 w-5 text-muted-foreground/50" />
-                    )}
+                  <div className="text-center">
+                    {item.basic ? <CheckCircle className="h-5 w-5 text-accent mx-auto" /> : <XCircle className="h-5 w-5 text-muted-foreground/30 mx-auto" />}
                   </div>
                 </div>
               ))}
@@ -351,51 +366,19 @@ export default function CommercialLeasing() {
 
       {/* Lease Calculator */}
       <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={calculatorReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`transition-all duration-700 ${
+        <div className="container mx-auto px-4 md:px-6">
+          <div className={`text-center mb-12 transition-all duration-700 ${
             calculatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-4 text-center">Lease Calculator</h2>
-            <p className="text-muted-foreground font-light mb-12 text-center max-w-2xl mx-auto">
-              Estimate total lease value and monthly payments for your commercial space.
+            <h2 className="text-3xl md:text-4xl font-light mb-4">Lease Calculator</h2>
+            <p className="text-muted-foreground font-light max-w-2xl mx-auto">
+              Estimate your total lease costs and compare different lease structures.
             </p>
-            <LeaseCalculator />
           </div>
-        </div>
-      </section>
-
-      {/* Team Preview */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={teamReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`transition-all duration-700 ${
-            teamReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-4 text-center">Our Commercial Team</h2>
-            <p className="text-muted-foreground font-light mb-12 text-center max-w-2xl mx-auto">
-              Experienced professionals dedicated to NYC commercial real estate.
-            </p>
-            <div className="grid md:grid-cols-3 gap-6 mb-10">
-              <div className="p-6 rounded-lg border border-white/10 bg-white/[0.02] text-center">
-                <MapPin className="h-8 w-8 text-accent mx-auto mb-4" />
-                <h3 className="text-lg font-light mb-2">Market Knowledge</h3>
-                <p className="text-muted-foreground font-light text-sm">Deep expertise in NYC retail corridors and office submarkets</p>
-              </div>
-              <div className="p-6 rounded-lg border border-white/10 bg-white/[0.02] text-center">
-                <Store className="h-8 w-8 text-accent mx-auto mb-4" />
-                <h3 className="text-lg font-light mb-2">Retail & Office Focus</h3>
-                <p className="text-muted-foreground font-light text-sm">Specialized in commercial assets across all five boroughs</p>
-              </div>
-              <div className="p-6 rounded-lg border border-white/10 bg-white/[0.02] text-center">
-                <Handshake className="h-8 w-8 text-accent mx-auto mb-4" />
-                <h3 className="text-lg font-light mb-2">Full-Service Support</h3>
-                <p className="text-muted-foreground font-light text-sm">From listing to lease execution—we handle it all</p>
-              </div>
-            </div>
-            <div className="text-center">
-              <Button asChild variant="outline" className="font-light">
-                <Link to="/team">Meet the Team</Link>
-              </Button>
-            </div>
+            calculatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`} style={{ transitionDelay: '200ms' }}>
+            <LeaseCalculator />
           </div>
         </div>
       </section>
@@ -403,16 +386,16 @@ export default function CommercialLeasing() {
       {/* CTA */}
       <section className="py-20 md:py-28 bg-white/[0.02]">
         <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
-          <h2 className="text-3xl md:text-4xl font-light mb-6">Ready to Maximize Your Property Value?</h2>
-          <p className="text-muted-foreground font-light mb-10 max-w-2xl mx-auto leading-relaxed">
-            Whether you're a landlord looking to lease your space or a tenant searching for the perfect location, we're here to help.
+          <h2 className="text-3xl md:text-4xl font-light mb-6">Ready To Get Started?</h2>
+          <p className="text-muted-foreground font-light mb-10 max-w-2xl mx-auto">
+            Whether you're looking to lease space or find the perfect tenant, Bridge Commercial is ready to help.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="font-light" onClick={openContactSheet}>
-              Submit a Deal
+              List Your Space
             </Button>
-            <Button variant="outline" size="lg" className="font-light" onClick={openContactSheet}>
-              Find Your Space
+            <Button asChild variant="outline" size="lg" className="font-light">
+              <Link to="/contact">Find Space</Link>
             </Button>
           </div>
         </div>

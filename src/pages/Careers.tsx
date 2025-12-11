@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Briefcase, Users, TrendingUp, Award, MapPin, Clock, ArrowRight } from "lucide-react";
+import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 
 const openPositions = [
   {
@@ -53,20 +54,27 @@ export default function Careers() {
   const whyReveal = useScrollReveal(0.1);
   const valuesReveal = useScrollReveal(0.1);
   const positionsReveal = useScrollReveal(0.1);
+  const cultureReveal = useScrollReveal(0.1);
 
   return (
-    <div className="min-h-screen pt-32 md:pt-40">
-      {/* Hero */}
-      <section className="pb-16 md:pb-24 border-b border-white/5" ref={heroReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
-          <h1 className={`text-4xl md:text-5xl lg:text-6xl font-light mb-6 transition-all duration-700 ${
-            heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
+    <div className="min-h-screen">
+      {/* Hero with Image */}
+      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center" ref={heroReveal.elementRef}>
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={PLACEHOLDER_IMAGES.office.modern} 
+            alt="Modern office workspace" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+        </div>
+        <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${
+          heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6">
             Join Our Team
           </h1>
-          <p className={`text-lg md:text-xl text-muted-foreground font-light max-w-2xl mx-auto transition-all duration-700 ${
-            heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`} style={{ animationDelay: '100ms' }}>
+          <p className="text-lg md:text-xl text-muted-foreground font-light max-w-2xl mx-auto">
             Build your career at one of NYC's fastest-growing real estate advisory firms
           </p>
         </div>
@@ -99,8 +107,34 @@ export default function Careers() {
         </div>
       </section>
 
+      {/* Culture Section with Image */}
+      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={cultureReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+          <div className={`grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${
+            cultureReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
+            <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
+              <img 
+                src={PLACEHOLDER_IMAGES.office.teamWork} 
+                alt="Team collaboration at Bridge" 
+                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+              />
+            </div>
+            <div>
+              <h2 className="text-3xl md:text-4xl font-light mb-6">Our Culture</h2>
+              <p className="text-muted-foreground font-light leading-relaxed mb-6">
+                At Bridge, we believe that great work happens when talented people collaborate in a supportive environment. Our team is built on mutual respect, open communication, and a shared commitment to excellence.
+              </p>
+              <p className="text-muted-foreground font-light leading-relaxed">
+                We celebrate wins together, learn from challenges, and continuously push each other to grow. Whether you're just starting your career or bringing years of experience, you'll find opportunities to make an impact here.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Our Values */}
-      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={valuesReveal.elementRef}>
+      <section className="py-20 md:py-28 border-b border-white/5" ref={valuesReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`transition-all duration-700 ${
             valuesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
@@ -126,7 +160,7 @@ export default function Careers() {
       </section>
 
       {/* Open Positions */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={positionsReveal.elementRef}>
+      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={positionsReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
           <div className={`transition-all duration-700 ${
             positionsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'

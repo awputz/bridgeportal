@@ -5,7 +5,8 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
-import { InvestmentCalculator } from "@/components/InvestmentCalculator";
+import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
+
 const stats = [{
   label: "Units Managed",
   value: "500+"
@@ -19,6 +20,7 @@ const stats = [{
   label: "Years Experience",
   value: "15+"
 }];
+
 const services = [{
   icon: Shield,
   title: "Tenant Screening",
@@ -44,6 +46,7 @@ const services = [{
   title: "Portfolio Management",
   description: "Full-service management for multi-unit portfolios"
 }];
+
 const operationalStats = [{
   value: "30+",
   label: "Team Members"
@@ -57,6 +60,7 @@ const operationalStats = [{
   value: "15+",
   label: "Years Experience"
 }];
+
 const markets = [{
   borough: "Manhattan",
   areas: ["Upper East Side", "Upper West Side", "Midtown", "Downtown", "Chelsea", "Tribeca"]
@@ -67,32 +71,39 @@ const markets = [{
   borough: "Queens",
   areas: ["Long Island City", "Astoria", "Forest Hills", "Flushing", "Jackson Heights"]
 }];
+
 export default function PropertyManagement() {
-  const {
-    openContactSheet
-  } = useContactSheet();
+  const { openContactSheet } = useContactSheet();
+  const heroReveal = useScrollReveal(0.1);
   const statsReveal = useScrollReveal(0.1);
   const introReveal = useScrollReveal(0.1);
   const hpgReveal = useScrollReveal(0.1);
   const servicesReveal = useScrollReveal(0.1);
   const marketsReveal = useScrollReveal(0.1);
   const operationalReveal = useScrollReveal(0.1);
-  const calculatorReveal = useScrollReveal(0.1);
-  return <div className="min-h-screen pt-32 md:pt-40">
-      {/* Hero */}
-      <section className="pb-16 md:pb-24 border-b border-white/5">
-        <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 animate-fade-in">
+
+  return (
+    <div className="min-h-screen">
+      {/* Hero with Image */}
+      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={PLACEHOLDER_IMAGES.building.residential} 
+            alt="Residential property management" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+        </div>
+        <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${
+          heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6">
             Bridge Property Management
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground font-light animate-fade-in max-w-2xl mx-auto mb-10" style={{
-          animationDelay: '100ms'
-        }}>
+          <p className="text-lg md:text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-10">
             Full-service portfolio management for landlords and institutional investors across New York City
           </p>
-          <Button size="lg" className="font-light animate-fade-in" style={{
-          animationDelay: '200ms'
-        }} onClick={openContactSheet}>
+          <Button size="lg" className="font-light" onClick={openContactSheet}>
             Partner With Us
           </Button>
         </div>
@@ -105,12 +116,12 @@ export default function PropertyManagement() {
       <section className="py-12 md:py-16 border-b border-white/5 bg-white/[0.02]" ref={statsReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6">
           <div className={`grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 transition-all duration-700 ${statsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            {stats.map((stat, index) => <div key={stat.label} className="text-center" style={{
-            transitionDelay: `${index * 100}ms`
-          }}>
+            {stats.map((stat, index) => (
+              <div key={stat.label} className="text-center" style={{ transitionDelay: `${index * 100}ms` }}>
                 <div className="text-3xl md:text-4xl font-light text-foreground mb-2">{stat.value}</div>
                 <div className="text-sm text-muted-foreground font-light">{stat.label}</div>
-              </div>)}
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -126,7 +137,7 @@ export default function PropertyManagement() {
 
       {/* HPG Partnership & Underwriting */}
       <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={hpgReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
           <div className={`grid md:grid-cols-2 gap-8 transition-all duration-700 ${hpgReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             {/* HPG Partnership Card */}
             <div className="p-8 rounded-lg border border-white/10 bg-white/[0.02]">
@@ -181,22 +192,37 @@ export default function PropertyManagement() {
         </div>
       </section>
 
-      {/* Services Grid */}
+      {/* Services Grid with Image */}
       <section className="py-20 md:py-28 border-b border-white/5" ref={servicesReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`transition-all duration-700 ${servicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-4 text-center">Our Services</h2>
-            <p className="text-muted-foreground font-light mb-12 text-center max-w-2xl mx-auto">
-              Comprehensive property management services designed to maximize your portfolio's potential.
-            </p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {services.map((service, index) => <div key={service.title} className="p-6 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-300 hover:bg-white/[0.04]" style={{
-              transitionDelay: `${index * 50}ms`
-            }}>
-                  <service.icon className="h-8 w-8 text-accent mb-4" />
-                  <h3 className="text-lg font-light mb-2">{service.title}</h3>
-                  <p className="text-muted-foreground font-light text-sm">{service.description}</p>
-                </div>)}
+        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+          <div className={`grid md:grid-cols-2 gap-12 items-start transition-all duration-700 ${servicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div>
+              <h2 className="text-3xl md:text-4xl font-light mb-4">Our Services</h2>
+              <p className="text-muted-foreground font-light mb-8">
+                Comprehensive property management services designed to maximize your portfolio's potential.
+              </p>
+              <div className="grid gap-4">
+                {services.map((service, index) => (
+                  <div 
+                    key={service.title} 
+                    className="p-4 rounded-lg border border-white/10 bg-white/[0.02] flex items-start gap-4"
+                    style={{ transitionDelay: `${index * 50}ms` }}
+                  >
+                    <service.icon className="h-6 w-6 text-accent flex-shrink-0 mt-1" />
+                    <div>
+                      <h3 className="text-base font-light mb-1">{service.title}</h3>
+                      <p className="text-muted-foreground font-light text-sm">{service.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
+              <img 
+                src={PLACEHOLDER_IMAGES.building.apartment} 
+                alt="Modern apartment interior" 
+                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+              />
             </div>
           </div>
         </div>
@@ -214,17 +240,23 @@ export default function PropertyManagement() {
               Deep expertise across New York City's most sought-after residential neighborhoods.
             </p>
             <div className="grid md:grid-cols-3 gap-6">
-              {markets.map((market, index) => <div key={market.borough} className="p-6 rounded-lg border border-white/10 bg-white/[0.02]" style={{
-              transitionDelay: `${index * 100}ms`
-            }}>
+              {markets.map((market, index) => (
+                <div 
+                  key={market.borough} 
+                  className="p-6 rounded-lg border border-white/10 bg-white/[0.02]"
+                  style={{ transitionDelay: `${index * 100}ms` }}
+                >
                   <h3 className="text-xl font-light mb-4">{market.borough}</h3>
                   <ul className="space-y-2">
-                    {market.areas.map(area => <li key={area} className="text-muted-foreground font-light text-sm flex items-center gap-2">
+                    {market.areas.map(area => (
+                      <li key={area} className="text-muted-foreground font-light text-sm flex items-center gap-2">
                         <span className="w-1 h-1 bg-accent rounded-full" />
                         {area}
-                      </li>)}
+                      </li>
+                    ))}
                   </ul>
-                </div>)}
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -239,12 +271,12 @@ export default function PropertyManagement() {
               Backed by the full resources of Bridge Advisory Group
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-              {operationalStats.map((stat, index) => <div key={stat.label} className="text-center" style={{
-              transitionDelay: `${index * 100}ms`
-            }}>
+              {operationalStats.map((stat, index) => (
+                <div key={stat.label} className="text-center" style={{ transitionDelay: `${index * 100}ms` }}>
                   <div className="text-3xl md:text-4xl font-light text-foreground mb-2">{stat.value}</div>
                   <div className="text-sm text-muted-foreground font-light">{stat.label}</div>
-                </div>)}
+                </div>
+              ))}
             </div>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="p-6 rounded-lg border border-white/10 bg-white/[0.02] text-center">
@@ -264,9 +296,6 @@ export default function PropertyManagement() {
         </div>
       </section>
 
-      {/* Portfolio Analysis Calculator */}
-      
-
       {/* CTA */}
       <section className="py-20 md:py-28 bg-white/[0.02]">
         <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
@@ -284,5 +313,6 @@ export default function PropertyManagement() {
           </div>
         </div>
       </section>
-    </div>;
+    </div>
+  );
 }
