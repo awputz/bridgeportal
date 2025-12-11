@@ -72,7 +72,7 @@ export const Navigation = () => {
           </div>
 
           {/* Desktop Layout - Centered Logo */}
-          <div className="hidden lg:grid grid-cols-3 items-center py-2.5 px-8">
+          <div className="hidden lg:grid grid-cols-3 items-center py-1.5 px-4">
             {/* Left: Navigation Links */}
             <div className="flex items-center space-x-5">
               {leftNavItems.map((item) => (
