@@ -68,17 +68,20 @@ export default function Home() {
 
           {/* Quick Access Service Buttons */}
           <div 
-            className="flex flex-col sm:flex-row gap-3 justify-center px-4 mt-6 animate-fade-in"
+            className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center px-4 mt-8 animate-fade-in"
             style={{ animationDelay: '700ms', animationFillMode: 'backwards' }}
           >
-            <Button asChild variant="outline" size="lg" className="font-light px-6 md:px-8 w-full sm:w-auto border-white/20 hover:bg-white/10 hover:border-white/30">
+            <Button asChild variant="outline" size="lg" className="font-medium px-6 md:px-8 w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/40 hover:bg-white/20 hover:border-white/60 text-white shadow-lg">
               <Link to="/services/residential">Residential</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="font-light px-6 md:px-8 w-full sm:w-auto border-white/20 hover:bg-white/10 hover:border-white/30">
+            <Button asChild variant="outline" size="lg" className="font-medium px-6 md:px-8 w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/40 hover:bg-white/20 hover:border-white/60 text-white shadow-lg">
               <Link to="/services/commercial-leasing">Commercial Leasing</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="font-light px-6 md:px-8 w-full sm:w-auto border-white/20 hover:bg-white/10 hover:border-white/30">
+            <Button asChild variant="outline" size="lg" className="font-medium px-6 md:px-8 w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/40 hover:bg-white/20 hover:border-white/60 text-white shadow-lg">
               <Link to="/services/investment-sales">Investment Sales</Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="font-medium px-6 md:px-8 w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/40 hover:bg-white/20 hover:border-white/60 text-white shadow-lg">
+              <Link to="/services/capital-advisory">Capital Advisory</Link>
             </Button>
           </div>
         </div>
