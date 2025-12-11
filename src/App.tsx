@@ -29,6 +29,7 @@ import InvestmentSales from "./pages/services/InvestmentSales";
 import CapitalAdvisory from "./pages/services/CapitalAdvisory";
 import Marketing from "./pages/services/Marketing";
 import Billboard from "./pages/services/Billboard";
+import MarketsComingSoon from "./pages/MarketsComingSoon";
 
 const queryClient = new QueryClient();
 
@@ -78,6 +79,9 @@ const App = () => {
                     {/* Track Record */}
                     <Route path="/track-record" element={<TrackRecord />} />
                     
+                    {/* Markets Coming Soon */}
+                    <Route path="/markets-coming-soon" element={<MarketsComingSoon />} />
+                    
                     {/* Legacy routes - redirect to new structure */}
                     <Route path="/commercial" element={<Navigate to="/services/investment-sales" replace />} />
                     <Route path="/commercial/*" element={<Navigate to="/services/investment-sales" replace />} />
@@ -86,7 +90,7 @@ const App = () => {
                     <Route path="/capital-markets" element={<Navigate to="/services/capital-advisory" replace />} />
                     <Route path="/approach" element={<Navigate to="/about" replace />} />
                     <Route path="/services" element={<Navigate to="/" replace />} />
-                    <Route path="/markets" element={<Navigate to="/" replace />} />
+                    <Route path="/markets" element={<Navigate to="/markets-coming-soon" replace />} />
                     <Route path="/market-insights" element={<Navigate to="/insights" replace />} />
                     <Route path="/submit-deal" element={<Navigate to="/contact" replace />} />
                     <Route path="/transactions" element={<Navigate to="/track-record" replace />} />
