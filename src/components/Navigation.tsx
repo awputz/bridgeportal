@@ -27,9 +27,6 @@ const leftNavItems = [{
   name: "Transactions",
   path: "https://traded.co/company/bridge-advisory-group/",
   external: true
-}, {
-  name: "Careers",
-  path: "/careers"
 }];
 
 // Service icons mapping
@@ -239,6 +236,16 @@ export const Navigation = () => {
                   })}
                 </DropdownMenuContent>
               </DropdownMenu>
+
+              <Link 
+                to="/careers" 
+                className={cn(
+                  "text-sm font-light transition-all duration-200 hover:scale-105",
+                  location.pathname === "/careers" ? "text-foreground" : "text-foreground/70 hover:text-foreground"
+                )}
+              >
+                Careers
+              </Link>
 
               <Button 
                 size="sm" 
