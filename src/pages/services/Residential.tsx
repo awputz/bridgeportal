@@ -18,6 +18,7 @@ import instagram3 from "@/assets/instagram-3.jpg";
 import instagram4 from "@/assets/instagram-4.jpg";
 import instagram5 from "@/assets/instagram-5.jpg";
 import instagram6 from "@/assets/instagram-6.jpg";
+import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 
 const defaultStats = [
   { label: "Units Represented", value: "500+" },
@@ -69,10 +70,19 @@ export default function ResidentialServices() {
   const recentDeals = transactions || [];
 
   return (
-    <div className="min-h-screen pt-32 md:pt-40">
-      {/* Hero */}
-      <section className="pb-16 md:pb-24 border-b border-white/5">
-        <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
+    <div className="min-h-screen">
+      {/* Hero with Background Image */}
+      <section className="relative min-h-[70vh] flex items-center justify-center pt-32 md:pt-40 pb-16 md:pb-24">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${PLACEHOLDER_IMAGES.building.apartment})` }}
+        />
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/70 to-background" />
+        
+        {/* Content */}
+        <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 animate-fade-in">
             Bridge Residential
           </h1>
