@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useBridgeSettings } from "@/hooks/useBridgeSettings";
 import { useBridgeServices } from "@/hooks/useBridgeServices";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
-import { Instagram, Linkedin, Phone } from "lucide-react";
+import { Instagram, Linkedin, Phone, Mail } from "lucide-react";
 import { useState } from "react";
 export const Footer = () => {
   const {
@@ -23,10 +23,10 @@ export const Footer = () => {
   return <footer className="bg-dark-bg text-foreground">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 bg-primary-foreground">
         {/* Top Section - 4 Columns */}
-        <div className="py-12 md:py-16 lg:py-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+        <div className="py-8 md:py-12 lg:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12">
           {/* Newsletter */}
-          <div className="md:col-span-2 lg:col-span-1 lg:pr-8">
-            <h3 className="text-xl md:text-2xl font-light mb-6 tracking-tight">
+          <div className="sm:col-span-2 lg:col-span-1 lg:pr-8">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-light mb-4 md:mb-6 tracking-tight">
               Subscribe To Our Newsletter
             </h3>
             <form onSubmit={handleNewsletterSubmit} className="space-y-4">
@@ -39,10 +39,10 @@ export const Footer = () => {
 
           {/* Navigation */}
           <div>
-            <h3 className="font-medium mb-5 tracking-tight text-sm">
+            <h3 className="font-medium mb-3 md:mb-5 tracking-tight text-sm">
               Navigation
             </h3>
-            <ul className="space-y-2.5 text-sm">
+            <ul className="space-y-2 text-sm">
               {services?.slice(0, 2).map(service => <li key={service.id}>
                   <Link to={service.path} className="text-muted-foreground hover:text-foreground transition-colors font-light">
                     {service.name}
@@ -73,10 +73,10 @@ export const Footer = () => {
 
           {/* Contact Us */}
           <div>
-            <h3 className="font-medium mb-5 tracking-tight text-sm">
+            <h3 className="font-medium mb-3 md:mb-5 tracking-tight text-sm">
               Contact Us
             </h3>
-            <div className="space-y-4 text-sm">
+            <div className="space-y-3 md:space-y-4 text-sm">
               <div>
                 <p className="text-muted-foreground font-light mb-1">Email Address</p>
                 <a href={`mailto:${settings?.company_contact.email}`} className="text-foreground hover:text-muted-foreground transition-colors">
@@ -94,7 +94,7 @@ export const Footer = () => {
 
           {/* Office */}
           <div>
-            <h3 className="font-medium mb-5 tracking-tight text-sm">
+            <h3 className="font-medium mb-3 md:mb-5 tracking-tight text-sm">
               Office
             </h3>
             <div className="text-sm text-muted-foreground font-light leading-relaxed whitespace-pre-line">
@@ -104,33 +104,36 @@ export const Footer = () => {
         </div>
 
         {/* Middle Section - Logo & Social */}
-        <div className="py-8 border-t border-border/20 flex flex-col md:flex-row justify-between items-center gap-6">
-          <img alt="Bridge Advisory Group" src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" className="h-10 md:h-12 w-auto" />
-          <div className="flex items-center gap-4">
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors">
-              <Instagram className="w-5 h-5" />
+        <div className="py-6 md:py-8 border-t border-border/20 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6">
+          <img alt="Bridge Advisory Group" src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" className="h-8 md:h-10 lg:h-12 w-auto" />
+          <div className="flex items-center gap-3 md:gap-4">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors">
+              <Instagram className="w-4 h-4 md:w-5 md:h-5" />
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors">
-              <Linkedin className="w-5 h-5" />
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors">
+              <Linkedin className="w-4 h-4 md:w-5 md:h-5" />
             </a>
-            <button onClick={openContactSheet} className="w-12 h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors">
-              <Phone className="w-5 h-5" />
+            <a href={`mailto:${settings?.company_contact.email}`} className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors">
+              <Mail className="w-4 h-4 md:w-5 md:h-5" />
+            </a>
+            <button onClick={openContactSheet} className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors">
+              <Phone className="w-4 h-4 md:w-5 md:h-5" />
             </button>
           </div>
         </div>
 
         {/* Legal Disclaimer */}
-        <div className="py-6 border-t border-border/20">
-          <div className="flex items-start gap-3 mb-6">
-            <img src="/brandmark-white.png" alt="Bridge" className="w-5 h-5 mt-0.5 opacity-70" />
-            <p className="text-xs text-muted-foreground/70 leading-relaxed">
+        <div className="py-4 md:py-6 border-t border-border/20">
+          <div className="flex items-start gap-2 md:gap-3 mb-4 md:mb-6">
+            <img src="/brandmark-white.png" alt="Bridge" className="w-4 h-4 md:w-5 md:h-5 mt-0.5 opacity-70 flex-shrink-0" />
+            <p className="text-[10px] md:text-xs text-muted-foreground/70 leading-relaxed">
               {settings?.company_name}, Including Its Logo, Trademarks, Designs, And Slogans, Are Registered And Unregistered Trademarks Of {settings?.company_name} Or Its Affiliated Companies. Bridge Is A Licensed Real Estate Broker In New York. All Listing Information Is Deemed Reliable But Is Not Guaranteed And Is Subject To Errors, Omissions, Changes In Price, Prior Sale, Or Withdrawal Without Notice. No Representation Is Made As To The Accuracy Of Any Description. All Measurements And Square Footages Are Approximate, And All Descriptive Information Should Be Independently Verified. No Financial Or Legal Advice Is Provided. {settings?.company_name} Supports The Fair Housing Act And Equal Opportunity Act And Does Not Discriminate Against Voucher Holders Pursuant To Applicable Law. All Lawful Sources Of Income Are Accepted.
             </p>
           </div>
         </div>
 
         {/* Bottom Links */}
-        <div className="py-4 border-t border-border/20 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground uppercase tracking-wider">
+        <div className="py-3 md:py-4 border-t border-border/20 flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4 text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider">
           <a href="https://d1e1jt2fj4r8r.cloudfront.net/b26ab618-2b1e-4a17-8868-498b96b52dc0/qckNAwejF/NY%20Reasonable%20Accommodations%20Notice.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
             NY Reasonable Accommodations Notice
           </a>
