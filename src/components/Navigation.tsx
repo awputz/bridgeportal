@@ -33,23 +33,41 @@ export const Navigation = () => {
     };
   }, [isOpen]);
 
+  // Close menu on route change
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
+
   const isServicesActive = location.pathname.startsWith('/services');
 
   return (
     <>
-      <nav className="fixed top-4 md:top-6 left-0 right-0 z-50 px-4 md:px-6">
+      <nav className="fixed top-0 left-0 right-0 z-50 px-3 pt-3 md:px-4 md:pt-4 lg:px-6 lg:pt-6">
         <div className="max-w-7xl mx-auto bg-black/40 backdrop-blur-3xl border border-white/10 rounded-lg md:rounded-xl shadow-[0_16px_48px_0_rgba(0,0,0,0.75)]">
           {/* Mobile & Tablet Layout */}
-          <div className="flex lg:hidden items-center justify-between h-16 md:h-20 px-4 md:px-6">
-            <Link to="/" className="flex items-center">
-              <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-20 md:h-24 invert object-contain max-w-[220px]" />
+          <div className="flex lg:hidden items-center justify-between h-16 sm:h-18 md:h-20 px-4 md:px-6">
+            <Link to="/" className="flex items-center flex-shrink-0">
+              <img 
+                src={bridgeAdvisoryLogo} 
+                alt="Bridge Advisory Group" 
+                className="w-36 sm:w-40 md:w-44 invert" 
+              />
             </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 text-foreground hover:text-foreground/80 transition-colors"
+              className="p-2.5 -mr-2 text-foreground hover:text-foreground/80 transition-colors touch-manipulation"
               aria-label="Toggle menu"
             >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
+              <div className="relative w-6 h-6">
+                <Menu 
+                  size={24} 
+                  className={`absolute inset-0 transition-all duration-300 ${isOpen ? 'opacity-0 rotate-90' : 'opacity-100 rotate-0'}`} 
+                />
+                <X 
+                  size={24} 
+                  className={`absolute inset-0 transition-all duration-300 ${isOpen ? 'opacity-100 rotate-0' : 'opacity-0 -rotate-90'}`} 
+                />
+              </div>
             </button>
           </div>
 
@@ -124,52 +142,66 @@ export const Navigation = () => {
         </div>
 
         {/* Mobile Full-Screen Menu */}
-        {isOpen && (
-          <div className="lg:hidden fixed inset-0 bg-background/98 backdrop-blur-3xl top-20 md:top-24 z-40">
-            <div className="container mx-auto px-6 py-8 overflow-y-auto max-h-[calc(100vh-6rem)]">
-              <div className="space-y-6">
-                {/* Left Nav Items */}
-                <div>
-                  {leftNavItems.map((item) => (
-                    <Link
-                      key={item.name}
-                      to={item.path}
-                      className="block text-xl font-light text-foreground/80 hover:text-foreground transition-colors py-3"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-
-                {/* Services Section */}
-                <div className="pt-4 border-t border-white/10">
-                  <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3">Services</p>
-                  {NAV_ITEMS.services.items.map((item) => (
-                    <Link
-                      key={item.name}
-                      to={item.path}
-                      className="block text-xl font-light text-foreground/80 hover:text-foreground transition-colors py-3"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-
-                <Button
-                  asChild
-                  className="w-full mt-6 font-light"
-                  size="lg"
-                >
-                  <Link to="/contact" onClick={() => setIsOpen(false)}>
-                    Contact Us
+        <div 
+          className={`lg:hidden fixed inset-x-0 bottom-0 bg-background/98 backdrop-blur-3xl z-40 transition-all duration-300 ease-out ${
+            isOpen 
+              ? 'opacity-100 translate-y-0' 
+              : 'opacity-0 translate-y-full pointer-events-none'
+          }`}
+          style={{ top: 'calc(4rem + 0.75rem)' }}
+        >
+          <div className="h-full overflow-y-auto overscroll-contain px-6 py-6 pb-safe">
+            <div className="space-y-4">
+              {/* Left Nav Items */}
+              <div>
+                {leftNavItems.map((item, index) => (
+                  <Link
+                    key={item.name}
+                    to={item.path}
+                    className={`block text-lg font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[48px] flex items-center ${
+                      isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                    }`}
+                    style={{ transitionDelay: `${index * 50}ms` }}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.name}
                   </Link>
-                </Button>
+                ))}
               </div>
+
+              {/* Services Section */}
+              <div className="pt-4 border-t border-white/10">
+                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3">Services</p>
+                {NAV_ITEMS.services.items.map((item, index) => (
+                  <Link
+                    key={item.name}
+                    to={item.path}
+                    className={`block text-lg font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[48px] flex items-center ${
+                      isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                    }`}
+                    style={{ transitionDelay: `${(index + leftNavItems.length) * 50}ms` }}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+
+              <Button
+                asChild
+                className={`w-full mt-6 font-light transition-all duration-300 ${
+                  isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                }`}
+                style={{ transitionDelay: '400ms' }}
+                size="lg"
+              >
+                <Link to="/contact" onClick={() => setIsOpen(false)}>
+                  Contact Us
+                </Link>
+              </Button>
             </div>
           </div>
-        )}
+        </div>
       </nav>
     </>
   );
