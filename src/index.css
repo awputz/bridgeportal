@@ -49,8 +49,8 @@ All colors MUST be HSL.
     --input: 0 0% 22%;
     --ring: 0 0% 95%;
     
-    /* Dark sections (even darker) */
-    --dark-bg: 0 0% 7%;
+    /* Dark sections (even darker for footer contrast) */
+    --dark-bg: 0 0% 4%;
     --dark-text: 0 0% 95%;
     --dark-muted: 0 0% 65%;
     
