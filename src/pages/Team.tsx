@@ -73,7 +73,7 @@ const Team = () => {
           <p className="text-xs text-muted-foreground font-light mb-1">{member.title}</p>
           {agent.license_number && (
             <p className="text-[10px] text-muted-foreground/60 font-light">
-              {agent.name.includes('Matthew Simon') ? 'Firm License' : 'Lic'}# {agent.license_number}
+              #{agent.license_number}
             </p>
           )}
           {isLarge && member.bio && (
