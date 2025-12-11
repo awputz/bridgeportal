@@ -5,6 +5,8 @@ import { useTransactions } from "@/hooks/useTransactions";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { COMPANY_INFO, DIVISIONS } from "@/lib/constants";
+import { Testimonials } from "@/components/Testimonials";
+import { TrustBadges } from "@/components/TrustBadges";
 import heroImage from "@/assets/brooklyn-bridge-hero-light.jpg";
 import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
 export default function Home() {
@@ -379,6 +381,12 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Trust Badges */}
+      <TrustBadges />
+
+      {/* Testimonials Section */}
+      <Testimonials />
 
       {/* Section 7: Final CTA */}
       <section ref={ctaReveal.elementRef} className="py-12 md:py-20 lg:py-28 bg-secondary">

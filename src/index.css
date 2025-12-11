@@ -331,6 +331,65 @@ All colors MUST be HSL.
   .heading-spacing {
     @apply mb-6 md:mb-8 lg:mb-10;
   }
+  
+  /* ========================================
+     GRADIENT TEXT ANIMATION
+     ======================================== */
+  
+  .gradient-text {
+    background: linear-gradient(
+      90deg,
+      hsl(var(--foreground)) 0%,
+      hsl(var(--accent)) 50%,
+      hsl(var(--foreground)) 100%
+    );
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 4s ease-in-out infinite;
+  }
+  
+  @keyframes gradientShift {
+    0%, 100% {
+      background-position: 0% center;
+    }
+    50% {
+      background-position: 100% center;
+    }
+  }
+  
+  /* ========================================
+     PARALLAX UTILITIES
+     ======================================== */
+  
+  .parallax-bg {
+    will-change: transform;
+    transition: transform 0.1s linear;
+  }
+  
+  /* ========================================
+     TYPEWRITER EFFECT
+     ======================================== */
+  
+  .typewriter {
+    overflow: hidden;
+    border-right: 2px solid hsl(var(--foreground));
+    white-space: nowrap;
+    animation: 
+      typing 3s steps(40, end),
+      blink-caret 0.75s step-end infinite;
+  }
+  
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+  
+  @keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: hsl(var(--foreground)); }
+  }
 }
 
 /* Touch target utility - minimum 44px for accessibility */
