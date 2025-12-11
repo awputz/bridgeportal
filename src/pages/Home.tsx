@@ -80,7 +80,7 @@ export default function Home() {
               <Link to="/services/investment-sales">Investment Sales</Link>
             </Button>
             <Button asChild variant="outline" className="font-light px-5 bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white">
-              <Link to="/services/capital-advisory">Capital</Link>
+              <Link to="/services/capital-advisory">Capital Markets  </Link>
             </Button>
           </div>
         </div>
