@@ -30,43 +30,50 @@ export const DIVISIONS = {
     name: "Residential",
     path: "/services/residential",
     tagline: "Luxury leasing and sales for owners, renters, and buyers across New York.",
-    description: "Find a Home • List Your Home"
+    description: "Find a Home • List Your Home",
+    icon: "Home"
   },
   commercialLeasing: {
     name: "Commercial Leasing",
     path: "/services/commercial-leasing",
     tagline: "Tenant and landlord representation for office, retail, and specialty assets.",
-    description: "Office, Retail & Specialty Assets"
+    description: "Office, Retail & Specialty Assets",
+    icon: "Building2"
   },
   investmentSales: {
     name: "Investment Sales",
     path: "/services/investment-sales",
     tagline: "Transaction advisory for multifamily, mixed use, and commercial assets.",
-    description: "Multifamily & Mixed-Use Investment Sales"
+    description: "Multifamily & Mixed-Use Investment Sales",
+    icon: "TrendingUp"
   },
   capitalAdvisory: {
     name: "Capital Advisory",
     path: "/services/capital-advisory",
     tagline: "Debt and equity solutions aligned with real world business plans.",
-    description: "Debt & Equity Advisory"
+    description: "Debt & Equity Advisory",
+    icon: "Landmark"
   },
   propertyManagement: {
     name: "Property Management",
     path: "/services/property-management",
     tagline: "Full-service portfolio management for landlords and investors.",
-    description: "Portfolio & Asset Management"
+    description: "Portfolio & Asset Management",
+    icon: "Settings"
   },
   marketing: {
     name: "Marketing",
     path: "/services/marketing",
     tagline: "Creative, digital, and strategy support for properties and brands.",
-    description: "Creative, Digital & Strategy"
+    description: "Creative, Digital & Strategy",
+    icon: "Megaphone"
   },
   billboard: {
     name: "Billboard",
     path: "/services/billboard",
     tagline: "Direct LL access to NYC's best boards.",
-    description: "Out-of-Home Advertising"
+    description: "Out-of-Home Advertising",
+    icon: "Presentation"
   }
 };
 
