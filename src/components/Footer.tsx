@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
-import { COMPANY_INFO, NAV_ITEMS } from "@/lib/constants";
+import { useBridgeSettings } from "@/hooks/useBridgeSettings";
+import { useBridgeServices } from "@/hooks/useBridgeServices";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
 
 export const Footer = () => {
   const { openContactSheet } = useContactSheet();
+  const { data: settings } = useBridgeSettings();
+  const { data: services } = useBridgeServices();
+
   return (
     <footer className="bg-dark-bg text-foreground border-t border-border">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 lg:py-24">
@@ -13,16 +17,16 @@ export const Footer = () => {
           <div className="col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1">
             <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-8 md:h-10 invert opacity-80" />
             <p className="text-sm text-muted-foreground mt-4 mb-6 leading-relaxed max-w-sm">
-              {COMPANY_INFO.description.short}
+              {settings?.company_description.short}
             </p>
             <div className="text-sm text-muted-foreground space-y-2">
-              <p className="font-light">{COMPANY_INFO.address.short}</p>
+              <p className="font-light">{settings?.company_address.short}</p>
               <p>
                 <a 
-                  href={`mailto:${COMPANY_INFO.contact.email}`} 
+                  href={`mailto:${settings?.company_contact.email}`} 
                   className="hover:text-foreground transition-colors font-light touch-manipulation"
                 >
-                  {COMPANY_INFO.contact.email}
+                  {settings?.company_contact.email}
                 </a>
               </p>
             </div>
@@ -34,13 +38,13 @@ export const Footer = () => {
               Services
             </h3>
             <ul className="space-y-2.5 md:space-y-3 text-sm">
-              {NAV_ITEMS.services.items.map((item) => (
-                <li key={item.path}>
+              {services?.map((service) => (
+                <li key={service.id}>
                   <Link 
-                    to={item.path} 
+                    to={service.path} 
                     className="text-foreground/70 hover:text-foreground transition-colors font-light py-1 inline-block touch-manipulation"
                   >
-                    {item.name}
+                    {service.name}
                   </Link>
                 </li>
               ))}
@@ -104,10 +108,10 @@ export const Footer = () => {
               </li>
               <li>
                 <a 
-                  href={`tel:${COMPANY_INFO.contact.phone}`} 
+                  href={`tel:${settings?.company_contact.phone}`} 
                   className="text-foreground/70 hover:text-foreground transition-colors font-light py-1 inline-block touch-manipulation"
                 >
-                  {COMPANY_INFO.contact.phone}
+                  {settings?.company_contact.phone}
                 </a>
               </li>
             </ul>
@@ -129,10 +133,10 @@ export const Footer = () => {
             
             <div className="text-center sm:text-right">
               <p className="text-xs text-muted-foreground mb-1">
-                {COMPANY_INFO.compliance.license}
+                {settings?.company_compliance.license}
               </p>
               <p className="text-xs text-muted-foreground">
-                © {new Date().getFullYear()} {COMPANY_INFO.name}. All rights reserved.
+                © {new Date().getFullYear()} {settings?.company_name}. All rights reserved.
               </p>
             </div>
           </div>

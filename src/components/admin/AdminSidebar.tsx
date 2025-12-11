@@ -1,4 +1,4 @@
-import { Users, DollarSign, LogOut, Building2 } from "lucide-react";
+import { Users, DollarSign, LogOut, Building2, Settings, MapPin, Link2, Layers } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -19,6 +19,13 @@ const menuItems = [
   { title: "Team", url: "/admin/team", icon: Users },
   { title: "Properties", url: "/admin/properties", icon: Building2 },
   { title: "Closed Deals", url: "/admin/transactions", icon: DollarSign },
+];
+
+const cmsItems = [
+  { title: "Settings", url: "/admin/settings", icon: Settings },
+  { title: "Services", url: "/admin/services", icon: Layers },
+  { title: "Markets", url: "/admin/markets", icon: MapPin },
+  { title: "Listing Links", url: "/admin/listing-links", icon: Link2 },
 ];
 
 export function AdminSidebar() {
@@ -60,6 +67,27 @@ export function AdminSidebar() {
                         end={item.url === "/admin"}
                         className="flex items-center gap-3"
                       >
+                        <item.icon className="h-4 w-4" />
+                        {open && <span>{item.title}</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>CMS</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {cmsItems.map((item) => {
+                const isActive = currentPath.startsWith(item.url);
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild isActive={isActive}>
+                      <NavLink to={item.url} className="flex items-center gap-3">
                         <item.icon className="h-4 w-4" />
                         {open && <span>{item.title}</span>}
                       </NavLink>

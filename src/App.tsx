@@ -21,6 +21,10 @@ import Auth from "./pages/Auth";
 import TeamAdmin from "./pages/admin/TeamAdmin";
 import TransactionsAdmin from "./pages/admin/TransactionsAdmin";
 import PropertiesAdmin from "./pages/admin/PropertiesAdmin";
+import SettingsAdmin from "./pages/admin/SettingsAdmin";
+import ServicesAdmin from "./pages/admin/ServicesAdmin";
+import MarketsAdmin from "./pages/admin/MarketsAdmin";
+import ListingLinksAdmin from "./pages/admin/ListingLinksAdmin";
 import NotFound from "./pages/NotFound";
 import FAQ from "./pages/FAQ";
 import Careers from "./pages/Careers";
@@ -90,6 +94,10 @@ const App = () => {
               <Route path="team" element={<TeamAdmin />} />
               <Route path="properties" element={<PropertiesAdmin />} />
               <Route path="transactions" element={<TransactionsAdmin />} />
+              <Route path="settings" element={<SettingsAdmin />} />
+              <Route path="services" element={<ServicesAdmin />} />
+              <Route path="markets" element={<MarketsAdmin />} />
+              <Route path="listing-links" element={<ListingLinksAdmin />} />
             </Route>
 
             {/* Public Routes */}
