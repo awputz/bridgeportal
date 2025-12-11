@@ -10,7 +10,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { NAV_ITEMS } from "@/lib/constants";
+import { NAV_ITEMS, DIVISIONS } from "@/lib/constants";
 import bridgeInvestmentLogo from "@/assets/bridge-investment-sales-logo.png";
 import { cn } from "@/lib/utils";
 
@@ -127,19 +127,25 @@ export const Navigation = () => {
                     >
                       Services
                     </NavigationMenuTrigger>
-                    <NavigationMenuContent className="glass-dropdown">
-                      <div className="grid gap-1 p-3 w-[280px]">
+                    <NavigationMenuContent className="glass-dropdown bg-black/80 backdrop-blur-xl border border-white/15 shadow-[0_16px_64px_rgba(0,0,0,0.6)]">
+                      <div className="grid grid-cols-2 gap-2 p-4 w-[520px]">
                         {NAV_ITEMS.services.items.map((item, index) => {
                           const IconComponent = serviceIcons[item.name] || Building2;
+                          // Get division key from item name
+                          const divisionKey = Object.keys(DIVISIONS).find(
+                            key => DIVISIONS[key as keyof typeof DIVISIONS].name === item.name
+                          ) as keyof typeof DIVISIONS | undefined;
+                          const description = divisionKey ? DIVISIONS[divisionKey].description : "";
+                          
                           return (
                             <NavigationMenuLink key={item.name} asChild>
                               <Link
                                 to={item.path}
                                 className={cn(
-                                  "group flex items-center gap-3 rounded-lg p-2.5 transition-all duration-200",
+                                  "group flex items-center gap-3 rounded-lg p-3 transition-all duration-200",
                                   "hover:bg-white/10 hover:scale-[1.02]",
                                   "animate-in fade-in slide-in-from-top-2",
-                                  location.pathname.startsWith(item.path) && "bg-white/5"
+                                  location.pathname.startsWith(item.path) && "bg-white/10"
                                 )}
                                 style={{
                                   animationDuration: "300ms",
@@ -147,12 +153,15 @@ export const Navigation = () => {
                                   animationFillMode: "backwards"
                                 }}
                               >
-                                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-white/5 group-hover:bg-white/10 transition-colors">
-                                  <IconComponent className="h-4 w-4 text-foreground/70 group-hover:text-foreground transition-colors" />
+                                <div className="flex h-9 w-9 items-center justify-center rounded-md bg-white/10 group-hover:bg-white/15 transition-colors">
+                                  <IconComponent className="h-4 w-4 text-white/70 group-hover:text-white transition-colors" />
                                 </div>
                                 <div className="flex flex-col">
-                                  <span className="text-sm font-light text-foreground group-hover:text-foreground">
+                                  <span className="text-sm font-medium text-white group-hover:text-white">
                                     {item.name}
+                                  </span>
+                                  <span className="text-xs text-white/60 mt-0.5">
+                                    {description}
                                   </span>
                                 </div>
                               </Link>
