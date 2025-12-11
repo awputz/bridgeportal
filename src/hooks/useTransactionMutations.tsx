@@ -38,6 +38,7 @@ export const useCreateTransaction = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["residential-transactions"] });
       toast({
         title: "Success",
         description: "Transaction created successfully",
@@ -68,6 +69,7 @@ export const useUpdateTransaction = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["residential-transactions"] });
       toast({
         title: "Success",
         description: "Transaction updated successfully",
@@ -98,6 +100,7 @@ export const useDeleteTransaction = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["residential-transactions"] });
       toast({
         title: "Success",
         description: "Transaction deleted successfully",

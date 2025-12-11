@@ -8,20 +8,22 @@ export interface ResidentialTransaction {
   borough: string | null;
   property_type: string | null;
   monthly_rent: number | null;
+  lease_term_months: number | null;
+  total_lease_value: number | null;
   agent_name: string;
   closing_date: string | null;
   deal_type: string;
 }
 
-export const useResidentialTransactions = (limit?: number) => {
+export const useResidentialTransactions = (limit?: number, dealType?: string) => {
   return useQuery({
-    queryKey: ["residential-transactions", limit],
+    queryKey: ["residential-transactions", limit, dealType],
     queryFn: async () => {
       let query = supabase
         .from("transactions")
-        .select("id, property_address, neighborhood, borough, property_type, monthly_rent, agent_name, closing_date, deal_type")
-        .eq("deal_type", "Residential")
-        .order("monthly_rent", { ascending: false, nullsFirst: false });
+        .select("id, property_address, neighborhood, borough, property_type, monthly_rent, lease_term_months, total_lease_value, agent_name, closing_date, deal_type")
+        .in("deal_type", dealType ? [dealType] : ["Residential", "Commercial"])
+        .order("total_lease_value", { ascending: false, nullsFirst: false });
 
       if (limit) {
         query = query.limit(limit);
