@@ -27,6 +27,7 @@ import ResidentialServices from "./pages/services/Residential";
 import CommercialLeasing from "./pages/services/CommercialLeasing";
 import InvestmentSales from "./pages/services/InvestmentSales";
 import CapitalAdvisory from "./pages/services/CapitalAdvisory";
+import PropertyManagement from "./pages/services/PropertyManagement";
 import Marketing from "./pages/services/Marketing";
 import Billboard from "./pages/services/Billboard";
 import MarketsComingSoon from "./pages/MarketsComingSoon";
@@ -73,6 +74,7 @@ const App = () => {
                     <Route path="/services/commercial-leasing" element={<CommercialLeasing />} />
                     <Route path="/services/investment-sales" element={<InvestmentSales />} />
                     <Route path="/services/capital-advisory" element={<CapitalAdvisory />} />
+                    <Route path="/services/property-management" element={<PropertyManagement />} />
                     <Route path="/services/marketing" element={<Marketing />} />
                     <Route path="/services/billboard" element={<Billboard />} />
                     

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Building2, Users, TrendingUp, ArrowRight, Store, Briefcase, MapPin, Target, BarChart3, Handshake, CheckCircle, XCircle, Megaphone, FileText, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { DIVISIONS } from "@/lib/constants";
 import LeaseCalculator from "@/components/LeaseCalculator";
 
@@ -122,6 +123,8 @@ export default function CommercialLeasing() {
           </Button>
         </div>
       </section>
+
+      <ServicesSubNav />
 
       {/* Stats Bar */}
       <section className="py-12 md:py-16 border-b border-white/5 bg-white/[0.02]" ref={statsReveal.elementRef}>
