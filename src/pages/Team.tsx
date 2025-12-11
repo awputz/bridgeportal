@@ -62,12 +62,12 @@ const Team = () => {
             <div className="h-px flex-1 bg-border" />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 stagger-reveal">
             {leadership.map((member, index) => (
               <div 
                 key={index} 
                 onClick={() => handleMemberClick(member)}
-                className="group overflow-hidden rounded-lg transition-all duration-400 hover:transform hover:-translate-y-1 cursor-pointer active:scale-[0.98]"
+                className="group glass-card overflow-hidden cursor-pointer active:scale-[0.98]"
               >
                 <div className="aspect-square bg-muted/20 relative overflow-hidden">
                   <img 
@@ -80,10 +80,10 @@ const Team = () => {
                   />
                 </div>
                 
-                <div className="p-6">
-                  <h3 className="text-lg md:text-xl font-light mb-1">{member.name}</h3>
-                  <p className="text-xs md:text-sm text-muted-foreground font-light mb-4">{member.title}</p>
-                  <p className="text-xs md:text-sm text-muted-foreground leading-relaxed font-light">{member.bio}</p>
+                <div className="p-5">
+                  <h3 className="text-lg font-light mb-1">{member.name}</h3>
+                  <p className="text-xs text-muted-foreground font-light mb-3">{member.title}</p>
+                  <p className="text-xs text-muted-foreground/80 leading-relaxed font-light line-clamp-2">{member.bio}</p>
                 </div>
               </div>
             ))}
@@ -97,12 +97,12 @@ const Team = () => {
             <div className="h-px flex-1 bg-border" />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-10 lg:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6 stagger-reveal">
             {investmentSalesTeam.map((member, index) => (
               <div 
                 key={index}
                 onClick={() => handleMemberClick(member)}
-                className="group overflow-hidden rounded-lg transition-all duration-400 hover:transform hover:-translate-y-1 cursor-pointer active:scale-[0.98]"
+                className="group glass-card overflow-hidden cursor-pointer active:scale-[0.98]"
               >
                 <div className="aspect-square bg-muted/20 relative overflow-hidden">
                   <img 
@@ -115,10 +115,9 @@ const Team = () => {
                   />
                 </div>
                 
-                <div className="p-6">
-                  <h3 className="text-base md:text-lg font-light mb-1">{member.name}</h3>
-                  <p className="text-xs md:text-sm text-muted-foreground font-light mb-4">{member.title}</p>
-                  <p className="text-xs md:text-sm text-muted-foreground leading-relaxed font-light">{member.bio}</p>
+                <div className="p-4">
+                  <h3 className="text-base font-light mb-0.5">{member.name}</h3>
+                  <p className="text-xs text-muted-foreground font-light">{member.title}</p>
                 </div>
               </div>
             ))}
