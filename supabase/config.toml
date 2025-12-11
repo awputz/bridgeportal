@@ -1,1 +1,22 @@
 project_id = "nwbvvxzmbnxgpajogvgi"
+
+[functions.submit-inquiry]
+verify_jwt = false
+
+[functions.ai-chat]
+verify_jwt = false
+
+[functions.area-assistant]
+verify_jwt = false
+
+[functions.log-activity]
+verify_jwt = false
+
+[functions.match-properties]
+verify_jwt = false
+
+[functions.send-notification]
+verify_jwt = false
+
+[functions.track-view]
+verify_jwt = false
