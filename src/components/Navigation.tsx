@@ -14,7 +14,6 @@ import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
 const leftNavItems = [
   { name: "About Us", path: "/about" },
   { name: "Team", path: "/team" },
-  { name: "Market Insights", path: "/insights" },
   { name: "Research", path: "/research" },
 ];
 
@@ -89,7 +88,7 @@ export const Navigation = () => {
                   Services
                   <ChevronDown className="h-4 w-4 transition-transform duration-300 ease-out group-data-[state=open]:rotate-180" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-background/95 backdrop-blur-xl border-white/10 z-50">
+                <DropdownMenuContent className="bg-popover border-border/50 z-[100]">
                   {NAV_ITEMS.services.items.map((item, index) => (
                     <DropdownMenuItem 
                       key={item.name} 

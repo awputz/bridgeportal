@@ -1,24 +1,82 @@
 import { Link } from "react-router-dom";
-import { Building2, MapPin, Eye, Clock, ArrowRight, Megaphone } from "lucide-react";
+import { Building2, MapPin, Eye, Clock, ArrowRight, Megaphone, TrendingUp, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import billboardHero from "@/assets/bridge-billboard-hero.png";
 
 export default function Billboard() {
   const introReveal = useScrollReveal(0.1);
+  const inventoryReveal = useScrollReveal(0.1);
   const servicesReveal = useScrollReveal(0.1);
+  const statsReveal = useScrollReveal(0.1);
   const ctaReveal = useScrollReveal(0.1);
+
+  const featuredLocations = [
+    { name: "Times Square", borough: "Manhattan", impressions: "25M+/month", type: "Digital & Static" },
+    { name: "BQE Corridor", borough: "Brooklyn/Queens", impressions: "15M+/month", type: "Highway Boards" },
+    { name: "Downtown Brooklyn", borough: "Brooklyn", impressions: "8M+/month", type: "Building Wraps" },
+    { name: "LIC Waterfront", borough: "Queens", impressions: "6M+/month", type: "Rooftop & Wall" },
+    { name: "Third Avenue", borough: "Bronx", impressions: "4M+/month", type: "Street Level" },
+    { name: "125th Street", borough: "Manhattan", impressions: "5M+/month", type: "Transit Adjacent" },
+  ];
 
   return (
     <div className="min-h-screen pt-32 md:pt-40">
-      {/* Hero */}
+      {/* Hero with Image */}
       <section className="pb-16 md:pb-24 border-b border-white/5">
-        <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 animate-fade-in">
-            Bridge Billboard
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground font-light animate-fade-in" style={{ animationDelay: '100ms' }}>
-            Direct LL access to NYC's best boards.
-          </p>
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+            <div>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 animate-fade-in">
+                Bridge Billboard
+              </h1>
+              <p className="text-lg md:text-xl text-muted-foreground font-light mb-8 animate-fade-in" style={{ animationDelay: '100ms' }}>
+                Direct landlord access to NYC's most visible outdoor advertising inventory.
+              </p>
+              <div className="flex flex-wrap gap-4 animate-fade-in" style={{ animationDelay: '200ms' }}>
+                <Button asChild size="lg" className="font-light">
+                  <Link to="/contact">
+                    View Inventory
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="font-light">
+                  <Link to="/contact">Request Rates</Link>
+                </Button>
+              </div>
+            </div>
+            <div className="relative animate-fade-in" style={{ animationDelay: '300ms' }}>
+              <img 
+                src={billboardHero} 
+                alt="Bridge Billboard - NYC Outdoor Advertising" 
+                className="rounded-lg shadow-2xl w-full"
+              />
+              <div className="absolute -bottom-4 -right-4 bg-accent/90 text-accent-foreground px-4 py-2 rounded-lg font-light text-sm">
+                50+ Premium Locations
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Bar */}
+      <section className="py-12 md:py-16 border-b border-white/5 bg-white/[0.02]" ref={statsReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6">
+          <div className={`grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto text-center transition-all duration-700 ${
+            statsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
+            {[
+              { value: "50+", label: "Board Locations" },
+              { value: "100M+", label: "Monthly Impressions" },
+              { value: "5", label: "NYC Boroughs" },
+              { value: "Direct", label: "LL Access" },
+            ].map((stat, index) => (
+              <div key={index} style={{ transitionDelay: `${index * 100}ms` }}>
+                <div className="text-3xl md:text-4xl font-light text-accent mb-2">{stat.value}</div>
+                <div className="text-sm text-muted-foreground font-light">{stat.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -41,8 +99,52 @@ export default function Billboard() {
         </div>
       </section>
 
+      {/* Featured Inventory */}
+      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={inventoryReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6">
+          <div className={`text-center mb-12 md:mb-16 transition-all duration-700 ${
+            inventoryReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
+            <h2 className="text-3xl md:text-4xl font-light mb-4">Featured Inventory</h2>
+            <p className="text-muted-foreground font-light max-w-2xl mx-auto">
+              Premium billboard locations across all five boroughs with direct landlord relationships.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {featuredLocations.map((location, index) => (
+              <div 
+                key={index}
+                className={`group p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-700 ${
+                  inventoryReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                }`}
+                style={{ transitionDelay: `${(index + 1) * 100}ms` }}
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h3 className="text-lg font-light mb-1">{location.name}</h3>
+                    <p className="text-sm text-muted-foreground font-light">{location.borough}</p>
+                  </div>
+                  <MapPin className="h-5 w-5 text-accent" />
+                </div>
+                <div className="space-y-2 text-sm font-light">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Impressions:</span>
+                    <span>{location.impressions}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Type:</span>
+                    <span>{location.type}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Services Section */}
-      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={servicesReveal.elementRef}>
+      <section className="py-20 md:py-28 border-b border-white/5" ref={servicesReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6">
           <div className={`text-center mb-12 md:mb-16 transition-all duration-700 ${
             servicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
@@ -83,6 +185,29 @@ export default function Billboard() {
                 </div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* Client Types */}
+      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]">
+        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+          <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">Who We Work With</h2>
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12">
+            <div>
+              <Users className="h-10 w-10 text-accent mb-4" />
+              <h3 className="text-2xl font-light mb-4">Brands & Agencies</h3>
+              <p className="text-muted-foreground font-light leading-relaxed">
+                National brands and creative agencies looking for high-impact placements in New York's most desirable locations. We provide strategic guidance and inventory access for campaigns of all sizes.
+              </p>
+            </div>
+            <div>
+              <TrendingUp className="h-10 w-10 text-accent mb-4" />
+              <h3 className="text-2xl font-light mb-4">Local Businesses</h3>
+              <p className="text-muted-foreground font-light leading-relaxed">
+                Regional businesses and startups seeking to build awareness in specific neighborhoods. Our hyperlocal inventory options make outdoor advertising accessible at every budget level.
+              </p>
+            </div>
           </div>
         </div>
       </section>
