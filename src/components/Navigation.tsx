@@ -1,9 +1,17 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ChevronDown, Building2, Home, Briefcase, TrendingUp, Megaphone, Image, Settings } from "lucide-react";
+import { Menu, X, ChevronDown, Building2, Home, Briefcase, TrendingUp, Megaphone, Image, Settings, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { NAV_ITEMS, DIVISIONS } from "@/lib/constants";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent
+} from "@/components/ui/dropdown-menu";
+import { NAV_ITEMS, DIVISIONS, LISTINGS_ITEMS } from "@/lib/constants";
 import bridgeInvestmentLogo from "@/assets/bridge-investment-sales-logo.png";
 import { cn } from "@/lib/utils";
 import { ContactSheet } from "@/components/ContactSheet";
@@ -137,6 +145,84 @@ export const Navigation = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
 
+              {/* Listings Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className={cn(
+                    "flex items-center gap-1 text-sm font-light transition-all duration-200 hover:scale-105",
+                    "text-foreground/70 hover:text-foreground"
+                  )}>
+                    Listings
+                    <ChevronDown className="h-3 w-3 transition-transform duration-200" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent 
+                  align="end" 
+                  sideOffset={12}
+                  className="w-[220px] p-2 bg-zinc-900/95 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-xl"
+                >
+                  {/* Residential */}
+                  <DropdownMenuItem asChild>
+                    <a 
+                      href="https://streeteasy.com/building/bridge-advisory-group" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer"
+                    >
+                      <Home className="h-4 w-4 text-white/70" />
+                      <span className="text-sm text-white">Residential</span>
+                      <ExternalLink className="h-3 w-3 ml-auto text-white/50" />
+                    </a>
+                  </DropdownMenuItem>
+                  
+                  {/* Commercial Leasing - Nested */}
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger className="flex items-center gap-3 p-2.5 rounded-lg">
+                      <Building2 className="h-4 w-4 text-white/70" />
+                      <span className="text-sm text-white">Commercial Leasing</span>
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuSubContent className="bg-zinc-900/95 backdrop-blur-2xl border border-white/20 rounded-xl p-2">
+                      <DropdownMenuItem asChild>
+                        <a 
+                          href="https://www.costar.com" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer"
+                        >
+                          <span className="text-sm text-white">Office</span>
+                          <ExternalLink className="h-3 w-3 ml-auto text-white/50" />
+                        </a>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <a 
+                          href="https://www.costar.com" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer"
+                        >
+                          <span className="text-sm text-white">Retail</span>
+                          <ExternalLink className="h-3 w-3 ml-auto text-white/50" />
+                        </a>
+                      </DropdownMenuItem>
+                    </DropdownMenuSubContent>
+                  </DropdownMenuSub>
+                  
+                  {/* Investment Sales */}
+                  <DropdownMenuItem asChild>
+                    <a 
+                      href="https://www.costar.com" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer"
+                    >
+                      <TrendingUp className="h-4 w-4 text-white/70" />
+                      <span className="text-sm text-white">Investment Sales</span>
+                      <ExternalLink className="h-3 w-3 ml-auto text-white/50" />
+                    </a>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
               <Button 
                 size="sm" 
                 className="h-9 px-5 text-sm font-medium bg-white text-black hover:bg-white/90 rounded-md"
@@ -175,6 +261,64 @@ export const Navigation = () => {
                       {item.name}
                     </Link>;
               })}
+              </div>
+
+              {/* Listings Section */}
+              <div className="pt-3 border-t border-white/10">
+                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Listings</p>
+                
+                {/* Residential */}
+                <a 
+                  href="https://streeteasy.com/building/bridge-advisory-group" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className={`flex items-center gap-3 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2.5 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                  style={{ transitionDelay: `${(NAV_ITEMS.services.items.length + leftNavItems.length) * 50}ms` }}
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Home className="h-4 w-4 text-foreground/50" />
+                  Residential
+                  <ExternalLink className="h-3 w-3 ml-auto text-foreground/40" />
+                </a>
+                
+                {/* Commercial Leasing Header */}
+                <p className="text-sm text-foreground/60 mt-2 mb-1 pl-7">Commercial Leasing</p>
+                <a 
+                  href="https://www.costar.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className={`flex items-center gap-3 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2 min-h-[40px] pl-7 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                  style={{ transitionDelay: `${(NAV_ITEMS.services.items.length + leftNavItems.length + 1) * 50}ms` }}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Office
+                  <ExternalLink className="h-3 w-3 ml-auto text-foreground/40" />
+                </a>
+                <a 
+                  href="https://www.costar.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className={`flex items-center gap-3 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2 min-h-[40px] pl-7 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                  style={{ transitionDelay: `${(NAV_ITEMS.services.items.length + leftNavItems.length + 2) * 50}ms` }}
+                  onClick={() => setIsOpen(false)}
+                >
+                  Retail
+                  <ExternalLink className="h-3 w-3 ml-auto text-foreground/40" />
+                </a>
+                
+                {/* Investment Sales */}
+                <a 
+                  href="https://www.costar.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className={`flex items-center gap-3 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2.5 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                  style={{ transitionDelay: `${(NAV_ITEMS.services.items.length + leftNavItems.length + 3) * 50}ms` }}
+                  onClick={() => setIsOpen(false)}
+                >
+                  <TrendingUp className="h-4 w-4 text-foreground/50" />
+                  Investment Sales
+                  <ExternalLink className="h-3 w-3 ml-auto text-foreground/40" />
+                </a>
               </div>
 
               <Button 
