@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Building2, TrendingUp, Award, Users, Home as HomeIcon, Megaphone, ArrowRight, ChevronDown } from "lucide-react";
+import { Building2, TrendingUp, Award, Users, Home as HomeIcon, Megaphone, ArrowRight, ChevronDown, Target, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTransactions } from "@/hooks/useTransactions";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -12,6 +12,7 @@ export default function Home() {
   const recentTransactions = transactions.slice(0, 3);
   
   const platformReveal = useScrollReveal(0.1);
+  const missionReveal = useScrollReveal(0.1);
   const commercialReveal = useScrollReveal(0.1);
   const residentialReveal = useScrollReveal(0.1);
   const capitalReveal = useScrollReveal(0.1);
@@ -90,7 +91,7 @@ export default function Home() {
             </p>
           </div>
           
-          <div className={`grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-6 mb-12 transition-all duration-700 ${
+          <div className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6 mb-12 transition-all duration-700 ${
             platformReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`} style={{ transitionDelay: '200ms' }}>
             {Object.values(DIVISIONS).map((division, index) => (
@@ -109,7 +110,7 @@ export default function Home() {
           }`} style={{ transitionDelay: '400ms' }}>
             <Button asChild variant="link" className="font-light group">
               <Link to="/about">
-                View Our Story
+                Learn more about the firm
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
@@ -117,8 +118,52 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section 2: Commercial And Investment Expertise */}
-      <section className="py-20 md:py-28 lg:py-36 border-b border-white/5 bg-white/[0.01]" ref={commercialReveal.elementRef}>
+      {/* Section 2: Mission And Vision */}
+      <section className="py-20 md:py-28 lg:py-36 border-b border-white/5 bg-white/[0.01]" ref={missionReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+          <div className={`text-center mb-12 md:mb-16 transition-all duration-700 ${
+            missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">Mission And Vision</h2>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 max-w-4xl mx-auto mb-12">
+            <div className={`p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-700 ${
+              missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`} style={{ transitionDelay: '100ms' }}>
+              <Target className="h-8 w-8 md:h-10 md:w-10 text-accent mb-4" />
+              <h3 className="text-xl md:text-2xl font-light mb-4">Our Mission</h3>
+              <p className="text-muted-foreground font-light leading-relaxed">
+                At Bridge Advisory Group, our mission is to redefine real estate service excellence across the New York market and empower clients through informed, expert-led strategies that maximize value and foster long-term relationships.
+              </p>
+            </div>
+            
+            <div className={`p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-700 ${
+              missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`} style={{ transitionDelay: '200ms' }}>
+              <Eye className="h-8 w-8 md:h-10 md:w-10 text-accent mb-4" />
+              <h3 className="text-xl md:text-2xl font-light mb-4">Our Vision</h3>
+              <p className="text-muted-foreground font-light leading-relaxed">
+                Our vision is to set new standards in New York real estate, driven by innovation, integrity, and a focus on long-term value creation for our clients and our community.
+              </p>
+            </div>
+          </div>
+          
+          <div className={`text-center transition-all duration-700 ${
+            missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`} style={{ transitionDelay: '300ms' }}>
+            <Button asChild variant="link" className="font-light group">
+              <Link to="/about">
+                View our full Mission, Vision, and Values
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 3: Commercial And Investment Expertise */}
+      <section className="py-20 md:py-28 lg:py-36 border-b border-white/5" ref={commercialReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6">
           <div className={`text-center mb-12 md:mb-16 transition-all duration-700 ${
             commercialReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
@@ -169,13 +214,13 @@ export default function Home() {
           }`} style={{ transitionDelay: '400ms' }}>
             <Button asChild variant="link" className="font-light group">
               <Link to="/services/commercial-leasing">
-                Learn More → Commercial Leasing
+                Explore Commercial Leasing
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
             <Button asChild variant="link" className="font-light group">
               <Link to="/services/investment-sales">
-                Learn More → Investment Sales
+                Explore Investment Sales
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
@@ -183,8 +228,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section 3: Residential Platform */}
-      <section className="py-20 md:py-28 lg:py-36 border-b border-white/5" ref={residentialReveal.elementRef}>
+      {/* Section 4: Residential Platform */}
+      <section className="py-20 md:py-28 lg:py-36 border-b border-white/5 bg-white/[0.01]" ref={residentialReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6">
           <div className={`text-center mb-12 md:mb-16 transition-all duration-700 ${
             residentialReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
@@ -200,17 +245,17 @@ export default function Home() {
               {
                 icon: HomeIcon,
                 title: "Landlord Leasing Programs",
-                desc: "Full-service leasing programs for owners seeking lower vacancy, better quality tenants, and consistent reporting."
+                desc: "Building-level leasing programs that reduce vacancy and improve tenant quality."
               },
               {
                 icon: Award,
-                title: "Luxury Rentals And Sales",
-                desc: "Representation for renters and buyers across prime neighborhoods, with direct access to exclusive and off-market opportunities."
+                title: "Rentals And Sales",
+                desc: "Representation for renters and buyers across prime neighborhoods, with access to exclusive and off-market opportunities."
               },
               {
                 icon: TrendingUp,
-                title: "Market Intel For Owners",
-                desc: "Pricing guidance, unit positioning, and marketing strategy designed to capture demand without wasting time."
+                title: "Residential Market Intel",
+                desc: "Pricing guidance, unit positioning, and feedback that helps owners stay ahead of the market."
               }
             ].map((service, index) => {
               const Icon = service.icon;
@@ -243,8 +288,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section 4: Capital Advisory */}
-      <section className="py-20 md:py-28 lg:py-36 border-b border-white/5 bg-white/[0.01]" ref={capitalReveal.elementRef}>
+      {/* Section 5: Capital Advisory */}
+      <section className="py-20 md:py-28 lg:py-36 border-b border-white/5" ref={capitalReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6">
           <div className={`text-center mb-12 md:mb-16 transition-all duration-700 ${
             capitalReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
@@ -303,15 +348,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section 5: Marketing Engine */}
-      <section className="py-20 md:py-28 lg:py-36 border-b border-white/5" ref={marketingReveal.elementRef}>
+      {/* Section 6: Marketing Engine */}
+      <section className="py-20 md:py-28 lg:py-36 border-b border-white/5 bg-white/[0.01]" ref={marketingReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6">
           <div className={`text-center mb-12 md:mb-16 transition-all duration-700 ${
             marketingReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">Strategy, Story, And Execution</h2>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">A Marketing Engine Behind Every Assignment</h2>
             <p className="text-base md:text-lg text-muted-foreground font-light max-w-3xl mx-auto leading-relaxed">
-              The Marketing division at Bridge supports all internal divisions and select external clients with brand-level storytelling, digital campaigns, and property-specific marketing assets. The focus is on clean design, clear messaging, and distribution that reaches the right audience.
+              Bridge Marketing powers the visual identity and storytelling behind Bridge listings and select client assignments, with a focus on clean design, clear messaging, and thoughtful distribution.
             </p>
           </div>
           
@@ -363,7 +408,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section 6: Final CTA */}
+      {/* Section 7: Final CTA */}
       <section className="py-20 md:py-28 lg:py-36" ref={ctaReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 text-center max-w-4xl">
           <h2 className={`text-3xl md:text-4xl lg:text-5xl font-light mb-6 transition-all duration-700 ${

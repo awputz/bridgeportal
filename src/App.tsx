@@ -14,6 +14,7 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Team from "./pages/Team";
 import MarketInsights from "./pages/MarketInsights";
+import Research from "./pages/Research";
 import Contact from "./pages/Contact";
 import TrackRecord from "./pages/TrackRecord";
 import Auth from "./pages/Auth";
@@ -27,6 +28,7 @@ import CommercialLeasing from "./pages/services/CommercialLeasing";
 import InvestmentSales from "./pages/services/InvestmentSales";
 import CapitalAdvisory from "./pages/services/CapitalAdvisory";
 import Marketing from "./pages/services/Marketing";
+import Billboard from "./pages/services/Billboard";
 
 const queryClient = new QueryClient();
 
@@ -62,6 +64,7 @@ const App = () => {
                     <Route path="/about" element={<About />} />
                     <Route path="/team" element={<Team />} />
                     <Route path="/insights" element={<MarketInsights />} />
+                    <Route path="/research" element={<Research />} />
                     <Route path="/contact" element={<Contact />} />
                     
                     {/* Service Pages */}
@@ -70,6 +73,7 @@ const App = () => {
                     <Route path="/services/investment-sales" element={<InvestmentSales />} />
                     <Route path="/services/capital-advisory" element={<CapitalAdvisory />} />
                     <Route path="/services/marketing" element={<Marketing />} />
+                    <Route path="/services/billboard" element={<Billboard />} />
                     
                     {/* Track Record */}
                     <Route path="/track-record" element={<TrackRecord />} />

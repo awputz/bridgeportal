@@ -15,6 +15,7 @@ const leftNavItems = [
   { name: "About Us", path: "/about" },
   { name: "Team", path: "/team" },
   { name: "Market Insights", path: "/insights" },
+  { name: "Research", path: "/research" },
 ];
 
 export const Navigation = () => {
@@ -41,7 +42,7 @@ export const Navigation = () => {
           {/* Mobile & Tablet Layout */}
           <div className="flex lg:hidden items-center justify-between h-16 md:h-20 px-4 md:px-6">
             <Link to="/" className="flex items-center">
-              <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-10 md:h-12 invert" />
+              <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-12 md:h-14 invert object-contain" />
             </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -55,7 +56,7 @@ export const Navigation = () => {
           {/* Desktop Layout - Centered Logo */}
           <div className="hidden lg:grid grid-cols-3 items-center h-20 px-8">
             {/* Left: Navigation Links */}
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-5">
               {leftNavItems.map((item) => (
                 <Link
                   key={item.name}
@@ -71,10 +72,10 @@ export const Navigation = () => {
               ))}
             </div>
 
-            {/* Center: Logo */}
+            {/* Center: Logo - Made larger */}
             <div className="flex justify-center">
               <Link to="/" className="flex items-center">
-                <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-10 invert" />
+                <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-12 invert object-contain" />
               </Link>
             </div>
 

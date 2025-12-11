@@ -55,6 +55,12 @@ export const DIVISIONS = {
     path: "/services/marketing",
     tagline: "Creative, digital, and strategy support for properties and brands.",
     description: "Creative, Digital & Strategy"
+  },
+  billboard: {
+    name: "Billboard",
+    path: "/services/billboard",
+    tagline: "Direct LL access to NYC's best boards.",
+    description: "Out-of-Home Advertising"
   }
 };
 
@@ -67,6 +73,7 @@ export const NAV_ITEMS = {
       { name: "Investment Sales", path: "/services/investment-sales" },
       { name: "Capital Advisory", path: "/services/capital-advisory" },
       { name: "Marketing", path: "/services/marketing" },
+      { name: "Billboard", path: "/services/billboard" },
     ]
   }
 };

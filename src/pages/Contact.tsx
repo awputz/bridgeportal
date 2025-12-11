@@ -13,7 +13,7 @@ import {
 import { toast } from "sonner";
 import { COMPANY_INFO } from "@/lib/constants";
 
-type Division = "residential" | "commercial-leasing" | "investment-sales" | "capital-advisory" | "marketing" | "";
+type Division = "residential" | "commercial-leasing" | "investment-sales" | "capital-advisory" | "marketing" | "billboard" | "";
 
 export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,6 +51,11 @@ export default function Contact() {
     projectType: "",
     marketingNeed: "",
     timeline: "",
+    // Billboard fields
+    billboardClientType: "",
+    campaignType: "",
+    budgetRangeBillboard: "",
+    campaignTiming: "",
     // Common
     message: "",
   });
@@ -93,6 +98,10 @@ export default function Contact() {
       projectType: "",
       marketingNeed: "",
       timeline: "",
+      billboardClientType: "",
+      campaignType: "",
+      budgetRangeBillboard: "",
+      campaignTiming: "",
       message: "",
     });
     setDivision("");
@@ -186,6 +195,7 @@ export default function Contact() {
                   <SelectItem value="investment-sales">Investment Sales</SelectItem>
                   <SelectItem value="capital-advisory">Capital Advisory</SelectItem>
                   <SelectItem value="marketing">Marketing</SelectItem>
+                  <SelectItem value="billboard">Billboard</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -532,6 +542,85 @@ export default function Contact() {
                   placeholder="e.g., Q1 2025"
                   className="mt-1"
                 />
+              </div>
+            </div>
+          )}
+
+          {/* Conditional Fields - Billboard */}
+          {division === "billboard" && (
+            <div className="space-y-4 p-6 rounded-lg border border-white/10 bg-white/[0.02]">
+              <h3 className="font-light text-lg mb-4">Billboard Details</h3>
+              <div>
+                <Label className="font-light">Client Type</Label>
+                <Select
+                  value={formData.billboardClientType}
+                  onValueChange={(value) => handleInputChange("billboardClientType", value)}
+                >
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Select..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="brand">Brand / Advertiser</SelectItem>
+                    <SelectItem value="agency">Agency</SelectItem>
+                    <SelectItem value="developer">Developer</SelectItem>
+                    <SelectItem value="landlord">Landlord / Property Owner</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="font-light">Campaign Type</Label>
+                <Select
+                  value={formData.campaignType}
+                  onValueChange={(value) => handleInputChange("campaignType", value)}
+                >
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Select..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="brand-awareness">Brand Awareness</SelectItem>
+                    <SelectItem value="product-launch">Product Launch</SelectItem>
+                    <SelectItem value="event-promotion">Event Promotion</SelectItem>
+                    <SelectItem value="real-estate">Real Estate Marketing</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="font-light">Budget Range</Label>
+                <Select
+                  value={formData.budgetRangeBillboard}
+                  onValueChange={(value) => handleInputChange("budgetRangeBillboard", value)}
+                >
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Select..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="under-10k">Under $10,000</SelectItem>
+                    <SelectItem value="10k-25k">$10,000 - $25,000</SelectItem>
+                    <SelectItem value="25k-50k">$25,000 - $50,000</SelectItem>
+                    <SelectItem value="50k-100k">$50,000 - $100,000</SelectItem>
+                    <SelectItem value="over-100k">Over $100,000</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="font-light">Campaign Timing</Label>
+                <Select
+                  value={formData.campaignTiming}
+                  onValueChange={(value) => handleInputChange("campaignTiming", value)}
+                >
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Select..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="immediate">Immediate</SelectItem>
+                    <SelectItem value="1-month">Within 1 Month</SelectItem>
+                    <SelectItem value="1-3-months">1-3 Months</SelectItem>
+                    <SelectItem value="3-6-months">3-6 Months</SelectItem>
+                    <SelectItem value="planning">Planning / Exploratory</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           )}
