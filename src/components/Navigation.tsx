@@ -42,7 +42,7 @@ export const Navigation = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 px-2 pt-2 md:px-3 md:pt-3 lg:px-4 lg:pt-3">
+      <nav className="fixed top-0 left-0 right-0 z-50 px-2 pt-2 md:px-3 md:pt-2 lg:px-3 lg:pt-2">
         <div className="max-w-7xl mx-auto bg-black/40 backdrop-blur-3xl border border-white/10 rounded-lg md:rounded-xl shadow-[0_16px_48px_0_rgba(0,0,0,0.75)]">
           {/* Mobile & Tablet Layout */}
           <div className="flex lg:hidden items-center justify-between h-16 sm:h-18 md:h-20 px-4 md:px-6">
@@ -72,7 +72,7 @@ export const Navigation = () => {
           </div>
 
           {/* Desktop Layout - Centered Logo */}
-          <div className="hidden lg:grid grid-cols-3 items-center py-1.5 px-4">
+          <div className="hidden lg:grid grid-cols-3 items-center py-0.5 px-3">
             {/* Left: Navigation Links */}
             <div className="flex items-center space-x-5">
               {leftNavItems.map((item) => (
@@ -93,7 +93,7 @@ export const Navigation = () => {
             {/* Center: Logo */}
             <div className="flex justify-center">
               <Link to="/" className="flex items-center">
-                <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="w-44 invert" />
+                <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="w-36 invert" />
               </Link>
             </div>
 

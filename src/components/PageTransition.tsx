@@ -19,6 +19,7 @@ export const PageTransition = ({ children }: PageTransitionProps) => {
   return (
     <div
       className={`page-transition ${transitionStage}`}
+      style={{ willChange: 'opacity, transform' }}
       onAnimationEnd={() => {
         if (transitionStage === "fadeOut") {
           setTransitionStage("fadeIn");
