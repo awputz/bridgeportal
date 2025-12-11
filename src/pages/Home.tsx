@@ -39,18 +39,18 @@ export default function Home() {
             className="animate-fade-in"
             style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}
           >
-            <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="mx-auto w-[280px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert mb-8 md:mb-12" />
+            <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="mx-auto w-[280px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert mb-4 md:mb-6" />
           </div>
           
           <h1 
-            className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-foreground/90 mb-6 md:mb-8 max-w-4xl mx-auto font-light px-4 animate-fade-in"
+            className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-foreground/90 mb-4 md:mb-6 max-w-4xl mx-auto font-light px-4 animate-fade-in"
             style={{ animationDelay: '400ms', animationFillMode: 'backwards' }}
           >
             {COMPANY_INFO.tagline}
           </h1>
           
           <p 
-            className="text-base md:text-lg lg:text-xl text-foreground/60 mb-8 md:mb-12 max-w-3xl mx-auto font-light px-4 animate-fade-in"
+            className="text-base md:text-lg lg:text-xl text-foreground/60 mb-6 md:mb-8 max-w-3xl mx-auto font-light px-4 animate-fade-in"
             style={{ animationDelay: '500ms', animationFillMode: 'backwards' }}
           >
             {COMPANY_INFO.description.full}
@@ -70,7 +70,7 @@ export default function Home() {
 
           {/* Quick Access Service Buttons */}
           <div 
-            className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center px-4 mt-8 animate-fade-in"
+            className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center px-4 mt-6 animate-fade-in"
             style={{ animationDelay: '700ms', animationFillMode: 'backwards' }}
           >
             <Button asChild variant="outline" size="lg" className="font-medium px-6 md:px-8 w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/40 hover:bg-white/20 hover:border-white/60 text-white shadow-lg">
