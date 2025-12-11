@@ -3,6 +3,7 @@ import { Building2, Users, TrendingUp, ArrowRight, Store, Briefcase, MapPin, Tar
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
+import { ServicePageNav } from "@/components/ServicePageNav";
 import { DIVISIONS } from "@/lib/constants";
 import LeaseCalculator from "@/components/LeaseCalculator";
 
@@ -125,6 +126,7 @@ export default function CommercialLeasing() {
       </section>
 
       <ServicesSubNav />
+      <ServicePageNav serviceKey="commercial-leasing" />
 
       {/* Stats Bar */}
       <section className="py-12 md:py-16 border-b border-white/5 bg-white/[0.02]" ref={statsReveal.elementRef}>

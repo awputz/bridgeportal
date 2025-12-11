@@ -3,6 +3,7 @@ import { Home, Award, TrendingUp, ArrowRight, Users, MapPin, Calendar, Quote, In
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
+import { ServicePageNav } from "@/components/ServicePageNav";
 import manhattanImg from "@/assets/manhattan-market.jpg";
 import brooklynImg from "@/assets/brooklyn-market.jpg";
 import queensImg from "@/assets/queens-market.jpg";
@@ -97,6 +98,7 @@ export default function ResidentialServices() {
       </section>
 
       <ServicesSubNav />
+      <ServicePageNav serviceKey="residential" />
 
       {/* Stats Bar */}
       <section className="py-12 md:py-16 border-b border-white/5 bg-white/[0.02]" ref={statsReveal.elementRef}>

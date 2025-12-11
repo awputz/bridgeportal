@@ -3,6 +3,7 @@ import { Building2, MapPin, Eye, Clock, ArrowRight, Megaphone, TrendingUp, Users
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
+import { ServicePageNav } from "@/components/ServicePageNav";
 import billboardHero from "@/assets/bridge-billboard-hero.png";
 
 export default function Billboard() {
@@ -61,6 +62,7 @@ export default function Billboard() {
       </section>
 
       <ServicesSubNav />
+      <ServicePageNav serviceKey="billboard" />
 
       {/* Stats Bar */}
       <section className="py-12 md:py-16 border-b border-white/5 bg-white/[0.02]" ref={statsReveal.elementRef}>
