@@ -160,6 +160,17 @@ export const Navigation = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
 
+              {/* Transactions - External Link */}
+              <a
+                href="https://traded.co/company/bridge-advisory-group/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-sm font-light transition-all duration-200 hover:scale-105 text-foreground/70 hover:text-foreground"
+              >
+                Transactions
+                <ExternalLink className="h-3 w-3" />
+              </a>
+
               {/* Listings Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -311,6 +322,22 @@ export const Navigation = () => {
                     </a>
                   );
                 })}
+              </div>
+
+              {/* Transactions - External Link (Mobile) */}
+              <div className="pt-3 border-t border-white/10">
+                <a
+                  href="https://traded.co/company/bridge-advisory-group/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`flex items-center gap-3 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2.5 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                  style={{ transitionDelay: '350ms' }}
+                  onClick={() => setIsOpen(false)}
+                >
+                  <TrendingUp className="h-4 w-4 text-foreground/50" />
+                  Transactions
+                  <ExternalLink className="h-3 w-3 ml-auto text-foreground/40" />
+                </a>
               </div>
 
               <Button 
