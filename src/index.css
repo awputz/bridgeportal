@@ -177,8 +177,58 @@ All colors MUST be HSL.
     transform: translateY(-2px);
   }
   
-  /* Smooth transitions for all elements */
-  * {
-    @apply transition-colors duration-300;
+  /* Scrollbar hide utility */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Touch-friendly utilities */
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+  
+  /* Safe area padding for notched devices */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 1rem);
+  }
+  
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0);
+  }
+  
+  .px-safe {
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
+  }
+  
+  /* Smooth momentum scrolling */
+  .scroll-smooth-touch {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Smooth transitions for all elements - reduced for mobile performance */
+  @media (prefers-reduced-motion: no-preference) {
+    * {
+      @apply transition-colors duration-200;
+    }
+  }
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 768px) {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  body {
+    -webkit-text-size-adjust: 100%;
+    overscroll-behavior-y: contain;
   }
 }

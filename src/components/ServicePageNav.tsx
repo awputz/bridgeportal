@@ -15,7 +15,7 @@ export const ServicePageNav = ({ serviceKey }: ServicePageNavProps) => {
   return (
     <nav className="bg-secondary/50 border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center overflow-x-auto scrollbar-hide py-1">
+        <div className="flex items-center overflow-x-auto scrollbar-hide py-1 -mx-4 px-4 sm:mx-0 sm:px-0">
           {service.pages.map((page) => {
             const isActive = location.pathname === page.path;
             return (
@@ -23,10 +23,10 @@ export const ServicePageNav = ({ serviceKey }: ServicePageNavProps) => {
                 key={page.path}
                 to={page.path}
                 className={cn(
-                  "px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors relative",
+                  "px-4 py-3.5 md:py-3 text-sm font-medium whitespace-nowrap transition-colors relative min-h-[48px] md:min-h-[44px] flex items-center touch-manipulation",
                   isActive
                     ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"
+                    : "text-muted-foreground hover:text-foreground active:text-foreground"
                 )}
               >
                 {page.name}
