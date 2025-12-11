@@ -6,6 +6,7 @@ import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMe
 import { NAV_ITEMS, DIVISIONS } from "@/lib/constants";
 import bridgeInvestmentLogo from "@/assets/bridge-investment-sales-logo.png";
 import { cn } from "@/lib/utils";
+import { ContactSheet } from "@/components/ContactSheet";
 const leftNavItems = [{
   name: "About Us",
   path: "/about"
@@ -32,6 +33,7 @@ const serviceIcons: Record<string, typeof Building2> = {
 };
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
   const location = useLocation();
   useEffect(() => {
     if (isOpen) {
@@ -123,12 +125,12 @@ export const Navigation = () => {
                 </NavigationMenuList>
               </NavigationMenu>
 
-              <Link to="/contact" className="text-sm font-light text-foreground/70 hover:text-foreground transition-all duration-200">
-                Contact
-              </Link>
-
-              <Button asChild size="sm" className="h-9 px-5 text-sm font-medium bg-white text-black hover:bg-white/90 rounded-md">
-                <Link to="/contact">Submit a Deal</Link>
+              <Button 
+                size="sm" 
+                className="h-9 px-5 text-sm font-medium bg-white text-black hover:bg-white/90 rounded-md"
+                onClick={() => setContactOpen(true)}
+              >
+                Contact Us
               </Button>
             </div>
           </div>
@@ -163,16 +165,21 @@ export const Navigation = () => {
               })}
               </div>
 
-              <Button asChild className={`w-full mt-5 font-light transition-all duration-300 ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{
-              transitionDelay: '400ms'
-            }} size="lg">
-                <Link to="/contact" onClick={() => setIsOpen(false)}>
-                  Contact Us
-                </Link>
+              <Button 
+                className={`w-full mt-5 font-light transition-all duration-300 ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} 
+                style={{ transitionDelay: '400ms' }} 
+                size="lg"
+                onClick={() => {
+                  setIsOpen(false);
+                  setContactOpen(true);
+                }}
+              >
+                Contact Us
               </Button>
             </div>
           </div>
         </div>
       </nav>
+      <ContactSheet open={contactOpen} onOpenChange={setContactOpen} />
     </>;
 };
