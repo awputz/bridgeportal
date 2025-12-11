@@ -42,7 +42,7 @@ export const Navigation = () => {
           {/* Mobile & Tablet Layout */}
           <div className="flex lg:hidden items-center justify-between h-16 md:h-20 px-4 md:px-6">
             <Link to="/" className="flex items-center">
-              <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-12 md:h-14 invert object-contain" />
+              <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-14 md:h-16 invert object-contain" />
             </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -56,12 +56,12 @@ export const Navigation = () => {
           {/* Desktop Layout - Centered Logo */}
           <div className="hidden lg:grid grid-cols-3 items-center h-20 px-8">
             {/* Left: Navigation Links */}
-            <div className="flex items-center space-x-5">
+            <div className="flex items-center space-x-6">
               {leftNavItems.map((item) => (
                 <Link
                   key={item.name}
                   to={item.path}
-                  className={`text-sm font-light transition-all duration-300 whitespace-nowrap ${
+                  className={`text-base font-light transition-all duration-300 whitespace-nowrap ${
                     location.pathname === item.path
                       ? "text-foreground"
                       : "text-foreground/80 hover:text-foreground"
@@ -75,7 +75,7 @@ export const Navigation = () => {
             {/* Center: Logo - Made larger */}
             <div className="flex justify-center">
               <Link to="/" className="flex items-center">
-                <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-12 invert object-contain" />
+                <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-14 invert object-contain" />
               </Link>
             </div>
 
@@ -83,7 +83,7 @@ export const Navigation = () => {
             <div className="flex items-center justify-end space-x-6">
               {/* Services Dropdown */}
               <DropdownMenu>
-                <DropdownMenuTrigger className={`group flex items-center gap-1 text-sm font-light transition-all duration-300 ease-out outline-none hover:scale-105 ${
+                <DropdownMenuTrigger className={`group flex items-center gap-1 text-base font-light transition-all duration-300 ease-out outline-none hover:scale-105 ${
                   isServicesActive ? "text-foreground" : "text-foreground/80 hover:text-foreground"
                 }`}>
                   Services
@@ -94,7 +94,7 @@ export const Navigation = () => {
                     <DropdownMenuItem 
                       key={item.name} 
                       asChild 
-                      className="animate-in fade-in slide-in-from-top-1"
+                      className="animate-in fade-in slide-in-from-top-1 text-base"
                       style={{
                         animationDuration: "300ms",
                         animationDelay: `${index * 50}ms`,
