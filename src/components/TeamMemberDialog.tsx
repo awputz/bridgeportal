@@ -81,7 +81,7 @@ export const TeamMemberDialog = ({ member, open, onOpenChange }: TeamMemberDialo
             <p className="text-sm uppercase tracking-widest text-muted-foreground">{member.title}</p>
             {member.license_number && (
               <p className="text-xs text-muted-foreground/70 font-light">
-                {member.name.includes('Matthew Simon') ? 'Firm License' : 'License'} #{member.license_number}
+                #{member.license_number}
               </p>
             )}
           </div>
