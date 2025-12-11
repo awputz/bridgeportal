@@ -90,7 +90,7 @@ export const Navigation = () => {
                     <NavigationMenuTrigger className={cn("bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent", "text-sm font-light px-0 h-auto", "transition-all duration-200 hover:scale-105", isServicesActive ? "text-foreground" : "text-foreground/70 hover:text-foreground")}>
                       Services
                     </NavigationMenuTrigger>
-                    <NavigationMenuContent>
+                    <NavigationMenuContent className="bg-zinc-900/95 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-xl">
                       <div className="grid grid-cols-2 gap-2 p-4 w-[500px]">
                         {NAV_ITEMS.services.items.map((item, index) => {
                         const IconComponent = serviceIcons[item.name] || Building2;
