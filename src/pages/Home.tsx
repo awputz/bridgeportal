@@ -129,7 +129,7 @@ export default function Home() {
                 <Link 
                   key={division.name}
                   to={division.path}
-                  className="px-4 py-2 md:px-6 md:py-2.5 rounded-lg border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 text-center group flex flex-col items-center"
+                  className="px-4 pt-2 pb-1 md:px-6 md:pt-2.5 md:pb-1.5 rounded-lg border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 text-center group flex flex-col items-center"
                 >
                   {iconMap[division.icon]}
                   <p className="text-xs md:text-sm font-light group-hover:text-foreground transition-colors">{division.name}</p>
