@@ -381,7 +381,7 @@ export default function Home() {
       </section>
 
       {/* Section 7: Final CTA */}
-      <section className="py-20 md:py-28 lg:py-36" ref={ctaReveal.elementRef}>
+      <section ref={ctaReveal.elementRef} className="py-20 md:py-28 lg:py-36 bg-secondary">
         <div className="container mx-auto px-4 md:px-6 text-center max-w-4xl">
           <h2 className={`text-3xl md:text-4xl lg:text-5xl font-light mb-6 transition-all duration-700 ${ctaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             Talk To The Right Team At Bridge
