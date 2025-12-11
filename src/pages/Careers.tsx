@@ -59,7 +59,7 @@ export default function Careers() {
   return (
     <div className="min-h-screen">
       {/* Hero with Image */}
-      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center" ref={heroReveal.elementRef}>
+      <section className="relative h-[45vh] md:h-[50vh] min-h-[320px] md:min-h-[400px] flex items-center justify-center" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img 
             src={PLACEHOLDER_IMAGES.office.modern} 
@@ -81,16 +81,16 @@ export default function Careers() {
       </section>
 
       {/* Why Bridge */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={whyReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={whyReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`transition-all duration-700 ${
             whyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-4 text-center">Why Bridge Advisory Group</h2>
-            <p className="text-muted-foreground font-light mb-12 text-center max-w-2xl mx-auto">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">Why Bridge Advisory Group</h2>
+            <p className="text-sm md:text-base text-muted-foreground font-light mb-8 md:mb-12 text-center max-w-2xl mx-auto">
               We invest in our people and provide the tools, training, and support to help you succeed.
             </p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               {benefits.map((benefit, index) => (
                 <div 
                   key={benefit.title} 
@@ -108,7 +108,7 @@ export default function Careers() {
       </section>
 
       {/* Culture Section with Image */}
-      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={cultureReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={cultureReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
           <div className={`grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${
             cultureReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
@@ -134,16 +134,16 @@ export default function Careers() {
       </section>
 
       {/* Our Values */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={valuesReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={valuesReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`transition-all duration-700 ${
             valuesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-4 text-center">Our Values</h2>
-            <p className="text-muted-foreground font-light mb-12 text-center max-w-2xl mx-auto">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">Our Values</h2>
+            <p className="text-sm md:text-base text-muted-foreground font-light mb-8 md:mb-12 text-center max-w-2xl mx-auto">
               The principles that guide how we work and serve our clients.
             </p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
               {values.map((value, index) => (
                 <div 
                   key={value.title} 
@@ -160,13 +160,13 @@ export default function Careers() {
       </section>
 
       {/* Open Positions */}
-      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={positionsReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={positionsReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
           <div className={`transition-all duration-700 ${
             positionsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-4 text-center">Open Positions</h2>
-            <p className="text-muted-foreground font-light mb-12 text-center max-w-2xl mx-auto">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">Open Positions</h2>
+            <p className="text-sm md:text-base text-muted-foreground font-light mb-8 md:mb-12 text-center max-w-2xl mx-auto">
               Explore current opportunities to join the Bridge team.
             </p>
             <div className="space-y-6">
@@ -206,9 +206,9 @@ export default function Careers() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 md:py-28 bg-white/[0.02]">
+      <section className="py-12 md:py-20 lg:py-28 bg-white/[0.02]">
         <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
-          <h2 className="text-3xl md:text-4xl font-light mb-6">Don't See a Fit?</h2>
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-6">Don't See a Fit?</h2>
           <p className="text-muted-foreground font-light mb-8 max-w-2xl mx-auto">
             We're always looking for talented individuals. Send us your resume and tell us how you can contribute to Bridge Advisory Group.
           </p>

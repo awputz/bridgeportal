@@ -138,14 +138,14 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen pt-32 md:pt-40 pb-20">
+    <div className="min-h-screen pt-24 md:pt-32 lg:pt-40 pb-16 md:pb-20">
       <div className="container mx-auto px-4 md:px-6 max-w-2xl">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-light mb-4 animate-fade-in">
+        <div className="text-center mb-8 md:mb-12">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-light mb-4 animate-fade-in">
             Contact Bridge Advisory Group
           </h1>
-          <p className="text-muted-foreground font-light animate-fade-in" style={{ animationDelay: '100ms' }}>
+          <p className="text-sm md:text-base text-muted-foreground font-light animate-fade-in" style={{ animationDelay: '100ms' }}>
             Tell us who you are trying to reach and what you are working on. We will route your inquiry to the right team.
           </p>
         </div>

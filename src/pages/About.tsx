@@ -28,7 +28,7 @@ export default function About() {
   return (
     <div className="min-h-screen">
       {/* Hero with Image */}
-      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
+      <section className="relative h-[50vh] md:h-[60vh] min-h-[350px] md:min-h-[450px] flex items-center justify-center" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img 
             src={PLACEHOLDER_IMAGES.hero.nycSkyline} 
@@ -50,7 +50,7 @@ export default function About() {
       </section>
 
       {/* Platform Story with Image */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={storyReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={storyReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
           <div className={`grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${
             storyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
@@ -78,7 +78,7 @@ export default function About() {
       </section>
 
       {/* Mission and Vision */}
-      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={missionReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={missionReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
           <div className={`transition-all duration-700 ${
             missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
@@ -111,29 +111,29 @@ export default function About() {
       </section>
 
       {/* Cultural Values */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={valuesReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={valuesReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
           <div className={`transition-all duration-700 ${
             valuesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-4 text-center">Cultural Values</h2>
-            <p className="text-muted-foreground font-light text-center mb-12">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">Cultural Values</h2>
+            <p className="text-sm md:text-base text-muted-foreground font-light text-center mb-8 md:mb-12">
               These values are reviewed in every onboarding meeting and guide how we work as a firm.
             </p>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
               {culturalValues.map((value, index) => {
                 const Icon = value.icon;
                 return (
                   <div 
                     key={value.title}
-                    className={`p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-500 ${
+                    className={`p-4 md:p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-500 ${
                       valuesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
                     }`}
                     style={{ transitionDelay: `${index * 100}ms` }}
                   >
-                    <Icon className="h-8 w-8 text-accent mb-4" />
-                    <h3 className="text-lg font-light">{value.title}</h3>
+                    <Icon className="h-6 w-6 md:h-8 md:w-8 text-accent mb-3 md:mb-4" />
+                    <h3 className="text-sm md:text-lg font-light">{value.title}</h3>
                   </div>
                 );
               })}
@@ -143,7 +143,7 @@ export default function About() {
       </section>
 
       {/* Philosophy with Image */}
-      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={philosophyReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={philosophyReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
           <div className={`grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${
             philosophyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
@@ -183,16 +183,16 @@ export default function About() {
       </section>
 
       {/* Divisions Overview */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={divisionsReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={divisionsReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`text-center mb-12 transition-all duration-700 ${
+          <div className={`text-center mb-8 md:mb-12 transition-all duration-700 ${
             divisionsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-4">Our Divisions</h2>
-            <p className="text-muted-foreground font-light">Specialized expertise across every sector of New York City real estate</p>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Our Divisions</h2>
+            <p className="text-sm md:text-base text-muted-foreground font-light">Specialized expertise across every sector of New York City real estate</p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {Object.values(DIVISIONS).map((division, index) => (
               <Link
                 key={division.name}
@@ -215,15 +215,15 @@ export default function About() {
       </section>
 
       {/* Why Bridge */}
-      <section className="py-20 md:py-28" ref={whyReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28" ref={whyReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`text-center mb-12 transition-all duration-700 ${
+          <div className={`text-center mb-8 md:mb-12 transition-all duration-700 ${
             whyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-4">Why Bridge</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Why Bridge</h2>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {[
               {
                 icon: Building2,
