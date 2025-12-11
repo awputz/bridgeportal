@@ -1,14 +1,16 @@
 import { Link } from "react-router-dom";
-import { Building2, Users, TrendingUp, ArrowRight } from "lucide-react";
+import { Building2, Users, TrendingUp, ArrowRight, Calculator } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { DIVISIONS } from "@/lib/constants";
+import { InvestmentCalculator } from "@/components/InvestmentCalculator";
 
 export default function CapitalAdvisory() {
   const introReveal = useScrollReveal(0.1);
   const debtReveal = useScrollReveal(0.1);
   const equityReveal = useScrollReveal(0.1);
   const recapReveal = useScrollReveal(0.1);
+  const calculatorReveal = useScrollReveal(0.1);
 
   return (
     <div className="min-h-screen pt-32 md:pt-40">
@@ -124,6 +126,28 @@ export default function CapitalAdvisory() {
                 <span>Advisory for assets facing maturity or capital structure stress</span>
               </li>
             </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Underwriting Tools Section */}
+      <section className="py-20 md:py-28 border-b border-white/5" ref={calculatorReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6">
+          <div className={`text-center mb-12 transition-all duration-700 ${
+            calculatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <Calculator className="h-10 w-10 text-accent" />
+              <h2 className="text-3xl md:text-4xl font-light">Underwriting Tools</h2>
+            </div>
+            <p className="text-muted-foreground font-light max-w-2xl mx-auto">
+              Model financing scenarios and analyze returns with our comprehensive underwriting calculator.
+            </p>
+          </div>
+          <div className={`transition-all duration-700 ${
+            calculatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`} style={{ transitionDelay: '200ms' }}>
+            <InvestmentCalculator />
           </div>
         </div>
       </section>
