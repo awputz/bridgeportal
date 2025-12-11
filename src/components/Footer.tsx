@@ -72,6 +72,11 @@ export const Footer = () => {
                   Track Record
                 </Link>
               </li>
+              <li>
+                <Link to="/markets-coming-soon" className="text-foreground/70 hover:text-foreground transition-colors font-light">
+                  Markets Coming Soon
+                </Link>
+              </li>
             </ul>
           </div>
 
