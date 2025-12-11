@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Building2, MapPin, Eye, Clock, ArrowRight, Megaphone, TrendingUp, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { ServicesSubNav } from "@/components/ServicesSubNav";
 import billboardHero from "@/assets/bridge-billboard-hero.png";
 
 export default function Billboard() {
@@ -58,6 +59,8 @@ export default function Billboard() {
           </div>
         </div>
       </section>
+
+      <ServicesSubNav />
 
       {/* Stats Bar */}
       <section className="py-12 md:py-16 border-b border-white/5 bg-white/[0.02]" ref={statsReveal.elementRef}>

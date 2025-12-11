@@ -41,7 +41,7 @@ export const Navigation = () => {
           {/* Mobile & Tablet Layout */}
           <div className="flex lg:hidden items-center justify-between h-16 md:h-20 px-4 md:px-6">
             <Link to="/" className="flex items-center">
-              <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-14 md:h-16 invert object-contain" />
+              <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-16 md:h-20 invert object-contain max-w-[200px]" />
             </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -74,7 +74,7 @@ export const Navigation = () => {
             {/* Center: Logo - Made larger */}
             <div className="flex justify-center">
               <Link to="/" className="flex items-center">
-                <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-14 invert object-contain" />
+                <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-24 invert object-contain max-w-[240px]" />
               </Link>
             </div>
 
@@ -88,7 +88,7 @@ export const Navigation = () => {
                   Services
                   <ChevronDown className="h-4 w-4 transition-transform duration-300 ease-out group-data-[state=open]:rotate-180" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-popover border-border/50 z-[100]">
+                <DropdownMenuContent className="bg-[#1a1a1a] border-white/20 z-[9999] shadow-2xl">
                   {NAV_ITEMS.services.items.map((item, index) => (
                     <DropdownMenuItem 
                       key={item.name} 

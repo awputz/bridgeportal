@@ -3,6 +3,7 @@ import { Building2, TrendingUp, Users, ArrowRight, BarChart3, Calculator } from 
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useTransactions } from "@/hooks/useTransactions";
+import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { DIVISIONS } from "@/lib/constants";
 import { MarketStats } from "@/components/MarketStats";
 import { InvestmentCalculator } from "@/components/InvestmentCalculator";
@@ -32,6 +33,8 @@ export default function InvestmentSales() {
           </p>
         </div>
       </section>
+
+      <ServicesSubNav />
 
       {/* Intro */}
       <section className="py-20 md:py-28 border-b border-white/5" ref={introReveal.elementRef}>

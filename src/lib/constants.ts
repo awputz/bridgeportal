@@ -50,6 +50,12 @@ export const DIVISIONS = {
     tagline: "Debt and equity solutions aligned with real world business plans.",
     description: "Debt & Equity Advisory"
   },
+  propertyManagement: {
+    name: "Property Management",
+    path: "/services/property-management",
+    tagline: "Full-service portfolio management for landlords and investors.",
+    description: "Portfolio & Asset Management"
+  },
   marketing: {
     name: "Marketing",
     path: "/services/marketing",
@@ -72,6 +78,7 @@ export const NAV_ITEMS = {
       { name: "Commercial Leasing", path: "/services/commercial-leasing" },
       { name: "Investment Sales", path: "/services/investment-sales" },
       { name: "Capital Advisory", path: "/services/capital-advisory" },
+      { name: "Property Management", path: "/services/property-management" },
       { name: "Marketing", path: "/services/marketing" },
       { name: "Billboard", path: "/services/billboard" },
     ]
