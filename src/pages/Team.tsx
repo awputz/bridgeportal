@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { CheckCircle2, TrendingUp, Users, Building2 } from "lucide-react";
 import { TeamMemberDialog } from "@/components/TeamMemberDialog";
 import { useBridgeAgents, BridgeAgent, TeamCategory } from "@/hooks/useBridgeAgents";
 import { TeamPerformance } from "@/components/TeamPerformance";
+import { use3DTilt } from "@/hooks/useMousePosition";
 
 interface TeamMember {
   name: string;
@@ -48,18 +49,23 @@ const Team = () => {
     setDialogOpen(true);
   };
 
-  const renderAgentCard = (agent: BridgeAgent, isLarge: boolean = false) => {
+  const TiltCard = ({ agent, isLarge }: { agent: BridgeAgent; isLarge: boolean }) => {
+    const cardRef = useRef<HTMLDivElement>(null);
+    const { handleMouseMove, handleMouseLeave, tiltStyle } = use3DTilt(cardRef, 8);
     const member = mapAgentToMember(agent);
-    
+
     return (
-      <div 
-        key={agent.id}
+      <div
+        ref={cardRef}
         onClick={() => handleMemberClick(member)}
-        className="group glass-card overflow-hidden cursor-pointer active:scale-[0.98]"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={tiltStyle}
+        className="group glass-card overflow-hidden cursor-pointer active:scale-[0.98] will-change-transform"
       >
         <div className="aspect-square bg-muted/20 relative overflow-hidden">
-          <img 
-            src={member.image} 
+          <img
+            src={member.image}
             alt={member.name}
             onError={(e) => {
               e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&size=400&background=18181b&color=fff`;
@@ -67,7 +73,7 @@ const Team = () => {
             className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
           />
         </div>
-        
+
         <div className={isLarge ? "p-5" : "p-4"}>
           <h3 className={`${isLarge ? "text-lg" : "text-base"} font-light mb-1`}>{member.name}</h3>
           <p className="text-xs text-muted-foreground font-light mb-1">{member.title}</p>
@@ -82,6 +88,10 @@ const Team = () => {
         </div>
       </div>
     );
+  };
+
+  const renderAgentCard = (agent: BridgeAgent, isLarge: boolean = false) => {
+    return <TiltCard key={agent.id} agent={agent} isLarge={isLarge} />;
   };
 
   const renderSection = (category: TeamCategory, isLeadership: boolean = false) => {

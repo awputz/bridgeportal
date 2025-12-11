@@ -8,6 +8,7 @@ import { Footer } from "@/components/Footer";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { PageTransition } from "@/components/PageTransition";
 import { FloatingBackToTop } from "@/components/FloatingBackToTop";
+import { ScrollProgressBar } from "@/components/ScrollProgressBar";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { ContactSheetProvider } from "@/contexts/ContactSheetContext";
 // Pages
@@ -86,6 +87,7 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
+          <ScrollProgressBar />
           <Routes>
             {/* Auth Route */}
             <Route path="/auth" element={<Auth />} />

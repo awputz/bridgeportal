@@ -1,20 +1,29 @@
 import { Link } from "react-router-dom";
-import { Building2, Users, TrendingUp, Award, ArrowRight, Target, Eye, Heart, MessageSquare, Trophy, Compass, HelpCircle, PenLine } from "lucide-react";
+import { Building2, Users, TrendingUp, Award, ArrowRight, Target, Eye, Heart, MessageSquare, Trophy, Compass, HelpCircle, PenLine, DollarSign, Briefcase, Clock, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { DIVISIONS } from "@/lib/constants";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
+import { AnimatedCounter } from "@/components/AnimatedCounter";
 
 export default function About() {
   const { openContactSheet } = useContactSheet();
   const heroReveal = useScrollReveal(0.1);
+  const statsReveal = useScrollReveal(0.1);
   const storyReveal = useScrollReveal(0.1);
   const missionReveal = useScrollReveal(0.1);
   const valuesReveal = useScrollReveal(0.1);
   const philosophyReveal = useScrollReveal(0.1);
   const divisionsReveal = useScrollReveal(0.1);
   const whyReveal = useScrollReveal(0.1);
+
+  const stats = [
+    { icon: DollarSign, value: 500, suffix: "M+", label: "Transactions Closed" },
+    { icon: Briefcase, value: 100, suffix: "+", label: "Clients Served" },
+    { icon: Clock, value: 15, suffix: "+", label: "Years Combined Experience" },
+    { icon: Home, value: 50, suffix: "+", label: "Active Listings" },
+  ];
 
   const culturalValues = [
     { icon: Heart, title: "Lead with Optimism and Compassion" },
@@ -46,6 +55,36 @@ export default function About() {
           <p className="text-lg md:text-xl text-muted-foreground font-light">
             A multi-division real estate platform at the intersection of brokerage, ownership, and capital.
           </p>
+        </div>
+      </section>
+
+      {/* Animated Stats Section */}
+      <section className="py-12 md:py-16 border-b border-white/5 bg-white/[0.02]" ref={statsReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+          <div className={`grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 transition-all duration-700 ${
+            statsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
+            {stats.map((stat, index) => {
+              const Icon = stat.icon;
+              return (
+                <div 
+                  key={stat.label}
+                  className="text-center"
+                  style={{ transitionDelay: `${index * 100}ms` }}
+                >
+                  <Icon className="h-6 w-6 md:h-8 md:w-8 text-accent mx-auto mb-3" />
+                  <div className="text-3xl md:text-4xl lg:text-5xl font-light mb-2">
+                    <AnimatedCounter 
+                      end={stat.value} 
+                      suffix={stat.suffix}
+                      duration={2000}
+                    />
+                  </div>
+                  <p className="text-xs md:text-sm text-muted-foreground font-light">{stat.label}</p>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
