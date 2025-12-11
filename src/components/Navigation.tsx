@@ -77,7 +77,7 @@ export const Navigation = () => {
             {/* Center: Logo */}
             <div className="flex justify-center">
               <Link to="/" className="flex items-center">
-                <img alt="Bridge Investment Sales" className="h-14 w-auto" src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" />
+                <img alt="Bridge Investment Sales" className="h-16 w-auto" src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" />
               </Link>
             </div>
 
