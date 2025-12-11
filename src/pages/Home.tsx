@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Building2, TrendingUp, Award, Users, Home as HomeIcon, Megaphone, ArrowRight, ChevronDown, Target, Eye } from "lucide-react";
+import { Building2, TrendingUp, Award, Users, Home as HomeIcon, Megaphone, ArrowRight, ChevronDown, Target, Eye, Landmark, Settings, Presentation } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTransactions } from "@/hooks/useTransactions";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -115,15 +115,27 @@ export default function Home() {
           <div className={`flex flex-wrap justify-center gap-3 md:gap-4 mb-12 transition-all duration-700 ${
             platformReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`} style={{ transitionDelay: '200ms' }}>
-            {Object.values(DIVISIONS).map((division, index) => (
-              <Link 
-                key={division.name}
-                to={division.path}
-                className="px-4 py-3 md:px-6 md:py-4 rounded-lg border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 text-center group"
-              >
-                <p className="text-xs md:text-sm font-light group-hover:text-foreground transition-colors">{division.name}</p>
-              </Link>
-            ))}
+            {Object.values(DIVISIONS).map((division, index) => {
+              const iconMap: Record<string, React.ReactNode> = {
+                Home: <HomeIcon className="h-4 w-4 md:h-5 md:w-5 mb-2 opacity-70 group-hover:opacity-100 transition-opacity" />,
+                Building2: <Building2 className="h-4 w-4 md:h-5 md:w-5 mb-2 opacity-70 group-hover:opacity-100 transition-opacity" />,
+                TrendingUp: <TrendingUp className="h-4 w-4 md:h-5 md:w-5 mb-2 opacity-70 group-hover:opacity-100 transition-opacity" />,
+                Landmark: <Landmark className="h-4 w-4 md:h-5 md:w-5 mb-2 opacity-70 group-hover:opacity-100 transition-opacity" />,
+                Settings: <Settings className="h-4 w-4 md:h-5 md:w-5 mb-2 opacity-70 group-hover:opacity-100 transition-opacity" />,
+                Megaphone: <Megaphone className="h-4 w-4 md:h-5 md:w-5 mb-2 opacity-70 group-hover:opacity-100 transition-opacity" />,
+                Presentation: <Presentation className="h-4 w-4 md:h-5 md:w-5 mb-2 opacity-70 group-hover:opacity-100 transition-opacity" />,
+              };
+              return (
+                <Link 
+                  key={division.name}
+                  to={division.path}
+                  className="px-4 py-3 md:px-6 md:py-4 rounded-lg border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 text-center group flex flex-col items-center"
+                >
+                  {iconMap[division.icon]}
+                  <p className="text-xs md:text-sm font-light group-hover:text-foreground transition-colors">{division.name}</p>
+                </Link>
+              );
+            })}
           </div>
           
           <div className={`text-center transition-all duration-700 ${
