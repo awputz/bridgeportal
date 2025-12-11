@@ -65,12 +65,28 @@ export default function Home() {
               <Link to="/contact">Contact Us</Link>
             </Button>
           </div>
+
+          {/* Quick Access Service Buttons */}
+          <div 
+            className="flex flex-col sm:flex-row gap-3 justify-center px-4 mt-6 animate-fade-in"
+            style={{ animationDelay: '700ms', animationFillMode: 'backwards' }}
+          >
+            <Button asChild variant="outline" size="lg" className="font-light px-6 md:px-8 w-full sm:w-auto border-white/20 hover:bg-white/10 hover:border-white/30">
+              <Link to="/services/residential">Residential</Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="font-light px-6 md:px-8 w-full sm:w-auto border-white/20 hover:bg-white/10 hover:border-white/30">
+              <Link to="/services/commercial-leasing">Commercial Leasing</Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="font-light px-6 md:px-8 w-full sm:w-auto border-white/20 hover:bg-white/10 hover:border-white/30">
+              <Link to="/services/investment-sales">Investment Sales</Link>
+            </Button>
+          </div>
         </div>
         
         {/* Scroll Indicator */}
         <div 
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-fade-in" 
-          style={{ animationDelay: '800ms', animationFillMode: 'backwards' }}
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 animate-fade-in hidden md:block" 
+          style={{ animationDelay: '900ms', animationFillMode: 'backwards' }}
         >
           <div className="flex flex-col items-center gap-2 text-white/60 hover:text-white/90 transition-colors cursor-pointer">
             <span className="text-sm tracking-wider uppercase font-light">Scroll to Explore</span>
