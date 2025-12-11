@@ -103,6 +103,40 @@ const faqCategories = [
       },
     ]
   },
+  {
+    title: "Marketing",
+    questions: [
+      {
+        q: "What marketing services does Bridge offer?",
+        a: "Bridge Marketing provides creative services (photography, video, branding, brochures), digital campaigns (paid advertising, email marketing, social media), and strategic consulting for property launches and repositioning."
+      },
+      {
+        q: "Do you work with non-real estate clients?",
+        a: "Our primary focus is real estate marketing, but we selectively work with related industries such as hospitality, design, and development firms where our expertise adds clear value."
+      },
+      {
+        q: "What is your typical project timeline?",
+        a: "Timelines vary by scope. A single property campaign typically takes 2-4 weeks, while comprehensive brand or portfolio projects may take 6-8 weeks from kickoff to launch."
+      },
+    ]
+  },
+  {
+    title: "Billboard",
+    questions: [
+      {
+        q: "What types of billboard advertising do you offer?",
+        a: "We offer static billboards, digital displays, wallscapes, and building wraps across high-traffic NYC locations. Our inventory spans Manhattan, Brooklyn, and Queens with options for all budgets."
+      },
+      {
+        q: "How does the billboard booking process work?",
+        a: "Start with a consultation to define your goals and target audience. We then present site options, handle creative production guidance, and manage the campaign from installation through completion."
+      },
+      {
+        q: "What are typical campaign durations?",
+        a: "Most campaigns run a minimum of 4 weeks, with discounts available for longer commitments. Seasonal and event-based campaigns can be arranged with flexible timing."
+      },
+    ]
+  },
 ];
 
 export default function FAQ() {

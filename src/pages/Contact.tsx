@@ -679,6 +679,16 @@ export default function Contact() {
             </a>
           </p>
           <p className="font-light">{COMPANY_INFO.contact.phone}</p>
+          
+          {/* Office Hours */}
+          <div className="mt-8 pt-8 border-t border-white/10">
+            <h3 className="font-light text-lg mb-4">Office Hours</h3>
+            <div className="space-y-2 text-muted-foreground font-light">
+              <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
+              <p>Saturday - Sunday: By Appointment</p>
+              <p className="text-sm mt-4">Response Time: Within 24 hours</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

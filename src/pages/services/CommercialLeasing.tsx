@@ -135,9 +135,21 @@ export default function CommercialLeasing() {
           <p className="text-base md:text-lg lg:text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-6 md:mb-10">
             NYC Retail & Office Leasing Specialists
           </p>
-          <Button size="lg" className="font-light" onClick={openContactSheet}>
-            List Your Space
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button size="lg" className="font-light" onClick={openContactSheet}>
+              List Your Space
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="font-light border-white/30 hover:bg-white/10"
+              asChild
+            >
+              <a href="https://www.costar.com/agent/alexander-smotritsky/broker-profile" target="_blank" rel="noopener noreferrer">
+                View Our Listings
+              </a>
+            </Button>
+          </div>
         </div>
       </section>
 

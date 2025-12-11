@@ -74,9 +74,25 @@ export default function Careers() {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6">
             Join Our Team
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground font-light max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-8">
             Build your career at one of NYC's fastest-growing real estate advisory firms
           </p>
+          
+          {/* Quick Stats */}
+          <div className="flex flex-wrap justify-center gap-6 md:gap-10">
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-light text-accent">50+</div>
+              <div className="text-sm text-muted-foreground font-light">Team Members</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-light text-accent">7</div>
+              <div className="text-sm text-muted-foreground font-light">Divisions</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-light text-accent">5</div>
+              <div className="text-sm text-muted-foreground font-light">Boroughs Covered</div>
+            </div>
+          </div>
         </div>
       </section>
 
