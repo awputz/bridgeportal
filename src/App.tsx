@@ -45,6 +45,10 @@ import ResidentialRentals from "./pages/services/residential/Rentals";
 import ResidentialSales from "./pages/services/residential/Sales";
 import ResidentialListings from "./pages/services/residential/Listings";
 import ResidentialMarkets from "./pages/services/residential/Markets";
+import ResidentialTransactions from "./pages/services/residential/Transactions";
+import ResidentialResources from "./pages/services/residential/Resources";
+import ResidentialLandlordServices from "./pages/services/residential/LandlordServices";
+import ResidentialBuildings from "./pages/services/residential/Buildings";
 
 import InvestmentAcquisitions from "./pages/services/investment-sales/Acquisitions";
 import InvestmentDispositions from "./pages/services/investment-sales/Dispositions";
@@ -133,6 +137,10 @@ const App = () => {
                     <Route path="/services/residential/sales" element={<ResidentialSales />} />
                     <Route path="/services/residential/listings" element={<ResidentialListings />} />
                     <Route path="/services/residential/markets" element={<ResidentialMarkets />} />
+                    <Route path="/services/residential/transactions" element={<ResidentialTransactions />} />
+                    <Route path="/services/residential/resources" element={<ResidentialResources />} />
+                    <Route path="/services/residential/landlord-services" element={<ResidentialLandlordServices />} />
+                    <Route path="/services/residential/buildings" element={<ResidentialBuildings />} />
                     
                     {/* Investment Sales Sub-Pages */}
                     <Route path="/services/investment-sales/acquisitions" element={<InvestmentAcquisitions />} />
