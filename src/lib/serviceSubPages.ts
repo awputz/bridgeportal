@@ -19,6 +19,10 @@ export const SERVICE_SUB_PAGES = {
       { name: "Sales", path: "/services/residential/sales" },
       { name: "Listings", path: "/services/residential/listings" },
       { name: "Markets", path: "/services/residential/markets" },
+      { name: "Transactions", path: "/services/residential/transactions" },
+      { name: "Resources", path: "/services/residential/resources" },
+      { name: "Landlord Services", path: "/services/residential/landlord-services" },
+      { name: "Buildings", path: "/services/residential/buildings" },
     ],
   },
   "commercial-leasing": {

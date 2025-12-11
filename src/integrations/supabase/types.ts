@@ -50,6 +50,57 @@ export type Database = {
         }
         Relationships: []
       }
+      bridge_buildings: {
+        Row: {
+          address: string
+          borough: string | null
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          name: string
+          neighborhood: string | null
+          slug: string
+          tags: string[] | null
+          unit_count: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          address: string
+          borough?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          name: string
+          neighborhood?: string | null
+          slug: string
+          tags?: string[] | null
+          unit_count?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string
+          borough?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          name?: string
+          neighborhood?: string | null
+          slug?: string
+          tags?: string[] | null
+          unit_count?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       bridge_listing_links: {
         Row: {
           category: string
