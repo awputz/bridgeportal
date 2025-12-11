@@ -25,12 +25,12 @@ export const Footer = () => {
           {/* Newsletter */}
           <div className="md:col-span-2 lg:col-span-1 lg:pr-8">
             <h3 className="text-xl md:text-2xl font-light mb-6 tracking-tight">
-              subscribe to our newsletter
+              Subscribe To Our Newsletter
             </h3>
             <form onSubmit={handleNewsletterSubmit} className="space-y-4">
               <input
                 type="email"
-                placeholder="Enter your Email here"
+                placeholder="Enter Your Email Here"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-transparent border-b border-muted-foreground/30 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors"
@@ -47,7 +47,7 @@ export const Footer = () => {
           {/* Navigation */}
           <div>
             <h3 className="font-medium mb-5 tracking-tight text-sm">
-              navigation
+              Navigation
             </h3>
             <ul className="space-y-2.5 text-sm">
               {services?.slice(0, 2).map((service) => (
@@ -56,28 +56,28 @@ export const Footer = () => {
                     to={service.path}
                     className="text-muted-foreground hover:text-foreground transition-colors font-light"
                   >
-                    {service.name.toLowerCase()}
+                    {service.name}
                   </Link>
                 </li>
               ))}
               <li>
                 <Link to="/press" className="text-muted-foreground hover:text-foreground transition-colors font-light">
-                  press
+                  Press
                 </Link>
               </li>
               <li>
                 <Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors font-light">
-                  design
+                  Design
                 </Link>
               </li>
               <li>
                 <Link to="/team" className="text-muted-foreground hover:text-foreground transition-colors font-light">
-                  agents
+                  Agents
                 </Link>
               </li>
               <li>
                 <Link to="/careers" className="text-muted-foreground hover:text-foreground transition-colors font-light">
-                  join us
+                  Join Us
                 </Link>
               </li>
             </ul>
@@ -86,11 +86,11 @@ export const Footer = () => {
           {/* Contact Us */}
           <div>
             <h3 className="font-medium mb-5 tracking-tight text-sm">
-              contact us
+              Contact Us
             </h3>
             <div className="space-y-4 text-sm">
               <div>
-                <p className="text-muted-foreground font-light mb-1">email address</p>
+                <p className="text-muted-foreground font-light mb-1">Email Address</p>
                 <a
                   href={`mailto:${settings?.company_contact.email}`}
                   className="text-foreground hover:text-muted-foreground transition-colors"
@@ -99,7 +99,7 @@ export const Footer = () => {
                 </a>
               </div>
               <div>
-                <p className="text-muted-foreground font-light mb-1">phone number</p>
+                <p className="text-muted-foreground font-light mb-1">Phone Number</p>
                 <a
                   href={`tel:${settings?.company_contact.phone}`}
                   className="text-foreground hover:text-muted-foreground transition-colors"
@@ -113,7 +113,7 @@ export const Footer = () => {
           {/* Office */}
           <div>
             <h3 className="font-medium mb-5 tracking-tight text-sm">
-              office
+              Office
             </h3>
             <div className="text-sm text-muted-foreground font-light leading-relaxed whitespace-pre-line">
               {settings?.company_address.full || settings?.company_address.short}
@@ -156,27 +156,42 @@ export const Footer = () => {
 
         {/* Legal Disclaimer */}
         <div className="py-6 border-t border-border/20">
-          <div className="flex items-start gap-2 mb-6">
+          <div className="flex items-start gap-3 mb-6">
+            <img 
+              src="/brandmark-white.png" 
+              alt="Bridge" 
+              className="w-5 h-5 mt-0.5 opacity-70"
+            />
             <p className="text-xs text-muted-foreground/70 leading-relaxed">
-              {settings?.company_name}, including its logo, trademarks, designs, and slogans, are registered and unregistered trademarks of {settings?.company_name} or its affiliated companies. Bridge is a licensed real estate broker in New York. All listing information is deemed reliable but is not guaranteed and is subject to errors, omissions, changes in price, prior sale, or withdrawal without notice. No representation is made as to the accuracy of any description. All measurements and square footages are approximate, and all descriptive information should be independently verified. No financial or legal advice is provided. {settings?.company_name} supports the Fair Housing Act and Equal Opportunity Act and does not discriminate against voucher holders pursuant to applicable law. All lawful sources of income are accepted.
-              <span className="inline-block ml-1">
-                <div className="w-4 h-4 border border-muted-foreground/50 inline-flex items-center justify-center text-[6px] leading-none">
-                  ⌂
-                </div>
-              </span>
+              {settings?.company_name}, Including Its Logo, Trademarks, Designs, And Slogans, Are Registered And Unregistered Trademarks Of {settings?.company_name} Or Its Affiliated Companies. Bridge Is A Licensed Real Estate Broker In New York. All Listing Information Is Deemed Reliable But Is Not Guaranteed And Is Subject To Errors, Omissions, Changes In Price, Prior Sale, Or Withdrawal Without Notice. No Representation Is Made As To The Accuracy Of Any Description. All Measurements And Square Footages Are Approximate, And All Descriptive Information Should Be Independently Verified. No Financial Or Legal Advice Is Provided. {settings?.company_name} Supports The Fair Housing Act And Equal Opportunity Act And Does Not Discriminate Against Voucher Holders Pursuant To Applicable Law. All Lawful Sources Of Income Are Accepted.
             </p>
           </div>
         </div>
 
         {/* Bottom Links */}
         <div className="py-4 border-t border-border/20 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-muted-foreground uppercase tracking-wider">
-          <a href="#" className="hover:text-foreground transition-colors">
+          <a 
+            href="https://d1e1jt2fj4r8r.cloudfront.net/b26ab618-2b1e-4a17-8868-498b96b52dc0/qckNAwejF/NY%20Reasonable%20Accommodations%20Notice.pdf" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors"
+          >
             NY Reasonable Accommodations Notice
           </a>
-          <a href="#" className="hover:text-foreground transition-colors">
+          <a 
+            href="https://d1e1jt2fj4r8r.cloudfront.net/b26ab618-2b1e-4a17-8868-498b96b52dc0/LcdbBuJ7w/NY%20Fair%20Housing%20Notice.pdf" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors"
+          >
             Fair Housing Notice
           </a>
-          <a href="#" className="hover:text-foreground transition-colors">
+          <a 
+            href="https://nyresop.tiiny.site/" 
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors"
+          >
             Standard Operating Procedures
           </a>
         </div>
