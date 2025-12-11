@@ -10,16 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { NAV_ITEMS } from "@/lib/constants";
-
-// Placeholder for Bridge Advisory Group logo - replace with actual logo
-const PlaceholderLogo = ({ className }: { className?: string }) => (
-  <div className={`flex items-center gap-2 ${className}`}>
-    <div className="text-xl md:text-2xl font-light tracking-tight">
-      <span className="font-medium">BRIDGE</span>
-      <span className="text-foreground/70 ml-1">Advisory Group</span>
-    </div>
-  </div>
-);
+import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
 
 const staticNavItems = [
   { name: "Capital Markets", path: "/capital-markets" },
@@ -51,7 +42,7 @@ export const Navigation = () => {
           {/* Mobile & Tablet Layout */}
           <div className="flex lg:hidden items-center justify-between h-16 md:h-20 px-4 md:px-6">
             <Link to="/" className="flex items-center">
-              <PlaceholderLogo className="h-10 md:h-12" />
+              <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-10 md:h-12 invert" />
             </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -66,7 +57,7 @@ export const Navigation = () => {
           <div className="hidden lg:flex items-center justify-between h-20 px-8">
             {/* Left: Logo */}
             <Link to="/" className="flex items-center">
-              <PlaceholderLogo />
+              <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-10 invert" />
             </Link>
 
             {/* Center: Navigation */}
