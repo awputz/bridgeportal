@@ -1,6 +1,6 @@
 import { ServicePageLayout } from "@/components/ServicePageLayout";
 import { useBridgeBuildings } from "@/hooks/useBridgeBuildings";
-import { Building2, MapPin, Home, Tag } from "lucide-react";
+import { Building2, MapPin, Home } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -128,26 +128,10 @@ const Buildings = () => {
                     <p className="text-sm text-muted-foreground mb-4">{building.description}</p>
                   )}
 
-                  <div className="flex items-center justify-between pt-4 border-t border-border">
-                    {building.unit_count && (
-                      <div className="flex items-center gap-1 text-sm text-foreground">
-                        <Home className="h-4 w-4 text-primary" />
-                        {building.unit_count} units
-                      </div>
-                    )}
-                  </div>
-
-                  {building.tags && building.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      {building.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-xs bg-primary/10 text-primary px-2 py-1 rounded flex items-center gap-1"
-                        >
-                          <Tag className="h-3 w-3" />
-                          {tag}
-                        </span>
-                      ))}
+                  {building.unit_count && (
+                    <div className="flex items-center gap-1 text-sm text-foreground pt-4 border-t border-border">
+                      <Home className="h-4 w-4 text-foreground/70" />
+                      {building.unit_count} units
                     </div>
                   )}
                 </div>
