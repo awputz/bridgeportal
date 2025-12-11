@@ -21,9 +21,9 @@ All colors MUST be HSL.
     --popover: 0 0% 8%;
     --popover-foreground: 0 0% 95%;
     
-    /* Primary - White for buttons */
-    --primary: 0 0% 95%;
-    --primary-foreground: 0 0% 11%;
+    /* Primary - Subtle dark accent */
+    --primary: 0 0% 22%;
+    --primary-foreground: 0 0% 95%;
     
     /* Secondary - Dark with light border */
     --secondary: 0 0% 18%;
@@ -34,7 +34,7 @@ All colors MUST be HSL.
     --muted-foreground: 0 0% 60%;
     
     /* Accent - Neutral White */
-    --accent: 0 0% 95%;
+    --accent: 0 0% 85%;
     --accent-foreground: 0 0% 11%;
     
     /* Surface - Slightly lighter than background */
