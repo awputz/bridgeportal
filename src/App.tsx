@@ -9,7 +9,7 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import { PageTransition } from "@/components/PageTransition";
 import { FloatingBackToTop } from "@/components/FloatingBackToTop";
 import { ScrollProgressBar } from "@/components/ScrollProgressBar";
-import { FloatingChatButton } from "@/components/FloatingChatButton";
+
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { ContactSheetProvider } from "@/contexts/ContactSheetContext";
 // Pages
@@ -203,7 +203,7 @@ const App = () => {
                 </PageTransition>
                 <Footer />
                 <FloatingBackToTop />
-                <FloatingChatButton />
+                
               </>
             } />
           </Routes>

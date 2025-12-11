@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ChevronDown, Building2, Home, Briefcase, TrendingUp, Megaphone, Image, Settings, Search } from "lucide-react";
-import { GlobalSearch } from "@/components/GlobalSearch";
+import { Menu, X, ChevronDown, Building2, Home, Briefcase, TrendingUp, Megaphone, Image, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
   DropdownMenu, 
@@ -125,8 +124,6 @@ export const Navigation = () => {
 
             {/* Right: Services Hover Menu + Search + Contact Link */}
             <div className="flex items-center justify-end space-x-6">
-              {/* Global Search */}
-              <GlobalSearch />
               
               {/* Services Dropdown */}
               <DropdownMenu>
