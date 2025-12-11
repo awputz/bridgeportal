@@ -136,19 +136,20 @@ export const Navigation = () => {
                           key={service.id}
                           to={service.path}
                           className={cn(
-                            "group flex items-center gap-3 rounded-lg p-3 transition-all duration-200",
+                            "group flex items-start gap-3 rounded-lg p-3 transition-all duration-200",
                             "hover:bg-white/10 hover:scale-[1.02]",
+                            "min-h-[72px]",
                             location.pathname.startsWith(service.path) && "bg-white/10"
                           )}
                         >
-                          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-white/10 group-hover:bg-white/15 transition-colors">
+                          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-md bg-white/10 group-hover:bg-white/15 transition-colors">
                             <IconComponent className="h-4 w-4 text-white/70 group-hover:text-white transition-colors" />
                           </div>
-                          <div className="flex flex-col">
+                          <div className="flex flex-col min-w-0">
                             <span className="text-sm font-medium text-white group-hover:text-white">
                               {service.name}
                             </span>
-                            <span className="text-xs text-white/60 mt-0.5">
+                            <span className="text-xs text-white/60 mt-0.5 line-clamp-1">
                               {service.description}
                             </span>
                           </div>
