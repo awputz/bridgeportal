@@ -38,7 +38,7 @@ export default function Home() {
             className="animate-fade-in"
             style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}
           >
-            <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="mx-auto h-24 md:h-32 lg:h-40 invert mb-8 md:mb-12" />
+            <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="mx-auto w-[280px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert mb-8 md:mb-12" />
           </div>
           
           <p 
