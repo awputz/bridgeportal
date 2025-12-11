@@ -1,6 +1,6 @@
 export const COMPANY_INFO = {
   name: "Bridge Advisory Group",
-  tagline: "NYC's Premier Full-Service Real Estate Advisory",
+  tagline: "Full Spectrum Real Estate Solutions For A Changing Market",
   address: {
     street: "600 Third Avenue",
     floors: "Floors 2 and 10",
@@ -15,7 +15,7 @@ export const COMPANY_INFO = {
     phone: "(212) 555-0100"
   },
   description: {
-    full: "Full-service real estate advisory delivering institutional-quality execution across commercial, residential, and investment sales throughout New York City.",
+    full: "Bridge Advisory Group is a New York based brokerage and advisory platform that unifies residential, commercial leasing, investment sales, capital advisory, and marketing services under one integrated umbrella.",
     short: "NYC's premier full-service real estate advisory platform.",
     home: "Full-Service Real Estate Advisory"
   },
@@ -26,53 +26,47 @@ export const COMPANY_INFO = {
 };
 
 export const DIVISIONS = {
-  commercial: {
-    name: "BRIDGE Commercial",
-    tagline: "Institutional-grade execution for sophisticated investors",
-    accent: "210 100% 45%", // Blue accent
-    accentForeground: "0 0% 100%",
-    vibe: "institutional",
-    description: "Office, Retail, Industrial & Asset Sales"
+  residential: {
+    name: "Residential",
+    path: "/services/residential",
+    tagline: "Luxury leasing and sales for owners, renters, and buyers across New York.",
+    description: "Find a Home • List Your Home"
+  },
+  commercialLeasing: {
+    name: "Commercial Leasing",
+    path: "/services/commercial-leasing",
+    tagline: "Tenant and landlord representation for office, retail, and specialty assets.",
+    description: "Office, Retail & Specialty Assets"
   },
   investmentSales: {
-    name: "BRIDGE Investment Sales", 
-    tagline: "Maximizing value for middle market properties",
-    accent: "210 100% 45%", // Same blue (merged section)
-    accentForeground: "0 0% 100%",
-    vibe: "institutional",
+    name: "Investment Sales",
+    path: "/services/investment-sales",
+    tagline: "Transaction advisory for multifamily, mixed use, and commercial assets.",
     description: "Multifamily & Mixed-Use Investment Sales"
   },
-  residential: {
-    name: "BRIDGE Residential",
-    tagline: "White-glove service for discerning clients",
-    accent: "35 85% 55%", // Warm gold accent
-    accentForeground: "0 0% 11%",
-    vibe: "lifestyle",
-    description: "Find a Home • List Your Home"
+  capitalAdvisory: {
+    name: "Capital Advisory",
+    path: "/services/capital-advisory",
+    tagline: "Debt and equity solutions aligned with real world business plans.",
+    description: "Debt & Equity Advisory"
+  },
+  marketing: {
+    name: "Marketing",
+    path: "/services/marketing",
+    tagline: "Creative, digital, and strategy support for properties and brands.",
+    description: "Creative, Digital & Strategy"
   }
 };
 
 export const NAV_ITEMS = {
-  commercialInvestment: {
-    label: "Commercial & Investment",
-    path: "/commercial",
+  services: {
+    label: "Services",
     items: [
-      { name: "Overview", path: "/commercial" },
-      { name: "Office", path: "/commercial/office" },
-      { name: "Retail", path: "/commercial/retail" },
-      { name: "Industrial", path: "/commercial/industrial" },
-      { name: "Investment Sales", path: "/commercial/investment-sales" },
-      { name: "Track Record", path: "/commercial/track-record" },
-    ]
-  },
-  residential: {
-    label: "Residential",
-    path: "/residential",
-    items: [
-      { name: "Overview", path: "/residential" },
-      { name: "Find a Home", path: "/residential/listings" },
-      { name: "List Your Home", path: "/residential/sell" },
-      { name: "Track Record", path: "/residential/track-record" },
+      { name: "Residential", path: "/services/residential" },
+      { name: "Commercial Leasing", path: "/services/commercial-leasing" },
+      { name: "Investment Sales", path: "/services/investment-sales" },
+      { name: "Capital Advisory", path: "/services/capital-advisory" },
+      { name: "Marketing", path: "/services/marketing" },
     ]
   }
 };

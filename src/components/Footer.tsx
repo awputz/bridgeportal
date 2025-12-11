@@ -22,32 +22,13 @@ export const Footer = () => {
             </div>
           </div>
 
-          {/* Commercial & Investment Links */}
+          {/* Services Links */}
           <div>
             <h3 className="font-light mb-5 tracking-tight text-sm uppercase text-muted-foreground">
-              Commercial & Investment
+              Services
             </h3>
             <ul className="space-y-3 text-sm">
-              {NAV_ITEMS.commercialInvestment.items.map((item) => (
-                <li key={item.path}>
-                  <Link 
-                    to={item.path} 
-                    className="text-foreground/70 hover:text-foreground transition-colors font-light"
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Residential Links */}
-          <div>
-            <h3 className="font-light mb-5 tracking-tight text-sm uppercase text-muted-foreground">
-              Residential
-            </h3>
-            <ul className="space-y-3 text-sm">
-              {NAV_ITEMS.residential.items.map((item) => (
+              {NAV_ITEMS.services.items.map((item) => (
                 <li key={item.path}>
                   <Link 
                     to={item.path} 
@@ -77,14 +58,33 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/capital-markets" className="text-foreground/70 hover:text-foreground transition-colors font-light">
-                  Capital Markets
+                <Link to="/insights" className="text-foreground/70 hover:text-foreground transition-colors font-light">
+                  Market Insights
                 </Link>
               </li>
               <li>
-                <Link to="/submit-deal" className="text-foreground/70 hover:text-foreground transition-colors font-light">
-                  Submit a Deal
+                <Link to="/track-record" className="text-foreground/70 hover:text-foreground transition-colors font-light">
+                  Track Record
                 </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h3 className="font-light mb-5 tracking-tight text-sm uppercase text-muted-foreground">
+              Contact
+            </h3>
+            <ul className="space-y-3 text-sm">
+              <li>
+                <Link to="/contact" className="text-foreground/70 hover:text-foreground transition-colors font-light">
+                  Contact Us
+                </Link>
+              </li>
+              <li>
+                <a href={`tel:${COMPANY_INFO.contact.phone}`} className="text-foreground/70 hover:text-foreground transition-colors font-light">
+                  {COMPANY_INFO.contact.phone}
+                </a>
               </li>
             </ul>
           </div>
@@ -94,7 +94,7 @@ export const Footer = () => {
         <div className="border-t border-border/30 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-6">
-              {/* Equal Housing Opportunity - Placeholder */}
+              {/* Equal Housing Opportunity */}
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <div className="w-8 h-8 border border-muted-foreground/30 flex items-center justify-center text-[8px] leading-tight">
                   EQUAL<br/>HOUSING

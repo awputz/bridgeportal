@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
-import { Building2, TrendingUp, Award, Users, CheckCircle2, ArrowRight, ChevronDown } from "lucide-react";
+import { Building2, TrendingUp, Award, Users, Home as HomeIcon, Megaphone, ArrowRight, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTransactions } from "@/hooks/useTransactions";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { DivisionSelector } from "@/components/DivisionSelector";
-import { COMPANY_INFO } from "@/lib/constants";
+import { COMPANY_INFO, DIVISIONS } from "@/lib/constants";
 import heroImage from "@/assets/brooklyn-bridge-hero-light.jpg";
 import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
 
@@ -12,12 +11,11 @@ export default function Home() {
   const { data: transactions = [] } = useTransactions();
   const recentTransactions = transactions.slice(0, 3);
   
-  // Scroll animation hooks for each section
-  const statsReveal = useScrollReveal(0.1);
-  const servicesReveal = useScrollReveal(0.1);
-  const whyBridgeReveal = useScrollReveal(0.1);
-  const transactionsReveal = useScrollReveal(0.1);
-  const teamReveal = useScrollReveal(0.1);
+  const platformReveal = useScrollReveal(0.1);
+  const commercialReveal = useScrollReveal(0.1);
+  const residentialReveal = useScrollReveal(0.1);
+  const capitalReveal = useScrollReveal(0.1);
+  const marketingReveal = useScrollReveal(0.1);
   const ctaReveal = useScrollReveal(0.1);
 
   return (
@@ -33,7 +31,7 @@ export default function Home() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
         
-        <div className="relative z-10 container mx-auto text-center max-w-4xl">
+        <div className="relative z-10 container mx-auto text-center max-w-5xl">
           <div 
             className="animate-fade-in"
             style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}
@@ -41,11 +39,18 @@ export default function Home() {
             <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="mx-auto w-[280px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert mb-8 md:mb-12" />
           </div>
           
-          <p 
-            className="text-base md:text-xl lg:text-2xl xl:text-3xl text-foreground/70 mb-8 md:mb-12 lg:mb-16 max-w-xs md:max-w-2xl lg:max-w-3xl mx-auto font-light px-4 animate-fade-in"
+          <h1 
+            className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-foreground/90 mb-6 md:mb-8 max-w-4xl mx-auto font-light px-4 animate-fade-in"
             style={{ animationDelay: '400ms', animationFillMode: 'backwards' }}
           >
             {COMPANY_INFO.tagline}
+          </h1>
+          
+          <p 
+            className="text-base md:text-lg lg:text-xl text-foreground/60 mb-8 md:mb-12 max-w-3xl mx-auto font-light px-4 animate-fade-in"
+            style={{ animationDelay: '500ms', animationFillMode: 'backwards' }}
+          >
+            {COMPANY_INFO.description.full}
           </p>
           
           <div 
@@ -53,10 +58,10 @@ export default function Home() {
             style={{ animationDelay: '600ms', animationFillMode: 'backwards' }}
           >
             <Button asChild size="lg" className="font-light px-8 md:px-12 w-full sm:w-auto">
-              <Link to="/commercial">Explore Commercial</Link>
+              <a href="#services">Explore Our Services</a>
             </Button>
             <Button asChild size="lg" variant="outline" className="font-light px-8 md:px-12 w-full sm:w-auto border-white/30 hover:bg-white/10">
-              <Link to="/residential">Explore Residential</Link>
+              <Link to="/contact">Contact Us</Link>
             </Button>
           </div>
         </div>
@@ -73,259 +78,38 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Division Selector */}
-      <DivisionSelector />
-
-      {/* Stats Section */}
-      <section className="py-16 md:py-24 lg:py-32 border-b border-white/5" ref={statsReveal.elementRef}>
+      {/* Section 1: Who We Are */}
+      <section id="services" className="py-20 md:py-28 lg:py-36 border-b border-white/5" ref={platformReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 lg:gap-16">
-            {[
-              { value: "100+", label: "Transactions", delay: "0ms" },
-              { value: "$750M+", label: "Total Volume", delay: "100ms" },
-              { value: "3", label: "Divisions", delay: "200ms" },
-              { value: "NYC", label: "Focus", delay: "300ms" }
-            ].map((stat, index) => (
-              <div 
-                key={index} 
-                className={`text-center transition-all duration-700 ${
-                  statsReveal.isVisible 
-                    ? 'opacity-100 translate-y-0 scale-100' 
-                    : 'opacity-0 translate-y-10 scale-95'
-                }`}
-                style={{ transitionDelay: stat.delay }}
-              >
-                <div className="text-4xl md:text-5xl lg:text-6xl font-light mb-2 md:mb-4">{stat.value}</div>
-                <div className="text-xs md:text-sm text-muted-foreground uppercase tracking-wider font-light">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Services Overview */}
-      <section className="py-16 md:py-24 lg:py-32 border-b border-white/5" ref={servicesReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6">
-          <div className={`transition-all duration-700 ${
-            servicesReveal.isVisible 
-              ? 'opacity-100 translate-y-0' 
-              : 'opacity-0 translate-y-10'
-          }`}>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl text-center mb-6 font-light">Full-Service Platform</h2>
-            <p className="text-base md:text-lg text-muted-foreground font-light text-center mb-12 md:mb-16 max-w-3xl mx-auto">
-              Comprehensive real estate services across commercial, residential, and capital markets
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
-            {[
-              {
-                icon: Building2,
-                title: "Commercial & Investment Sales",
-                desc: "Office, retail, industrial, and investment properties with institutional-grade execution"
-              },
-              {
-                icon: Users,
-                title: "Residential Services",
-                desc: "White-glove service for buyers and sellers across NYC's most desirable neighborhoods"
-              },
-              {
-                icon: TrendingUp,
-                title: "Capital Markets",
-                desc: "Debt and equity advisory to optimize capital structure and maximize returns"
-              },
-              {
-                icon: CheckCircle2,
-                title: "Comprehensive Underwriting",
-                desc: "Detailed valuation and financial analysis with market comps and projected returns"
-              },
-              {
-                icon: Award,
-                title: "Marketing Excellence",
-                desc: "Professional materials from our dedicated in-house marketing team"
-              }
-            ].map((service, index) => {
-              const Icon = service.icon;
-              return (
-                <div 
-                  key={index}
-                  className={`group p-6 md:p-8 rounded-lg transition-all duration-700 hover:bg-white/3 hover:transform hover:-translate-y-1 border-l-2 border-accent/30 ${
-                    servicesReveal.isVisible 
-                      ? 'opacity-100 translate-y-0 scale-100' 
-                      : 'opacity-0 translate-y-10 scale-95'
-                  }`}
-                  style={{ transitionDelay: `${index * 100}ms` }}
-                >
-                  <Icon className="h-8 w-8 md:h-10 md:w-10 text-accent mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-400" />
-                  <h3 className="text-lg md:text-xl font-light mb-2 md:mb-3">{service.title}</h3>
-                  <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed">
-                    {service.desc}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Why Bridge Advisory Group */}
-      <section className="py-16 md:py-24 lg:py-32 border-b border-white/5 bg-white/[0.01]" ref={whyBridgeReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6">
-          <h2 className={`text-3xl md:text-4xl lg:text-5xl text-center mb-12 md:mb-16 font-light transition-all duration-700 ${
-            whyBridgeReveal.isVisible 
-              ? 'opacity-100 translate-y-0' 
-              : 'opacity-0 translate-y-10'
-          }`}>
-            Why Bridge Advisory Group
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-6xl mx-auto">
-            {[
-              {
-                num: "01",
-                title: "One Platform",
-                desc: "Integrated services across commercial, residential, and capital markets"
-              },
-              {
-                num: "02",
-                title: "Local Expertise",
-                desc: "Deep knowledge of every NYC neighborhood and submarket"
-              },
-              {
-                num: "03",
-                title: "Proven Results",
-                desc: "Track record of successful transactions across all property types"
-              },
-              {
-                num: "04",
-                title: "Client Focus",
-                desc: "Dedicated professionals committed to your success"
-              }
-            ].map((item, index) => (
-              <div 
-                key={item.num} 
-                className={`text-center p-6 rounded-lg hover:bg-white/[0.02] transition-all duration-700 ${
-                  whyBridgeReveal.isVisible 
-                    ? 'opacity-100 scale-100' 
-                    : 'opacity-0 scale-90'
-                }`}
-                style={{ transitionDelay: `${index * 150}ms` }}
-              >
-                <div className="text-4xl md:text-5xl font-light mb-4 text-accent">{item.num}</div>
-                <h3 className="text-lg md:text-xl font-light mb-3">{item.title}</h3>
-                <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed">
-                  {item.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Recent Transactions Preview */}
-      {recentTransactions.length > 0 && (
-        <section className="py-16 md:py-24 lg:py-32 border-b border-white/5" ref={transactionsReveal.elementRef}>
-          <div className="container mx-auto px-4 md:px-6">
-            <div className={`flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 gap-4 transition-all duration-700 ${
-              transactionsReveal.isVisible 
-                ? 'opacity-100 translate-y-0' 
-                : 'opacity-0 translate-y-10'
-            }`}>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-light">Recent Transactions</h2>
-              <Button asChild variant="outline" className="font-light w-full sm:w-auto group">
-                <Link to="/commercial/track-record">
-                  View All
-                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {recentTransactions.map((transaction, index) => (
-                <div 
-                  key={transaction.id} 
-                  className={`p-4 md:p-6 rounded-lg transition-all duration-700 hover:bg-white/3 border-l-2 border-transparent hover:border-accent/30 hover:transform hover:-translate-y-1 ${
-                    transactionsReveal.isVisible 
-                      ? 'opacity-100 translate-y-0' 
-                      : 'opacity-0 translate-y-10'
-                  }`}
-                  style={{ transitionDelay: `${index * 100}ms` }}
-                >
-                  <h3 className="text-base md:text-lg font-light mb-1">{transaction.property_address}</h3>
-                  <p className="text-sm text-muted-foreground font-light mb-3 md:mb-4">{transaction.neighborhood}</p>
-                  <div className="space-y-2 text-sm font-light">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Type:</span>
-                      <span>{transaction.property_type}</span>
-                    </div>
-                    {transaction.sale_price && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Price:</span>
-                        <span>${transaction.sale_price.toLocaleString()}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Team Preview */}
-      <section className="py-16 md:py-24 lg:py-32 border-b border-white/5" ref={teamReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <div className={`text-center mb-12 md:mb-16 transition-all duration-700 ${
-            teamReveal.isVisible 
-              ? 'opacity-100 translate-y-0' 
-              : 'opacity-0 translate-y-10'
-          }`}>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">Our Team</h2>
-            <p className="text-base md:text-lg lg:text-xl text-muted-foreground font-light max-w-2xl mx-auto">
-              Senior professionals with deep NYC market expertise across all property sectors
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-12">
-            {[
-              {
-                icon: Users,
-                title: "Expert Team",
-                desc: "Specialists in commercial, residential, and capital markets"
-              },
-              {
-                icon: TrendingUp,
-                title: "Market Leaders",
-                desc: "Deep relationships across NYC's real estate community"
-              },
-              {
-                icon: CheckCircle2,
-                title: "Client Focused",
-                desc: "Dedicated to achieving optimal outcomes"
-              }
-            ].map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <div 
-                  key={item.title} 
-                  className={`text-center p-6 rounded-lg hover:bg-white/[0.02] transition-all duration-700 ${
-                    teamReveal.isVisible 
-                      ? 'opacity-100 translate-y-0' 
-                      : 'opacity-0 translate-y-10'
-                  }`}
-                  style={{ transitionDelay: `${index * 150}ms` }}
-                >
-                  <Icon className="mx-auto mb-4 text-accent" size={36} />
-                  <h3 className="text-base md:text-lg font-light mb-2">{item.title}</h3>
-                  <p className="text-xs md:text-sm text-muted-foreground font-light">{item.desc}</p>
-                </div>
-              );
-            })}
-          </div>
           <div className={`text-center transition-all duration-700 ${
-            teamReveal.isVisible 
-              ? 'opacity-100 scale-100' 
-              : 'opacity-0 scale-95'
-          }`} style={{ transitionDelay: '450ms' }}>
-            <Button asChild variant="outline" className="font-light group">
-              <Link to="/team">
-                Meet the Team
+            platformReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">Who We Are</h2>
+            <p className="text-base md:text-lg text-muted-foreground font-light mb-12 max-w-3xl mx-auto leading-relaxed">
+              Bridge Advisory Group is a multi-division real estate platform built to serve owners, operators, and occupiers across every stage of the real estate cycle. From luxury residential leasing and sales to complex commercial transactions, investment sales assignments, and capital markets solutions, Bridge combines brokerage execution with principal-level thinking.
+            </p>
+          </div>
+          
+          <div className={`grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-6 mb-12 transition-all duration-700 ${
+            platformReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`} style={{ transitionDelay: '200ms' }}>
+            {Object.values(DIVISIONS).map((division, index) => (
+              <Link 
+                key={division.name}
+                to={division.path}
+                className="p-4 md:p-6 rounded-lg border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 text-center group"
+              >
+                <p className="text-sm md:text-base font-light group-hover:text-foreground transition-colors">{division.name}</p>
+              </Link>
+            ))}
+          </div>
+          
+          <div className={`text-center transition-all duration-700 ${
+            platformReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`} style={{ transitionDelay: '400ms' }}>
+            <Button asChild variant="link" className="font-light group">
+              <Link to="/about">
+                View Our Story
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
@@ -333,33 +117,273 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 md:py-24 lg:py-32" ref={ctaReveal.elementRef}>
+      {/* Section 2: Commercial And Investment Expertise */}
+      <section className="py-20 md:py-28 lg:py-36 border-b border-white/5 bg-white/[0.01]" ref={commercialReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6">
+          <div className={`text-center mb-12 md:mb-16 transition-all duration-700 ${
+            commercialReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">Commercial And Investment Expertise</h2>
+            <p className="text-base md:text-lg text-muted-foreground font-light max-w-3xl mx-auto leading-relaxed">
+              Bridge Commercial and Bridge Investment Sales work together to support owners, tenants, and investors across New York. The platform focuses on strategic leasing, repositioning, and disposition work for office, retail, mixed-use, and multifamily assets.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto mb-12">
+            {[
+              {
+                icon: Users,
+                title: "Tenant and Landlord Representation",
+                desc: "Support for tenants seeking the right footprint and landlords working to stabilize or reposition their assets."
+              },
+              {
+                icon: TrendingUp,
+                title: "Investment Sales Advisory",
+                desc: "Acquisition and disposition advisory grounded in data, underwriting, and real-time market intelligence."
+              },
+              {
+                icon: Building2,
+                title: "Portfolio And Asset Strategy",
+                desc: "Guidance for ownership groups on hold-sell decisions, recapitalizations, and value creation strategies."
+              }
+            ].map((service, index) => {
+              const Icon = service.icon;
+              return (
+                <div 
+                  key={index}
+                  className={`group p-6 md:p-8 rounded-lg transition-all duration-700 hover:bg-white/3 border-l-2 border-accent/30 ${
+                    commercialReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                  }`}
+                  style={{ transitionDelay: `${(index + 1) * 100}ms` }}
+                >
+                  <Icon className="h-8 w-8 md:h-10 md:w-10 text-accent mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-400" />
+                  <h3 className="text-lg md:text-xl font-light mb-2 md:mb-3">{service.title}</h3>
+                  <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed">{service.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+          
+          <div className={`flex flex-wrap justify-center gap-4 transition-all duration-700 ${
+            commercialReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`} style={{ transitionDelay: '400ms' }}>
+            <Button asChild variant="link" className="font-light group">
+              <Link to="/services/commercial-leasing">
+                Learn More → Commercial Leasing
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+            <Button asChild variant="link" className="font-light group">
+              <Link to="/services/investment-sales">
+                Learn More → Investment Sales
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 3: Residential Platform */}
+      <section className="py-20 md:py-28 lg:py-36 border-b border-white/5" ref={residentialReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6">
+          <div className={`text-center mb-12 md:mb-16 transition-all duration-700 ${
+            residentialReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">Residential In A City That Never Slows Down</h2>
+            <p className="text-base md:text-lg text-muted-foreground font-light max-w-3xl mx-auto leading-relaxed">
+              Bridge Residential focuses on high-quality apartments, townhomes, and condominiums across New York. The team works with landlords, buyers, and renters who expect a sharp, straightforward process and clear communication at every step.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto mb-12">
+            {[
+              {
+                icon: HomeIcon,
+                title: "Landlord Leasing Programs",
+                desc: "Full-service leasing programs for owners seeking lower vacancy, better quality tenants, and consistent reporting."
+              },
+              {
+                icon: Award,
+                title: "Luxury Rentals And Sales",
+                desc: "Representation for renters and buyers across prime neighborhoods, with direct access to exclusive and off-market opportunities."
+              },
+              {
+                icon: TrendingUp,
+                title: "Market Intel For Owners",
+                desc: "Pricing guidance, unit positioning, and marketing strategy designed to capture demand without wasting time."
+              }
+            ].map((service, index) => {
+              const Icon = service.icon;
+              return (
+                <div 
+                  key={index}
+                  className={`group p-6 md:p-8 rounded-lg transition-all duration-700 hover:bg-white/3 border-l-2 border-accent/30 ${
+                    residentialReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                  }`}
+                  style={{ transitionDelay: `${(index + 1) * 100}ms` }}
+                >
+                  <Icon className="h-8 w-8 md:h-10 md:w-10 text-accent mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-400" />
+                  <h3 className="text-lg md:text-xl font-light mb-2 md:mb-3">{service.title}</h3>
+                  <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed">{service.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+          
+          <div className={`text-center transition-all duration-700 ${
+            residentialReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`} style={{ transitionDelay: '400ms' }}>
+            <Button asChild variant="link" className="font-light group">
+              <Link to="/services/residential">
+                Explore Residential
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 4: Capital Advisory */}
+      <section className="py-20 md:py-28 lg:py-36 border-b border-white/5 bg-white/[0.01]" ref={capitalReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6">
+          <div className={`text-center mb-12 md:mb-16 transition-all duration-700 ${
+            capitalReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">Capital Advisory That Understands The Real Asset</h2>
+            <p className="text-base md:text-lg text-muted-foreground font-light max-w-3xl mx-auto leading-relaxed">
+              Bridge Capital Advisory works with owners, investors, and developers to structure debt and equity solutions around the actual business plan of each asset. The team focuses on clarity, speed, and alignment across lenders, investors, and sponsors.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto mb-12">
+            {[
+              {
+                icon: Building2,
+                title: "Debt Placement",
+                desc: "Sourcing and structuring senior and subordinate financing across banks, private lenders, and alternative capital providers."
+              },
+              {
+                icon: Users,
+                title: "Equity And Joint Ventures",
+                desc: "Matching operators and developers with equity partners aligned with the risk and return profile of each deal."
+              },
+              {
+                icon: TrendingUp,
+                title: "Recapitalization And Restructuring",
+                desc: "Advisory support for capital stack resets, partnership buyouts, and asset-level restructuring."
+              }
+            ].map((service, index) => {
+              const Icon = service.icon;
+              return (
+                <div 
+                  key={index}
+                  className={`group p-6 md:p-8 rounded-lg transition-all duration-700 hover:bg-white/3 border-l-2 border-accent/30 ${
+                    capitalReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                  }`}
+                  style={{ transitionDelay: `${(index + 1) * 100}ms` }}
+                >
+                  <Icon className="h-8 w-8 md:h-10 md:w-10 text-accent mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-400" />
+                  <h3 className="text-lg md:text-xl font-light mb-2 md:mb-3">{service.title}</h3>
+                  <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed">{service.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+          
+          <div className={`text-center transition-all duration-700 ${
+            capitalReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`} style={{ transitionDelay: '400ms' }}>
+            <Button asChild variant="link" className="font-light group">
+              <Link to="/services/capital-advisory">
+                View Capital Advisory
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 5: Marketing Engine */}
+      <section className="py-20 md:py-28 lg:py-36 border-b border-white/5" ref={marketingReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6">
+          <div className={`text-center mb-12 md:mb-16 transition-all duration-700 ${
+            marketingReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">Strategy, Story, And Execution</h2>
+            <p className="text-base md:text-lg text-muted-foreground font-light max-w-3xl mx-auto leading-relaxed">
+              The Marketing division at Bridge supports all internal divisions and select external clients with brand-level storytelling, digital campaigns, and property-specific marketing assets. The focus is on clean design, clear messaging, and distribution that reaches the right audience.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto mb-12">
+            {[
+              {
+                icon: Megaphone,
+                title: "Creative For Properties And Brands",
+                desc: "Property branding, offering memorandums, pitch decks, photography, video, and render direction."
+              },
+              {
+                icon: TrendingUp,
+                title: "Digital Distribution And Campaigns",
+                desc: "Paid and organic digital campaigns, email marketing, list management, and social media content."
+              },
+              {
+                icon: Award,
+                title: "Data-Driven Strategy And Performance",
+                desc: "Performance tracking, creative testing, and reporting that feeds back into pricing and positioning."
+              }
+            ].map((service, index) => {
+              const Icon = service.icon;
+              return (
+                <div 
+                  key={index}
+                  className={`group p-6 md:p-8 rounded-lg transition-all duration-700 hover:bg-white/3 border-l-2 border-accent/30 ${
+                    marketingReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                  }`}
+                  style={{ transitionDelay: `${(index + 1) * 100}ms` }}
+                >
+                  <Icon className="h-8 w-8 md:h-10 md:w-10 text-accent mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-400" />
+                  <h3 className="text-lg md:text-xl font-light mb-2 md:mb-3">{service.title}</h3>
+                  <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed">{service.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+          
+          <div className={`text-center transition-all duration-700 ${
+            marketingReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`} style={{ transitionDelay: '400ms' }}>
+            <Button asChild variant="link" className="font-light group">
+              <Link to="/services/marketing">
+                Learn More
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 6: Final CTA */}
+      <section className="py-20 md:py-28 lg:py-36" ref={ctaReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 text-center max-w-4xl">
           <h2 className={`text-3xl md:text-4xl lg:text-5xl font-light mb-6 transition-all duration-700 ${
-            ctaReveal.isVisible 
-              ? 'opacity-100 translate-y-0' 
-              : 'opacity-0 translate-y-10'
+            ctaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            Ready to Get Started?
+            Talk To The Right Team At Bridge
           </h2>
           <p className={`text-base md:text-lg text-muted-foreground font-light mb-8 md:mb-12 transition-all duration-700 ${
-            ctaReveal.isVisible 
-              ? 'opacity-100 translate-y-0' 
-              : 'opacity-0 translate-y-10'
+            ctaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`} style={{ transitionDelay: '100ms' }}>
-            Whether you're buying, selling, or investing, our team is here to help you achieve your real estate goals.
+            Whether you are an owner, investor, tenant, or home seeker, Bridge Advisory Group will connect you with the right team to move your real estate decisions forward.
           </p>
           <div className={`flex flex-col sm:flex-row gap-4 justify-center transition-all duration-700 ${
-            ctaReveal.isVisible 
-              ? 'opacity-100 translate-y-0 scale-100' 
-              : 'opacity-0 translate-y-10 scale-95'
+            ctaReveal.isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-10 scale-95'
           }`} style={{ transitionDelay: '200ms' }}>
             <Button asChild size="lg" className="font-light px-8 md:px-12">
-              <Link to="/submit-deal">Submit a Deal</Link>
+              <Link to="/contact">Contact Us</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="font-light px-8 md:px-12">
-              <Link to="/team">Contact Our Team</Link>
+              <a href="#services">Explore Services</a>
             </Button>
           </div>
         </div>
