@@ -72,7 +72,7 @@ export default function ResidentialServices() {
   return (
     <div className="min-h-screen">
       {/* Hero with Background Image */}
-      <section className="relative min-h-[55vh] md:min-h-[70vh] flex items-center justify-center pt-24 md:pt-32 lg:pt-40 pb-12 md:pb-16 lg:pb-24">
+      <section className="relative min-h-[45vh] md:min-h-[55vh] lg:min-h-[70vh] flex items-center justify-center pt-20 md:pt-28 lg:pt-32 xl:pt-40 pb-8 md:pb-12 lg:pb-16 xl:pb-24">
         {/* Background Image */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -86,7 +86,7 @@ export default function ResidentialServices() {
           <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-4 md:mb-6 animate-fade-in">
             Bridge Residential
           </h1>
-          <p className="text-base md:text-lg lg:text-xl text-muted-foreground font-light animate-fade-in max-w-2xl mx-auto mb-6 md:mb-10" style={{ animationDelay: '100ms' }}>
+          <p className="text-base md:text-lg lg:text-xl text-muted-foreground font-light animate-fade-in max-w-2xl mx-auto mb-4 md:mb-6 lg:mb-10" style={{ animationDelay: '100ms' }}>
             New York residential advisory for renters, buyers, landlords, and sellers
           </p>
           
@@ -147,13 +147,13 @@ export default function ResidentialServices() {
       </section>
 
       {/* Exclusive Portfolio */}
-      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={portfolioReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={portfolioReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`transition-all duration-700 ${
             portfolioReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-4 text-center">Exclusive Portfolio</h2>
-            <p className="text-muted-foreground font-light mb-8 text-center max-w-2xl mx-auto">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">Exclusive Portfolio</h2>
+            <p className="text-muted-foreground font-light mb-6 md:mb-8 text-center max-w-2xl mx-auto">
               Buildings we manage across Manhattan, Brooklyn, and Queens
             </p>
             <div className="flex justify-center gap-2 mb-8 flex-wrap">
@@ -170,13 +170,13 @@ export default function ResidentialServices() {
       </section>
 
       {/* Current Listings */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={listingsReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={listingsReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`text-center transition-all duration-700 ${
             listingsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-4">Current Listings</h2>
-            <p className="text-muted-foreground font-light mb-8 max-w-2xl mx-auto">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Current Listings</h2>
+            <p className="text-muted-foreground font-light mb-6 md:mb-8 max-w-2xl mx-auto">
               Browse our complete portfolio of available rentals and sales across Manhattan, Brooklyn, and Queens.
             </p>
             <Button asChild className="font-light">
@@ -189,9 +189,9 @@ export default function ResidentialServices() {
       </section>
 
       {/* Property Management Link */}
-      <section className="py-16 md:py-20 border-b border-white/5 bg-white/[0.02]">
+      <section className="py-12 md:py-16 lg:py-20 border-b border-white/5 bg-white/[0.02]">
         <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
-          <h2 className="text-2xl md:text-3xl font-light mb-4">For Property Owners & Landlords</h2>
+          <h2 className="text-xl md:text-2xl lg:text-3xl font-light mb-4">For Property Owners & Landlords</h2>
           <p className="text-muted-foreground font-light mb-8 max-w-2xl mx-auto">
             Looking for full-service property management? We offer comprehensive solutions for landlords and investors.
           </p>
@@ -202,19 +202,19 @@ export default function ResidentialServices() {
       </section>
 
       {/* Markets We Serve */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={marketsReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={marketsReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`transition-all duration-700 ${
             marketsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <div className="flex items-center gap-4 mb-6">
-              <MapPin className="h-10 w-10 text-accent" />
-              <h2 className="text-3xl md:text-4xl font-light">Markets We Serve</h2>
+            <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
+              <MapPin className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent" />
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-light">Markets We Serve</h2>
             </div>
-            <p className="text-muted-foreground font-light mb-10 max-w-3xl leading-relaxed">
+            <p className="text-muted-foreground font-light mb-8 md:mb-10 max-w-3xl leading-relaxed">
               Deep expertise across New York City's most sought-after residential neighborhoods.
             </p>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {markets.map((market, index) => (
                 <div 
                   key={market.borough} 
@@ -257,16 +257,16 @@ export default function ResidentialServices() {
       </section>
 
       {/* Rental Services */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={rentersReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={rentersReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`transition-all duration-700 ${
             rentersReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <div className="flex items-center gap-4 mb-6">
-              <Users className="h-10 w-10 text-accent" />
-              <h2 className="text-3xl md:text-4xl font-light">Rental Services</h2>
+            <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
+              <Users className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent" />
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-light">Rental Services</h2>
             </div>
-            <p className="text-muted-foreground font-light mb-8 max-w-3xl leading-relaxed">
+            <p className="text-muted-foreground font-light mb-6 md:mb-8 max-w-3xl leading-relaxed">
               Dedicated representation for renters navigating New York's competitive rental market.
             </p>
             <ul className="space-y-4 text-muted-foreground font-light">
@@ -292,16 +292,16 @@ export default function ResidentialServices() {
       </section>
 
       {/* Buyer Advisory */}
-      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={buyersReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={buyersReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`transition-all duration-700 ${
             buyersReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <div className="flex items-center gap-4 mb-6">
-              <Award className="h-10 w-10 text-accent" />
-              <h2 className="text-3xl md:text-4xl font-light">Buyer Advisory</h2>
+            <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
+              <Award className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent" />
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-light">Buyer Advisory</h2>
             </div>
-            <p className="text-muted-foreground font-light mb-8 max-w-3xl leading-relaxed">
+            <p className="text-muted-foreground font-light mb-6 md:mb-8 max-w-3xl leading-relaxed">
               Strategic guidance for buyers looking to purchase in New York City.
             </p>
             <ul className="space-y-4 text-muted-foreground font-light">
@@ -339,7 +339,7 @@ export default function ResidentialServices() {
             <p className="text-muted-foreground font-light mb-10 max-w-3xl leading-relaxed">
               A streamlined process designed to get you results efficiently.
             </p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               {processSteps.map((item, index) => (
                 <div 
                   key={item.step} 

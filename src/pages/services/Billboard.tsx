@@ -23,16 +23,16 @@ export default function Billboard() {
   ];
 
   return (
-    <div className="min-h-screen pt-32 md:pt-40">
+    <div className="min-h-screen pt-24 md:pt-32 lg:pt-40">
       {/* Hero with Image */}
-      <section className="pb-16 md:pb-24 border-b border-white/5">
+      <section className="pb-12 md:pb-16 lg:pb-24 border-b border-white/5">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center max-w-6xl mx-auto">
             <div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 animate-fade-in">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-4 md:mb-6 animate-fade-in">
                 Bridge Billboard
               </h1>
-              <p className="text-lg md:text-xl text-muted-foreground font-light mb-8 animate-fade-in" style={{ animationDelay: '100ms' }}>
+              <p className="text-base md:text-lg lg:text-xl text-muted-foreground font-light mb-6 md:mb-8 animate-fade-in" style={{ animationDelay: '100ms' }}>
                 Direct landlord access to NYC's most visible outdoor advertising inventory.
               </p>
               <div className="flex flex-wrap gap-4 animate-fade-in" style={{ animationDelay: '200ms' }}>
@@ -86,12 +86,12 @@ export default function Billboard() {
       </section>
 
       {/* Intro Section */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={introReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={introReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
           <div className={`transition-all duration-700 ${
             introReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-8">Out-of-Home Advertising in New York</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-6 md:mb-8">Out-of-Home Advertising in New York</h2>
             <div className="space-y-6 text-muted-foreground font-light leading-relaxed">
               <p>
                 Bridge Billboard connects brands and advertisers directly with premium outdoor advertising inventory across New York City. Through long-standing relationships with landlords and property owners, Bridge offers access to high-visibility placements that are often unavailable through traditional channels.
@@ -105,18 +105,18 @@ export default function Billboard() {
       </section>
 
       {/* Featured Inventory */}
-      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={inventoryReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={inventoryReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6">
-          <div className={`text-center mb-12 md:mb-16 transition-all duration-700 ${
+          <div className={`text-center mb-8 md:mb-12 lg:mb-16 transition-all duration-700 ${
             inventoryReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-4">Featured Inventory</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Featured Inventory</h2>
             <p className="text-muted-foreground font-light max-w-2xl mx-auto">
               Premium billboard locations across all five boroughs with direct landlord relationships.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
             {featuredLocations.map((location, index) => (
               <div 
                 key={index}
@@ -149,15 +149,15 @@ export default function Billboard() {
       </section>
 
       {/* Services Section */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={servicesReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={servicesReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6">
-          <div className={`text-center mb-12 md:mb-16 transition-all duration-700 ${
+          <div className={`text-center mb-8 md:mb-12 lg:mb-16 transition-all duration-700 ${
             servicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-6">What We Offer</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 md:mb-6">What We Offer</h2>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 max-w-5xl mx-auto">
             {[
               {
                 icon: MapPin,
@@ -184,7 +184,7 @@ export default function Billboard() {
                   }`}
                   style={{ transitionDelay: `${(index + 1) * 100}ms` }}
                 >
-                  <Icon className="h-8 w-8 md:h-10 md:w-10 text-accent mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-400" />
+                  <Icon className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-400" />
                   <h3 className="text-lg md:text-xl font-light mb-2 md:mb-3">{service.title}</h3>
                   <p className="text-sm md:text-base text-muted-foreground font-light leading-relaxed">{service.desc}</p>
                 </div>
@@ -195,20 +195,20 @@ export default function Billboard() {
       </section>
 
       {/* Client Types */}
-      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]">
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]">
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">Who We Work With</h2>
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-8 md:mb-12 text-center">Who We Work With</h2>
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
             <div>
-              <Users className="h-10 w-10 text-accent mb-4" />
+              <Users className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent mb-3 md:mb-4" />
               <h3 className="text-2xl font-light mb-4">Brands & Agencies</h3>
               <p className="text-muted-foreground font-light leading-relaxed">
                 National brands and creative agencies looking for high-impact placements in New York's most desirable locations. We provide strategic guidance and inventory access for campaigns of all sizes.
               </p>
             </div>
             <div>
-              <TrendingUp className="h-10 w-10 text-accent mb-4" />
-              <h3 className="text-2xl font-light mb-4">Local Businesses</h3>
+              <TrendingUp className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent mb-3 md:mb-4" />
+              <h3 className="text-xl md:text-2xl font-light mb-3 md:mb-4">Local Businesses</h3>
               <p className="text-muted-foreground font-light leading-relaxed">
                 Regional businesses and startups seeking to build awareness in specific neighborhoods. Our hyperlocal inventory options make outdoor advertising accessible at every budget level.
               </p>
@@ -218,19 +218,19 @@ export default function Billboard() {
       </section>
 
       {/* Additional Info */}
-      <section className="py-20 md:py-28 border-b border-white/5">
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5">
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12">
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
             <div>
-              <Eye className="h-10 w-10 text-accent mb-4" />
-              <h3 className="text-2xl font-light mb-4">High Visibility Locations</h3>
+              <Eye className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent mb-3 md:mb-4" />
+              <h3 className="text-xl md:text-2xl font-light mb-3 md:mb-4">High Visibility Locations</h3>
               <p className="text-muted-foreground font-light leading-relaxed">
                 From Times Square to the BQE, Bridge Billboard has inventory in the locations that matter. We focus on high-traffic areas with strong demographics and measurable impressions.
               </p>
             </div>
             <div>
-              <Clock className="h-10 w-10 text-accent mb-4" />
-              <h3 className="text-2xl font-light mb-4">Flexible Terms</h3>
+              <Clock className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent mb-3 md:mb-4" />
+              <h3 className="text-xl md:text-2xl font-light mb-3 md:mb-4">Flexible Terms</h3>
               <p className="text-muted-foreground font-light leading-relaxed">
                 Short-term campaigns, long-term placements, and everything in between. Bridge works with clients to structure agreements that match campaign objectives and budgets.
               </p>
@@ -240,9 +240,9 @@ export default function Billboard() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 md:py-28" ref={ctaReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28" ref={ctaReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 text-center max-w-4xl">
-          <h2 className={`text-3xl md:text-4xl font-light mb-6 transition-all duration-700 ${
+          <h2 className={`text-2xl md:text-3xl lg:text-4xl font-light mb-4 md:mb-6 transition-all duration-700 ${
             ctaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
             Ready to Go Big?

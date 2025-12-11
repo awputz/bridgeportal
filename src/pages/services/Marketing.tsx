@@ -17,7 +17,7 @@ export default function Marketing() {
   return (
     <div className="min-h-screen">
       {/* Hero with Image */}
-      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
+      <section className="relative h-[45vh] md:h-[55vh] lg:h-[60vh] min-h-[320px] md:min-h-[400px] lg:min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img 
             src={PLACEHOLDER_IMAGES.marketing.creative} 
@@ -29,10 +29,10 @@ export default function Marketing() {
         <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${
           heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-4 md:mb-6">
             Bridge Marketing
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground font-light">
+          <p className="text-base md:text-lg lg:text-xl text-muted-foreground font-light">
             {DIVISIONS.marketing.tagline}
           </p>
         </div>
@@ -42,9 +42,9 @@ export default function Marketing() {
       <ServicePageNav serviceKey="marketing" />
 
       {/* Intro */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={introReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={introReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
-          <p className={`text-lg md:text-xl text-muted-foreground font-light leading-relaxed text-center transition-all duration-700 ${
+          <p className={`text-base md:text-lg lg:text-xl text-muted-foreground font-light leading-relaxed text-center transition-all duration-700 ${
             introReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
             Bridge Marketing powers the visual identity and storytelling behind Bridge listings and select client assignments. The team focuses on clean design, focused narratives, and distribution channels that align with where the audience actually is.
@@ -53,15 +53,15 @@ export default function Marketing() {
       </section>
 
       {/* Section 1: Creative Studio */}
-      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={creativeReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={creativeReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <div className={`grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${
+          <div className={`grid md:grid-cols-2 gap-8 md:gap-12 items-center transition-all duration-700 ${
             creativeReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
             <div>
-              <div className="flex items-center gap-4 mb-6">
-                <Megaphone className="h-10 w-10 text-accent" />
-                <h2 className="text-3xl md:text-4xl font-light">Creative Studio</h2>
+              <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
+                <Megaphone className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent" />
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-light">Creative Studio</h2>
               </div>
               <p className="text-muted-foreground font-light mb-8 max-w-3xl leading-relaxed">
                 Full-service creative production for properties and brands.
@@ -93,9 +93,9 @@ export default function Marketing() {
       </section>
 
       {/* Section 2: Digital And Campaigns */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={digitalReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={digitalReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <div className={`grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${
+          <div className={`grid md:grid-cols-2 gap-8 md:gap-12 items-center transition-all duration-700 ${
             digitalReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
             <div className="relative aspect-[4/3] rounded-lg overflow-hidden order-2 md:order-1">
@@ -106,9 +106,9 @@ export default function Marketing() {
               />
             </div>
             <div className="order-1 md:order-2">
-              <div className="flex items-center gap-4 mb-6">
-                <TrendingUp className="h-10 w-10 text-accent" />
-                <h2 className="text-3xl md:text-4xl font-light">Digital And Campaigns</h2>
+              <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
+                <TrendingUp className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent" />
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-light">Digital And Campaigns</h2>
               </div>
               <p className="text-muted-foreground font-light mb-8 max-w-3xl leading-relaxed">
                 Multi-channel distribution that reaches the right audience.
@@ -133,14 +133,14 @@ export default function Marketing() {
       </section>
 
       {/* Section 3: Analytics And Optimization */}
-      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={analyticsReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={analyticsReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`transition-all duration-700 ${
             analyticsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <div className="flex items-center gap-4 mb-6">
-              <Award className="h-10 w-10 text-accent" />
-              <h2 className="text-3xl md:text-4xl font-light">Analytics And Optimization</h2>
+            <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
+              <Award className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent" />
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-light">Analytics And Optimization</h2>
             </div>
             <p className="text-muted-foreground font-light mb-8 max-w-3xl leading-relaxed">
               Data-driven insights that improve performance over time.
@@ -164,9 +164,9 @@ export default function Marketing() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 md:py-28">
+      <section className="py-12 md:py-20 lg:py-28">
         <div className="container mx-auto px-4 md:px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-light mb-6">Ready To Get Started?</h2>
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 md:mb-6">Ready To Get Started?</h2>
           <p className="text-muted-foreground font-light mb-8 max-w-2xl mx-auto">
             Whether you need creative, digital distribution, or strategic marketing support, Bridge Marketing is ready to help.
           </p>

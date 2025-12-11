@@ -85,7 +85,7 @@ export default function PropertyManagement() {
   return (
     <div className="min-h-screen">
       {/* Hero with Image */}
-      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
+      <section className="relative h-[45vh] md:h-[55vh] lg:h-[60vh] min-h-[320px] md:min-h-[400px] lg:min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img 
             src={PLACEHOLDER_IMAGES.building.residential} 
@@ -97,10 +97,10 @@ export default function PropertyManagement() {
         <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${
           heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-4 md:mb-6">
             Bridge Property Management
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-10">
+          <p className="text-base md:text-lg lg:text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-6 md:mb-10">
             Full-service portfolio management for landlords and institutional investors across New York City
           </p>
           <Button size="lg" className="font-light" onClick={openContactSheet}>
@@ -127,22 +127,22 @@ export default function PropertyManagement() {
       </section>
 
       {/* Intro */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={introReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={introReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
-          <p className={`text-lg md:text-xl text-muted-foreground font-light leading-relaxed text-center transition-all duration-700 ${introReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <p className={`text-base md:text-lg lg:text-xl text-muted-foreground font-light leading-relaxed text-center transition-all duration-700 ${introReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             Bridge Property Management delivers institutional-quality services for landlords and investors seeking lower vacancy, better quality tenants, and consistent reporting. Our platform manages 500+ units across Manhattan, Brooklyn, and Queens with a focus on operational excellence and data-driven decision making.
           </p>
         </div>
       </section>
 
       {/* HPG Partnership & Underwriting */}
-      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={hpgReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={hpgReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <div className={`grid md:grid-cols-2 gap-8 transition-all duration-700 ${hpgReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className={`grid md:grid-cols-2 gap-6 md:gap-8 transition-all duration-700 ${hpgReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             {/* HPG Partnership Card */}
-            <div className="p-8 rounded-lg border border-white/10 bg-white/[0.02]">
-              <div className="flex items-center gap-4 mb-6">
-                <Building2 className="h-10 w-10 text-accent" />
+            <div className="p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02]">
+              <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
+                <Building2 className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent" />
                 <h3 className="text-2xl font-light">HPG Partnership</h3>
               </div>
               <p className="text-muted-foreground font-light mb-6 leading-relaxed">
@@ -165,9 +165,9 @@ export default function PropertyManagement() {
             </div>
 
             {/* Backend Underwriting Card */}
-            <div className="p-8 rounded-lg border border-white/10 bg-white/[0.02]">
-              <div className="flex items-center gap-4 mb-6">
-                <BarChart3 className="h-10 w-10 text-accent" />
+            <div className="p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02]">
+              <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
+                <BarChart3 className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent" />
                 <h3 className="text-2xl font-light">Backend Underwriting & Analysis</h3>
               </div>
               <p className="text-muted-foreground font-light mb-6 leading-relaxed">
@@ -193,11 +193,11 @@ export default function PropertyManagement() {
       </section>
 
       {/* Services Grid with Image */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={servicesReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={servicesReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <div className={`grid md:grid-cols-2 gap-12 items-start transition-all duration-700 ${servicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className={`grid md:grid-cols-2 gap-8 md:gap-12 items-start transition-all duration-700 ${servicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <div>
-              <h2 className="text-3xl md:text-4xl font-light mb-4">Our Services</h2>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Our Services</h2>
               <p className="text-muted-foreground font-light mb-8">
                 Comprehensive property management services designed to maximize your portfolio's potential.
               </p>
@@ -229,17 +229,17 @@ export default function PropertyManagement() {
       </section>
 
       {/* Markets We Serve */}
-      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={marketsReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={marketsReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`transition-all duration-700 ${marketsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="flex items-center gap-4 mb-6 justify-center">
-              <MapPin className="h-10 w-10 text-accent" />
-              <h2 className="text-3xl md:text-4xl font-light">Markets We Serve</h2>
+            <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6 justify-center">
+              <MapPin className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent" />
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-light">Markets We Serve</h2>
             </div>
-            <p className="text-muted-foreground font-light mb-10 max-w-3xl leading-relaxed text-center mx-auto">
+            <p className="text-muted-foreground font-light mb-8 md:mb-10 max-w-3xl leading-relaxed text-center mx-auto">
               Deep expertise across New York City's most sought-after residential neighborhoods.
             </p>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {markets.map((market, index) => (
                 <div 
                   key={market.borough} 
@@ -263,14 +263,14 @@ export default function PropertyManagement() {
       </section>
 
       {/* Operational Excellence */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={operationalReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={operationalReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`transition-all duration-700 ${operationalReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-4 text-center">Operational Excellence</h2>
-            <p className="text-muted-foreground font-light mb-12 text-center max-w-2xl mx-auto">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">Operational Excellence</h2>
+            <p className="text-muted-foreground font-light mb-8 md:mb-12 text-center max-w-2xl mx-auto">
               Backed by the full resources of Bridge Advisory Group
             </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-8 md:mb-12">
               {operationalStats.map((stat, index) => (
                 <div key={stat.label} className="text-center" style={{ transitionDelay: `${index * 100}ms` }}>
                   <div className="text-3xl md:text-4xl font-light text-foreground mb-2">{stat.value}</div>
@@ -278,8 +278,8 @@ export default function PropertyManagement() {
                 </div>
               ))}
             </div>
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="p-6 rounded-lg border border-white/10 bg-white/[0.02] text-center">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              <div className="p-4 md:p-6 rounded-lg border border-white/10 bg-white/[0.02] text-center">
                 <h3 className="text-lg font-light mb-2">In-House Underwriting Team</h3>
                 <p className="text-muted-foreground font-light text-sm">Dedicated analysts for pricing and market research</p>
               </div>
@@ -297,9 +297,9 @@ export default function PropertyManagement() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 md:py-28 bg-white/[0.02]">
+      <section className="py-12 md:py-20 lg:py-28 bg-white/[0.02]">
         <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
-          <h2 className="text-3xl md:text-4xl font-light mb-6">Partner with Bridge Property Management</h2>
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 md:mb-6">Partner with Bridge Property Management</h2>
           <p className="text-muted-foreground font-light mb-10 max-w-2xl mx-auto">
             Whether you're managing a single building or a multi-property portfolio, our team is ready to help you optimize performance and reduce vacancy.
           </p>

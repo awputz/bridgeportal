@@ -7,6 +7,7 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { PageTransition } from "@/components/PageTransition";
+import { FloatingBackToTop } from "@/components/FloatingBackToTop";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { ContactSheetProvider } from "@/contexts/ContactSheetContext";
 // Pages
@@ -198,6 +199,7 @@ const App = () => {
                   </Routes>
                 </PageTransition>
                 <Footer />
+                <FloatingBackToTop />
               </>
             } />
           </Routes>
