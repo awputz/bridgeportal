@@ -127,7 +127,7 @@ export const Navigation = () => {
                     >
                       Services
                     </NavigationMenuTrigger>
-                    <NavigationMenuContent className="!bg-zinc-900/95 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-xl">
+                    <NavigationMenuContent>
                       <div className="grid grid-cols-2 gap-2 p-4 w-[500px]">
                         {NAV_ITEMS.services.items.map((item, index) => {
                           const IconComponent = serviceIcons[item.name] || Building2;
