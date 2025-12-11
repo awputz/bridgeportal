@@ -3,6 +3,7 @@ import { Building2, TrendingUp, Users, ArrowRight, BarChart3, Calculator } from 
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useTransactions } from "@/hooks/useTransactions";
+import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { DIVISIONS } from "@/lib/constants";
@@ -10,6 +11,7 @@ import { MarketStats } from "@/components/MarketStats";
 import { InvestmentCalculator } from "@/components/InvestmentCalculator";
 
 export default function InvestmentSales() {
+  const { openContactSheet } = useContactSheet();
   const introReveal = useScrollReveal(0.1);
   const acquisitionReveal = useScrollReveal(0.1);
   const analysisReveal = useScrollReveal(0.1);
@@ -238,8 +240,8 @@ export default function InvestmentSales() {
           <p className="text-muted-foreground font-light mb-8 max-w-2xl mx-auto">
             Whether you're looking to buy, sell, or evaluate your options, Bridge Investment Sales is ready to help.
           </p>
-          <Button asChild size="lg" className="font-light">
-            <Link to="/contact">Contact Investment Sales</Link>
+          <Button size="lg" className="font-light" onClick={openContactSheet}>
+            Contact Investment Sales
           </Button>
         </div>
       </section>

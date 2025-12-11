@@ -2,12 +2,14 @@ import { Link } from "react-router-dom";
 import { Building2, Users, TrendingUp, ArrowRight, Calculator } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { DIVISIONS } from "@/lib/constants";
 import { InvestmentCalculator } from "@/components/InvestmentCalculator";
 
 export default function CapitalAdvisory() {
+  const { openContactSheet } = useContactSheet();
   const introReveal = useScrollReveal(0.1);
   const debtReveal = useScrollReveal(0.1);
   const equityReveal = useScrollReveal(0.1);
@@ -164,8 +166,8 @@ export default function CapitalAdvisory() {
           <p className="text-muted-foreground font-light mb-8 max-w-2xl mx-auto">
             Whether you need debt, equity, or strategic capital advisory, Bridge Capital is ready to help structure the right solution.
           </p>
-          <Button asChild size="lg" className="font-light">
-            <Link to="/contact">Contact Capital Advisory</Link>
+          <Button size="lg" className="font-light" onClick={openContactSheet}>
+            Contact Capital Advisory
           </Button>
         </div>
       </section>

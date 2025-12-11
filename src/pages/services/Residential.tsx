@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Home, Award, TrendingUp, ArrowRight, Users, MapPin, Calendar, Quote, Instagram, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import manhattanImg from "@/assets/manhattan-market.jpg";
@@ -46,6 +47,7 @@ const recentDeals = [
 const instagramImages = [instagram1, instagram2, instagram3, instagram4, instagram5, instagram6];
 
 export default function ResidentialServices() {
+  const { openContactSheet } = useContactSheet();
   const introReveal = useScrollReveal(0.1);
   const statsReveal = useScrollReveal(0.1);
   const marketsReveal = useScrollReveal(0.1);
@@ -73,14 +75,14 @@ export default function ResidentialServices() {
           
           {/* Hero CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 animate-fade-in" style={{ animationDelay: '200ms' }}>
-            <Button asChild variant="outline" className="font-light">
-              <Link to="/contact">Looking to Rent</Link>
+            <Button variant="outline" className="font-light" onClick={openContactSheet}>
+              Looking to Rent
             </Button>
-            <Button asChild variant="outline" className="font-light">
-              <Link to="/contact">Looking to Buy</Link>
+            <Button variant="outline" className="font-light" onClick={openContactSheet}>
+              Looking to Buy
             </Button>
-            <Button asChild className="font-light">
-              <Link to="/contact">Landlord or Seller</Link>
+            <Button className="font-light" onClick={openContactSheet}>
+              Landlord or Seller
             </Button>
           </div>
           
@@ -486,8 +488,8 @@ export default function ResidentialServices() {
             Whether you're looking for your next home or seeking to list your property, our team is ready to assist.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="font-light">
-              <Link to="/contact">Start Your Search</Link>
+            <Button size="lg" className="font-light" onClick={openContactSheet}>
+              Start Your Search
             </Button>
             <Button asChild variant="outline" size="lg" className="font-light">
               <Link to="/services/property-management">Property Management</Link>

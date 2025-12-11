@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
 import { ServicePageLayout } from "@/components/ServicePageLayout";
 import { BarChart3, Calculator, FileText, TrendingUp, CheckCircle, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { InvestmentCalculator } from "@/components/InvestmentCalculator";
 
 const Valuations = () => {
+  const { openContactSheet } = useContactSheet();
 
   const valuationServices = [
     {
@@ -206,10 +207,8 @@ const Valuations = () => {
           <p className="text-primary-foreground/80 mb-8 text-lg">
             Contact us for a complimentary broker opinion of value on your property.
           </p>
-          <Button asChild size="lg" variant="secondary">
-            <Link to="/contact">
-              Request Valuation <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
+          <Button size="lg" variant="secondary" onClick={openContactSheet}>
+            Request Valuation <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </div>
       </section>

@@ -3,6 +3,7 @@ import { Building2, TrendingUp, Award, Users, Home as HomeIcon, Megaphone, Arrow
 import { Button } from "@/components/ui/button";
 import { useTransactions } from "@/hooks/useTransactions";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { COMPANY_INFO, DIVISIONS } from "@/lib/constants";
 import heroImage from "@/assets/brooklyn-bridge-hero-light.jpg";
 import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
@@ -10,7 +11,8 @@ import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
 export default function Home() {
   const { data: transactions = [] } = useTransactions();
   const recentTransactions = transactions.slice(0, 3);
-  
+  const { openContactSheet } = useContactSheet();
+
   const platformReveal = useScrollReveal(0.1);
   const missionReveal = useScrollReveal(0.1);
   const commercialReveal = useScrollReveal(0.1);
@@ -61,8 +63,8 @@ export default function Home() {
             <Button asChild size="lg" className="font-light px-8 md:px-12 w-full sm:w-auto">
               <a href="#services">Explore Our Services</a>
             </Button>
-            <Button asChild size="lg" variant="outline" className="font-light px-8 md:px-12 w-full sm:w-auto border-white/30 hover:bg-white/10">
-              <Link to="/contact">Contact Us</Link>
+            <Button size="lg" variant="outline" className="font-light px-8 md:px-12 w-full sm:w-auto border-white/30 hover:bg-white/10" onClick={openContactSheet}>
+              Contact Us
             </Button>
           </div>
 
@@ -443,8 +445,8 @@ export default function Home() {
           <div className={`flex flex-col sm:flex-row gap-4 justify-center transition-all duration-700 ${
             ctaReveal.isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-10 scale-95'
           }`} style={{ transitionDelay: '200ms' }}>
-            <Button asChild size="lg" className="font-light px-8 md:px-12">
-              <Link to="/contact">Contact Us</Link>
+            <Button size="lg" className="font-light px-8 md:px-12" onClick={openContactSheet}>
+              Contact Us
             </Button>
             <Button asChild size="lg" variant="outline" className="font-light px-8 md:px-12">
               <a href="#services">Explore Services</a>
