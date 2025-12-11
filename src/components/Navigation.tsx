@@ -11,10 +11,12 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuSubContent
 } from "@/components/ui/dropdown-menu";
-import { NAV_ITEMS, DIVISIONS, LISTINGS_ITEMS } from "@/lib/constants";
+import { useBridgeServices } from "@/hooks/useBridgeServices";
+import { useBridgeListingNavItems } from "@/hooks/useBridgeListingLinks";
 import bridgeInvestmentLogo from "@/assets/bridge-investment-sales-logo.png";
 import { cn } from "@/lib/utils";
 import { ContactSheet } from "@/components/ContactSheet";
+
 const leftNavItems = [{
   name: "About Us",
   path: "/about"
@@ -39,10 +41,22 @@ const serviceIcons: Record<string, typeof Building2> = {
   "Billboard": Image,
   "Residential": Home
 };
+
+// Listing icons mapping
+const listingIcons: Record<string, typeof Building2> = {
+  "Residential": Home,
+  "Commercial Leasing": Building2,
+  "Investment Sales": TrendingUp
+};
+
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const location = useLocation();
+  
+  const { data: services } = useBridgeServices();
+  const { data: listingsNav } = useBridgeListingNavItems();
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -58,7 +72,9 @@ export const Navigation = () => {
   useEffect(() => {
     setIsOpen(false);
   }, [location.pathname]);
+
   const isServicesActive = location.pathname.startsWith('/services');
+
   return <>
       <nav className="fixed top-0 left-0 right-0 z-50 px-3 pt-3 md:px-4 md:pt-3 lg:px-5 lg:pt-4">
         <div className="max-w-7xl mx-auto glass-nav">
@@ -112,21 +128,17 @@ export const Navigation = () => {
                   {/* Arrow connector */}
                   <div className="absolute -top-2 right-8 w-4 h-4 bg-zinc-900/95 border-l border-t border-white/20 rotate-45" />
                   <div className="grid grid-cols-2 gap-2">
-                    {NAV_ITEMS.services.items.map((item) => {
-                      const IconComponent = serviceIcons[item.name] || Building2;
-                      const divisionKey = Object.keys(DIVISIONS).find(key => 
-                        DIVISIONS[key as keyof typeof DIVISIONS].name === item.name
-                      ) as keyof typeof DIVISIONS | undefined;
-                      const description = divisionKey ? DIVISIONS[divisionKey].description : "";
+                    {services?.map((service) => {
+                      const IconComponent = serviceIcons[service.name] || Building2;
                       
                       return (
                         <Link
-                          key={item.name}
-                          to={item.path}
+                          key={service.id}
+                          to={service.path}
                           className={cn(
                             "group flex items-center gap-3 rounded-lg p-3 transition-all duration-200",
                             "hover:bg-white/10 hover:scale-[1.02]",
-                            location.pathname.startsWith(item.path) && "bg-white/10"
+                            location.pathname.startsWith(service.path) && "bg-white/10"
                           )}
                         >
                           <div className="flex h-9 w-9 items-center justify-center rounded-md bg-white/10 group-hover:bg-white/15 transition-colors">
@@ -134,10 +146,10 @@ export const Navigation = () => {
                           </div>
                           <div className="flex flex-col">
                             <span className="text-sm font-medium text-white group-hover:text-white">
-                              {item.name}
+                              {service.name}
                             </span>
                             <span className="text-xs text-white/60 mt-0.5">
-                              {description}
+                              {service.description}
                             </span>
                           </div>
                         </Link>
@@ -165,65 +177,50 @@ export const Navigation = () => {
                 >
                   {/* Arrow connector */}
                   <div className="absolute -top-2 right-8 w-4 h-4 bg-zinc-900/95 border-l border-t border-white/20 rotate-45" />
-                  {/* Residential */}
-                  <DropdownMenuItem asChild>
-                    <a 
-                      href="https://streeteasy.com/building/bridge-advisory-group" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer"
-                    >
-                      <Home className="h-4 w-4 text-white/70" />
-                      <span className="text-sm text-white">Residential</span>
-                      <ExternalLink className="h-3 w-3 ml-auto text-white/50" />
-                    </a>
-                  </DropdownMenuItem>
-                  
-                  {/* Commercial Leasing - Nested */}
-                  <DropdownMenuSub>
-                    <DropdownMenuSubTrigger className="flex items-center gap-3 p-2.5 rounded-lg">
-                      <Building2 className="h-4 w-4 text-white/70" />
-                      <span className="text-sm text-white">Commercial Leasing</span>
-                    </DropdownMenuSubTrigger>
-                    <DropdownMenuSubContent className="bg-zinc-900/95 backdrop-blur-2xl border border-white/20 rounded-xl p-2">
-                      <DropdownMenuItem asChild>
+                  {listingsNav?.items.map((item) => {
+                    const IconComponent = listingIcons[item.name] || Building2;
+                    
+                    if (item.nested && item.items) {
+                      return (
+                        <DropdownMenuSub key={item.name}>
+                          <DropdownMenuSubTrigger className="flex items-center gap-3 p-2.5 rounded-lg">
+                            <IconComponent className="h-4 w-4 text-white/70" />
+                            <span className="text-sm text-white">{item.name}</span>
+                          </DropdownMenuSubTrigger>
+                          <DropdownMenuSubContent className="bg-zinc-900/95 backdrop-blur-2xl border border-white/20 rounded-xl p-2">
+                            {item.items.map((subItem) => (
+                              <DropdownMenuItem key={subItem.name} asChild>
+                                <a 
+                                  href={subItem.url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer"
+                                >
+                                  <span className="text-sm text-white">{subItem.name}</span>
+                                  <ExternalLink className="h-3 w-3 ml-auto text-white/50" />
+                                </a>
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuSubContent>
+                        </DropdownMenuSub>
+                      );
+                    }
+                    
+                    return (
+                      <DropdownMenuItem key={item.name} asChild>
                         <a 
-                          href="https://www.costar.com" 
+                          href={item.url} 
                           target="_blank" 
                           rel="noopener noreferrer"
                           className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer"
                         >
-                          <span className="text-sm text-white">Office</span>
-                          <ExternalLink className="h-3 w-3 ml-auto text-white/50" />
+                          <IconComponent className="h-4 w-4 text-white/70" />
+                          <span className="text-sm text-white">{item.name}</span>
+                          {item.external && <ExternalLink className="h-3 w-3 ml-auto text-white/50" />}
                         </a>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <a 
-                          href="https://www.costar.com" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer"
-                        >
-                          <span className="text-sm text-white">Retail</span>
-                          <ExternalLink className="h-3 w-3 ml-auto text-white/50" />
-                        </a>
-                      </DropdownMenuItem>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuSub>
-                  
-                  {/* Investment Sales */}
-                  <DropdownMenuItem asChild>
-                    <a 
-                      href="https://www.costar.com" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer"
-                    >
-                      <TrendingUp className="h-4 w-4 text-white/70" />
-                      <span className="text-sm text-white">Investment Sales</span>
-                      <ExternalLink className="h-3 w-3 ml-auto text-white/50" />
-                    </a>
-                  </DropdownMenuItem>
+                    );
+                  })}
                 </DropdownMenuContent>
               </DropdownMenu>
 
@@ -256,13 +253,13 @@ export const Navigation = () => {
               {/* Services Section */}
               <div className="pt-3 border-t border-white/10">
                 <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Services</p>
-                {NAV_ITEMS.services.items.map((item, index) => {
-                const IconComponent = serviceIcons[item.name] || Building2;
-                return <Link key={item.name} to={item.path} className={`flex items-center gap-3 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2.5 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
+                {services?.map((service, index) => {
+                const IconComponent = serviceIcons[service.name] || Building2;
+                return <Link key={service.id} to={service.path} className={`flex items-center gap-3 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2.5 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
                   transitionDelay: `${(index + leftNavItems.length) * 50}ms`
                 }} onClick={() => setIsOpen(false)}>
                       <IconComponent className="h-4 w-4 text-foreground/50" />
-                      {item.name}
+                      {service.name}
                     </Link>;
               })}
               </div>
@@ -271,58 +268,48 @@ export const Navigation = () => {
               <div className="pt-3 border-t border-white/10">
                 <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Listings</p>
                 
-                {/* Residential */}
-                <a 
-                  href="https://streeteasy.com/building/bridge-advisory-group" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className={`flex items-center gap-3 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2.5 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
-                  style={{ transitionDelay: `${(NAV_ITEMS.services.items.length + leftNavItems.length) * 50}ms` }}
-                  onClick={() => setIsOpen(false)}
-                >
-                  <Home className="h-4 w-4 text-foreground/50" />
-                  Residential
-                  <ExternalLink className="h-3 w-3 ml-auto text-foreground/40" />
-                </a>
-                
-                {/* Commercial Leasing Header */}
-                <p className="text-sm text-foreground/60 mt-2 mb-1 pl-7">Commercial Leasing</p>
-                <a 
-                  href="https://www.costar.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className={`flex items-center gap-3 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2 min-h-[40px] pl-7 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
-                  style={{ transitionDelay: `${(NAV_ITEMS.services.items.length + leftNavItems.length + 1) * 50}ms` }}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Office
-                  <ExternalLink className="h-3 w-3 ml-auto text-foreground/40" />
-                </a>
-                <a 
-                  href="https://www.costar.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className={`flex items-center gap-3 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2 min-h-[40px] pl-7 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
-                  style={{ transitionDelay: `${(NAV_ITEMS.services.items.length + leftNavItems.length + 2) * 50}ms` }}
-                  onClick={() => setIsOpen(false)}
-                >
-                  Retail
-                  <ExternalLink className="h-3 w-3 ml-auto text-foreground/40" />
-                </a>
-                
-                {/* Investment Sales */}
-                <a 
-                  href="https://www.costar.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className={`flex items-center gap-3 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2.5 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
-                  style={{ transitionDelay: `${(NAV_ITEMS.services.items.length + leftNavItems.length + 3) * 50}ms` }}
-                  onClick={() => setIsOpen(false)}
-                >
-                  <TrendingUp className="h-4 w-4 text-foreground/50" />
-                  Investment Sales
-                  <ExternalLink className="h-3 w-3 ml-auto text-foreground/40" />
-                </a>
+                {listingsNav?.items.map((item, index) => {
+                  const IconComponent = listingIcons[item.name] || Building2;
+                  const baseDelay = (services?.length || 0) + leftNavItems.length;
+                  
+                  if (item.nested && item.items) {
+                    return (
+                      <div key={item.name}>
+                        <p className="text-sm text-foreground/60 mt-2 mb-1 pl-7">{item.name}</p>
+                        {item.items.map((subItem, subIndex) => (
+                          <a 
+                            key={subItem.name}
+                            href={subItem.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className={`flex items-center gap-3 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2 min-h-[40px] pl-7 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                            style={{ transitionDelay: `${(baseDelay + index + subIndex + 1) * 50}ms` }}
+                            onClick={() => setIsOpen(false)}
+                          >
+                            {subItem.name}
+                            <ExternalLink className="h-3 w-3 ml-auto text-foreground/40" />
+                          </a>
+                        ))}
+                      </div>
+                    );
+                  }
+                  
+                  return (
+                    <a 
+                      key={item.name}
+                      href={item.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className={`flex items-center gap-3 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2.5 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                      style={{ transitionDelay: `${(baseDelay + index) * 50}ms` }}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <IconComponent className="h-4 w-4 text-foreground/50" />
+                      {item.name}
+                      {item.external && <ExternalLink className="h-3 w-3 ml-auto text-foreground/40" />}
+                    </a>
+                  );
+                })}
               </div>
 
               <Button 
