@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { COMPANY_INFO, NAV_ITEMS } from "@/lib/constants";
+import { useContactSheet } from "@/contexts/ContactSheetContext";
 import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
 
 export const Footer = () => {
+  const { openContactSheet } = useContactSheet();
   return (
     <footer className="bg-dark-bg text-foreground border-t border-border">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 lg:py-24">
@@ -96,9 +98,9 @@ export const Footer = () => {
             </h3>
             <ul className="space-y-2.5 md:space-y-3 text-sm">
               <li>
-                <Link to="/contact" className="text-foreground/70 hover:text-foreground transition-colors font-light py-1 inline-block touch-manipulation">
+                <button onClick={openContactSheet} className="text-foreground/70 hover:text-foreground transition-colors font-light py-1 inline-block touch-manipulation text-left">
                   Contact Us
-                </Link>
+                </button>
               </li>
               <li>
                 <a 

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Building2, BarChart3, Shield, TrendingUp, FileText, Target, Users, CheckCircle, MapPin, Calculator } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { InvestmentCalculator } from "@/components/InvestmentCalculator";
@@ -36,6 +37,7 @@ const markets = [
 ];
 
 export default function PropertyManagement() {
+  const { openContactSheet } = useContactSheet();
   const statsReveal = useScrollReveal(0.1);
   const introReveal = useScrollReveal(0.1);
   const hpgReveal = useScrollReveal(0.1);
@@ -55,8 +57,8 @@ export default function PropertyManagement() {
           <p className="text-lg md:text-xl text-muted-foreground font-light animate-fade-in max-w-2xl mx-auto mb-10" style={{ animationDelay: '100ms' }}>
             Full-service portfolio management for landlords and institutional investors across New York City
           </p>
-          <Button asChild size="lg" className="font-light animate-fade-in" style={{ animationDelay: '200ms' }}>
-            <Link to="/contact">Partner With Us</Link>
+          <Button size="lg" className="font-light animate-fade-in" style={{ animationDelay: '200ms' }} onClick={openContactSheet}>
+            Partner With Us
           </Button>
         </div>
       </section>
@@ -279,8 +281,8 @@ export default function PropertyManagement() {
             Whether you're managing a single building or a multi-property portfolio, our team is ready to help you optimize performance and reduce vacancy.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="font-light">
-              <Link to="/contact">Schedule a Consultation</Link>
+            <Button size="lg" className="font-light" onClick={openContactSheet}>
+              Schedule a Consultation
             </Button>
             <Button asChild variant="outline" size="lg" className="font-light">
               <Link to="/services/residential">View Residential Services</Link>

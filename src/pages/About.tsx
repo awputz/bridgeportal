@@ -2,9 +2,11 @@ import { Link } from "react-router-dom";
 import { Building2, Users, TrendingUp, Award, ArrowRight, Target, Eye, Heart, MessageSquare, Trophy, Compass, HelpCircle, PenLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { DIVISIONS } from "@/lib/constants";
 
 export default function About() {
+  const { openContactSheet } = useContactSheet();
   const storyReveal = useScrollReveal(0.1);
   const missionReveal = useScrollReveal(0.1);
   const valuesReveal = useScrollReveal(0.1);
@@ -240,8 +242,8 @@ export default function About() {
           <div className={`text-center mt-12 transition-all duration-700 ${
             whyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`} style={{ transitionDelay: '400ms' }}>
-            <Button asChild size="lg" className="font-light">
-              <Link to="/contact">Contact Us</Link>
+            <Button size="lg" className="font-light" onClick={openContactSheet}>
+              Contact Us
             </Button>
           </div>
         </div>

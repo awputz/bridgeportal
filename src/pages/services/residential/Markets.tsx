@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
 import { ServicePageLayout } from "@/components/ServicePageLayout";
 import { MapPin, TrendingUp, Home, ArrowRight, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useContactSheet } from "@/contexts/ContactSheetContext";
 
 const Markets = () => {
+  const { openContactSheet } = useContactSheet();
   const neighborhoods = [
     {
       borough: "Manhattan",
@@ -156,10 +157,8 @@ const Markets = () => {
             Our agents have deep knowledge of every NYC neighborhood. Let us help you find 
             the perfect fit.
           </p>
-          <Button asChild size="lg" variant="secondary">
-            <Link to="/contact">
-              Schedule Consultation <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
+          <Button size="lg" variant="secondary" onClick={openContactSheet}>
+            Schedule Consultation <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </div>
       </section>

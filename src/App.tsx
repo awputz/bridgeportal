@@ -8,7 +8,7 @@ import { Footer } from "@/components/Footer";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { PageTransition } from "@/components/PageTransition";
 import { AdminLayout } from "@/components/admin/AdminLayout";
-
+import { ContactSheetProvider } from "@/contexts/ContactSheetContext";
 // Pages
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -75,6 +75,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
+        <ContactSheetProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
@@ -186,6 +187,7 @@ const App = () => {
             } />
           </Routes>
         </BrowserRouter>
+        </ContactSheetProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

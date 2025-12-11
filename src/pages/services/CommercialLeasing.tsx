@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Building2, Users, TrendingUp, ArrowRight, Store, Briefcase, MapPin, Target, BarChart3, Handshake, CheckCircle, XCircle, Megaphone, FileText, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { DIVISIONS } from "@/lib/constants";
@@ -97,6 +98,7 @@ const serviceDetails = [
 ];
 
 export default function CommercialLeasing() {
+  const { openContactSheet } = useContactSheet();
   const statsReveal = useScrollReveal(0.1);
   const introReveal = useScrollReveal(0.1);
   const processReveal = useScrollReveal(0.1);
@@ -119,8 +121,8 @@ export default function CommercialLeasing() {
           <p className="text-lg md:text-xl text-muted-foreground font-light animate-fade-in max-w-2xl mx-auto mb-10" style={{ animationDelay: '100ms' }}>
             NYC Retail & Office Leasing Specialists
           </p>
-          <Button asChild size="lg" className="font-light animate-fade-in" style={{ animationDelay: '200ms' }}>
-            <Link to="/contact">List Your Space</Link>
+          <Button size="lg" className="font-light animate-fade-in" style={{ animationDelay: '200ms' }} onClick={openContactSheet}>
+            List Your Space
           </Button>
         </div>
       </section>
@@ -406,11 +408,11 @@ export default function CommercialLeasing() {
             Whether you're a landlord looking to lease your space or a tenant searching for the perfect location, we're here to help.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="font-light">
-              <Link to="/contact">Submit a Deal</Link>
+            <Button size="lg" className="font-light" onClick={openContactSheet}>
+              Submit a Deal
             </Button>
-            <Button asChild variant="outline" size="lg" className="font-light">
-              <Link to="/contact">Find Your Space</Link>
+            <Button variant="outline" size="lg" className="font-light" onClick={openContactSheet}>
+              Find Your Space
             </Button>
           </div>
         </div>

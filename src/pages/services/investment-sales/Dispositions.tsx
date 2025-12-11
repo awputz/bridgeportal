@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
 import { ServicePageLayout } from "@/components/ServicePageLayout";
 import { CheckCircle, ArrowRight, Clock, DollarSign, FileText, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useContactSheet } from "@/contexts/ContactSheetContext";
 
 const Dispositions = () => {
+  const { openContactSheet } = useContactSheet();
   const dispositionProcess = [
     {
       step: "01",
@@ -242,10 +243,8 @@ const Dispositions = () => {
           <p className="text-primary-foreground/80 mb-8 text-lg">
             Request a complimentary property valuation and learn how we can maximize your return.
           </p>
-          <Button asChild size="lg" variant="secondary">
-            <Link to="/contact">
-              Request Valuation <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
+          <Button size="lg" variant="secondary" onClick={openContactSheet}>
+            Request Valuation <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </div>
       </section>

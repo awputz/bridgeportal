@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
 import { ServicePageLayout } from "@/components/ServicePageLayout";
 import { Users, Building2, CheckCircle, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useContactSheet } from "@/contexts/ContactSheetContext";
 
 const TenantRep = () => {
+  const { openContactSheet } = useContactSheet();
   const heroContent = (
     <section className="relative bg-gradient-to-b from-secondary to-background pt-32 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,7 +41,7 @@ const TenantRep = () => {
       <section className="py-20 bg-primary">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-primary-foreground mb-6">Need Space?</h2>
-          <Button asChild size="lg" variant="secondary"><Link to="/contact">Contact Us <ArrowRight className="ml-2 h-5 w-5" /></Link></Button>
+          <Button size="lg" variant="secondary" onClick={openContactSheet}>Contact Us <ArrowRight className="ml-2 h-5 w-5" /></Button>
         </div>
       </section>
     </ServicePageLayout>
