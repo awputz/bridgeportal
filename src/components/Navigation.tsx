@@ -11,7 +11,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { NAV_ITEMS } from "@/lib/constants";
-import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
+import bridgeInvestmentLogo from "@/assets/bridge-investment-sales-logo.png";
 import { cn } from "@/lib/utils";
 
 const leftNavItems = [
@@ -56,15 +56,15 @@ export const Navigation = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 px-2 pt-2 md:px-3 md:pt-2 lg:px-2 lg:pt-1.5">
+      <nav className="fixed top-0 left-0 right-0 z-50 px-3 pt-3 md:px-4 md:pt-3 lg:px-5 lg:pt-4">
         <div className="max-w-7xl mx-auto glass-nav">
           {/* Mobile & Tablet Layout */}
-          <div className="flex lg:hidden items-center justify-between h-14 sm:h-15 md:h-16 px-4 md:px-5">
+          <div className="flex lg:hidden items-center justify-between h-14 sm:h-16 md:h-18 px-4 md:px-5">
             <Link to="/" className="flex items-center flex-shrink-0">
               <img 
-                src={bridgeAdvisoryLogo} 
-                alt="Bridge Advisory Group" 
-                className="h-7 sm:h-8 md:h-9 w-auto invert" 
+                src={bridgeInvestmentLogo} 
+                alt="Bridge Investment Sales" 
+                className="h-9 sm:h-10 md:h-11 w-auto invert" 
               />
             </Link>
             <button
@@ -85,15 +85,15 @@ export const Navigation = () => {
             </button>
           </div>
 
-          {/* Desktop Layout - Compact */}
-          <div className="hidden lg:grid grid-cols-3 items-center h-12 px-4">
+          {/* Desktop Layout */}
+          <div className="hidden lg:grid grid-cols-3 items-center h-16 px-6">
             {/* Left: Navigation Links */}
-            <div className="flex items-center space-x-5">
+            <div className="flex items-center space-x-6">
               {leftNavItems.map((item) => (
                 <Link
                   key={item.name}
                   to={item.path}
-                  className={`text-[13px] font-light transition-all duration-200 whitespace-nowrap hover:scale-105 ${
+                  className={`text-sm font-light transition-all duration-200 whitespace-nowrap hover:scale-105 ${
                     location.pathname === item.path
                       ? "text-foreground"
                       : "text-foreground/70 hover:text-foreground"
@@ -107,12 +107,12 @@ export const Navigation = () => {
             {/* Center: Logo */}
             <div className="flex justify-center">
               <Link to="/" className="flex items-center">
-                <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-7 w-auto invert" />
+                <img src={bridgeInvestmentLogo} alt="Bridge Investment Sales" className="h-10 w-auto invert" />
               </Link>
             </div>
 
-            {/* Right: Services Hover Menu + Contact Button */}
-            <div className="flex items-center justify-end space-x-5">
+            {/* Right: Services Hover Menu + Contact Link + Submit Button */}
+            <div className="flex items-center justify-end space-x-6">
               {/* Services Hover Navigation */}
               <NavigationMenu>
                 <NavigationMenuList>
@@ -120,7 +120,7 @@ export const Navigation = () => {
                     <NavigationMenuTrigger 
                       className={cn(
                         "bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent",
-                        "text-[13px] font-light px-0 h-auto",
+                        "text-sm font-light px-0 h-auto",
                         "transition-all duration-200 hover:scale-105",
                         isServicesActive ? "text-foreground" : "text-foreground/70 hover:text-foreground"
                       )}
@@ -165,12 +165,19 @@ export const Navigation = () => {
                 </NavigationMenuList>
               </NavigationMenu>
 
+              <Link 
+                to="/contact" 
+                className="text-sm font-light text-foreground/70 hover:text-foreground transition-all duration-200"
+              >
+                Contact
+              </Link>
+
               <Button
                 asChild
                 size="sm"
-                className="h-8 px-4 text-xs font-light glass-button"
+                className="h-9 px-5 text-sm font-medium bg-white text-black hover:bg-white/90 rounded-md"
               >
-                <Link to="/contact">Contact Us</Link>
+                <Link to="/contact">Submit a Deal</Link>
               </Button>
             </div>
           </div>
