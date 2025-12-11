@@ -2,8 +2,12 @@ import { Link } from "react-router-dom";
 import { useBridgeSettings } from "@/hooks/useBridgeSettings";
 import { useBridgeServices } from "@/hooks/useBridgeServices";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
-import { Instagram, Linkedin, Phone, Mail } from "lucide-react";
+import { Instagram, Linkedin, Phone, Mail, ArrowUp } from "lucide-react";
 import { useState } from "react";
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
 export const Footer = () => {
   const {
     openContactSheet
@@ -118,6 +122,9 @@ export const Footer = () => {
             </a>
             <button onClick={openContactSheet} className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors">
               <Phone className="w-4 h-4 md:w-5 md:h-5" />
+            </button>
+            <button onClick={scrollToTop} className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground hover:bg-foreground hover:text-background transition-colors" aria-label="Back to top">
+              <ArrowUp className="w-4 h-4 md:w-5 md:h-5" />
             </button>
           </div>
         </div>
