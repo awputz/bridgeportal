@@ -2,12 +2,27 @@ import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export default function LeaseCalculator() {
-  const [rentPerSF, setRentPerSF] = useState<number>(50);
-  const [squareFeet, setSquareFeet] = useState<number>(2000);
-  const [leaseTerm, setLeaseTerm] = useState<number>(5);
-  const [escalation, setEscalation] = useState<number>(3);
-  const [freeRentMonths, setFreeRentMonths] = useState<number>(0);
+interface LeaseCalculatorProps {
+  config?: {
+    title?: string;
+    subtitle?: string;
+    defaults?: {
+      rentPerSF?: number;
+      squareFeet?: number;
+      leaseTerm?: number;
+      escalation?: number;
+      freeRentMonths?: number;
+    };
+  };
+}
+
+export default function LeaseCalculator({ config }: LeaseCalculatorProps) {
+  const defaults = config?.defaults || {};
+  const [rentPerSF, setRentPerSF] = useState<number>(defaults.rentPerSF ?? 50);
+  const [squareFeet, setSquareFeet] = useState<number>(defaults.squareFeet ?? 2000);
+  const [leaseTerm, setLeaseTerm] = useState<number>(defaults.leaseTerm ?? 5);
+  const [escalation, setEscalation] = useState<number>(defaults.escalation ?? 3);
+  const [freeRentMonths, setFreeRentMonths] = useState<number>(defaults.freeRentMonths ?? 0);
 
   const calculations = useMemo(() => {
     const yearlyBreakdown: { year: number; annualRent: number; monthlyRent: number }[] = [];

@@ -101,6 +101,54 @@ export type Database = {
         }
         Relationships: []
       }
+      bridge_calculators: {
+        Row: {
+          calculator_type: string
+          created_at: string | null
+          display_order: number | null
+          id: string
+          input_config: Json | null
+          is_active: boolean | null
+          output_description: string | null
+          section_key: string
+          service_slug: string
+          slug: string
+          subtitle: string | null
+          title: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          calculator_type: string
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          input_config?: Json | null
+          is_active?: boolean | null
+          output_description?: string | null
+          section_key: string
+          service_slug: string
+          slug: string
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          calculator_type?: string
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          input_config?: Json | null
+          is_active?: boolean | null
+          output_description?: string | null
+          section_key?: string
+          service_slug?: string
+          slug?: string
+          subtitle?: string | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       bridge_listing_links: {
         Row: {
           category: string

@@ -8,6 +8,7 @@ import { ServicePageNav } from "@/components/ServicePageNav";
 import { DIVISIONS } from "@/lib/constants";
 import LeaseCalculator from "@/components/LeaseCalculator";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
+import { useBridgeCalculatorBySection } from "@/hooks/useBridgeCalculators";
 
 const stats = [
   { label: "Spaces Leased", value: "100+" },
@@ -100,6 +101,7 @@ const serviceDetails = [
 
 export default function CommercialLeasing() {
   const { openContactSheet } = useContactSheet();
+  const { data: calculatorConfig } = useBridgeCalculatorBySection("commercial-leasing", "main_calculator");
   const heroReveal = useScrollReveal(0.1);
   const statsReveal = useScrollReveal(0.1);
   const introReveal = useScrollReveal(0.1);
@@ -370,15 +372,21 @@ export default function CommercialLeasing() {
           <div className={`text-center mb-12 transition-all duration-700 ${
             calculatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-4">Lease Calculator</h2>
+            <h2 className="text-3xl md:text-4xl font-light mb-4">
+              {calculatorConfig?.title || "Lease Calculator"}
+            </h2>
             <p className="text-muted-foreground font-light max-w-2xl mx-auto">
-              Estimate your total lease costs and compare different lease structures.
+              {calculatorConfig?.subtitle || "Estimate your total lease costs and compare different lease structures."}
             </p>
           </div>
           <div className={`transition-all duration-700 ${
             calculatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`} style={{ transitionDelay: '200ms' }}>
-            <LeaseCalculator />
+            <LeaseCalculator config={calculatorConfig ? {
+              title: calculatorConfig.title || undefined,
+              subtitle: calculatorConfig.subtitle || undefined,
+              defaults: calculatorConfig.input_config?.defaults as any,
+            } : undefined} />
           </div>
         </div>
       </section>
