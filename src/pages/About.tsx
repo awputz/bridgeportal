@@ -1,14 +1,25 @@
 import { Link } from "react-router-dom";
-import { Building2, Users, TrendingUp, Award, ArrowRight } from "lucide-react";
+import { Building2, Users, TrendingUp, Award, ArrowRight, Target, Eye, Heart, MessageSquare, Trophy, Compass, HelpCircle, PenLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { DIVISIONS } from "@/lib/constants";
 
 export default function About() {
   const storyReveal = useScrollReveal(0.1);
+  const missionReveal = useScrollReveal(0.1);
+  const valuesReveal = useScrollReveal(0.1);
   const philosophyReveal = useScrollReveal(0.1);
   const divisionsReveal = useScrollReveal(0.1);
   const whyReveal = useScrollReveal(0.1);
+
+  const culturalValues = [
+    { icon: Heart, title: "Lead with Optimism and Compassion" },
+    { icon: MessageSquare, title: "Cultivate Frequent Feedback" },
+    { icon: Trophy, title: "Celebrate the Wins" },
+    { icon: Compass, title: "Embrace Process Over Outcome" },
+    { icon: HelpCircle, title: "Start with Why" },
+    { icon: PenLine, title: "Cherish Writing" },
+  ];
 
   return (
     <div className="min-h-screen pt-32 md:pt-40">
@@ -16,10 +27,10 @@ export default function About() {
       <section className="pb-16 md:pb-24 border-b border-white/5">
         <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 animate-fade-in">
-            Bridge Advisory Group
+            About Bridge Advisory Group
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground font-light animate-fade-in" style={{ animationDelay: '100ms' }}>
-            A multi-division real estate platform built at the intersection of brokerage, ownership, and capital.
+            A multi-division real estate platform at the intersection of brokerage, ownership, and capital.
           </p>
         </div>
       </section>
@@ -30,7 +41,7 @@ export default function About() {
           <div className={`transition-all duration-700 ${
             storyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-8">Platform Story</h2>
+            <h2 className="text-3xl md:text-4xl font-light mb-8">Firm Story</h2>
             <div className="space-y-6 text-muted-foreground font-light leading-relaxed">
               <p>
                 Bridge Advisory Group was founded with a clear vision: to build a real estate platform that brings together the best of brokerage execution with principal-level thinking. Headquartered in New York City, Bridge serves owners, operators, investors, and occupiers across every stage of the real estate cycle.
@@ -41,6 +52,74 @@ export default function About() {
               <p>
                 From day one, Bridge has been committed to New York. The team knows the neighborhoods, the buildings, the players, and the dynamics that drive value in this market. That local expertise, combined with institutional-grade execution, is the foundation of everything Bridge does.
               </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Mission and Vision */}
+      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={missionReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+          <div className={`transition-all duration-700 ${
+            missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
+            <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">Mission And Vision</h2>
+            
+            <div className="grid md:grid-cols-2 gap-8 md:gap-12">
+              <div className={`p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-700 ${
+                missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+              }`} style={{ transitionDelay: '100ms' }}>
+                <Target className="h-10 w-10 text-accent mb-6" />
+                <h3 className="text-2xl font-light mb-4">Mission Statement</h3>
+                <p className="text-muted-foreground font-light leading-relaxed">
+                  At Bridge Advisory Group, our mission is to redefine real estate service excellence across the New York market. We aim to empower our clients through informed, expert-led strategies that maximize value and foster long-term relationships.
+                </p>
+              </div>
+              
+              <div className={`p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-700 ${
+                missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+              }`} style={{ transitionDelay: '200ms' }}>
+                <Eye className="h-10 w-10 text-accent mb-6" />
+                <h3 className="text-2xl font-light mb-4">Vision Statement</h3>
+                <p className="text-muted-foreground font-light leading-relaxed mb-4">
+                  Our vision is to be the leading real estate advisory firm in New York, known for our innovative approaches and unwavering commitment to client success. We strive to set new standards in the industry, driving growth and excellence through our dedicated team, advanced technology, and a deep understanding of market dynamics.
+                </p>
+                <p className="text-muted-foreground font-light leading-relaxed">
+                  We are committed to shaping the future of real estate with integrity, expertise, and a focus on sustainable, profitable outcomes for our clients and our community.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Cultural Values */}
+      <section className="py-20 md:py-28 border-b border-white/5" ref={valuesReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+          <div className={`transition-all duration-700 ${
+            valuesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
+            <h2 className="text-3xl md:text-4xl font-light mb-4 text-center">Cultural Values</h2>
+            <p className="text-muted-foreground font-light text-center mb-12">
+              These values are reviewed in every onboarding meeting and guide how we work as a firm.
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {culturalValues.map((value, index) => {
+                const Icon = value.icon;
+                return (
+                  <div 
+                    key={value.title}
+                    className={`p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-500 ${
+                      valuesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                    }`}
+                    style={{ transitionDelay: `${index * 100}ms` }}
+                  >
+                    <Icon className="h-8 w-8 text-accent mb-4" />
+                    <h3 className="text-lg font-light">{value.title}</h3>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
