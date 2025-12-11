@@ -1,0 +1,57 @@
+import { Award, Shield, Star, TrendingUp } from "lucide-react";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { cn } from "@/lib/utils";
+
+const badges = [
+  {
+    icon: Award,
+    title: "Top Broker",
+    description: "Recognized industry leader",
+  },
+  {
+    icon: Shield,
+    title: "Licensed & Insured",
+    description: "Fully compliant operations",
+  },
+  {
+    icon: Star,
+    title: "5-Star Rated",
+    description: "Exceptional client reviews",
+  },
+  {
+    icon: TrendingUp,
+    title: "$500M+ Closed",
+    description: "Proven track record",
+  },
+];
+
+export const TrustBadges = () => {
+  const { elementRef, isVisible } = useScrollReveal();
+
+  return (
+    <section ref={elementRef} className="py-12 border-y border-border/50 bg-secondary/20">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+          {badges.map((badge, index) => (
+            <div
+              key={badge.title}
+              className={cn(
+                "flex flex-col items-center text-center transition-all duration-700",
+                isVisible 
+                  ? "opacity-100 translate-y-0" 
+                  : "opacity-0 translate-y-4"
+              )}
+              style={{ transitionDelay: `${index * 100}ms` }}
+            >
+              <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center mb-3">
+                <badge.icon className="h-5 w-5 text-accent" />
+              </div>
+              <h3 className="font-medium text-sm mb-1">{badge.title}</h3>
+              <p className="text-xs text-muted-foreground">{badge.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
