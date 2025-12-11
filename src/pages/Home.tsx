@@ -112,16 +112,16 @@ export default function Home() {
             </p>
           </div>
           
-          <div className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6 mb-12 transition-all duration-700 ${
+          <div className={`grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 md:gap-4 mb-12 transition-all duration-700 ${
             platformReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`} style={{ transitionDelay: '200ms' }}>
             {Object.values(DIVISIONS).map((division, index) => (
               <Link 
                 key={division.name}
                 to={division.path}
-                className="p-4 md:p-6 rounded-lg border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 text-center group"
+                className="p-3 md:p-4 rounded-lg border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 text-center group"
               >
-                <p className="text-sm md:text-base font-light group-hover:text-foreground transition-colors">{division.name}</p>
+                <p className="text-xs md:text-sm font-light group-hover:text-foreground transition-colors whitespace-nowrap">{division.name}</p>
               </Link>
             ))}
           </div>
