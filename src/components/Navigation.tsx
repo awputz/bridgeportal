@@ -84,10 +84,10 @@ export const Navigation = () => {
             <Link to="/" className="flex items-center flex-shrink-0">
               <img src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" alt="Bridge Advisory Group" className="h-10 w-auto" />
             </Link>
-            <button onClick={() => setIsOpen(!isOpen)} className="p-2 -mr-1.5 text-foreground hover:text-foreground/80 transition-colors touch-manipulation" aria-label="Toggle menu">
-              <div className="relative w-5 h-5">
-                <Menu size={20} className={`absolute inset-0 transition-all duration-300 ${isOpen ? 'opacity-0 rotate-90' : 'opacity-100 rotate-0'}`} />
-                <X size={20} className={`absolute inset-0 transition-all duration-300 ${isOpen ? 'opacity-100 rotate-0' : 'opacity-0 -rotate-90'}`} />
+            <button onClick={() => setIsOpen(!isOpen)} className="p-3 -mr-2 text-foreground hover:text-foreground/80 transition-colors touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Toggle menu">
+              <div className="relative w-6 h-6">
+                <Menu size={22} className={`absolute inset-0 transition-all duration-300 ${isOpen ? 'opacity-0 rotate-90' : 'opacity-100 rotate-0'}`} />
+                <X size={22} className={`absolute inset-0 transition-all duration-300 ${isOpen ? 'opacity-100 rotate-0' : 'opacity-0 -rotate-90'}`} />
               </div>
             </button>
           </div>
@@ -255,7 +255,7 @@ export const Navigation = () => {
         top: 'calc(3.5rem + 0.75rem)'
       }}>
           <div className="h-full overflow-y-auto overscroll-contain px-4 py-4 pb-safe">
-            <div className="space-y-2">
+            <div className="space-y-3">
               {/* Left Nav Items */}
               <div>
                 {leftNavItems.map((item, index) => 
@@ -265,14 +265,14 @@ export const Navigation = () => {
                       href={item.path}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`block text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2 min-h-[40px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                      className={`block text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] flex items-center ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
                       style={{ transitionDelay: `${index * 40}ms` }}
                       onClick={() => setIsOpen(false)}
                     >
                       {item.name}
                     </a>
                   ) : (
-                    <Link key={item.name} to={item.path} className={`block text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2 min-h-[40px] flex items-center ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
+                    <Link key={item.name} to={item.path} className={`block text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] flex items-center ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
                       transitionDelay: `${index * 40}ms`
                     }} onClick={() => setIsOpen(false)}>
                       {item.name}
@@ -282,22 +282,22 @@ export const Navigation = () => {
               </div>
 
               {/* Services Section */}
-              <div className="pt-2 border-t border-white/10">
-                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">Services</p>
+              <div className="pt-3 border-t border-white/15">
+                <p className="text-sm uppercase tracking-wider text-muted-foreground mb-2">Services</p>
                 {services?.map((service, index) => {
                 const IconComponent = serviceIcons[service.name] || Building2;
-                return <Link key={service.id} to={service.path} className={`flex items-center gap-2 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-1.5 min-h-[36px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
+                return <Link key={service.id} to={service.path} className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
                   transitionDelay: `${(index + leftNavItems.length) * 40}ms`
                 }} onClick={() => setIsOpen(false)}>
-                      <IconComponent className="h-3.5 w-3.5 text-foreground/50" />
+                      <IconComponent className="h-4 w-4 text-foreground/50" />
                       {service.name}
                     </Link>;
               })}
               </div>
 
               {/* Listings Section */}
-              <div className="pt-2 border-t border-white/10">
-                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">Listings</p>
+              <div className="pt-3 border-t border-white/15">
+                <p className="text-sm uppercase tracking-wider text-muted-foreground mb-2">Listings</p>
                 
                 {listingsNav?.items.map((item, index) => {
                   const IconComponent = listingIcons[item.name] || Building2;
@@ -306,14 +306,14 @@ export const Navigation = () => {
                   if (item.nested && item.items) {
                     return (
                       <div key={item.name}>
-                        <p className="text-xs text-foreground/60 mt-1.5 mb-0.5 pl-5">{item.name}</p>
+                        <p className="text-xs text-foreground/60 mt-2 mb-1 pl-7">{item.name}</p>
                         {item.items.map((subItem, subIndex) => (
                           <a 
                             key={subItem.name}
                             href={subItem.url} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className={`flex items-center gap-2 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-1.5 min-h-[36px] pl-5 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                            className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] pl-7 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
                             style={{ transitionDelay: `${(baseDelay + index + subIndex + 1) * 40}ms` }}
                             onClick={() => setIsOpen(false)}
                           >
@@ -330,11 +330,11 @@ export const Navigation = () => {
                       href={item.url} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className={`flex items-center gap-2 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-1.5 min-h-[36px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                      className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
                       style={{ transitionDelay: `${(baseDelay + index) * 40}ms` }}
                       onClick={() => setIsOpen(false)}
                     >
-                      <IconComponent className="h-3.5 w-3.5 text-foreground/50" />
+                      <IconComponent className="h-4 w-4 text-foreground/50" />
                       {item.name}
                     </a>
                   );

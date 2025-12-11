@@ -117,7 +117,7 @@ export default function CommercialLeasing() {
   return (
     <div className="min-h-screen">
       {/* Hero with Image */}
-      <section className="relative h-[50vh] md:h-[60vh] min-h-[400px] md:min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
+      <section className="relative h-[45vh] md:h-[55vh] lg:h-[60vh] min-h-[320px] md:min-h-[400px] lg:min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img 
             src={PLACEHOLDER_IMAGES.retail.street} 
@@ -172,16 +172,16 @@ export default function CommercialLeasing() {
       </section>
 
       {/* Our Process */}
-      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={processReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={processReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`transition-all duration-700 ${
             processReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-4 text-center">Our Process</h2>
-            <p className="text-muted-foreground font-light mb-12 text-center max-w-2xl mx-auto">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">Our Process</h2>
+            <p className="text-muted-foreground font-light mb-8 md:mb-12 text-center max-w-2xl mx-auto">
               A proven three-step approach that delivers results for both tenants and landlords.
             </p>
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
               {processSteps.map((item, index) => (
                 <div 
                   key={item.step} 
@@ -199,16 +199,16 @@ export default function CommercialLeasing() {
       </section>
 
       {/* Our Services */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={servicesReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={servicesReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`transition-all duration-700 ${
             servicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-4 text-center">Our Services</h2>
-            <p className="text-muted-foreground font-light mb-12 text-center max-w-2xl mx-auto">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">Our Services</h2>
+            <p className="text-muted-foreground font-light mb-8 md:mb-12 text-center max-w-2xl mx-auto">
               Comprehensive commercial leasing services tailored to your needs.
             </p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {services.map((service, index) => (
                 <div 
                   key={service.title} 
@@ -226,13 +226,13 @@ export default function CommercialLeasing() {
       </section>
 
       {/* Who We Serve with Image */}
-      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={categoriesReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={categoriesReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <div className={`grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${
+          <div className={`grid md:grid-cols-2 gap-8 md:gap-12 items-center transition-all duration-700 ${
             categoriesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
             <div>
-              <h2 className="text-3xl md:text-4xl font-light mb-4">Who We Serve</h2>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Who We Serve</h2>
               <p className="text-muted-foreground font-light mb-8">
                 Experience across a wide range of commercial tenant types.
               </p>
@@ -264,16 +264,16 @@ export default function CommercialLeasing() {
       </section>
 
       {/* Why Bridge Advisory Group */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={whyReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={whyReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`transition-all duration-700 ${
             whyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-4 text-center">Why Bridge Advisory Group</h2>
-            <p className="text-muted-foreground font-light mb-12 text-center max-w-2xl mx-auto">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">Why Bridge Advisory Group</h2>
+            <p className="text-muted-foreground font-light mb-8 md:mb-12 text-center max-w-2xl mx-auto">
               What sets us apart in NYC's competitive commercial leasing market.
             </p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               {whyBridge.map((item, index) => (
                 <div 
                   key={item.number} 
@@ -291,16 +291,16 @@ export default function CommercialLeasing() {
       </section>
 
       {/* Service Details */}
-      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={detailsReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={detailsReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`transition-all duration-700 ${
             detailsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-4 text-center">Service Details</h2>
-            <p className="text-muted-foreground font-light mb-12 text-center max-w-2xl mx-auto">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">Service Details</h2>
+            <p className="text-muted-foreground font-light mb-8 md:mb-12 text-center max-w-2xl mx-auto">
               Comprehensive support at every stage of your commercial real estate transaction.
             </p>
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-4 md:gap-6">
               {serviceDetails.map((service, index) => (
                 <div 
                   key={service.title} 
