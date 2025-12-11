@@ -27,14 +27,20 @@ export interface Transaction {
   asset_type: string | null;
 }
 
-export const useTransactions = () => {
+export const useTransactions = (dealType?: string) => {
   return useQuery({
-    queryKey: ["transactions"],
+    queryKey: ["transactions", dealType],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("transactions")
         .select("*")
-        .order("created_at", { ascending: false });
+        .order("sale_price", { ascending: false, nullsFirst: false });
+
+      if (dealType) {
+        query = query.eq("deal_type", dealType);
+      }
+
+      const { data, error } = await query;
 
       if (error) throw error;
       return data as Transaction[];

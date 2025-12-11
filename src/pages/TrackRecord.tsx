@@ -1,32 +1,31 @@
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useTransactions } from "@/hooks/useTransactions";
-import { Building2, DollarSign, Calendar } from "lucide-react";
+import { Building2, DollarSign, Calendar, User, Ruler } from "lucide-react";
 
 const TrackRecord = () => {
   const [assetType, setAssetType] = useState<string>("all");
-  const [year, setYear] = useState<string>("all");
   
-  const { data: transactions = [], isLoading } = useTransactions();
+  const { data: transactions = [], isLoading } = useTransactions("Investment Sales");
 
   const filteredTransactions = transactions.filter((t) => {
     if (assetType !== "all" && t.asset_type !== assetType) return false;
-    if (year !== "all" && t.year?.toString() !== year) return false;
     return true;
   });
 
   const totalVolume = filteredTransactions.reduce((sum, t) => sum + (t.sale_price || 0), 0);
-  const totalUnits = filteredTransactions.reduce((sum, t) => sum + (t.units || 0), 0);
+  const totalSqFt = filteredTransactions.reduce((sum, t) => sum + (t.gross_square_feet || 0), 0);
   const buildingsSold = filteredTransactions.length;
 
-  const years = Array.from(new Set(transactions.map(t => t.year).filter(Boolean))).sort((a, b) => b! - a!);
+  // Get unique asset types from data
+  const assetTypes = Array.from(new Set(transactions.map(t => t.asset_type).filter(Boolean)));
 
   return (
     <div className="min-h-screen pt-28 md:pt-36 lg:pt-44 px-4 md:px-6 lg:px-8 pb-20 md:pb-28 lg:pb-36">
       <div className="container mx-auto max-w-6xl">
         {/* Header */}
         <div className="mb-20 md:mb-24 lg:mb-28 max-w-4xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-8 md:mb-10 lg:mb-12 tracking-tight">Proven Track Record</h1>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-8 md:mb-10 lg:mb-12 tracking-tight">Investment Sales Track Record</h1>
           <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground leading-loose font-light">
             Representative transactions demonstrating our ability to maximize value for middle-market NYC property owners
           </p>
@@ -37,17 +36,17 @@ const TrackRecord = () => {
           <div className="p-6 md:p-8 border-b-2 border-white/10">
             <DollarSign className="mb-4 text-accent" size={36} />
             <div className="text-4xl md:text-5xl font-light mb-2">${(totalVolume / 1000000).toFixed(1)}M</div>
-            <p className="text-xs md:text-sm text-muted-foreground font-light uppercase tracking-wider">Total Volume</p>
+            <p className="text-xs md:text-sm text-muted-foreground font-light uppercase tracking-wider">Total Sales Volume</p>
           </div>
           <div className="p-6 md:p-8 border-b-2 border-white/10">
             <Building2 className="mb-4 text-accent" size={36} />
             <div className="text-4xl md:text-5xl font-light mb-2">{buildingsSold}</div>
-            <p className="text-xs md:text-sm text-muted-foreground font-light uppercase tracking-wider">Buildings Sold</p>
+            <p className="text-xs md:text-sm text-muted-foreground font-light uppercase tracking-wider">Properties Sold</p>
           </div>
           <div className="p-6 md:p-8 border-b-2 border-white/10">
-            <Building2 className="mb-4 text-accent" size={36} />
-            <div className="text-4xl md:text-5xl font-light mb-2">{totalUnits.toLocaleString()}</div>
-            <p className="text-xs md:text-sm text-muted-foreground font-light uppercase tracking-wider">Units Sold</p>
+            <Ruler className="mb-4 text-accent" size={36} />
+            <div className="text-4xl md:text-5xl font-light mb-2">{totalSqFt.toLocaleString()}</div>
+            <p className="text-xs md:text-sm text-muted-foreground font-light uppercase tracking-wider">Total Sq Ft</p>
           </div>
         </div>
 
@@ -59,22 +58,8 @@ const TrackRecord = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="multifamily">Multifamily</SelectItem>
-              <SelectItem value="mixed-use">Mixed-Use</SelectItem>
-              <SelectItem value="retail">Retail</SelectItem>
-              <SelectItem value="office">Office</SelectItem>
-              <SelectItem value="development">Development</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select value={year} onValueChange={setYear}>
-            <SelectTrigger className="w-full sm:w-56 font-light">
-              <SelectValue placeholder="Year" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Years</SelectItem>
-              {years.map((y) => (
-                <SelectItem key={y} value={y!.toString()}>{y}</SelectItem>
+              {assetTypes.map((type) => (
+                <SelectItem key={type} value={type!}>{type}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -93,18 +78,23 @@ const TrackRecord = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                   <div>
                     <h3 className="text-base md:text-lg font-light mb-1">{transaction.property_address}</h3>
-                    <p className="text-xs md:text-sm text-muted-foreground font-light">{transaction.borough}, {transaction.neighborhood}</p>
+                    <p className="text-xs md:text-sm text-muted-foreground font-light">
+                      {transaction.property_type || transaction.asset_type}
+                    </p>
                   </div>
                   
                   <div className="space-y-1 text-xs md:text-sm font-light">
-                    {transaction.asset_type && (
-                      <p><span className="text-muted-foreground">Type:</span> <span>{transaction.asset_type}</span></p>
-                    )}
-                    {transaction.units && (
-                      <p><span className="text-muted-foreground">Units:</span> <span>{transaction.units}</span></p>
+                    {transaction.agent_name && (
+                      <p className="flex items-center gap-2">
+                        <User size={12} className="text-muted-foreground" />
+                        <span>{transaction.agent_name}</span>
+                      </p>
                     )}
                     {transaction.gross_square_feet && (
                       <p><span className="text-muted-foreground">SF:</span> <span>{transaction.gross_square_feet.toLocaleString()}</span></p>
+                    )}
+                    {transaction.price_per_sf && (
+                      <p><span className="text-muted-foreground">$/SF:</span> <span>${transaction.price_per_sf.toLocaleString()}</span></p>
                     )}
                   </div>
                   
@@ -112,16 +102,10 @@ const TrackRecord = () => {
                     {transaction.sale_price && (
                       <p className="text-xl md:text-2xl font-light">${transaction.sale_price.toLocaleString()}</p>
                     )}
-                    {transaction.price_per_unit && (
-                      <p className="text-xs text-muted-foreground font-light">
-                        ${transaction.price_per_unit.toLocaleString()}/unit
-                      </p>
-                    )}
-                    {transaction.closing_date && (
-                      <div className="flex items-center gap-2 justify-start md:justify-end text-xs text-muted-foreground font-light">
-                        <Calendar size={12} />
-                        <span>{new Date(transaction.closing_date).toLocaleDateString()}</span>
-                      </div>
+                    {transaction.asset_type && (
+                      <span className="inline-block text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+                        {transaction.asset_type}
+                      </span>
                     )}
                   </div>
                 </div>

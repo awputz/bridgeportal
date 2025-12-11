@@ -20,6 +20,7 @@ export const SERVICE_SUB_PAGES = {
       { name: "View Listings on StreetEasy", path: "https://streeteasy.com/nyc/rentals/agent:bridge-investment-sales", external: true },
       { name: "Transactions", path: "/services/residential/transactions" },
       { name: "Landlord Services", path: "/services/residential/landlord-services" },
+      { name: "Resources", path: "/services/residential/resources" },
       { name: "Buildings", path: "/services/residential/buildings" },
     ],
   },

@@ -44,6 +44,7 @@ import MarketsComingSoon from "./pages/MarketsComingSoon";
 import ResidentialFindAHome from "./pages/services/residential/FindAHome";
 import ResidentialTransactions from "./pages/services/residential/Transactions";
 import ResidentialLandlordServices from "./pages/services/residential/LandlordServices";
+import ResidentialResources from "./pages/services/residential/Resources";
 import ResidentialBuildings from "./pages/services/residential/Buildings";
 
 import InvestmentAcquisitions from "./pages/services/investment-sales/Acquisitions";
@@ -133,12 +134,12 @@ const App = () => {
                     <Route path="/services/residential/transactions" element={<ResidentialTransactions />} />
                     <Route path="/services/residential/landlord-services" element={<ResidentialLandlordServices />} />
                     <Route path="/services/residential/buildings" element={<ResidentialBuildings />} />
+                    <Route path="/services/residential/resources" element={<ResidentialResources />} />
                     {/* Legacy residential redirects */}
                     <Route path="/services/residential/rentals" element={<Navigate to="/services/residential/find-a-home" replace />} />
                     <Route path="/services/residential/sales" element={<Navigate to="/services/residential/find-a-home" replace />} />
                     <Route path="/services/residential/listings" element={<Navigate to="/services/residential/find-a-home" replace />} />
                     <Route path="/services/residential/markets" element={<Navigate to="/services/residential" replace />} />
-                    <Route path="/services/residential/resources" element={<Navigate to="/services/residential/landlord-services" replace />} />
                     
                     {/* Investment Sales Sub-Pages */}
                     <Route path="/services/investment-sales/acquisitions" element={<InvestmentAcquisitions />} />
