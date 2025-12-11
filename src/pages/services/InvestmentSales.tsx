@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Building2, TrendingUp, Users, ArrowRight, BarChart3, Calculator, Send } from "lucide-react";
+import { Building2, TrendingUp, Users, ArrowRight, BarChart3, Calculator } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useTransactions } from "@/hooks/useTransactions";
@@ -12,13 +12,11 @@ import { InvestmentCalculator } from "@/components/InvestmentCalculator";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { 
   useInvestmentSalesSection, 
-  useInvestmentDealsEmail,
   getSectionMetadata,
   type ProcessStep,
   type ServiceItem,
   type ClientProfile,
   type BoroughData,
-  type AssetTypeData
 } from "@/hooks/useBridgeInvestmentSalesContent";
 
 export default function InvestmentSales() {
@@ -45,16 +43,12 @@ export default function InvestmentSales() {
   const { data: clientSection } = useInvestmentSalesSection("investment_sales_approach", "client_profile");
   const { data: differentiatorSection } = useInvestmentSalesSection("investment_sales_approach", "differentiators");
   const { data: marketsSection } = useInvestmentSalesSection("investment_sales_markets", "boroughs");
-  const { data: dealsEmail } = useInvestmentDealsEmail();
 
-  // Parse CMS metadata
   const processSteps = getSectionMetadata<{ steps: ProcessStep[] }>(processSection)?.steps || [];
   const serviceItems = getSectionMetadata<{ services: ServiceItem[] }>(servicesSection)?.services || [];
   const clientProfiles = getSectionMetadata<{ clients: ClientProfile[] }>(clientSection)?.clients || [];
   const differentiators = getSectionMetadata<{ points: string[] }>(differentiatorSection)?.points || [];
   const boroughs = getSectionMetadata<{ boroughs: BoroughData[] }>(marketsSection)?.boroughs || [];
-
-  const submitDealUrl = `mailto:${dealsEmail || 'alex@bridgenyre.com'}?subject=New Investment Sales Deal Submission`;
 
   return (
     <div className="min-h-screen">
@@ -79,17 +73,16 @@ export default function InvestmentSales() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="font-light" onClick={openContactSheet}>
-              Contact Investment Sales
+              Submit a Deal
             </Button>
             <Button 
               size="lg" 
               variant="outline" 
-              className="font-light group"
+              className="font-light"
               asChild
             >
-              <a href={submitDealUrl}>
-                <Send className="mr-2 h-4 w-4" />
-                Submit a Deal
+              <a href="https://www.costar.com/agent/alexander-smotritsky/broker-profile" target="_blank" rel="noopener noreferrer">
+                View Our Listings
               </a>
             </Button>
           </div>
@@ -447,17 +440,16 @@ export default function InvestmentSales() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="font-light" onClick={openContactSheet}>
-              Contact Investment Sales
+              Submit a Deal
             </Button>
             <Button 
               size="lg" 
               variant="outline" 
-              className="font-light group"
+              className="font-light"
               asChild
             >
-              <a href={submitDealUrl}>
-                <Send className="mr-2 h-4 w-4" />
-                Submit a Deal
+              <a href="https://www.costar.com/agent/alexander-smotritsky/broker-profile" target="_blank" rel="noopener noreferrer">
+                View Our Listings
               </a>
             </Button>
           </div>

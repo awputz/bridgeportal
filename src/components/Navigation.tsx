@@ -103,10 +103,9 @@ export const Navigation = () => {
                     href={item.path}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-sm font-light transition-all duration-200 whitespace-nowrap hover:scale-105 text-foreground/70 hover:text-foreground"
+                    className="text-sm font-light transition-all duration-200 whitespace-nowrap hover:scale-105 text-foreground/70 hover:text-foreground"
                   >
                     {item.name}
-                    <ExternalLink className="h-3 w-3" />
                   </a>
                 ) : (
                   <Link key={item.name} to={item.path} className={`text-sm font-light transition-all duration-200 whitespace-nowrap hover:scale-105 ${location.pathname === item.path ? "text-foreground" : "text-foreground/70 hover:text-foreground"}`}>
@@ -268,12 +267,11 @@ export const Navigation = () => {
                       href={item.path}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`flex items-center gap-3 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2.5 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                      className={`block text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2.5 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
                       style={{ transitionDelay: `${index * 50}ms` }}
                       onClick={() => setIsOpen(false)}
                     >
                       {item.name}
-                      <ExternalLink className="h-3 w-3 text-foreground/40" />
                     </a>
                   ) : (
                     <Link key={item.name} to={item.path} className={`block text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2.5 min-h-[44px] flex items-center ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
