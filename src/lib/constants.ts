@@ -84,3 +84,27 @@ export const NAV_ITEMS = {
     ]
   }
 };
+
+export const LISTINGS_ITEMS = {
+  label: "Listings",
+  items: [
+    { 
+      name: "Residential", 
+      url: "https://streeteasy.com/building/bridge-advisory-group",
+      external: true 
+    },
+    { 
+      name: "Commercial Leasing", 
+      nested: true,
+      items: [
+        { name: "Office", url: "https://www.costar.com", external: true },
+        { name: "Retail", url: "https://www.costar.com", external: true }
+      ]
+    },
+    { 
+      name: "Investment Sales", 
+      url: "https://www.costar.com",
+      external: true 
+    }
+  ]
+};
