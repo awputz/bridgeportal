@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { COMPANY_INFO } from "@/lib/constants";
+import { supabase } from "@/integrations/supabase/client";
 
 type Division = "residential" | "commercial-leasing" | "investment-sales" | "capital-advisory" | "marketing" | "billboard" | "";
 
@@ -64,48 +65,72 @@ export default function Contact() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      const inquiryData = {
+        name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone || null,
+        inquiry_type: division || 'general',
+        user_type: formData.userType || formData.tenantLandlord || formData.ownerBuyerBroker || formData.clientType || formData.billboardClientType || null,
+        property_type: formData.propertyType || formData.useType || formData.assetClass || formData.projectType || formData.campaignType || null,
+        budget_range: formData.budgetRange || formData.dealSize || formData.projectSize || formData.budgetRangeBillboard || null,
+        neighborhoods: formData.neighborhoods || formData.targetSubmarket || formData.assetLocation || null,
+        timeline: formData.timing || formData.timingToTransact || formData.timeline || formData.campaignTiming || null,
+        approximate_size: formData.squareFootage || null,
+        notes: formData.message || null,
+        target_asset_type: formData.assetType || null,
+      };
 
-    toast.success("Thank you. Your inquiry has been received and will be routed to the appropriate team at Bridge Advisory Group. A member of our team will be in touch shortly.");
+      const { error } = await supabase.functions.invoke('submit-inquiry', {
+        body: inquiryData
+      });
+
+      if (error) throw error;
+
+      toast.success("Thank you. Your inquiry has been received and will be routed to the appropriate team at Bridge Advisory Group. A member of our team will be in touch shortly.");
     
-    // Reset form
-    setFormData({
-      fullName: "",
-      email: "",
-      phone: "",
-      preferredContact: "email",
-      userType: "",
-      propertyType: "",
-      budgetRange: "",
-      neighborhoods: "",
-      timing: "",
-      tenantLandlord: "",
-      useType: "",
-      squareFootage: "",
-      targetSubmarket: "",
-      leaseStartDate: "",
-      ownerBuyerBroker: "",
-      assetClass: "",
-      dealSize: "",
-      assetLocation: "",
-      timingToTransact: "",
-      capitalNeedType: "",
-      projectSize: "",
-      assetType: "",
-      useCase: "",
-      clientType: "",
-      projectType: "",
-      marketingNeed: "",
-      timeline: "",
-      billboardClientType: "",
-      campaignType: "",
-      budgetRangeBillboard: "",
-      campaignTiming: "",
-      message: "",
-    });
-    setDivision("");
-    setIsSubmitting(false);
+      // Reset form
+      setFormData({
+        fullName: "",
+        email: "",
+        phone: "",
+        preferredContact: "email",
+        userType: "",
+        propertyType: "",
+        budgetRange: "",
+        neighborhoods: "",
+        timing: "",
+        tenantLandlord: "",
+        useType: "",
+        squareFootage: "",
+        targetSubmarket: "",
+        leaseStartDate: "",
+        ownerBuyerBroker: "",
+        assetClass: "",
+        dealSize: "",
+        assetLocation: "",
+        timingToTransact: "",
+        capitalNeedType: "",
+        projectSize: "",
+        assetType: "",
+        useCase: "",
+        clientType: "",
+        projectType: "",
+        marketingNeed: "",
+        timeline: "",
+        billboardClientType: "",
+        campaignType: "",
+        budgetRangeBillboard: "",
+        campaignTiming: "",
+        message: "",
+      });
+      setDivision("");
+    } catch (error) {
+      console.error("Failed to submit inquiry:", error);
+      toast.error("Failed to submit inquiry. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {

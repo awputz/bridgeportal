@@ -20,6 +20,7 @@ import {
 import { MapPin, Phone, Mail, Linkedin } from "lucide-react";
 import { toast } from "sonner";
 import { COMPANY_INFO } from "@/lib/constants";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ContactSheetProps {
   open: boolean;
@@ -110,10 +111,37 @@ export const ContactSheet = ({ open, onOpenChange }: ContactSheetProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    toast.success("Thank you. Your inquiry has been received and will be routed to the appropriate team.");
-    onOpenChange(false);
-    setIsSubmitting(false);
+
+    try {
+      const inquiryData = {
+        name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone || null,
+        inquiry_type: division || 'general',
+        user_type: formData.userType || formData.tenantLandlord || formData.ownerBuyerBroker || formData.clientType || formData.billboardClientType || null,
+        property_type: formData.propertyType || formData.useType || formData.assetClass || formData.projectType || formData.campaignType || null,
+        budget_range: formData.budgetRange || formData.dealSize || formData.projectSize || formData.budgetRangeBillboard || null,
+        neighborhoods: formData.neighborhoods || formData.targetSubmarket || formData.assetLocation || null,
+        timeline: formData.timing || formData.timingToTransact || formData.timeline || formData.campaignTiming || null,
+        approximate_size: formData.squareFootage || null,
+        notes: formData.message || null,
+        target_asset_type: formData.assetType || null,
+      };
+
+      const { error } = await supabase.functions.invoke('submit-inquiry', {
+        body: inquiryData
+      });
+
+      if (error) throw error;
+
+      toast.success("Thank you. Your inquiry has been received and will be routed to the appropriate team.");
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Failed to submit inquiry:", error);
+      toast.error("Failed to submit inquiry. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -150,8 +178,8 @@ export const ContactSheet = ({ open, onOpenChange }: ContactSheetProps) => {
             <div className="w-10 h-10 mx-auto rounded-full bg-white/10 flex items-center justify-center mb-2 group-hover:bg-white/20 transition-colors">
               <Phone className="text-white/80" size={16} />
             </div>
-            <a href="tel:+12125550100" className="text-xs text-white/60 hover:text-white transition-colors">
-              (212) 555-0100
+            <a href={`tel:${COMPANY_INFO.contact.phone.replace(/\D/g, '')}`} className="text-xs text-white/60 hover:text-white transition-colors">
+              {COMPANY_INFO.contact.phone}
             </a>
           </div>
 
