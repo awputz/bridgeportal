@@ -8,6 +8,7 @@ export const SERVICE_SUB_PAGES = {
       { name: "Dispositions", path: "/services/investment-sales/dispositions" },
       { name: "Valuations", path: "/services/investment-sales/valuations" },
       { name: "Track Record", path: "/services/investment-sales/track-record" },
+      { name: "View Listings on CoStar", path: "https://www.costar.com", external: true },
     ],
   },
   residential: {
@@ -34,6 +35,7 @@ export const SERVICE_SUB_PAGES = {
       { name: "Landlord Rep", path: "/services/commercial-leasing/landlord-rep" },
       { name: "Retail", path: "/services/commercial-leasing/retail" },
       { name: "Office", path: "/services/commercial-leasing/office" },
+      { name: "View Listings on CoStar", path: "https://www.costar.com", external: true },
     ],
   },
   "capital-advisory": {
