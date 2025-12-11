@@ -3,29 +3,29 @@ import { useBridgeSettings } from "@/hooks/useBridgeSettings";
 import { useBridgeServices } from "@/hooks/useBridgeServices";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
-
 export const Footer = () => {
-  const { openContactSheet } = useContactSheet();
-  const { data: settings } = useBridgeSettings();
-  const { data: services } = useBridgeServices();
-
-  return (
-    <footer className="bg-dark-bg text-foreground border-t border-border">
+  const {
+    openContactSheet
+  } = useContactSheet();
+  const {
+    data: settings
+  } = useBridgeSettings();
+  const {
+    data: services
+  } = useBridgeServices();
+  return <footer className="bg-dark-bg text-foreground border-t border-border">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 lg:py-24">
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 lg:gap-16 mb-12 md:mb-16">
           {/* Logo & Description - Full width on mobile */}
           <div className="col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1">
-            <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-8 md:h-10 invert opacity-80" />
+            <img alt="Bridge Advisory Group" className="h-8 md:h-10 invert opacity-80" src="/lovable-uploads/9957f0ab-02cb-40b9-88b6-26d8320cc7d4.png" />
             <p className="text-sm text-muted-foreground mt-4 mb-6 leading-relaxed max-w-sm">
               {settings?.company_description.short}
             </p>
             <div className="text-sm text-muted-foreground space-y-2">
               <p className="font-light">{settings?.company_address.short}</p>
               <p>
-                <a 
-                  href={`mailto:${settings?.company_contact.email}`} 
-                  className="hover:text-foreground transition-colors font-light touch-manipulation"
-                >
+                <a href={`mailto:${settings?.company_contact.email}`} className="hover:text-foreground transition-colors font-light touch-manipulation">
                   {settings?.company_contact.email}
                 </a>
               </p>
@@ -38,16 +38,11 @@ export const Footer = () => {
               Services
             </h3>
             <ul className="space-y-2.5 md:space-y-3 text-sm">
-              {services?.map((service) => (
-                <li key={service.id}>
-                  <Link 
-                    to={service.path} 
-                    className="text-foreground/70 hover:text-foreground transition-colors font-light py-1 inline-block touch-manipulation"
-                  >
+              {services?.map(service => <li key={service.id}>
+                  <Link to={service.path} className="text-foreground/70 hover:text-foreground transition-colors font-light py-1 inline-block touch-manipulation">
                     {service.name}
                   </Link>
-                </li>
-              ))}
+                </li>)}
             </ul>
           </div>
 
@@ -107,10 +102,7 @@ export const Footer = () => {
                 </button>
               </li>
               <li>
-                <a 
-                  href={`tel:${settings?.company_contact.phone}`} 
-                  className="text-foreground/70 hover:text-foreground transition-colors font-light py-1 inline-block touch-manipulation"
-                >
+                <a href={`tel:${settings?.company_contact.phone}`} className="text-foreground/70 hover:text-foreground transition-colors font-light py-1 inline-block touch-manipulation">
                   {settings?.company_contact.phone}
                 </a>
               </li>
@@ -125,7 +117,7 @@ export const Footer = () => {
               {/* Equal Housing Opportunity */}
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <div className="w-7 h-7 md:w-8 md:h-8 border border-muted-foreground/30 flex items-center justify-center text-[7px] md:text-[8px] leading-tight flex-shrink-0">
-                  EQUAL<br/>HOUSING
+                  EQUAL<br />HOUSING
                 </div>
                 <span>Equal Housing Opportunity</span>
               </div>
@@ -142,6 +134,5 @@ export const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
