@@ -7,6 +7,7 @@ import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { COMPANY_INFO, DIVISIONS } from "@/lib/constants";
 import { Testimonials } from "@/components/Testimonials";
 import { TrustBadges } from "@/components/TrustBadges";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 import heroImage from "@/assets/brooklyn-bridge-hero-light.jpg";
 import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
 export default function Home() {
@@ -387,6 +388,13 @@ export default function Home() {
 
       {/* Testimonials Section */}
       <Testimonials />
+
+      {/* Newsletter Signup */}
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5">
+        <div className="container mx-auto px-4 md:px-6 max-w-2xl">
+          <NewsletterSignup />
+        </div>
+      </section>
 
       {/* Section 7: Final CTA */}
       <section ref={ctaReveal.elementRef} className="py-12 md:py-20 lg:py-28 bg-secondary">

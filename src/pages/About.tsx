@@ -6,6 +6,7 @@ import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { DIVISIONS } from "@/lib/constants";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 
 export default function About() {
   const { openContactSheet } = useContactSheet();
@@ -309,6 +310,13 @@ export default function About() {
               Contact Us
             </Button>
           </div>
+        </div>
+      </section>
+
+      {/* Newsletter Signup */}
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5">
+        <div className="container mx-auto px-4 md:px-6 max-w-2xl">
+          <NewsletterSignup />
         </div>
       </section>
     </div>
