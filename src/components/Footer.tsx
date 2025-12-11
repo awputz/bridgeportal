@@ -18,7 +18,7 @@ export const Footer = () => {
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 lg:gap-16 mb-12 md:mb-16">
           {/* Logo & Description - Full width on mobile */}
           <div className="col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1">
-            <img alt="Bridge Advisory Group" className="h-16 w-auto" src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" />
+            <img alt="Bridge Advisory Group" className="h-16 w-auto" src="/lovable-uploads/ad049e33-7a22-4d66-9015-0299205f5e02.png" />
             <p className="text-sm text-muted-foreground mt-4 mb-6 leading-relaxed max-w-sm">
               {settings?.company_description.short}
             </p>
