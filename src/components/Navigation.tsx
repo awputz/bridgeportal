@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown, Building2, Home, Briefcase, TrendingUp, Megaphone, Image, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { NAV_ITEMS, DIVISIONS } from "@/lib/constants";
 import bridgeInvestmentLogo from "@/assets/bridge-investment-sales-logo.png";
 import { cn } from "@/lib/utils";
@@ -85,45 +85,57 @@ export const Navigation = () => {
 
             {/* Right: Services Hover Menu + Contact Link + Submit Button */}
             <div className="flex items-center justify-end space-x-6">
-              {/* Services Hover Navigation */}
-              <NavigationMenu>
-                <NavigationMenuList>
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className={cn("bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent", "text-sm font-light px-0 h-auto", "transition-all duration-200 hover:scale-105", isServicesActive ? "text-foreground" : "text-foreground/70 hover:text-foreground")}>
-                      Services
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent className="bg-zinc-900/95 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-xl">
-                      <div className="grid grid-cols-2 gap-2 p-4 w-[500px]">
-                        {NAV_ITEMS.services.items.map((item, index) => {
-                        const IconComponent = serviceIcons[item.name] || Building2;
-                        // Get division key from item name
-                        const divisionKey = Object.keys(DIVISIONS).find(key => DIVISIONS[key as keyof typeof DIVISIONS].name === item.name) as keyof typeof DIVISIONS | undefined;
-                        const description = divisionKey ? DIVISIONS[divisionKey].description : "";
-                        return <NavigationMenuLink key={item.name} asChild>
-                              <Link to={item.path} className={cn("group flex items-center gap-3 rounded-lg p-3 transition-all duration-200", "hover:bg-white/10 hover:scale-[1.02]", "animate-in fade-in slide-in-from-top-2", location.pathname.startsWith(item.path) && "bg-white/10")} style={{
-                            animationDuration: "300ms",
-                            animationDelay: `${index * 40}ms`,
-                            animationFillMode: "backwards"
-                          }}>
-                                <div className="flex h-9 w-9 items-center justify-center rounded-md bg-white/10 group-hover:bg-white/15 transition-colors">
-                                  <IconComponent className="h-4 w-4 text-white/70 group-hover:text-white transition-colors" />
-                                </div>
-                                <div className="flex flex-col">
-                                  <span className="text-sm font-medium text-white group-hover:text-white">
-                                    {item.name}
-                                  </span>
-                                  <span className="text-xs text-white/60 mt-0.5">
-                                    {description}
-                                  </span>
-                                </div>
-                              </Link>
-                            </NavigationMenuLink>;
-                      })}
-                      </div>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
+              {/* Services Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className={cn(
+                    "flex items-center gap-1 text-sm font-light transition-all duration-200 hover:scale-105",
+                    isServicesActive ? "text-foreground" : "text-foreground/70 hover:text-foreground"
+                  )}>
+                    Services
+                    <ChevronDown className="h-3 w-3 transition-transform duration-200" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent 
+                  align="end" 
+                  sideOffset={12}
+                  className="w-[500px] p-4 bg-zinc-900/95 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-xl"
+                >
+                  <div className="grid grid-cols-2 gap-2">
+                    {NAV_ITEMS.services.items.map((item) => {
+                      const IconComponent = serviceIcons[item.name] || Building2;
+                      const divisionKey = Object.keys(DIVISIONS).find(key => 
+                        DIVISIONS[key as keyof typeof DIVISIONS].name === item.name
+                      ) as keyof typeof DIVISIONS | undefined;
+                      const description = divisionKey ? DIVISIONS[divisionKey].description : "";
+                      
+                      return (
+                        <Link
+                          key={item.name}
+                          to={item.path}
+                          className={cn(
+                            "group flex items-center gap-3 rounded-lg p-3 transition-all duration-200",
+                            "hover:bg-white/10 hover:scale-[1.02]",
+                            location.pathname.startsWith(item.path) && "bg-white/10"
+                          )}
+                        >
+                          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-white/10 group-hover:bg-white/15 transition-colors">
+                            <IconComponent className="h-4 w-4 text-white/70 group-hover:text-white transition-colors" />
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium text-white group-hover:text-white">
+                              {item.name}
+                            </span>
+                            <span className="text-xs text-white/60 mt-0.5">
+                              {description}
+                            </span>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
               <Button 
                 size="sm" 
