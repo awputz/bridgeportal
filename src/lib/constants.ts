@@ -11,7 +11,7 @@ export const COMPANY_INFO = {
     short: "600 Third Avenue, New York NY 10016"
   },
   contact: {
-    email: "info@bridgeadvisorygroup.com",
+    email: "office@bridgenyre.com",
     phone: "(212) 555-0100"
   },
   description: {
