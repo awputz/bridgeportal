@@ -98,7 +98,7 @@ export default function Home() {
       </section>
 
       {/* Section 1: Who We Are */}
-      <section id="services" className="py-20 md:py-28 lg:py-36 border-b border-white/5" ref={platformReveal.elementRef}>
+      <section id="services" className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={platformReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`text-center transition-all duration-700 ${platformReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">Who We Are</h2>
@@ -141,7 +141,7 @@ export default function Home() {
       </section>
 
       {/* Section 2: Mission And Vision */}
-      <section className="py-20 md:py-28 lg:py-36 border-b border-white/5 bg-white/[0.01]" ref={missionReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={missionReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`text-center mb-12 md:mb-16 transition-all duration-700 ${missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">Mission And Vision</h2>
@@ -183,7 +183,7 @@ export default function Home() {
       </section>
 
       {/* Section 3: Commercial And Investment Expertise */}
-      <section className="py-20 md:py-28 lg:py-36 border-b border-white/5" ref={commercialReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={commercialReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6">
           <div className={`text-center mb-12 md:mb-16 transition-all duration-700 ${commercialReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">Commercial And Investment Expertise</h2>
@@ -237,7 +237,7 @@ export default function Home() {
       </section>
 
       {/* Section 4: Residential Platform */}
-      <section className="py-20 md:py-28 lg:py-36 border-b border-white/5 bg-white/[0.01]" ref={residentialReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={residentialReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6">
           <div className={`text-center mb-12 md:mb-16 transition-all duration-700 ${residentialReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">Residential In A City That Never Slows Down</h2>
@@ -285,7 +285,7 @@ export default function Home() {
       </section>
 
       {/* Section 5: Capital Advisory */}
-      <section className="py-20 md:py-28 lg:py-36 border-b border-white/5" ref={capitalReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={capitalReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6">
           <div className={`text-center mb-12 md:mb-16 transition-all duration-700 ${capitalReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">Capital Advisory That Understands The Real Asset</h2>
@@ -333,7 +333,7 @@ export default function Home() {
       </section>
 
       {/* Section 6: Marketing Engine */}
-      <section className="py-20 md:py-28 lg:py-36 border-b border-white/5 bg-white/[0.01]" ref={marketingReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={marketingReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6">
           <div className={`text-center mb-12 md:mb-16 transition-all duration-700 ${marketingReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">A Marketing Engine Behind Every Assignment</h2>
@@ -381,7 +381,7 @@ export default function Home() {
       </section>
 
       {/* Section 7: Final CTA */}
-      <section ref={ctaReveal.elementRef} className="py-20 md:py-28 lg:py-36 bg-secondary">
+      <section ref={ctaReveal.elementRef} className="py-12 md:py-20 lg:py-28 bg-secondary">
         <div className="container mx-auto px-4 md:px-6 text-center max-w-4xl">
           <h2 className={`text-3xl md:text-4xl lg:text-5xl font-light mb-6 transition-all duration-700 ${ctaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             Talk To The Right Team At Bridge

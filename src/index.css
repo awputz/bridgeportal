@@ -333,6 +333,12 @@ All colors MUST be HSL.
   }
 }
 
+/* Touch target utility - minimum 44px for accessibility */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
 /* Mobile-specific optimizations */
 @media (max-width: 768px) {
   html {
@@ -343,5 +349,32 @@ All colors MUST be HSL.
   body {
     -webkit-text-size-adjust: 100%;
     overscroll-behavior-y: contain;
+  }
+  
+  /* Improved mobile typography */
+  h1 {
+    @apply text-3xl;
+    line-height: 1.15;
+  }
+  
+  h2 {
+    @apply text-2xl;
+    line-height: 1.2;
+  }
+  
+  h3 {
+    @apply text-lg;
+  }
+  
+  /* Reduce section padding on mobile */
+  .section-spacing {
+    @apply py-12;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .section-spacing {
+    @apply py-16;
   }
 }
