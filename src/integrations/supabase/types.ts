@@ -66,6 +66,7 @@ export type Database = {
           tags: string[] | null
           unit_count: number | null
           updated_at: string | null
+          website_url: string | null
         }
         Insert: {
           address: string
@@ -82,6 +83,7 @@ export type Database = {
           tags?: string[] | null
           unit_count?: number | null
           updated_at?: string | null
+          website_url?: string | null
         }
         Update: {
           address?: string
@@ -98,6 +100,7 @@ export type Database = {
           tags?: string[] | null
           unit_count?: number | null
           updated_at?: string | null
+          website_url?: string | null
         }
         Relationships: []
       }

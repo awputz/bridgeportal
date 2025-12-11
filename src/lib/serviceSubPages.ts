@@ -4,8 +4,8 @@ export const SERVICE_SUB_PAGES = {
     basePath: "/services/investment-sales",
     pages: [
       { name: "Overview", path: "/services/investment-sales" },
-      { name: "Acquisitions", path: "/services/investment-sales/acquisitions" },
       { name: "Dispositions", path: "/services/investment-sales/dispositions" },
+      { name: "Acquisitions", path: "/services/investment-sales/acquisitions" },
       { name: "Valuations", path: "/services/investment-sales/valuations" },
       { name: "Track Record", path: "/services/investment-sales/track-record" },
       { name: "View Listings on CoStar", path: "https://www.costar.com", external: true },
@@ -16,12 +16,9 @@ export const SERVICE_SUB_PAGES = {
     basePath: "/services/residential",
     pages: [
       { name: "Overview", path: "/services/residential" },
-      { name: "Rentals", path: "/services/residential/rentals" },
-      { name: "Sales", path: "/services/residential/sales" },
+      { name: "Find a Home", path: "/services/residential/find-a-home" },
       { name: "View Listings on StreetEasy", path: "https://streeteasy.com/nyc/rentals/agent:bridge-investment-sales", external: true },
-      { name: "Markets", path: "/services/residential/markets" },
       { name: "Transactions", path: "/services/residential/transactions" },
-      { name: "Resources", path: "/services/residential/resources" },
       { name: "Landlord Services", path: "/services/residential/landlord-services" },
       { name: "Buildings", path: "/services/residential/buildings" },
     ],

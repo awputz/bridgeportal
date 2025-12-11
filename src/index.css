@@ -186,39 +186,41 @@ All colors MUST be HSL.
   }
   
   /* ========================================
-     PAGE TRANSITIONS - Smooth and subtle
+     PAGE TRANSITIONS - Smooth crossfade
      ======================================== */
   
   .page-transition {
-    animation-duration: 0.2s;
     animation-fill-mode: both;
-    animation-timing-function: ease-out;
-    will-change: opacity;
+    will-change: opacity, transform;
   }
   
-  .page-transition.fadeOut {
-    animation-name: pageExit;
+  .page-transition.enter {
+    animation: pageEnter 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
   
-  .page-transition.fadeIn {
-    animation-name: pageEnter;
+  .page-transition.exit {
+    animation: pageExit 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
   
   @keyframes pageExit {
     from {
       opacity: 1;
+      transform: translateY(0);
     }
     to {
       opacity: 0;
+      transform: translateY(-8px);
     }
   }
   
   @keyframes pageEnter {
     from {
       opacity: 0;
+      transform: translateY(12px);
     }
     to {
       opacity: 1;
+      transform: translateY(0);
     }
   }
   

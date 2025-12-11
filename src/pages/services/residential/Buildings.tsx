@@ -1,6 +1,6 @@
 import { ServicePageLayout } from "@/components/ServicePageLayout";
 import { useBridgeBuildings } from "@/hooks/useBridgeBuildings";
-import { Building2, MapPin, Home } from "lucide-react";
+import { Building2, MapPin, Home, ExternalLink } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -20,10 +20,10 @@ const Buildings = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <p className="text-primary font-medium mb-4">Residential / Buildings</p>
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
-          Building Directory
+          Exclusive Buildings
         </h1>
         <p className="text-xl text-muted-foreground max-w-3xl">
-          Explore our portfolio of represented residential buildings across New York City.
+          Our portfolio of represented residential buildings across New York City.
         </p>
       </div>
     </section>
@@ -36,21 +36,21 @@ const Buildings = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
-              <p className="text-3xl font-bold text-primary">{buildings?.length || 0}</p>
+              <p className="text-3xl font-bold text-foreground">{buildings?.length || 0}</p>
               <p className="text-muted-foreground text-sm">Buildings</p>
             </div>
             <div>
-              <p className="text-3xl font-bold text-primary">
+              <p className="text-3xl font-bold text-foreground">
                 {buildings?.reduce((acc, b) => acc + (b.unit_count || 0), 0) || 0}+
               </p>
               <p className="text-muted-foreground text-sm">Total Units</p>
             </div>
             <div>
-              <p className="text-3xl font-bold text-primary">{boroughs.length}</p>
+              <p className="text-3xl font-bold text-foreground">{boroughs.length}</p>
               <p className="text-muted-foreground text-sm">Boroughs</p>
             </div>
             <div>
-              <p className="text-3xl font-bold text-primary">
+              <p className="text-3xl font-bold text-foreground">
                 {[...new Set(buildings?.map(b => b.neighborhood).filter(Boolean))].length}
               </p>
               <p className="text-muted-foreground text-sm">Neighborhoods</p>
@@ -104,35 +104,47 @@ const Buildings = () => {
               {filteredBuildings?.map((building) => (
                 <div
                   key={building.id}
-                  className="bg-secondary/20 rounded-lg p-6 border border-border hover:border-primary/50 transition-colors"
+                  className="bg-secondary/20 rounded-lg p-6 border border-border hover:border-primary/50 transition-colors group"
                 >
-                  <div className="flex items-start gap-3 mb-4">
-                    <Building2 className="h-6 w-6 text-primary flex-shrink-0" />
-                    <div>
-                      <h3 className="font-semibold text-foreground text-lg">{building.name}</h3>
-                      <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
-                        <MapPin className="h-3 w-3" />
-                        {building.address}
-                      </p>
+                  <div className="flex items-start justify-between gap-3 mb-4">
+                    <div className="flex items-start gap-3">
+                      <Building2 className="h-6 w-6 text-primary flex-shrink-0" />
+                      <div>
+                        <h3 className="font-semibold text-foreground text-lg">{building.name}</h3>
+                        <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
+                          <MapPin className="h-3 w-3" />
+                          {building.address}
+                        </p>
+                      </div>
                     </div>
+                    {building.unit_count && (
+                      <div className="flex items-center gap-1 text-sm text-foreground bg-secondary/50 px-2 py-1 rounded">
+                        <Home className="h-3 w-3" />
+                        {building.unit_count}
+                      </div>
+                    )}
                   </div>
 
                   {building.neighborhood && (
-                    <p className="text-sm text-muted-foreground mb-3">
+                    <p className="text-sm text-primary font-medium mb-3">
                       {building.neighborhood}
-                      {building.borough && `, ${building.borough}`}
+                      {building.borough && ` • ${building.borough}`}
                     </p>
                   )}
 
                   {building.description && (
-                    <p className="text-sm text-muted-foreground mb-4">{building.description}</p>
+                    <p className="text-sm text-muted-foreground mb-4 line-clamp-3">{building.description}</p>
                   )}
 
-                  {building.unit_count && (
-                    <div className="flex items-center gap-1 text-sm text-foreground pt-4 border-t border-border">
-                      <Home className="h-4 w-4 text-foreground/70" />
-                      {building.unit_count} units
-                    </div>
+                  {(building as any).website_url && (
+                    <a
+                      href={(building as any).website_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-sm text-primary hover:underline mt-2"
+                    >
+                      Visit Website <ExternalLink className="h-3 w-3" />
+                    </a>
                   )}
                 </div>
               ))}
