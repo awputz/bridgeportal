@@ -11,7 +11,11 @@ import { PageTransition } from "@/components/PageTransition";
 import { FloatingContactButton } from "@/components/FloatingContactButton";
 import { ContactSheet } from "@/components/ContactSheet";
 import { AdminLayout } from "@/components/admin/AdminLayout";
+
+// Pages
 import Home from "./pages/Home";
+import Commercial from "./pages/Commercial";
+import Residential from "./pages/Residential";
 import TrackRecord from "./pages/TrackRecord";
 import Approach from "./pages/Approach";
 import Services from "./pages/Services";
@@ -37,38 +41,61 @@ const App = () => {
         <BrowserRouter>
           <ScrollToTop />
           <Routes>
-          {/* Auth Route */}
-          <Route path="/auth" element={<Auth />} />
-          
-          {/* Admin Routes */}
+            {/* Auth Route */}
+            <Route path="/auth" element={<Auth />} />
+            
+            {/* Admin Routes */}
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<Navigate to="/admin/team" replace />} />
               <Route path="team" element={<TeamAdmin />} />
               <Route path="transactions" element={<TransactionsAdmin />} />
             </Route>
 
-          {/* Public Routes */}
-          <Route path="*" element={
-            <>
-              <Navigation />
-              <PageTransition>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/transactions" element={<TrackRecord />} />
-                  <Route path="/approach" element={<Approach />} />
-                  <Route path="/services" element={<Services />} />
-                  <Route path="/markets" element={<Markets />} />
-                  <Route path="/market-insights" element={<MarketInsights />} />
-                  <Route path="/submit-deal" element={<SubmitDeal />} />
-                  <Route path="/team" element={<Team />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </PageTransition>
-              <Footer />
-              <FloatingContactButton onContactClick={() => setContactOpen(true)} />
-              <ContactSheet open={contactOpen} onOpenChange={setContactOpen} />
-            </>
-          } />
+            {/* Public Routes */}
+            <Route path="*" element={
+              <>
+                <Navigation />
+                <PageTransition>
+                  <Routes>
+                    {/* Home */}
+                    <Route path="/" element={<Home />} />
+                    
+                    {/* Commercial & Investment Hub */}
+                    <Route path="/commercial" element={<Commercial />} />
+                    <Route path="/commercial/office" element={<Commercial />} />
+                    <Route path="/commercial/retail" element={<Commercial />} />
+                    <Route path="/commercial/industrial" element={<Commercial />} />
+                    <Route path="/commercial/investment-sales" element={<Commercial />} />
+                    <Route path="/commercial/track-record" element={<TrackRecord />} />
+                    
+                    {/* Residential Hub */}
+                    <Route path="/residential" element={<Residential />} />
+                    <Route path="/residential/listings" element={<Residential />} />
+                    <Route path="/residential/sell" element={<Residential />} />
+                    <Route path="/residential/track-record" element={<TrackRecord />} />
+                    
+                    {/* Shared Pages */}
+                    <Route path="/capital-markets" element={<Services />} />
+                    <Route path="/about" element={<Approach />} />
+                    <Route path="/team" element={<Team />} />
+                    <Route path="/market-insights" element={<MarketInsights />} />
+                    <Route path="/submit-deal" element={<SubmitDeal />} />
+                    
+                    {/* Legacy routes - redirect to new structure */}
+                    <Route path="/transactions" element={<Navigate to="/commercial/track-record" replace />} />
+                    <Route path="/approach" element={<Navigate to="/about" replace />} />
+                    <Route path="/services" element={<Navigate to="/capital-markets" replace />} />
+                    <Route path="/markets" element={<Navigate to="/commercial" replace />} />
+                    
+                    {/* 404 */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </PageTransition>
+                <Footer />
+                <FloatingContactButton onContactClick={() => setContactOpen(true)} />
+                <ContactSheet open={contactOpen} onOpenChange={setContactOpen} />
+              </>
+            } />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
