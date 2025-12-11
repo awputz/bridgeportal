@@ -384,14 +384,14 @@ export default function Home() {
       </section>
 
       {/* Client Logos / Trusted By Section */}
-      <section className="py-12 md:py-16 border-b border-white/5">
+      <section className="py-16 md:py-20 border-b border-white/5 bg-white/[0.01]">
         <div className="container mx-auto px-4 md:px-6">
-          <p className="text-center text-sm uppercase tracking-widest text-muted-foreground mb-8">Trusted By Industry Leaders</p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 lg:gap-16 opacity-60 hover:opacity-80 transition-opacity">
+          <p className="text-center text-xs uppercase tracking-[0.2em] text-muted-foreground/70 mb-10">Trusted By Industry Leaders</p>
+          <div className="flex flex-wrap justify-center items-center gap-10 md:gap-14 lg:gap-20">
             {["REBNY", "NYC Housing", "CoStar Group", "StreetEasy", "Cushman & Wakefield", "CBRE"].map((client) => (
               <div 
                 key={client} 
-                className="text-lg md:text-xl font-light text-muted-foreground grayscale hover:grayscale-0 transition-all duration-300"
+                className="text-base md:text-lg font-light text-muted-foreground/50 hover:text-muted-foreground hover:scale-105 transition-all duration-300 cursor-default"
               >
                 {client}
               </div>

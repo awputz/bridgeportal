@@ -67,8 +67,8 @@ export const Testimonials = () => {
     <section className="section-spacing bg-secondary/30">
       <div className="max-w-4xl mx-auto px-6">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-light mb-4">What Our Clients Say</h2>
-          <p className="text-muted-foreground">Trusted by leading investors and property owners across New York</p>
+          <h2 className="text-3xl md:text-4xl font-light mb-4 tracking-tight">What Our Clients Say</h2>
+          <p className="text-muted-foreground/80 font-light">Trusted by leading investors and property owners across New York</p>
         </div>
 
         <div 
@@ -77,8 +77,8 @@ export const Testimonials = () => {
           onMouseLeave={() => setIsPaused(false)}
         >
           {/* Testimonial Card */}
-          <div className="glass-card p-8 md:p-12 relative overflow-hidden min-h-[280px]">
-            <Quote className="absolute top-6 left-6 h-8 w-8 text-accent/20" />
+          <div className="glass-card p-8 md:p-12 relative overflow-hidden min-h-[280px] border border-white/5">
+            <Quote className="absolute top-6 left-6 h-10 w-10 text-accent/10" />
             
             <div className="relative z-10">
               {testimonials.map((testimonial, index) => (
@@ -93,7 +93,7 @@ export const Testimonials = () => {
                         : "opacity-0 translate-x-8"
                   )}
                 >
-                  <blockquote className="text-lg md:text-xl font-light leading-relaxed mb-6 text-foreground/90">
+                  <blockquote className="text-lg md:text-xl font-light leading-relaxed mb-6 text-foreground/90 italic">
                     "{testimonial.quote}"
                   </blockquote>
                   
