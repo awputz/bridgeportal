@@ -106,9 +106,11 @@ export const Navigation = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
                   align="end" 
-                  sideOffset={20}
-                  className="w-[500px] p-4 bg-zinc-900/95 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-xl"
+                  sideOffset={16}
+                  className="w-[500px] p-4 bg-zinc-900/95 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-xl relative"
                 >
+                  {/* Arrow connector */}
+                  <div className="absolute -top-2 right-8 w-4 h-4 bg-zinc-900/95 border-l border-t border-white/20 rotate-45" />
                   <div className="grid grid-cols-2 gap-2">
                     {NAV_ITEMS.services.items.map((item) => {
                       const IconComponent = serviceIcons[item.name] || Building2;
@@ -158,9 +160,11 @@ export const Navigation = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
                   align="end" 
-                  sideOffset={20}
-                  className="w-[220px] p-2 bg-zinc-900/95 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-xl"
+                  sideOffset={16}
+                  className="w-[220px] p-2 bg-zinc-900/95 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-xl relative"
                 >
+                  {/* Arrow connector */}
+                  <div className="absolute -top-2 right-8 w-4 h-4 bg-zinc-900/95 border-l border-t border-white/20 rotate-45" />
                   {/* Residential */}
                   <DropdownMenuItem asChild>
                     <a 
