@@ -54,14 +54,14 @@ export const Navigation = () => {
           </div>
 
           {/* Desktop Layout - Centered Logo */}
-          <div className="hidden lg:grid grid-cols-3 items-center h-20 px-8">
+          <div className="hidden lg:grid grid-cols-3 items-center py-4 px-8">
             {/* Left: Navigation Links */}
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-5">
               {leftNavItems.map((item) => (
                 <Link
                   key={item.name}
                   to={item.path}
-                  className={`text-base font-light transition-all duration-300 whitespace-nowrap ${
+                  className={`text-sm font-light transition-all duration-300 whitespace-nowrap ${
                     location.pathname === item.path
                       ? "text-foreground"
                       : "text-foreground/80 hover:text-foreground"
@@ -72,10 +72,10 @@ export const Navigation = () => {
               ))}
             </div>
 
-            {/* Center: Logo - Made larger */}
+            {/* Center: Logo */}
             <div className="flex justify-center">
               <Link to="/" className="flex items-center">
-                <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-32 invert object-contain max-w-[300px]" />
+                <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="w-48 invert" />
               </Link>
             </div>
 
