@@ -106,7 +106,7 @@ export const Navigation = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
                   align="end" 
-                  sideOffset={12}
+                  sideOffset={20}
                   className="w-[500px] p-4 bg-zinc-900/95 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-xl"
                 >
                   <div className="grid grid-cols-2 gap-2">
@@ -158,7 +158,7 @@ export const Navigation = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
                   align="end" 
-                  sideOffset={12}
+                  sideOffset={20}
                   className="w-[220px] p-2 bg-zinc-900/95 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-xl"
                 >
                   {/* Residential */}
