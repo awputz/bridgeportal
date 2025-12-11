@@ -11,6 +11,7 @@ interface TeamMember {
   image: string;
   instagram?: string;
   linkedin?: string;
+  license_number?: string;
 }
 
 interface TeamMemberDialogProps {
@@ -78,6 +79,11 @@ export const TeamMemberDialog = ({ member, open, onOpenChange }: TeamMemberDialo
           <div className="space-y-2 animate-in fade-in slide-in-from-bottom-4 duration-300 ease-out">
             <h2 className="text-3xl md:text-4xl font-light tracking-tight">{member.name}</h2>
             <p className="text-sm uppercase tracking-widest text-muted-foreground">{member.title}</p>
+            {member.license_number && (
+              <p className="text-xs text-muted-foreground/70 font-light">
+                {member.name.includes('Matthew Simon') ? 'Firm License' : 'License'} #{member.license_number}
+              </p>
+            )}
           </div>
 
           {/* Bio */}
