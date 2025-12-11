@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, Building2, Home, Briefcase, TrendingUp, Megaphone, Image, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 import { NAV_ITEMS } from "@/lib/constants";
 import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
+import { cn } from "@/lib/utils";
 
 const leftNavItems = [
   { name: "About Us", path: "/about" },
@@ -17,6 +20,17 @@ const leftNavItems = [
   { name: "Research", path: "/research" },
   { name: "Careers", path: "/careers" },
 ];
+
+// Service icons mapping
+const serviceIcons: Record<string, typeof Building2> = {
+  "Investment Sales": TrendingUp,
+  "Commercial Leasing": Building2,
+  "Capital Advisory": Briefcase,
+  "Property Management": Settings,
+  "Marketing": Megaphone,
+  "Billboard": Image,
+  "Residential": Home,
+};
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,47 +56,47 @@ export const Navigation = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 px-2 pt-2 md:px-3 md:pt-2 lg:px-3 lg:pt-2">
-        <div className="max-w-7xl mx-auto bg-black/40 backdrop-blur-3xl border border-white/10 rounded-lg md:rounded-xl shadow-[0_16px_48px_0_rgba(0,0,0,0.75)]">
+      <nav className="fixed top-0 left-0 right-0 z-50 px-2 pt-2 md:px-3 md:pt-2 lg:px-2 lg:pt-1.5">
+        <div className="max-w-7xl mx-auto glass-nav">
           {/* Mobile & Tablet Layout */}
-          <div className="flex lg:hidden items-center justify-between h-16 sm:h-18 md:h-20 px-4 md:px-6">
+          <div className="flex lg:hidden items-center justify-between h-14 sm:h-15 md:h-16 px-4 md:px-5">
             <Link to="/" className="flex items-center flex-shrink-0">
               <img 
                 src={bridgeAdvisoryLogo} 
                 alt="Bridge Advisory Group" 
-                className="w-36 sm:w-40 md:w-44 invert" 
+                className="h-7 sm:h-8 md:h-9 w-auto invert" 
               />
             </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2.5 -mr-2 text-foreground hover:text-foreground/80 transition-colors touch-manipulation"
+              className="p-2 -mr-1.5 text-foreground hover:text-foreground/80 transition-colors touch-manipulation"
               aria-label="Toggle menu"
             >
-              <div className="relative w-6 h-6">
+              <div className="relative w-5 h-5">
                 <Menu 
-                  size={24} 
+                  size={20} 
                   className={`absolute inset-0 transition-all duration-300 ${isOpen ? 'opacity-0 rotate-90' : 'opacity-100 rotate-0'}`} 
                 />
                 <X 
-                  size={24} 
+                  size={20} 
                   className={`absolute inset-0 transition-all duration-300 ${isOpen ? 'opacity-100 rotate-0' : 'opacity-0 -rotate-90'}`} 
                 />
               </div>
             </button>
           </div>
 
-          {/* Desktop Layout - Centered Logo */}
-          <div className="hidden lg:grid grid-cols-3 items-center py-0.5 px-3">
+          {/* Desktop Layout - Compact */}
+          <div className="hidden lg:grid grid-cols-3 items-center h-12 px-4">
             {/* Left: Navigation Links */}
             <div className="flex items-center space-x-5">
               {leftNavItems.map((item) => (
                 <Link
                   key={item.name}
                   to={item.path}
-                  className={`text-sm font-light transition-all duration-300 whitespace-nowrap ${
+                  className={`text-[13px] font-light transition-all duration-200 whitespace-nowrap hover:scale-105 ${
                     location.pathname === item.path
                       ? "text-foreground"
-                      : "text-foreground/80 hover:text-foreground"
+                      : "text-foreground/70 hover:text-foreground"
                   }`}
                 >
                   {item.name}
@@ -93,47 +107,68 @@ export const Navigation = () => {
             {/* Center: Logo */}
             <div className="flex justify-center">
               <Link to="/" className="flex items-center">
-                <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="w-36 invert" />
+                <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-7 w-auto invert" />
               </Link>
             </div>
 
-            {/* Right: Services Dropdown + Contact Button */}
-            <div className="flex items-center justify-end space-x-6">
-              {/* Services Dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger className={`group flex items-center gap-1 text-base font-light transition-all duration-300 ease-out outline-none hover:scale-105 ${
-                  isServicesActive ? "text-foreground" : "text-foreground/80 hover:text-foreground"
-                }`}>
-                  Services
-                  <ChevronDown className="h-4 w-4 transition-transform duration-300 ease-out group-data-[state=open]:rotate-180" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-[#0a0a0a] border border-white/20 z-[9999] shadow-2xl min-w-[200px]">
-                  {NAV_ITEMS.services.items.map((item, index) => (
-                    <DropdownMenuItem 
-                      key={item.name} 
-                      asChild 
-                      className="animate-in fade-in slide-in-from-top-1 text-base"
-                      style={{
-                        animationDuration: "300ms",
-                        animationDelay: `${index * 50}ms`,
-                        animationFillMode: "backwards"
-                      }}
+            {/* Right: Services Hover Menu + Contact Button */}
+            <div className="flex items-center justify-end space-x-5">
+              {/* Services Hover Navigation */}
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger 
+                      className={cn(
+                        "bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent",
+                        "text-[13px] font-light px-0 h-auto",
+                        "transition-all duration-200 hover:scale-105",
+                        isServicesActive ? "text-foreground" : "text-foreground/70 hover:text-foreground"
+                      )}
                     >
-                      <Link
-                        to={item.path}
-                        className="cursor-pointer font-light"
-                      >
-                        {item.name}
-                      </Link>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+                      Services
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent className="glass-dropdown">
+                      <div className="grid gap-1 p-3 w-[280px]">
+                        {NAV_ITEMS.services.items.map((item, index) => {
+                          const IconComponent = serviceIcons[item.name] || Building2;
+                          return (
+                            <NavigationMenuLink key={item.name} asChild>
+                              <Link
+                                to={item.path}
+                                className={cn(
+                                  "group flex items-center gap-3 rounded-lg p-2.5 transition-all duration-200",
+                                  "hover:bg-white/10 hover:scale-[1.02]",
+                                  "animate-in fade-in slide-in-from-top-2",
+                                  location.pathname.startsWith(item.path) && "bg-white/5"
+                                )}
+                                style={{
+                                  animationDuration: "300ms",
+                                  animationDelay: `${index * 40}ms`,
+                                  animationFillMode: "backwards"
+                                }}
+                              >
+                                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-white/5 group-hover:bg-white/10 transition-colors">
+                                  <IconComponent className="h-4 w-4 text-foreground/70 group-hover:text-foreground transition-colors" />
+                                </div>
+                                <div className="flex flex-col">
+                                  <span className="text-sm font-light text-foreground group-hover:text-foreground">
+                                    {item.name}
+                                  </span>
+                                </div>
+                              </Link>
+                            </NavigationMenuLink>
+                          );
+                        })}
+                      </div>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
 
               <Button
                 asChild
                 size="sm"
-                className="font-light whitespace-nowrap"
+                className="h-8 px-4 text-xs font-light glass-button"
               >
                 <Link to="/contact">Contact Us</Link>
               </Button>
@@ -148,17 +183,17 @@ export const Navigation = () => {
               ? 'opacity-100 translate-y-0' 
               : 'opacity-0 translate-y-full pointer-events-none'
           }`}
-          style={{ top: 'calc(4rem + 0.75rem)' }}
+          style={{ top: 'calc(3.5rem + 0.75rem)' }}
         >
-          <div className="h-full overflow-y-auto overscroll-contain px-6 py-6 pb-safe">
-            <div className="space-y-4">
+          <div className="h-full overflow-y-auto overscroll-contain px-5 py-5 pb-safe">
+            <div className="space-y-3">
               {/* Left Nav Items */}
               <div>
                 {leftNavItems.map((item, index) => (
                   <Link
                     key={item.name}
                     to={item.path}
-                    className={`block text-lg font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[48px] flex items-center ${
+                    className={`block text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2.5 min-h-[44px] flex items-center ${
                       isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                     }`}
                     style={{ transitionDelay: `${index * 50}ms` }}
@@ -170,26 +205,30 @@ export const Navigation = () => {
               </div>
 
               {/* Services Section */}
-              <div className="pt-4 border-t border-white/10">
-                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3">Services</p>
-                {NAV_ITEMS.services.items.map((item, index) => (
-                  <Link
-                    key={item.name}
-                    to={item.path}
-                    className={`block text-lg font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[48px] flex items-center ${
-                      isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
-                    }`}
-                    style={{ transitionDelay: `${(index + leftNavItems.length) * 50}ms` }}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
+              <div className="pt-3 border-t border-white/10">
+                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Services</p>
+                {NAV_ITEMS.services.items.map((item, index) => {
+                  const IconComponent = serviceIcons[item.name] || Building2;
+                  return (
+                    <Link
+                      key={item.name}
+                      to={item.path}
+                      className={`flex items-center gap-3 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2.5 min-h-[44px] ${
+                        isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                      }`}
+                      style={{ transitionDelay: `${(index + leftNavItems.length) * 50}ms` }}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <IconComponent className="h-4 w-4 text-foreground/50" />
+                      {item.name}
+                    </Link>
+                  );
+                })}
               </div>
 
               <Button
                 asChild
-                className={`w-full mt-6 font-light transition-all duration-300 ${
+                className={`w-full mt-5 font-light transition-all duration-300 ${
                   isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
                 style={{ transitionDelay: '400ms' }}
