@@ -2,17 +2,21 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
+export type TeamCategory = 'Leadership' | 'Investment Sales' | 'Residential' | 'Operations' | 'Marketing' | 'Advisory';
+
 export interface TeamMember {
   id: string;
   name: string;
+  slug?: string;
   title: string;
   bio?: string;
   email: string;
   phone?: string;
+  license_number?: string;
   image_url?: string;
   instagram_url?: string;
   linkedin_url?: string;
-  category: 'leadership' | 'sales_team';
+  category: TeamCategory;
   display_order: number;
   is_active: boolean;
   created_at: string;
@@ -48,9 +52,12 @@ export const useCreateTeamMember = () => {
   
   return useMutation({
     mutationFn: async (member: Omit<TeamMember, 'id' | 'created_at' | 'updated_at'>) => {
+      // Generate slug from name if not provided
+      const slug = member.slug || member.name.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+      
       const { data, error } = await supabase
         .from('team_members')
-        .insert(member)
+        .insert({ ...member, slug })
         .select()
         .single();
       
@@ -59,6 +66,7 @@ export const useCreateTeamMember = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['team-members'] });
+      queryClient.invalidateQueries({ queryKey: ['bridge-agents'] });
       toast({
         title: "Success",
         description: "Team member added successfully",
@@ -91,6 +99,7 @@ export const useUpdateTeamMember = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['team-members'] });
+      queryClient.invalidateQueries({ queryKey: ['bridge-agents'] });
       toast({
         title: "Success",
         description: "Team member updated successfully",
@@ -120,6 +129,7 @@ export const useDeleteTeamMember = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['team-members'] });
+      queryClient.invalidateQueries({ queryKey: ['bridge-agents'] });
       toast({
         title: "Success",
         description: "Team member deleted successfully",
