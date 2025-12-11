@@ -22,9 +22,18 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { TeamMemberFormDialog } from "@/components/admin/TeamMemberFormDialog";
-import { useTeamMembers, useDeleteTeamMember, TeamMember } from "@/hooks/useTeamMembers";
+import { useTeamMembers, useDeleteTeamMember, TeamMember, TeamCategory } from "@/hooks/useTeamMembers";
 import { Switch } from "@/components/ui/switch";
 import { useUpdateTeamMember } from "@/hooks/useTeamMembers";
+
+const CATEGORY_COLORS: Record<TeamCategory, "default" | "secondary" | "outline" | "destructive"> = {
+  'Leadership': 'default',
+  'Investment Sales': 'secondary',
+  'Residential': 'outline',
+  'Operations': 'outline',
+  'Marketing': 'outline',
+  'Advisory': 'outline',
+};
 
 export default function TeamAdmin() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -40,7 +49,8 @@ export default function TeamAdmin() {
   const filteredMembers = teamMembers.filter((member) =>
     member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     member.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    member.email.toLowerCase().includes(searchQuery.toLowerCase())
+    member.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    member.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleEdit = (member: TeamMember) => {
@@ -92,7 +102,7 @@ export default function TeamAdmin() {
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search by name, title, or email..."
+            placeholder="Search by name, title, email, or category..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
@@ -109,6 +119,7 @@ export default function TeamAdmin() {
               <TableHead>Title</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Category</TableHead>
+              <TableHead>License</TableHead>
               <TableHead>Order</TableHead>
               <TableHead>Active</TableHead>
               <TableHead className="text-right">Actions</TableHead>
@@ -117,13 +128,13 @@ export default function TeamAdmin() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                   Loading team members...
                 </TableCell>
               </TableRow>
             ) : filteredMembers.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                   No team members found
                 </TableCell>
               </TableRow>
@@ -145,13 +156,25 @@ export default function TeamAdmin() {
                       </div>
                     )}
                   </TableCell>
-                  <TableCell className="font-medium">{member.name}</TableCell>
+                  <TableCell className="font-medium">
+                    <div>
+                      {member.name}
+                      {member.slug && (
+                        <span className="text-xs text-muted-foreground block">
+                          /{member.slug}
+                        </span>
+                      )}
+                    </div>
+                  </TableCell>
                   <TableCell>{member.title}</TableCell>
                   <TableCell>{member.email}</TableCell>
                   <TableCell>
-                    <Badge variant={member.category === 'leadership' ? 'default' : 'secondary'}>
-                      {member.category === 'leadership' ? 'Leadership' : 'Sales Team'}
+                    <Badge variant={CATEGORY_COLORS[member.category] || 'secondary'}>
+                      {member.category}
                     </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {member.license_number || '-'}
                   </TableCell>
                   <TableCell>{member.display_order}</TableCell>
                   <TableCell>

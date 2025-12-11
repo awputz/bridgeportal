@@ -529,9 +529,11 @@ export type Database = {
           image_url: string | null
           instagram_url: string | null
           is_active: boolean | null
+          license_number: string | null
           linkedin_url: string | null
           name: string
           phone: string | null
+          slug: string | null
           title: string
           updated_at: string | null
         }
@@ -545,9 +547,11 @@ export type Database = {
           image_url?: string | null
           instagram_url?: string | null
           is_active?: boolean | null
+          license_number?: string | null
           linkedin_url?: string | null
           name: string
           phone?: string | null
+          slug?: string | null
           title: string
           updated_at?: string | null
         }
@@ -561,9 +565,11 @@ export type Database = {
           image_url?: string | null
           instagram_url?: string | null
           is_active?: boolean | null
+          license_number?: string | null
           linkedin_url?: string | null
           name?: string
           phone?: string | null
+          slug?: string | null
           title?: string
           updated_at?: string | null
         }

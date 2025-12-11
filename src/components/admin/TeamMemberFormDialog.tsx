@@ -31,15 +31,26 @@ import { TeamMember, useCreateTeamMember, useUpdateTeamMember, useUploadTeamPhot
 import { Upload, X } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
+const CATEGORIES = [
+  { value: 'Leadership', label: 'Leadership' },
+  { value: 'Investment Sales', label: 'Investment Sales' },
+  { value: 'Residential', label: 'Residential' },
+  { value: 'Operations', label: 'Operations' },
+  { value: 'Marketing', label: 'Marketing' },
+  { value: 'Advisory', label: 'Advisory' },
+] as const;
+
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(100),
+  slug: z.string().max(100).optional().or(z.literal('')),
   title: z.string().min(2, "Title must be at least 2 characters").max(150),
   bio: z.string().max(1000).optional().or(z.literal('')),
   email: z.string().email("Invalid email address").max(255),
   phone: z.string().max(20).optional().or(z.literal('')),
+  license_number: z.string().max(50).optional().or(z.literal('')),
   instagram_url: z.string().url("Invalid URL").optional().or(z.literal('')),
   linkedin_url: z.string().url("Invalid URL").optional().or(z.literal('')),
-  category: z.enum(['leadership', 'sales_team']),
+  category: z.enum(['Leadership', 'Investment Sales', 'Residential', 'Operations', 'Marketing', 'Advisory']),
   display_order: z.coerce.number().int().min(0),
   is_active: z.boolean(),
 });
@@ -65,13 +76,15 @@ export function TeamMemberFormDialog({ open, onOpenChange, member }: TeamMemberF
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      slug: "",
       title: "",
       bio: "",
       email: "",
       phone: "",
+      license_number: "",
       instagram_url: "",
       linkedin_url: "",
-      category: "sales_team",
+      category: "Investment Sales",
       display_order: 0,
       is_active: true,
     },
@@ -81,10 +94,12 @@ export function TeamMemberFormDialog({ open, onOpenChange, member }: TeamMemberF
     if (member) {
       form.reset({
         name: member.name,
+        slug: member.slug || "",
         title: member.title,
         bio: member.bio || "",
         email: member.email,
         phone: member.phone || "",
+        license_number: member.license_number || "",
         instagram_url: member.instagram_url || "",
         linkedin_url: member.linkedin_url || "",
         category: member.category,
@@ -95,13 +110,15 @@ export function TeamMemberFormDialog({ open, onOpenChange, member }: TeamMemberF
     } else {
       form.reset({
         name: "",
+        slug: "",
         title: "",
         bio: "",
         email: "",
         phone: "",
+        license_number: "",
         instagram_url: "",
         linkedin_url: "",
-        category: "sales_team",
+        category: "Investment Sales",
         display_order: 0,
         is_active: true,
       });
@@ -258,12 +275,42 @@ export function TeamMemberFormDialog({ open, onOpenChange, member }: TeamMemberF
 
               <FormField
                 control={form.control}
+                name="slug"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Slug</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="john_doe (auto-generated if empty)" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
                 name="title"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Title *</FormLabel>
                     <FormControl>
                       <Input {...field} placeholder="Investment Sales Associate" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="license_number"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>License Number</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="10401334366" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -276,7 +323,7 @@ export function TeamMemberFormDialog({ open, onOpenChange, member }: TeamMemberF
               name="bio"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Bio</FormLabel>
+                  <FormLabel>Bio / Description</FormLabel>
                   <FormControl>
                     <Textarea
                       {...field}
@@ -309,9 +356,9 @@ export function TeamMemberFormDialog({ open, onOpenChange, member }: TeamMemberF
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Phone</FormLabel>
+                    <FormLabel>Phone (digits only)</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="(555) 123-4567" />
+                      <Input {...field} placeholder="9171234567" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -363,8 +410,11 @@ export function TeamMemberFormDialog({ open, onOpenChange, member }: TeamMemberF
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                <SelectItem value="leadership">Leadership</SelectItem>
-                <SelectItem value="sales_team">Advisors</SelectItem>
+                        {CATEGORIES.map((cat) => (
+                          <SelectItem key={cat.value} value={cat.value}>
+                            {cat.label}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />
