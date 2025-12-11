@@ -57,33 +57,33 @@ export default function Home() {
           </p>
           
           <div 
-            className="flex flex-col sm:flex-row gap-4 justify-center px-4 animate-fade-in"
+            className="flex flex-col sm:flex-row gap-3 justify-center px-4 animate-fade-in"
             style={{ animationDelay: '600ms', animationFillMode: 'backwards' }}
           >
-            <Button asChild size="lg" className="font-light px-8 md:px-12 w-full sm:w-auto">
+            <Button asChild size="lg" className="font-light px-6 md:px-10 w-full sm:w-auto">
               <a href="#services">Explore Our Services</a>
             </Button>
-            <Button size="lg" variant="outline" className="font-light px-8 md:px-12 w-full sm:w-auto border-white/30 hover:bg-white/10" onClick={openContactSheet}>
+            <Button size="lg" variant="outline" className="font-light px-6 md:px-10 w-full sm:w-auto border-white/30 hover:bg-white/10" onClick={openContactSheet}>
               Contact Us
             </Button>
           </div>
 
-          {/* Quick Access Service Buttons */}
+          {/* Quick Access Service Buttons - Hidden on mobile for cleaner look */}
           <div 
-            className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center px-4 mt-6 animate-fade-in"
+            className="hidden md:flex flex-wrap gap-3 justify-center px-4 mt-6 animate-fade-in"
             style={{ animationDelay: '700ms', animationFillMode: 'backwards' }}
           >
-            <Button asChild variant="outline" size="lg" className="font-medium px-6 md:px-8 w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/40 hover:bg-white/20 hover:border-white/60 text-white shadow-lg">
+            <Button asChild variant="outline" className="font-light px-5 bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white">
               <Link to="/services/residential">Residential</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="font-medium px-6 md:px-8 w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/40 hover:bg-white/20 hover:border-white/60 text-white shadow-lg">
-              <Link to="/services/commercial-leasing">Commercial Leasing</Link>
+            <Button asChild variant="outline" className="font-light px-5 bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white">
+              <Link to="/services/commercial-leasing">Commercial</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="font-medium px-6 md:px-8 w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/40 hover:bg-white/20 hover:border-white/60 text-white shadow-lg">
+            <Button asChild variant="outline" className="font-light px-5 bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white">
               <Link to="/services/investment-sales">Investment Sales</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="font-medium px-6 md:px-8 w-full sm:w-auto bg-white/10 backdrop-blur-sm border-white/40 hover:bg-white/20 hover:border-white/60 text-white shadow-lg">
-              <Link to="/services/capital-advisory">Capital Advisory</Link>
+            <Button asChild variant="outline" className="font-light px-5 bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white">
+              <Link to="/services/capital-advisory">Capital</Link>
             </Button>
           </div>
         </div>

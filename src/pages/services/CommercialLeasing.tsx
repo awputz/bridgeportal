@@ -117,7 +117,7 @@ export default function CommercialLeasing() {
   return (
     <div className="min-h-screen">
       {/* Hero with Image */}
-      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
+      <section className="relative h-[50vh] md:h-[60vh] min-h-[400px] md:min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img 
             src={PLACEHOLDER_IMAGES.retail.street} 
@@ -129,10 +129,10 @@ export default function CommercialLeasing() {
         <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${
           heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-4 md:mb-6">
             Bridge Commercial
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-10">
+          <p className="text-base md:text-lg lg:text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-6 md:mb-10">
             NYC Retail & Office Leasing Specialists
           </p>
           <Button size="lg" className="font-light" onClick={openContactSheet}>
@@ -161,12 +161,12 @@ export default function CommercialLeasing() {
       </section>
 
       {/* Intro */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={introReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={introReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
-          <p className={`text-lg md:text-xl text-muted-foreground font-light leading-relaxed text-center transition-all duration-700 ${
+          <p className={`text-base md:text-lg lg:text-xl text-muted-foreground font-light leading-relaxed text-center transition-all duration-700 ${
             introReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            Bridge Commercial provides strategic leasing services for retail and office spaces throughout NYC. We focus on matching the right tenants with the right spaces while helping landlords position assets for long-term performance. Our in-house marketing team, extensive broker network, and hands-on approach deliver results.
+            Bridge Commercial provides strategic leasing services for retail and office spaces throughout NYC. We focus on matching the right tenants with the right spaces while helping landlords position assets for long-term performance.
           </p>
         </div>
       </section>

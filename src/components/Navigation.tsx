@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ChevronDown, Building2, Home, Briefcase, TrendingUp, Megaphone, Image, Settings, ExternalLink } from "lucide-react";
+import { Menu, X, ChevronDown, Building2, Home, Briefcase, TrendingUp, Megaphone, Image, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
   DropdownMenu, 
@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useBridgeServices } from "@/hooks/useBridgeServices";
 import { useBridgeListingNavItems } from "@/hooks/useBridgeListingLinks";
-import bridgeInvestmentLogo from "@/assets/bridge-investment-sales-logo.png";
+
 import { cn } from "@/lib/utils";
 import { ContactSheet } from "@/components/ContactSheet";
 
@@ -80,9 +80,9 @@ export const Navigation = () => {
       <nav className="fixed top-0 left-0 right-0 z-50 px-3 pt-3 md:px-4 md:pt-3 lg:px-5 lg:pt-4">
         <div className="max-w-7xl mx-auto glass-nav">
           {/* Mobile & Tablet Layout */}
-          <div className="flex lg:hidden items-center justify-between h-16 sm:h-18 px-5 md:px-6">
+          <div className="flex lg:hidden items-center justify-between h-14 px-4">
             <Link to="/" className="flex items-center flex-shrink-0">
-              <img src={bridgeInvestmentLogo} alt="Bridge Investment Sales" className="h-10 sm:h-11 md:h-12 w-auto" />
+              <img src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" alt="Bridge Advisory Group" className="h-10 w-auto" />
             </Link>
             <button onClick={() => setIsOpen(!isOpen)} className="p-2 -mr-1.5 text-foreground hover:text-foreground/80 transition-colors touch-manipulation" aria-label="Toggle menu">
               <div className="relative w-5 h-5">
@@ -207,14 +207,13 @@ export const Navigation = () => {
                           <DropdownMenuSubContent className="bg-zinc-900/95 backdrop-blur-2xl border border-white/20 rounded-xl p-2">
                             {item.items.map((subItem) => (
                               <DropdownMenuItem key={subItem.name} asChild>
-                                <a 
+                              <a 
                                   href={subItem.url} 
                                   target="_blank" 
                                   rel="noopener noreferrer"
                                   className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer"
                                 >
                                   <span className="text-sm text-white">{subItem.name}</span>
-                                  <ExternalLink className="h-3 w-3 ml-auto text-white/50" />
                                 </a>
                               </DropdownMenuItem>
                             ))}
@@ -233,7 +232,6 @@ export const Navigation = () => {
                         >
                           <IconComponent className="h-4 w-4 text-white/70" />
                           <span className="text-sm text-white">{item.name}</span>
-                          {item.external && <ExternalLink className="h-3 w-3 ml-auto text-white/50" />}
                         </a>
                       </DropdownMenuItem>
                     );
@@ -243,7 +241,7 @@ export const Navigation = () => {
 
               <Button 
                 size="sm" 
-                className="h-9 px-5 text-sm font-medium bg-white text-black hover:bg-white/90 rounded-md"
+                className="font-light"
                 onClick={() => setContactOpen(true)}
               >
                 Contact Us
@@ -256,8 +254,8 @@ export const Navigation = () => {
         <div className={`lg:hidden fixed inset-x-0 bottom-0 bg-background/98 backdrop-blur-3xl z-40 transition-all duration-300 ease-out ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full pointer-events-none'}`} style={{
         top: 'calc(3.5rem + 0.75rem)'
       }}>
-          <div className="h-full overflow-y-auto overscroll-contain px-5 py-5 pb-safe">
-            <div className="space-y-3">
+          <div className="h-full overflow-y-auto overscroll-contain px-4 py-4 pb-safe">
+            <div className="space-y-2">
               {/* Left Nav Items */}
               <div>
                 {leftNavItems.map((item, index) => 
@@ -267,15 +265,15 @@ export const Navigation = () => {
                       href={item.path}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`block text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2.5 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
-                      style={{ transitionDelay: `${index * 50}ms` }}
+                      className={`block text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2 min-h-[40px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                      style={{ transitionDelay: `${index * 40}ms` }}
                       onClick={() => setIsOpen(false)}
                     >
                       {item.name}
                     </a>
                   ) : (
-                    <Link key={item.name} to={item.path} className={`block text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2.5 min-h-[44px] flex items-center ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
-                      transitionDelay: `${index * 50}ms`
+                    <Link key={item.name} to={item.path} className={`block text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2 min-h-[40px] flex items-center ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
+                      transitionDelay: `${index * 40}ms`
                     }} onClick={() => setIsOpen(false)}>
                       {item.name}
                     </Link>
@@ -284,22 +282,22 @@ export const Navigation = () => {
               </div>
 
               {/* Services Section */}
-              <div className="pt-3 border-t border-white/10">
-                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Services</p>
+              <div className="pt-2 border-t border-white/10">
+                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">Services</p>
                 {services?.map((service, index) => {
                 const IconComponent = serviceIcons[service.name] || Building2;
-                return <Link key={service.id} to={service.path} className={`flex items-center gap-3 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2.5 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
-                  transitionDelay: `${(index + leftNavItems.length) * 50}ms`
+                return <Link key={service.id} to={service.path} className={`flex items-center gap-2 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-1.5 min-h-[36px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
+                  transitionDelay: `${(index + leftNavItems.length) * 40}ms`
                 }} onClick={() => setIsOpen(false)}>
-                      <IconComponent className="h-4 w-4 text-foreground/50" />
+                      <IconComponent className="h-3.5 w-3.5 text-foreground/50" />
                       {service.name}
                     </Link>;
               })}
               </div>
 
               {/* Listings Section */}
-              <div className="pt-3 border-t border-white/10">
-                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Listings</p>
+              <div className="pt-2 border-t border-white/10">
+                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">Listings</p>
                 
                 {listingsNav?.items.map((item, index) => {
                   const IconComponent = listingIcons[item.name] || Building2;
@@ -308,19 +306,18 @@ export const Navigation = () => {
                   if (item.nested && item.items) {
                     return (
                       <div key={item.name}>
-                        <p className="text-sm text-foreground/60 mt-2 mb-1 pl-7">{item.name}</p>
+                        <p className="text-xs text-foreground/60 mt-1.5 mb-0.5 pl-5">{item.name}</p>
                         {item.items.map((subItem, subIndex) => (
                           <a 
                             key={subItem.name}
                             href={subItem.url} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className={`flex items-center gap-3 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2 min-h-[40px] pl-7 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
-                            style={{ transitionDelay: `${(baseDelay + index + subIndex + 1) * 50}ms` }}
+                            className={`flex items-center gap-2 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-1.5 min-h-[36px] pl-5 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                            style={{ transitionDelay: `${(baseDelay + index + subIndex + 1) * 40}ms` }}
                             onClick={() => setIsOpen(false)}
                           >
                             {subItem.name}
-                            <ExternalLink className="h-3 w-3 ml-auto text-foreground/40" />
                           </a>
                         ))}
                       </div>
@@ -333,22 +330,20 @@ export const Navigation = () => {
                       href={item.url} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className={`flex items-center gap-3 text-base font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-2.5 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
-                      style={{ transitionDelay: `${(baseDelay + index) * 50}ms` }}
+                      className={`flex items-center gap-2 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-1.5 min-h-[36px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                      style={{ transitionDelay: `${(baseDelay + index) * 40}ms` }}
                       onClick={() => setIsOpen(false)}
                     >
-                      <IconComponent className="h-4 w-4 text-foreground/50" />
+                      <IconComponent className="h-3.5 w-3.5 text-foreground/50" />
                       {item.name}
-                      {item.external && <ExternalLink className="h-3 w-3 ml-auto text-foreground/40" />}
                     </a>
                   );
                 })}
               </div>
 
               <Button 
-                className={`w-full mt-5 font-light transition-all duration-300 ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} 
-                style={{ transitionDelay: '400ms' }} 
-                size="lg"
+                className={`w-full mt-4 font-light transition-all duration-300 ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} 
+                style={{ transitionDelay: '300ms' }} 
                 onClick={() => {
                   setIsOpen(false);
                   setContactOpen(true);

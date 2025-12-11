@@ -53,7 +53,7 @@ export default function InvestmentSales() {
   return (
     <div className="min-h-screen">
       {/* Hero with Image */}
-      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
+      <section className="relative h-[50vh] md:h-[60vh] min-h-[400px] md:min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img 
             src={PLACEHOLDER_IMAGES.building.exterior} 
@@ -65,20 +65,20 @@ export default function InvestmentSales() {
         <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${
           heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-4 md:mb-6">
             {heroSection?.title || "Bridge Investment Sales"}
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground font-light mb-8">
+          <p className="text-base md:text-lg lg:text-xl text-muted-foreground font-light mb-6 md:mb-8">
             {heroSection?.content || DIVISIONS.investmentSales.tagline}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button size="lg" className="font-light" onClick={openContactSheet}>
               Submit a Deal
             </Button>
             <Button 
               size="lg" 
               variant="outline" 
-              className="font-light"
+              className="font-light border-white/30 hover:bg-white/10"
               asChild
             >
               <a href="https://www.costar.com/agent/alexander-smotritsky/broker-profile" target="_blank" rel="noopener noreferrer">
@@ -93,9 +93,9 @@ export default function InvestmentSales() {
       <ServicePageNav serviceKey="investment-sales" />
 
       {/* Intro */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={introReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={introReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
-          <p className={`text-lg md:text-xl text-muted-foreground font-light leading-relaxed text-center transition-all duration-700 ${
+          <p className={`text-base md:text-lg lg:text-xl text-muted-foreground font-light leading-relaxed text-center transition-all duration-700 ${
             introReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
             The Investment Sales team at Bridge advises owners and investors on acquisitions and dispositions across New York. The focus is on clear underwriting, precise positioning, and disciplined process from first conversation through closing.

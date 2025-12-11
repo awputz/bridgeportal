@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Home, Award, TrendingUp, ArrowRight, Users, MapPin, Calendar, Quote, Instagram, ExternalLink } from "lucide-react";
+import { Home, Award, TrendingUp, ArrowRight, Users, MapPin, Calendar, Quote, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
@@ -72,7 +72,7 @@ export default function ResidentialServices() {
   return (
     <div className="min-h-screen">
       {/* Hero with Background Image */}
-      <section className="relative min-h-[70vh] flex items-center justify-center pt-32 md:pt-40 pb-16 md:pb-24">
+      <section className="relative min-h-[55vh] md:min-h-[70vh] flex items-center justify-center pt-24 md:pt-32 lg:pt-40 pb-12 md:pb-16 lg:pb-24">
         {/* Background Image */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -83,19 +83,19 @@ export default function ResidentialServices() {
         
         {/* Content */}
         <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 animate-fade-in">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-4 md:mb-6 animate-fade-in">
             Bridge Residential
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground font-light animate-fade-in max-w-2xl mx-auto mb-10" style={{ animationDelay: '100ms' }}>
+          <p className="text-base md:text-lg lg:text-xl text-muted-foreground font-light animate-fade-in max-w-2xl mx-auto mb-6 md:mb-10" style={{ animationDelay: '100ms' }}>
             New York residential advisory for renters, buyers, landlords, and sellers
           </p>
           
           {/* Hero CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8 animate-fade-in" style={{ animationDelay: '200ms' }}>
-            <Button variant="outline" className="font-light" onClick={openContactSheet}>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6 animate-fade-in" style={{ animationDelay: '200ms' }}>
+            <Button variant="outline" className="font-light border-white/30 hover:bg-white/10" onClick={openContactSheet}>
               Looking to Rent
             </Button>
-            <Button variant="outline" className="font-light" onClick={openContactSheet}>
+            <Button variant="outline" className="font-light border-white/30 hover:bg-white/10" onClick={openContactSheet}>
               Looking to Buy
             </Button>
             <Button className="font-light" onClick={openContactSheet}>
@@ -108,10 +108,10 @@ export default function ResidentialServices() {
             href="https://streeteasy.com/building/bridge-advisory-group" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-accent hover:text-accent/80 font-light transition-colors animate-fade-in"
+            className="inline-flex items-center gap-2 text-accent hover:text-accent/80 font-light transition-colors animate-fade-in text-sm md:text-base"
             style={{ animationDelay: '300ms' }}
           >
-            View listings on StreetEasy <ExternalLink className="h-4 w-4" />
+            View listings on StreetEasy
           </a>
         </div>
       </section>
@@ -136,12 +136,12 @@ export default function ResidentialServices() {
       </section>
 
       {/* Platform Intro */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={introReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={introReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
-          <p className={`text-lg md:text-xl text-muted-foreground font-light leading-relaxed text-center transition-all duration-700 ${
+          <p className={`text-base md:text-lg lg:text-xl text-muted-foreground font-light leading-relaxed text-center transition-all duration-700 ${
             introReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            {platformIntro?.content || "Bridge Residential is the dedicated residential division of Bridge Advisory Group, led by Jacob Neiderfer as Director of Residential Leasing and Alex Putzer as co-founder. Operating as a platform managing more than 500 units and over one hundred active listings across Manhattan, Brooklyn, and Queens, we partner with landlords, investors, and residents who expect a sharp process, accurate pricing guidance, and marketing that actually converts."}
+            {platformIntro?.content || "Bridge Residential is the dedicated residential division of Bridge Advisory Group. Operating as a platform managing more than 500 units across Manhattan, Brooklyn, and Queens, we partner with landlords, investors, and residents who expect a sharp process, accurate pricing guidance, and marketing that actually converts."}
           </p>
         </div>
       </section>
@@ -181,7 +181,7 @@ export default function ResidentialServices() {
             </p>
             <Button asChild className="font-light">
               <a href="https://streeteasy.com/building/bridge-advisory-group" target="_blank" rel="noopener noreferrer">
-                View All Listings on StreetEasy <ExternalLink className="ml-2 h-4 w-4" />
+                View All Listings on StreetEasy
               </a>
             </Button>
           </div>
@@ -472,7 +472,7 @@ export default function ResidentialServices() {
               </p>
               <Button asChild variant="outline" className="font-light">
                 <a href="https://instagram.com/bridgeresidential" target="_blank" rel="noopener noreferrer">
-                  Follow on Instagram <ExternalLink className="ml-2 h-4 w-4" />
+                  Follow on Instagram
                 </a>
               </Button>
             </div>
