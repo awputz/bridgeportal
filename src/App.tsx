@@ -20,6 +20,7 @@ import TrackRecord from "./pages/TrackRecord";
 import Auth from "./pages/Auth";
 import TeamAdmin from "./pages/admin/TeamAdmin";
 import TransactionsAdmin from "./pages/admin/TransactionsAdmin";
+import PropertiesAdmin from "./pages/admin/PropertiesAdmin";
 import NotFound from "./pages/NotFound";
 import FAQ from "./pages/FAQ";
 import Careers from "./pages/Careers";
@@ -86,6 +87,7 @@ const App = () => {
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<Navigate to="/admin/team" replace />} />
               <Route path="team" element={<TeamAdmin />} />
+              <Route path="properties" element={<PropertiesAdmin />} />
               <Route path="transactions" element={<TransactionsAdmin />} />
             </Route>
 
