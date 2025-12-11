@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
 interface PageTransitionProps {
@@ -8,24 +8,32 @@ interface PageTransitionProps {
 export const PageTransition = ({ children }: PageTransitionProps) => {
   const location = useLocation();
   const [displayLocation, setDisplayLocation] = useState(location);
-  const [transitionStage, setTransitionStage] = useState("fadeIn");
+  const [transitionStage, setTransitionStage] = useState("enter");
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
-    if (location !== displayLocation) {
-      setTransitionStage("fadeOut");
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    
+    if (location.pathname !== displayLocation.pathname) {
+      setTransitionStage("exit");
     }
   }, [location, displayLocation]);
+
+  const handleAnimationEnd = () => {
+    if (transitionStage === "exit") {
+      setTransitionStage("enter");
+      setDisplayLocation(location);
+      window.scrollTo(0, 0);
+    }
+  };
 
   return (
     <div
       className={`page-transition ${transitionStage}`}
-      style={{ willChange: 'opacity, transform' }}
-      onAnimationEnd={() => {
-        if (transitionStage === "fadeOut") {
-          setTransitionStage("fadeIn");
-          setDisplayLocation(location);
-        }
-      }}
+      onAnimationEnd={handleAnimationEnd}
     >
       {children}
     </div>

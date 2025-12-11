@@ -147,6 +147,32 @@ const LandlordServices = () => {
         </div>
       </section>
 
+      {/* Application Requirements - Merged from Resources */}
+      <section className="py-20 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-foreground mb-4 text-center">
+            Standard Application Requirements
+          </h2>
+          <p className="text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
+            Help your applicants prepare with these standard requirements.
+          </p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { title: "Photo ID", description: "Government-issued identification for all applicants" },
+              { title: "Proof of Income", description: "Recent pay stubs, tax returns, or employment letter" },
+              { title: "Bank Statements", description: "Last 2-3 months of bank statements" },
+              { title: "References", description: "Previous landlord and personal references" },
+            ].map((req) => (
+              <div key={req.title} className="bg-secondary/20 rounded-lg p-6 border border-border">
+                <FileText className="h-8 w-8 text-primary mb-3" />
+                <h3 className="font-semibold text-foreground mb-2">{req.title}</h3>
+                <p className="text-sm text-muted-foreground">{req.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-20 bg-primary">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
