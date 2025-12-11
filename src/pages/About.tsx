@@ -1,0 +1,172 @@
+import { Link } from "react-router-dom";
+import { Building2, Users, TrendingUp, Award, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { DIVISIONS } from "@/lib/constants";
+
+export default function About() {
+  const storyReveal = useScrollReveal(0.1);
+  const philosophyReveal = useScrollReveal(0.1);
+  const divisionsReveal = useScrollReveal(0.1);
+  const whyReveal = useScrollReveal(0.1);
+
+  return (
+    <div className="min-h-screen pt-32 md:pt-40">
+      {/* Hero */}
+      <section className="pb-16 md:pb-24 border-b border-white/5">
+        <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 animate-fade-in">
+            Bridge Advisory Group
+          </h1>
+          <p className="text-lg md:text-xl text-muted-foreground font-light animate-fade-in" style={{ animationDelay: '100ms' }}>
+            A multi-division real estate platform built at the intersection of brokerage, ownership, and capital.
+          </p>
+        </div>
+      </section>
+
+      {/* Platform Story */}
+      <section className="py-20 md:py-28 border-b border-white/5" ref={storyReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+          <div className={`transition-all duration-700 ${
+            storyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
+            <h2 className="text-3xl md:text-4xl font-light mb-8">Platform Story</h2>
+            <div className="space-y-6 text-muted-foreground font-light leading-relaxed">
+              <p>
+                Bridge Advisory Group was founded with a clear vision: to build a real estate platform that brings together the best of brokerage execution with principal-level thinking. Headquartered in New York City, Bridge serves owners, operators, investors, and occupiers across every stage of the real estate cycle.
+              </p>
+              <p>
+                What sets Bridge apart is the integration of services under one roof. Rather than operating as siloed divisions, Bridge brings together residential, commercial leasing, investment sales, capital advisory, and marketing into a unified platform. This means clients benefit from cross-functional insights, coordinated strategies, and a team that understands the full picture.
+              </p>
+              <p>
+                From day one, Bridge has been committed to New York. The team knows the neighborhoods, the buildings, the players, and the dynamics that drive value in this market. That local expertise, combined with institutional-grade execution, is the foundation of everything Bridge does.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Philosophy */}
+      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={philosophyReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+          <div className={`transition-all duration-700 ${
+            philosophyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
+            <h2 className="text-3xl md:text-4xl font-light mb-8">Philosophy</h2>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div>
+                <h3 className="text-xl font-light mb-3">Precision</h3>
+                <p className="text-muted-foreground font-light leading-relaxed">
+                  Every transaction deserves careful attention to detail. Bridge approaches each assignment with rigorous analysis, clear communication, and disciplined execution.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-xl font-light mb-3">Transparency</h3>
+                <p className="text-muted-foreground font-light leading-relaxed">
+                  Clients deserve to know where they stand. Bridge provides honest assessments, realistic timelines, and regular updates throughout every engagement.
+                </p>
+              </div>
+              <div>
+                <h3 className="text-xl font-light mb-3">Long-Term Relationships</h3>
+                <p className="text-muted-foreground font-light leading-relaxed">
+                  The best client relationships are built over years, not transactions. Bridge invests in understanding client goals and delivering value that compounds over time.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Divisions Overview */}
+      <section className="py-20 md:py-28 border-b border-white/5" ref={divisionsReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+          <div className={`text-center mb-12 transition-all duration-700 ${
+            divisionsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
+            <h2 className="text-3xl md:text-4xl font-light mb-4">Our Divisions</h2>
+            <p className="text-muted-foreground font-light">Specialized expertise across every sector of New York City real estate</p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Object.values(DIVISIONS).map((division, index) => (
+              <Link
+                key={division.name}
+                to={division.path}
+                className={`group p-6 rounded-lg border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-500 ${
+                  divisionsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                }`}
+                style={{ transitionDelay: `${index * 100}ms` }}
+              >
+                <h3 className="text-lg font-light mb-2 group-hover:text-foreground transition-colors">{division.name}</h3>
+                <p className="text-sm text-muted-foreground font-light mb-4">{division.tagline}</p>
+                <div className="flex items-center gap-2 text-sm font-light text-foreground/60 group-hover:text-foreground transition-colors">
+                  <span>Learn More</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Bridge */}
+      <section className="py-20 md:py-28" ref={whyReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+          <div className={`text-center mb-12 transition-all duration-700 ${
+            whyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
+            <h2 className="text-3xl md:text-4xl font-light mb-4">Why Bridge</h2>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              {
+                icon: Building2,
+                title: "Integrated View",
+                desc: "Cross-functional insights from residential, commercial, investment, and capital teams working together."
+              },
+              {
+                icon: TrendingUp,
+                title: "Speed Of Execution",
+                desc: "Streamlined processes and dedicated resources that move transactions forward without unnecessary delays."
+              },
+              {
+                icon: Award,
+                title: "Creative Marketing",
+                desc: "In-house marketing team that creates compelling narratives and reaches the right audience."
+              },
+              {
+                icon: Users,
+                title: "Principal Thinking",
+                desc: "Advisory that goes beyond brokerage to consider long-term value creation and strategic positioning."
+              }
+            ].map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <div 
+                  key={item.title}
+                  className={`text-center p-6 rounded-lg hover:bg-white/[0.02] transition-all duration-700 ${
+                    whyReveal.isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
+                  }`}
+                  style={{ transitionDelay: `${index * 100}ms` }}
+                >
+                  <Icon className="mx-auto mb-4 text-accent" size={36} />
+                  <h3 className="text-lg font-light mb-2">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground font-light">{item.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+          
+          <div className={`text-center mt-12 transition-all duration-700 ${
+            whyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`} style={{ transitionDelay: '400ms' }}>
+            <Button asChild size="lg" className="font-light">
+              <Link to="/contact">Contact Us</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
