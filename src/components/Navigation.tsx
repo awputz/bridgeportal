@@ -72,7 +72,7 @@ export const Navigation = () => {
           </div>
 
           {/* Desktop Layout - Centered Logo */}
-          <div className="hidden lg:grid grid-cols-3 items-center py-4 px-8">
+          <div className="hidden lg:grid grid-cols-3 items-center py-2.5 px-8">
             {/* Left: Navigation Links */}
             <div className="flex items-center space-x-5">
               {leftNavItems.map((item) => (
@@ -93,7 +93,7 @@ export const Navigation = () => {
             {/* Center: Logo */}
             <div className="flex justify-center">
               <Link to="/" className="flex items-center">
-                <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="w-48 invert" />
+                <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="w-56 invert" />
               </Link>
             </div>
 
