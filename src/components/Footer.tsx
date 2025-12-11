@@ -58,8 +58,8 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/insights" className="text-foreground/70 hover:text-foreground transition-colors font-light">
-                  Market Insights
+                <Link to="/track-record" className="text-foreground/70 hover:text-foreground transition-colors font-light">
+                  Track Record
                 </Link>
               </li>
               <li>
@@ -68,13 +68,18 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/track-record" className="text-foreground/70 hover:text-foreground transition-colors font-light">
-                  Track Record
+                <Link to="/careers" className="text-foreground/70 hover:text-foreground transition-colors font-light">
+                  Careers
                 </Link>
               </li>
               <li>
-                <Link to="/markets-coming-soon" className="text-foreground/70 hover:text-foreground transition-colors font-light">
-                  Markets Coming Soon
+                <Link to="/press" className="text-foreground/70 hover:text-foreground transition-colors font-light">
+                  Press & Media
+                </Link>
+              </li>
+              <li>
+                <Link to="/faq" className="text-foreground/70 hover:text-foreground transition-colors font-light">
+                  FAQ
                 </Link>
               </li>
             </ul>

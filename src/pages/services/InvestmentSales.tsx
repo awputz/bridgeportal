@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useTransactions } from "@/hooks/useTransactions";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
+import { ServicePageNav } from "@/components/ServicePageNav";
 import { DIVISIONS } from "@/lib/constants";
 import { MarketStats } from "@/components/MarketStats";
 import { InvestmentCalculator } from "@/components/InvestmentCalculator";
@@ -35,6 +36,7 @@ export default function InvestmentSales() {
       </section>
 
       <ServicesSubNav />
+      <ServicePageNav serviceKey="investment-sales" />
 
       {/* Intro */}
       <section className="py-20 md:py-28 border-b border-white/5" ref={introReveal.elementRef}>

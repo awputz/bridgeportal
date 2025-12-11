@@ -3,6 +3,7 @@ import { Megaphone, TrendingUp, Award, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
+import { ServicePageNav } from "@/components/ServicePageNav";
 import { DIVISIONS } from "@/lib/constants";
 
 export default function Marketing() {
@@ -26,6 +27,7 @@ export default function Marketing() {
       </section>
 
       <ServicesSubNav />
+      <ServicePageNav serviceKey="marketing" />
 
       {/* Intro */}
       <section className="py-20 md:py-28 border-b border-white/5" ref={introReveal.elementRef}>

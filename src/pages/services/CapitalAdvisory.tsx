@@ -3,6 +3,7 @@ import { Building2, Users, TrendingUp, ArrowRight, Calculator } from "lucide-rea
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
+import { ServicePageNav } from "@/components/ServicePageNav";
 import { DIVISIONS } from "@/lib/constants";
 import { InvestmentCalculator } from "@/components/InvestmentCalculator";
 
@@ -28,6 +29,7 @@ export default function CapitalAdvisory() {
       </section>
 
       <ServicesSubNav />
+      <ServicePageNav serviceKey="capital-advisory" />
 
       {/* Intro */}
       <section className="py-20 md:py-28 border-b border-white/5" ref={introReveal.elementRef}>
