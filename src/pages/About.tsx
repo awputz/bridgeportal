@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { DIVISIONS } from "@/lib/constants";
+import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 
 export default function About() {
   const { openContactSheet } = useContactSheet();
+  const heroReveal = useScrollReveal(0.1);
   const storyReveal = useScrollReveal(0.1);
   const missionReveal = useScrollReveal(0.1);
   const valuesReveal = useScrollReveal(0.1);
@@ -24,36 +26,52 @@ export default function About() {
   ];
 
   return (
-    <div className="min-h-screen pt-32 md:pt-40">
-      {/* Hero */}
-      <section className="pb-16 md:pb-24 border-b border-white/5">
-        <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6 animate-fade-in">
+    <div className="min-h-screen">
+      {/* Hero with Image */}
+      <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={PLACEHOLDER_IMAGES.hero.nycSkyline} 
+            alt="New York City skyline" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+        </div>
+        <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${
+          heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6">
             About Bridge Advisory Group
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground font-light animate-fade-in" style={{ animationDelay: '100ms' }}>
+          <p className="text-lg md:text-xl text-muted-foreground font-light">
             A multi-division real estate platform at the intersection of brokerage, ownership, and capital.
           </p>
         </div>
       </section>
 
-      {/* Platform Story */}
+      {/* Platform Story with Image */}
       <section className="py-20 md:py-28 border-b border-white/5" ref={storyReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-4xl">
-          <div className={`transition-all duration-700 ${
+        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+          <div className={`grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${
             storyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-8">Firm Story</h2>
-            <div className="space-y-6 text-muted-foreground font-light leading-relaxed">
-              <p>
-                Bridge Advisory Group was founded with a clear vision: to build a real estate platform that brings together the best of brokerage execution with principal-level thinking. Headquartered in New York City, Bridge serves owners, operators, investors, and occupiers across every stage of the real estate cycle.
-              </p>
-              <p>
-                What sets Bridge apart is the integration of services under one roof. Rather than operating as siloed divisions, Bridge brings together residential, commercial leasing, investment sales, capital advisory, and marketing into a unified platform. This means clients benefit from cross-functional insights, coordinated strategies, and a team that understands the full picture.
-              </p>
-              <p>
-                From day one, Bridge has been committed to New York. The team knows the neighborhoods, the buildings, the players, and the dynamics that drive value in this market. That local expertise, combined with institutional-grade execution, is the foundation of everything Bridge does.
-              </p>
+            <div>
+              <h2 className="text-3xl md:text-4xl font-light mb-8">Firm Story</h2>
+              <div className="space-y-6 text-muted-foreground font-light leading-relaxed">
+                <p>
+                  Bridge Advisory Group was founded with a clear vision: to build a real estate platform that brings together the best of brokerage execution with principal-level thinking. Headquartered in New York City, Bridge serves owners, operators, investors, and occupiers across every stage of the real estate cycle.
+                </p>
+                <p>
+                  What sets Bridge apart is the integration of services under one roof. Rather than operating as siloed divisions, Bridge brings together residential, commercial leasing, investment sales, capital advisory, and marketing into a unified platform.
+                </p>
+              </div>
+            </div>
+            <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
+              <img 
+                src={PLACEHOLDER_IMAGES.office.teamWork} 
+                alt="Bridge Advisory Group team collaboration" 
+                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+              />
             </div>
           </div>
         </div>
@@ -83,11 +101,8 @@ export default function About() {
               }`} style={{ transitionDelay: '200ms' }}>
                 <Eye className="h-10 w-10 text-accent mb-6" />
                 <h3 className="text-2xl font-light mb-4">Vision Statement</h3>
-                <p className="text-muted-foreground font-light leading-relaxed mb-4">
-                  Our vision is to be the leading real estate advisory firm in New York, known for our innovative approaches and unwavering commitment to client success. We strive to set new standards in the industry, driving growth and excellence through our dedicated team, advanced technology, and a deep understanding of market dynamics.
-                </p>
                 <p className="text-muted-foreground font-light leading-relaxed">
-                  We are committed to shaping the future of real estate with integrity, expertise, and a focus on sustainable, profitable outcomes for our clients and our community.
+                  Our vision is to be the leading real estate advisory firm in New York, known for our innovative approaches and unwavering commitment to client success.
                 </p>
               </div>
             </div>
@@ -127,31 +142,40 @@ export default function About() {
         </div>
       </section>
 
-      {/* Philosophy */}
+      {/* Philosophy with Image */}
       <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={philosophyReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-4xl">
-          <div className={`transition-all duration-700 ${
+        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+          <div className={`grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${
             philosophyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-8">Philosophy</h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div>
-                <h3 className="text-xl font-light mb-3">Precision</h3>
-                <p className="text-muted-foreground font-light leading-relaxed">
-                  Every transaction deserves careful attention to detail. Bridge approaches each assignment with rigorous analysis, clear communication, and disciplined execution.
-                </p>
-              </div>
-              <div>
-                <h3 className="text-xl font-light mb-3">Transparency</h3>
-                <p className="text-muted-foreground font-light leading-relaxed">
-                  Clients deserve to know where they stand. Bridge provides honest assessments, realistic timelines, and regular updates throughout every engagement.
-                </p>
-              </div>
-              <div>
-                <h3 className="text-xl font-light mb-3">Long-Term Relationships</h3>
-                <p className="text-muted-foreground font-light leading-relaxed">
-                  The best client relationships are built over years, not transactions. Bridge invests in understanding client goals and delivering value that compounds over time.
-                </p>
+            <div className="relative aspect-[4/3] rounded-lg overflow-hidden order-2 md:order-1">
+              <img 
+                src={PLACEHOLDER_IMAGES.building.exterior} 
+                alt="Modern building architecture" 
+                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+              />
+            </div>
+            <div className="order-1 md:order-2">
+              <h2 className="text-3xl md:text-4xl font-light mb-8">Philosophy</h2>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl font-light mb-3">Precision</h3>
+                  <p className="text-muted-foreground font-light leading-relaxed">
+                    Every transaction deserves careful attention to detail. Bridge approaches each assignment with rigorous analysis, clear communication, and disciplined execution.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-xl font-light mb-3">Transparency</h3>
+                  <p className="text-muted-foreground font-light leading-relaxed">
+                    Clients deserve to know where they stand. Bridge provides honest assessments, realistic timelines, and regular updates throughout every engagement.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-xl font-light mb-3">Long-Term Relationships</h3>
+                  <p className="text-muted-foreground font-light leading-relaxed">
+                    The best client relationships are built over years, not transactions. Bridge invests in understanding client goals and delivering value that compounds over time.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
