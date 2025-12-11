@@ -66,7 +66,7 @@ export default function Home() {
           </div>
 
           {/* Quick Access Service Buttons - Hidden on mobile for cleaner look */}
-          <div className="hidden md:flex flex-wrap gap-3 justify-center px-4 mt-6 animate-fade-in" style={{
+          <div className="hidden md:flex flex-wrap gap-3 justify-center px-4 mt-6 mb-20 animate-fade-in" style={{
           animationDelay: '700ms',
           animationFillMode: 'backwards'
         }}>
@@ -86,7 +86,7 @@ export default function Home() {
         </div>
         
         {/* Scroll Indicator */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 animate-fade-in hidden md:block" style={{
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-fade-in hidden md:block" style={{
         animationDelay: '900ms',
         animationFillMode: 'backwards'
       }}>
