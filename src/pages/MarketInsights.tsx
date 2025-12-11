@@ -4,8 +4,11 @@ import { InvestmentCalculator } from "@/components/InvestmentCalculator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TrendingUp, Calculator, FileText, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useBridgeCalculatorBySection } from "@/hooks/useBridgeCalculators";
 
 const MarketInsights = () => {
+  const { data: calculatorConfig } = useBridgeCalculatorBySection("commercial_market_insights", "insights_calculator");
+
   return (
     <div className="min-h-screen pt-28 md:pt-36 lg:pt-44 pb-20 md:pb-28 lg:pb-36 px-4 md:px-6 lg:px-8">
       <div className="container mx-auto max-w-7xl">
@@ -60,7 +63,11 @@ const MarketInsights = () => {
           </TabsContent>
 
           <TabsContent value="calculator">
-            <InvestmentCalculator />
+            <InvestmentCalculator config={calculatorConfig ? {
+              title: calculatorConfig.title || undefined,
+              subtitle: calculatorConfig.subtitle || undefined,
+              defaults: calculatorConfig.input_config?.defaults as any,
+            } : undefined} />
           </TabsContent>
         </Tabs>
       </div>

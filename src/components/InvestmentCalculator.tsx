@@ -4,14 +4,31 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Calculator, TrendingUp, DollarSign, Percent } from "lucide-react";
 
-export const InvestmentCalculator = () => {
-  const [purchasePrice, setPurchasePrice] = useState<number>(2000000);
-  const [downPayment, setDownPayment] = useState<number>(25);
-  const [interestRate, setInterestRate] = useState<number>(6.5);
-  const [loanTerm, setLoanTerm] = useState<number>(30);
-  const [grossIncome, setGrossIncome] = useState<number>(180000);
-  const [operatingExpenses, setOperatingExpenses] = useState<number>(72000);
-  const [vacancyRate, setVacancyRate] = useState<number>(5);
+interface InvestmentCalculatorProps {
+  config?: {
+    title?: string;
+    subtitle?: string;
+    defaults?: {
+      purchasePrice?: number;
+      downPayment?: number;
+      interestRate?: number;
+      loanTerm?: number;
+      grossIncome?: number;
+      operatingExpenses?: number;
+      vacancyRate?: number;
+    };
+  };
+}
+
+export const InvestmentCalculator = ({ config }: InvestmentCalculatorProps) => {
+  const defaults = config?.defaults || {};
+  const [purchasePrice, setPurchasePrice] = useState<number>(defaults.purchasePrice ?? 2000000);
+  const [downPayment, setDownPayment] = useState<number>(defaults.downPayment ?? 25);
+  const [interestRate, setInterestRate] = useState<number>(defaults.interestRate ?? 6.5);
+  const [loanTerm, setLoanTerm] = useState<number>(defaults.loanTerm ?? 30);
+  const [grossIncome, setGrossIncome] = useState<number>(defaults.grossIncome ?? 180000);
+  const [operatingExpenses, setOperatingExpenses] = useState<number>(defaults.operatingExpenses ?? 72000);
+  const [vacancyRate, setVacancyRate] = useState<number>(defaults.vacancyRate ?? 5);
 
   const [results, setResults] = useState({
     monthlyPayment: 0,
@@ -87,10 +104,10 @@ export const InvestmentCalculator = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Calculator className="h-5 w-5 text-accent" />
-              Investment Calculator
+              {config?.title || "Investment Calculator"}
             </CardTitle>
             <CardDescription>
-              Calculate returns and analyze investment property performance
+              {config?.subtitle || "Calculate returns and analyze investment property performance"}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
