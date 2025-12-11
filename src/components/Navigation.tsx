@@ -59,12 +59,12 @@ export const Navigation = () => {
       <nav className="fixed top-0 left-0 right-0 z-50 px-3 pt-3 md:px-4 md:pt-3 lg:px-5 lg:pt-4">
         <div className="max-w-7xl mx-auto glass-nav">
           {/* Mobile & Tablet Layout */}
-          <div className="flex lg:hidden items-center justify-between h-14 sm:h-16 md:h-18 px-4 md:px-5">
+          <div className="flex lg:hidden items-center justify-between h-16 sm:h-18 px-5 md:px-6">
             <Link to="/" className="flex items-center flex-shrink-0">
               <img 
                 src={bridgeInvestmentLogo} 
                 alt="Bridge Investment Sales" 
-                className="h-9 sm:h-10 md:h-11 w-auto invert" 
+                className="h-10 sm:h-11 md:h-12 w-auto" 
               />
             </Link>
             <button
@@ -86,7 +86,7 @@ export const Navigation = () => {
           </div>
 
           {/* Desktop Layout */}
-          <div className="hidden lg:grid grid-cols-3 items-center h-16 px-6">
+          <div className="hidden lg:grid grid-cols-3 items-center h-20 px-8">
             {/* Left: Navigation Links */}
             <div className="flex items-center space-x-6">
               {leftNavItems.map((item) => (
@@ -107,7 +107,7 @@ export const Navigation = () => {
             {/* Center: Logo */}
             <div className="flex justify-center">
               <Link to="/" className="flex items-center">
-                <img src={bridgeInvestmentLogo} alt="Bridge Investment Sales" className="h-10 w-auto invert" />
+                <img src={bridgeInvestmentLogo} alt="Bridge Investment Sales" className="h-12 w-auto" />
               </Link>
             </div>
 
@@ -127,8 +127,8 @@ export const Navigation = () => {
                     >
                       Services
                     </NavigationMenuTrigger>
-                    <NavigationMenuContent className="glass-dropdown bg-black/80 backdrop-blur-xl border border-white/15 shadow-[0_16px_64px_rgba(0,0,0,0.6)]">
-                      <div className="grid grid-cols-2 gap-2 p-4 w-[520px]">
+                    <NavigationMenuContent className="!bg-zinc-900/95 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-xl">
+                      <div className="grid grid-cols-2 gap-2 p-4 w-[500px]">
                         {NAV_ITEMS.services.items.map((item, index) => {
                           const IconComponent = serviceIcons[item.name] || Building2;
                           // Get division key from item name
