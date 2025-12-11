@@ -4,6 +4,7 @@ import { useBridgeServices } from "@/hooks/useBridgeServices";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { Instagram, Linkedin, Phone, Mail, ArrowUp } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -21,8 +22,10 @@ export const Footer = () => {
   const [email, setEmail] = useState("");
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Newsletter submission logic here
-    setEmail("");
+    if (email) {
+      toast.success("Thanks for subscribing!", { description: "You'll receive our latest updates." });
+      setEmail("");
+    }
   };
   return <footer className="bg-dark-bg text-foreground">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 bg-primary-foreground">

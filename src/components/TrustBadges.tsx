@@ -5,18 +5,18 @@ import { cn } from "@/lib/utils";
 const badges = [
   {
     icon: Award,
-    title: "Top Broker",
-    description: "Recognized industry leader",
+    title: "REBNY Member",
+    description: "Industry accredited",
   },
   {
     icon: Shield,
-    title: "Licensed & Insured",
-    description: "Fully compliant operations",
+    title: "15+ Years Combined",
+    description: "Team experience",
   },
   {
     icon: Star,
-    title: "5-Star Rated",
-    description: "Exceptional client reviews",
+    title: "5-Star Google",
+    description: "Client reviews",
   },
   {
     icon: TrendingUp,
