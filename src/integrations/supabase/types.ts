@@ -175,6 +175,51 @@ export type Database = {
         }
         Relationships: []
       }
+      bridge_resources: {
+        Row: {
+          body_content: string | null
+          category: string
+          created_at: string | null
+          display_order: number | null
+          external_url: string | null
+          id: string
+          is_active: boolean | null
+          metadata: Json | null
+          short_description: string | null
+          slug: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          body_content?: string | null
+          category: string
+          created_at?: string | null
+          display_order?: number | null
+          external_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          short_description?: string | null
+          slug: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          body_content?: string | null
+          category?: string
+          created_at?: string | null
+          display_order?: number | null
+          external_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          short_description?: string | null
+          slug?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       bridge_services: {
         Row: {
           created_at: string | null

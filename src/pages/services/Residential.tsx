@@ -5,6 +5,8 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
+import { useResidentialTransactions } from "@/hooks/useResidentialTransactions";
+import { useBridgePageSection } from "@/hooks/useBridgePageContent";
 import manhattanImg from "@/assets/manhattan-market.jpg";
 import brooklynImg from "@/assets/brooklyn-market.jpg";
 import queensImg from "@/assets/queens-market.jpg";
@@ -17,7 +19,7 @@ import instagram4 from "@/assets/instagram-4.jpg";
 import instagram5 from "@/assets/instagram-5.jpg";
 import instagram6 from "@/assets/instagram-6.jpg";
 
-const stats = [
+const defaultStats = [
   { label: "Units Represented", value: "500+" },
   { label: "Active Listings", value: "100+" },
   { label: "Landlord Relationships", value: "50+" },
@@ -37,17 +39,19 @@ const processSteps = [
   { step: "04", title: "Move-In Ready", description: "Seamless closing coordination ensuring you're ready to move in on schedule." },
 ];
 
-const recentDeals = [
-  { address: "250 West 50th Street, #42C", neighborhood: "Hell's Kitchen", type: "Rental", price: "$5,200/mo", date: "Nov 2024", agent: "Sarah Mitchell" },
-  { address: "180 Myrtle Avenue, #8F", neighborhood: "Downtown Brooklyn", type: "Rental", price: "$4,800/mo", date: "Nov 2024", agent: "James Chen" },
-  { address: "42-15 Crescent Street, #5B", neighborhood: "Long Island City", type: "Sale", price: "$875,000", date: "Oct 2024", agent: "Maria Rodriguez" },
-  { address: "301 East 78th Street, #12A", neighborhood: "Upper East Side", type: "Rental", price: "$6,500/mo", date: "Oct 2024", agent: "David Park" },
-];
-
 const instagramImages = [instagram1, instagram2, instagram3, instagram4, instagram5, instagram6];
+
+// Format currency for display
+const formatRent = (rent: number | null) => {
+  if (!rent) return "Price on Request";
+  return `$${rent.toLocaleString()}/mo`;
+};
 
 export default function ResidentialServices() {
   const { openContactSheet } = useContactSheet();
+  const { data: transactions } = useResidentialTransactions(4);
+  const { data: platformIntro } = useBridgePageSection("residential", "platform_intro");
+  
   const introReveal = useScrollReveal(0.1);
   const statsReveal = useScrollReveal(0.1);
   const marketsReveal = useScrollReveal(0.1);
@@ -60,6 +64,9 @@ export default function ResidentialServices() {
   const dealsReveal = useScrollReveal(0.1);
   const exploreReveal = useScrollReveal(0.1);
   const instagramReveal = useScrollReveal(0.1);
+
+  // Use CMS transactions or empty array
+  const recentDeals = transactions || [];
 
   return (
     <div className="min-h-screen pt-32 md:pt-40">
@@ -108,7 +115,7 @@ export default function ResidentialServices() {
           <div className={`grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 transition-all duration-700 ${
             statsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            {stats.map((stat, index) => (
+            {defaultStats.map((stat, index) => (
               <div key={stat.label} className="text-center" style={{ transitionDelay: `${index * 100}ms` }}>
                 <div className="text-3xl md:text-4xl font-light text-foreground mb-2">{stat.value}</div>
                 <div className="text-sm text-muted-foreground font-light">{stat.label}</div>
@@ -124,7 +131,7 @@ export default function ResidentialServices() {
           <p className={`text-lg md:text-xl text-muted-foreground font-light leading-relaxed text-center transition-all duration-700 ${
             introReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            Bridge Residential is the dedicated residential division of Bridge Advisory Group, led by Jacob Neiderfer as Director of Residential Leasing and Alex Putzer as co-founder. Operating as a platform managing more than 500 units and over one hundred active listings across Manhattan, Brooklyn, and Queens, we partner with landlords, investors, and residents who expect a sharp process, accurate pricing guidance, and marketing that actually converts.
+            {platformIntro?.content || "Bridge Residential is the dedicated residential division of Bridge Advisory Group, led by Jacob Neiderfer as Director of Residential Leasing and Alex Putzer as co-founder. Operating as a platform managing more than 500 units and over one hundred active listings across Manhattan, Brooklyn, and Queens, we partner with landlords, investors, and residents who expect a sharp process, accurate pricing guidance, and marketing that actually converts."}
           </p>
         </div>
       </section>
@@ -381,21 +388,21 @@ export default function ResidentialServices() {
             <div className="grid md:grid-cols-2 gap-6">
               {recentDeals.map((deal, index) => (
                 <div 
-                  key={deal.address} 
+                  key={deal.id} 
                   className="p-6 rounded-lg border border-white/10 bg-white/[0.02]"
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
                   <div className="flex justify-between items-start mb-3">
-                    <span className={`text-xs uppercase tracking-wider px-2 py-1 rounded ${deal.type === 'Sale' ? 'bg-accent/20 text-accent' : 'bg-white/10 text-muted-foreground'}`}>
-                      {deal.type}
+                    <span className={`text-xs uppercase tracking-wider px-2 py-1 rounded ${deal.property_type === 'Retail' || deal.property_type === 'Office' ? 'bg-accent/20 text-accent' : 'bg-white/10 text-muted-foreground'}`}>
+                      {deal.property_type || 'Rental'}
                     </span>
-                    <span className="text-sm text-muted-foreground font-light">{deal.date}</span>
+                    <span className="text-sm text-muted-foreground font-light">{deal.closing_date || 'Recent'}</span>
                   </div>
-                  <h3 className="text-lg font-light mb-1">{deal.address}</h3>
-                  <p className="text-sm text-muted-foreground font-light mb-3">{deal.neighborhood}</p>
+                  <h3 className="text-lg font-light mb-1">{deal.property_address}</h3>
+                  <p className="text-sm text-muted-foreground font-light mb-3">{deal.neighborhood || deal.borough || 'Manhattan'}</p>
                   <div className="flex justify-between items-center">
-                    <span className="text-xl font-light text-accent">{deal.price}</span>
-                    <span className="text-sm text-muted-foreground font-light">{deal.agent}</span>
+                    <span className="text-xl font-light text-accent">{formatRent(deal.monthly_rent)}</span>
+                    <span className="text-sm text-muted-foreground font-light">{deal.agent_name}</span>
                   </div>
                 </div>
               ))}
