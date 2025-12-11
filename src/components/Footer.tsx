@@ -1,22 +1,14 @@
 import { Link } from "react-router-dom";
 import { COMPANY_INFO, NAV_ITEMS } from "@/lib/constants";
-
-// Placeholder for Bridge Advisory Group logo (monochrome)
-const FooterLogo = () => (
-  <div className="text-2xl font-light tracking-tight">
-    <span className="font-medium">BRIDGE</span>
-    <span className="text-muted-foreground ml-1">Advisory Group</span>
-  </div>
-);
+import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
 
 export const Footer = () => {
   return (
     <footer className="bg-dark-bg text-foreground border-t border-border">
       <div className="container mx-auto px-6 lg:px-8 py-20 md:py-24">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-14 lg:gap-16 mb-16">
-          {/* Company Info */}
           <div className="lg:col-span-1">
-            <FooterLogo />
+            <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="h-10 invert opacity-80" />
             <p className="text-sm text-muted-foreground mt-4 mb-6 leading-relaxed max-w-sm">
               {COMPANY_INFO.description.short}
             </p>

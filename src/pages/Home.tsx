@@ -6,18 +6,7 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { DivisionSelector } from "@/components/DivisionSelector";
 import { COMPANY_INFO } from "@/lib/constants";
 import heroImage from "@/assets/brooklyn-bridge-hero-light.jpg";
-
-// Placeholder for Bridge Advisory Group logo
-const PlaceholderLogo = ({ className }: { className?: string }) => (
-  <div className={`flex flex-col items-center ${className}`}>
-    <div className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-center">
-      <span className="font-medium">BRIDGE</span>
-    </div>
-    <div className="text-lg md:text-xl lg:text-2xl font-light text-foreground/70 tracking-widest uppercase mt-2">
-      Advisory Group
-    </div>
-  </div>
-);
+import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
 
 export default function Home() {
   const { data: transactions = [] } = useTransactions();
@@ -49,7 +38,7 @@ export default function Home() {
             className="animate-fade-in"
             style={{ animationDelay: '200ms', animationFillMode: 'backwards' }}
           >
-            <PlaceholderLogo className="mx-auto mb-8 md:mb-12" />
+            <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="mx-auto h-24 md:h-32 lg:h-40 invert mb-8 md:mb-12" />
           </div>
           
           <p 
