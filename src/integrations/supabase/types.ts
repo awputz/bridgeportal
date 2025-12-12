@@ -1082,7 +1082,45 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      team_members_public: {
+        Row: {
+          bio: string | null
+          category: string | null
+          display_order: number | null
+          id: string | null
+          image_url: string | null
+          instagram_url: string | null
+          linkedin_url: string | null
+          name: string | null
+          slug: string | null
+          title: string | null
+        }
+        Insert: {
+          bio?: string | null
+          category?: string | null
+          display_order?: number | null
+          id?: string | null
+          image_url?: string | null
+          instagram_url?: string | null
+          linkedin_url?: string | null
+          name?: string | null
+          slug?: string | null
+          title?: string | null
+        }
+        Update: {
+          bio?: string | null
+          category?: string | null
+          display_order?: number | null
+          id?: string | null
+          image_url?: string | null
+          instagram_url?: string | null
+          linkedin_url?: string | null
+          name?: string | null
+          slug?: string | null
+          title?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {
