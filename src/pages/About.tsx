@@ -3,42 +3,38 @@ import { Building2, Users, TrendingUp, Award, ArrowRight, Target, Eye, Heart, Me
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
-import { DIVISIONS } from "@/lib/constants";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
-import { NewsletterSignup } from "@/components/NewsletterSignup";
 
 export default function About() {
   const { openContactSheet } = useContactSheet();
   const heroReveal = useScrollReveal(0.1);
-  const statsReveal = useScrollReveal(0.1);
   const storyReveal = useScrollReveal(0.1);
   const missionReveal = useScrollReveal(0.1);
   const valuesReveal = useScrollReveal(0.1);
   const philosophyReveal = useScrollReveal(0.1);
-  const divisionsReveal = useScrollReveal(0.1);
   const whyReveal = useScrollReveal(0.1);
 
   const stats = [
-    { icon: DollarSign, value: 500, suffix: "M+", label: "Transactions Closed" },
-    { icon: Briefcase, value: 100, suffix: "+", label: "Clients Served" },
-    { icon: Clock, value: 15, suffix: "+", label: "Years Combined Experience" },
-    { icon: Home, value: 50, suffix: "+", label: "Active Listings" },
+    { icon: DollarSign, value: 500, suffix: "M+", label: "Closed" },
+    { icon: Briefcase, value: 100, suffix: "+", label: "Clients" },
+    { icon: Clock, value: 15, suffix: "+", label: "Years Exp." },
+    { icon: Home, value: 50, suffix: "+", label: "Listings" },
   ];
 
   const culturalValues = [
-    { icon: Heart, title: "Lead with Optimism and Compassion" },
-    { icon: MessageSquare, title: "Cultivate Frequent Feedback" },
-    { icon: Trophy, title: "Celebrate the Wins" },
-    { icon: Compass, title: "Embrace Process Over Outcome" },
+    { icon: Heart, title: "Lead with Optimism" },
+    { icon: MessageSquare, title: "Frequent Feedback" },
+    { icon: Trophy, title: "Celebrate Wins" },
+    { icon: Compass, title: "Process Over Outcome" },
     { icon: HelpCircle, title: "Start with Why" },
     { icon: PenLine, title: "Cherish Writing" },
   ];
 
   return (
     <div className="min-h-screen">
-      {/* Hero with Image */}
-      <section className="relative h-[50vh] md:h-[60vh] min-h-[350px] md:min-h-[450px] flex items-center justify-center" ref={heroReveal.elementRef}>
+      {/* Hero with Stats */}
+      <section className="relative min-h-[50vh] flex items-center justify-center py-20" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img 
             src={PLACEHOLDER_IMAGES.hero.nycSkyline} 
@@ -50,38 +46,24 @@ export default function About() {
         <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${
           heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-4">
             About Bridge Advisory Group
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground font-light">
+          <p className="text-lg md:text-xl text-muted-foreground font-light mb-8">
             A multi-division real estate platform at the intersection of brokerage, ownership, and capital.
           </p>
-        </div>
-      </section>
-
-      {/* Animated Stats Section */}
-      <section className="py-12 md:py-16 border-b border-white/5 bg-white/[0.02]" ref={statsReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 transition-all duration-700 ${
-            statsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
+          
+          {/* Stats inline */}
+          <div className="grid grid-cols-4 gap-4 max-w-2xl mx-auto">
             {stats.map((stat, index) => {
               const Icon = stat.icon;
               return (
-                <div 
-                  key={stat.label}
-                  className="text-center"
-                  style={{ transitionDelay: `${index * 100}ms` }}
-                >
-                  <Icon className="h-6 w-6 md:h-8 md:w-8 text-accent mx-auto mb-3" />
-                  <div className="text-3xl md:text-4xl lg:text-5xl font-light mb-2">
-                    <AnimatedCounter 
-                      end={stat.value} 
-                      suffix={stat.suffix}
-                      duration={2000}
-                    />
+                <div key={stat.label} className="text-center" style={{ transitionDelay: `${index * 100}ms` }}>
+                  <Icon className="h-5 w-5 text-accent mx-auto mb-2" />
+                  <div className="text-xl md:text-2xl font-light">
+                    <AnimatedCounter end={stat.value} suffix={stat.suffix} duration={2000} />
                   </div>
-                  <p className="text-xs md:text-sm text-muted-foreground font-light">{stat.label}</p>
+                  <p className="text-xs text-muted-foreground font-light">{stat.label}</p>
                 </div>
               );
             })}
@@ -89,27 +71,25 @@ export default function About() {
         </div>
       </section>
 
-      {/* Platform Story with Image */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={storyReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+      {/* Firm Story */}
+      <section className="py-16 md:py-24 border-b border-white/5" ref={storyReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${
             storyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
             <div>
-              <h2 className="text-3xl md:text-4xl font-light mb-8">Firm Story</h2>
-              <div className="space-y-6 text-muted-foreground font-light leading-relaxed">
-                <p>
-                  Bridge Advisory Group was founded with a clear vision: to build a real estate platform that brings together the best of brokerage execution with principal-level thinking. Headquartered in New York City, Bridge serves owners, operators, investors, and occupiers across every stage of the real estate cycle.
-                </p>
-                <p>
-                  What sets Bridge apart is the integration of services under one roof. Rather than operating as siloed divisions, Bridge brings together residential, commercial leasing, investment sales, capital advisory, and marketing into a unified platform.
-                </p>
-              </div>
+              <h2 className="text-3xl md:text-4xl font-light mb-6">Firm Story</h2>
+              <p className="text-muted-foreground font-light leading-relaxed mb-4">
+                Bridge Advisory Group was founded to build a real estate platform that brings together brokerage execution with principal-level thinking. Headquartered in NYC, we serve owners, operators, investors, and occupiers across every stage of the real estate cycle.
+              </p>
+              <p className="text-muted-foreground font-light leading-relaxed">
+                What sets Bridge apart is the integration of residential, commercial leasing, investment sales, capital advisory, and marketing into a unified platform.
+              </p>
             </div>
             <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
               <img 
                 src={PLACEHOLDER_IMAGES.office.teamWork} 
-                alt="Bridge Advisory Group team collaboration" 
+                alt="Bridge Advisory Group team" 
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
               />
             </div>
@@ -118,102 +98,88 @@ export default function About() {
       </section>
 
       {/* Mission and Vision */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={missionReveal.elementRef}>
+      <section className="py-16 md:py-24 border-b border-white/5 bg-white/[0.01]" ref={missionReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
-          <div className={`transition-all duration-700 ${
-            missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
-            <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">Mission And Vision</h2>
-            
-            <div className="grid md:grid-cols-2 gap-8 md:gap-12">
-              <div className={`p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-700 ${
-                missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`} style={{ transitionDelay: '100ms' }}>
-                <Target className="h-10 w-10 text-accent mb-6" />
-                <h3 className="text-2xl font-light mb-4">Mission Statement</h3>
-                <p className="text-muted-foreground font-light leading-relaxed">
-                  At Bridge Advisory Group, our mission is to redefine real estate service excellence across the New York market. We aim to empower our clients through informed, expert-led strategies that maximize value and foster long-term relationships.
-                </p>
-              </div>
-              
-              <div className={`p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-700 ${
-                missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`} style={{ transitionDelay: '200ms' }}>
-                <Eye className="h-10 w-10 text-accent mb-6" />
-                <h3 className="text-2xl font-light mb-4">Vision Statement</h3>
-                <p className="text-muted-foreground font-light leading-relaxed">
-                  Our vision is to be the leading real estate advisory firm in New York, known for our innovative approaches and unwavering commitment to client success.
-                </p>
-              </div>
+          <h2 className="text-3xl md:text-4xl font-light mb-10 text-center">Mission & Vision</h2>
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+            <div className={`p-6 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-700 ${
+              missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}>
+              <Target className="h-8 w-8 text-accent mb-4" />
+              <h3 className="text-xl font-light mb-3">Mission</h3>
+              <p className="text-sm text-muted-foreground font-light leading-relaxed">
+                To redefine real estate service excellence across New York through expert-led strategies that maximize value and foster long-term relationships.
+              </p>
+            </div>
+            <div className={`p-6 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-700 ${
+              missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`} style={{ transitionDelay: '100ms' }}>
+              <Eye className="h-8 w-8 text-accent mb-4" />
+              <h3 className="text-xl font-light mb-3">Vision</h3>
+              <p className="text-sm text-muted-foreground font-light leading-relaxed">
+                To be New York's leading real estate advisory firm, known for innovative approaches and unwavering commitment to client success.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Cultural Values */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={valuesReveal.elementRef}>
+      <section className="py-16 md:py-24 border-b border-white/5" ref={valuesReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
-          <div className={`transition-all duration-700 ${
-            valuesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">Cultural Values</h2>
-            <p className="text-sm md:text-base text-muted-foreground font-light text-center mb-8 md:mb-12">
-              These values are reviewed in every onboarding meeting and guide how we work as a firm.
-            </p>
-            
-            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
-              {culturalValues.map((value, index) => {
-                const Icon = value.icon;
-                return (
-                  <div 
-                    key={value.title}
-                    className={`p-4 md:p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-500 ${
-                      valuesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                    }`}
-                    style={{ transitionDelay: `${index * 100}ms` }}
-                  >
-                    <Icon className="h-6 w-6 md:h-8 md:w-8 text-accent mb-3 md:mb-4" />
-                    <h3 className="text-sm md:text-lg font-light">{value.title}</h3>
-                  </div>
-                );
-              })}
-            </div>
+          <h2 className="text-2xl md:text-3xl font-light mb-8 text-center">Our Values</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {culturalValues.map((value, index) => {
+              const Icon = value.icon;
+              return (
+                <div 
+                  key={value.title}
+                  className={`p-4 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-500 text-center ${
+                    valuesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                  }`}
+                  style={{ transitionDelay: `${index * 50}ms` }}
+                >
+                  <Icon className="h-6 w-6 text-accent mb-2 mx-auto" />
+                  <h3 className="text-sm font-light">{value.title}</h3>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Philosophy with Image */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={philosophyReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+      {/* Philosophy */}
+      <section className="py-16 md:py-24 border-b border-white/5 bg-white/[0.01]" ref={philosophyReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${
             philosophyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
             <div className="relative aspect-[4/3] rounded-lg overflow-hidden order-2 md:order-1">
               <img 
                 src={PLACEHOLDER_IMAGES.building.exterior} 
-                alt="Modern building architecture" 
+                alt="Modern building" 
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
               />
             </div>
             <div className="order-1 md:order-2">
-              <h2 className="text-3xl md:text-4xl font-light mb-8">Philosophy</h2>
-              <div className="space-y-6">
+              <h2 className="text-2xl md:text-3xl font-light mb-6">Philosophy</h2>
+              <div className="space-y-4">
                 <div>
-                  <h3 className="text-xl font-light mb-3">Precision</h3>
-                  <p className="text-muted-foreground font-light leading-relaxed">
-                    Every transaction deserves careful attention to detail. Bridge approaches each assignment with rigorous analysis, clear communication, and disciplined execution.
+                  <h3 className="text-lg font-light mb-2">Precision</h3>
+                  <p className="text-sm text-muted-foreground font-light">
+                    Every transaction deserves careful attention to detail with rigorous analysis and clear communication.
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-xl font-light mb-3">Transparency</h3>
-                  <p className="text-muted-foreground font-light leading-relaxed">
-                    Clients deserve to know where they stand. Bridge provides honest assessments, realistic timelines, and regular updates throughout every engagement.
+                  <h3 className="text-lg font-light mb-2">Transparency</h3>
+                  <p className="text-sm text-muted-foreground font-light">
+                    Honest assessments, realistic timelines, and regular updates throughout every engagement.
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-xl font-light mb-3">Long-Term Relationships</h3>
-                  <p className="text-muted-foreground font-light leading-relaxed">
-                    The best client relationships are built over years, not transactions. Bridge invests in understanding client goals and delivering value that compounds over time.
+                  <h3 className="text-lg font-light mb-2">Long-Term Relationships</h3>
+                  <p className="text-sm text-muted-foreground font-light">
+                    We invest in understanding client goals and delivering value that compounds over time.
                   </p>
                 </div>
               </div>
@@ -222,101 +188,41 @@ export default function About() {
         </div>
       </section>
 
-      {/* Divisions Overview */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={divisionsReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`text-center mb-8 md:mb-12 transition-all duration-700 ${
-            divisionsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Our Divisions</h2>
-            <p className="text-sm md:text-base text-muted-foreground font-light">Specialized expertise across every sector of New York City real estate</p>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {Object.values(DIVISIONS).map((division, index) => (
-              <Link
-                key={division.name}
-                to={division.path}
-                className={`group p-6 rounded-lg border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-500 ${
-                  divisionsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                }`}
-                style={{ transitionDelay: `${index * 100}ms` }}
-              >
-                <h3 className="text-lg font-light mb-2 group-hover:text-foreground transition-colors">{division.name}</h3>
-                <p className="text-sm text-muted-foreground font-light mb-4">{division.tagline}</p>
-                <div className="flex items-center gap-2 text-sm font-light text-foreground/60 group-hover:text-foreground transition-colors">
-                  <span>Learn More</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Why Bridge */}
-      <section className="py-12 md:py-20 lg:py-28" ref={whyReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`text-center mb-8 md:mb-12 transition-all duration-700 ${
-            whyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Why Bridge</h2>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+      <section className="py-16 md:py-24" ref={whyReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+          <h2 className="text-2xl md:text-3xl font-light mb-8 text-center">Why Bridge</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              {
-                icon: Building2,
-                title: "Integrated View",
-                desc: "Cross-functional insights from residential, commercial, investment, and capital teams working together."
-              },
-              {
-                icon: TrendingUp,
-                title: "Speed Of Execution",
-                desc: "Streamlined processes and dedicated resources that move transactions forward without unnecessary delays."
-              },
-              {
-                icon: Award,
-                title: "Creative Marketing",
-                desc: "In-house marketing team that creates compelling narratives and reaches the right audience."
-              },
-              {
-                icon: Users,
-                title: "Principal Thinking",
-                desc: "Advisory that goes beyond brokerage to consider long-term value creation and strategic positioning."
-              }
+              { icon: Building2, title: "Integrated View", desc: "Cross-functional insights across all divisions." },
+              { icon: TrendingUp, title: "Speed", desc: "Streamlined processes that move fast." },
+              { icon: Award, title: "Creative Marketing", desc: "In-house team for compelling narratives." },
+              { icon: Users, title: "Principal Thinking", desc: "Advisory beyond just brokerage." }
             ].map((item, index) => {
               const Icon = item.icon;
               return (
                 <div 
                   key={item.title}
-                  className={`text-center p-6 rounded-lg hover:bg-white/[0.02] transition-all duration-700 ${
+                  className={`text-center p-4 rounded-lg hover:bg-white/[0.02] transition-all duration-700 ${
                     whyReveal.isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'
                   }`}
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
-                  <Icon className="mx-auto mb-4 text-accent" size={36} />
-                  <h3 className="text-lg font-light mb-2">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground font-light">{item.desc}</p>
+                  <Icon className="mx-auto mb-3 text-accent" size={28} />
+                  <h3 className="text-sm font-light mb-1">{item.title}</h3>
+                  <p className="text-xs text-muted-foreground font-light">{item.desc}</p>
                 </div>
               );
             })}
           </div>
           
-          <div className={`text-center mt-12 transition-all duration-700 ${
+          <div className={`text-center mt-10 transition-all duration-700 ${
             whyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`} style={{ transitionDelay: '400ms' }}>
             <Button size="lg" className="font-light" onClick={openContactSheet}>
               Contact Us
             </Button>
           </div>
-        </div>
-      </section>
-
-      {/* Newsletter Signup */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5">
-        <div className="container mx-auto px-4 md:px-6 max-w-2xl">
-          <NewsletterSignup />
         </div>
       </section>
     </div>
