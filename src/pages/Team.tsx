@@ -9,12 +9,9 @@ interface TeamMember {
   name: string;
   title: string;
   bio?: string;
-  email: string;
-  phone?: string;
   image: string;
   instagram?: string;
   linkedin?: string;
-  license_number?: string;
 }
 
 const CATEGORY_LABELS: Record<TeamCategory, string> = {
@@ -36,12 +33,9 @@ const Team = () => {
     name: agent.name,
     title: agent.title,
     bio: agent.bio,
-    email: agent.email,
-    phone: agent.phone,
     image: agent.image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(agent.name)}&size=400&background=18181b&color=fff`,
     instagram: agent.instagram_url,
     linkedin: agent.linkedin_url,
-    license_number: agent.license_number,
   });
 
   const handleMemberClick = (member: TeamMember) => {
@@ -77,11 +71,6 @@ const Team = () => {
         <div className={isLarge ? "p-5" : "p-4"}>
           <h3 className={`${isLarge ? "text-lg" : "text-base"} font-light mb-1`}>{member.name}</h3>
           <p className="text-xs text-muted-foreground font-light mb-1">{member.title}</p>
-          {agent.license_number && (
-            <p className="text-[10px] text-muted-foreground/60 font-light">
-              #{agent.license_number}
-            </p>
-          )}
           {isLarge && member.bio && (
             <p className="text-xs text-muted-foreground/80 leading-relaxed font-light line-clamp-2 mt-2">{member.bio}</p>
           )}

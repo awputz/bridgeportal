@@ -1,17 +1,16 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Mail, Phone, Instagram, Linkedin, Download, X } from "lucide-react";
+import { Instagram, Linkedin, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { useContactSheet } from "@/contexts/ContactSheetContext";
 
 interface TeamMember {
   name: string;
   title: string;
   bio?: string;
-  email: string;
-  phone?: string;
   image: string;
   instagram?: string;
   linkedin?: string;
-  license_number?: string;
 }
 
 interface TeamMemberDialogProps {
@@ -20,35 +19,20 @@ interface TeamMemberDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const generateVCard = (member: TeamMember) => {
-  const vcard = `BEGIN:VCARD
-VERSION:3.0
-FN:${member.name}
-ORG:Bridge Advisory Group
-TITLE:${member.title}
-TEL:${member.phone || ''}
-EMAIL:${member.email}
-${member.linkedin ? `URL:${member.linkedin}\n` : ''}END:VCARD`;
-
-  const blob = new Blob([vcard], { type: 'text/vcard' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `${member.name.replace(/\s+/g, '-')}.vcf`;
-  link.click();
-  URL.revokeObjectURL(url);
-};
-
-const contactActions = [
-  { icon: Mail, label: "Email", action: (member: TeamMember) => window.location.href = `mailto:${member.email}` },
-  { icon: Phone, label: "Phone", action: (member: TeamMember) => member.phone && (window.location.href = `tel:${member.phone}`) },
-  { icon: Instagram, label: "Instagram", action: (member: TeamMember) => member.instagram && window.open(member.instagram, '_blank') },
-  { icon: Linkedin, label: "LinkedIn", action: (member: TeamMember) => member.linkedin && window.open(member.linkedin, '_blank') },
-  { icon: Download, label: "Save", action: (member: TeamMember) => generateVCard(member) },
-];
-
 export const TeamMemberDialog = ({ member, open, onOpenChange }: TeamMemberDialogProps) => {
+  const { openContactSheet } = useContactSheet();
+
   if (!member) return null;
+
+  const handleContact = () => {
+    onOpenChange(false);
+    openContactSheet();
+  };
+
+  const socialActions = [
+    { icon: Instagram, label: "Instagram", url: member.instagram },
+    { icon: Linkedin, label: "LinkedIn", url: member.linkedin },
+  ].filter(action => action.url);
 
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
@@ -79,11 +63,6 @@ export const TeamMemberDialog = ({ member, open, onOpenChange }: TeamMemberDialo
           <div className="space-y-2 animate-in fade-in slide-in-from-bottom-4 duration-300 ease-out">
             <h2 className="text-3xl md:text-4xl font-light tracking-tight">{member.name}</h2>
             <p className="text-sm uppercase tracking-widest text-muted-foreground">{member.title}</p>
-            {member.license_number && (
-              <p className="text-xs text-muted-foreground/70 font-light">
-                #{member.license_number}
-              </p>
-            )}
           </div>
 
           {/* Bio */}
@@ -93,43 +72,25 @@ export const TeamMemberDialog = ({ member, open, onOpenChange }: TeamMemberDialo
             </p>
           )}
 
-          {/* Contact Actions */}
-          <div className="grid grid-cols-3 md:grid-cols-5 gap-6 pt-4">
-            {contactActions.map((action, index) => {
+          {/* Actions */}
+          <div className="flex flex-wrap items-center gap-4 pt-4 animate-in fade-in slide-in-from-bottom-4 duration-300 ease-out delay-100">
+            <Button onClick={handleContact} className="font-light">
+              Contact {member.name.split(' ')[0]}
+            </Button>
+            
+            {socialActions.map((action) => {
               const Icon = action.icon;
-              const isDisabled = 
-                (action.label === "Phone" && !member.phone) ||
-                (action.label === "Instagram" && !member.instagram) ||
-                (action.label === "LinkedIn" && !member.linkedin);
-              
               return (
-                <button
+                <a
                   key={action.label}
-                  onClick={() => !isDisabled && action.action(member)}
-                  disabled={isDisabled}
-                  className={cn(
-                    "flex flex-col items-center gap-3 group transition-all duration-300 ease-out",
-                    "animate-in fade-in slide-in-from-bottom-4",
-                    isDisabled && "opacity-30 cursor-not-allowed"
-                  )}
-                  style={{ 
-                    animationDuration: "300ms",
-                    animationDelay: `${(index + 2) * 40}ms` 
-                  }}
+                  href={action.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border/30 hover:border-accent/50 hover:bg-accent/10 transition-all duration-300"
                 >
-                  <div className={cn(
-                    "w-20 h-20 rounded-full border-2 border-border/30 flex items-center justify-center",
-                    "transition-all duration-300 ease-out",
-                    !isDisabled && "group-hover:scale-110 group-hover:bg-accent/10 group-hover:border-accent/50",
-                    !isDisabled && "group-active:scale-95"
-                  )}>
-                    <Icon className={cn(
-                      "h-7 w-7 transition-all duration-300 ease-out",
-                      !isDisabled && "group-hover:rotate-6"
-                    )} />
-                  </div>
-                  <span className="text-xs uppercase tracking-wide font-light">{action.label}</span>
-                </button>
+                  <Icon className="h-4 w-4" />
+                  <span className="text-sm font-light">{action.label}</span>
+                </a>
               );
             })}
           </div>

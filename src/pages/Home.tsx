@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
-import { Building2, TrendingUp, Award, Users, Home as HomeIcon, Megaphone, ArrowRight, ChevronDown, Landmark, Settings, Presentation } from "lucide-react";
+import { Building2, TrendingUp, Home as HomeIcon, Megaphone, ArrowRight, ChevronDown, Landmark, Settings, Presentation } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { COMPANY_INFO, DIVISIONS } from "@/lib/constants";
-import { Testimonials } from "@/components/Testimonials";
 import { TrustBadges } from "@/components/TrustBadges";
+import { FeaturedDeals } from "@/components/FeaturedDeals";
 import heroImage from "@/assets/brooklyn-bridge-hero-light.jpg";
 import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
 
@@ -184,18 +184,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section 2: Testimonials + Trust Badges */}
-      <section className="py-16 md:py-24 border-b border-white/5 bg-white/[0.01]">
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <TrustBadges />
-          <div className="mt-12 md:mt-16">
-            <Testimonials />
-          </div>
-        </div>
-      </section>
+      {/* Section 2: Trust Badges */}
+      <TrustBadges />
 
-      {/* Section 3: Final CTA */}
-      <section className="py-16 md:py-24" ref={ctaReveal.elementRef}>
+      {/* Section 3: Featured Deals */}
+      <FeaturedDeals />
+
+      {/* Section 4: Final CTA */}
+      <section className="py-16 md:py-24 border-t border-white/5" ref={ctaReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-3xl text-center">
           <div
             className={`transition-all duration-700 ${
