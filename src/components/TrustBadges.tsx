@@ -1,32 +1,44 @@
-import { Award, Shield, Star, TrendingUp } from "lucide-react";
+import { Award, Shield, Users, TrendingUp } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useLiveStats } from "@/hooks/useLiveStats";
 import { cn } from "@/lib/utils";
 
-const badges = [
-  {
-    icon: Award,
-    title: "REBNY Member",
-    description: "Industry accredited",
-  },
-  {
-    icon: Shield,
-    title: "15+ Years Combined",
-    description: "Team experience",
-  },
-  {
-    icon: Star,
-    title: "5-Star Google",
-    description: "Client reviews",
-  },
-  {
-    icon: TrendingUp,
-    title: "$500M+ Closed",
-    description: "Proven track record",
-  },
-];
+const formatVolume = (value: number) => {
+  if (value >= 1000000000) {
+    return `$${(value / 1000000000).toFixed(1)}B+`;
+  }
+  if (value >= 1000000) {
+    return `$${Math.floor(value / 1000000)}M+`;
+  }
+  return `$${Math.floor(value / 1000)}K+`;
+};
 
 export const TrustBadges = () => {
   const { elementRef, isVisible } = useScrollReveal();
+  const { data: stats, isLoading } = useLiveStats();
+
+  const badges = [
+    {
+      icon: Award,
+      title: "REBNY Member",
+      description: "Industry accredited",
+    },
+    {
+      icon: Shield,
+      title: `${stats?.yearsExperience || 15}+ Years`,
+      description: "Combined experience",
+    },
+    {
+      icon: Users,
+      title: `${stats?.teamCount || 0} Professionals`,
+      description: "Expert team",
+    },
+    {
+      icon: TrendingUp,
+      title: isLoading ? "Loading..." : formatVolume(stats?.totalVolume || 0),
+      description: `${stats?.transactionCount || 0}+ transactions closed`,
+    },
+  ];
 
   return (
     <section ref={elementRef} className="py-12 border-y border-border/50 bg-secondary/20">

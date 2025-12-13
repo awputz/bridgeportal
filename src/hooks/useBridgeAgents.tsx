@@ -8,19 +8,13 @@ export interface BridgeAgent {
   name: string;
   slug: string;
   title: string;
-  email: string;
-  phone?: string;
-  license_number?: string;
   image_url?: string;
   instagram_url?: string;
   linkedin_url?: string;
   category: TeamCategory;
   bio?: string;
   display_order: number;
-  is_active: boolean;
   // Computed properties
-  mailtoLink: string;
-  telLink?: string;
   profileUrl: string;
 }
 
@@ -42,45 +36,32 @@ const CATEGORY_ORDER: TeamCategory[] = [
   'Advisory'
 ];
 
-const formatPhoneForTel = (phone: string | null | undefined): string | undefined => {
-  if (!phone) return undefined;
-  // Remove all non-digit characters
-  const digits = phone.replace(/\D/g, '');
-  return digits.length > 0 ? `+1${digits}` : undefined;
-};
-
 export const useBridgeAgents = () => {
   return useQuery({
-    queryKey: ['bridge-agents'],
+    queryKey: ['bridge-agents-public'],
     queryFn: async () => {
+      // Use the secure public view that doesn't expose email/phone
       const { data, error } = await supabase
-        .from('team_members')
+        .from('team_members_public')
         .select('*')
-        .eq('is_active', true)
         .order('display_order');
 
       if (error) throw error;
 
       // Transform to BridgeAgent with computed properties
       const agents: BridgeAgent[] = (data || []).map((member) => ({
-        id: member.id,
-        name: member.name,
-        slug: member.slug || member.name.toLowerCase().replace(/[^a-z0-9]+/g, '_'),
-        title: member.title,
-        email: member.email,
-        phone: member.phone || undefined,
-        license_number: member.license_number || undefined,
+        id: member.id || '',
+        name: member.name || '',
+        slug: member.slug || (member.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '_'),
+        title: member.title || '',
         image_url: member.image_url || undefined,
         instagram_url: member.instagram_url || undefined,
         linkedin_url: member.linkedin_url || undefined,
-        category: member.category as TeamCategory,
+        category: (member.category as TeamCategory) || 'Advisory',
         bio: member.bio || undefined,
         display_order: member.display_order || 0,
-        is_active: member.is_active ?? true,
         // Computed properties
-        mailtoLink: `mailto:${member.email}`,
-        telLink: formatPhoneForTel(member.phone),
-        profileUrl: `/team/${member.slug || member.name.toLowerCase().replace(/[^a-z0-9]+/g, '_')}`,
+        profileUrl: `/team/${member.slug || (member.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '_')}`,
       }));
 
       // Group by category
