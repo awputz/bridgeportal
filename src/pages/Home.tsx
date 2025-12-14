@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Building2, TrendingUp, Home as HomeIcon, Megaphone, ArrowRight, ChevronDown, Landmark, Settings, Presentation } from "lucide-react";
+import { Building2, TrendingUp, Home as HomeIcon, Megaphone, ArrowRight, ChevronDown, Landmark, Settings, Presentation, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
@@ -7,6 +7,9 @@ import { COMPANY_INFO, DIVISIONS } from "@/lib/constants";
 import { TrustBadges } from "@/components/TrustBadges";
 import { FeaturedDeals } from "@/components/FeaturedDeals";
 import { CoverageMap } from "@/components/CoverageMap";
+import { CalculatorTeaser } from "@/components/CalculatorTeaser";
+import { PartnerLogos } from "@/components/PartnerLogos";
+import { SEOHelmet } from "@/components/SEOHelmet";
 import heroImage from "@/assets/brooklyn-bridge-hero-light.jpg";
 import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
 
@@ -17,6 +20,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
+      <SEOHelmet 
+        title="Bridge Advisory Group | NYC Real Estate Brokerage"
+        description="New York City's premier multi-division real estate platform. Investment sales, commercial leasing, residential services, and capital advisory."
+        path="/"
+      />
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center px-4 md:px-6">
         <div
@@ -67,7 +75,8 @@ export default function Home() {
               className="font-light px-6 md:px-10 w-full sm:w-auto border-white/30 hover:bg-white/10"
               onClick={openContactSheet}
             >
-              Contact Us
+              <Calendar className="mr-2 h-4 w-4" />
+              Schedule a Consultation
             </Button>
           </div>
 
@@ -194,7 +203,13 @@ export default function Home() {
       {/* Section 4: Featured Deals */}
       <FeaturedDeals />
 
-      {/* Section 4: Final CTA */}
+      {/* Section 5: Calculator Teaser */}
+      <CalculatorTeaser />
+
+      {/* Section 6: Partner Logos */}
+      <PartnerLogos />
+
+      {/* Section 7: Final CTA */}
       <section className="py-16 md:py-24 border-t border-white/5" ref={ctaReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-3xl text-center">
           <div
@@ -208,7 +223,8 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" className="font-light px-10" onClick={openContactSheet}>
-                Contact Us
+                <Calendar className="mr-2 h-4 w-4" />
+                Schedule a Consultation
               </Button>
               <Button asChild size="lg" variant="outline" className="font-light px-10">
                 <Link to="/team">Meet Our Team</Link>

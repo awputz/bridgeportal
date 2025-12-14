@@ -114,10 +114,10 @@ export const Footer = () => {
         <div className="py-6 md:py-8 border-t border-border/20 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6">
           <img alt="Bridge Advisory Group" src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" className="h-8 md:h-10 lg:h-12 w-auto" />
           <div className="flex items-center gap-3 md:gap-4">
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors">
+            <a href="https://www.instagram.com/bridgeadvisorygroup" target="_blank" rel="noopener noreferrer" className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors">
               <Instagram className="w-4 h-4 md:w-5 md:h-5" />
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors">
+            <a href="https://www.linkedin.com/company/bridgeadvisorygroup" target="_blank" rel="noopener noreferrer" className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors">
               <Linkedin className="w-4 h-4 md:w-5 md:h-5" />
             </a>
             <a href={`mailto:${settings?.company_contact.email}`} className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors">
