@@ -6,6 +6,7 @@ import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { COMPANY_INFO, DIVISIONS } from "@/lib/constants";
 import { TrustBadges } from "@/components/TrustBadges";
 import { FeaturedDeals } from "@/components/FeaturedDeals";
+import { CoverageMap } from "@/components/CoverageMap";
 import heroImage from "@/assets/brooklyn-bridge-hero-light.jpg";
 import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
 
@@ -184,10 +185,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section 2: Trust Badges */}
+      {/* Section 2: NYC Coverage Map */}
+      <CoverageMap />
+
+      {/* Section 3: Trust Badges */}
       <TrustBadges />
 
-      {/* Section 3: Featured Deals */}
+      {/* Section 4: Featured Deals */}
       <FeaturedDeals />
 
       {/* Section 4: Final CTA */}
