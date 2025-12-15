@@ -8,15 +8,6 @@ export const SERVICE_SUB_PAGES = {
       { name: "Track Record", path: "/services/investment-sales/track-record" },
     ],
   },
-  residential: {
-    title: "Residential",
-    basePath: "/services/residential",
-    pages: [
-      { name: "Overview", path: "/services/residential" },
-      { name: "Find a Home", path: "/services/residential/find-a-home" },
-      { name: "Transactions", path: "/services/residential/transactions" },
-    ],
-  },
   "commercial-leasing": {
     title: "Commercial Leasing",
     basePath: "/services/commercial-leasing",
@@ -24,6 +15,16 @@ export const SERVICE_SUB_PAGES = {
       { name: "Overview", path: "/services/commercial-leasing" },
       { name: "Tenant Rep", path: "/services/commercial-leasing/tenant-rep" },
       { name: "Landlord Rep", path: "/services/commercial-leasing/landlord-rep" },
+    ],
+  },
+  residential: {
+    title: "Residential",
+    basePath: "/services/residential",
+    pages: [
+      { name: "Overview", path: "/services/residential" },
+      { name: "For Landlords", path: "/services/residential/landlords" },
+      { name: "For Buyers", path: "/services/residential/find-a-home" },
+      { name: "For Renters", path: "/services/residential/find-a-home" },
     ],
   },
   "capital-advisory": {

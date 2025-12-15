@@ -174,7 +174,7 @@ export default function Home() {
       </section>
 
       {/* Commercial & Investment Expertise Section */}
-      <section className="py-16 md:py-24 bg-foreground text-background" ref={commercialReveal.elementRef}>
+      <section className="py-16 md:py-24 bg-secondary" ref={commercialReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div
             className={`text-center mb-12 transition-all duration-500 ease-out ${
@@ -182,7 +182,7 @@ export default function Home() {
             }`}
           >
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Commercial & Investment Expertise</h2>
-            <p className="text-background/70 font-light max-w-2xl mx-auto text-sm md:text-base">
+            <p className="text-muted-foreground font-light max-w-2xl mx-auto text-sm md:text-base">
               Strategic leasing and investment advisory for office, retail, mixed-use, and multifamily assets across New York.
             </p>
           </div>
@@ -195,14 +195,14 @@ export default function Home() {
             ].map((item, index) => (
               <div
                 key={item.title}
-                className={`p-5 md:p-6 rounded-xl border border-background/20 bg-background/5 text-center transition-all duration-500 ease-out ${
+                className={`p-5 md:p-6 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${
                   commercialReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                 }`}
                 style={{ transitionDelay: commercialReveal.isVisible ? `${150 + index * 100}ms` : "0ms" }}
               >
                 <item.icon className="h-7 w-7 text-primary mx-auto mb-3" />
                 <h3 className="text-base font-medium mb-2">{item.title}</h3>
-                <p className="text-background/60 font-light text-xs">{item.desc}</p>
+                <p className="text-muted-foreground font-light text-xs">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -213,15 +213,15 @@ export default function Home() {
             }`}
             style={{ transitionDelay: commercialReveal.isVisible ? "450ms" : "0ms" }}
           >
-            <Button asChild variant="link" className="font-light group text-background/80 hover:text-background">
-              <Link to="/services/commercial-leasing">
-                Explore Commercial Leasing
+            <Button asChild variant="link" className="font-light group text-muted-foreground hover:text-foreground">
+              <Link to="/services/investment-sales">
+                Explore Investment Sales
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </Button>
-            <Button asChild variant="link" className="font-light group text-background/80 hover:text-background">
-              <Link to="/services/investment-sales">
-                Explore Investment Sales
+            <Button asChild variant="link" className="font-light group text-muted-foreground hover:text-foreground">
+              <Link to="/services/commercial-leasing">
+                Explore Commercial Leasing
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </Button>
@@ -280,7 +280,7 @@ export default function Home() {
       </section>
 
       {/* Capital Advisory Section */}
-      <section className="py-16 md:py-24 bg-foreground text-background" ref={capitalReveal.elementRef}>
+      <section className="py-16 md:py-24 bg-secondary" ref={capitalReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div
             className={`text-center mb-12 transition-all duration-500 ease-out ${
@@ -288,7 +288,7 @@ export default function Home() {
             }`}
           >
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Capital Advisory That Understands The Real Asset</h2>
-            <p className="text-background/70 font-light max-w-2xl mx-auto text-sm md:text-base">
+            <p className="text-muted-foreground font-light max-w-2xl mx-auto text-sm md:text-base">
               Debt, equity, and structured finance solutions tailored to your real estate objectives.
             </p>
           </div>
@@ -301,14 +301,14 @@ export default function Home() {
             ].map((item, index) => (
               <div
                 key={item.title}
-                className={`p-5 md:p-6 rounded-xl border border-background/20 bg-background/5 text-center transition-all duration-500 ease-out ${
+                className={`p-5 md:p-6 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${
                   capitalReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                 }`}
                 style={{ transitionDelay: capitalReveal.isVisible ? `${150 + index * 100}ms` : "0ms" }}
               >
                 <item.icon className="h-7 w-7 text-primary mx-auto mb-3" />
                 <h3 className="text-base font-medium mb-2">{item.title}</h3>
-                <p className="text-background/60 font-light text-xs">{item.desc}</p>
+                <p className="text-muted-foreground font-light text-xs">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -319,7 +319,7 @@ export default function Home() {
             }`}
             style={{ transitionDelay: capitalReveal.isVisible ? "450ms" : "0ms" }}
           >
-            <Button asChild variant="link" className="font-light group text-background/80 hover:text-background">
+            <Button asChild variant="link" className="font-light group text-muted-foreground hover:text-foreground">
               <Link to="/services/capital-advisory">
                 View Capital Advisory
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
