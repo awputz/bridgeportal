@@ -78,9 +78,13 @@ export const Navigation = () => {
   const isServicesActive = location.pathname.startsWith('/services');
 
   return <>
-      <nav className="fixed top-0 left-0 right-0 z-50 px-3 pt-3 md:px-4 md:pt-3 lg:px-5 lg:pt-4">
+      {/* Desktop Navigation Header */}
+      <nav className={cn(
+        "fixed top-0 left-0 right-0 z-50 px-3 pt-3 md:px-4 md:pt-3 lg:px-5 lg:pt-4 transition-opacity duration-300",
+        isOpen ? "lg:opacity-100 opacity-0 pointer-events-none lg:pointer-events-auto" : "opacity-100"
+      )}>
         <div className="max-w-7xl mx-auto glass-nav">
-          {/* Mobile & Tablet Layout */}
+          {/* Mobile & Tablet Layout - Hidden when menu is open */}
           <div className="flex lg:hidden items-center justify-between h-14 px-4">
             <Link to="/" className="flex items-center flex-shrink-0">
               <img src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" alt="Bridge Advisory Group" className="h-10 w-auto" />
@@ -251,11 +255,32 @@ export const Navigation = () => {
           </div>
         </div>
 
-        {/* Mobile Full-Screen Menu */}
-        <div className={`lg:hidden fixed inset-x-0 bottom-0 bg-background/98 backdrop-blur-3xl z-40 transition-all duration-300 ease-out ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full pointer-events-none'}`} style={{
-        top: 'calc(3.5rem + 0.75rem)'
-      }}>
-          <div className="h-full overflow-y-auto overscroll-contain px-4 py-4 pb-safe">
+        {/* Mobile Full-Screen Menu - Unified Glass Overlay */}
+        <div className={cn(
+          "lg:hidden fixed inset-0 z-50 transition-all duration-500 ease-out",
+          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+        )}>
+          {/* Full Glass Backdrop */}
+          <div className="absolute inset-0 bg-black/85 backdrop-blur-3xl" />
+          
+          {/* Content Container */}
+          <div className="relative h-full flex flex-col">
+            {/* Integrated Header */}
+            <div className="flex items-center justify-between h-14 px-4 mx-3 mt-3 md:mx-4 md:mt-3">
+              <Link to="/" className="flex items-center flex-shrink-0" onClick={() => setIsOpen(false)}>
+                <img src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" alt="Bridge Advisory Group" className="h-10 w-auto" />
+              </Link>
+              <button 
+                onClick={() => setIsOpen(false)} 
+                className="p-3 -mr-2 text-foreground hover:text-foreground/80 transition-colors touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center" 
+                aria-label="Close menu"
+              >
+                <X size={22} />
+              </button>
+            </div>
+            
+            {/* Scrollable Menu Content */}
+            <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-4 pb-safe mx-3 md:mx-4">
             <div className="space-y-3">
               {/* Left Nav Items */}
               <div>
@@ -376,6 +401,7 @@ export const Navigation = () => {
               >
                 Contact Us
               </Button>
+              </div>
             </div>
           </div>
         </div>
