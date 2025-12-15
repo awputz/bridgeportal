@@ -44,7 +44,7 @@ import Marketing from "./pages/services/Marketing";
 import Billboard from "./pages/services/Billboard";
 import MarketsComingSoon from "./pages/MarketsComingSoon";
 
-// Service Sub-Pages (kept valuable ones)
+// Service Sub-Pages
 import ResidentialFindAHome from "./pages/services/residential/FindAHome";
 import ResidentialTransactions from "./pages/services/residential/Transactions";
 
@@ -53,6 +53,18 @@ import InvestmentTrackRecord from "./pages/services/investment-sales/TrackRecord
 
 import CommercialTenantRep from "./pages/services/commercial-leasing/TenantRep";
 import CommercialLandlordRep from "./pages/services/commercial-leasing/LandlordRep";
+
+import CapitalDebtFinancing from "./pages/services/capital-advisory/DebtFinancing";
+import CapitalEquityJV from "./pages/services/capital-advisory/EquityJV";
+
+import PMPortfolio from "./pages/services/property-management/Portfolio";
+import PMServices from "./pages/services/property-management/ServicesOffered";
+
+import MarketingCreativeStudio from "./pages/services/marketing/CreativeStudio";
+import MarketingDigitalCampaigns from "./pages/services/marketing/DigitalCampaigns";
+
+import BillboardInventory from "./pages/services/billboard/Inventory";
+import BillboardRates from "./pages/services/billboard/Rates";
 
 const queryClient = new QueryClient();
 
