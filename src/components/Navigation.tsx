@@ -306,7 +306,10 @@ export const Navigation = () => {
 
               {/* Services Section */}
               <div className="pt-3 border-t border-white/15">
-                <p className="text-sm uppercase tracking-wider text-muted-foreground mb-2">Services</p>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground">Services</p>
+                  <span className="text-[10px] text-muted-foreground/60">Tap to explore</span>
+                </div>
                 {services?.map((service, index) => {
                 const IconComponent = serviceIcons[service.name] || Building2;
                 return <Link key={service.id} to={service.path} className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
@@ -320,7 +323,10 @@ export const Navigation = () => {
 
               {/* Listings Section - Optimized for Mobile/Tablet */}
               <div className="pt-3 border-t border-white/15">
-                <p className="text-sm uppercase tracking-wider text-muted-foreground mb-2">Listings</p>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground">Listings</p>
+                  <span className="text-[10px] text-muted-foreground/60">View properties</span>
+                </div>
                 
                 {/* Residential - Direct link */}
                 {listingsNav?.items.filter(item => item.name === "Residential").map((item, index) => (
