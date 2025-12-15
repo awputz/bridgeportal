@@ -140,7 +140,7 @@ export const Navigation = () => {
                 <DropdownMenuContent 
                   align="end" 
                   sideOffset={12}
-                  className="w-[260px] p-2 bg-zinc-900 border border-white/10 shadow-2xl rounded-lg z-50"
+                  className="w-[340px] p-3 bg-zinc-900 border border-white/10 shadow-2xl rounded-lg z-50"
                 >
                   {services?.map((service) => {
                     const IconComponent = serviceIcons[service.name] || Building2;
@@ -150,15 +150,22 @@ export const Navigation = () => {
                         key={service.id}
                         to={service.path}
                         className={cn(
-                          "flex items-center gap-3 rounded-md px-3 py-2.5 transition-colors",
+                          "flex items-start gap-3 rounded-md px-3 py-3 transition-colors",
                           "hover:bg-white/10",
                           location.pathname.startsWith(service.path) && "bg-white/10"
                         )}
                       >
-                        <IconComponent className="h-4 w-4 text-white/60" />
-                        <span className="text-sm text-white/90 font-light">
-                          {service.name}
-                        </span>
+                        <IconComponent className="h-5 w-5 text-white/60 mt-0.5 flex-shrink-0" />
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-sm text-white/90 font-light">
+                            {service.name}
+                          </span>
+                          {service.tagline && (
+                            <span className="text-xs text-white/50 font-light leading-snug">
+                              {service.tagline}
+                            </span>
+                          )}
+                        </div>
                       </Link>
                     );
                   })}

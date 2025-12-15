@@ -6,7 +6,6 @@ export const SERVICE_SUB_PAGES = {
       { name: "Overview", path: "/services/investment-sales" },
       { name: "Valuations", path: "/services/investment-sales/valuations" },
       { name: "Track Record", path: "/services/investment-sales/track-record" },
-      { name: "View Listings on CoStar", path: "https://www.costar.com", external: true },
     ],
   },
   residential: {
@@ -16,7 +15,6 @@ export const SERVICE_SUB_PAGES = {
       { name: "Overview", path: "/services/residential" },
       { name: "Find a Home", path: "/services/residential/find-a-home" },
       { name: "Transactions", path: "/services/residential/transactions" },
-      { name: "View Listings on StreetEasy", path: "https://streeteasy.com/nyc/rentals/agent:bridge-investment-sales", external: true },
     ],
   },
   "commercial-leasing": {
@@ -26,7 +24,6 @@ export const SERVICE_SUB_PAGES = {
       { name: "Overview", path: "/services/commercial-leasing" },
       { name: "Tenant Rep", path: "/services/commercial-leasing/tenant-rep" },
       { name: "Landlord Rep", path: "/services/commercial-leasing/landlord-rep" },
-      { name: "View Listings on CoStar", path: "https://www.costar.com", external: true },
     ],
   },
   "capital-advisory": {
@@ -34,6 +31,8 @@ export const SERVICE_SUB_PAGES = {
     basePath: "/services/capital-advisory",
     pages: [
       { name: "Overview", path: "/services/capital-advisory" },
+      { name: "Debt Financing", path: "/services/capital-advisory/debt-financing" },
+      { name: "Equity & JV", path: "/services/capital-advisory/equity-jv" },
     ],
   },
   "property-management": {
@@ -41,6 +40,8 @@ export const SERVICE_SUB_PAGES = {
     basePath: "/services/property-management",
     pages: [
       { name: "Overview", path: "/services/property-management" },
+      { name: "Our Portfolio", path: "/services/property-management/portfolio" },
+      { name: "Services", path: "/services/property-management/services" },
     ],
   },
   marketing: {
@@ -48,6 +49,8 @@ export const SERVICE_SUB_PAGES = {
     basePath: "/services/marketing",
     pages: [
       { name: "Overview", path: "/services/marketing" },
+      { name: "Creative Studio", path: "/services/marketing/creative-studio" },
+      { name: "Digital & Campaigns", path: "/services/marketing/digital-campaigns" },
     ],
   },
   billboard: {
@@ -55,6 +58,8 @@ export const SERVICE_SUB_PAGES = {
     basePath: "/services/billboard",
     pages: [
       { name: "Overview", path: "/services/billboard" },
+      { name: "Inventory Map", path: "/services/billboard/inventory" },
+      { name: "Rates & Availability", path: "/services/billboard/rates" },
     ],
   },
 };
