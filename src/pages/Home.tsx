@@ -38,23 +38,23 @@ export default function Home() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
 
-        {/* Nav spacer */}
-        <div className="flex-shrink-0 h-16 md:h-20" />
+        {/* Zone 1: Logo at top */}
+        <div className="relative z-10 flex-shrink-0 pt-20 md:pt-24 text-center">
+          <div
+            className="animate-fade-in"
+            style={{ animationDelay: "200ms", animationFillMode: "backwards" }}
+          >
+            <img
+              src={bridgeAdvisoryLogo}
+              alt="Bridge Advisory Group"
+              className="mx-auto w-[200px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert"
+            />
+          </div>
+        </div>
 
-        {/* Main content - grows to fill available space */}
+        {/* Zone 2: Content centered in middle */}
         <div className="relative z-10 flex-1 flex items-center justify-center">
           <div className="container mx-auto text-center max-w-5xl">
-            <div
-              className="animate-fade-in"
-              style={{ animationDelay: "200ms", animationFillMode: "backwards" }}
-            >
-              <img
-                src={bridgeAdvisoryLogo}
-                alt="Bridge Advisory Group"
-                className="mx-auto w-[200px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert mb-2 md:mb-4"
-              />
-            </div>
-
             <h1
               className="text-xl md:text-3xl lg:text-4xl xl:text-5xl text-foreground/90 mb-2 md:mb-4 max-w-4xl mx-auto font-light px-4 animate-fade-in"
               style={{ animationDelay: "400ms", animationFillMode: "backwards" }}
@@ -124,9 +124,9 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Scroll Indicator - fixed height at bottom */}
+        {/* Zone 3: Scroll Indicator - absolutely positioned at bottom */}
         <div
-          className="flex-shrink-0 h-16 md:h-20 flex items-center justify-center z-10 animate-fade-in hidden md:flex"
+          className="absolute bottom-6 left-0 right-0 z-10 animate-fade-in hidden md:flex justify-center"
           style={{ animationDelay: "900ms", animationFillMode: "backwards" }}
         >
           <a href="#mission" className="flex flex-col items-center gap-2 text-white/60 hover:text-white/90 transition-colors cursor-pointer">
