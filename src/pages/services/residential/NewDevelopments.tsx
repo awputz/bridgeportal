@@ -1,3 +1,4 @@
+import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { ServicePageLayout } from "@/components/ServicePageLayout";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Button } from "@/components/ui/button";
@@ -126,7 +127,7 @@ const NewDevelopments = () => {
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
-              backgroundImage: `url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&h=1080&fit=crop')`,
+              backgroundImage: `url('${PLACEHOLDER_IMAGES.hero.newDevelopments}')`,
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
