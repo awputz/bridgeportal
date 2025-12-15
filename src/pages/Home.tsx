@@ -96,7 +96,7 @@ export default function Home() {
       </section>
 
       {/* Section 1: Who We Are + Our Divisions */}
-      <section id="services" className="py-16 md:py-24 border-b border-white/5" ref={platformReveal.elementRef}>
+      <section id="services" ref={platformReveal.elementRef} className="py-16 md:py-24 border-b border-white/5 pt-0">
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`text-center transition-all duration-700 ${platformReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">Who We Are</h2>
@@ -119,9 +119,9 @@ export default function Home() {
               Megaphone: <Megaphone className="h-6 w-6 md:h-8 md:w-8 text-accent mb-3" />,
               Presentation: <Presentation className="h-6 w-6 md:h-8 md:w-8 text-accent mb-3" />
             };
-            return <Link key={division.name} to={division.path} className="group p-4 md:p-6 rounded-lg border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 text-center flex flex-col items-center" style={{
+            return <Link key={division.name} to={division.path} style={{
               transitionDelay: `${index * 50}ms`
-            }}>
+            }} className="group p-4 md:p-6 rounded-lg border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 text-center flex flex-col items-center pb-0">
                   {iconMap[division.icon]}
                   <h3 className="text-sm md:text-base font-light mb-1 group-hover:text-foreground transition-colors">
                     {division.name}
