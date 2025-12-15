@@ -39,7 +39,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
 
         {/* Nav spacer */}
-        <div className="flex-shrink-0 h-20 md:h-24" />
+        <div className="flex-shrink-0 h-16 md:h-20" />
 
         {/* Main content - grows to fill available space */}
         <div className="relative z-10 flex-1 flex items-center justify-center">
@@ -51,19 +51,19 @@ export default function Home() {
               <img
                 src={bridgeAdvisoryLogo}
                 alt="Bridge Advisory Group"
-                className="mx-auto w-[200px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert mb-3 md:mb-6"
+                className="mx-auto w-[200px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert mb-2 md:mb-4"
               />
             </div>
 
             <h1
-              className="text-xl md:text-3xl lg:text-4xl xl:text-5xl text-foreground/90 mb-3 md:mb-6 max-w-4xl mx-auto font-light px-4 animate-fade-in"
+              className="text-xl md:text-3xl lg:text-4xl xl:text-5xl text-foreground/90 mb-2 md:mb-4 max-w-4xl mx-auto font-light px-4 animate-fade-in"
               style={{ animationDelay: "400ms", animationFillMode: "backwards" }}
             >
               {COMPANY_INFO.tagline}
             </h1>
 
             <p
-              className="text-sm md:text-lg lg:text-xl text-foreground/60 mb-5 md:mb-8 max-w-3xl mx-auto font-light px-4 animate-fade-in line-clamp-2 md:line-clamp-none"
+              className="text-sm md:text-lg lg:text-xl text-foreground/60 mb-3 md:mb-5 max-w-3xl mx-auto font-light px-4 animate-fade-in line-clamp-2 md:line-clamp-none"
               style={{ animationDelay: "500ms", animationFillMode: "backwards" }}
             >
               {COMPANY_INFO.description.full}
@@ -89,7 +89,7 @@ export default function Home() {
 
             {/* Quick Access Service Buttons */}
             <div
-              className="hidden md:flex flex-wrap gap-3 justify-center px-4 mt-6 animate-fade-in"
+              className="hidden md:flex flex-wrap gap-3 justify-center px-4 mt-4 animate-fade-in"
               style={{ animationDelay: "700ms", animationFillMode: "backwards" }}
             >
               <Button
@@ -126,7 +126,7 @@ export default function Home() {
 
         {/* Scroll Indicator - fixed height at bottom */}
         <div
-          className="flex-shrink-0 h-20 md:h-24 flex items-center justify-center z-10 animate-fade-in hidden md:flex"
+          className="flex-shrink-0 h-16 md:h-20 flex items-center justify-center z-10 animate-fade-in hidden md:flex"
           style={{ animationDelay: "900ms", animationFillMode: "backwards" }}
         >
           <a href="#mission" className="flex flex-col items-center gap-2 text-white/60 hover:text-white/90 transition-colors cursor-pointer">
