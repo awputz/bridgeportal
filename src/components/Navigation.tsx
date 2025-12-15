@@ -78,10 +78,10 @@ export const Navigation = () => {
   const isServicesActive = location.pathname.startsWith('/services');
 
   return <>
-      {/* Desktop Navigation Header */}
+      {/* Desktop Navigation Header - Hidden on mobile when menu is open */}
       <nav className={cn(
         "fixed top-0 left-0 right-0 z-50 px-3 pt-3 md:px-4 md:pt-3 lg:px-5 lg:pt-4 transition-opacity duration-300",
-        isOpen ? "lg:opacity-100 opacity-0 pointer-events-none lg:pointer-events-auto" : "opacity-100"
+        isOpen && "lg:opacity-100 lg:pointer-events-auto opacity-0 pointer-events-none"
       )}>
         <div className="max-w-7xl mx-auto glass-nav">
           {/* Mobile & Tablet Layout - Hidden when menu is open */}
