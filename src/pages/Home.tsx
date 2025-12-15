@@ -53,8 +53,8 @@ export default function Home() {
         </div>
 
         {/* Zone 2: Content centered in middle */}
-        <div className="relative z-10 flex-1 flex items-center justify-center">
-          <div className="container mx-auto text-center max-w-5xl">
+        <div className="relative z-10 flex-1 flex items-center justify-center pb-32 md:pb-36">
+          <div className="container mx-auto text-center max-w-5xl -translate-y-6 md:-translate-y-12">
             <h1
               className="text-xl md:text-3xl lg:text-4xl xl:text-5xl text-foreground/90 mb-2 md:mb-4 max-w-4xl mx-auto font-light px-4 animate-fade-in"
               style={{ animationDelay: "400ms", animationFillMode: "backwards" }}
