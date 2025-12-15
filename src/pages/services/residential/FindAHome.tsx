@@ -127,7 +127,7 @@ const FindAHome = () => {
               <h2 className="text-3xl font-bold text-foreground mb-8 text-center">Rental Services</h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {rentalServices.map((service) => (
-                  <div key={service.title} className="bg-secondary/30 rounded-lg p-6 border border-border">
+                  <div key={service.title} className="bg-black/40 backdrop-blur-xl rounded-xl p-6 border border-white/10 hover:bg-black/50 hover:border-white/15 transition-all duration-300">
                     <service.icon className="h-8 w-8 text-primary mb-4" />
                     <h3 className="font-semibold text-foreground mb-2">{service.title}</h3>
                     <p className="text-sm text-muted-foreground">{service.description}</p>
@@ -141,7 +141,7 @@ const FindAHome = () => {
               <h2 className="text-3xl font-bold text-foreground mb-8 text-center">Types of Rentals</h2>
               <div className="grid md:grid-cols-3 gap-8">
                 {rentalTypes.map((type) => (
-                  <div key={type.title} className="bg-secondary/20 rounded-lg p-6 border border-border">
+                  <div key={type.title} className="bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-white/10 hover:bg-black/40 transition-all duration-300">
                     <h3 className="text-xl font-semibold text-foreground mb-3">{type.title}</h3>
                     <p className="text-muted-foreground mb-4">{type.description}</p>
                     <ul className="space-y-2">
@@ -158,7 +158,7 @@ const FindAHome = () => {
             </section>
 
             {/* Process */}
-            <section className="bg-secondary/30 rounded-xl p-8 border border-border">
+            <section className="bg-black/40 backdrop-blur-xl rounded-xl p-8 border border-white/10">
               <h2 className="text-3xl font-bold text-foreground mb-8 text-center">The Rental Process</h2>
               <div className="grid md:grid-cols-5 gap-4">
                 {rentalProcess.map((item, index) => (
@@ -195,7 +195,7 @@ const FindAHome = () => {
               <h2 className="text-3xl font-bold text-foreground mb-8 text-center">Buyer Services</h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {buyerServices.map((service) => (
-                  <div key={service.title} className="bg-secondary/30 rounded-lg p-6 border border-border">
+                  <div key={service.title} className="bg-black/40 backdrop-blur-xl rounded-xl p-6 border border-white/10 hover:bg-black/50 hover:border-white/15 transition-all duration-300">
                     <service.icon className="h-8 w-8 text-primary mb-4" />
                     <h3 className="font-semibold text-foreground mb-2">{service.title}</h3>
                     <p className="text-sm text-muted-foreground">{service.description}</p>
@@ -209,7 +209,7 @@ const FindAHome = () => {
               <h2 className="text-3xl font-bold text-foreground mb-8 text-center">Property Types</h2>
               <div className="grid md:grid-cols-3 gap-8">
                 {propertyTypes.map((type) => (
-                  <div key={type.title} className="bg-secondary/20 rounded-lg p-6 border border-border">
+                  <div key={type.title} className="bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-white/10 hover:bg-black/40 transition-all duration-300">
                     <h3 className="text-xl font-semibold text-foreground mb-3">{type.title}</h3>
                     <p className="text-muted-foreground mb-4">{type.description}</p>
                     <ul className="space-y-2">
@@ -226,7 +226,7 @@ const FindAHome = () => {
             </section>
 
             {/* Why Buy with Bridge */}
-            <section className="bg-secondary/30 rounded-xl p-8 border border-border">
+            <section className="bg-black/40 backdrop-blur-xl rounded-xl p-8 border border-white/10">
               <h2 className="text-3xl font-bold text-foreground mb-8 text-center">Why Buy with Bridge</h2>
               <div className="grid md:grid-cols-4 gap-6 text-center">
                 <div>

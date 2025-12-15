@@ -14,7 +14,7 @@ export const ServicePageNav = ({ serviceKey }: ServicePageNavProps) => {
   if (!service) return null;
 
   return (
-    <nav className="bg-secondary/50 border-b border-border">
+    <nav className="bg-black/30 backdrop-blur-xl border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center overflow-x-auto scrollbar-hide py-1 -mx-4 px-4 sm:mx-0 sm:px-0">
           {service.pages.map((page) => {

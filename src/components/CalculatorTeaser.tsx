@@ -9,7 +9,7 @@ export const CalculatorTeaser = () => {
   return (
     <section 
       ref={elementRef}
-      className={`py-16 md:py-24 bg-muted/30 transition-all duration-700 ${
+      className={`py-16 md:py-24 bg-black/20 backdrop-blur-lg transition-all duration-700 ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
       }`}
     >
@@ -30,17 +30,17 @@ export const CalculatorTeaser = () => {
 
           {/* Sample Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
-            <div className="bg-background rounded-lg p-6 shadow-sm border border-border/50">
+            <div className="bg-black/40 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/10">
               <DollarSign className="w-6 h-6 text-primary mx-auto mb-2" />
               <p className="text-2xl font-bold text-foreground">$2.5M</p>
               <p className="text-sm text-muted-foreground">Sample Investment</p>
             </div>
-            <div className="bg-background rounded-lg p-6 shadow-sm border border-border/50">
+            <div className="bg-black/40 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/10">
               <TrendingUp className="w-6 h-6 text-primary mx-auto mb-2" />
               <p className="text-2xl font-bold text-foreground">5.2%</p>
               <p className="text-sm text-muted-foreground">Projected Cap Rate</p>
             </div>
-            <div className="bg-background rounded-lg p-6 shadow-sm border border-border/50">
+            <div className="bg-black/40 backdrop-blur-xl rounded-xl p-6 shadow-lg border border-white/10">
               <DollarSign className="w-6 h-6 text-primary mx-auto mb-2" />
               <p className="text-2xl font-bold text-foreground">$130K</p>
               <p className="text-sm text-muted-foreground">Annual NOI</p>
