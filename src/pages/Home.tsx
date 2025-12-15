@@ -46,39 +46,39 @@ export default function Home() {
             <img
               src={bridgeAdvisoryLogo}
               alt="Bridge Advisory Group"
-              className="mx-auto w-[280px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert mb-4 md:mb-6"
+              className="mx-auto w-[200px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert mb-3 md:mb-6"
             />
           </div>
 
           <h1
-            className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-foreground/90 mb-4 md:mb-6 max-w-4xl mx-auto font-light px-4 animate-fade-in"
+            className="text-xl md:text-3xl lg:text-4xl xl:text-5xl text-foreground/90 mb-3 md:mb-6 max-w-4xl mx-auto font-light px-4 animate-fade-in"
             style={{ animationDelay: "400ms", animationFillMode: "backwards" }}
           >
             {COMPANY_INFO.tagline}
           </h1>
 
           <p
-            className="text-base md:text-lg lg:text-xl text-foreground/60 mb-6 md:mb-8 max-w-3xl mx-auto font-light px-4 animate-fade-in"
+            className="text-sm md:text-lg lg:text-xl text-foreground/60 mb-5 md:mb-8 max-w-3xl mx-auto font-light px-4 animate-fade-in line-clamp-2 md:line-clamp-none"
             style={{ animationDelay: "500ms", animationFillMode: "backwards" }}
           >
             {COMPANY_INFO.description.full}
           </p>
 
           <div
-            className="flex flex-col sm:flex-row gap-3 justify-center px-4 animate-fade-in"
+            className="flex flex-col sm:flex-row gap-2 md:gap-3 justify-center px-4 animate-fade-in"
             style={{ animationDelay: "600ms", animationFillMode: "backwards" }}
           >
-            <Button asChild size="lg" className="font-light px-6 md:px-10 w-full sm:w-auto">
-              <a href="#mission">Explore Our Services</a>
+            <Button asChild size="default" className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto">
+              <a href="#mission">Explore Services</a>
             </Button>
             <Button
-              size="lg"
+              size="default"
               variant="outline"
-              className="font-light px-6 md:px-10 w-full sm:w-auto border-white/30 hover:bg-white/10"
+              className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto border-white/30 hover:bg-white/10"
               onClick={openContactSheet}
             >
               <Calendar className="mr-2 h-4 w-4" />
-              Schedule a Consultation
+              Schedule Consultation
             </Button>
           </div>
 
@@ -226,14 +226,14 @@ export default function Home() {
             ].map((item, index) => (
               <div
                 key={item.title}
-                className={`p-5 md:p-6 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${
+                className={`p-4 md:p-6 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${
                   commercialReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                 }`}
                 style={{ transitionDelay: commercialReveal.isVisible ? `${150 + index * 100}ms` : "0ms" }}
               >
-                <item.icon className="h-7 w-7 text-primary mx-auto mb-3" />
-                <h3 className="text-base font-medium mb-2">{item.title}</h3>
-                <p className="text-muted-foreground font-light text-xs">{item.desc}</p>
+                <item.icon className="h-6 w-6 md:h-7 md:w-7 text-primary mx-auto mb-2 md:mb-3" />
+                <h3 className="text-sm md:text-base font-medium mb-1 md:mb-2">{item.title}</h3>
+                <p className="text-muted-foreground font-light text-xs line-clamp-2">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -282,14 +282,14 @@ export default function Home() {
             ].map((item, index) => (
               <div
                 key={item.title}
-                className={`p-5 md:p-6 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${
+                className={`p-4 md:p-6 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${
                   residentialReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                 }`}
                 style={{ transitionDelay: residentialReveal.isVisible ? `${150 + index * 100}ms` : "0ms" }}
               >
-                <item.icon className="h-7 w-7 text-primary mx-auto mb-3" />
-                <h3 className="text-base font-medium mb-2">{item.title}</h3>
-                <p className="text-muted-foreground font-light text-xs">{item.desc}</p>
+                <item.icon className="h-6 w-6 md:h-7 md:w-7 text-primary mx-auto mb-2 md:mb-3" />
+                <h3 className="text-sm md:text-base font-medium mb-1 md:mb-2">{item.title}</h3>
+                <p className="text-muted-foreground font-light text-xs line-clamp-2">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -332,14 +332,14 @@ export default function Home() {
             ].map((item, index) => (
               <div
                 key={item.title}
-                className={`p-5 md:p-6 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${
+                className={`p-4 md:p-6 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${
                   capitalReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                 }`}
                 style={{ transitionDelay: capitalReveal.isVisible ? `${150 + index * 100}ms` : "0ms" }}
               >
-                <item.icon className="h-7 w-7 text-primary mx-auto mb-3" />
-                <h3 className="text-base font-medium mb-2">{item.title}</h3>
-                <p className="text-muted-foreground font-light text-xs">{item.desc}</p>
+                <item.icon className="h-6 w-6 md:h-7 md:w-7 text-primary mx-auto mb-2 md:mb-3" />
+                <h3 className="text-sm md:text-base font-medium mb-1 md:mb-2">{item.title}</h3>
+                <p className="text-muted-foreground font-light text-xs line-clamp-2">{item.desc}</p>
               </div>
             ))}
           </div>

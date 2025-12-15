@@ -408,22 +408,28 @@ All colors MUST be HSL.
   
   /* Improved mobile typography */
   h1 {
-    @apply text-3xl;
+    @apply text-2xl;
     line-height: 1.15;
   }
   
   h2 {
-    @apply text-2xl;
+    @apply text-xl;
     line-height: 1.2;
   }
   
   h3 {
-    @apply text-lg;
+    @apply text-base;
   }
   
   /* Reduce section padding on mobile */
   .section-spacing {
-    @apply py-12;
+    @apply py-10;
+  }
+  
+  /* Tighter paragraph spacing */
+  p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
   }
 }
 
