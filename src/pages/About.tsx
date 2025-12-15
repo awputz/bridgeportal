@@ -6,6 +6,7 @@ import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { SEOHelmet } from "@/components/SEOHelmet";
+import { TeamHighlight } from "@/components/TeamHighlight";
 
 export default function About() {
   const { openContactSheet } = useContactSheet();
@@ -102,6 +103,13 @@ export default function About() {
           </div>
         </div>
       </section>
+
+      {/* Meet Our Leadership */}
+      <TeamHighlight 
+        title="Meet Our Leadership"
+        subtitle="The principals guiding Bridge Advisory Group's strategy and client relationships."
+        className="bg-muted/20"
+      />
 
       {/* Mission and Vision */}
       <section className="py-16 md:py-24 border-b border-white/5 bg-white/[0.01]" ref={missionReveal.elementRef}>

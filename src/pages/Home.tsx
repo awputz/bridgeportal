@@ -6,6 +6,7 @@ import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { COMPANY_INFO } from "@/lib/constants";
 import { TrustBadges } from "@/components/TrustBadges";
 import { SEOHelmet } from "@/components/SEOHelmet";
+import { TeamHighlight } from "@/components/TeamHighlight";
 import heroImage from "@/assets/brooklyn-bridge-hero-light.jpg";
 import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
 
@@ -172,6 +173,13 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Meet Our Leadership Section */}
+      <TeamHighlight 
+        title="Meet Our Leadership"
+        subtitle="The principals and partners driving Bridge Advisory Group's vision and client success."
+        className="bg-secondary"
+      />
 
       {/* Commercial & Investment Expertise Section */}
       <section className="py-16 md:py-24 bg-secondary" ref={commercialReveal.elementRef}>

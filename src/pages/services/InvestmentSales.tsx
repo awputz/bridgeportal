@@ -10,6 +10,7 @@ import { DIVISIONS } from "@/lib/constants";
 import { MarketStats } from "@/components/MarketStats";
 import { InvestmentCalculator } from "@/components/InvestmentCalculator";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
+import { TeamHighlight } from "@/components/TeamHighlight";
 import { 
   useInvestmentSalesSection, 
   getSectionMetadata,
@@ -430,6 +431,14 @@ export default function InvestmentSales() {
           </div>
         </section>
       )}
+
+      {/* Meet the Investment Sales Team */}
+      <TeamHighlight 
+        category="Investment Sales"
+        title="Meet the Investment Sales Team"
+        subtitle="Experienced advisors dedicated to maximizing value for our clients."
+        className="bg-muted/20"
+      />
 
       {/* CTA */}
       <section className="py-20 md:py-28">
