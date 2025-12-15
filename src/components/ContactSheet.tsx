@@ -27,7 +27,7 @@ interface ContactSheetProps {
   onOpenChange: (open: boolean) => void;
 }
 
-type Division = "residential" | "commercial-leasing" | "investment-sales" | "capital-advisory" | "marketing" | "billboard" | "";
+type Division = "residential" | "commercial-leasing" | "investment-sales" | "capital-advisory" | "marketing" | "billboard" | "careers" | "";
 
 export const ContactSheet = ({ open, onOpenChange }: ContactSheetProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -65,6 +65,12 @@ export const ContactSheet = ({ open, onOpenChange }: ContactSheetProps) => {
     budgetRangeBillboard: "",
     campaignTiming: "",
     message: "",
+    // Careers fields
+    positionInterest: "",
+    experienceLevel: "",
+    currentCompany: "",
+    linkedinUrl: "",
+    referralSource: "",
   });
 
   // Reset form when sheet closes
@@ -104,6 +110,11 @@ export const ContactSheet = ({ open, onOpenChange }: ContactSheetProps) => {
         budgetRangeBillboard: "",
         campaignTiming: "",
         message: "",
+        positionInterest: "",
+        experienceLevel: "",
+        currentCompany: "",
+        linkedinUrl: "",
+        referralSource: "",
       });
     }
   }, [open]);
@@ -263,6 +274,7 @@ export const ContactSheet = ({ open, onOpenChange }: ContactSheetProps) => {
                 <SelectItem value="capital-advisory">Capital Advisory</SelectItem>
                 <SelectItem value="marketing">Marketing</SelectItem>
                 <SelectItem value="billboard">Billboard</SelectItem>
+                <SelectItem value="careers">Careers</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -634,6 +646,78 @@ export const ContactSheet = ({ open, onOpenChange }: ContactSheetProps) => {
                     <SelectItem value="1-3-months">1-3 Months</SelectItem>
                     <SelectItem value="3-6-months">3-6 Months</SelectItem>
                     <SelectItem value="planning">Planning / Exploratory</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
+
+          {/* Conditional Fields - Careers */}
+          {division === "careers" && (
+            <div className="space-y-4 p-4 rounded-lg border border-white/10 bg-white/5 animate-fade-in">
+              <h3 className="font-light text-sm text-white/90 mb-3">Career Inquiry Details</h3>
+              <div>
+                <Label className="font-light text-white/80 text-xs">Position of Interest</Label>
+                <Select value={formData.positionInterest} onValueChange={(value) => handleInputChange("positionInterest", value)}>
+                  <SelectTrigger className="mt-1 h-11 bg-white/5 border-white/20 text-white">
+                    <SelectValue placeholder="Select..." />
+                  </SelectTrigger>
+                  <SelectContent className="bg-zinc-900 border-white/20">
+                    <SelectItem value="investment-sales-associate">Investment Sales Associate</SelectItem>
+                    <SelectItem value="residential-agent">Residential Leasing Agent</SelectItem>
+                    <SelectItem value="commercial-leasing">Commercial Leasing Associate</SelectItem>
+                    <SelectItem value="capital-advisory">Capital Advisory Analyst</SelectItem>
+                    <SelectItem value="marketing-coordinator">Marketing Coordinator</SelectItem>
+                    <SelectItem value="operations">Operations / Admin</SelectItem>
+                    <SelectItem value="general">General / Open Application</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="font-light text-white/80 text-xs">Experience Level</Label>
+                <Select value={formData.experienceLevel} onValueChange={(value) => handleInputChange("experienceLevel", value)}>
+                  <SelectTrigger className="mt-1 h-11 bg-white/5 border-white/20 text-white">
+                    <SelectValue placeholder="Select..." />
+                  </SelectTrigger>
+                  <SelectContent className="bg-zinc-900 border-white/20">
+                    <SelectItem value="entry">Entry Level (0-2 years)</SelectItem>
+                    <SelectItem value="mid">Mid Level (2-5 years)</SelectItem>
+                    <SelectItem value="senior">Senior Level (5+ years)</SelectItem>
+                    <SelectItem value="executive">Executive / Leadership</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="font-light text-white/80 text-xs">Current or Most Recent Employer</Label>
+                <Input
+                  value={formData.currentCompany}
+                  onChange={(e) => handleInputChange("currentCompany", e.target.value)}
+                  placeholder="e.g., CBRE, Cushman & Wakefield"
+                  className="mt-1 h-11 bg-white/5 border-white/20 text-white placeholder:text-white/40"
+                />
+              </div>
+              <div>
+                <Label className="font-light text-white/80 text-xs">LinkedIn Profile URL</Label>
+                <Input
+                  value={formData.linkedinUrl}
+                  onChange={(e) => handleInputChange("linkedinUrl", e.target.value)}
+                  placeholder="https://linkedin.com/in/yourprofile"
+                  className="mt-1 h-11 bg-white/5 border-white/20 text-white placeholder:text-white/40"
+                />
+              </div>
+              <div>
+                <Label className="font-light text-white/80 text-xs">How Did You Hear About Us?</Label>
+                <Select value={formData.referralSource} onValueChange={(value) => handleInputChange("referralSource", value)}>
+                  <SelectTrigger className="mt-1 h-11 bg-white/5 border-white/20 text-white">
+                    <SelectValue placeholder="Select..." />
+                  </SelectTrigger>
+                  <SelectContent className="bg-zinc-900 border-white/20">
+                    <SelectItem value="website">Bridge Website</SelectItem>
+                    <SelectItem value="linkedin">LinkedIn</SelectItem>
+                    <SelectItem value="referral">Employee Referral</SelectItem>
+                    <SelectItem value="indeed">Indeed</SelectItem>
+                    <SelectItem value="university">University / Campus Recruiting</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
