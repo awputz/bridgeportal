@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { ExternalLink, Calendar, FileText, Download } from "lucide-react";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
+import { SEOHelmet } from "@/components/SEOHelmet";
 
 const pressReleases = [
   {
@@ -57,6 +58,11 @@ export default function Press() {
 
   return (
     <div className="min-h-screen">
+      <SEOHelmet 
+        title="Press & Media | Bridge Advisory Group - News & Updates"
+        description="News, press releases, and media resources from Bridge Advisory Group. Download our media kit and contact our communications team."
+        path="/press"
+      />
       {/* Hero with Image */}
       <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Briefcase, Users, TrendingUp, Award, MapPin, Clock, ArrowRight } from "lucide-react";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
+import { SEOHelmet } from "@/components/SEOHelmet";
 
 const openPositions = [
   {
@@ -58,6 +59,11 @@ export default function Careers() {
 
   return (
     <div className="min-h-screen">
+      <SEOHelmet 
+        title="Careers | Bridge Advisory Group - Join Our Team"
+        description="Build your career at one of NYC's fastest-growing real estate advisory firms. Explore open positions in investment sales, residential, commercial leasing, and more."
+        path="/careers"
+      />
       {/* Hero with Image */}
       <section className="relative h-[45vh] md:h-[50vh] min-h-[320px] md:min-h-[400px] flex items-center justify-center" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">

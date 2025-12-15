@@ -4,6 +4,7 @@ import { TeamMemberDialog } from "@/components/TeamMemberDialog";
 import { useBridgeAgents, BridgeAgent, TeamCategory } from "@/hooks/useBridgeAgents";
 import { TeamPerformance } from "@/components/TeamPerformance";
 import { use3DTilt } from "@/hooks/useMousePosition";
+import { SEOHelmet } from "@/components/SEOHelmet";
 
 interface TeamMember {
   name: string;
@@ -121,6 +122,11 @@ const Team = () => {
 
   return (
     <div className="min-h-screen pt-24 md:pt-32 lg:pt-40 pb-16 md:pb-24 lg:pb-32 px-4 md:px-6 lg:px-8">
+      <SEOHelmet 
+        title="Our Team | Bridge Advisory Group - NYC Real Estate Experts"
+        description="Meet the Bridge Advisory Group team - senior professionals with deep NYC market expertise and proven investment sales track records."
+        path="/team"
+      />
       <div className="container mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-12 md:mb-20 lg:mb-24 max-w-4xl">

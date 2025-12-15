@@ -7,6 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { SEOHelmet } from "@/components/SEOHelmet";
 
 const faqCategories = [
   {
@@ -145,6 +146,11 @@ export default function FAQ() {
 
   return (
     <div className="min-h-screen pt-32 md:pt-40">
+      <SEOHelmet 
+        title="FAQ | Bridge Advisory Group - Frequently Asked Questions"
+        description="Find answers to common questions about Bridge Advisory Group's services including investment sales, residential, commercial leasing, capital advisory, and more."
+        path="/faq"
+      />
       {/* Hero */}
       <section className="pb-16 md:pb-24 border-b border-white/5" ref={heroReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
