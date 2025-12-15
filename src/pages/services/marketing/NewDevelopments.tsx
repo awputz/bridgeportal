@@ -121,7 +121,7 @@ const NewDevelopments = () => {
 
   return (
     <ServicePageLayout
-      serviceKey="residential"
+      serviceKey="marketing"
       heroContent={
         <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
           <div
