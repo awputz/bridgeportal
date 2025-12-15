@@ -77,35 +77,35 @@ export default {
           },
         },
         "fade-in": {
-          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "0%": { opacity: "0", transform: "translateY(8px)" },
           "100%": { opacity: "1", transform: "translateY(0)" }
         },
         "fade-in-up": {
-          "0%": { opacity: "0", transform: "translateY(40px)" },
+          "0%": { opacity: "0", transform: "translateY(16px)" },
           "100%": { opacity: "1", transform: "translateY(0)" }
         },
         "fade-in-left": {
-          "0%": { opacity: "0", transform: "translateX(-40px)" },
+          "0%": { opacity: "0", transform: "translateX(-16px)" },
           "100%": { opacity: "1", transform: "translateX(0)" }
         },
         "fade-in-right": {
-          "0%": { opacity: "0", transform: "translateX(40px)" },
+          "0%": { opacity: "0", transform: "translateX(16px)" },
           "100%": { opacity: "1", transform: "translateX(0)" }
         },
         "scale-in": {
-          "0%": { opacity: "0", transform: "scale(0.9)" },
+          "0%": { opacity: "0", transform: "scale(0.95)" },
           "100%": { opacity: "1", transform: "scale(1)" }
         },
         "bounce-gentle": {
           "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-10px)" }
+          "50%": { transform: "translateY(-6px)" }
         },
         "slide-up": {
-          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "0%": { opacity: "0", transform: "translateY(10px)" },
           "100%": { opacity: "1", transform: "translateY(0)" }
         },
         "slide-down": {
-          "0%": { opacity: "0", transform: "translateY(-20px)" },
+          "0%": { opacity: "0", transform: "translateY(-10px)" },
           "100%": { opacity: "1", transform: "translateY(0)" }
         }
       },

@@ -1,16 +1,8 @@
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+// ScrollToTop is now handled by PageTransition component
+// This component is kept for backwards compatibility but does nothing
+// The PageTransition component scrolls after the exit animation completes
 
 export const ScrollToTop = () => {
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "instant",
-    });
-  }, [pathname]);
-
+  // Scroll is handled by PageTransition.handleAnimationEnd
   return null;
 };
