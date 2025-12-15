@@ -7,6 +7,7 @@ import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { useResidentialTransactions } from "@/hooks/useResidentialTransactions";
 import { useBridgePageSection } from "@/hooks/useBridgePageContent";
+import { TeamHighlight } from "@/components/TeamHighlight";
 import manhattanImg from "@/assets/manhattan-market.jpg";
 import brooklynImg from "@/assets/brooklyn-market.jpg";
 import queensImg from "@/assets/queens-market.jpg";
@@ -496,6 +497,14 @@ export default function ResidentialServices() {
           </div>
         </div>
       </section>
+
+      {/* Meet the Residential Team */}
+      <TeamHighlight 
+        category="Residential"
+        title="Meet the Residential Team"
+        subtitle="Dedicated agents helping you find your next home in NYC."
+        className="bg-muted/20"
+      />
 
       {/* CTA */}
       <section className="py-20 md:py-28 bg-white/[0.02]">
