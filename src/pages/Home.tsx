@@ -46,7 +46,7 @@ export default function Home() {
             <img
               src={bridgeAdvisoryLogo}
               alt="Bridge Advisory Group"
-              className="mx-auto w-[200px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert mb-3 md:mb-6"
+              className="mx-auto w-[280px] sm:w-[320px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert mb-4 md:mb-6"
             />
           </div>
 
