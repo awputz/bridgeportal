@@ -5,17 +5,13 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { COMPANY_INFO, DIVISIONS } from "@/lib/constants";
 import { TrustBadges } from "@/components/TrustBadges";
-import { FeaturedDeals } from "@/components/FeaturedDeals";
-import { CoverageMap } from "@/components/CoverageMap";
-import { CalculatorTeaser } from "@/components/CalculatorTeaser";
-import { PartnerLogos } from "@/components/PartnerLogos";
 import { SEOHelmet } from "@/components/SEOHelmet";
 import heroImage from "@/assets/brooklyn-bridge-hero-light.jpg";
 import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
 
 export default function Home() {
   const { openContactSheet } = useContactSheet();
-  const platformReveal = useScrollReveal(0.1);
+  const servicesReveal = useScrollReveal(0.1);
   const ctaReveal = useScrollReveal(0.1);
 
   return (
@@ -25,6 +21,7 @@ export default function Home() {
         description="New York City's premier multi-division real estate platform. Investment sales, commercial leasing, residential services, and capital advisory."
         path="/"
       />
+      
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center px-4 md:px-6">
         <div
@@ -121,53 +118,52 @@ export default function Home() {
           className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-fade-in hidden md:block"
           style={{ animationDelay: "900ms", animationFillMode: "backwards" }}
         >
-          <div className="flex flex-col items-center gap-2 text-white/60 hover:text-white/90 transition-colors cursor-pointer">
+          <a href="#services" className="flex flex-col items-center gap-2 text-white/60 hover:text-white/90 transition-colors cursor-pointer">
             <span className="text-sm tracking-wider uppercase font-light">Scroll to Explore</span>
             <ChevronDown className="h-6 w-6 animate-bounce-gentle" />
-          </div>
+          </a>
         </div>
       </section>
 
-      {/* Section 1: Who We Are + Our Divisions */}
-      <section id="services" className="py-16 md:py-24 border-b border-white/5" ref={platformReveal.elementRef}>
+      {/* Section 2: Who We Are + Our Divisions */}
+      <section id="services" className="py-20 md:py-32" ref={servicesReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div
-            className={`text-center transition-all duration-700 ${
-              platformReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+            className={`text-center transition-all duration-700 ease-out ${
+              servicesReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
           >
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">Who We Are</h2>
-            <p className="text-base md:text-lg text-muted-foreground font-light mb-12 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base md:text-lg text-muted-foreground font-light mb-16 max-w-3xl mx-auto leading-relaxed">
               Bridge Advisory Group is a multi-division real estate platform serving owners, operators, and occupiers across every stage of the real estate cycle—from luxury residential to complex commercial transactions, investment sales, and capital markets solutions.
             </p>
           </div>
 
-          {/* Division Cards */}
-          <div
-            className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-12 transition-all duration-700 ${
-              platformReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-            }`}
-            style={{ transitionDelay: "200ms" }}
-          >
+          {/* Division Cards - Staggered Animation */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
             {Object.values(DIVISIONS).map((division, index) => {
               const iconMap: Record<string, React.ReactNode> = {
-                Home: <HomeIcon className="h-6 w-6 md:h-8 md:w-8 text-accent mb-3" />,
-                Building2: <Building2 className="h-6 w-6 md:h-8 md:w-8 text-accent mb-3" />,
-                TrendingUp: <TrendingUp className="h-6 w-6 md:h-8 md:w-8 text-accent mb-3" />,
-                Landmark: <Landmark className="h-6 w-6 md:h-8 md:w-8 text-accent mb-3" />,
-                Settings: <Settings className="h-6 w-6 md:h-8 md:w-8 text-accent mb-3" />,
-                Megaphone: <Megaphone className="h-6 w-6 md:h-8 md:w-8 text-accent mb-3" />,
-                Presentation: <Presentation className="h-6 w-6 md:h-8 md:w-8 text-accent mb-3" />,
+                Home: <HomeIcon className="h-7 w-7 md:h-8 md:w-8 text-accent mb-4" />,
+                Building2: <Building2 className="h-7 w-7 md:h-8 md:w-8 text-accent mb-4" />,
+                TrendingUp: <TrendingUp className="h-7 w-7 md:h-8 md:w-8 text-accent mb-4" />,
+                Landmark: <Landmark className="h-7 w-7 md:h-8 md:w-8 text-accent mb-4" />,
+                Settings: <Settings className="h-7 w-7 md:h-8 md:w-8 text-accent mb-4" />,
+                Megaphone: <Megaphone className="h-7 w-7 md:h-8 md:w-8 text-accent mb-4" />,
+                Presentation: <Presentation className="h-7 w-7 md:h-8 md:w-8 text-accent mb-4" />,
               };
               return (
                 <Link
                   key={division.name}
                   to={division.path}
-                  className="group p-4 md:p-6 rounded-lg border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 text-center flex flex-col items-center"
-                  style={{ transitionDelay: `${index * 50}ms` }}
+                  className={`group p-5 md:p-6 rounded-xl border border-border/50 hover:border-border bg-card/30 hover:bg-card/60 transition-all duration-500 ease-out text-center flex flex-col items-center ${
+                    servicesReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+                  }`}
+                  style={{ 
+                    transitionDelay: servicesReveal.isVisible ? `${200 + index * 75}ms` : "0ms"
+                  }}
                 >
                   {iconMap[division.icon]}
-                  <h3 className="text-sm md:text-base font-light mb-1 group-hover:text-foreground transition-colors">
+                  <h3 className="text-sm md:text-base font-medium mb-2 group-hover:text-primary transition-colors duration-300">
                     {division.name}
                   </h3>
                   <p className="text-xs text-muted-foreground font-light line-clamp-2 hidden md:block">
@@ -179,49 +175,42 @@ export default function Home() {
           </div>
 
           <div
-            className={`text-center transition-all duration-700 ${
-              platformReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+            className={`text-center transition-all duration-700 ease-out ${
+              servicesReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
             }`}
-            style={{ transitionDelay: "400ms" }}
+            style={{ transitionDelay: servicesReveal.isVisible ? "700ms" : "0ms" }}
           >
-            <Button asChild variant="link" className="font-light group">
+            <Button asChild variant="link" className="font-light group text-muted-foreground hover:text-foreground">
               <Link to="/about">
                 Learn more about the firm
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Section 2: NYC Coverage Map */}
-      <CoverageMap />
-
       {/* Section 3: Trust Badges */}
       <TrustBadges />
 
-      {/* Section 4: Featured Deals */}
-      <FeaturedDeals />
-
-      {/* Section 5: Calculator Teaser */}
-      <CalculatorTeaser />
-
-      {/* Section 6: Partner Logos */}
-      <PartnerLogos />
-
-      {/* Section 7: Final CTA */}
-      <section className="py-16 md:py-24 border-t border-white/5" ref={ctaReveal.elementRef}>
+      {/* Section 4: Final CTA */}
+      <section className="py-20 md:py-32 border-t border-border/30" ref={ctaReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-3xl text-center">
           <div
-            className={`transition-all duration-700 ${
-              ctaReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+            className={`transition-all duration-700 ease-out ${
+              ctaReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
           >
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-light mb-6">Ready to Get Started?</h2>
-            <p className="text-base md:text-lg text-muted-foreground font-light mb-8 max-w-2xl mx-auto">
+            <p className="text-base md:text-lg text-muted-foreground font-light mb-10 max-w-2xl mx-auto leading-relaxed">
               Whether you're buying, selling, leasing, or investing, our team is ready to help you navigate New York real estate.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div
+              className={`flex flex-col sm:flex-row gap-4 justify-center transition-all duration-700 ease-out ${
+                ctaReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+              }`}
+              style={{ transitionDelay: ctaReveal.isVisible ? "200ms" : "0ms" }}
+            >
               <Button size="lg" className="font-light px-10" onClick={openContactSheet}>
                 <Calendar className="mr-2 h-4 w-4" />
                 Schedule a Consultation
