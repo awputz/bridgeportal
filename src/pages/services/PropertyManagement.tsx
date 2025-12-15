@@ -88,8 +88,8 @@ export default function PropertyManagement() {
       <section className="relative h-[45vh] md:h-[55vh] lg:h-[60vh] min-h-[320px] md:min-h-[400px] lg:min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img 
-            src={PLACEHOLDER_IMAGES.building.residential} 
-            alt="Residential property management" 
+            src={PLACEHOLDER_IMAGES.hero.propertyManagement} 
+            alt="Residential property management"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
