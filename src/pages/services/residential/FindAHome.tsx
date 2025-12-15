@@ -3,22 +3,9 @@ import { Home, Search, FileText, Key, Building2, MapPin, DollarSign, Users, Chec
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const FindAHome = () => {
   const { openContactSheet } = useContactSheet();
-  
-  // Scroll reveal hooks for each section
-  const heroReveal = useScrollReveal(0.1);
-  const tabsReveal = useScrollReveal(0.1);
-  const rentalServicesReveal = useScrollReveal(0.1);
-  const rentalTypesReveal = useScrollReveal(0.15);
-  const processReveal = useScrollReveal(0.15);
-  const rentalCtaReveal = useScrollReveal(0.2);
-  const buyerServicesReveal = useScrollReveal(0.1);
-  const propertyTypesReveal = useScrollReveal(0.15);
-  const statsReveal = useScrollReveal(0.15);
-  const buyerCtaReveal = useScrollReveal(0.2);
 
   const rentalServices = [
     {
@@ -111,12 +98,7 @@ const FindAHome = () => {
   ];
 
   const heroContent = (
-    <section 
-      ref={heroReveal.elementRef}
-      className={`relative bg-gradient-to-b from-secondary to-background pt-32 pb-20 transition-all duration-700 ${
-        heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-      }`}
-    >
+    <section className="relative bg-gradient-to-b from-secondary to-background pt-32 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <p className="text-primary font-medium mb-4">Residential / Find a Home</p>
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
@@ -132,226 +114,152 @@ const FindAHome = () => {
   return (
     <ServicePageLayout serviceKey="residential" heroContent={heroContent}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div
-          ref={tabsReveal.elementRef}
-          className={`transition-all duration-700 ${
-            tabsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
-        >
-          <Tabs defaultValue="rentals" className="w-full">
-            <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-12">
-              <TabsTrigger value="rentals" className="text-base">Rentals</TabsTrigger>
-              <TabsTrigger value="sales" className="text-base">Buy</TabsTrigger>
-            </TabsList>
+        <Tabs defaultValue="rentals" className="w-full">
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-12">
+            <TabsTrigger value="rentals" className="text-base">Rentals</TabsTrigger>
+            <TabsTrigger value="sales" className="text-base">Buy</TabsTrigger>
+          </TabsList>
 
-            {/* Rentals Tab */}
-            <TabsContent value="rentals" className="space-y-20">
-              {/* Services */}
-              <section ref={rentalServicesReveal.elementRef}>
-                <h2 className={`text-3xl font-bold text-foreground mb-8 text-center transition-all duration-500 ${
-                  rentalServicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                }`}>
-                  Rental Services
-                </h2>
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {rentalServices.map((service, index) => (
-                    <div 
-                      key={service.title} 
-                      className={`bg-black/40 backdrop-blur-xl rounded-xl p-6 border border-white/10 hover:bg-black/50 hover:border-white/15 transition-all duration-500 ${
-                        rentalServicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                      }`}
-                      style={{ transitionDelay: rentalServicesReveal.isVisible ? `${index * 100}ms` : '0ms' }}
-                    >
-                      <service.icon className="h-8 w-8 text-primary mb-4" />
-                      <h3 className="font-semibold text-foreground mb-2">{service.title}</h3>
-                      <p className="text-sm text-muted-foreground">{service.description}</p>
+          {/* Rentals Tab */}
+          <TabsContent value="rentals" className="space-y-20">
+            {/* Services */}
+            <section>
+              <h2 className="text-3xl font-bold text-foreground mb-8 text-center">Rental Services</h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {rentalServices.map((service) => (
+                  <div key={service.title} className="bg-black/40 backdrop-blur-xl rounded-xl p-6 border border-white/10 hover:bg-black/50 hover:border-white/15 transition-all duration-300">
+                    <service.icon className="h-8 w-8 text-primary mb-4" />
+                    <h3 className="font-semibold text-foreground mb-2">{service.title}</h3>
+                    <p className="text-sm text-muted-foreground">{service.description}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Rental Types */}
+            <section>
+              <h2 className="text-3xl font-bold text-foreground mb-8 text-center">Types of Rentals</h2>
+              <div className="grid md:grid-cols-3 gap-8">
+                {rentalTypes.map((type) => (
+                  <div key={type.title} className="bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-white/10 hover:bg-black/40 transition-all duration-300">
+                    <h3 className="text-xl font-semibold text-foreground mb-3">{type.title}</h3>
+                    <p className="text-muted-foreground mb-4">{type.description}</p>
+                    <ul className="space-y-2">
+                      {type.features.map((feature) => (
+                        <li key={feature} className="flex items-center gap-2 text-sm text-foreground">
+                          <CheckCircle className="h-4 w-4 text-primary" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Process */}
+            <section className="bg-black/40 backdrop-blur-xl rounded-xl p-8 border border-white/10">
+              <h2 className="text-3xl font-bold text-foreground mb-8 text-center">The Rental Process</h2>
+              <div className="grid md:grid-cols-5 gap-4">
+                {rentalProcess.map((item, index) => (
+                  <div key={item.step} className="text-center relative">
+                    <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+                      {item.step}
                     </div>
-                  ))}
+                    <h4 className="font-semibold text-foreground mb-2">{item.title}</h4>
+                    <p className="text-sm text-muted-foreground">{item.description}</p>
+                    {index < rentalProcess.length - 1 && (
+                      <div className="hidden md:block absolute top-6 left-[60%] w-[80%] h-px bg-border" />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* CTA */}
+            <section className="text-center">
+              <h2 className="text-3xl font-bold text-foreground mb-4">Ready to Find Your Rental?</h2>
+              <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+                Connect with one of our rental specialists to start your apartment search today.
+              </p>
+              <Button size="lg" onClick={openContactSheet}>
+                Start Your Search
+              </Button>
+            </section>
+          </TabsContent>
+
+          {/* Sales Tab */}
+          <TabsContent value="sales" className="space-y-20">
+            {/* Services */}
+            <section>
+              <h2 className="text-3xl font-bold text-foreground mb-8 text-center">Buyer Services</h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {buyerServices.map((service) => (
+                  <div key={service.title} className="bg-black/40 backdrop-blur-xl rounded-xl p-6 border border-white/10 hover:bg-black/50 hover:border-white/15 transition-all duration-300">
+                    <service.icon className="h-8 w-8 text-primary mb-4" />
+                    <h3 className="font-semibold text-foreground mb-2">{service.title}</h3>
+                    <p className="text-sm text-muted-foreground">{service.description}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Property Types */}
+            <section>
+              <h2 className="text-3xl font-bold text-foreground mb-8 text-center">Property Types</h2>
+              <div className="grid md:grid-cols-3 gap-8">
+                {propertyTypes.map((type) => (
+                  <div key={type.title} className="bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-white/10 hover:bg-black/40 transition-all duration-300">
+                    <h3 className="text-xl font-semibold text-foreground mb-3">{type.title}</h3>
+                    <p className="text-muted-foreground mb-4">{type.description}</p>
+                    <ul className="space-y-2">
+                      {type.features.map((feature) => (
+                        <li key={feature} className="flex items-center gap-2 text-sm text-foreground">
+                          <CheckCircle className="h-4 w-4 text-primary" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Why Buy with Bridge */}
+            <section className="bg-black/40 backdrop-blur-xl rounded-xl p-8 border border-white/10">
+              <h2 className="text-3xl font-bold text-foreground mb-8 text-center">Why Buy with Bridge</h2>
+              <div className="grid md:grid-cols-4 gap-6 text-center">
+                <div>
+                  <p className="text-4xl font-bold text-primary mb-2">$500M+</p>
+                  <p className="text-muted-foreground">In Transactions</p>
                 </div>
-              </section>
-
-              {/* Rental Types */}
-              <section ref={rentalTypesReveal.elementRef}>
-                <h2 className={`text-3xl font-bold text-foreground mb-8 text-center transition-all duration-500 ${
-                  rentalTypesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                }`}>
-                  Types of Rentals
-                </h2>
-                <div className="grid md:grid-cols-3 gap-8">
-                  {rentalTypes.map((type, index) => (
-                    <div 
-                      key={type.title} 
-                      className={`bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-white/10 hover:bg-black/40 transition-all duration-500 ${
-                        rentalTypesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                      }`}
-                      style={{ transitionDelay: rentalTypesReveal.isVisible ? `${index * 150}ms` : '0ms' }}
-                    >
-                      <h3 className="text-xl font-semibold text-foreground mb-3">{type.title}</h3>
-                      <p className="text-muted-foreground mb-4">{type.description}</p>
-                      <ul className="space-y-2">
-                        {type.features.map((feature) => (
-                          <li key={feature} className="flex items-center gap-2 text-sm text-foreground">
-                            <CheckCircle className="h-4 w-4 text-primary" />
-                            {feature}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
+                <div>
+                  <p className="text-4xl font-bold text-primary mb-2">200+</p>
+                  <p className="text-muted-foreground">Homes Sold</p>
                 </div>
-              </section>
-
-              {/* Process */}
-              <section 
-                ref={processReveal.elementRef}
-                className={`bg-black/40 backdrop-blur-xl rounded-xl p-8 border border-white/10 transition-all duration-700 ${
-                  processReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                }`}
-              >
-                <h2 className="text-3xl font-bold text-foreground mb-8 text-center">The Rental Process</h2>
-                <div className="grid md:grid-cols-5 gap-4">
-                  {rentalProcess.map((item, index) => (
-                    <div 
-                      key={item.step} 
-                      className={`text-center relative transition-all duration-500 ${
-                        processReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                      }`}
-                      style={{ transitionDelay: processReveal.isVisible ? `${index * 150}ms` : '0ms' }}
-                    >
-                      <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
-                        {item.step}
-                      </div>
-                      <h4 className="font-semibold text-foreground mb-2">{item.title}</h4>
-                      <p className="text-sm text-muted-foreground">{item.description}</p>
-                      {index < rentalProcess.length - 1 && (
-                        <div className="hidden md:block absolute top-6 left-[60%] w-[80%] h-px bg-border" />
-                      )}
-                    </div>
-                  ))}
+                <div>
+                  <p className="text-4xl font-bold text-primary mb-2">15+</p>
+                  <p className="text-muted-foreground">Years Experience</p>
                 </div>
-              </section>
-
-              {/* CTA */}
-              <section 
-                ref={rentalCtaReveal.elementRef}
-                className={`text-center transition-all duration-700 ${
-                  rentalCtaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                }`}
-              >
-                <h2 className="text-3xl font-bold text-foreground mb-4">Ready to Find Your Rental?</h2>
-                <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-                  Connect with one of our rental specialists to start your apartment search today.
-                </p>
-                <Button size="lg" onClick={openContactSheet}>
-                  Start Your Search
-                </Button>
-              </section>
-            </TabsContent>
-
-            {/* Sales Tab */}
-            <TabsContent value="sales" className="space-y-20">
-              {/* Services */}
-              <section ref={buyerServicesReveal.elementRef}>
-                <h2 className={`text-3xl font-bold text-foreground mb-8 text-center transition-all duration-500 ${
-                  buyerServicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                }`}>
-                  Buyer Services
-                </h2>
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {buyerServices.map((service, index) => (
-                    <div 
-                      key={service.title} 
-                      className={`bg-black/40 backdrop-blur-xl rounded-xl p-6 border border-white/10 hover:bg-black/50 hover:border-white/15 transition-all duration-500 ${
-                        buyerServicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                      }`}
-                      style={{ transitionDelay: buyerServicesReveal.isVisible ? `${index * 100}ms` : '0ms' }}
-                    >
-                      <service.icon className="h-8 w-8 text-primary mb-4" />
-                      <h3 className="font-semibold text-foreground mb-2">{service.title}</h3>
-                      <p className="text-sm text-muted-foreground">{service.description}</p>
-                    </div>
-                  ))}
+                <div>
+                  <p className="text-4xl font-bold text-primary mb-2">5</p>
+                  <p className="text-muted-foreground">Boroughs Covered</p>
                 </div>
-              </section>
+              </div>
+            </section>
 
-              {/* Property Types */}
-              <section ref={propertyTypesReveal.elementRef}>
-                <h2 className={`text-3xl font-bold text-foreground mb-8 text-center transition-all duration-500 ${
-                  propertyTypesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                }`}>
-                  Property Types
-                </h2>
-                <div className="grid md:grid-cols-3 gap-8">
-                  {propertyTypes.map((type, index) => (
-                    <div 
-                      key={type.title} 
-                      className={`bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-white/10 hover:bg-black/40 transition-all duration-500 ${
-                        propertyTypesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                      }`}
-                      style={{ transitionDelay: propertyTypesReveal.isVisible ? `${index * 150}ms` : '0ms' }}
-                    >
-                      <h3 className="text-xl font-semibold text-foreground mb-3">{type.title}</h3>
-                      <p className="text-muted-foreground mb-4">{type.description}</p>
-                      <ul className="space-y-2">
-                        {type.features.map((feature) => (
-                          <li key={feature} className="flex items-center gap-2 text-sm text-foreground">
-                            <CheckCircle className="h-4 w-4 text-primary" />
-                            {feature}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* Why Buy with Bridge */}
-              <section 
-                ref={statsReveal.elementRef}
-                className={`bg-black/40 backdrop-blur-xl rounded-xl p-8 border border-white/10 transition-all duration-700 ${
-                  statsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                }`}
-              >
-                <h2 className="text-3xl font-bold text-foreground mb-8 text-center">Why Buy with Bridge</h2>
-                <div className="grid md:grid-cols-4 gap-6 text-center">
-                  {[
-                    { value: "$500M+", label: "In Transactions" },
-                    { value: "200+", label: "Homes Sold" },
-                    { value: "15+", label: "Years Experience" },
-                    { value: "5", label: "Boroughs Covered" }
-                  ].map((stat, index) => (
-                    <div 
-                      key={stat.label}
-                      className={`transition-all duration-500 ${
-                        statsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-                      }`}
-                      style={{ transitionDelay: statsReveal.isVisible ? `${index * 100}ms` : '0ms' }}
-                    >
-                      <p className="text-4xl font-bold text-primary mb-2">{stat.value}</p>
-                      <p className="text-muted-foreground">{stat.label}</p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* CTA */}
-              <section 
-                ref={buyerCtaReveal.elementRef}
-                className={`text-center transition-all duration-700 ${
-                  buyerCtaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                }`}
-              >
-                <h2 className="text-3xl font-bold text-foreground mb-4">Ready to Buy?</h2>
-                <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-                  Schedule a consultation with one of our buyer specialists to discuss your goals.
-                </p>
-                <Button size="lg" onClick={openContactSheet}>
-                  Schedule Consultation
-                </Button>
-              </section>
-            </TabsContent>
-          </Tabs>
-        </div>
+            {/* CTA */}
+            <section className="text-center">
+              <h2 className="text-3xl font-bold text-foreground mb-4">Ready to Buy?</h2>
+              <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+                Schedule a consultation with one of our buyer specialists to discuss your goals.
+              </p>
+              <Button size="lg" onClick={openContactSheet}>
+                Schedule Consultation
+              </Button>
+            </section>
+          </TabsContent>
+        </Tabs>
       </div>
     </ServicePageLayout>
   );

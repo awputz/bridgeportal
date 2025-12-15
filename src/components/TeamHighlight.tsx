@@ -11,7 +11,6 @@ interface TeamHighlightProps {
   showCTA?: boolean;
   maxMembers?: number;
   className?: string;
-  includeNames?: string[];
 }
 
 export function TeamHighlight({ 
@@ -20,27 +19,14 @@ export function TeamHighlight({
   subtitle,
   showCTA = true,
   maxMembers = 4,
-  className = "",
-  includeNames = []
+  className = ""
 }: TeamHighlightProps) {
   const reveal = useScrollReveal(0.1);
   const { data } = useBridgeAgents();
   
-  // Get agents from specified category
-  let agents = category 
+  const agents = category 
     ? (data?.grouped[category] || []).slice(0, maxMembers)
     : (data?.grouped.Leadership || []).slice(0, maxMembers);
-  
-  // If specific names are provided, include those members from any category
-  if (includeNames.length > 0 && data?.all) {
-    const namedAgents = data.all.filter(agent => 
-      includeNames.some(name => agent.name.toLowerCase().includes(name.toLowerCase()))
-    );
-    // Combine named agents with category agents, avoiding duplicates
-    const existingIds = new Set(agents.map(a => a.id));
-    const uniqueNamedAgents = namedAgents.filter(a => !existingIds.has(a.id));
-    agents = [...uniqueNamedAgents, ...agents].slice(0, maxMembers);
-  }
 
   if (agents.length === 0) return null;
 

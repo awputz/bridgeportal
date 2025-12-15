@@ -33,10 +33,10 @@ export default function Home() {
           className="absolute inset-0 bg-cover bg-center"
           style={{
             backgroundImage: `url(${heroImage})`,
-            filter: "brightness(0.85) contrast(1.05)",
+            filter: "brightness(0.6) contrast(1.1)",
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/30 to-black/45" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
 
         <div className="relative z-10 container mx-auto text-center max-w-5xl">
           <div
@@ -46,21 +46,20 @@ export default function Home() {
             <img
               src={bridgeAdvisoryLogo}
               alt="Bridge Advisory Group"
-              className="mx-auto w-[280px] sm:w-[320px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert mb-4 md:mb-6"
-              style={{ filter: "drop-shadow(0 2px 10px rgba(0,0,0,0.4))" }}
+              className="mx-auto w-[200px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert mb-3 md:mb-6"
             />
           </div>
 
           <h1
             className="text-xl md:text-3xl lg:text-4xl xl:text-5xl text-foreground/90 mb-3 md:mb-6 max-w-4xl mx-auto font-light px-4 animate-fade-in"
-            style={{ animationDelay: "400ms", animationFillMode: "backwards", textShadow: "0 2px 15px rgba(0,0,0,0.6)" }}
+            style={{ animationDelay: "400ms", animationFillMode: "backwards" }}
           >
             {COMPANY_INFO.tagline}
           </h1>
 
           <p
             className="text-sm md:text-lg lg:text-xl text-foreground/60 mb-5 md:mb-8 max-w-3xl mx-auto font-light px-4 animate-fade-in line-clamp-2 md:line-clamp-none"
-            style={{ animationDelay: "500ms", animationFillMode: "backwards", textShadow: "0 2px 10px rgba(0,0,0,0.5)" }}
+            style={{ animationDelay: "500ms", animationFillMode: "backwards" }}
           >
             {COMPANY_INFO.description.full}
           </p>

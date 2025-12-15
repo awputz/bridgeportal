@@ -24,12 +24,9 @@ export const PageTransition = ({ children }: PageTransitionProps) => {
 
   const handleAnimationEnd = () => {
     if (transitionStage === "exit") {
+      setTransitionStage("enter");
       setDisplayLocation(location);
       window.scrollTo(0, 0);
-      // Small delay for smoother transition
-      requestAnimationFrame(() => {
-        setTransitionStage("enter");
-      });
     }
   };
 

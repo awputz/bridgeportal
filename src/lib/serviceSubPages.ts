@@ -50,11 +50,8 @@ export const SERVICE_SUB_PAGES = {
     basePath: "/services/marketing",
     pages: [
       { name: "Overview", path: "/services/marketing" },
-      { name: "New Developments", path: "/services/marketing/new-developments" },
       { name: "Creative Studio", path: "/services/marketing/creative-studio" },
       { name: "Digital & Campaigns", path: "/services/marketing/digital-campaigns" },
-      { name: "Visual Production", path: "/services/marketing/visual-production" },
-      { name: "Print & Events", path: "/services/marketing/print-events" },
     ],
   },
   billboard: {

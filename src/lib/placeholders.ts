@@ -2,20 +2,12 @@
 // These can be replaced with actual photos as they become available
 
 export const PLACEHOLDER_IMAGES = {
-  // Hero/Banner images - Service-specific heroes
+  // Hero/Banner images
   hero: {
     skyline: "https://images.unsplash.com/photo-1534430480872-3498386e7856?w=1920&h=1080&fit=crop&q=80",
     nycSkyline: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=1920&h=1080&fit=crop&q=80",
     manhattanNight: "https://images.unsplash.com/photo-1522083165195-3424ed129620?w=1920&h=1080&fit=crop&q=80",
     brooklynBridge: "https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?w=1920&h=1080&fit=crop&q=80",
-    // Service-specific hero images
-    marketing: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&h=1080&fit=crop&q=80", // Creative design studio
-    investmentSales: "https://images.unsplash.com/photo-1470219556762-1771e7f9427d?w=1920&h=1080&fit=crop&q=80", // NYC skyline golden hour
-    residential: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1920&h=1080&fit=crop&q=80", // Luxury apartment interior
-    commercialLeasing: "https://images.unsplash.com/photo-1555529771-7888783a18d3?w=1920&h=1080&fit=crop&q=80", // NYC retail street SoHo
-    capitalAdvisory: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1920&h=1080&fit=crop&q=80", // Modern glass skyscraper looking up
-    propertyManagement: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1920&h=1080&fit=crop&q=80", // Beautiful residential building
-    newDevelopments: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1920&h=1080&fit=crop&q=80", // Modern construction/new building
   },
   
   // Office/Workspace images
@@ -31,17 +23,17 @@ export const PLACEHOLDER_IMAGES = {
   building: {
     exterior: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&h=800&fit=crop&q=80",
     glass: "https://images.unsplash.com/photo-1478860409698-8707f313ee8b?w=1200&h=800&fit=crop&q=80",
-    residential: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&h=800&fit=crop&q=80",
+    residential: "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=1200&h=800&fit=crop&q=80",
     brownstone: "https://images.unsplash.com/photo-1555636222-cae831e670b3?w=1200&h=800&fit=crop&q=80",
     interior: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1200&h=800&fit=crop&q=80",
-    apartment: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&h=800&fit=crop&q=80",
+    apartment: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&h=800&fit=crop&q=80",
   },
   
   // Retail/Commercial images
   retail: {
     storefront: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=800&fit=crop&q=80",
     interior: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1200&h=800&fit=crop&q=80",
-    street: "https://images.unsplash.com/photo-1555529771-7888783a18d3?w=1200&h=800&fit=crop&q=80",
+    street: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=1200&h=800&fit=crop&q=80",
   },
   
   // Team/People images (professional portraits)

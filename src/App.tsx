@@ -48,7 +48,6 @@ import MarketsComingSoon from "./pages/MarketsComingSoon";
 import ResidentialFindAHome from "./pages/services/residential/FindAHome";
 import ResidentialTransactions from "./pages/services/residential/Transactions";
 import ResidentialLandlords from "./pages/services/residential/Landlords";
-import MarketingNewDevelopments from "./pages/services/marketing/NewDevelopments";
 
 import InvestmentValuations from "./pages/services/investment-sales/Valuations";
 import InvestmentTrackRecord from "./pages/services/investment-sales/TrackRecord";
@@ -64,8 +63,6 @@ import PMServices from "./pages/services/property-management/ServicesOffered";
 
 import MarketingCreativeStudio from "./pages/services/marketing/CreativeStudio";
 import MarketingDigitalCampaigns from "./pages/services/marketing/DigitalCampaigns";
-import MarketingVisualProduction from "./pages/services/marketing/VisualProduction";
-import MarketingPrintEvents from "./pages/services/marketing/PrintEvents";
 
 import BillboardInventory from "./pages/services/billboard/Inventory";
 import BillboardRates from "./pages/services/billboard/Rates";
@@ -131,7 +128,6 @@ const App = () => {
                     <Route path="/services/residential/landlords" element={<ResidentialLandlords />} />
                     <Route path="/services/residential/find-a-home" element={<ResidentialFindAHome />} />
                     <Route path="/services/residential/transactions" element={<ResidentialTransactions />} />
-                    <Route path="/services/residential/new-developments" element={<Navigate to="/services/marketing/new-developments" replace />} />
                     {/* Residential redirects (consolidated pages) */}
                     <Route path="/services/residential/landlord-services" element={<Navigate to="/services/residential/landlords" replace />} />
                     <Route path="/services/residential/buildings" element={<Navigate to="/services/residential" replace />} />
@@ -166,16 +162,9 @@ const App = () => {
                     <Route path="/services/property-management/portfolio" element={<Navigate to="/services/property-management" replace />} />
                     <Route path="/services/property-management/reporting" element={<Navigate to="/services/property-management" replace />} />
                     
-                    {/* Marketing Sub-Pages */}
-                    <Route path="/services/marketing/creative-studio" element={<MarketingCreativeStudio />} />
-                    <Route path="/services/marketing/digital-campaigns" element={<MarketingDigitalCampaigns />} />
-                    <Route path="/services/marketing/visual-production" element={<MarketingVisualProduction />} />
-                    <Route path="/services/marketing/print-events" element={<MarketingPrintEvents />} />
-                    <Route path="/services/marketing/new-developments" element={<MarketingNewDevelopments />} />
-                    
-                    {/* Marketing redirects (legacy) */}
-                    <Route path="/services/marketing/creative" element={<Navigate to="/services/marketing/creative-studio" replace />} />
-                    <Route path="/services/marketing/digital" element={<Navigate to="/services/marketing/digital-campaigns" replace />} />
+                    {/* Marketing redirects (all consolidated) */}
+                    <Route path="/services/marketing/creative" element={<Navigate to="/services/marketing" replace />} />
+                    <Route path="/services/marketing/digital" element={<Navigate to="/services/marketing" replace />} />
                     <Route path="/services/marketing/strategy" element={<Navigate to="/services/marketing" replace />} />
                     
                     {/* Billboard redirects (all consolidated) */}

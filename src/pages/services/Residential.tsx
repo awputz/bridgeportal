@@ -77,7 +77,7 @@ export default function ResidentialServices() {
         {/* Background Image */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${PLACEHOLDER_IMAGES.hero.residential})` }}
+          style={{ backgroundImage: `url(${PLACEHOLDER_IMAGES.building.apartment})` }}
         />
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/70 to-background" />

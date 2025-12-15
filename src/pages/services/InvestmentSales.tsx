@@ -57,8 +57,8 @@ export default function InvestmentSales() {
       <section className="relative h-[45vh] md:h-[55vh] lg:h-[60vh] min-h-[320px] md:min-h-[400px] lg:min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img 
-            src={PLACEHOLDER_IMAGES.hero.investmentSales} 
-            alt="Investment properties in NYC"
+            src={PLACEHOLDER_IMAGES.building.exterior} 
+            alt="Investment properties in NYC" 
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
@@ -438,8 +438,6 @@ export default function InvestmentSales() {
         title="Meet the Investment Sales Team"
         subtitle="Experienced advisors dedicated to maximizing value for our clients."
         className="bg-muted/20"
-        includeNames={["Eric Delafraz", "Joshua S. Malekan"]}
-        maxMembers={6}
       />
 
       {/* CTA */}
