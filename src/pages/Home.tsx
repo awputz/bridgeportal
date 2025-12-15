@@ -78,7 +78,7 @@ export default function Home() {
               onClick={openContactSheet}
             >
               <Calendar className="mr-2 h-4 w-4" />
-              Schedule Consultation
+              Inquire
             </Button>
           </div>
 
@@ -417,7 +417,7 @@ export default function Home() {
             >
               <Button size="lg" className="font-light px-8" onClick={openContactSheet}>
                 <Calendar className="mr-2 h-4 w-4" />
-                Schedule a Consultation
+                Inquire
               </Button>
               <Button asChild size="lg" variant="outline" className="font-light px-8">
                 <Link to="/team">Meet Our Team</Link>
