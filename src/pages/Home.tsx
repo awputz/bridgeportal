@@ -6,7 +6,7 @@ import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { COMPANY_INFO } from "@/lib/constants";
 import { TrustBadges } from "@/components/TrustBadges";
 import { SEOHelmet } from "@/components/SEOHelmet";
-import { TeamHighlight } from "@/components/TeamHighlight";
+
 import heroImage from "@/assets/brooklyn-bridge-hero-light.jpg";
 import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
 
@@ -130,17 +130,31 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Mission & Vision Section */}
+      {/* About Bridge Advisory Group Section */}
       <section id="mission" className="py-16 md:py-24 bg-muted/30" ref={missionReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className="grid md:grid-cols-2 gap-6">
+          {/* Part 1: Header, Mission, Vision, Values */}
+          <div
+            className={`text-center mb-10 transition-all duration-500 ease-out ${
+              missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
+          >
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">About Bridge Advisory Group</h2>
+            <p className="text-muted-foreground font-light max-w-2xl mx-auto text-sm md:text-base">
+              A full-service real estate advisory platform built on integrity, expertise, and long-term relationships.
+            </p>
+          </div>
+
+          {/* Mission & Vision Cards */}
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
             <div
               className={`p-6 md:p-8 rounded-xl border border-border/50 bg-card/50 transition-all duration-500 ease-out ${
                 missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
               }`}
+              style={{ transitionDelay: missionReveal.isVisible ? "100ms" : "0ms" }}
             >
               <Target className="h-8 w-8 text-primary mb-4" />
-              <h3 className="text-xl font-medium mb-3">Our Mission</h3>
+              <h3 className="text-xl font-medium mb-3">Mission</h3>
               <p className="text-muted-foreground font-light text-sm leading-relaxed">
                 Deliver exceptional real estate advisory through integrity, expertise, and client-first service.
               </p>
@@ -149,37 +163,78 @@ export default function Home() {
               className={`p-6 md:p-8 rounded-xl border border-border/50 bg-card/50 transition-all duration-500 ease-out ${
                 missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
               }`}
-              style={{ transitionDelay: missionReveal.isVisible ? "100ms" : "0ms" }}
+              style={{ transitionDelay: missionReveal.isVisible ? "200ms" : "0ms" }}
             >
               <Eye className="h-8 w-8 text-primary mb-4" />
-              <h3 className="text-xl font-medium mb-3">Our Vision</h3>
+              <h3 className="text-xl font-medium mb-3">Vision</h3>
               <p className="text-muted-foreground font-light text-sm leading-relaxed">
                 Be New York's most trusted real estate platform—where every transaction builds lasting relationships.
               </p>
             </div>
           </div>
+
+          {/* Values */}
           <div
-            className={`text-center mt-8 transition-all duration-500 ease-out ${
+            className={`flex flex-wrap gap-3 justify-center mb-8 transition-all duration-500 ease-out ${
               missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
             }`}
-            style={{ transitionDelay: missionReveal.isVisible ? "200ms" : "0ms" }}
+            style={{ transitionDelay: missionReveal.isVisible ? "300ms" : "0ms" }}
           >
-            <Button asChild variant="link" className="font-light group text-muted-foreground hover:text-foreground">
-              <Link to="/about">
-                View our full Mission, Vision, and Values
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-              </Link>
+            {["Integrity", "Expertise", "Client-First Service", "Long-Term Partnerships"].map((value) => (
+              <span
+                key={value}
+                className="px-4 py-2 rounded-full border border-border/50 bg-card/30 text-sm text-muted-foreground font-light"
+              >
+                {value}
+              </span>
+            ))}
+          </div>
+
+          {/* About Us CTA */}
+          <div
+            className={`text-center mb-16 transition-all duration-500 ease-out ${
+              missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+            }`}
+            style={{ transitionDelay: missionReveal.isVisible ? "400ms" : "0ms" }}
+          >
+            <Button asChild className="font-light px-8">
+              <Link to="/about">About Us</Link>
             </Button>
+          </div>
+
+          {/* Part 2: Founders Highlight (Text Only) */}
+          <div
+            className={`border-t border-border/30 pt-12 transition-all duration-500 ease-out ${
+              missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+            }`}
+            style={{ transitionDelay: missionReveal.isVisible ? "500ms" : "0ms" }}
+          >
+            <div className="grid md:grid-cols-2 gap-6 mb-6">
+              <div className="p-6 rounded-xl border border-border/50 bg-card/50 text-center">
+                <h4 className="text-lg font-medium mb-1">Alex W. Putzer</h4>
+                <p className="text-muted-foreground font-light text-sm">Co-Founder & Managing Partner</p>
+              </div>
+              <div className="p-6 rounded-xl border border-border/50 bg-card/50 text-center">
+                <h4 className="text-lg font-medium mb-1">Joshua S. Malekan</h4>
+                <p className="text-muted-foreground font-light text-sm">Co-Founder & Principal</p>
+              </div>
+            </div>
+
+            <p className="text-center text-muted-foreground font-light text-sm max-w-2xl mx-auto mb-6">
+              Bridge is led by operators who combine deal execution with a client-driven advisory approach across New York City.
+            </p>
+
+            <div className="text-center">
+              <Button asChild variant="link" className="font-light group text-muted-foreground hover:text-foreground">
+                <Link to="/team">
+                  Meet the Full Team
+                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
-
-      {/* Meet Our Leadership Section */}
-      <TeamHighlight 
-        title="Meet Our Leadership"
-        subtitle="The principals and partners driving Bridge Advisory Group's vision and client success."
-        className="bg-secondary"
-      />
 
       {/* Commercial & Investment Expertise Section */}
       <section className="py-16 md:py-24 bg-secondary" ref={commercialReveal.elementRef}>
