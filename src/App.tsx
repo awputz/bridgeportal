@@ -48,7 +48,7 @@ import MarketsComingSoon from "./pages/MarketsComingSoon";
 import ResidentialFindAHome from "./pages/services/residential/FindAHome";
 import ResidentialTransactions from "./pages/services/residential/Transactions";
 import ResidentialLandlords from "./pages/services/residential/Landlords";
-import ResidentialNewDevelopments from "./pages/services/residential/NewDevelopments";
+import MarketingNewDevelopments from "./pages/services/marketing/NewDevelopments";
 
 import InvestmentValuations from "./pages/services/investment-sales/Valuations";
 import InvestmentTrackRecord from "./pages/services/investment-sales/TrackRecord";
@@ -131,7 +131,7 @@ const App = () => {
                     <Route path="/services/residential/landlords" element={<ResidentialLandlords />} />
                     <Route path="/services/residential/find-a-home" element={<ResidentialFindAHome />} />
                     <Route path="/services/residential/transactions" element={<ResidentialTransactions />} />
-                    <Route path="/services/residential/new-developments" element={<ResidentialNewDevelopments />} />
+                    <Route path="/services/residential/new-developments" element={<Navigate to="/services/marketing/new-developments" replace />} />
                     {/* Residential redirects (consolidated pages) */}
                     <Route path="/services/residential/landlord-services" element={<Navigate to="/services/residential/landlords" replace />} />
                     <Route path="/services/residential/buildings" element={<Navigate to="/services/residential" replace />} />
@@ -171,6 +171,7 @@ const App = () => {
                     <Route path="/services/marketing/digital-campaigns" element={<MarketingDigitalCampaigns />} />
                     <Route path="/services/marketing/visual-production" element={<MarketingVisualProduction />} />
                     <Route path="/services/marketing/print-events" element={<MarketingPrintEvents />} />
+                    <Route path="/services/marketing/new-developments" element={<MarketingNewDevelopments />} />
                     
                     {/* Marketing redirects (legacy) */}
                     <Route path="/services/marketing/creative" element={<Navigate to="/services/marketing/creative-studio" replace />} />

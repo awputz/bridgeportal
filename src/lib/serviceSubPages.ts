@@ -22,7 +22,6 @@ export const SERVICE_SUB_PAGES = {
     basePath: "/services/residential",
     pages: [
       { name: "Overview", path: "/services/residential" },
-      { name: "New Developments", path: "/services/residential/new-developments" },
       { name: "For Landlords", path: "/services/residential/landlords" },
       { name: "For Buyers", path: "/services/residential/find-a-home" },
       { name: "For Renters", path: "/services/residential/find-a-home" },
@@ -51,6 +50,7 @@ export const SERVICE_SUB_PAGES = {
     basePath: "/services/marketing",
     pages: [
       { name: "Overview", path: "/services/marketing" },
+      { name: "New Developments", path: "/services/marketing/new-developments" },
       { name: "Creative Studio", path: "/services/marketing/creative-studio" },
       { name: "Digital & Campaigns", path: "/services/marketing/digital-campaigns" },
       { name: "Visual Production", path: "/services/marketing/visual-production" },
