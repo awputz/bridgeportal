@@ -8,51 +8,51 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* BRIDGE Investment Sales - Dark Mode with Grey Background */
+    /* BRIDGE Investment Sales - Dark Mode with Warm Off-White Tones */
     
-    --background: 0 0% 11%;
-    --foreground: 0 0% 95%;
+    --background: 30 8% 10%;
+    --foreground: 35 10% 88%;
     
-    /* Card surfaces - Dark grey */
-    --card: 0 0% 14%;
-    --card-foreground: 0 0% 95%;
+    /* Card surfaces - Warm dark grey */
+    --card: 30 6% 13%;
+    --card-foreground: 35 10% 88%;
     
     /* Popover */
-    --popover: 0 0% 8%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 30 8% 7%;
+    --popover-foreground: 35 10% 88%;
     
-    /* Primary - White for emphasis */
-    --primary: 0 0% 95%;
-    --primary-foreground: 0 0% 11%;
+    /* Primary - Warm off-white for emphasis */
+    --primary: 35 10% 88%;
+    --primary-foreground: 30 8% 10%;
     
-    /* Secondary - Dark with light border */
-    --secondary: 0 0% 18%;
-    --secondary-foreground: 0 0% 95%;
+    /* Secondary - Warm dark with light border */
+    --secondary: 30 6% 16%;
+    --secondary-foreground: 35 10% 88%;
     
-    /* Muted - Darker gray for subtle backgrounds */
-    --muted: 0 0% 18%;
-    --muted-foreground: 0 0% 75%;
+    /* Muted - Warmer darker gray for subtle backgrounds */
+    --muted: 30 6% 16%;
+    --muted-foreground: 35 8% 68%;
     
-    /* Accent - Neutral White */
-    --accent: 0 0% 85%;
-    --accent-foreground: 0 0% 11%;
+    /* Accent - Warm cream */
+    --accent: 35 10% 80%;
+    --accent-foreground: 30 8% 10%;
     
     /* Surface - Slightly lighter than background */
-    --surface: 0 0% 14%;
+    --surface: 30 6% 13%;
     
     /* Destructive */
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 35 10% 95%;
     
-    /* Borders - Subtle grey */
-    --border: 0 0% 22%;
-    --input: 0 0% 22%;
-    --ring: 0 0% 95%;
+    /* Borders - Warm subtle grey */
+    --border: 30 6% 20%;
+    --input: 30 6% 20%;
+    --ring: 35 10% 88%;
     
     /* Dark sections (even darker for footer contrast) */
-    --dark-bg: 0 0% 4%;
-    --dark-text: 0 0% 95%;
-    --dark-muted: 0 0% 65%;
+    --dark-bg: 30 8% 4%;
+    --dark-text: 35 10% 88%;
+    --dark-muted: 35 8% 60%;
     
     /* Radius */
     --radius: 0.5rem;

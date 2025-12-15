@@ -26,12 +26,12 @@ export const COMPANY_INFO = {
 };
 
 export const DIVISIONS = {
-  residential: {
-    name: "Residential",
-    path: "/services/residential",
-    tagline: "Luxury leasing and sales for owners, renters, and buyers across New York.",
-    description: "Find a Home • List Your Home",
-    icon: "Home"
+  investmentSales: {
+    name: "Investment Sales",
+    path: "/services/investment-sales",
+    tagline: "Transaction advisory for multifamily, mixed use, and commercial assets.",
+    description: "Multifamily & Mixed-Use Investment Sales",
+    icon: "TrendingUp"
   },
   commercialLeasing: {
     name: "Commercial Leasing",
@@ -40,12 +40,12 @@ export const DIVISIONS = {
     description: "Office, Retail & Specialty Assets",
     icon: "Building2"
   },
-  investmentSales: {
-    name: "Investment Sales",
-    path: "/services/investment-sales",
-    tagline: "Transaction advisory for multifamily, mixed use, and commercial assets.",
-    description: "Multifamily & Mixed-Use Investment Sales",
-    icon: "TrendingUp"
+  residential: {
+    name: "Residential",
+    path: "/services/residential",
+    tagline: "Luxury leasing and sales for owners, renters, and buyers across New York.",
+    description: "Find a Home • List Your Home",
+    icon: "Home"
   },
   capitalAdvisory: {
     name: "Capital Advisory",
@@ -81,9 +81,9 @@ export const NAV_ITEMS = {
   services: {
     label: "Services",
     items: [
-      { name: "Residential", path: "/services/residential" },
-      { name: "Commercial Leasing", path: "/services/commercial-leasing" },
       { name: "Investment Sales", path: "/services/investment-sales" },
+      { name: "Commercial Leasing", path: "/services/commercial-leasing" },
+      { name: "Residential", path: "/services/residential" },
       { name: "Capital Advisory", path: "/services/capital-advisory" },
       { name: "Property Management", path: "/services/property-management" },
       { name: "Marketing", path: "/services/marketing" },
@@ -96,8 +96,8 @@ export const LISTINGS_ITEMS = {
   label: "Listings",
   items: [
     { 
-      name: "Residential", 
-      url: "https://streeteasy.com/building/bridge-advisory-group",
+      name: "Investment Sales", 
+      url: "https://www.costar.com",
       external: true 
     },
     { 
@@ -109,8 +109,8 @@ export const LISTINGS_ITEMS = {
       ]
     },
     { 
-      name: "Investment Sales", 
-      url: "https://www.costar.com",
+      name: "Residential", 
+      url: "https://streeteasy.com/building/bridge-advisory-group",
       external: true 
     }
   ]
