@@ -156,10 +156,10 @@ export default function Home() {
       <FeaturedDeals />
 
       {/* Section 5: Calculator Teaser */}
-      <CalculatorTeaser />
+      
 
       {/* Section 6: Partner Logos */}
-      <PartnerLogos />
+      
 
       {/* Section 7: Final CTA */}
       <section className="py-16 md:py-24 border-t border-white/5" ref={ctaReveal.elementRef}>
