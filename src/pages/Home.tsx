@@ -28,7 +28,7 @@ export default function Home() {
       />
       
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center px-4 md:px-6">
+      <section className="relative h-screen flex flex-col overflow-hidden px-4 md:px-6">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
@@ -38,89 +38,95 @@ export default function Home() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
 
-        <div className="relative z-10 container mx-auto text-center max-w-5xl">
-          <div
-            className="animate-fade-in"
-            style={{ animationDelay: "200ms", animationFillMode: "backwards" }}
-          >
-            <img
-              src={bridgeAdvisoryLogo}
-              alt="Bridge Advisory Group"
-              className="mx-auto w-[200px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert mb-3 md:mb-6"
-            />
-          </div>
+        {/* Nav spacer */}
+        <div className="flex-shrink-0 h-20 md:h-24" />
 
-          <h1
-            className="text-xl md:text-3xl lg:text-4xl xl:text-5xl text-foreground/90 mb-3 md:mb-6 max-w-4xl mx-auto font-light px-4 animate-fade-in"
-            style={{ animationDelay: "400ms", animationFillMode: "backwards" }}
-          >
-            {COMPANY_INFO.tagline}
-          </h1>
+        {/* Main content - grows to fill available space */}
+        <div className="relative z-10 flex-1 flex items-center justify-center">
+          <div className="container mx-auto text-center max-w-5xl">
+            <div
+              className="animate-fade-in"
+              style={{ animationDelay: "200ms", animationFillMode: "backwards" }}
+            >
+              <img
+                src={bridgeAdvisoryLogo}
+                alt="Bridge Advisory Group"
+                className="mx-auto w-[200px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert mb-3 md:mb-6"
+              />
+            </div>
 
-          <p
-            className="text-sm md:text-lg lg:text-xl text-foreground/60 mb-5 md:mb-8 max-w-3xl mx-auto font-light px-4 animate-fade-in line-clamp-2 md:line-clamp-none"
-            style={{ animationDelay: "500ms", animationFillMode: "backwards" }}
-          >
-            {COMPANY_INFO.description.full}
-          </p>
+            <h1
+              className="text-xl md:text-3xl lg:text-4xl xl:text-5xl text-foreground/90 mb-3 md:mb-6 max-w-4xl mx-auto font-light px-4 animate-fade-in"
+              style={{ animationDelay: "400ms", animationFillMode: "backwards" }}
+            >
+              {COMPANY_INFO.tagline}
+            </h1>
 
-          <div
-            className="flex flex-col sm:flex-row gap-2 md:gap-3 justify-center px-4 animate-fade-in"
-            style={{ animationDelay: "600ms", animationFillMode: "backwards" }}
-          >
-            <Button asChild size="default" className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto">
-              <a href="#mission">Explore Services</a>
-            </Button>
-            <Button
-              size="default"
-              variant="outline"
-              className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto border-white/30 hover:bg-white/10"
-              onClick={openContactSheet}
+            <p
+              className="text-sm md:text-lg lg:text-xl text-foreground/60 mb-5 md:mb-8 max-w-3xl mx-auto font-light px-4 animate-fade-in line-clamp-2 md:line-clamp-none"
+              style={{ animationDelay: "500ms", animationFillMode: "backwards" }}
             >
-              <Calendar className="mr-2 h-4 w-4" />
-              Schedule Consultation
-            </Button>
-          </div>
+              {COMPANY_INFO.description.full}
+            </p>
 
-          {/* Quick Access Service Buttons */}
-          <div
-            className="hidden md:flex flex-wrap gap-3 justify-center px-4 mt-6 mb-20 animate-fade-in"
-            style={{ animationDelay: "700ms", animationFillMode: "backwards" }}
-          >
-            <Button
-              asChild
-              variant="outline"
-              className="font-light px-5 bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white"
+            <div
+              className="flex flex-col sm:flex-row gap-2 md:gap-3 justify-center px-4 animate-fade-in"
+              style={{ animationDelay: "600ms", animationFillMode: "backwards" }}
             >
-              <Link to="/services/residential">Residential</Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="font-light px-5 bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white"
+              <Button asChild size="default" className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto">
+                <a href="#mission">Explore Services</a>
+              </Button>
+              <Button
+                size="default"
+                variant="outline"
+                className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto border-white/30 hover:bg-white/10"
+                onClick={openContactSheet}
+              >
+                <Calendar className="mr-2 h-4 w-4" />
+                Schedule Consultation
+              </Button>
+            </div>
+
+            {/* Quick Access Service Buttons */}
+            <div
+              className="hidden md:flex flex-wrap gap-3 justify-center px-4 mt-6 animate-fade-in"
+              style={{ animationDelay: "700ms", animationFillMode: "backwards" }}
             >
-              <Link to="/services/commercial-leasing">Commercial</Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="font-light px-5 bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white"
-            >
-              <Link to="/services/investment-sales">Investment Sales</Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="font-light px-5 bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white"
-            >
-              <Link to="/services/capital-advisory">Capital Markets</Link>
-            </Button>
+              <Button
+                asChild
+                variant="outline"
+                className="font-light px-5 bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white"
+              >
+                <Link to="/services/residential">Residential</Link>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                className="font-light px-5 bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white"
+              >
+                <Link to="/services/commercial-leasing">Commercial</Link>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                className="font-light px-5 bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white"
+              >
+                <Link to="/services/investment-sales">Investment Sales</Link>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                className="font-light px-5 bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white"
+              >
+                <Link to="/services/capital-advisory">Capital Markets</Link>
+              </Button>
+            </div>
           </div>
         </div>
 
-        {/* Scroll Indicator */}
+        {/* Scroll Indicator - fixed height at bottom */}
         <div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-fade-in hidden md:block"
+          className="flex-shrink-0 h-20 md:h-24 flex items-center justify-center z-10 animate-fade-in hidden md:flex"
           style={{ animationDelay: "900ms", animationFillMode: "backwards" }}
         >
           <a href="#mission" className="flex flex-col items-center gap-2 text-white/60 hover:text-white/90 transition-colors cursor-pointer">
