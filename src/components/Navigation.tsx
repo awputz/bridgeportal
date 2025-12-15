@@ -139,8 +139,8 @@ export const Navigation = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
                   align="end" 
-                  sideOffset={20}
-                  className="w-[340px] p-3 glass-nav z-40"
+                  sideOffset={24}
+                  className="w-[340px] p-3 glass-nav z-40 mt-2"
                 >
                   {services?.slice().sort((a, b) => {
                     const order = ["Investment Sales", "Commercial Leasing", "Residential", "Capital Advisory", "Property Management", "Marketing", "Billboard"];
@@ -189,8 +189,8 @@ export const Navigation = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
                   align="end" 
-                  sideOffset={20}
-                  className="w-[220px] p-2 glass-nav z-40"
+                  sideOffset={24}
+                  className="w-[220px] p-2 glass-nav z-40 mt-2"
                 >
                   {listingsNav?.items.map((item) => {
                     const IconComponent = listingIcons[item.name] || Building2;
