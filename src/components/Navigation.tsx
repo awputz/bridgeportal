@@ -53,6 +53,7 @@ const listingIcons: Record<string, typeof Building2> = {
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
+  const [commercialExpanded, setCommercialExpanded] = useState(false);
   const location = useLocation();
   
   const { data: services } = useBridgeServices();
@@ -282,50 +283,74 @@ export const Navigation = () => {
               })}
               </div>
 
-              {/* Listings Section */}
+              {/* Listings Section - Optimized for Mobile/Tablet */}
               <div className="pt-3 border-t border-white/15">
                 <p className="text-sm uppercase tracking-wider text-muted-foreground mb-2">Listings</p>
                 
-                {listingsNav?.items.map((item, index) => {
-                  const IconComponent = listingIcons[item.name] || Building2;
-                  const baseDelay = (services?.length || 0) + leftNavItems.length;
-                  
-                  if (item.nested && item.items) {
-                    return (
-                      <div key={item.name}>
-                        <p className="text-xs text-foreground/60 mt-2 mb-1 pl-7">{item.name}</p>
-                        {item.items.map((subItem, subIndex) => (
-                          <a 
-                            key={subItem.name}
-                            href={subItem.url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] pl-7 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
-                            style={{ transitionDelay: `${(baseDelay + index + subIndex + 1) * 40}ms` }}
-                            onClick={() => setIsOpen(false)}
-                          >
-                            {subItem.name}
-                          </a>
-                        ))}
-                      </div>
-                    );
-                  }
-                  
-                  return (
-                    <a 
-                      key={item.name}
-                      href={item.url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
-                      style={{ transitionDelay: `${(baseDelay + index) * 40}ms` }}
-                      onClick={() => setIsOpen(false)}
+                {/* Residential - Direct link */}
+                {listingsNav?.items.filter(item => item.name === "Residential").map((item, index) => (
+                  <a 
+                    key={item.name}
+                    href={item.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                    style={{ transitionDelay: `${((services?.length || 0) + leftNavItems.length + index) * 40}ms` }}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Home className="h-4 w-4 text-foreground/50" />
+                    {item.name}
+                  </a>
+                ))}
+
+                {/* Commercial Leasing - Collapsible */}
+                {listingsNav?.items.filter(item => item.name === "Commercial Leasing").map((item, index) => (
+                  <div key={item.name}>
+                    <button 
+                      onClick={() => setCommercialExpanded(!commercialExpanded)}
+                      className={`flex items-center justify-between w-full text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                      style={{ transitionDelay: `${((services?.length || 0) + leftNavItems.length + 1) * 40}ms` }}
                     >
-                      <IconComponent className="h-4 w-4 text-foreground/50" />
-                      {item.name}
-                    </a>
-                  );
-                })}
+                      <div className="flex items-center gap-3">
+                        <Building2 className="h-4 w-4 text-foreground/50" />
+                        {item.name}
+                      </div>
+                      <ChevronDown className={`h-4 w-4 text-foreground/50 transition-transform duration-300 ${commercialExpanded ? 'rotate-180' : ''}`} />
+                    </button>
+                    
+                    {/* Collapsible sub-items */}
+                    <div className={`overflow-hidden transition-all duration-300 ease-out ${commercialExpanded ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
+                      {item.items?.map((subItem) => (
+                        <a 
+                          key={subItem.name}
+                          href={subItem.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 text-sm font-light text-foreground/60 hover:text-foreground transition-colors duration-200 py-3 min-h-[44px] pl-7"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          {subItem.name}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+
+                {/* Investment Sales - Direct link */}
+                {listingsNav?.items.filter(item => item.name === "Investment Sales").map((item, index) => (
+                  <a 
+                    key={item.name}
+                    href={item.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                    style={{ transitionDelay: `${((services?.length || 0) + leftNavItems.length + 2) * 40}ms` }}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <TrendingUp className="h-4 w-4 text-foreground/50" />
+                    {item.name}
+                  </a>
+                ))}
               </div>
 
               <Button 
