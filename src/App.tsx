@@ -44,39 +44,15 @@ import Marketing from "./pages/services/Marketing";
 import Billboard from "./pages/services/Billboard";
 import MarketsComingSoon from "./pages/MarketsComingSoon";
 
-// Service Sub-Pages
+// Service Sub-Pages (kept valuable ones)
 import ResidentialFindAHome from "./pages/services/residential/FindAHome";
 import ResidentialTransactions from "./pages/services/residential/Transactions";
-import ResidentialLandlordServices from "./pages/services/residential/LandlordServices";
-import ResidentialResources from "./pages/services/residential/Resources";
-import ResidentialBuildings from "./pages/services/residential/Buildings";
 
-import InvestmentAcquisitions from "./pages/services/investment-sales/Acquisitions";
-import InvestmentDispositions from "./pages/services/investment-sales/Dispositions";
 import InvestmentValuations from "./pages/services/investment-sales/Valuations";
 import InvestmentTrackRecord from "./pages/services/investment-sales/TrackRecord";
 
 import CommercialTenantRep from "./pages/services/commercial-leasing/TenantRep";
 import CommercialLandlordRep from "./pages/services/commercial-leasing/LandlordRep";
-import CommercialRetail from "./pages/services/commercial-leasing/Retail";
-import CommercialOffice from "./pages/services/commercial-leasing/Office";
-
-import CapitalDebt from "./pages/services/capital-advisory/Debt";
-import CapitalEquity from "./pages/services/capital-advisory/Equity";
-import CapitalRefinance from "./pages/services/capital-advisory/Refinance";
-import CapitalConstruction from "./pages/services/capital-advisory/Construction";
-
-import PMServices from "./pages/services/property-management/Services";
-import PMPortfolio from "./pages/services/property-management/Portfolio";
-import PMReporting from "./pages/services/property-management/Reporting";
-
-import MarketingCreative from "./pages/services/marketing/Creative";
-import MarketingDigital from "./pages/services/marketing/Digital";
-import MarketingStrategy from "./pages/services/marketing/Strategy";
-
-import BillboardInventory from "./pages/services/billboard/Inventory";
-import BillboardPricing from "./pages/services/billboard/Pricing";
-import BillboardCaseStudies from "./pages/services/billboard/CaseStudies";
 
 const queryClient = new QueryClient();
 
@@ -135,50 +111,52 @@ const App = () => {
                     <Route path="/services/marketing" element={<Marketing />} />
                     <Route path="/services/billboard" element={<Billboard />} />
                     
-                    {/* Residential Sub-Pages */}
+                    {/* Residential Sub-Pages (kept) */}
                     <Route path="/services/residential/find-a-home" element={<ResidentialFindAHome />} />
                     <Route path="/services/residential/transactions" element={<ResidentialTransactions />} />
-                    <Route path="/services/residential/landlord-services" element={<ResidentialLandlordServices />} />
-                    <Route path="/services/residential/buildings" element={<ResidentialBuildings />} />
-                    <Route path="/services/residential/resources" element={<ResidentialResources />} />
-                    {/* Legacy residential redirects */}
+                    {/* Residential redirects (consolidated pages) */}
+                    <Route path="/services/residential/landlord-services" element={<Navigate to="/services/residential" replace />} />
+                    <Route path="/services/residential/buildings" element={<Navigate to="/services/residential" replace />} />
+                    <Route path="/services/residential/resources" element={<Navigate to="/services/residential" replace />} />
                     <Route path="/services/residential/rentals" element={<Navigate to="/services/residential/find-a-home" replace />} />
                     <Route path="/services/residential/sales" element={<Navigate to="/services/residential/find-a-home" replace />} />
                     <Route path="/services/residential/listings" element={<Navigate to="/services/residential/find-a-home" replace />} />
                     <Route path="/services/residential/markets" element={<Navigate to="/services/residential" replace />} />
                     
-                    {/* Investment Sales Sub-Pages */}
-                    <Route path="/services/investment-sales/acquisitions" element={<InvestmentAcquisitions />} />
-                    <Route path="/services/investment-sales/dispositions" element={<InvestmentDispositions />} />
+                    {/* Investment Sales Sub-Pages (kept) */}
                     <Route path="/services/investment-sales/valuations" element={<InvestmentValuations />} />
                     <Route path="/services/investment-sales/track-record" element={<InvestmentTrackRecord />} />
+                    {/* Investment Sales redirects (consolidated pages) */}
+                    <Route path="/services/investment-sales/acquisitions" element={<Navigate to="/services/investment-sales" replace />} />
+                    <Route path="/services/investment-sales/dispositions" element={<Navigate to="/services/investment-sales" replace />} />
                     
-                    {/* Commercial Leasing Sub-Pages */}
+                    {/* Commercial Leasing Sub-Pages (kept) */}
                     <Route path="/services/commercial-leasing/tenant-rep" element={<CommercialTenantRep />} />
                     <Route path="/services/commercial-leasing/landlord-rep" element={<CommercialLandlordRep />} />
-                    <Route path="/services/commercial-leasing/retail" element={<CommercialRetail />} />
-                    <Route path="/services/commercial-leasing/office" element={<CommercialOffice />} />
+                    {/* Commercial Leasing redirects (consolidated pages) */}
+                    <Route path="/services/commercial-leasing/retail" element={<Navigate to="/services/commercial-leasing" replace />} />
+                    <Route path="/services/commercial-leasing/office" element={<Navigate to="/services/commercial-leasing" replace />} />
                     
-                    {/* Capital Advisory Sub-Pages */}
-                    <Route path="/services/capital-advisory/debt" element={<CapitalDebt />} />
-                    <Route path="/services/capital-advisory/equity" element={<CapitalEquity />} />
-                    <Route path="/services/capital-advisory/refinance" element={<CapitalRefinance />} />
-                    <Route path="/services/capital-advisory/construction" element={<CapitalConstruction />} />
+                    {/* Capital Advisory redirects (all consolidated) */}
+                    <Route path="/services/capital-advisory/debt" element={<Navigate to="/services/capital-advisory" replace />} />
+                    <Route path="/services/capital-advisory/equity" element={<Navigate to="/services/capital-advisory" replace />} />
+                    <Route path="/services/capital-advisory/refinance" element={<Navigate to="/services/capital-advisory" replace />} />
+                    <Route path="/services/capital-advisory/construction" element={<Navigate to="/services/capital-advisory" replace />} />
                     
-                    {/* Property Management Sub-Pages */}
-                    <Route path="/services/property-management/services" element={<PMServices />} />
-                    <Route path="/services/property-management/portfolio" element={<PMPortfolio />} />
-                    <Route path="/services/property-management/reporting" element={<PMReporting />} />
+                    {/* Property Management redirects (all consolidated) */}
+                    <Route path="/services/property-management/services" element={<Navigate to="/services/property-management" replace />} />
+                    <Route path="/services/property-management/portfolio" element={<Navigate to="/services/property-management" replace />} />
+                    <Route path="/services/property-management/reporting" element={<Navigate to="/services/property-management" replace />} />
                     
-                    {/* Marketing Sub-Pages */}
-                    <Route path="/services/marketing/creative" element={<MarketingCreative />} />
-                    <Route path="/services/marketing/digital" element={<MarketingDigital />} />
-                    <Route path="/services/marketing/strategy" element={<MarketingStrategy />} />
+                    {/* Marketing redirects (all consolidated) */}
+                    <Route path="/services/marketing/creative" element={<Navigate to="/services/marketing" replace />} />
+                    <Route path="/services/marketing/digital" element={<Navigate to="/services/marketing" replace />} />
+                    <Route path="/services/marketing/strategy" element={<Navigate to="/services/marketing" replace />} />
                     
-                    {/* Billboard Sub-Pages */}
-                    <Route path="/services/billboard/inventory" element={<BillboardInventory />} />
-                    <Route path="/services/billboard/pricing" element={<BillboardPricing />} />
-                    <Route path="/services/billboard/case-studies" element={<BillboardCaseStudies />} />
+                    {/* Billboard redirects (all consolidated) */}
+                    <Route path="/services/billboard/inventory" element={<Navigate to="/services/billboard" replace />} />
+                    <Route path="/services/billboard/pricing" element={<Navigate to="/services/billboard" replace />} />
+                    <Route path="/services/billboard/case-studies" element={<Navigate to="/services/billboard" replace />} />
                     
                     {/* Track Record */}
                     <Route path="/track-record" element={<TrackRecord />} />
