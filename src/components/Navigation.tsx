@@ -139,8 +139,8 @@ export const Navigation = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
                   align="end" 
-                  sideOffset={12}
-                  className="w-[340px] p-3 bg-zinc-900 border border-white/10 shadow-2xl rounded-lg z-50"
+                  sideOffset={16}
+                  className="w-[340px] p-3 bg-zinc-900 border border-white/10 shadow-2xl rounded-lg z-40"
                 >
                   {services?.map((service) => {
                     const IconComponent = serviceIcons[service.name] || Building2;
@@ -186,8 +186,8 @@ export const Navigation = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
                   align="end" 
-                  sideOffset={12}
-                  className="w-[220px] p-2 bg-zinc-900 border border-white/10 shadow-2xl rounded-lg z-50"
+                  sideOffset={16}
+                  className="w-[220px] p-2 bg-zinc-900 border border-white/10 shadow-2xl rounded-lg z-40"
                 >
                   {listingsNav?.items.map((item) => {
                     const IconComponent = listingIcons[item.name] || Building2;
@@ -199,7 +199,7 @@ export const Navigation = () => {
                             <IconComponent className="h-4 w-4 text-white/60" />
                             <span className="text-sm font-light">{item.name}</span>
                           </DropdownMenuSubTrigger>
-                          <DropdownMenuSubContent className="bg-zinc-900 border border-white/10 rounded-lg p-2 z-50">
+                          <DropdownMenuSubContent className="bg-zinc-900 border border-white/10 rounded-lg p-2 z-40">
                             {item.items.map((subItem) => (
                               <DropdownMenuItem key={subItem.name} asChild>
                                 <a 
