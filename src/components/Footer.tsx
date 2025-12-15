@@ -50,11 +50,11 @@ export const Footer = () => {
               Navigation
             </h3>
             <ul className="space-y-2 text-sm">
-              {services?.slice(0, 2).map(service => <li key={service.id}>
-                  <Link to={service.path} className="text-muted-foreground hover:text-foreground transition-colors font-light">
-                    {service.name}
-                  </Link>
-                </li>)}
+              <li>
+                <Link to="/services/investment-sales" className="text-muted-foreground hover:text-foreground transition-colors font-light">
+                  Services
+                </Link>
+              </li>
               <li>
                 <Link to="/press" className="text-muted-foreground hover:text-foreground transition-colors font-light">
                   Press
