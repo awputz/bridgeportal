@@ -5,6 +5,7 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
+import { SEOHelmet } from "@/components/SEOHelmet";
 
 export default function About() {
   const { openContactSheet } = useContactSheet();
@@ -33,6 +34,11 @@ export default function About() {
 
   return (
     <div className="min-h-screen">
+      <SEOHelmet 
+        title="About Bridge Advisory Group | NYC Real Estate Advisory"
+        description="Learn about Bridge Advisory Group, a multi-division real estate platform at the intersection of brokerage, ownership, and capital in New York City."
+        path="/about"
+      />
       {/* Hero with Stats */}
       <section className="relative min-h-[50vh] flex items-center justify-center py-20" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">

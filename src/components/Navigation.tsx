@@ -138,41 +138,29 @@ export const Navigation = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
                   align="end" 
-                  sideOffset={16}
-                  className="w-[500px] p-4 bg-zinc-900/95 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-xl relative"
+                  sideOffset={12}
+                  className="w-[260px] p-2 bg-zinc-900 border border-white/10 shadow-2xl rounded-lg z-50"
                 >
-                  {/* Arrow connector */}
-                  <div className="absolute -top-2 right-8 w-4 h-4 bg-zinc-900/95 border-l border-t border-white/20 rotate-45" />
-                  <div className="grid grid-cols-2 gap-2">
-                    {services?.map((service) => {
-                      const IconComponent = serviceIcons[service.name] || Building2;
-                      
-                      return (
-                        <Link
-                          key={service.id}
-                          to={service.path}
-                          className={cn(
-                            "group flex items-start gap-3 rounded-lg p-3 transition-all duration-200",
-                            "hover:bg-white/10 hover:scale-[1.02]",
-                            "min-h-[72px]",
-                            location.pathname.startsWith(service.path) && "bg-white/10"
-                          )}
-                        >
-                          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-md bg-white/10 group-hover:bg-white/15 transition-colors">
-                            <IconComponent className="h-4 w-4 text-white/70 group-hover:text-white transition-colors" />
-                          </div>
-                          <div className="flex flex-col min-w-0">
-                            <span className="text-sm font-medium text-white group-hover:text-white">
-                              {service.name}
-                            </span>
-                            <span className="text-xs text-white/60 mt-0.5 line-clamp-1">
-                              {service.description}
-                            </span>
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
+                  {services?.map((service) => {
+                    const IconComponent = serviceIcons[service.name] || Building2;
+                    
+                    return (
+                      <Link
+                        key={service.id}
+                        to={service.path}
+                        className={cn(
+                          "flex items-center gap-3 rounded-md px-3 py-2.5 transition-colors",
+                          "hover:bg-white/10",
+                          location.pathname.startsWith(service.path) && "bg-white/10"
+                        )}
+                      >
+                        <IconComponent className="h-4 w-4 text-white/60" />
+                        <span className="text-sm text-white/90 font-light">
+                          {service.name}
+                        </span>
+                      </Link>
+                    );
+                  })}
                 </DropdownMenuContent>
               </DropdownMenu>
 
@@ -190,31 +178,29 @@ export const Navigation = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
                   align="end" 
-                  sideOffset={16}
-                  className="w-[220px] p-2 bg-zinc-900/95 backdrop-blur-2xl border border-white/20 shadow-2xl rounded-xl relative"
+                  sideOffset={12}
+                  className="w-[220px] p-2 bg-zinc-900 border border-white/10 shadow-2xl rounded-lg z-50"
                 >
-                  {/* Arrow connector */}
-                  <div className="absolute -top-2 right-8 w-4 h-4 bg-zinc-900/95 border-l border-t border-white/20 rotate-45" />
                   {listingsNav?.items.map((item) => {
                     const IconComponent = listingIcons[item.name] || Building2;
                     
                     if (item.nested && item.items) {
                       return (
                         <DropdownMenuSub key={item.name}>
-                          <DropdownMenuSubTrigger className="flex items-center gap-3 p-2.5 rounded-lg">
-                            <IconComponent className="h-4 w-4 text-white/70" />
-                            <span className="text-sm text-white">{item.name}</span>
+                          <DropdownMenuSubTrigger className="flex items-center gap-3 px-3 py-2.5 rounded-md text-white/90">
+                            <IconComponent className="h-4 w-4 text-white/60" />
+                            <span className="text-sm font-light">{item.name}</span>
                           </DropdownMenuSubTrigger>
-                          <DropdownMenuSubContent className="bg-zinc-900/95 backdrop-blur-2xl border border-white/20 rounded-xl p-2">
+                          <DropdownMenuSubContent className="bg-zinc-900 border border-white/10 rounded-lg p-2 z-50">
                             {item.items.map((subItem) => (
                               <DropdownMenuItem key={subItem.name} asChild>
-                              <a 
+                                <a 
                                   href={subItem.url} 
                                   target="_blank" 
                                   rel="noopener noreferrer"
-                                  className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer"
+                                  className="flex items-center gap-3 px-3 py-2.5 rounded-md cursor-pointer"
                                 >
-                                  <span className="text-sm text-white">{subItem.name}</span>
+                                  <span className="text-sm text-white/90 font-light">{subItem.name}</span>
                                 </a>
                               </DropdownMenuItem>
                             ))}
@@ -229,10 +215,10 @@ export const Navigation = () => {
                           href={item.url} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer"
+                          className="flex items-center gap-3 px-3 py-2.5 rounded-md cursor-pointer"
                         >
-                          <IconComponent className="h-4 w-4 text-white/70" />
-                          <span className="text-sm text-white">{item.name}</span>
+                          <IconComponent className="h-4 w-4 text-white/60" />
+                          <span className="text-sm text-white/90 font-light">{item.name}</span>
                         </a>
                       </DropdownMenuItem>
                     );
