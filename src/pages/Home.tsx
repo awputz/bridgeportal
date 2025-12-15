@@ -33,10 +33,10 @@ export default function Home() {
           className="absolute inset-0 bg-cover bg-center"
           style={{
             backgroundImage: `url(${heroImage})`,
-            filter: "brightness(0.6) contrast(1.1)",
+            filter: "brightness(0.85) contrast(1.05)",
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/40" />
 
         <div className="relative z-10 container mx-auto text-center max-w-5xl">
           <div
