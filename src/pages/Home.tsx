@@ -192,7 +192,7 @@ export default function Home() {
 
           {/* About Us CTA */}
           <div
-            className={`text-center mb-16 transition-all duration-500 ease-out ${
+            className={`text-center transition-all duration-500 ease-out ${
               missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
             }`}
             style={{ transitionDelay: missionReveal.isVisible ? "400ms" : "0ms" }}
@@ -200,38 +200,6 @@ export default function Home() {
             <Button asChild className="font-light px-8">
               <Link to="/about">About Us</Link>
             </Button>
-          </div>
-
-          {/* Part 2: Founders Highlight (Text Only) */}
-          <div
-            className={`border-t border-border/30 pt-12 transition-all duration-500 ease-out ${
-              missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-            }`}
-            style={{ transitionDelay: missionReveal.isVisible ? "500ms" : "0ms" }}
-          >
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
-              <div className="p-6 rounded-xl border border-border/50 bg-card/50 text-center">
-                <h4 className="text-lg font-medium mb-1">Alex W. Putzer</h4>
-                <p className="text-muted-foreground font-light text-sm">Co-Founder & Managing Partner</p>
-              </div>
-              <div className="p-6 rounded-xl border border-border/50 bg-card/50 text-center">
-                <h4 className="text-lg font-medium mb-1">Joshua S. Malekan</h4>
-                <p className="text-muted-foreground font-light text-sm">Co-Founder & Principal</p>
-              </div>
-            </div>
-
-            <p className="text-center text-muted-foreground font-light text-sm max-w-2xl mx-auto mb-6">
-              Bridge is led by operators who combine deal execution with a client-driven advisory approach across New York City.
-            </p>
-
-            <div className="text-center">
-              <Button asChild variant="link" className="font-light group text-muted-foreground hover:text-foreground">
-                <Link to="/team">
-                  Meet the Full Team
-                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-                </Link>
-              </Button>
-            </div>
           </div>
         </div>
       </section>
