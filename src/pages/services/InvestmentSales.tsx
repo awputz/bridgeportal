@@ -438,6 +438,8 @@ export default function InvestmentSales() {
         title="Meet the Investment Sales Team"
         subtitle="Experienced advisors dedicated to maximizing value for our clients."
         className="bg-muted/20"
+        includeNames={["Eric Delafraz", "Joshua S. Malekan"]}
+        maxMembers={6}
       />
 
       {/* CTA */}
