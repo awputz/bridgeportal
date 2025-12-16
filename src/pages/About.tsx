@@ -18,7 +18,7 @@ export default function About() {
   const whyReveal = useScrollReveal(0.1);
 
   const stats = [
-    { icon: DollarSign, value: 500, suffix: "M+", label: "Closed" },
+    { icon: DollarSign, value: 100, suffix: "M+", label: "Closed" },
     { icon: Briefcase, value: 100, suffix: "+", label: "Clients" },
     { icon: Clock, value: 15, suffix: "+", label: "Years Exp." },
     { icon: Home, value: 50, suffix: "+", label: "Listings" },
