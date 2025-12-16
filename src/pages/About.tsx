@@ -21,7 +21,7 @@ export default function About() {
     { icon: DollarSign, value: 100, suffix: "M+", label: "Closed" },
     { icon: Briefcase, value: 100, suffix: "+", label: "Clients" },
     { icon: Clock, value: 15, suffix: "+", label: "Years Exp." },
-    { icon: Home, value: 50, suffix: "+", label: "Listings" },
+    { icon: Home, value: 500, suffix: "+", label: "Listings" },
   ];
 
   const culturalValues = [
