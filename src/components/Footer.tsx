@@ -142,6 +142,13 @@ export const Footer = () => {
           </div>
         </div>
 
+        {/* Option 4: Founded line */}
+        <div className="py-3 md:py-4 border-t border-border/20 text-center">
+          <p className="text-[10px] md:text-xs text-muted-foreground font-light">
+            © 2024 Bridge Advisory Group. Founded 2024.
+          </p>
+        </div>
+
         {/* Bottom Links */}
         <div className="py-3 md:py-4 border-t border-border/20 flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4 text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider">
           <a href="https://d1e1jt2fj4r8r.cloudfront.net/b26ab618-2b1e-4a17-8868-498b96b52dc0/qckNAwejF/NY%20Reasonable%20Accommodations%20Notice.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">

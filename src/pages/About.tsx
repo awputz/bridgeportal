@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Building2, Users, TrendingUp, Award, ArrowRight, Target, Eye, Heart, MessageSquare, Trophy, Compass, HelpCircle, PenLine, DollarSign, Briefcase, Clock, Home } from "lucide-react";
+import { Building2, Users, TrendingUp, Award, ArrowRight, Target, Eye, Heart, MessageSquare, Trophy, Compass, HelpCircle, PenLine, DollarSign, Briefcase, Clock, Home, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
@@ -22,6 +22,7 @@ export default function About() {
     { icon: Briefcase, value: 100, suffix: "+", label: "Clients" },
     { icon: Clock, value: 15, suffix: "+", label: "Years Exp." },
     { icon: Home, value: 500, suffix: "+", label: "Listings" },
+    { icon: Calendar, value: 2024, suffix: "", label: "Founded" },
   ];
 
   const culturalValues = [
@@ -56,12 +57,17 @@ export default function About() {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-4">
             About Bridge Advisory Group
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground font-light mb-8">
+          <p className="text-lg md:text-xl text-muted-foreground font-light mb-4">
             A multi-division real estate platform at the intersection of brokerage, ownership, and capital.
           </p>
           
-          {/* Stats inline */}
-          <div className="grid grid-cols-4 gap-4 max-w-2xl mx-auto">
+          {/* Option 2: Est. 2024 Badge */}
+          <div className="inline-block px-4 py-1.5 rounded-full border border-accent/30 bg-accent/5 mb-8">
+            <span className="text-sm text-accent font-light tracking-wide">Est. 2024</span>
+          </div>
+          
+          {/* Stats inline - Option 1: Added Founded stat */}
+          <div className="grid grid-cols-5 gap-4 max-w-3xl mx-auto">
             {stats.map((stat, index) => {
               const Icon = stat.icon;
               return (
@@ -87,7 +93,7 @@ export default function About() {
             <div>
               <h2 className="text-3xl md:text-4xl font-light mb-6">Firm Story</h2>
               <p className="text-muted-foreground font-light leading-relaxed mb-4">
-                Bridge Advisory Group was founded to build a real estate platform that brings together brokerage execution with principal-level thinking. Headquartered in NYC, we serve owners, operators, investors, and occupiers across every stage of the real estate cycle.
+                Founded in 2024, Bridge Advisory Group was established to build a real estate platform that brings together brokerage execution with principal-level thinking. Headquartered in NYC, we serve owners, operators, investors, and occupiers across every stage of the real estate cycle.
               </p>
               <p className="text-muted-foreground font-light leading-relaxed">
                 What sets Bridge apart is the integration of residential, commercial leasing, investment sales, capital advisory, and marketing into a unified platform.
