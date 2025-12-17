@@ -3,7 +3,7 @@ import { ArrowRight, DollarSign, TrendingUp, Camera, Handshake, CheckCircle } fr
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
-import { ServicePageNav } from "@/components/ServicePageNav";
+import { ServicePageLayout } from "@/components/ServicePageLayout";
 import { SEOHelmet } from "@/components/SEOHelmet";
 
 const ResidentialSellers = () => {
@@ -70,6 +70,20 @@ const ResidentialSellers = () => {
     },
   ];
 
+  const heroContent = (
+    <section className="relative bg-gradient-to-b from-secondary to-background pt-32 pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <p className="text-primary font-medium mb-4">Residential / For Sellers</p>
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
+          Sell Your Property with Confidence
+        </h1>
+        <p className="text-xl text-muted-foreground max-w-3xl">
+          From valuation to closing, our team provides the expertise and marketing power to achieve the best possible outcome for your sale.
+        </p>
+      </div>
+    </section>
+  );
+
   return (
     <>
       <SEOHelmet
@@ -77,34 +91,7 @@ const ResidentialSellers = () => {
         description="Maximize your property's value with Bridge Advisory Group. Expert valuations, professional marketing, and skilled negotiation to achieve the best sale price in NYC."
       />
 
-      <main className="min-h-screen bg-background">
-        {/* Sub-navigation */}
-        <ServicePageNav serviceKey="residential" />
-
-        {/* Hero Section */}
-        <section className="py-20 md:py-28 bg-gradient-to-b from-muted/30 to-background">
-          <div className="container mx-auto px-4 md:px-6">
-            <div className="max-w-3xl mx-auto text-center">
-              <div className="inline-block px-4 py-1.5 rounded-full border border-accent/30 bg-accent/5 mb-6">
-                <span className="text-sm text-accent font-light tracking-wide">For Sellers</span>
-              </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-6">
-                Sell Your Property with Confidence
-              </h1>
-              <p className="text-lg md:text-xl text-muted-foreground font-light mb-8">
-                From valuation to closing, our team provides the expertise and marketing power to achieve the best possible outcome for your sale.
-              </p>
-              <Button
-                size="lg"
-                onClick={() => openContactSheet()}
-                className="gap-2"
-              >
-                Get a Free Valuation <ArrowRight className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        </section>
-
+      <ServicePageLayout serviceKey="residential" heroContent={heroContent}>
         {/* Services Grid */}
         <section ref={elementRef as React.RefObject<HTMLElement>} className="py-16 md:py-24">
           <div className="container mx-auto px-4 md:px-6">
@@ -231,7 +218,7 @@ const ResidentialSellers = () => {
             </div>
           </div>
         </section>
-      </main>
+      </ServicePageLayout>
     </>
   );
 };
