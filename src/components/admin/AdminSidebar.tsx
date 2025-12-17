@@ -1,4 +1,4 @@
-import { Users, DollarSign, LogOut, Building2, Settings, MapPin, Link2, Layers } from "lucide-react";
+import { Users, DollarSign, LogOut, Settings, MapPin, Link2, Layers } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,7 +17,6 @@ import { toast } from "@/hooks/use-toast";
 
 const menuItems = [
   { title: "Team", url: "/admin/team", icon: Users },
-  { title: "Properties", url: "/admin/properties", icon: Building2 },
   { title: "Closed Deals", url: "/admin/transactions", icon: DollarSign },
 ];
 
