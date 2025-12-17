@@ -138,8 +138,10 @@ export default function ResidentialServices() {
               ))}
             </div>
             <div className="text-center mt-8">
-              <Button variant="outline" className="font-light" onClick={openContactSheet}>
-                Inquire About Our Portfolio
+              <Button asChild variant="outline" className="font-light">
+                <Link to="/services/residential/buildings">
+                  View Full Portfolio <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
               </Button>
             </div>
           </div>
