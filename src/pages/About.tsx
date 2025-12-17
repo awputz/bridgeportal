@@ -1,37 +1,41 @@
 import { Link } from "react-router-dom";
-import { Building2, Users, TrendingUp, Award, ArrowRight, Target, Eye, Heart, MessageSquare, Trophy, Compass, HelpCircle, PenLine, DollarSign, Briefcase, Clock, Home, Calendar } from "lucide-react";
+import { Building2, Users, TrendingUp, Award, ArrowRight, Target, Eye, Heart, MessageSquare, Trophy, Compass, HelpCircle, PenLine, DollarSign, Briefcase, Clock, Home, Calendar, Zap, Handshake, Shield, LineChart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
-import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { SEOHelmet } from "@/components/SEOHelmet";
 import { TeamHighlight } from "@/components/TeamHighlight";
+import { useBridgeSettings } from "@/hooks/useBridgeSettings";
+
+import heroImage from "@/assets/brooklyn-bridge-hero-light.jpg";
 
 export default function About() {
   const { openContactSheet } = useContactSheet();
+  const { data: settings } = useBridgeSettings();
   const heroReveal = useScrollReveal(0.1);
   const storyReveal = useScrollReveal(0.1);
   const missionReveal = useScrollReveal(0.1);
-  const valuesReveal = useScrollReveal(0.1);
+  const howWeWorkReveal = useScrollReveal(0.1);
   const philosophyReveal = useScrollReveal(0.1);
   const whyReveal = useScrollReveal(0.1);
 
+  const clientsCount = settings?.clients_count || 100;
+
   const stats = [
     { icon: DollarSign, value: 100, suffix: "M+", label: "Closed" },
-    { icon: Briefcase, value: 100, suffix: "+", label: "Clients" },
+    { icon: Briefcase, value: clientsCount, suffix: "+", label: "Clients" },
     { icon: Clock, value: 15, suffix: "+", label: "Years Exp." },
     { icon: Home, value: 500, suffix: "+", label: "Listings" },
     { icon: Calendar, value: 2024, suffix: "", label: "Founded" },
   ];
 
-  const culturalValues = [
-    { icon: Heart, title: "Lead with Optimism" },
-    { icon: MessageSquare, title: "Frequent Feedback" },
-    { icon: Trophy, title: "Celebrate Wins" },
-    { icon: Compass, title: "Process Over Outcome" },
-    { icon: HelpCircle, title: "Start with Why" },
-    { icon: PenLine, title: "Cherish Writing" },
+  const howWeWork = [
+    { icon: Zap, title: "Move Fast", desc: "Streamlined processes that respect your time." },
+    { icon: Handshake, title: "Client-First", desc: "Your goals drive every recommendation." },
+    { icon: Shield, title: "Full Transparency", desc: "Honest assessments and clear communication." },
+    { icon: LineChart, title: "Data-Driven", desc: "Market intelligence informs all strategies." },
+    { icon: Users, title: "Collaborative", desc: "Cross-divisional expertise on every engagement." },
   ];
 
   return (
@@ -42,10 +46,10 @@ export default function About() {
         path="/about"
       />
       {/* Hero with Stats */}
-      <section className="relative min-h-[50vh] flex items-center justify-center py-20" ref={heroReveal.elementRef}>
+      <section className="relative min-h-[50vh] flex items-center justify-center pt-28 md:pt-32 pb-20" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img 
-            src={PLACEHOLDER_IMAGES.hero.nycSkyline} 
+            src={heroImage} 
             alt="New York City skyline" 
             className="w-full h-full object-cover"
           />
@@ -61,12 +65,12 @@ export default function About() {
             A multi-division real estate platform at the intersection of brokerage, ownership, and capital.
           </p>
           
-          {/* Option 2: Est. 2024 Badge */}
+          {/* Est. 2024 Badge */}
           <div className="inline-block px-4 py-1.5 rounded-full border border-accent/30 bg-accent/5 mb-8">
             <span className="text-sm text-accent font-light tracking-wide">Est. 2024</span>
           </div>
           
-          {/* Stats inline - Option 1: Added Founded stat */}
+          {/* Stats inline */}
           <div className="grid grid-cols-5 gap-4 max-w-3xl mx-auto">
             {stats.map((stat, index) => {
               const Icon = stat.icon;
@@ -101,8 +105,8 @@ export default function About() {
             </div>
             <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
               <img 
-                src={PLACEHOLDER_IMAGES.office.teamWork} 
-                alt="Bridge Advisory Group team" 
+                src={heroImage} 
+                alt="Bridge Advisory Group" 
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
               />
             </div>
@@ -144,23 +148,24 @@ export default function About() {
         </div>
       </section>
 
-      {/* Cultural Values */}
-      <section className="py-16 md:py-24 border-b border-white/5" ref={valuesReveal.elementRef}>
+      {/* How We Work (replaces Our Values) */}
+      <section className="py-16 md:py-24 border-b border-white/5" ref={howWeWorkReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
-          <h2 className="text-2xl md:text-3xl font-light mb-8 text-center">Our Values</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {culturalValues.map((value, index) => {
-              const Icon = value.icon;
+          <h2 className="text-2xl md:text-3xl font-light mb-8 text-center">How We Work</h2>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            {howWeWork.map((item, index) => {
+              const Icon = item.icon;
               return (
                 <div 
-                  key={value.title}
+                  key={item.title}
                   className={`p-4 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-500 text-center ${
-                    valuesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                    howWeWorkReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
                   }`}
                   style={{ transitionDelay: `${index * 50}ms` }}
                 >
                   <Icon className="h-6 w-6 text-accent mb-2 mx-auto" />
-                  <h3 className="text-sm font-light">{value.title}</h3>
+                  <h3 className="text-sm font-medium mb-1">{item.title}</h3>
+                  <p className="text-xs text-muted-foreground font-light">{item.desc}</p>
                 </div>
               );
             })}
@@ -176,7 +181,7 @@ export default function About() {
           }`}>
             <div className="relative aspect-[4/3] rounded-lg overflow-hidden order-2 md:order-1">
               <img 
-                src={PLACEHOLDER_IMAGES.building.exterior} 
+                src={heroImage} 
                 alt="Modern building" 
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
               />

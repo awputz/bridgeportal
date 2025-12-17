@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Building2, TrendingUp, Home as HomeIcon, Megaphone, ArrowRight, ChevronDown, Landmark, Settings, Presentation, Calendar, Target, Eye, Users, Briefcase, DollarSign, LineChart, Key, Building, BarChart3, CreditCard, Handshake, RefreshCw, PenTool, Globe, MapPin } from "lucide-react";
+import { Building2, TrendingUp, Home as HomeIcon, Megaphone, ArrowRight, ChevronDown, Landmark, Settings, Presentation, Calendar, Target, Eye, Users, Briefcase, DollarSign, LineChart, Key, Building, BarChart3, CreditCard, Handshake, RefreshCw, PenTool, Globe, MapPin, Compass } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
@@ -53,13 +53,13 @@ export default function Home() {
         </div>
 
         {/* Zone 2: Content centered in middle */}
-        <div className="relative z-10 flex-1 flex items-center justify-center pb-20 md:pb-24">
+        <div className="relative z-10 flex-1 flex items-center justify-center pb-32 md:pb-40">
           <div className="container mx-auto text-center max-w-5xl -translate-y-8 md:-translate-y-16">
             <h1
               className="text-xl md:text-3xl lg:text-4xl xl:text-5xl text-foreground/90 mb-2 md:mb-4 max-w-4xl mx-auto font-light px-4 animate-fade-in"
               style={{ animationDelay: "400ms", animationFillMode: "backwards" }}
             >
-              {COMPANY_INFO.tagline}
+              Advisory and brokerage across New York's residential, commercial, and investment markets.
             </h1>
 
             <p
@@ -83,7 +83,7 @@ export default function Home() {
                 onClick={openContactSheet}
               >
                 <Calendar className="mr-2 h-4 w-4" />
-                Schedule Consultation
+                SCHEDULE CONSULTATION
               </Button>
             </div>
 
@@ -151,8 +151,8 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Mission & Vision Cards */}
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
+          {/* Mission, Vision & Approach Cards */}
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
             <div
               className={`p-6 md:p-8 rounded-xl border border-border/50 bg-card/50 transition-all duration-500 ease-out ${
                 missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
@@ -177,14 +177,26 @@ export default function Home() {
                 Be New York's most trusted real estate platform—where every transaction builds lasting relationships.
               </p>
             </div>
+            <div
+              className={`p-6 md:p-8 rounded-xl border border-border/50 bg-card/50 transition-all duration-500 ease-out ${
+                missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+              }`}
+              style={{ transitionDelay: missionReveal.isVisible ? "300ms" : "0ms" }}
+            >
+              <Compass className="h-8 w-8 text-primary mb-4" />
+              <h3 className="text-xl font-medium mb-3">Approach</h3>
+              <p className="text-muted-foreground font-light text-sm leading-relaxed">
+                Principal-level thinking combined with hands-on execution across every transaction.
+              </p>
+            </div>
           </div>
 
           {/* Values */}
           <div
-            className={`flex flex-wrap gap-3 justify-center mb-8 transition-all duration-500 ease-out ${
+            className={`flex flex-wrap gap-3 justify-center transition-all duration-500 ease-out ${
               missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
             }`}
-            style={{ transitionDelay: missionReveal.isVisible ? "300ms" : "0ms" }}
+            style={{ transitionDelay: missionReveal.isVisible ? "400ms" : "0ms" }}
           >
             {["Integrity", "Expertise", "Client-First Service", "Long-Term Partnerships"].map((value) => (
               <span
@@ -194,18 +206,6 @@ export default function Home() {
                 {value}
               </span>
             ))}
-          </div>
-
-          {/* About Us CTA */}
-          <div
-            className={`text-center transition-all duration-500 ease-out ${
-              missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-            }`}
-            style={{ transitionDelay: missionReveal.isVisible ? "400ms" : "0ms" }}
-          >
-            <Button asChild className="font-light px-8">
-              <Link to="/about">About Us</Link>
-            </Button>
           </div>
         </div>
       </section>
