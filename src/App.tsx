@@ -48,6 +48,7 @@ import MarketsComingSoon from "./pages/MarketsComingSoon";
 import ResidentialFindAHome from "./pages/services/residential/FindAHome";
 import ResidentialTransactions from "./pages/services/residential/Transactions";
 import ResidentialLandlords from "./pages/services/residential/Landlords";
+import ResidentialSellers from "./pages/services/residential/Sellers";
 
 import InvestmentValuations from "./pages/services/investment-sales/Valuations";
 import InvestmentTrackRecord from "./pages/services/investment-sales/TrackRecord";
@@ -126,6 +127,7 @@ const App = () => {
                     
                     {/* Residential Sub-Pages */}
                     <Route path="/services/residential/landlords" element={<ResidentialLandlords />} />
+                    <Route path="/services/residential/sellers" element={<ResidentialSellers />} />
                     <Route path="/services/residential/find-a-home" element={<ResidentialFindAHome />} />
                     <Route path="/services/residential/transactions" element={<ResidentialTransactions />} />
                     {/* Residential redirects (consolidated pages) */}
@@ -133,7 +135,7 @@ const App = () => {
                     <Route path="/services/residential/buildings" element={<Navigate to="/services/residential" replace />} />
                     <Route path="/services/residential/resources" element={<Navigate to="/services/residential" replace />} />
                     <Route path="/services/residential/rentals" element={<Navigate to="/services/residential/find-a-home" replace />} />
-                    <Route path="/services/residential/sales" element={<Navigate to="/services/residential/find-a-home" replace />} />
+                    <Route path="/services/residential/sales" element={<Navigate to="/services/residential/sellers" replace />} />
                     <Route path="/services/residential/listings" element={<Navigate to="/services/residential/find-a-home" replace />} />
                     <Route path="/services/residential/markets" element={<Navigate to="/services/residential" replace />} />
                     
@@ -151,25 +153,34 @@ const App = () => {
                     <Route path="/services/commercial-leasing/retail" element={<Navigate to="/services/commercial-leasing" replace />} />
                     <Route path="/services/commercial-leasing/office" element={<Navigate to="/services/commercial-leasing" replace />} />
                     
-                    {/* Capital Advisory redirects (all consolidated) */}
-                    <Route path="/services/capital-advisory/debt" element={<Navigate to="/services/capital-advisory" replace />} />
-                    <Route path="/services/capital-advisory/equity" element={<Navigate to="/services/capital-advisory" replace />} />
+                    {/* Capital Advisory Sub-Pages */}
+                    <Route path="/services/capital-advisory/debt-financing" element={<CapitalDebtFinancing />} />
+                    <Route path="/services/capital-advisory/equity-jv" element={<CapitalEquityJV />} />
+                    {/* Capital Advisory redirects */}
+                    <Route path="/services/capital-advisory/debt" element={<Navigate to="/services/capital-advisory/debt-financing" replace />} />
+                    <Route path="/services/capital-advisory/equity" element={<Navigate to="/services/capital-advisory/equity-jv" replace />} />
                     <Route path="/services/capital-advisory/refinance" element={<Navigate to="/services/capital-advisory" replace />} />
                     <Route path="/services/capital-advisory/construction" element={<Navigate to="/services/capital-advisory" replace />} />
                     
-                    {/* Property Management redirects (all consolidated) */}
-                    <Route path="/services/property-management/services" element={<Navigate to="/services/property-management" replace />} />
-                    <Route path="/services/property-management/portfolio" element={<Navigate to="/services/property-management" replace />} />
+                    {/* Property Management Sub-Pages */}
+                    <Route path="/services/property-management/portfolio" element={<PMPortfolio />} />
+                    <Route path="/services/property-management/services" element={<PMServices />} />
+                    {/* Property Management redirects */}
                     <Route path="/services/property-management/reporting" element={<Navigate to="/services/property-management" replace />} />
                     
-                    {/* Marketing redirects (all consolidated) */}
-                    <Route path="/services/marketing/creative" element={<Navigate to="/services/marketing" replace />} />
-                    <Route path="/services/marketing/digital" element={<Navigate to="/services/marketing" replace />} />
+                    {/* Marketing Sub-Pages */}
+                    <Route path="/services/marketing/creative-studio" element={<MarketingCreativeStudio />} />
+                    <Route path="/services/marketing/digital-campaigns" element={<MarketingDigitalCampaigns />} />
+                    {/* Marketing redirects */}
+                    <Route path="/services/marketing/creative" element={<Navigate to="/services/marketing/creative-studio" replace />} />
+                    <Route path="/services/marketing/digital" element={<Navigate to="/services/marketing/digital-campaigns" replace />} />
                     <Route path="/services/marketing/strategy" element={<Navigate to="/services/marketing" replace />} />
                     
-                    {/* Billboard redirects (all consolidated) */}
-                    <Route path="/services/billboard/inventory" element={<Navigate to="/services/billboard" replace />} />
-                    <Route path="/services/billboard/pricing" element={<Navigate to="/services/billboard" replace />} />
+                    {/* Billboard Sub-Pages */}
+                    <Route path="/services/billboard/inventory" element={<BillboardInventory />} />
+                    <Route path="/services/billboard/rates" element={<BillboardRates />} />
+                    {/* Billboard redirects */}
+                    <Route path="/services/billboard/pricing" element={<Navigate to="/services/billboard/rates" replace />} />
                     <Route path="/services/billboard/case-studies" element={<Navigate to="/services/billboard" replace />} />
                     
                     {/* Track Record */}
