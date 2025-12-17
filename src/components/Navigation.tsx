@@ -25,8 +25,7 @@ const leftNavItems = [{
   path: "/team"
 }, {
   name: "Transactions",
-  path: "https://traded.co/company/bridge-advisory-group/",
-  external: true
+  path: "/transactions"
 }, {
   name: "Careers",
   path: "/careers"
@@ -98,23 +97,11 @@ export const Navigation = () => {
           <div className="hidden lg:grid grid-cols-3 items-center h-20 px-8">
             {/* Left: Navigation Links */}
             <div className="flex items-center space-x-6">
-              {leftNavItems.map(item => 
-                item.external ? (
-                  <a 
-                    key={item.name} 
-                    href={item.path}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm font-light transition-all duration-200 whitespace-nowrap hover:scale-105 text-foreground/70 hover:text-foreground"
-                  >
-                    {item.name}
-                  </a>
-                ) : (
-                  <Link key={item.name} to={item.path} className={`text-sm font-light transition-all duration-200 whitespace-nowrap hover:scale-105 ${location.pathname === item.path ? "text-foreground" : "text-foreground/70 hover:text-foreground"}`}>
-                    {item.name}
-                  </Link>
-                )
-              )}
+              {leftNavItems.map(item => (
+                <Link key={item.name} to={item.path} className={`text-sm font-light transition-all duration-200 whitespace-nowrap hover:scale-105 ${location.pathname === item.path ? "text-foreground" : "text-foreground/70 hover:text-foreground"}`}>
+                  {item.name}
+                </Link>
+              ))}
             </div>
 
             {/* Center: Logo */}
@@ -281,27 +268,13 @@ export const Navigation = () => {
             <div className="space-y-3">
               {/* Left Nav Items */}
               <div>
-                {leftNavItems.map((item, index) => 
-                  item.external ? (
-                    <a 
-                      key={item.name} 
-                      href={item.path}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`block text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] flex items-center ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
-                      style={{ transitionDelay: `${index * 40}ms` }}
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {item.name}
-                    </a>
-                  ) : (
-                    <Link key={item.name} to={item.path} className={`block text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] flex items-center ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
-                      transitionDelay: `${index * 40}ms`
-                    }} onClick={() => setIsOpen(false)}>
-                      {item.name}
-                    </Link>
-                  )
-                )}
+                {leftNavItems.map((item, index) => (
+                  <Link key={item.name} to={item.path} className={`block text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] flex items-center ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
+                    transitionDelay: `${index * 40}ms`
+                  }} onClick={() => setIsOpen(false)}>
+                    {item.name}
+                  </Link>
+                ))}
               </div>
 
               {/* Services Section */}

@@ -16,12 +16,12 @@ export default function Marketing() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero with Image */}
+      {/* Hero with Image - Updated imagery */}
       <section className="relative h-[45vh] md:h-[55vh] lg:h-[60vh] min-h-[320px] md:min-h-[400px] lg:min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img 
-            src={PLACEHOLDER_IMAGES.marketing.creative} 
-            alt="Creative marketing studio" 
+            src={PLACEHOLDER_IMAGES.office.modern}
+            alt="Modern creative workspace" 
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
@@ -52,7 +52,7 @@ export default function Marketing() {
         </div>
       </section>
 
-      {/* Section 1: Creative Studio */}
+      {/* Section 1: Creative Studio - Updated imagery */}
       <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={creativeReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
           <div className={`grid md:grid-cols-2 gap-8 md:gap-12 items-center transition-all duration-700 ${
@@ -83,8 +83,8 @@ export default function Marketing() {
             </div>
             <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
               <img 
-                src={PLACEHOLDER_IMAGES.marketing.campaign} 
-                alt="Marketing campaign materials" 
+                src={PLACEHOLDER_IMAGES.office.workspace}
+                alt="Creative studio workspace" 
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
               />
             </div>
@@ -92,7 +92,7 @@ export default function Marketing() {
         </div>
       </section>
 
-      {/* Section 2: Digital And Campaigns */}
+      {/* Section 2: Digital And Campaigns - Updated imagery */}
       <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={digitalReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
           <div className={`grid md:grid-cols-2 gap-8 md:gap-12 items-center transition-all duration-700 ${
@@ -100,8 +100,8 @@ export default function Marketing() {
           }`}>
             <div className="relative aspect-[4/3] rounded-lg overflow-hidden order-2 md:order-1">
               <img 
-                src={PLACEHOLDER_IMAGES.marketing.digital} 
-                alt="Digital marketing analytics" 
+                src={PLACEHOLDER_IMAGES.office.teamWork}
+                alt="Digital marketing team collaboration" 
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
               />
             </div>

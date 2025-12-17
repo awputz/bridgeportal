@@ -7,81 +7,47 @@ import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { RentOptimizationCalculator } from "@/components/RentOptimizationCalculator";
-const stats = [{
-  label: "Units Managed",
-  value: "500+"
-}, {
-  label: "Occupancy Rate",
-  value: "98%"
-}, {
-  label: "Landlord Relationships",
-  value: "50+"
-}, {
-  label: "Years Experience",
-  value: "15+"
-}];
 
-const services = [{
-  icon: Shield,
-  title: "Tenant Screening",
-  description: "Comprehensive background, credit, and employment verification"
-}, {
-  icon: TrendingUp,
-  title: "Marketing",
-  description: "Professional photography, StreetEasy premium, and syndication"
-}, {
-  icon: BarChart3,
-  title: "Rent Optimization",
-  description: "Data-driven pricing to maximize income while minimizing vacancy"
-}, {
-  icon: FileText,
-  title: "Underwriting",
-  description: "Comparative financial analysis and absorption tracking"
-}, {
-  icon: Target,
-  title: "Market Intelligence",
-  description: "Real-time market data and quarterly reporting"
-}, {
-  icon: Building2,
-  title: "Portfolio Management",
-  description: "Full-service management for multi-unit portfolios"
-}];
+const stats = [
+  { label: "Units Managed", value: "500+" },
+  { label: "Occupancy Rate", value: "98%" },
+  { label: "Landlord Relationships", value: "50+" },
+  { label: "Years Experience", value: "15+" },
+];
 
-const operationalStats = [{
-  value: "30+",
-  label: "Team Members"
-}, {
-  value: "$100M+",
-  label: "Annual Volume"
-}, {
-  value: "98%",
-  label: "Occupancy Rate"
-}, {
-  value: "15+",
-  label: "Years Experience"
-}];
+const services = [
+  { icon: Shield, title: "Tenant Screening", description: "Comprehensive background, credit, and employment verification" },
+  { icon: TrendingUp, title: "Marketing", description: "Professional photography, StreetEasy premium, and syndication" },
+  { icon: BarChart3, title: "Rent Optimization", description: "Data-driven pricing to maximize income while minimizing vacancy" },
+  { icon: FileText, title: "Underwriting", description: "Comparative financial analysis and absorption tracking" },
+  { icon: Target, title: "Market Intelligence", description: "Real-time market data and quarterly reporting" },
+  { icon: Building2, title: "Portfolio Management", description: "Full-service management for multi-unit portfolios" },
+];
 
-const markets = [{
-  borough: "Manhattan",
-  areas: ["Upper East Side", "Upper West Side", "Midtown", "Downtown", "Chelsea", "Tribeca"]
-}, {
-  borough: "Brooklyn",
-  areas: ["Williamsburg", "DUMBO", "Park Slope", "Brooklyn Heights", "Greenpoint", "Bushwick"]
-}, {
-  borough: "Queens",
-  areas: ["Long Island City", "Astoria", "Forest Hills", "Flushing", "Jackson Heights"]
-}];
+const operationalStats = [
+  { value: "30+", label: "Team Members" },
+  { value: "$100M+", label: "Annual Volume" },
+  { value: "98%", label: "Occupancy Rate" },
+  { value: "15+", label: "Years Experience" },
+];
+
+const markets = [
+  { borough: "Manhattan", areas: ["Upper East Side", "Upper West Side", "Midtown", "Downtown", "Chelsea", "Tribeca"] },
+  { borough: "Brooklyn", areas: ["Williamsburg", "DUMBO", "Park Slope", "Brooklyn Heights", "Greenpoint", "Bushwick"] },
+  { borough: "Queens", areas: ["Long Island City", "Astoria", "Forest Hills", "Flushing", "Jackson Heights"] },
+];
 
 export default function PropertyManagement() {
   const { openContactSheet } = useContactSheet();
   const heroReveal = useScrollReveal(0.1);
   const statsReveal = useScrollReveal(0.1);
   const introReveal = useScrollReveal(0.1);
-  const hpgReveal = useScrollReveal(0.1);
+  const partnershipReveal = useScrollReveal(0.1);
   const servicesReveal = useScrollReveal(0.1);
   const marketsReveal = useScrollReveal(0.1);
   const operationalReveal = useScrollReveal(0.1);
   const calculatorReveal = useScrollReveal(0.1);
+
   return (
     <div className="min-h-screen">
       {/* Hero with Image */}
@@ -135,18 +101,18 @@ export default function PropertyManagement() {
         </div>
       </section>
 
-      {/* HPG Partnership & Underwriting */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={hpgReveal.elementRef}>
+      {/* Institutional Partnership & Underwriting */}
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={partnershipReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <div className={`grid md:grid-cols-2 gap-6 md:gap-8 transition-all duration-700 ${hpgReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            {/* HPG Partnership Card */}
-            <div className="p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02]">
+          <div className={`grid md:grid-cols-2 gap-6 md:gap-8 transition-all duration-700 ${partnershipReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            {/* Institutional Partnership Card */}
+            <div className="p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-300">
               <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
                 <Building2 className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent" />
-                <h3 className="text-2xl font-light">HPG Partnership</h3>
+                <h3 className="text-2xl font-light">Institutional Partnership</h3>
               </div>
               <p className="text-muted-foreground font-light mb-6 leading-relaxed">
-                Exclusive in-house brokerage for Hudson Property Group's 500+ unit portfolio across New York City.
+                Exclusive in-house brokerage backed by institutional partners managing 500+ units across New York City.
               </p>
               <ul className="space-y-3 text-muted-foreground font-light">
                 <li className="flex items-start gap-3">
@@ -165,7 +131,7 @@ export default function PropertyManagement() {
             </div>
 
             {/* Backend Underwriting Card */}
-            <div className="p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02]">
+            <div className="p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-300">
               <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
                 <BarChart3 className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent" />
                 <h3 className="text-2xl font-light">Backend Underwriting & Analysis</h3>
@@ -192,7 +158,7 @@ export default function PropertyManagement() {
         </div>
       </section>
 
-      {/* Services Grid with Image */}
+      {/* Services Grid with Image - Added hover effects */}
       <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={servicesReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
           <div className={`grid md:grid-cols-2 gap-8 md:gap-12 items-start transition-all duration-700 ${servicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
@@ -205,10 +171,10 @@ export default function PropertyManagement() {
                 {services.map((service, index) => (
                   <div 
                     key={service.title} 
-                    className="p-4 rounded-lg border border-white/10 bg-white/[0.02] flex items-start gap-4"
+                    className="group p-4 rounded-lg border border-white/10 bg-white/[0.02] flex items-start gap-4 hover:bg-white/[0.05] hover:border-accent/30 transition-all duration-300"
                     style={{ transitionDelay: `${index * 50}ms` }}
                   >
-                    <service.icon className="h-6 w-6 text-accent flex-shrink-0 mt-1" />
+                    <service.icon className="h-6 w-6 text-accent flex-shrink-0 mt-1 group-hover:scale-110 transition-transform duration-300" />
                     <div>
                       <h3 className="text-base font-light mb-1">{service.title}</h3>
                       <p className="text-muted-foreground font-light text-sm">{service.description}</p>
@@ -243,7 +209,7 @@ export default function PropertyManagement() {
               {markets.map((market, index) => (
                 <div 
                   key={market.borough} 
-                  className="p-6 rounded-lg border border-white/10 bg-white/[0.02]"
+                  className="p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-300"
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
                   <h3 className="text-xl font-light mb-4">{market.borough}</h3>
@@ -262,7 +228,7 @@ export default function PropertyManagement() {
         </div>
       </section>
 
-      {/* Operational Excellence */}
+      {/* Operational Excellence - Fixed alignment */}
       <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={operationalReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           <div className={`transition-all duration-700 ${operationalReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
@@ -279,15 +245,15 @@ export default function PropertyManagement() {
               ))}
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-              <div className="p-4 md:p-6 rounded-lg border border-white/10 bg-white/[0.02] text-center">
+              <div className="p-6 rounded-lg border border-white/10 bg-white/[0.02] text-center hover:bg-white/[0.04] transition-all duration-300">
                 <h3 className="text-lg font-light mb-2">In-House Underwriting Team</h3>
                 <p className="text-muted-foreground font-light text-sm">Dedicated analysts for pricing and market research</p>
               </div>
-              <div className="p-6 rounded-lg border border-white/10 bg-white/[0.02] text-center">
+              <div className="p-6 rounded-lg border border-white/10 bg-white/[0.02] text-center hover:bg-white/[0.04] transition-all duration-300">
                 <h3 className="text-lg font-light mb-2">Technology Infrastructure</h3>
                 <p className="text-muted-foreground font-light text-sm">Modern tools for tracking, reporting, and communication</p>
               </div>
-              <div className="p-6 rounded-lg border border-white/10 bg-white/[0.02] text-center">
+              <div className="p-6 rounded-lg border border-white/10 bg-white/[0.02] text-center hover:bg-white/[0.04] transition-all duration-300">
                 <h3 className="text-lg font-light mb-2">Bridge Advisory Ecosystem</h3>
                 <p className="text-muted-foreground font-light text-sm">Access to investment sales, capital markets, and advisory</p>
               </div>
