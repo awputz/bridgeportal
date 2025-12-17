@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Building2, TrendingUp, Users, ArrowRight, BarChart3, Calculator } from "lucide-react";
+import { Building2, TrendingUp, Users, ArrowRight, BarChart3, Calculator, Target, FileText, Handshake } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useTransactions } from "@/hooks/useTransactions";
@@ -20,33 +20,58 @@ import {
   type BoroughData,
 } from "@/hooks/useBridgeInvestmentSalesContent";
 
+// Consolidated process steps
+const consolidatedProcess = [
+  { 
+    number: "01", 
+    title: "Strategy & Analysis", 
+    description: "Define objectives, conduct market analysis, and establish valuation parameters.",
+    icon: Target
+  },
+  { 
+    number: "02", 
+    title: "Marketing & Outreach", 
+    description: "Targeted buyer/seller outreach, professional materials, and market positioning.",
+    icon: FileText
+  },
+  { 
+    number: "03", 
+    title: "Negotiation & Execution", 
+    description: "Deal structuring, due diligence coordination, and closing support.",
+    icon: Handshake
+  },
+];
+
+// Full-service capabilities as concise cards
+const capabilities = [
+  { title: "Buy-Side Advisory", description: "Targeted sourcing and due diligence support" },
+  { title: "Sell-Side Execution", description: "Comprehensive marketing and buyer outreach" },
+  { title: "Financial Modeling", description: "Cash flow analysis and return projections" },
+  { title: "Valuation Services", description: "Market comps and broker opinions of value" },
+  { title: "Portfolio Strategy", description: "Hold-sell analysis and repositioning guidance" },
+  { title: "Off-Market Deals", description: "Access to proprietary deal flow" },
+];
+
 export default function InvestmentSales() {
   const { openContactSheet } = useContactSheet();
   const heroReveal = useScrollReveal(0.1);
-  const introReveal = useScrollReveal(0.1);
-  const acquisitionReveal = useScrollReveal(0.1);
-  const analysisReveal = useScrollReveal(0.1);
-  const strategyReveal = useScrollReveal(0.1);
+  const processReveal = useScrollReveal(0.1);
+  const capabilitiesReveal = useScrollReveal(0.1);
+  const clientsReveal = useScrollReveal(0.1);
+  const differentiatorReveal = useScrollReveal(0.1);
   const closingsReveal = useScrollReveal(0.1);
   const marketReveal = useScrollReveal(0.1);
   const calculatorReveal = useScrollReveal(0.1);
-  const processReveal = useScrollReveal(0.1);
-  const clientsReveal = useScrollReveal(0.1);
-  const differentiatorReveal = useScrollReveal(0.1);
   
   const { data: transactions = [] } = useTransactions();
   const recentTransactions = transactions.slice(0, 6);
 
   // Fetch CMS content
   const { data: heroSection } = useInvestmentSalesSection("investment_sales_approach", "hero");
-  const { data: processSection } = useInvestmentSalesSection("investment_sales_approach", "process_steps");
-  const { data: servicesSection } = useInvestmentSalesSection("investment_sales_approach", "services");
   const { data: clientSection } = useInvestmentSalesSection("investment_sales_approach", "client_profile");
   const { data: differentiatorSection } = useInvestmentSalesSection("investment_sales_approach", "differentiators");
   const { data: marketsSection } = useInvestmentSalesSection("investment_sales_markets", "boroughs");
 
-  const processSteps = getSectionMetadata<{ steps: ProcessStep[] }>(processSection)?.steps || [];
-  const serviceItems = getSectionMetadata<{ services: ServiceItem[] }>(servicesSection)?.services || [];
   const clientProfiles = getSectionMetadata<{ clients: ClientProfile[] }>(clientSection)?.clients || [];
   const differentiators = getSectionMetadata<{ points: string[] }>(differentiatorSection)?.points || [];
   const boroughs = getSectionMetadata<{ boroughs: BoroughData[] }>(marketsSection)?.boroughs || [];
@@ -93,138 +118,60 @@ export default function InvestmentSales() {
       <ServicesSubNav />
       <ServicePageNav serviceKey="investment-sales" />
 
-      {/* Intro */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={introReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-4xl">
-          <p className={`text-base md:text-lg lg:text-xl text-muted-foreground font-light leading-relaxed text-center transition-all duration-700 ${
-            introReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
-            The Investment Sales team at Bridge advises owners and investors on acquisitions and dispositions across New York. The focus is on clear underwriting, precise positioning, and disciplined process from first conversation through closing.
-          </p>
-        </div>
-      </section>
-
-      {/* Our Process - From CMS */}
-      {processSteps.length > 0 && (
-        <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={processReveal.elementRef}>
-          <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-            <div className={`text-center mb-8 md:mb-12 lg:mb-16 transition-all duration-700 ${
-              processReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">{processSection?.title || "Our Three-Phase Process"}</h2>
-              <p className="text-muted-foreground font-light max-w-2xl mx-auto">{processSection?.content}</p>
-            </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
-              {processSteps.map((step, index) => (
-                <div 
-                  key={index}
-                  className={`p-4 md:p-6 lg:p-8 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-700 ${
-                    processReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                  }`}
-                  style={{ transitionDelay: `${index * 100}ms` }}
-                >
-                  <div className="text-3xl md:text-4xl font-light text-accent mb-3 md:mb-4">{step.number}</div>
-                  <h3 className="text-lg md:text-xl font-light mb-2 md:mb-3">{step.title}</h3>
-                  <p className="text-muted-foreground font-light text-sm">{step.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Section 1: Acquisition And Disposition Advisory */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={acquisitionReveal.elementRef}>
+      {/* Consolidated Process Section */}
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={processReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <div className={`grid md:grid-cols-2 gap-8 md:gap-12 items-center transition-all duration-700 ${
-            acquisitionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          <div className={`text-center mb-8 md:mb-12 lg:mb-16 transition-all duration-700 ${
+            processReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <div>
-              <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
-                <Building2 className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent" />
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-light">Acquisition And Disposition Advisory</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Our Process</h2>
+            <p className="text-muted-foreground font-light max-w-2xl mx-auto">
+              A disciplined approach from first conversation through closing.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+            {consolidatedProcess.map((step, index) => (
+              <div 
+                key={index}
+                className={`p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-700 ${
+                  processReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                }`}
+                style={{ transitionDelay: `${index * 100}ms` }}
+              >
+                <step.icon className="h-8 w-8 text-accent mb-4" />
+                <div className="text-3xl md:text-4xl font-light text-accent/50 mb-3">{step.number}</div>
+                <h3 className="text-lg md:text-xl font-light mb-2">{step.title}</h3>
+                <p className="text-muted-foreground font-light text-sm">{step.description}</p>
               </div>
-              <p className="text-muted-foreground font-light mb-8 max-w-3xl leading-relaxed">
-                Strategic guidance for buyers and sellers across the transaction lifecycle.
-              </p>
-              <ul className="space-y-4 text-muted-foreground font-light">
-                <li className="flex items-start gap-3">
-                  <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span>Buy-side advisory with targeted sourcing and due diligence support</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span>Sell-side execution with comprehensive marketing and buyer outreach</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span>Off-market transaction facilitation</span>
-                </li>
-              </ul>
-            </div>
-            <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
-              <img 
-                src={PLACEHOLDER_IMAGES.building.glass} 
-                alt="NYC commercial buildings" 
-                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
-              />
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Full-Service Capabilities - From CMS */}
-      {serviceItems.length > 0 && (
-        <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]">
-          <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-            <div className={`text-center mb-8 md:mb-12 lg:mb-16 transition-all duration-700 ${
-              acquisitionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">{servicesSection?.title || "Full-Service Capabilities"}</h2>
-              <p className="text-muted-foreground font-light max-w-2xl mx-auto">{servicesSection?.content}</p>
-            </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-              {serviceItems.map((service, index) => (
-                <div 
-                  key={index}
-                  className="p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all"
-                >
-                  <h3 className="text-lg font-light mb-2">{service.title}</h3>
-                  <p className="text-sm text-muted-foreground font-light">{service.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Section 2: Financial Analysis And Valuation */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={analysisReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`transition-all duration-700 ${
-            analysisReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      {/* Full-Service Capabilities Card Grid */}
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={capabilitiesReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+          <div className={`text-center mb-8 md:mb-12 lg:mb-16 transition-all duration-700 ${
+            capabilitiesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
-              <TrendingUp className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent" />
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-light">Financial Analysis And Valuation</h2>
-            </div>
-            <p className="text-muted-foreground font-light mb-8 max-w-3xl leading-relaxed">
-              Rigorous underwriting that provides clarity on value and risk.
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Full-Service Capabilities</h2>
+            <p className="text-muted-foreground font-light max-w-2xl mx-auto">
+              End-to-end advisory for acquisitions and dispositions.
             </p>
-            <ul className="space-y-4 text-muted-foreground font-light">
-              <li className="flex items-start gap-3">
-                <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                <span>Detailed cash flow modeling and return analysis</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                <span>Comparable sales analysis and market positioning</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                <span>Broker opinions of value for internal planning</span>
-              </li>
-            </ul>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            {capabilities.map((item, index) => (
+              <div 
+                key={index}
+                className={`p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-accent/30 transition-all duration-300 ${
+                  capabilitiesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                }`}
+                style={{ transitionDelay: `${index * 50}ms` }}
+              >
+                <h3 className="text-lg font-light mb-2">{item.title}</h3>
+                <p className="text-sm text-muted-foreground font-light">{item.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -257,60 +204,29 @@ export default function InvestmentSales() {
         </section>
       )}
 
-      {/* Section 3: Portfolio And Owner Strategy */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={strategyReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`transition-all duration-700 ${
-            strategyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
-            <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
-              <Users className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent" />
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-light">Portfolio And Owner Strategy</h2>
-            </div>
-            <p className="text-muted-foreground font-light mb-8 max-w-3xl leading-relaxed">
-              Advisory that goes beyond individual transactions to consider long-term portfolio positioning.
-            </p>
-            <ul className="space-y-4 text-muted-foreground font-light">
-              <li className="flex items-start gap-3">
-                <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                <span>Hold-sell analysis for individual assets and portfolios</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                <span>Value creation strategies and repositioning guidance</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                <span>Partnership structuring and capital stack optimization</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* What Sets Us Apart - From CMS */}
+      {/* What Sets Us Apart - Simplified */}
       {differentiators.length > 0 && (
-        <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={differentiatorReveal.elementRef}>
-          <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-            <div className={`transition-all duration-700 ${
+        <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={differentiatorReveal.elementRef}>
+          <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+            <div className={`text-center transition-all duration-700 ${
               differentiatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">{differentiatorSection?.title || "What Sets Us Apart"}</h2>
-              <p className="text-muted-foreground font-light max-w-2xl mx-auto text-center mb-8 md:mb-12">{differentiatorSection?.content}</p>
-              <ul className="space-y-4 max-w-3xl mx-auto">
-                {differentiators.map((point, index) => (
-                  <li 
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">{differentiatorSection?.title || "What Sets Us Apart"}</h2>
+              <p className="text-muted-foreground font-light max-w-2xl mx-auto mb-8">{differentiatorSection?.content}</p>
+              <div className="grid sm:grid-cols-2 gap-4">
+                {differentiators.slice(0, 4).map((point, index) => (
+                  <div 
                     key={index}
-                    className={`flex items-start gap-3 text-muted-foreground font-light transition-all duration-700 ${
-                      differentiatorReveal.isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                    className={`p-4 rounded-lg border border-white/10 bg-white/[0.02] text-left flex items-start gap-3 transition-all duration-700 ${
+                      differentiatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
                     }`}
                     style={{ transitionDelay: `${index * 100}ms` }}
                   >
                     <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                    <span>{point}</span>
-                  </li>
+                    <span className="text-muted-foreground font-light text-sm">{point}</span>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           </div>
         </section>
@@ -318,7 +234,7 @@ export default function InvestmentSales() {
 
       {/* Borough Coverage - From CMS */}
       {boroughs.length > 0 && (
-        <section className="py-12 md:py-20 lg:py-28 border-b border-white/5">
+        <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]">
           <div className="container mx-auto px-4 md:px-6 max-w-6xl">
             <div className={`text-center mb-8 md:mb-12 lg:mb-16 transition-all duration-700 ${
               marketReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
@@ -343,8 +259,8 @@ export default function InvestmentSales() {
         </section>
       )}
 
-      {/* Market Intelligence Section */}
-      <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={marketReveal.elementRef}>
+      {/* Market Intelligence Section - Enhanced with clarification */}
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={marketReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6">
           <div className={`text-center mb-12 transition-all duration-700 ${
             marketReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
@@ -353,8 +269,11 @@ export default function InvestmentSales() {
               <BarChart3 className="h-10 w-10 text-accent" />
               <h2 className="text-3xl md:text-4xl font-light">Market Intelligence</h2>
             </div>
-            <p className="text-muted-foreground font-light max-w-2xl mx-auto">
+            <p className="text-muted-foreground font-light max-w-2xl mx-auto mb-4">
               Real-time transaction data and market analytics to inform your investment decisions.
+            </p>
+            <p className="text-muted-foreground/80 font-light text-sm max-w-xl mx-auto">
+              Our insights are powered by deal comps, capital markets activity, leasing trends, and active buyer demand across NYC.
             </p>
           </div>
           <div className={`transition-all duration-700 ${
@@ -366,7 +285,7 @@ export default function InvestmentSales() {
       </section>
 
       {/* Investment Calculator Section */}
-      <section className="py-20 md:py-28 border-b border-white/5" ref={calculatorReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={calculatorReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6">
           <div className={`text-center mb-12 transition-all duration-700 ${
             calculatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
@@ -387,16 +306,16 @@ export default function InvestmentSales() {
         </div>
       </section>
 
-      {/* Section 4: Selected Closings */}
+      {/* Selected Closings */}
       {recentTransactions.length > 0 && (
-        <section className="py-20 md:py-28 border-b border-white/5 bg-white/[0.01]" ref={closingsReveal.elementRef}>
+        <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={closingsReveal.elementRef}>
           <div className="container mx-auto px-4 md:px-6">
             <div className={`flex flex-col sm:flex-row justify-between items-start sm:items-end mb-12 gap-4 transition-all duration-700 ${
               closingsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}>
               <h2 className="text-3xl md:text-4xl font-light">Selected Closings</h2>
               <Button asChild variant="outline" className="font-light group">
-                <Link to="/track-record">
+                <Link to="/transactions">
                   View All
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
@@ -441,11 +360,11 @@ export default function InvestmentSales() {
       />
 
       {/* CTA */}
-      <section className="py-20 md:py-28">
+      <section className="py-12 md:py-20 lg:py-28">
         <div className="container mx-auto px-4 md:px-6 text-center">
           <h2 className="text-3xl md:text-4xl font-light mb-6">Ready To Get Started?</h2>
           <p className="text-muted-foreground font-light mb-8 max-w-2xl mx-auto">
-            Whether you're looking to buy, sell, or evaluate your options, Bridge Investment Sales is ready to help.
+            Whether you're looking to buy, sell, or evaluate your options, we're ready to help.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="font-light" onClick={openContactSheet}>
