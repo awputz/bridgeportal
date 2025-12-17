@@ -44,10 +44,9 @@ const mediaFeatures = [
 ];
 
 const mediaKitItems = [
-  { title: "Company Overview", description: "One-page overview of Bridge Advisory Group and services", format: "PDF" },
-  { title: "Leadership Bios", description: "Biographies and headshots of senior leadership", format: "PDF" },
-  { title: "Logo Assets", description: "High-resolution logos in various formats", format: "ZIP" },
-  { title: "Fact Sheet", description: "Key statistics and company milestones", format: "PDF" },
+  { title: "Company Overview", description: "One-page overview of Bridge Advisory Group, our history, and full service offerings", format: "PDF" },
+  { title: "Leadership Bios", description: "Biographies and professional headshots of senior leadership team", format: "PDF" },
+  { title: "Advisory Services Tear Sheet", description: "Comprehensive summary of our advisory services and capabilities", format: "PDF" },
 ];
 
 export default function Press() {
