@@ -25,7 +25,7 @@ import Transactions from "./pages/Transactions";
 import Auth from "./pages/Auth";
 import TeamAdmin from "./pages/admin/TeamAdmin";
 import TransactionsAdmin from "./pages/admin/TransactionsAdmin";
-import PropertiesAdmin from "./pages/admin/PropertiesAdmin";
+
 import SettingsAdmin from "./pages/admin/SettingsAdmin";
 import ServicesAdmin from "./pages/admin/ServicesAdmin";
 import MarketsAdmin from "./pages/admin/MarketsAdmin";
@@ -90,7 +90,7 @@ const App = () => {
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<Navigate to="/admin/team" replace />} />
               <Route path="team" element={<TeamAdmin />} />
-              <Route path="properties" element={<PropertiesAdmin />} />
+              
               <Route path="transactions" element={<TransactionsAdmin />} />
               <Route path="settings" element={<SettingsAdmin />} />
               <Route path="services" element={<ServicesAdmin />} />
