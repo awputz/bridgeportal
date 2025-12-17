@@ -9,104 +9,121 @@ import { DIVISIONS } from "@/lib/constants";
 import LeaseCalculator from "@/components/LeaseCalculator";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { useBridgeCalculatorBySection } from "@/hooks/useBridgeCalculators";
-
-const stats = [
-  { label: "Spaces Leased", value: "100+" },
-  { label: "Square Feet", value: "500K+" },
-  { label: "Active Listings", value: "50+" },
-  { label: "NYC Focus", value: "100%" },
-];
-
-const processSteps = [
-  { 
-    step: "01", 
-    title: "Space Assessment & Positioning", 
-    description: "Market analysis and optimal pricing strategy." 
-  },
-  { 
-    step: "02", 
-    title: "Marketing & Tenant Outreach", 
-    description: "Targeted property marketing and curated tenant search." 
-  },
-  { 
-    step: "03", 
-    title: "Negotiation & Lease Execution", 
-    description: "Deal structuring through closing." 
-  },
-];
-
-const services = [
-  { icon: Target, title: "Space Positioning & Marketing", description: "Strategic positioning to attract qualified tenants" },
-  { icon: Handshake, title: "Lease Structuring", description: "Creative deal structures that protect your interests" },
-  { icon: Users, title: "Tenant Representation", description: "Full-service guidance for businesses seeking space" },
-  { icon: Building2, title: "Landlord Representation", description: "Complete leasing services for property owners" },
-  { icon: BarChart3, title: "Market Intelligence", description: "Data-driven insights for informed decisions" },
-  { icon: TrendingUp, title: "Property Marketing", description: "Professional campaigns to maximize exposure and leasing velocity" },
-];
+const stats = [{
+  label: "Spaces Leased",
+  value: "100+"
+}, {
+  label: "Square Feet",
+  value: "500K+"
+}, {
+  label: "Active Listings",
+  value: "50+"
+}, {
+  label: "NYC Focus",
+  value: "100%"
+}];
+const processSteps = [{
+  step: "01",
+  title: "Space Assessment & Positioning",
+  description: "Market analysis and optimal pricing strategy."
+}, {
+  step: "02",
+  title: "Marketing & Tenant Outreach",
+  description: "Targeted property marketing and curated tenant search."
+}, {
+  step: "03",
+  title: "Negotiation & Lease Execution",
+  description: "Deal structuring through closing."
+}];
+const services = [{
+  icon: Target,
+  title: "Space Positioning & Marketing",
+  description: "Strategic positioning to attract qualified tenants"
+}, {
+  icon: Handshake,
+  title: "Lease Structuring",
+  description: "Creative deal structures that protect your interests"
+}, {
+  icon: Users,
+  title: "Tenant Representation",
+  description: "Full-service guidance for businesses seeking space"
+}, {
+  icon: Building2,
+  title: "Landlord Representation",
+  description: "Complete leasing services for property owners"
+}, {
+  icon: BarChart3,
+  title: "Market Intelligence",
+  description: "Data-driven insights for informed decisions"
+}];
 
 // Tenant categories with distinct images for hover effects
-const tenantCategories = [
-  { 
-    icon: Store, 
-    title: "Retail Tenants", 
-    description: "Fashion, F&B, specialty retail, and consumer services",
-    image: PLACEHOLDER_IMAGES.retail.street
-  },
-  { 
-    icon: Briefcase, 
-    title: "Restaurant & Hospitality", 
-    description: "Full-service support from site selection to lease execution",
-    image: PLACEHOLDER_IMAGES.retail.storefront
-  },
-  { 
-    icon: Users, 
-    title: "Wellness & Medical", 
-    description: "Fitness studios, medical offices, and spas",
-    image: PLACEHOLDER_IMAGES.building.glass
-  },
-  { 
-    icon: Building2, 
-    title: "Professional Services", 
-    description: "Law firms, financial services, and creative agencies",
-    image: PLACEHOLDER_IMAGES.building.exterior
-  },
-];
+const tenantCategories = [{
+  icon: Store,
+  title: "Retail Tenants",
+  description: "Fashion, F&B, specialty retail, and consumer services",
+  image: PLACEHOLDER_IMAGES.retail.street
+}, {
+  icon: Briefcase,
+  title: "Restaurant & Hospitality",
+  description: "Full-service support from site selection to lease execution",
+  image: PLACEHOLDER_IMAGES.retail.storefront
+}, {
+  icon: Users,
+  title: "Wellness & Medical",
+  description: "Fitness studios, medical offices, and spas",
+  image: PLACEHOLDER_IMAGES.building.glass
+}, {
+  icon: Building2,
+  title: "Professional Services",
+  description: "Law firms, financial services, and creative agencies",
+  image: PLACEHOLDER_IMAGES.building.exterior
+}];
 
 // Simplified Why Bridge - one sentence each
-const whyBridge = [
-  { number: "01", title: "Market Expertise", description: "Deep knowledge of NYC retail corridors and office markets." },
-  { number: "02", title: "Speed to Lease", description: "Efficient process minimizing vacancy." },
-  { number: "03", title: "Dual Representation", description: "Full support for landlords and tenants." },
-  { number: "04", title: "Hands-On Execution", description: "Direct involvement at every step." },
-];
+const whyBridge = [{
+  number: "01",
+  title: "Market Expertise",
+  description: "Deep knowledge of NYC retail corridors and office markets."
+}, {
+  number: "02",
+  title: "Speed to Lease",
+  description: "Efficient process minimizing vacancy."
+}, {
+  number: "03",
+  title: "Dual Representation",
+  description: "Full support for landlords and tenants."
+}, {
+  number: "04",
+  title: "Hands-On Execution",
+  description: "Direct involvement at every step."
+}];
 
 // Simplified service details - one sentence summaries
-const serviceDetails = [
-  {
-    title: "Landlord Representation",
-    description: "Full-service leasing programs to maximize asset performance.",
-    features: ["Space positioning", "Marketing materials", "Tenant screening", "Lease execution"]
-  },
-  {
-    title: "Tenant Representation",
-    description: "Strategic advisory for businesses seeking the right space.",
-    features: ["Needs assessment", "Market survey", "Tour coordination", "Negotiation support"]
-  },
-  {
-    title: "Lease Structuring",
-    description: "Expert deal structuring to protect your interests.",
-    features: ["Rent optimization", "Concession negotiations", "Use clause terms", "Renewal options"]
-  },
-  {
-    title: "Marketing Services",
-    description: "Powered by our in-house marketing team.",
-    features: ["Professional photography", "Digital campaigns", "Broker outreach", "Platform syndication"]
-  },
-];
-
+const serviceDetails = [{
+  title: "Landlord Representation",
+  description: "Full-service leasing programs to maximize asset performance.",
+  features: ["Space positioning", "Marketing materials", "Tenant screening", "Lease execution"]
+}, {
+  title: "Tenant Representation",
+  description: "Strategic advisory for businesses seeking the right space.",
+  features: ["Needs assessment", "Market survey", "Tour coordination", "Negotiation support"]
+}, {
+  title: "Lease Structuring",
+  description: "Expert deal structuring to protect your interests.",
+  features: ["Rent optimization", "Concession negotiations", "Use clause terms", "Renewal options"]
+}, {
+  title: "Marketing Services",
+  description: "Powered by our in-house marketing team.",
+  features: ["Professional photography", "Digital campaigns", "Broker outreach", "Platform syndication"]
+}];
 export default function CommercialLeasing() {
-  const { openContactSheet } = useContactSheet();
-  const { data: calculatorConfig } = useBridgeCalculatorBySection("commercial-leasing", "main_calculator");
+  const {
+    openContactSheet
+  } = useContactSheet();
+  const {
+    data: calculatorConfig
+  } = useBridgeCalculatorBySection("commercial-leasing", "main_calculator");
   const heroReveal = useScrollReveal(0.1);
   const statsReveal = useScrollReveal(0.1);
   const processReveal = useScrollReveal(0.1);
@@ -115,22 +132,14 @@ export default function CommercialLeasing() {
   const whyReveal = useScrollReveal(0.1);
   const detailsReveal = useScrollReveal(0.1);
   const calculatorReveal = useScrollReveal(0.1);
-
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       {/* Hero with Image */}
       <section className="relative h-[45vh] md:h-[55vh] lg:h-[60vh] min-h-[320px] md:min-h-[400px] lg:min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
-          <img 
-            src={PLACEHOLDER_IMAGES.retail.street} 
-            alt="NYC retail and commercial streets" 
-            className="w-full h-full object-cover"
-          />
+          <img src={PLACEHOLDER_IMAGES.retail.street} alt="NYC retail and commercial streets" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
         </div>
-        <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${
-          heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}>
+        <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-4 md:mb-6">
             Bridge Commercial
           </h1>
@@ -141,12 +150,7 @@ export default function CommercialLeasing() {
             <Button size="lg" className="font-light" onClick={openContactSheet}>
               List Your Space
             </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="font-light border-white/30 hover:bg-white/10"
-              asChild
-            >
+            <Button size="lg" variant="outline" className="font-light border-white/30 hover:bg-white/10" asChild>
               <a href="https://www.costar.com/agent/alexander-smotritsky/broker-profile" target="_blank" rel="noopener noreferrer">
                 View Our Listings
               </a>
@@ -161,15 +165,13 @@ export default function CommercialLeasing() {
       {/* Stats Bar */}
       <section className="py-12 md:py-16 border-b border-white/5 bg-white/[0.02]" ref={statsReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6">
-          <div className={`grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 transition-all duration-700 ${
-            statsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
-            {stats.map((stat, index) => (
-              <div key={stat.label} className="text-center" style={{ transitionDelay: `${index * 100}ms` }}>
+          <div className={`grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 transition-all duration-700 ${statsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            {stats.map((stat, index) => <div key={stat.label} className="text-center" style={{
+            transitionDelay: `${index * 100}ms`
+          }}>
                 <div className="text-3xl md:text-4xl font-light text-foreground mb-2">{stat.value}</div>
                 <div className="text-sm text-muted-foreground font-light">{stat.label}</div>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -177,25 +179,19 @@ export default function CommercialLeasing() {
       {/* Our Process */}
       <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={processReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`transition-all duration-700 ${
-            processReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
+          <div className={`transition-all duration-700 ${processReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">Our Process</h2>
             <p className="text-muted-foreground font-light mb-8 md:mb-12 text-center max-w-2xl mx-auto">
               A proven approach for tenants and landlords.
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
-              {processSteps.map((item, index) => (
-                <div 
-                  key={item.step} 
-                  className="p-8 rounded-lg border border-white/10 bg-white/[0.02] text-center"
-                  style={{ transitionDelay: `${index * 100}ms` }}
-                >
+              {processSteps.map((item, index) => <div key={item.step} className="p-8 rounded-lg border border-white/10 bg-white/[0.02] text-center" style={{
+              transitionDelay: `${index * 100}ms`
+            }}>
                   <div className="text-5xl font-light text-accent/50 mb-4">{item.step}</div>
                   <h3 className="text-xl font-light mb-3">{item.title}</h3>
                   <p className="text-muted-foreground font-light text-sm leading-relaxed">{item.description}</p>
-                </div>
-              ))}
+                </div>)}
             </div>
           </div>
         </div>
@@ -204,25 +200,19 @@ export default function CommercialLeasing() {
       {/* Our Services */}
       <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={servicesReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`transition-all duration-700 ${
-            servicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
+          <div className={`transition-all duration-700 ${servicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">Our Services</h2>
             <p className="text-muted-foreground font-light mb-8 md:mb-12 text-center max-w-2xl mx-auto">
               Comprehensive commercial leasing services.
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-              {services.map((service, index) => (
-                <div 
-                  key={service.title} 
-                  className="p-6 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-300 hover:bg-white/[0.04]"
-                  style={{ transitionDelay: `${index * 50}ms` }}
-                >
+              {services.map((service, index) => <div key={service.title} className="p-6 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-300 hover:bg-white/[0.04]" style={{
+              transitionDelay: `${index * 50}ms`
+            }}>
                   <service.icon className="h-8 w-8 text-accent mb-4" />
                   <h3 className="text-lg font-light mb-2">{service.title}</h3>
                   <p className="text-muted-foreground font-light text-sm">{service.description}</p>
-                </div>
-              ))}
+                </div>)}
             </div>
           </div>
         </div>
@@ -231,29 +221,18 @@ export default function CommercialLeasing() {
       {/* Who We Serve - With Hover Effects */}
       <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={categoriesReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <div className={`text-center mb-8 md:mb-12 transition-all duration-700 ${
-            categoriesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
+          <div className={`text-center mb-8 md:mb-12 transition-all duration-700 ${categoriesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Who We Serve</h2>
             <p className="text-muted-foreground font-light max-w-2xl mx-auto">
               Experience across a wide range of commercial tenant types.
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            {tenantCategories.map((category, index) => (
-              <div 
-                key={category.title} 
-                className={`group relative rounded-lg overflow-hidden aspect-[3/4] cursor-pointer transition-all duration-700 ${
-                  categoriesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                }`}
-                style={{ transitionDelay: `${index * 100}ms` }}
-              >
+            {tenantCategories.map((category, index) => <div key={category.title} className={`group relative rounded-lg overflow-hidden aspect-[3/4] cursor-pointer transition-all duration-700 ${categoriesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
+            transitionDelay: `${index * 100}ms`
+          }}>
                 {/* Background Image */}
-                <img 
-                  src={category.image} 
-                  alt={category.title}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
+                <img src={category.image} alt={category.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent transition-opacity duration-300 group-hover:opacity-90" />
                 {/* Content */}
@@ -262,80 +241,33 @@ export default function CommercialLeasing() {
                   <h3 className="text-lg font-light mb-2 transition-transform duration-300 group-hover:translate-y-[-4px]">{category.title}</h3>
                   <p className="text-muted-foreground font-light text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">{category.description}</p>
                 </div>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
 
       {/* Why Bridge Advisory Group - Truncated */}
       <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={whyReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`transition-all duration-700 ${
-            whyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-8 md:mb-12 text-center">Why Bridge Advisory Group</h2>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-              {whyBridge.map((item, index) => (
-                <div 
-                  key={item.number} 
-                  className="p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all"
-                  style={{ transitionDelay: `${index * 50}ms` }}
-                >
-                  <div className="text-3xl font-light text-accent/50 mb-3">{item.number}</div>
-                  <h3 className="text-base font-light mb-2">{item.title}</h3>
-                  <p className="text-muted-foreground font-light text-sm">{item.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        
       </section>
 
       {/* Service Details - Truncated */}
       <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={detailsReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`transition-all duration-700 ${
-            detailsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-8 md:mb-12 text-center">Service Details</h2>
-            <div className="grid sm:grid-cols-2 gap-4 md:gap-6">
-              {serviceDetails.map((service, index) => (
-                <div 
-                  key={service.title} 
-                  className="p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all"
-                  style={{ transitionDelay: `${index * 100}ms` }}
-                >
-                  <h3 className="text-lg font-light mb-2">{service.title}</h3>
-                  <p className="text-muted-foreground font-light text-sm mb-4">{service.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {service.features.map((feature) => (
-                      <span key={feature} className="text-xs text-muted-foreground/80 bg-white/5 px-2 py-1 rounded">
-                        {feature}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        
       </section>
 
       {/* Lease Calculator */}
       <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={calculatorReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6">
-          <div className={`text-center mb-12 transition-all duration-700 ${
-            calculatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
+          <div className={`text-center mb-12 transition-all duration-700 ${calculatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Lease Calculator</h2>
             <p className="text-muted-foreground font-light max-w-2xl mx-auto">
               {calculatorConfig?.subtitle || "Estimate your total lease costs and compare scenarios."}
             </p>
           </div>
-          <div className={`transition-all duration-700 ${
-            calculatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`} style={{ transitionDelay: '200ms' }}>
+          <div className={`transition-all duration-700 ${calculatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
+          transitionDelay: '200ms'
+        }}>
             <LeaseCalculator />
           </div>
         </div>
@@ -352,17 +284,11 @@ export default function CommercialLeasing() {
             <Button size="lg" className="font-light" onClick={openContactSheet}>
               List Your Space
             </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="font-light"
-              onClick={openContactSheet}
-            >
+            <Button size="lg" variant="outline" className="font-light" onClick={openContactSheet}>
               Find Your Space
             </Button>
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 }
