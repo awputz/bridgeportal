@@ -35,6 +35,7 @@ export interface BridgeSettings {
   company_contact: CompanyContact;
   company_description: CompanyDescription;
   company_compliance: CompanyCompliance;
+  clients_count: number;
 }
 
 // Fallback to constants if database is unavailable
@@ -45,6 +46,7 @@ const FALLBACK_SETTINGS: BridgeSettings = {
   company_contact: COMPANY_INFO.contact,
   company_description: COMPANY_INFO.description,
   company_compliance: COMPANY_INFO.compliance,
+  clients_count: 100,
 };
 
 export const useBridgeSettings = () => {
@@ -77,6 +79,7 @@ export const useBridgeSettings = () => {
         company_contact: (settings.company_contact as CompanyContact) || FALLBACK_SETTINGS.company_contact,
         company_description: (settings.company_description as CompanyDescription) || FALLBACK_SETTINGS.company_description,
         company_compliance: (settings.company_compliance as CompanyCompliance) || FALLBACK_SETTINGS.company_compliance,
+        clients_count: Number(settings.clients_count) || FALLBACK_SETTINGS.clients_count,
       };
     },
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
