@@ -58,8 +58,7 @@ import InvestmentTrackRecord from "./pages/services/investment-sales/TrackRecord
 import CommercialTenantRep from "./pages/services/commercial-leasing/TenantRep";
 import CommercialLandlordRep from "./pages/services/commercial-leasing/LandlordRep";
 
-import CapitalDebtFinancing from "./pages/services/capital-advisory/DebtFinancing";
-import CapitalEquityJV from "./pages/services/capital-advisory/EquityJV";
+// Capital Advisory sub-pages removed - consolidated into main page
 
 import PMPortfolio from "./pages/services/property-management/Portfolio";
 import PMServices from "./pages/services/property-management/ServicesOffered";
@@ -155,12 +154,11 @@ const App = () => {
                     <Route path="/services/commercial-leasing/retail" element={<Navigate to="/services/commercial-leasing" replace />} />
                     <Route path="/services/commercial-leasing/office" element={<Navigate to="/services/commercial-leasing" replace />} />
                     
-                    {/* Capital Advisory Sub-Pages */}
-                    <Route path="/services/capital-advisory/debt-financing" element={<CapitalDebtFinancing />} />
-                    <Route path="/services/capital-advisory/equity-jv" element={<CapitalEquityJV />} />
-                    {/* Capital Advisory redirects */}
-                    <Route path="/services/capital-advisory/debt" element={<Navigate to="/services/capital-advisory/debt-financing" replace />} />
-                    <Route path="/services/capital-advisory/equity" element={<Navigate to="/services/capital-advisory/equity-jv" replace />} />
+                    {/* Capital Advisory - All sub-pages redirect to main overview */}
+                    <Route path="/services/capital-advisory/debt-financing" element={<Navigate to="/services/capital-advisory" replace />} />
+                    <Route path="/services/capital-advisory/equity-jv" element={<Navigate to="/services/capital-advisory" replace />} />
+                    <Route path="/services/capital-advisory/debt" element={<Navigate to="/services/capital-advisory" replace />} />
+                    <Route path="/services/capital-advisory/equity" element={<Navigate to="/services/capital-advisory" replace />} />
                     <Route path="/services/capital-advisory/refinance" element={<Navigate to="/services/capital-advisory" replace />} />
                     <Route path="/services/capital-advisory/construction" element={<Navigate to="/services/capital-advisory" replace />} />
                     
