@@ -140,13 +140,13 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Values */}
-          <div className={`flex flex-wrap gap-3 justify-center transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
+          {/* About Us Button */}
+          <div className={`flex justify-center transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
           transitionDelay: missionReveal.isVisible ? "400ms" : "0ms"
         }}>
-            {["Integrity", "Expertise", "Client-First Service", "Long-Term Partnerships"].map(value => <span key={value} className="px-4 py-2 rounded-full border border-border/50 bg-card/30 text-sm text-muted-foreground font-light">
-                {value}
-              </span>)}
+            <Button asChild variant="outline" className="font-light">
+              <Link to="/about">About Us</Link>
+            </Button>
           </div>
         </div>
       </section>
