@@ -23,8 +23,8 @@ export const SERVICE_SUB_PAGES = {
     pages: [
       { name: "Overview", path: "/services/residential" },
       { name: "For Landlords", path: "/services/residential/landlords" },
-      { name: "For Buyers", path: "/services/residential/find-a-home" },
-      { name: "For Renters", path: "/services/residential/find-a-home" },
+      { name: "For Sellers", path: "/services/residential/sellers" },
+      { name: "For Buyers & Renters", path: "/services/residential/find-a-home" },
     ],
   },
   "capital-advisory": {
