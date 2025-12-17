@@ -57,14 +57,17 @@ export default function Landlords() {
   const { openContactSheet } = useContactSheet();
 
   const heroContent = (
-    <>
-      <h1 className="text-3xl md:text-4xl lg:text-5xl font-light mb-4">
-        For Landlords
-      </h1>
-      <p className="text-base md:text-lg text-muted-foreground font-light max-w-2xl mx-auto">
-        Maximize your rental income with professional leasing services. We handle everything from marketing to tenant placement.
-      </p>
-    </>
+    <section className="relative bg-gradient-to-b from-secondary to-background pt-32 pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <p className="text-primary font-medium mb-4">Residential / For Landlords</p>
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
+          For Landlords
+        </h1>
+        <p className="text-xl text-muted-foreground max-w-3xl">
+          Maximize your rental income with professional leasing services. We handle everything from marketing to tenant placement.
+        </p>
+      </div>
+    </section>
   );
 
   return (
