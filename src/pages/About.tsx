@@ -72,7 +72,7 @@ export default function About() {
   return <div className="min-h-screen">
       <SEOHelmet title="About Bridge Advisory Group | NYC Real Estate Advisory" description="Learn about Bridge Advisory Group, a multi-division real estate platform at the intersection of brokerage, ownership, and capital in New York City." path="/about" />
       {/* Hero with Stats */}
-      <section className="relative min-h-[50vh] flex items-center justify-center pt-28 md:pt-32 pb-20" ref={heroReveal.elementRef}>
+      <section className="relative min-h-[60vh] flex items-center justify-center pt-28 md:pt-32 pb-24" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img src={heroImage} alt="New York City skyline" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
