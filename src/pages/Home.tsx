@@ -60,7 +60,7 @@ export default function Home() {
               </Button>
               <Button asChild size="default" variant="outline" className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto border-white/30 hover:bg-white/10">
                 <Link to="/listings">
-                  CURRENT LISTINGS
+                  Current Listings 
                 </Link>
               </Button>
             </div>
