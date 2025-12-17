@@ -21,6 +21,7 @@ import MarketInsights from "./pages/MarketInsights";
 import Research from "./pages/Research";
 import Contact from "./pages/Contact";
 import TrackRecord from "./pages/TrackRecord";
+import Transactions from "./pages/Transactions";
 import Auth from "./pages/Auth";
 import TeamAdmin from "./pages/admin/TeamAdmin";
 import TransactionsAdmin from "./pages/admin/TransactionsAdmin";
@@ -183,8 +184,9 @@ const App = () => {
                     <Route path="/services/billboard/pricing" element={<Navigate to="/services/billboard/rates" replace />} />
                     <Route path="/services/billboard/case-studies" element={<Navigate to="/services/billboard" replace />} />
                     
-                    {/* Track Record */}
+                    {/* Track Record / Transactions */}
                     <Route path="/track-record" element={<TrackRecord />} />
+                    <Route path="/transactions" element={<Transactions />} />
                     
                     {/* Markets Coming Soon */}
                     <Route path="/markets-coming-soon" element={<MarketsComingSoon />} />
@@ -200,7 +202,7 @@ const App = () => {
                     <Route path="/markets" element={<Navigate to="/markets-coming-soon" replace />} />
                     <Route path="/market-insights" element={<Navigate to="/insights" replace />} />
                     <Route path="/submit-deal" element={<Navigate to="/contact" replace />} />
-                    <Route path="/transactions" element={<Navigate to="/track-record" replace />} />
+                    {/* Removed: /transactions redirect - now has its own page */}
                     
                     {/* 404 */}
                     <Route path="*" element={<NotFound />} />
