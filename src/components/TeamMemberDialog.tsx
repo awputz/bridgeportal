@@ -1,5 +1,5 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Instagram, Linkedin, X } from "lucide-react";
+import { Instagram, Linkedin, X, Mail, Phone, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
@@ -11,6 +11,8 @@ interface TeamMember {
   image: string;
   instagram?: string;
   linkedin?: string;
+  email?: string;
+  phone?: string;
 }
 
 interface TeamMemberDialogProps {
@@ -18,6 +20,13 @@ interface TeamMemberDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
+
+// Format phone number for WhatsApp (remove non-digits, ensure country code)
+const formatPhoneForWhatsApp = (phone: string): string => {
+  const digits = phone.replace(/\D/g, '');
+  // If starts with 1, assume US number, otherwise add 1
+  return digits.startsWith('1') ? digits : `1${digits}`;
+};
 
 export const TeamMemberDialog = ({ member, open, onOpenChange }: TeamMemberDialogProps) => {
   const { openContactSheet } = useContactSheet();
@@ -29,10 +38,34 @@ export const TeamMemberDialog = ({ member, open, onOpenChange }: TeamMemberDialo
     openContactSheet();
   };
 
-  const socialActions = [
-    { icon: Instagram, label: "Instagram", url: member.instagram },
-    { icon: Linkedin, label: "LinkedIn", url: member.linkedin },
-  ].filter(action => action.url);
+  // Build contact actions array
+  const contactActions = [
+    member.email && {
+      icon: Mail,
+      label: "Email",
+      url: `mailto:${member.email}`,
+    },
+    member.phone && {
+      icon: Phone,
+      label: "Call",
+      url: `tel:${member.phone}`,
+    },
+    member.phone && {
+      icon: MessageCircle,
+      label: "WhatsApp",
+      url: `https://wa.me/${formatPhoneForWhatsApp(member.phone)}`,
+    },
+    member.linkedin && {
+      icon: Linkedin,
+      label: "LinkedIn",
+      url: member.linkedin,
+    },
+    member.instagram && {
+      icon: Instagram,
+      label: "Instagram",
+      url: member.instagram,
+    },
+  ].filter(Boolean) as { icon: typeof Mail; label: string; url: string }[];
 
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
@@ -72,20 +105,21 @@ export const TeamMemberDialog = ({ member, open, onOpenChange }: TeamMemberDialo
             </p>
           )}
 
-          {/* Actions */}
-          <div className="flex flex-wrap items-center gap-4 pt-4 animate-in fade-in slide-in-from-bottom-4 duration-300 ease-out delay-100">
+          {/* Contact Actions */}
+          <div className="flex flex-wrap items-center gap-3 pt-4 animate-in fade-in slide-in-from-bottom-4 duration-300 ease-out delay-100">
             <Button onClick={handleContact} className="font-light">
               Contact {member.name.split(' ')[0]}
             </Button>
             
-            {socialActions.map((action) => {
+            {contactActions.map((action) => {
               const Icon = action.icon;
+              const isExternal = action.url.startsWith('http');
               return (
                 <a
                   key={action.label}
                   href={action.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={isExternal ? "_blank" : undefined}
+                  rel={isExternal ? "noopener noreferrer" : undefined}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border/30 hover:border-accent/50 hover:bg-accent/10 transition-all duration-300"
                 >
                   <Icon className="h-4 w-4" />

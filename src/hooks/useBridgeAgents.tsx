@@ -11,6 +11,8 @@ export interface BridgeAgent {
   image_url?: string;
   instagram_url?: string;
   linkedin_url?: string;
+  email?: string;
+  phone?: string;
   category: TeamCategory;
   bio?: string;
   display_order: number;
@@ -49,7 +51,7 @@ export const useBridgeAgents = () => {
       if (error) throw error;
 
       // Transform to BridgeAgent with computed properties
-      const agents: BridgeAgent[] = (data || []).map((member) => ({
+      const agents: BridgeAgent[] = (data || []).map((member: any) => ({
         id: member.id || '',
         name: member.name || '',
         slug: member.slug || (member.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '_'),
@@ -57,6 +59,8 @@ export const useBridgeAgents = () => {
         image_url: member.image_url || undefined,
         instagram_url: member.instagram_url || undefined,
         linkedin_url: member.linkedin_url || undefined,
+        email: member.email || undefined,
+        phone: member.phone || undefined,
         category: (member.category as TeamCategory) || 'Advisory',
         bio: member.bio || undefined,
         display_order: member.display_order || 0,

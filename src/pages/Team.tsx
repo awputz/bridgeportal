@@ -12,6 +12,8 @@ interface TeamMember {
   image: string;
   instagram?: string;
   linkedin?: string;
+  email?: string;
+  phone?: string;
 }
 const CATEGORY_LABELS: Record<TeamCategory, string> = {
   'Leadership': 'Leadership',
@@ -34,7 +36,9 @@ const Team = () => {
     bio: agent.bio,
     image: agent.image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(agent.name)}&size=400&background=18181b&color=fff`,
     instagram: agent.instagram_url,
-    linkedin: agent.linkedin_url
+    linkedin: agent.linkedin_url,
+    email: agent.email,
+    phone: agent.phone,
   });
   const handleMemberClick = (member: TeamMember) => {
     setSelectedMember(member);
