@@ -28,11 +28,6 @@ export default function About() {
     suffix: "M+",
     label: "Closed"
   }, {
-    icon: Briefcase,
-    value: clientsCount,
-    suffix: "+",
-    label: "Clients"
-  }, {
     icon: Clock,
     value: 15,
     suffix: "+",
@@ -91,7 +86,7 @@ export default function About() {
           </div>
           
           {/* Stats inline */}
-          <div className="grid grid-cols-5 gap-4 max-w-3xl mx-auto">
+          <div className="grid grid-cols-4 gap-4 max-w-3xl mx-auto">
             {stats.map((stat, index) => {
             const Icon = stat.icon;
             return <div key={stat.label} className="text-center" style={{
