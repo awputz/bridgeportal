@@ -72,7 +72,7 @@ export default function About() {
           <img src={heroImage} alt="New York City skyline" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
         </div>
-        <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 mt-8 md:mt-12 transition-all duration-700 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-4">
             About Bridge Advisory Group
           </h1>
