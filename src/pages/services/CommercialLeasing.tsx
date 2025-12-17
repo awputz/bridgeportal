@@ -41,6 +41,7 @@ const services = [
   { icon: Users, title: "Tenant Representation", description: "Full-service guidance for businesses seeking space" },
   { icon: Building2, title: "Landlord Representation", description: "Complete leasing services for property owners" },
   { icon: BarChart3, title: "Market Intelligence", description: "Data-driven insights for informed decisions" },
+  { icon: TrendingUp, title: "Property Marketing", description: "Professional campaigns to maximize exposure and leasing velocity" },
 ];
 
 // Tenant categories with distinct images for hover effects
