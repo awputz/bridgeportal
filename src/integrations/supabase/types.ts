@@ -1052,11 +1052,13 @@ export type Database = {
           bio: string | null
           category: string | null
           display_order: number | null
+          email: string | null
           id: string | null
           image_url: string | null
           instagram_url: string | null
           linkedin_url: string | null
           name: string | null
+          phone: string | null
           slug: string | null
           title: string | null
         }
@@ -1064,11 +1066,13 @@ export type Database = {
           bio?: string | null
           category?: string | null
           display_order?: number | null
+          email?: string | null
           id?: string | null
           image_url?: string | null
           instagram_url?: string | null
           linkedin_url?: string | null
           name?: string | null
+          phone?: string | null
           slug?: string | null
           title?: string | null
         }
@@ -1076,11 +1080,13 @@ export type Database = {
           bio?: string | null
           category?: string | null
           display_order?: number | null
+          email?: string | null
           id?: string | null
           image_url?: string | null
           instagram_url?: string | null
           linkedin_url?: string | null
           name?: string | null
+          phone?: string | null
           slug?: string | null
           title?: string | null
         }
