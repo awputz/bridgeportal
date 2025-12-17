@@ -56,7 +56,7 @@ export default function CapitalAdvisory() {
         </div>
       </section>
 
-      {/* Section 1: Debt Placement */}
+      {/* Section 1: Debt Placement - New Image */}
       <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={debtReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
           <div className={`grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${
@@ -87,8 +87,8 @@ export default function CapitalAdvisory() {
             </div>
             <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
               <img 
-                src={PLACEHOLDER_IMAGES.finance.documents} 
-                alt="Financial analysis and documentation" 
+                src={PLACEHOLDER_IMAGES.building.glass}
+                alt="Commercial building financing" 
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
               />
             </div>
@@ -96,7 +96,7 @@ export default function CapitalAdvisory() {
         </div>
       </section>
 
-      {/* Section 2: Equity And Joint Ventures */}
+      {/* Section 2: Equity And Joint Ventures - New Image */}
       <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={equityReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
           <div className={`grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${
@@ -104,8 +104,8 @@ export default function CapitalAdvisory() {
           }`}>
             <div className="relative aspect-[4/3] rounded-lg overflow-hidden order-2 md:order-1">
               <img 
-                src={PLACEHOLDER_IMAGES.finance.handshake} 
-                alt="Partnership and collaboration" 
+                src={PLACEHOLDER_IMAGES.office.meeting}
+                alt="Partnership meeting" 
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
               />
             </div>
