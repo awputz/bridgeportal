@@ -54,6 +54,8 @@ import ResidentialBuildings from "./pages/services/residential/Buildings";
 import RenterResources from "./pages/services/residential/RenterResources";
 
 import InvestmentValuations from "./pages/services/investment-sales/Valuations";
+import InvestmentListings from "./pages/services/investment-sales/Listings";
+import InvestmentDealRoom from "./pages/services/investment-sales/DealRoom";
 
 import CommercialTenantRep from "./pages/services/commercial-leasing/TenantRep";
 import CommercialLandlordRep from "./pages/services/commercial-leasing/LandlordRep";
@@ -137,6 +139,8 @@ const App = () => {
                     
                     {/* Investment Sales Sub-Pages (kept) */}
                     <Route path="/services/investment-sales/valuations" element={<InvestmentValuations />} />
+                    <Route path="/services/investment-sales/listings" element={<InvestmentListings />} />
+                    <Route path="/services/investment-sales/deal-room/:listingId" element={<InvestmentDealRoom />} />
                     <Route path="/services/investment-sales/track-record" element={<Navigate to="/transactions" replace />} />
                     {/* Investment Sales redirects (consolidated pages) */}
                     <Route path="/services/investment-sales/acquisitions" element={<Navigate to="/services/investment-sales" replace />} />

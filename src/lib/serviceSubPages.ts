@@ -4,6 +4,7 @@ export const SERVICE_SUB_PAGES = {
     basePath: "/services/investment-sales",
     pages: [
       { name: "Overview", path: "/services/investment-sales" },
+      { name: "Active Listings", path: "/services/investment-sales/listings" },
       { name: "Valuations", path: "/services/investment-sales/valuations" },
       { name: "Track Record", path: "/transactions" },
     ],

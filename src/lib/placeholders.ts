@@ -27,6 +27,9 @@ export const PLACEHOLDER_IMAGES = {
     brownstone: "https://images.unsplash.com/photo-1555636222-cae831e670b3?w=1200&h=800&fit=crop&q=80",
     interior: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1200&h=800&fit=crop&q=80",
     apartment: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&h=800&fit=crop&q=80",
+    mixedUse: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&h=800&fit=crop&q=80",
+    multifamily: "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=1200&h=800&fit=crop&q=80",
+    commercial: "https://images.unsplash.com/photo-1464938050520-ef2571c7c6ca?w=1200&h=800&fit=crop&q=80",
   },
   
   // Retail/Commercial images
