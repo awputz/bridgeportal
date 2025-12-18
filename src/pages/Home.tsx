@@ -11,8 +11,9 @@ import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
 
 const upcomingMarkets = [
   { name: "Bridge Florida", initials: "BF", location: "Palm Beach · West Palm Beach · Miami" },
-  { name: "Bridge Los Angeles", initials: "BLA", location: "Greater Los Angeles" },
+  { name: "Bridge Los Angeles", initials: "BLA", location: "Los Angeles & Malibu" },
   { name: "Bridge Boston", initials: "BB", location: "Greater Boston" },
+  { name: "Bridge New Jersey", initials: "BNJ", location: "New Jersey" },
 ];
 
 export default function Home() {
