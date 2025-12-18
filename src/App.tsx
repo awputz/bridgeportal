@@ -59,9 +59,7 @@ import CommercialTenantRep from "./pages/services/commercial-leasing/TenantRep";
 import CommercialLandlordRep from "./pages/services/commercial-leasing/LandlordRep";
 
 // Capital Advisory sub-pages removed - consolidated into main page
-
-import PMPortfolio from "./pages/services/property-management/Portfolio";
-import PMServices from "./pages/services/property-management/ServicesOffered";
+// Property Management sub-pages removed - consolidated into main page
 
 import MarketingCreativeStudio from "./pages/services/marketing/CreativeStudio";
 import MarketingDigitalCampaigns from "./pages/services/marketing/DigitalCampaigns";
@@ -162,10 +160,9 @@ const App = () => {
                     <Route path="/services/capital-advisory/refinance" element={<Navigate to="/services/capital-advisory" replace />} />
                     <Route path="/services/capital-advisory/construction" element={<Navigate to="/services/capital-advisory" replace />} />
                     
-                    {/* Property Management Sub-Pages */}
-                    <Route path="/services/property-management/portfolio" element={<PMPortfolio />} />
-                    <Route path="/services/property-management/services" element={<PMServices />} />
-                    {/* Property Management redirects */}
+                    {/* Property Management - All sub-pages redirect to main overview */}
+                    <Route path="/services/property-management/portfolio" element={<Navigate to="/services/property-management" replace />} />
+                    <Route path="/services/property-management/services" element={<Navigate to="/services/property-management" replace />} />
                     <Route path="/services/property-management/reporting" element={<Navigate to="/services/property-management" replace />} />
                     
                     {/* Marketing Sub-Pages */}
