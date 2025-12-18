@@ -19,11 +19,6 @@ const upcomingMarkets = [
     initials: "BB",
     location: "Greater Boston",
   },
-  {
-    name: "Bridge Texas",
-    initials: "BT",
-    location: "Dallas & Houston",
-  },
 ];
 
 const MarketsComingSoon = () => {

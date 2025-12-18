@@ -75,6 +75,11 @@ export const Footer = () => {
                   Join Us
                 </Link>
               </li>
+              <li>
+                <Link to="/markets-coming-soon" className="text-muted-foreground hover:text-foreground transition-colors font-light">
+                  Markets Coming Soon
+                </Link>
+              </li>
             </ul>
           </div>
 
