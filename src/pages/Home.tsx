@@ -88,7 +88,7 @@ export default function Home() {
                     <ChevronDown className="ml-2 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="center" className="bg-white border-border">
+                <DropdownMenuContent align="center" className="bg-white border-border text-black">
                   {LISTINGS_ITEMS.items.map((item) => (
                     <DropdownMenuItem key={item.name} asChild>
                       {item.external ? (
