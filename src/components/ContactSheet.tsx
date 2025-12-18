@@ -175,7 +175,7 @@ export const ContactSheet = ({ open, onOpenChange }: ContactSheetProps) => {
         </SheetHeader>
 
         {/* Contact Info */}
-        <div className="grid grid-cols-3 gap-4 mb-6 pb-6 border-b border-white/10 animate-fade-in" style={{ animationDelay: '100ms' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6 pb-6 border-b border-white/10 animate-fade-in" style={{ animationDelay: '100ms' }}>
           <div className="group text-center">
             <div className="w-10 h-10 mx-auto rounded-full bg-white/10 flex items-center justify-center mb-2 group-hover:bg-white/20 transition-colors">
               <MapPin className="text-white/80" size={16} />
@@ -198,7 +198,7 @@ export const ContactSheet = ({ open, onOpenChange }: ContactSheetProps) => {
             <div className="w-10 h-10 mx-auto rounded-full bg-white/10 flex items-center justify-center mb-2 group-hover:bg-white/20 transition-colors">
               <Mail className="text-white/80" size={16} />
             </div>
-            <a href="mailto:office@bridgenyre.com" className="text-xs text-white/60 hover:text-white transition-colors">
+            <a href="mailto:office@bridgenyre.com" className="text-xs text-white/60 hover:text-white transition-colors break-all">
               office@bridgenyre.com
             </a>
           </div>
