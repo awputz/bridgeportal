@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Building2, Store, Download, MessageSquare, MapPin, Ruler, DollarSign, Calendar, Clock } from "lucide-react";
+import { Building2, Store, Download, MessageSquare, MapPin, Ruler, DollarSign, Calendar, Clock, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -80,54 +80,70 @@ const CommercialListings = () => {
           </div>
         </div>
 
-        {/* Listings Grid */}
+        {/* Map and Listings Container */}
         <section className="py-8">
           <div className="container mx-auto px-4">
-            {isLoading ? (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {[1, 2, 3].map((i) => (
-                  <Card key={i} className="overflow-hidden">
-                    <Skeleton className="aspect-[16/10]" />
-                    <CardContent className="p-4 space-y-3">
-                      <Skeleton className="h-5 w-3/4" />
-                      <Skeleton className="h-4 w-1/2" />
-                      <div className="flex gap-4">
-                        <Skeleton className="h-4 w-16" />
-                        <Skeleton className="h-4 w-16" />
-                        <Skeleton className="h-4 w-16" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+            <div className="grid lg:grid-cols-2 gap-6">
+              {/* Listings Grid */}
+              <div>
+                {isLoading ? (
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    {[1, 2, 3].map((i) => (
+                      <Card key={i} className="overflow-hidden">
+                        <Skeleton className="aspect-[16/10]" />
+                        <CardContent className="p-4 space-y-3">
+                          <Skeleton className="h-5 w-3/4" />
+                          <Skeleton className="h-4 w-1/2" />
+                          <div className="flex gap-4">
+                            <Skeleton className="h-4 w-16" />
+                            <Skeleton className="h-4 w-16" />
+                            <Skeleton className="h-4 w-16" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : displayedListings.length > 0 ? (
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    {displayedListings.map((listing) => (
+                      <ListingCard
+                        key={listing.id}
+                        listing={listing}
+                        onInquire={openContactSheet}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-16">
+                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-muted mb-4">
+                      {activeTab === "office" ? (
+                        <Building2 className="h-6 w-6 text-muted-foreground" />
+                      ) : (
+                        <Store className="h-6 w-6 text-muted-foreground" />
+                      )}
+                    </div>
+                    <h3 className="text-lg font-medium mb-2">No {activeTab} listings available</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Check back soon or contact us for off-market opportunities.
+                    </p>
+                    <Button size="sm" onClick={openContactSheet}>
+                      Contact Us
+                    </Button>
+                  </div>
+                )}
               </div>
-            ) : displayedListings.length > 0 ? (
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {displayedListings.map((listing) => (
-                  <ListingCard
-                    key={listing.id}
-                    listing={listing}
-                    onInquire={openContactSheet}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-16">
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-muted mb-4">
-                  {activeTab === "office" ? (
-                    <Building2 className="h-6 w-6 text-muted-foreground" />
-                  ) : (
-                    <Store className="h-6 w-6 text-muted-foreground" />
-                  )}
+
+              {/* Map Placeholder */}
+              <div className="lg:sticky lg:top-32 h-fit">
+                <div className="bg-muted rounded-lg border border-border overflow-hidden">
+                  <div className="aspect-square flex flex-col items-center justify-center text-muted-foreground p-8">
+                    <Map className="h-16 w-16 mb-4 opacity-30" />
+                    <p className="text-lg font-medium mb-2">Mapbox Integration</p>
+                    <p className="text-sm text-center">Map will display listing locations</p>
+                  </div>
                 </div>
-                <h3 className="text-lg font-medium mb-2">No {activeTab} listings available</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Check back soon or contact us for off-market opportunities.
-                </p>
-                <Button size="sm" onClick={openContactSheet}>
-                  Contact Us
-                </Button>
               </div>
-            )}
+            </div>
           </div>
         </section>
 
