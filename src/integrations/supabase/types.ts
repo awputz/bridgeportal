@@ -352,6 +352,128 @@ export type Database = {
         }
         Relationships: []
       }
+      deal_room_documents: {
+        Row: {
+          category: string
+          created_at: string | null
+          display_order: number | null
+          document_name: string
+          document_url: string | null
+          id: string
+          is_active: boolean | null
+          listing_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          display_order?: number | null
+          document_name: string
+          document_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          listing_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          display_order?: number | null
+          document_name?: string
+          document_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          listing_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_room_documents_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "investment_listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      investment_listings: {
+        Row: {
+          asking_price: number | null
+          asset_class: string
+          borough: string | null
+          cap_rate: number | null
+          created_at: string | null
+          deal_room_password: string
+          description: string | null
+          display_order: number | null
+          gross_sf: number | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          listing_agent_id: string | null
+          neighborhood: string | null
+          om_url: string | null
+          property_address: string
+          units: number | null
+          updated_at: string | null
+          year_built: number | null
+        }
+        Insert: {
+          asking_price?: number | null
+          asset_class: string
+          borough?: string | null
+          cap_rate?: number | null
+          created_at?: string | null
+          deal_room_password?: string
+          description?: string | null
+          display_order?: number | null
+          gross_sf?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          listing_agent_id?: string | null
+          neighborhood?: string | null
+          om_url?: string | null
+          property_address: string
+          units?: number | null
+          updated_at?: string | null
+          year_built?: number | null
+        }
+        Update: {
+          asking_price?: number | null
+          asset_class?: string
+          borough?: string | null
+          cap_rate?: number | null
+          created_at?: string | null
+          deal_room_password?: string
+          description?: string | null
+          display_order?: number | null
+          gross_sf?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          listing_agent_id?: string | null
+          neighborhood?: string | null
+          om_url?: string | null
+          property_address?: string
+          units?: number | null
+          updated_at?: string | null
+          year_built?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investment_listings_listing_agent_id_fkey"
+            columns: ["listing_agent_id"]
+            isOneToOne: false
+            referencedRelation: "team_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "investment_listings_listing_agent_id_fkey"
+            columns: ["listing_agent_id"]
+            isOneToOne: false
+            referencedRelation: "team_members_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string | null
