@@ -109,9 +109,9 @@ export default function InvestmentSales() {
               Submit a Deal
             </Button>
             <Button size="lg" variant="outline" className="font-light border-white/30 hover:bg-white/10" asChild>
-              <a href="https://www.costar.com/agent/alexander-smotritsky/broker-profile" target="_blank" rel="noopener noreferrer">
+              <Link to="/services/investment-sales/listings">
                 View Our Listings
-              </a>
+              </Link>
             </Button>
           </div>
         </div>
@@ -257,9 +257,9 @@ export default function InvestmentSales() {
               Submit a Deal
             </Button>
             <Button size="lg" variant="outline" className="font-light" asChild>
-              <a href="https://www.costar.com/agent/alexander-smotritsky/broker-profile" target="_blank" rel="noopener noreferrer">
+              <Link to="/services/investment-sales/listings">
                 View Our Listings
-              </a>
+              </Link>
             </Button>
           </div>
         </div>

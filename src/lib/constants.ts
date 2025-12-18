@@ -97,8 +97,8 @@ export const LISTINGS_ITEMS = {
   items: [
     { 
       name: "Investment Sales", 
-      url: "https://www.costar.com",
-      external: true 
+      url: "/services/investment-sales/listings",
+      external: false 
     },
     { 
       name: "Commercial Leasing", 
