@@ -62,7 +62,7 @@ const MarketsComingSoon = () => {
       </section>
 
       {/* Markets Grid */}
-      <section className="py-20 md:py-28 border-b border-border/30">
+      <section className="py-12 md:py-16 border-b border-border/30">
         <div className="container mx-auto px-6 lg:px-8">
           <div 
             ref={gridReveal.elementRef} 
@@ -72,11 +72,11 @@ const MarketsComingSoon = () => {
               {upcomingMarkets.map((market, index) => (
                 <div
                   key={market.name}
-                  className="group relative rounded-lg border border-white/10 bg-white/[0.02] p-8 md:p-10 text-center hover:border-accent/30 transition-all duration-300"
+                  className="group relative rounded-lg border border-white/10 bg-white/[0.02] p-6 md:p-8 text-center hover:border-accent/30 transition-all duration-300"
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
                   {/* Logo */}
-                  <div className="w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+                  <div className="w-40 h-40 mx-auto mb-4 flex items-center justify-center">
                     <img src={market.logo} alt={market.name} className="w-full h-full object-contain" />
                   </div>
 
