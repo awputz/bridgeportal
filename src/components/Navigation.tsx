@@ -219,7 +219,7 @@ export const Navigation = () => {
                               <IconComponent className="h-4 w-4 text-white/60" />
                               <span className="text-sm text-white/90 font-light whitespace-nowrap">{item.name}</span>
                             </div>
-                            <ChevronDown className="h-3 w-3 text-white/40 -rotate-90" />
+                            <ChevronDown className="h-3 w-3 text-white/40 -rotate-90 ml-4" />
                           </Link>
                         </DropdownMenuItem>
                       );
