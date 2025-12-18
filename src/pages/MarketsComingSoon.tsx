@@ -12,12 +12,17 @@ const upcomingMarkets = [
   {
     name: "Bridge Los Angeles",
     initials: "BLA",
-    location: "Greater Los Angeles",
+    location: "Los Angeles & Malibu",
   },
   {
     name: "Bridge Boston",
     initials: "BB",
     location: "Greater Boston",
+  },
+  {
+    name: "Bridge New Jersey",
+    initials: "BNJ",
+    location: "New Jersey",
   },
 ];
 
