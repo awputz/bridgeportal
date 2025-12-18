@@ -102,7 +102,7 @@ export const LISTINGS_ITEMS = {
     },
     { 
       name: "Commercial Leasing", 
-      url: "/services/commercial-leasing/listings",
+      url: "/commercial-listings",
       external: false 
     },
     { 

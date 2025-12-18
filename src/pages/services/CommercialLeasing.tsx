@@ -151,7 +151,7 @@ export default function CommercialLeasing() {
               List Your Space
             </Button>
             <Button size="lg" variant="outline" className="font-light border-white/30 hover:bg-white/10" asChild>
-              <Link to="/services/commercial-leasing/listings">
+              <Link to="/commercial-listings">
                 View Our Listings
               </Link>
             </Button>

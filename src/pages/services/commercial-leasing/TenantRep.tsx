@@ -96,7 +96,7 @@ const TenantRep = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" variant="secondary" asChild>
-              <Link to="/services/commercial-leasing/listings">
+              <Link to="/commercial-listings">
                 View Available Spaces <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
