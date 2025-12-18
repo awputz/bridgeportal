@@ -98,7 +98,7 @@ export const Navigation = () => {
             {/* Left: Navigation Links */}
             <div className="flex items-center space-x-6">
               {leftNavItems.map(item => (
-                <Link key={item.name} to={item.path} className={`text-sm font-light transition-all duration-200 whitespace-nowrap hover:scale-105 ${location.pathname === item.path ? "text-foreground" : "text-foreground/70 hover:text-foreground"}`}>
+                <Link key={item.name} to={item.path} className={`text-[15px] font-light transition-all duration-200 whitespace-nowrap hover:scale-105 ${location.pathname === item.path ? "text-foreground" : "text-foreground/70 hover:text-foreground"}`}>
                   {item.name}
                 </Link>
               ))}
@@ -118,7 +118,7 @@ export const Navigation = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className={cn(
-                    "flex items-center gap-1 text-sm font-light transition-all duration-200 hover:scale-105",
+                    "flex items-center gap-1 text-[15px] font-light transition-all duration-200 hover:scale-105",
                     isServicesActive ? "text-foreground" : "text-foreground/70 hover:text-foreground"
                   )}>
                     Services
@@ -168,7 +168,7 @@ export const Navigation = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className={cn(
-                    "flex items-center gap-1 text-sm font-light transition-all duration-200 hover:scale-105",
+                    "flex items-center gap-1 text-[15px] font-light transition-all duration-200 hover:scale-105",
                     "text-foreground/70 hover:text-foreground"
                   )}>
                     Listings
