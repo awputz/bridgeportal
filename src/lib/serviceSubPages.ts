@@ -5,7 +5,7 @@ export const SERVICE_SUB_PAGES = {
     pages: [
       { name: "Overview", path: "/services/investment-sales" },
       { name: "Valuations", path: "/services/investment-sales/valuations" },
-      { name: "Track Record", path: "/services/investment-sales/track-record" },
+      { name: "Track Record", path: "/transactions" },
     ],
   },
   "commercial-leasing": {

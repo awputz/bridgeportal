@@ -119,7 +119,7 @@ export const FeaturedDeals = () => {
           style={{ transitionDelay: "400ms" }}
         >
           <Button asChild variant="link" className="font-light group">
-            <Link to="/services/investment-sales/track-record">
+            <Link to="/transactions">
               View Full Track Record
               <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Link>
