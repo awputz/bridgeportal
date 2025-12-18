@@ -110,7 +110,7 @@ export const LISTINGS_ITEMS = {
     },
     { 
       name: "Residential", 
-      url: "https://streeteasy.com/building/bridge-advisory-group",
+      url: "https://streeteasy.com/profile/957575-bridge-advisory-group?tab_profile=active_listings",
       external: true 
     }
   ]
