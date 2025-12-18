@@ -54,8 +54,6 @@ export const SERVICE_SUB_PAGES = {
     basePath: "/services/billboard",
     pages: [
       { name: "Overview", path: "/services/billboard" },
-      { name: "Inventory Map", path: "/services/billboard/inventory" },
-      { name: "Rates & Availability", path: "/services/billboard/rates" },
     ],
   },
 };
