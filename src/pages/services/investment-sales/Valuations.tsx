@@ -91,48 +91,7 @@ const Valuations = () => {
       
 
       {/* Market Intelligence */}
-      <section className="py-20 bg-secondary/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl font-bold text-foreground mb-6">
-                Market Intelligence Platform
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                Our valuations are powered by proprietary market data and analytics that 
-                provide unmatched insight into New York City's real estate markets.
-              </p>
-              <div className="space-y-4">
-                {["Real-time transaction data", "Rent comparable database", "Cap rate tracking by submarket", "Development pipeline monitoring", "Zoning and regulatory analysis", "Demographic and economic indicators"].map(item => <div key={item} className="flex items-center gap-3">
-                    <CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
-                    <span className="text-foreground">{item}</span>
-                  </div>)}
-              </div>
-            </div>
-            <div className="bg-background rounded-lg p-8 border border-border">
-              <h3 className="text-xl font-semibold text-foreground mb-6">Data Sources</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-4 bg-secondary/30 rounded-lg">
-                  <p className="text-3xl font-bold text-primary">10K+</p>
-                  <p className="text-sm text-muted-foreground">Transaction Records</p>
-                </div>
-                <div className="text-center p-4 bg-secondary/30 rounded-lg">
-                  <p className="text-3xl font-bold text-primary">50+</p>
-                  <p className="text-sm text-muted-foreground">Submarkets Tracked</p>
-                </div>
-                <div className="text-center p-4 bg-secondary/30 rounded-lg">
-                  <p className="text-3xl font-bold text-primary">Daily</p>
-                  <p className="text-sm text-muted-foreground">Data Updates</p>
-                </div>
-                <div className="text-center p-4 bg-secondary/30 rounded-lg">
-                  <p className="text-3xl font-bold text-primary">15 Yrs</p>
-                  <p className="text-sm text-muted-foreground">Historical Data</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      
 
       {/* CTA */}
       <section className="py-20 bg-primary">
