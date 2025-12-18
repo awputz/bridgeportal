@@ -7,12 +7,15 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCommercialListings, CommercialListing } from "@/hooks/useCommercialListings";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { cn } from "@/lib/utils";
+import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 
 const CommercialListings = () => {
   const [activeTab, setActiveTab] = useState<"office" | "retail">("office");
   const { data: listings, isLoading } = useCommercialListings();
   const { openContactSheet } = useContactSheet();
+  const { elementRef: heroRef, isVisible: heroVisible } = useScrollReveal();
 
   const officeListings = listings?.filter((l) => l.listing_type === "office") || [];
   const retailListings = listings?.filter((l) => l.listing_type === "retail") || [];
@@ -21,24 +24,32 @@ const CommercialListings = () => {
   return (
     <>
       <Helmet>
-        <title>Commercial Spaces for Lease | Bridge</title>
+        <title>Exclusive Commercial Listings | Bridge</title>
         <meta
           name="description"
-          content="Browse available office and retail spaces for lease in NYC. Premium commercial real estate opportunities in Manhattan and Brooklyn."
+          content="Browse exclusive office and retail spaces for lease in NYC. Premium commercial real estate opportunities in Manhattan and Brooklyn."
         />
       </Helmet>
 
       <main className="min-h-screen bg-background">
-        {/* Compact Hero */}
-        <section className="relative h-[25vh] min-h-[200px] flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary/80 to-primary/70" />
-          <div className="absolute inset-0 bg-[url('/lovable-uploads/ad049e33-7a22-4d66-9015-0299205f5e02.png')] bg-cover bg-center opacity-20" />
-          <div className="relative z-10 text-center px-4">
-            <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-2">
-              Commercial Listings
+        {/* Hero Section with Background Image */}
+        <section 
+          ref={heroRef}
+          className={`relative h-[45vh] min-h-[400px] flex items-center justify-center transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+        >
+          <img 
+            src={PLACEHOLDER_IMAGES.building.commercial} 
+            alt="Commercial Real Estate" 
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black/60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+          <div className="relative z-10 text-center px-6">
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight">
+              Exclusive Commercial Listings
             </h1>
-            <p className="text-sm md:text-base text-primary-foreground/80">
-              Office & retail spaces for lease in NYC
+            <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto">
+              Premium office & retail spaces for lease in NYC
             </p>
           </div>
         </section>
