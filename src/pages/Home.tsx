@@ -89,18 +89,12 @@ export default function Home() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="center" className="bg-white border-border text-black">
-                  {LISTINGS_ITEMS.items.map((item) => (
-                    <DropdownMenuItem key={item.name} asChild>
-                      {item.external ? (
-                        <a href={item.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full cursor-pointer">
+                  {LISTINGS_ITEMS.items.map(item => <DropdownMenuItem key={item.name} asChild>
+                      {item.external ? <a href={item.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full cursor-pointer">
                           {item.name}
                           <ExternalLink className="ml-2 h-3 w-3 opacity-50" />
-                        </a>
-                      ) : (
-                        <Link to={item.url} className="cursor-pointer">{item.name}</Link>
-                      )}
-                    </DropdownMenuItem>
-                  ))}
+                        </a> : <Link to={item.url} className="cursor-pointer">{item.name}</Link>}
+                    </DropdownMenuItem>)}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -382,7 +376,7 @@ export default function Home() {
           }}>
               <Button size="lg" className="font-light px-8" onClick={openContactSheet}>
                 <Calendar className="mr-2 h-4 w-4" />
-                Schedule a Consultation
+                Schedule a Call
               </Button>
               <Button asChild size="lg" variant="outline" className="font-light px-8">
                 <Link to="/team">Meet Our Team</Link>
