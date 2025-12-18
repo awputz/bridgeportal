@@ -23,7 +23,7 @@ export const SERVICE_SUB_PAGES = {
     basePath: "/services/residential",
     pages: [
       { name: "Overview", path: "/services/residential" },
-      { name: "Buildings", path: "/services/residential/buildings" },
+      { name: "Exclusive Portfolio", path: "/services/residential/buildings" },
       { name: "For Landlords", path: "/services/residential/landlords" },
       { name: "For Sellers", path: "/services/residential/sellers" },
       { name: "For Buyers & Renters", path: "/services/residential/find-a-home" },
