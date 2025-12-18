@@ -40,8 +40,6 @@ export const SERVICE_SUB_PAGES = {
     basePath: "/services/property-management",
     pages: [
       { name: "Overview", path: "/services/property-management" },
-      { name: "Our Portfolio", path: "/services/property-management/portfolio" },
-      { name: "Services", path: "/services/property-management/services" },
     ],
   },
   marketing: {

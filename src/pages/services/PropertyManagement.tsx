@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
-import { ServicePageNav } from "@/components/ServicePageNav";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { RentOptimizationCalculator } from "@/components/RentOptimizationCalculator";
 
@@ -32,9 +31,9 @@ const operationalStats = [
 ];
 
 const markets = [
-  { borough: "Manhattan", areas: ["Upper East Side", "Upper West Side", "Midtown", "Downtown", "Chelsea", "Tribeca"] },
-  { borough: "Brooklyn", areas: ["Williamsburg", "DUMBO", "Park Slope", "Brooklyn Heights", "Greenpoint", "Bushwick"] },
-  { borough: "Queens", areas: ["Long Island City", "Astoria", "Forest Hills", "Flushing", "Jackson Heights"] },
+  { borough: "Manhattan", areas: ["Upper East Side", "Upper West Side", "Midtown", "Downtown", "Chelsea", "Tribeca"], units: "200+" },
+  { borough: "Brooklyn", areas: ["Williamsburg", "DUMBO", "Park Slope", "Brooklyn Heights", "Greenpoint", "Bushwick"], units: "200+" },
+  { borough: "Queens", areas: ["Long Island City", "Astoria", "Forest Hills", "Flushing", "Jackson Heights"], units: "100+" },
 ];
 
 export default function PropertyManagement() {
@@ -76,7 +75,6 @@ export default function PropertyManagement() {
       </section>
 
       <ServicesSubNav />
-      <ServicePageNav serviceKey="property-management" />
 
       {/* Stats Bar */}
       <section className="py-12 md:py-16 border-b border-white/5 bg-white/[0.02]" ref={statsReveal.elementRef}>
@@ -212,7 +210,10 @@ export default function PropertyManagement() {
                   className="p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-300"
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
-                  <h3 className="text-xl font-light mb-4">{market.borough}</h3>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-light">{market.borough}</h3>
+                    <span className="text-sm text-accent font-light">{market.units} units</span>
+                  </div>
                   <ul className="space-y-2">
                     {market.areas.map(area => (
                       <li key={area} className="text-muted-foreground font-light text-sm flex items-center gap-2">
