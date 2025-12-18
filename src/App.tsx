@@ -60,9 +60,7 @@ import CommercialLandlordRep from "./pages/services/commercial-leasing/LandlordR
 
 // Capital Advisory sub-pages removed - consolidated into main page
 // Property Management sub-pages removed - consolidated into main page
-
-import MarketingCreativeStudio from "./pages/services/marketing/CreativeStudio";
-import MarketingDigitalCampaigns from "./pages/services/marketing/DigitalCampaigns";
+// Marketing sub-pages removed - consolidated into main page
 
 import BillboardInventory from "./pages/services/billboard/Inventory";
 import BillboardRates from "./pages/services/billboard/Rates";
@@ -165,12 +163,11 @@ const App = () => {
                     <Route path="/services/property-management/services" element={<Navigate to="/services/property-management" replace />} />
                     <Route path="/services/property-management/reporting" element={<Navigate to="/services/property-management" replace />} />
                     
-                    {/* Marketing Sub-Pages */}
-                    <Route path="/services/marketing/creative-studio" element={<MarketingCreativeStudio />} />
-                    <Route path="/services/marketing/digital-campaigns" element={<MarketingDigitalCampaigns />} />
-                    {/* Marketing redirects */}
-                    <Route path="/services/marketing/creative" element={<Navigate to="/services/marketing/creative-studio" replace />} />
-                    <Route path="/services/marketing/digital" element={<Navigate to="/services/marketing/digital-campaigns" replace />} />
+                    {/* Marketing - All sub-pages redirect to main overview */}
+                    <Route path="/services/marketing/creative-studio" element={<Navigate to="/services/marketing" replace />} />
+                    <Route path="/services/marketing/digital-campaigns" element={<Navigate to="/services/marketing" replace />} />
+                    <Route path="/services/marketing/creative" element={<Navigate to="/services/marketing" replace />} />
+                    <Route path="/services/marketing/digital" element={<Navigate to="/services/marketing" replace />} />
                     <Route path="/services/marketing/strategy" element={<Navigate to="/services/marketing" replace />} />
                     
                     {/* Billboard Sub-Pages */}
