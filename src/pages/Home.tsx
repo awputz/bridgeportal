@@ -8,12 +8,16 @@ import { TrustBadges } from "@/components/TrustBadges";
 import { SEOHelmet } from "@/components/SEOHelmet";
 import heroImage from "@/assets/brooklyn-bridge-hero-light.jpg";
 import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
+import floridaLogo from "@/assets/market-logos/florida.png";
+import losAngelesLogo from "@/assets/market-logos/los-angeles.png";
+import bostonLogo from "@/assets/market-logos/boston.png";
+import newJerseyLogo from "@/assets/market-logos/new-jersey.png";
 
 const upcomingMarkets = [
-  { name: "Bridge Florida", initials: "BF", location: "Palm Beach · West Palm Beach · Miami" },
-  { name: "Bridge Los Angeles", initials: "BLA", location: "Los Angeles & Malibu" },
-  { name: "Bridge Boston", initials: "BB", location: "Greater Boston" },
-  { name: "Bridge New Jersey", initials: "BNJ", location: "New Jersey" },
+  { name: "Bridge Florida", logo: floridaLogo, location: "Palm Beach · West Palm Beach · Miami" },
+  { name: "Bridge Los Angeles", logo: losAngelesLogo, location: "Los Angeles & Malibu" },
+  { name: "Bridge Boston", logo: bostonLogo, location: "Greater Boston" },
+  { name: "Bridge New Jersey", logo: newJerseyLogo, location: "New Jersey" },
 ];
 
 export default function Home() {
@@ -358,10 +362,8 @@ export default function Home() {
                 className={`group p-6 md:p-8 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out hover:border-accent/30 hover:bg-card/50 ${marketsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
                 style={{ transitionDelay: marketsReveal.isVisible ? `${150 + index * 100}ms` : "0ms" }}
               >
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted/50 border border-border/50 flex items-center justify-center group-hover:border-accent/30 transition-colors">
-                  <span className="text-xl font-light text-muted-foreground tracking-wide">
-                    {market.initials}
-                  </span>
+                <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                  <img src={market.logo} alt={market.name} className="w-full h-full object-contain" />
                 </div>
                 <h3 className="text-base md:text-lg font-medium mb-1">{market.name}</h3>
                 <p className="text-muted-foreground font-light text-xs mb-3">{market.location}</p>

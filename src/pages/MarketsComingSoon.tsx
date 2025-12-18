@@ -2,26 +2,30 @@ import { Link } from "react-router-dom";
 import { MapPin, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import floridaLogo from "@/assets/market-logos/florida.png";
+import losAngelesLogo from "@/assets/market-logos/los-angeles.png";
+import bostonLogo from "@/assets/market-logos/boston.png";
+import newJerseyLogo from "@/assets/market-logos/new-jersey.png";
 
 const upcomingMarkets = [
   {
     name: "Bridge Florida",
-    initials: "BF",
+    logo: floridaLogo,
     location: "Palm Beach · West Palm Beach · Miami",
   },
   {
     name: "Bridge Los Angeles",
-    initials: "BLA",
+    logo: losAngelesLogo,
     location: "Los Angeles & Malibu",
   },
   {
     name: "Bridge Boston",
-    initials: "BB",
+    logo: bostonLogo,
     location: "Greater Boston",
   },
   {
     name: "Bridge New Jersey",
-    initials: "BNJ",
+    logo: newJerseyLogo,
     location: "New Jersey",
   },
 ];
@@ -71,11 +75,9 @@ const MarketsComingSoon = () => {
                   className="group relative rounded-lg border border-white/10 bg-white/[0.02] p-8 md:p-10 text-center hover:border-accent/30 transition-all duration-300"
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
-                  {/* Placeholder Logo */}
-                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center">
-                    <span className="text-2xl font-light text-muted-foreground tracking-wide">
-                      {market.initials}
-                    </span>
+                  {/* Logo */}
+                  <div className="w-24 h-24 mx-auto mb-6 flex items-center justify-center">
+                    <img src={market.logo} alt={market.name} className="w-full h-full object-contain" />
                   </div>
 
                   {/* Market Name */}
