@@ -197,7 +197,7 @@ const App = () => {
                     <Route path="/markets" element={<Navigate to="/markets-coming-soon" replace />} />
                     <Route path="/market-insights" element={<Navigate to="/insights" replace />} />
                     <Route path="/submit-deal" element={<Navigate to="/contact" replace />} />
-                    {/* Removed: /transactions redirect - now has its own page */}
+                    <Route path="/listings" element={<Navigate to="/services/investment-sales/listings" replace />} />
                     
                     {/* 404 */}
                     <Route path="*" element={<NotFound />} />
