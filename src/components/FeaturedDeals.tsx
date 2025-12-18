@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Building2 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTransactions } from "@/hooks/useTransactions";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { cn } from "@/lib/utils";
 
 const formatCurrency = (value: number) => {
@@ -10,6 +11,14 @@ const formatCurrency = (value: number) => {
     return `$${(value / 1000000).toFixed(1)}M`;
   }
   return `$${(value / 1000).toFixed(0)}K`;
+};
+
+const getPlaceholderImage = (assetType: string | null) => {
+  const type = assetType?.toLowerCase() || "";
+  if (type.includes("retail")) return PLACEHOLDER_IMAGES.retail.storefront;
+  if (type.includes("office")) return PLACEHOLDER_IMAGES.building.exterior;
+  if (type.includes("multifamily") || type.includes("residential")) return PLACEHOLDER_IMAGES.building.residential;
+  return PLACEHOLDER_IMAGES.building.glass;
 };
 
 export const FeaturedDeals = () => {
@@ -25,7 +34,7 @@ export const FeaturedDeals = () => {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="h-48 bg-white/5 rounded-lg animate-pulse" />
+          <div key={i} className="h-64 bg-white/5 rounded-lg animate-pulse" />
         ))}
       </div>
     );
@@ -60,52 +69,58 @@ export const FeaturedDeals = () => {
           {featuredDeals.map((deal, index) => (
             <div
               key={deal.id}
-              className="group p-6 rounded-lg border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300"
+              className="group rounded-lg border border-white/10 hover:border-white/20 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 overflow-hidden"
               style={{ transitionDelay: `${index * 50}ms` }}
             >
-              <div className="flex items-start gap-4 mb-4">
-                <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
-                  <Building2 className="h-5 w-5 text-accent" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-sm mb-1 truncate">
+              {/* Property Image */}
+              <div className="aspect-[16/10] overflow-hidden">
+                <img 
+                  src={deal.image_url || getPlaceholderImage(deal.asset_type)} 
+                  alt={deal.property_address}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+
+              <div className="p-5">
+                <div className="mb-3">
+                  <h3 className="font-medium text-sm mb-1 truncate group-hover:text-accent transition-colors">
                     {deal.property_address}
                   </h3>
                   <p className="text-xs text-muted-foreground">
                     {deal.neighborhood || deal.borough || "New York"}
                   </p>
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-muted-foreground">Sale Price</span>
-                  <span className="font-medium text-accent">
-                    {deal.sale_price ? formatCurrency(deal.sale_price) : "N/A"}
-                  </span>
-                </div>
-                
-                {deal.gross_square_feet && (
+                <div className="space-y-1.5">
                   <div className="flex justify-between items-center">
-                    <span className="text-xs text-muted-foreground">Size</span>
-                    <span className="text-sm">
-                      {deal.gross_square_feet.toLocaleString()} SF
+                    <span className="text-xs text-muted-foreground">Sale Price</span>
+                    <span className="font-medium text-accent text-sm">
+                      {deal.sale_price ? formatCurrency(deal.sale_price) : "N/A"}
                     </span>
                   </div>
-                )}
+                  
+                  {deal.gross_square_feet && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-muted-foreground">Size</span>
+                      <span className="text-sm">
+                        {deal.gross_square_feet.toLocaleString()} SF
+                      </span>
+                    </div>
+                  )}
 
-                {deal.asset_type && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-muted-foreground">Type</span>
-                    <span className="text-sm capitalize">{deal.asset_type}</span>
-                  </div>
-                )}
-              </div>
+                  {deal.asset_type && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-muted-foreground">Type</span>
+                      <span className="text-sm capitalize">{deal.asset_type}</span>
+                    </div>
+                  )}
+                </div>
 
-              <div className="mt-4 pt-4 border-t border-white/5">
-                <p className="text-xs text-muted-foreground">
-                  {deal.agent_name}
-                </p>
+                <div className="mt-3 pt-3 border-t border-white/5">
+                  <p className="text-xs text-muted-foreground">
+                    {deal.agent_name}
+                  </p>
+                </div>
               </div>
             </div>
           ))}

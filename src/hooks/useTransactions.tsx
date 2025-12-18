@@ -25,6 +25,7 @@ export interface Transaction {
   units: number | null;
   sale_price: number | null;
   asset_type: string | null;
+  image_url: string | null;
 }
 
 export const useTransactions = (dealType?: string) => {
