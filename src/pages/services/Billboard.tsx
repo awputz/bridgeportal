@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Building2, MapPin, Eye, Clock, ArrowRight, Megaphone, TrendingUp, Users } from "lucide-react";
+import { Building2, Eye, Clock, ArrowRight, Megaphone, TrendingUp, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
@@ -147,7 +147,7 @@ export default function Billboard() {
                     <h3 className="text-lg font-light mb-1">{location.name}</h3>
                     <p className="text-sm text-muted-foreground font-light">{location.borough}</p>
                   </div>
-                  <MapPin className="h-5 w-5 text-accent" />
+                  
                 </div>
                 <div className="space-y-2 text-sm font-light">
                   <div className="flex justify-between">
