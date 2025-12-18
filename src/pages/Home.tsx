@@ -10,7 +10,7 @@ import heroImage from "@/assets/brooklyn-bridge-hero-light.jpg";
 import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
 
 const upcomingMarkets = [
-  { name: "Bridge Florida", initials: "BF", location: "Miami & South Florida" },
+  { name: "Bridge Florida", initials: "BF", location: "Palm Beach · West Palm Beach · Miami" },
   { name: "Bridge Los Angeles", initials: "BLA", location: "Greater Los Angeles" },
   { name: "Bridge Boston", initials: "BB", location: "Greater Boston" },
 ];
