@@ -82,7 +82,7 @@ export const Navigation = () => {
           {/* Mobile & Tablet Layout - Hidden when menu is open */}
           <div className="flex lg:hidden items-center justify-between h-14 px-4">
             <Link to="/" className="flex items-center flex-shrink-0">
-              <img src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" alt="Bridge Advisory Group" className="h-10 w-auto" />
+              <img src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" alt="Bridge Advisory Group" className="h-11 sm:h-12 w-auto" />
             </Link>
             <button onClick={() => setIsOpen(!isOpen)} className="p-3 -mr-2 text-foreground hover:text-foreground/80 transition-colors touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Toggle menu">
               <div className="relative w-6 h-6">
@@ -271,7 +271,7 @@ export const Navigation = () => {
             {/* Integrated Header */}
             <div className="flex items-center justify-between h-14 px-4 mx-3 mt-3 md:mx-4 md:mt-3">
               <Link to="/" className="flex items-center flex-shrink-0" onClick={() => setIsOpen(false)}>
-                <img src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" alt="Bridge Advisory Group" className="h-10 w-auto" />
+                <img src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" alt="Bridge Advisory Group" className="h-11 sm:h-12 w-auto" />
               </Link>
               <button 
                 onClick={() => setIsOpen(false)} 

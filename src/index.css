@@ -423,19 +423,48 @@ All colors MUST be HSL.
   
   /* Reduce section padding on mobile */
   .section-spacing {
-    @apply py-10;
+    @apply py-8;
   }
   
   /* Tighter paragraph spacing */
   p {
-    margin-bottom: 1rem;
+    margin-bottom: 0.875rem;
     line-height: 1.6;
+  }
+  
+  /* Tighter container padding on mobile */
+  .container {
+    @apply px-4;
+  }
+}
+
+/* Small mobile optimizations (< 380px) */
+@media (max-width: 380px) {
+  h1 {
+    @apply text-xl;
+    line-height: 1.2;
+  }
+  
+  h2 {
+    @apply text-lg;
+  }
+  
+  .section-spacing {
+    @apply py-6;
   }
 }
 
 /* Tablet optimizations */
 @media (min-width: 640px) and (max-width: 1023px) {
   .section-spacing {
-    @apply py-16;
+    @apply py-14;
+  }
+  
+  h1 {
+    @apply text-3xl;
+  }
+  
+  h2 {
+    @apply text-2xl;
   }
 }
