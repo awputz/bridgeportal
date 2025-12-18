@@ -70,7 +70,7 @@ export default function Home() {
             <p style={{
             animationDelay: "500ms",
             animationFillMode: "backwards"
-          }} className="text-sm sm:text-base md:text-lg lg:text-xl mb-4 md:mb-5 max-w-3xl mx-auto px-4 animate-fade-in line-clamp-3 sm:line-clamp-none text-primary bg-black/0 font-medium">
+          }} className="text-sm sm:text-base md:text-lg lg:text-xl mb-4 md:mb-5 max-w-3xl mx-auto px-4 animate-fade-in text-primary bg-black/0 font-medium">
               {COMPANY_INFO.description.full}
             </p>
 
