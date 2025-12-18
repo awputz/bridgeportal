@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { ServicePageLayout } from "@/components/ServicePageLayout";
 import { Users, Building2, CheckCircle, ArrowRight, Clock, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -93,9 +94,16 @@ const TenantRep = () => {
           <p className="text-primary-foreground/80 mb-8 max-w-xl mx-auto">
             Let us help you find the perfect location for your business.
           </p>
-          <Button size="lg" variant="secondary" onClick={openContactSheet}>
-            Contact Us <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" variant="secondary" asChild>
+              <Link to="/services/commercial-leasing/listings">
+                View Available Spaces <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+            <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary" onClick={openContactSheet}>
+              Contact Us
+            </Button>
+          </div>
         </div>
       </section>
     </ServicePageLayout>
