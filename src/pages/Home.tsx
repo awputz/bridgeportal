@@ -12,14 +12,23 @@ import floridaLogo from "@/assets/market-logos/florida.png";
 import losAngelesLogo from "@/assets/market-logos/los-angeles.png";
 import bostonLogo from "@/assets/market-logos/boston.png";
 import newJerseyLogo from "@/assets/market-logos/new-jersey.png";
-
-const upcomingMarkets = [
-  { name: "Bridge Florida", logo: floridaLogo, location: "Palm Beach · West Palm Beach · Miami" },
-  { name: "Bridge Los Angeles", logo: losAngelesLogo, location: "Los Angeles & Malibu" },
-  { name: "Bridge Boston", logo: bostonLogo, location: "Greater Boston" },
-  { name: "Bridge New Jersey", logo: newJerseyLogo, location: "New Jersey" },
-];
-
+const upcomingMarkets = [{
+  name: "Bridge Florida",
+  logo: floridaLogo,
+  location: "Palm Beach · West Palm Beach · Miami"
+}, {
+  name: "Bridge Los Angeles",
+  logo: losAngelesLogo,
+  location: "Los Angeles & Malibu"
+}, {
+  name: "Bridge Boston",
+  logo: bostonLogo,
+  location: "Greater Boston"
+}, {
+  name: "Bridge New Jersey",
+  logo: newJerseyLogo,
+  location: "New Jersey"
+}];
 export default function Home() {
   const {
     openContactSheet
@@ -340,50 +349,7 @@ export default function Home() {
       </section>
 
       {/* Markets Coming Soon Section */}
-      <section className="py-16 md:py-24 bg-secondary" ref={marketsReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`text-center mb-10 transition-all duration-500 ease-out ${marketsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <Globe className="w-5 h-5 text-accent" />
-              <span className="text-sm uppercase tracking-widest text-muted-foreground font-light">
-                Expansion
-              </span>
-            </div>
-            <h2 className="text-2xl md:text-3xl font-light mb-4">Expanding Our Reach</h2>
-            <p className="text-muted-foreground font-light max-w-2xl mx-auto text-sm md:text-base">
-              Bridge Advisory Group is bringing its platform to select new markets across the country.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-5 mb-10">
-            {upcomingMarkets.map((market, index) => (
-              <div
-                key={market.name}
-                className={`group p-6 md:p-8 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out hover:border-accent/30 hover:bg-card/50 ${marketsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
-                style={{ transitionDelay: marketsReveal.isVisible ? `${150 + index * 100}ms` : "0ms" }}
-              >
-                <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                  <img src={market.logo} alt={market.name} className="w-full h-full object-contain" />
-                </div>
-                <h3 className="text-base md:text-lg font-medium mb-1">{market.name}</h3>
-                <p className="text-muted-foreground font-light text-xs mb-3">{market.location}</p>
-                <span className="inline-block px-3 py-1 text-[10px] uppercase tracking-widest text-accent border border-accent/30 rounded-full font-light">
-                  Coming Soon
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <div className={`text-center transition-all duration-500 ease-out ${marketsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: marketsReveal.isVisible ? "450ms" : "0ms" }}>
-            <Button asChild variant="link" className="font-light group text-muted-foreground hover:text-foreground">
-              <Link to="/markets-coming-soon">
-                Learn More About Our Expansion
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+      
 
       {/* Final CTA */}
       <section className="py-16 md:py-24 border-t border-border/30" ref={ctaReveal.elementRef}>
