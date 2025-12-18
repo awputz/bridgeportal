@@ -61,9 +61,7 @@ import CommercialLandlordRep from "./pages/services/commercial-leasing/LandlordR
 // Capital Advisory sub-pages removed - consolidated into main page
 // Property Management sub-pages removed - consolidated into main page
 // Marketing sub-pages removed - consolidated into main page
-
-import BillboardInventory from "./pages/services/billboard/Inventory";
-import BillboardRates from "./pages/services/billboard/Rates";
+// Billboard sub-pages removed - consolidated into main page
 
 const queryClient = new QueryClient();
 
@@ -170,11 +168,10 @@ const App = () => {
                     <Route path="/services/marketing/digital" element={<Navigate to="/services/marketing" replace />} />
                     <Route path="/services/marketing/strategy" element={<Navigate to="/services/marketing" replace />} />
                     
-                    {/* Billboard Sub-Pages */}
-                    <Route path="/services/billboard/inventory" element={<BillboardInventory />} />
-                    <Route path="/services/billboard/rates" element={<BillboardRates />} />
-                    {/* Billboard redirects */}
-                    <Route path="/services/billboard/pricing" element={<Navigate to="/services/billboard/rates" replace />} />
+                    {/* Billboard - All sub-pages redirect to main overview */}
+                    <Route path="/services/billboard/inventory" element={<Navigate to="/services/billboard" replace />} />
+                    <Route path="/services/billboard/rates" element={<Navigate to="/services/billboard" replace />} />
+                    <Route path="/services/billboard/pricing" element={<Navigate to="/services/billboard" replace />} />
                     <Route path="/services/billboard/case-studies" element={<Navigate to="/services/billboard" replace />} />
                     
                     {/* Track Record / Transactions */}
