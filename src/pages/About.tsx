@@ -67,36 +67,36 @@ export default function About() {
   return <div className="min-h-screen">
       <SEOHelmet title="About Bridge Advisory Group | NYC Real Estate Advisory" description="Learn about Bridge Advisory Group, a multi-division real estate platform at the intersection of brokerage, ownership, and capital in New York City." path="/about" />
       {/* Hero with Stats */}
-      <section className="relative min-h-[60vh] flex items-center justify-center pt-28 md:pt-32 pb-24" ref={heroReveal.elementRef}>
+      <section className="relative min-h-[50vh] sm:min-h-[55vh] md:min-h-[60vh] flex items-center justify-center pt-20 sm:pt-24 md:pt-28 lg:pt-32 pb-16 sm:pb-20 md:pb-24" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img src={heroImage} alt="New York City skyline" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
         </div>
-        <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 mt-8 md:mt-12 transition-all duration-700 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-4">
+        <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 mt-6 sm:mt-8 md:mt-12 transition-all duration-700 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-3 sm:mb-4">
             About Bridge Advisory Group
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground font-light mb-4">
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground font-light mb-3 sm:mb-4">
             A multi-division real estate platform at the intersection of brokerage, ownership, and capital.
           </p>
           
           {/* Est. 2024 Badge */}
-          <div className="inline-block px-4 py-1.5 rounded-full border border-accent/30 bg-accent/5 mb-8">
-            <span className="text-sm text-accent font-light tracking-wide">Est. 2024</span>
+          <div className="inline-block px-3 sm:px-4 py-1 sm:py-1.5 rounded-full border border-accent/30 bg-accent/5 mb-6 sm:mb-8">
+            <span className="text-xs sm:text-sm text-accent font-light tracking-wide">Est. 2024</span>
           </div>
           
           {/* Stats inline */}
-          <div className="grid grid-cols-4 gap-4 max-w-3xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-3xl mx-auto">
             {stats.map((stat, index) => {
             const Icon = stat.icon;
             return <div key={stat.label} className="text-center" style={{
               transitionDelay: `${index * 100}ms`
             }}>
-                  <Icon className="h-5 w-5 text-accent mx-auto mb-2" />
-                  <div className="text-xl md:text-2xl font-light">
+                  <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-accent mx-auto mb-1.5 sm:mb-2" />
+                  <div className="text-lg sm:text-xl md:text-2xl font-light">
                     <AnimatedCounter end={stat.value} suffix={stat.suffix} duration={2000} />
                   </div>
-                  <p className="text-xs text-muted-foreground font-light">{stat.label}</p>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground font-light">{stat.label}</p>
                 </div>;
           })}
           </div>
@@ -189,10 +189,10 @@ export default function About() {
       </section>
 
       {/* Why Bridge */}
-      <section className="py-16 md:py-24" ref={whyReveal.elementRef}>
+      <section className="py-12 sm:py-16 md:py-24" ref={whyReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
-          <h2 className="text-2xl md:text-3xl font-light mb-8 text-center">Why Bridge</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-light mb-6 sm:mb-8 text-center">Why Bridge</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             {[{
             icon: Building2,
             title: "Integrated View",
@@ -211,12 +211,12 @@ export default function About() {
             desc: "Advisory beyond just brokerage."
           }].map((item, index) => {
             const Icon = item.icon;
-            return <div key={item.title} className={`text-center p-4 rounded-lg hover:bg-white/[0.02] transition-all duration-700 ${whyReveal.isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`} style={{
+            return <div key={item.title} className={`text-center p-3 sm:p-4 rounded-lg hover:bg-white/[0.02] transition-all duration-700 ${whyReveal.isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`} style={{
               transitionDelay: `${index * 100}ms`
             }}>
-                  <Icon className="mx-auto mb-3 text-accent" size={28} />
-                  <h3 className="text-sm font-light mb-1">{item.title}</h3>
-                  <p className="text-xs text-muted-foreground font-light">{item.desc}</p>
+                  <Icon className="mx-auto mb-2 sm:mb-3 text-accent" size={24} />
+                  <h3 className="text-xs sm:text-sm font-light mb-1">{item.title}</h3>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground font-light">{item.desc}</p>
                 </div>;
           })}
           </div>
