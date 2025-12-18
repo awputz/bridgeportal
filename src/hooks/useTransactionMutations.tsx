@@ -22,6 +22,7 @@ interface TransactionFormData {
   total_lease_value?: number;
   role?: string;
   notes?: string;
+  image_url?: string;
 }
 
 export const useCreateTransaction = () => {

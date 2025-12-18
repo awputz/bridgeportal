@@ -6,6 +6,7 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { useTransactions, Transaction } from "@/hooks/useTransactions";
 import { SEOHelmet } from "@/components/SEOHelmet";
+import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { 
   Building2, DollarSign, Calendar, MapPin, ArrowRight, ExternalLink,
   Home, Briefcase, TrendingUp, Landmark, FileText, Ruler, User
@@ -32,6 +33,14 @@ const formatDate = (dateStr: string | null) => {
     month: "short", 
     year: "numeric" 
   });
+};
+
+const getPlaceholderImage = (assetType: string | null) => {
+  const type = assetType?.toLowerCase() || "";
+  if (type.includes("retail")) return PLACEHOLDER_IMAGES.retail.storefront;
+  if (type.includes("office")) return PLACEHOLDER_IMAGES.building.exterior;
+  if (type.includes("multifamily") || type.includes("residential")) return PLACEHOLDER_IMAGES.building.residential;
+  return PLACEHOLDER_IMAGES.building.glass;
 };
 
 export default function Transactions() {
@@ -148,67 +157,72 @@ export default function Transactions() {
                 <div
                   key={transaction.id}
                   onClick={() => setSelectedTransaction(transaction)}
-                  className="p-5 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-accent/30 transition-all cursor-pointer group"
+                  className="rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-accent/30 transition-all cursor-pointer group overflow-hidden"
                   style={{ transitionDelay: `${index * 30}ms` }}
                 >
-                  {/* Address & Neighborhood */}
-                  <h3 className="text-base font-light mb-1 group-hover:text-accent transition-colors line-clamp-1">
-                    {transaction.property_address}
-                  </h3>
-                  {transaction.neighborhood && (
-                    <p className="text-sm text-muted-foreground font-light mb-3 flex items-center gap-1">
-                      <MapPin className="h-3 w-3" />
-                      {transaction.neighborhood}{transaction.borough && `, ${transaction.borough}`}
-                    </p>
-                  )}
+                  {/* Property Image */}
+                  <div className="aspect-[16/9] overflow-hidden">
+                    <img 
+                      src={transaction.image_url || getPlaceholderImage(transaction.asset_type)} 
+                      alt={transaction.property_address}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
 
-                  {/* Division & Deal Type */}
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    <span className="inline-block text-xs bg-accent/10 text-accent px-2 py-1 rounded">
-                      {transaction.deal_type}
-                    </span>
-                    {transaction.asset_type && (
-                      <span className="inline-block text-xs bg-white/5 text-muted-foreground px-2 py-1 rounded">
-                        {transaction.asset_type}
+                  <div className="p-5">
+                    {/* Address & Neighborhood */}
+                    <h3 className="text-base font-light mb-1 group-hover:text-accent transition-colors line-clamp-1">
+                      {transaction.property_address}
+                    </h3>
+                    {transaction.neighborhood && (
+                      <p className="text-sm text-muted-foreground font-light mb-3 flex items-center gap-1">
+                        <MapPin className="h-3 w-3" />
+                        {transaction.neighborhood}{transaction.borough && `, ${transaction.borough}`}
+                      </p>
+                    )}
+
+                    {/* Division & Deal Type */}
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      <span className="inline-block text-xs bg-accent/10 text-accent px-2 py-1 rounded">
+                        {transaction.deal_type}
                       </span>
-                    )}
-                  </div>
-
-                  {/* Key Metrics */}
-                  <div className="space-y-1 text-sm">
-                    {(transaction.sale_price || transaction.total_lease_value) && (
-                      <div className="flex items-center justify-between">
-                        <span className="text-muted-foreground font-light">Value</span>
-                        <span className="font-light">
-                          {formatCurrency(transaction.sale_price || transaction.total_lease_value)}
+                      {transaction.asset_type && (
+                        <span className="inline-block text-xs bg-white/5 text-muted-foreground px-2 py-1 rounded">
+                          {transaction.asset_type}
                         </span>
-                      </div>
-                    )}
-                    {transaction.gross_square_feet && (
-                      <div className="flex items-center justify-between">
-                        <span className="text-muted-foreground font-light">Size</span>
-                        <span className="font-light">{transaction.gross_square_feet.toLocaleString()} SF</span>
-                      </div>
-                    )}
-                    {transaction.closing_date && (
-                      <div className="flex items-center justify-between">
-                        <span className="text-muted-foreground font-light">Date</span>
-                        <span className="font-light">{formatDate(transaction.closing_date)}</span>
-                      </div>
-                    )}
-                    {transaction.role && (
-                      <div className="flex items-center justify-between">
-                        <span className="text-muted-foreground font-light">Role</span>
-                        <span className="font-light capitalize">{transaction.role.replace(/_/g, " ")}</span>
-                      </div>
-                    )}
-                  </div>
+                      )}
+                    </div>
 
-                  {/* View Details */}
-                  <div className="mt-4 pt-3 border-t border-white/5">
-                    <span className="text-xs text-accent font-light group-hover:underline">
-                      View Details →
-                    </span>
+                    {/* Key Metrics */}
+                    <div className="space-y-1 text-sm">
+                      {(transaction.sale_price || transaction.total_lease_value) && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground font-light">Value</span>
+                          <span className="font-light">
+                            {formatCurrency(transaction.sale_price || transaction.total_lease_value)}
+                          </span>
+                        </div>
+                      )}
+                      {transaction.gross_square_feet && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground font-light">Size</span>
+                          <span className="font-light">{transaction.gross_square_feet.toLocaleString()} SF</span>
+                        </div>
+                      )}
+                      {transaction.closing_date && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground font-light">Date</span>
+                          <span className="font-light">{formatDate(transaction.closing_date)}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* View Details */}
+                    <div className="mt-4 pt-3 border-t border-white/5">
+                      <span className="text-xs text-accent font-light group-hover:underline">
+                        View Details →
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -267,6 +281,15 @@ export default function Transactions() {
           
           {selectedTransaction && (
             <div className="space-y-4 pt-4">
+              {/* Property Image in Modal */}
+              <div className="aspect-video rounded-lg overflow-hidden">
+                <img 
+                  src={selectedTransaction.image_url || getPlaceholderImage(selectedTransaction.asset_type)} 
+                  alt={selectedTransaction.property_address}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
               {/* Location */}
               {selectedTransaction.neighborhood && (
                 <div className="flex items-start gap-3">

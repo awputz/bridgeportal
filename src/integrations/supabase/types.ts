@@ -450,6 +450,7 @@ export type Database = {
           deal_type: string
           gross_square_feet: number | null
           id: string
+          image_url: string | null
           lease_term_months: number | null
           monthly_rent: number | null
           neighborhood: string | null
@@ -475,6 +476,7 @@ export type Database = {
           deal_type?: string
           gross_square_feet?: number | null
           id?: string
+          image_url?: string | null
           lease_term_months?: number | null
           monthly_rent?: number | null
           neighborhood?: string | null
@@ -500,6 +502,7 @@ export type Database = {
           deal_type?: string
           gross_square_feet?: number | null
           id?: string
+          image_url?: string | null
           lease_term_months?: number | null
           monthly_rent?: number | null
           neighborhood?: string | null

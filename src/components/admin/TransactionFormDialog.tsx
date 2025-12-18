@@ -28,6 +28,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useCreateTransaction, useUpdateTransaction } from "@/hooks/useTransactionMutations";
 import { useTeamMembers } from "@/hooks/useTeamMembers";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { Upload, X, ImageIcon } from "lucide-react";
 import type { Transaction } from "@/hooks/useTransactions";
 
 const formSchema = z.object({
@@ -60,10 +63,13 @@ export function TransactionFormDialog({
   onOpenChange,
   transaction,
 }: TransactionFormDialogProps) {
+  const { toast } = useToast();
   const { data: teamMembers = [] } = useTeamMembers();
   const createMutation = useCreateTransaction();
   const updateMutation = useUpdateTransaction();
   const [dealType, setDealType] = useState<"Sale" | "Lease">("Sale");
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -99,6 +105,7 @@ export function TransactionFormDialog({
         notes: transaction.notes || "",
       });
       setDealType(transaction.deal_type as "Sale" | "Lease");
+      setImageUrl(transaction.image_url || null);
     } else {
       form.reset({
         agent_name: "",
@@ -112,8 +119,45 @@ export function TransactionFormDialog({
         notes: "",
       });
       setDealType("Sale");
+      setImageUrl(null);
     }
   }, [transaction, open, form]);
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+    setUploading(true);
+    try {
+      const { error: uploadError } = await supabase.storage
+        .from("property-images")
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicUrl } = supabase.storage
+        .from("property-images")
+        .getPublicUrl(fileName);
+
+      setImageUrl(publicUrl.publicUrl);
+      toast({ title: "Image uploaded successfully" });
+    } catch (error: any) {
+      toast({
+        title: "Upload failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const removeImage = () => {
+    setImageUrl(null);
+  };
 
   const onSubmit = async (data: FormData) => {
     const closingDate = data.closing_date ? new Date(data.closing_date) : null;
@@ -142,6 +186,7 @@ export function TransactionFormDialog({
       price_per_unit: pricePerUnit,
       price_per_sf: pricePerSf,
       total_lease_value: totalLeaseValue,
+      image_url: imageUrl,
     };
 
     if (transaction) {
@@ -167,6 +212,48 @@ export function TransactionFormDialog({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {/* Property Image */}
+            <div className="space-y-4">
+              <h3 className="font-medium text-sm">Property Image</h3>
+              
+              {imageUrl ? (
+                <div className="relative w-full aspect-video rounded-lg overflow-hidden border border-border">
+                  <img 
+                    src={imageUrl} 
+                    alt="Property" 
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={removeImage}
+                    className="absolute top-2 right-2 p-1.5 rounded-full bg-background/80 hover:bg-background transition-colors"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ) : (
+                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
+                  <div className="flex flex-col items-center justify-center py-4">
+                    {uploading ? (
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-foreground" />
+                    ) : (
+                      <>
+                        <ImageIcon className="h-8 w-8 text-muted-foreground mb-2" />
+                        <p className="text-sm text-muted-foreground">Click to upload property image</p>
+                      </>
+                    )}
+                  </div>
+                  <input 
+                    type="file" 
+                    className="hidden" 
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    disabled={uploading}
+                  />
+                </label>
+              )}
+            </div>
+
             <div className="space-y-4">
               <h3 className="font-medium text-sm">Basic Information</h3>
               
