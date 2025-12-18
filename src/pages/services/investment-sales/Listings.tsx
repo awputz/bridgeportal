@@ -130,7 +130,7 @@ const InvestmentListings = () => {
         {/* Hero Section with Background Image */}
         <section 
           ref={heroRef}
-          className={`relative h-[45vh] min-h-[400px] flex items-center justify-center transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          className={`relative h-[35vh] sm:h-[40vh] md:h-[45vh] min-h-[280px] sm:min-h-[320px] md:min-h-[400px] flex items-center justify-center transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
           <img 
             src={brooklynBridgeHero} 
@@ -138,29 +138,29 @@ const InvestmentListings = () => {
             className="absolute inset-0 w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-black/60" />
-          <div className="relative z-10 text-center px-6">
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight">
+          <div className="relative z-10 text-center px-4 sm:px-6">
+            <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-bold text-white mb-2 sm:mb-4 tracking-tight">
               Investment Sales Exclusives
             </h1>
-            <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/70 max-w-2xl mx-auto">
               Curated investment opportunities across New York City's most dynamic markets
             </p>
           </div>
         </section>
 
         {/* Filters Section */}
-        <section className="px-6 py-6 border-b border-white/10">
+        <section className="px-4 sm:px-6 py-4 sm:py-6 border-b border-white/10">
           <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Filter className="w-4 h-4" />
+            <div className="flex flex-col gap-3 sm:gap-4">
+              <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+                <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 <span>Filter by:</span>
               </div>
               
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                 {/* Borough Filter */}
                 <Select value={selectedBorough} onValueChange={setSelectedBorough}>
-                  <SelectTrigger className="w-[140px] h-9 text-sm bg-white/[0.02] border-white/10">
+                  <SelectTrigger className="w-full sm:w-[140px] h-9 text-xs sm:text-sm bg-white/[0.02] border-white/10">
                     <SelectValue placeholder="Borough" />
                   </SelectTrigger>
                   <SelectContent>
@@ -175,7 +175,7 @@ const InvestmentListings = () => {
 
                 {/* Asset Class Filter */}
                 <Select value={selectedAssetClass} onValueChange={setSelectedAssetClass}>
-                  <SelectTrigger className="w-[160px] h-9 text-sm bg-white/[0.02] border-white/10">
+                  <SelectTrigger className="w-full sm:w-[160px] h-9 text-xs sm:text-sm bg-white/[0.02] border-white/10">
                     <SelectValue placeholder="Asset Class" />
                   </SelectTrigger>
                   <SelectContent>
@@ -190,7 +190,7 @@ const InvestmentListings = () => {
 
                 {/* Price Range Filter */}
                 <Select value={selectedPriceRange} onValueChange={setSelectedPriceRange}>
-                  <SelectTrigger className="w-[140px] h-9 text-sm bg-white/[0.02] border-white/10">
+                  <SelectTrigger className="w-full sm:w-[140px] h-9 text-xs sm:text-sm bg-white/[0.02] border-white/10">
                     <SelectValue placeholder="Price Range" />
                   </SelectTrigger>
                   <SelectContent>
@@ -217,7 +217,7 @@ const InvestmentListings = () => {
               </div>
 
               {/* Results Count */}
-              <div className="sm:ml-auto text-sm text-muted-foreground">
+              <div className="text-xs sm:text-sm text-muted-foreground">
                 {filteredListings.length} {filteredListings.length === 1 ? "listing" : "listings"}
               </div>
             </div>
@@ -227,20 +227,20 @@ const InvestmentListings = () => {
         {/* Split Layout: Listings + Map */}
         <section 
           ref={gridRef} 
-          className={`px-6 py-12 transition-all duration-700 delay-200 ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          className={`px-4 sm:px-6 py-8 sm:py-12 transition-all duration-700 delay-200 ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
           <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col lg:flex-row gap-8">
+            <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
               {/* Left: Listings Grid */}
               <div className="lg:w-[60%]">
                 {isLoading ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     {[1, 2, 3, 4].map((i) => (
                       <div key={i} className="aspect-[4/3] bg-white/[0.02] animate-pulse rounded-xl" />
                     ))}
                   </div>
                 ) : filteredListings.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     {filteredListings.map((listing, index) => (
                       <article
                         key={listing.id}

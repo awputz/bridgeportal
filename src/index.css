@@ -394,6 +394,11 @@ All colors MUST be HSL.
   min-width: 44px;
 }
 
+/* Better button touch targets */
+button, [role="button"], a {
+  @apply touch-manipulation;
+}
+
 /* Mobile-specific optimizations */
 @media (max-width: 768px) {
   html {
@@ -436,6 +441,36 @@ All colors MUST be HSL.
   .container {
     @apply px-4;
   }
+  
+  /* Improved touch feedback */
+  .touch-active:active {
+    opacity: 0.85;
+    transform: scale(0.98);
+  }
+}
+
+/* Extra small mobile optimizations (< 360px) */
+@media (max-width: 360px) {
+  h1 {
+    @apply text-lg;
+    line-height: 1.2;
+  }
+  
+  h2 {
+    @apply text-base;
+  }
+  
+  h3 {
+    @apply text-sm;
+  }
+  
+  .section-spacing {
+    @apply py-5;
+  }
+  
+  .container {
+    @apply px-3;
+  }
 }
 
 /* Small mobile optimizations (< 380px) */
@@ -467,4 +502,23 @@ All colors MUST be HSL.
   h2 {
     @apply text-2xl;
   }
+}
+
+/* Utility classes for responsive design */
+.mobile-section {
+  @apply py-8 sm:py-12 md:py-16 lg:py-20;
+}
+
+.mobile-card-padding {
+  @apply p-3 sm:p-4 md:p-5 lg:p-6;
+}
+
+/* Safe area for notched devices */
+.safe-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+}
+
+/* Text balance for better mobile line breaks */
+.text-balance {
+  text-wrap: balance;
 }

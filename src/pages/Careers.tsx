@@ -61,7 +61,7 @@ export default function Careers() {
       />
       
       {/* Hero with Image */}
-      <section className="relative h-[45vh] md:h-[50vh] min-h-[320px] md:min-h-[400px] flex items-end pb-12 md:pb-16" ref={heroReveal.elementRef}>
+      <section className="relative h-[40vh] sm:h-[45vh] md:h-[50vh] min-h-[280px] sm:min-h-[320px] md:min-h-[400px] flex items-end pb-8 sm:pb-12 md:pb-16" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img 
             src={PLACEHOLDER_IMAGES.office.modern} 
@@ -73,46 +73,46 @@ export default function Careers() {
         <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${
           heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-3 sm:mb-4">
             Join Our Team
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-6">
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-4 sm:mb-6">
             Build your career at one of NYC's fastest-growing real estate advisory firms
           </p>
           
           {/* Quick Stats */}
-          <div className="flex flex-wrap justify-center gap-6 md:gap-10">
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-10">
             <div className="text-center">
-              <div className="text-2xl md:text-3xl font-light text-accent">50+</div>
-              <div className="text-sm text-muted-foreground font-light">Team Members</div>
+              <div className="text-lg sm:text-2xl md:text-3xl font-light text-accent">50+</div>
+              <div className="text-xs sm:text-sm text-muted-foreground font-light">Team Members</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl md:text-3xl font-light text-accent">7</div>
-              <div className="text-sm text-muted-foreground font-light">Divisions</div>
+              <div className="text-lg sm:text-2xl md:text-3xl font-light text-accent">7</div>
+              <div className="text-xs sm:text-sm text-muted-foreground font-light">Divisions</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl md:text-3xl font-light text-accent">5</div>
-              <div className="text-sm text-muted-foreground font-light">Boroughs Covered</div>
+              <div className="text-lg sm:text-2xl md:text-3xl font-light text-accent">5</div>
+              <div className="text-xs sm:text-sm text-muted-foreground font-light">Boroughs Covered</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Open Positions - MOVED UP */}
-      <section className="py-12 md:py-20 border-b border-white/5" ref={positionsReveal.elementRef}>
+      <section className="py-10 sm:py-12 md:py-20 border-b border-white/5" ref={positionsReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
           <div className={`transition-all duration-700 ${
             positionsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">Open Positions</h2>
-            <p className="text-sm md:text-base text-muted-foreground font-light mb-8 md:mb-12 text-center max-w-2xl mx-auto">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light mb-3 sm:mb-4 text-center">Open Positions</h2>
+            <p className="text-xs sm:text-sm md:text-base text-muted-foreground font-light mb-6 sm:mb-8 md:mb-12 text-center max-w-2xl mx-auto">
               Explore current opportunities to join the Bridge team.
             </p>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {openPositions.map((position, index) => (
                 <div 
                   key={position.title} 
-                  className="p-5 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
+                  className="p-3 sm:p-4 md:p-5 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
                   style={{ transitionDelay: `${index * 50}ms` }}
                 >
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-3">
@@ -150,22 +150,22 @@ export default function Careers() {
           <div className={`transition-all duration-700 ${
             whyBridgeReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">Why Bridge Advisory Group</h2>
-            <p className="text-sm md:text-base text-muted-foreground font-light mb-8 text-center max-w-2xl mx-auto">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light mb-3 sm:mb-4 text-center">Why Bridge Advisory Group</h2>
+            <p className="text-xs sm:text-sm md:text-base text-muted-foreground font-light mb-6 sm:mb-8 text-center max-w-2xl mx-auto">
               We invest in our people and provide the tools, training, and support to help you succeed.
             </p>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
               {whyBridgeValues.map((item, index) => {
                 const Icon = item.icon;
                 return (
                   <div 
                     key={item.title} 
-                    className="p-4 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
+                    className="p-3 sm:p-4 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-colors"
                     style={{ transitionDelay: `${index * 50}ms` }}
                   >
-                    <Icon className="h-6 w-6 text-accent mb-2" />
-                    <h3 className="text-sm font-medium mb-1">{item.title}</h3>
-                    <p className="text-xs text-muted-foreground font-light">{item.desc}</p>
+                    <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-accent mb-1.5 sm:mb-2" />
+                    <h3 className="text-xs sm:text-sm font-medium mb-0.5 sm:mb-1">{item.title}</h3>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground font-light">{item.desc}</p>
                   </div>
                 );
               })}

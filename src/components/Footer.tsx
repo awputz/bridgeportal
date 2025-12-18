@@ -53,15 +53,15 @@ export const Footer = () => {
   return <footer className="bg-dark-bg text-foreground">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 bg-primary-foreground">
         {/* Top Section - 4 Columns */}
-        <div className="py-8 md:py-12 lg:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12">
+        <div className="py-6 sm:py-8 md:py-12 lg:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 lg:gap-12">
           {/* Newsletter */}
           <div className="sm:col-span-2 lg:col-span-1 lg:pr-8">
-            <h3 className="text-lg sm:text-xl md:text-2xl font-light mb-4 md:mb-6 tracking-tight">
+            <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl font-light mb-3 sm:mb-4 md:mb-6 tracking-tight">
               Subscribe To Our Newsletter
             </h3>
-            <form onSubmit={handleNewsletterSubmit} className="space-y-4">
-              <input type="email" placeholder="Enter Your Email Here" value={email} onChange={e => setEmail(e.target.value)} className="w-full bg-transparent border-b border-muted-foreground/30 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors" required />
-              <button type="submit" disabled={isSubmitting} className="w-full bg-foreground text-background py-3 text-sm font-medium hover:bg-foreground/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            <form onSubmit={handleNewsletterSubmit} className="space-y-3 sm:space-y-4">
+              <input type="email" placeholder="Enter Your Email Here" value={email} onChange={e => setEmail(e.target.value)} className="w-full bg-transparent border-b border-muted-foreground/30 py-2.5 sm:py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors min-h-[44px]" required />
+              <button type="submit" disabled={isSubmitting} className="w-full bg-foreground text-background py-2.5 sm:py-3 text-sm font-medium hover:bg-foreground/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]">
                 {isSubmitting ? "Subscribing..." : "Submit"}
               </button>
             </form>
@@ -173,14 +173,14 @@ export const Footer = () => {
         </div>
 
         {/* Bottom Links */}
-        <div className="py-3 md:py-4 border-t border-border/20 flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4 text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider">
-          <a href="https://d1e1jt2fj4r8r.cloudfront.net/b26ab618-2b1e-4a17-8868-498b96b52dc0/qckNAwejF/NY%20Reasonable%20Accommodations%20Notice.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
+        <div className="py-3 md:py-4 border-t border-border/20 flex flex-col sm:flex-row flex-wrap justify-center sm:justify-between items-center gap-2 sm:gap-3 md:gap-4 text-[9px] sm:text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider">
+          <a href="https://d1e1jt2fj4r8r.cloudfront.net/b26ab618-2b1e-4a17-8868-498b96b52dc0/qckNAwejF/NY%20Reasonable%20Accommodations%20Notice.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors text-center min-h-[44px] flex items-center">
             NY Reasonable Accommodations Notice
           </a>
-          <a href="https://d1e1jt2fj4r8r.cloudfront.net/b26ab618-2b1e-4a17-8868-498b96b52dc0/LcdbBuJ7w/NY%20Fair%20Housing%20Notice.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
+          <a href="https://d1e1jt2fj4r8r.cloudfront.net/b26ab618-2b1e-4a17-8868-498b96b52dc0/LcdbBuJ7w/NY%20Fair%20Housing%20Notice.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors text-center min-h-[44px] flex items-center">
             Fair Housing Notice
           </a>
-          <a href="https://nyresop.tiiny.site/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
+          <a href="https://nyresop.tiiny.site/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors text-center min-h-[44px] flex items-center">
             Standard Operating Procedures
           </a>
         </div>

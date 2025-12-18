@@ -72,7 +72,7 @@ export default function Transactions() {
       />
 
       {/* Hero Section */}
-      <section className="relative pt-28 md:pt-36 pb-12 md:pb-16" ref={heroReveal.elementRef}>
+      <section className="relative pt-20 sm:pt-24 md:pt-28 lg:pt-36 pb-8 sm:pb-12 md:pb-16" ref={heroReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
           <div className={`transition-all duration-700 ${
             heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
@@ -82,33 +82,33 @@ export default function Transactions() {
               href="https://traded.co" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-accent hover:text-accent/80 transition-colors mb-6 group"
+              className="inline-flex items-center gap-2 text-xs sm:text-sm text-accent hover:text-accent/80 transition-colors mb-4 sm:mb-6 group"
             >
               View transactions on Traded 
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              <ExternalLink className="h-3 w-3" />
+              <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform" />
+              <ExternalLink className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
             </a>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-light mb-4">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-3 sm:mb-4">
               Transactions
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground font-light max-w-3xl mb-8">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground font-light max-w-3xl mb-6 sm:mb-8">
               A record of completed deals demonstrating our expertise across New York's residential, commercial, and investment markets.
             </p>
 
             {/* Summary Stats */}
-            <div className="flex flex-wrap gap-8 mb-8">
+            <div className="flex flex-wrap gap-4 sm:gap-6 md:gap-8 mb-6 sm:mb-8">
               <div>
-                <div className="text-3xl md:text-4xl font-light text-accent">
+                <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-accent">
                   {formatCurrency(totalVolume) || "$0"}
                 </div>
-                <div className="text-sm text-muted-foreground font-light">Total Volume</div>
+                <div className="text-xs sm:text-sm text-muted-foreground font-light">Total Volume</div>
               </div>
               <div>
-                <div className="text-3xl md:text-4xl font-light text-accent">
+                <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-accent">
                   {totalDeals}
                 </div>
-                <div className="text-sm text-muted-foreground font-light">Deals Closed</div>
+                <div className="text-xs sm:text-sm text-muted-foreground font-light">Deals Closed</div>
               </div>
             </div>
           </div>
@@ -142,15 +142,15 @@ export default function Transactions() {
       </section>
 
       {/* Transactions Grid */}
-      <section className="py-12 md:py-16" ref={gridReveal.elementRef}>
+      <section className="py-8 sm:py-12 md:py-16" ref={gridReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
           {isLoading ? (
-            <div className="text-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-foreground mx-auto mb-4"></div>
-              <p className="text-sm text-muted-foreground font-light">Loading transactions...</p>
+            <div className="text-center py-16 sm:py-20">
+              <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-foreground mx-auto mb-4"></div>
+              <p className="text-xs sm:text-sm text-muted-foreground font-light">Loading transactions...</p>
             </div>
           ) : filteredTransactions.length > 0 ? (
-            <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 transition-all duration-700 ${
+            <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 transition-all duration-700 ${
               gridReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}>
               {filteredTransactions.map((transaction, index) => (
@@ -169,7 +169,7 @@ export default function Transactions() {
                     />
                   </div>
 
-                  <div className="p-5">
+                  <div className="p-3 sm:p-4 md:p-5">
                     {/* Address & Neighborhood */}
                     <h3 className="text-base font-light mb-1 group-hover:text-accent transition-colors line-clamp-1">
                       {transaction.property_address}

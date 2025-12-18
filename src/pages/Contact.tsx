@@ -139,7 +139,7 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen pt-24 md:pt-32 lg:pt-40 pb-16 md:pb-20">
+    <div className="min-h-screen pt-20 sm:pt-24 md:pt-32 lg:pt-40 pb-12 sm:pb-16 md:pb-20">
       <SEOHelmet 
         title="Contact Us | Bridge Advisory Group - NYC Real Estate"
         description="Get in touch with Bridge Advisory Group. Reach our residential, commercial, investment sales, capital advisory, marketing, or billboard divisions."
@@ -147,17 +147,17 @@ export default function Contact() {
       />
       <div className="container mx-auto px-4 md:px-6 max-w-2xl">
         {/* Header */}
-        <div className="text-center mb-8 md:mb-12">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-light mb-4 animate-fade-in">
+        <div className="text-center mb-6 sm:mb-8 md:mb-12">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light mb-3 sm:mb-4 animate-fade-in">
             Contact Bridge Advisory Group
           </h1>
-          <p className="text-sm md:text-base text-muted-foreground font-light animate-fade-in" style={{ animationDelay: '100ms' }}>
+          <p className="text-xs sm:text-sm md:text-base text-muted-foreground font-light animate-fade-in" style={{ animationDelay: '100ms' }}>
             Tell us who you are trying to reach and what you are working on. We will route your inquiry to the right team.
           </p>
         </div>
 
         {/* Contact Form */}
-        <form onSubmit={handleSubmit} className="space-y-6 animate-fade-in" style={{ animationDelay: '200ms' }}>
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 md:space-y-6 animate-fade-in" style={{ animationDelay: '200ms' }}>
           {/* Base Fields */}
           <div className="space-y-4">
             <div>
