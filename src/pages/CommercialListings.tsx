@@ -241,21 +241,6 @@ const ListingCard = ({
           </p>
         )}
 
-        {/* Features - Compact */}
-        {listing.features && listing.features.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-3">
-            {listing.features.slice(0, 3).map((feature, i) => (
-              <Badge key={i} variant="outline" className="text-[10px] px-1.5 py-0">
-                {feature}
-              </Badge>
-            ))}
-            {listing.features.length > 3 && (
-              <Badge variant="outline" className="text-[10px] px-1.5 py-0">
-                +{listing.features.length - 3}
-              </Badge>
-            )}
-          </div>
-        )}
 
         {/* Actions */}
         <div className="flex gap-2">
