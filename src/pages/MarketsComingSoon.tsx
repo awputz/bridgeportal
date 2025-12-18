@@ -7,7 +7,7 @@ const upcomingMarkets = [
   {
     name: "Bridge Florida",
     initials: "BF",
-    location: "Miami & South Florida",
+    location: "Palm Beach · West Palm Beach · Miami",
   },
   {
     name: "Bridge Los Angeles",
