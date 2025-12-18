@@ -151,9 +151,9 @@ export default function CommercialLeasing() {
               List Your Space
             </Button>
             <Button size="lg" variant="outline" className="font-light border-white/30 hover:bg-white/10" asChild>
-              <a href="https://www.costar.com/agent/alexander-smotritsky/broker-profile" target="_blank" rel="noopener noreferrer">
+              <Link to="/services/commercial-leasing/listings">
                 View Our Listings
-              </a>
+              </Link>
             </Button>
           </div>
         </div>
