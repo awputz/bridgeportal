@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import { Building2, TrendingUp, Home as HomeIcon, Megaphone, ArrowRight, ChevronDown, Landmark, Settings, Presentation, Calendar, Target, Eye, Users, Briefcase, DollarSign, LineChart, Key, Building, BarChart3, CreditCard, Handshake, RefreshCw, PenTool, Globe, MapPin, Compass } from "lucide-react";
+import { Building2, TrendingUp, Home as HomeIcon, Megaphone, ArrowRight, ChevronDown, Landmark, Settings, Presentation, Calendar, Target, Eye, Users, Briefcase, DollarSign, LineChart, Key, Building, BarChart3, CreditCard, Handshake, RefreshCw, PenTool, Globe, MapPin, Compass, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
-import { COMPANY_INFO } from "@/lib/constants";
+import { COMPANY_INFO, LISTINGS_ITEMS } from "@/lib/constants";
 import { TrustBadges } from "@/components/TrustBadges";
 import { SEOHelmet } from "@/components/SEOHelmet";
 import heroImage from "@/assets/brooklyn-bridge-hero-light.jpg";
@@ -80,11 +81,28 @@ export default function Home() {
               <Button asChild size="default" className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto">
                 <a href="#mission">Explore Services</a>
               </Button>
-              <Button asChild size="default" className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto bg-white text-black hover:bg-white/90">
-                <Link to="/services/investment-sales/listings">
-                  Current Listings 
-                </Link>
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button size="default" className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto bg-white text-black hover:bg-white/90">
+                    Current Listings
+                    <ChevronDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center" className="bg-white border-border">
+                  {LISTINGS_ITEMS.items.map((item) => (
+                    <DropdownMenuItem key={item.name} asChild>
+                      {item.external ? (
+                        <a href={item.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full cursor-pointer">
+                          {item.name}
+                          <ExternalLink className="ml-2 h-3 w-3 opacity-50" />
+                        </a>
+                      ) : (
+                        <Link to={item.url} className="cursor-pointer">{item.name}</Link>
+                      )}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
 
             {/* Quick Access Service Buttons */}
