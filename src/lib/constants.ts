@@ -102,11 +102,8 @@ export const LISTINGS_ITEMS = {
     },
     { 
       name: "Commercial Leasing", 
-      nested: true,
-      items: [
-        { name: "Office", url: "https://www.costar.com", external: true },
-        { name: "Retail", url: "https://www.costar.com", external: true }
-      ]
+      url: "/services/commercial-leasing/listings",
+      external: false 
     },
     { 
       name: "Residential", 

@@ -52,7 +52,6 @@ const listingIcons: Record<string, typeof Building2> = {
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
-  const [commercialExpanded, setCommercialExpanded] = useState(false);
   const location = useLocation();
   
   const { data: services } = useBridgeServices();
@@ -335,37 +334,33 @@ export const Navigation = () => {
                   </a>
                 ))}
 
-                {/* Commercial Leasing - Collapsible */}
+                {/* Commercial Leasing - Internal link */}
                 {listingsNav?.items.filter(item => item.name === "Commercial Leasing").map((item, index) => (
-                  <div key={item.name}>
-                    <button 
-                      onClick={() => setCommercialExpanded(!commercialExpanded)}
-                      className={`flex items-center justify-between w-full text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                  item.external === false && item.url ? (
+                    <Link 
+                      key={item.name}
+                      to={item.url}
+                      className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
                       style={{ transitionDelay: `${((services?.length || 0) + leftNavItems.length + 1) * 40}ms` }}
+                      onClick={() => setIsOpen(false)}
                     >
-                      <div className="flex items-center gap-3">
-                        <Building2 className="h-4 w-4 text-foreground/50" />
-                        {item.name}
-                      </div>
-                      <ChevronDown className={`h-4 w-4 text-foreground/50 transition-transform duration-300 ${commercialExpanded ? 'rotate-180' : ''}`} />
-                    </button>
-                    
-                    {/* Collapsible sub-items */}
-                    <div className={`overflow-hidden transition-all duration-300 ease-out ${commercialExpanded ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
-                      {item.items?.map((subItem) => (
-                        <a 
-                          key={subItem.name}
-                          href={subItem.url} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-3 text-sm font-light text-foreground/60 hover:text-foreground transition-colors duration-200 py-3 min-h-[44px] pl-7"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          {subItem.name}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
+                      <Building2 className="h-4 w-4 text-foreground/50" />
+                      {item.name}
+                    </Link>
+                  ) : (
+                    <a 
+                      key={item.name}
+                      href={item.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                      style={{ transitionDelay: `${((services?.length || 0) + leftNavItems.length + 1) * 40}ms` }}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <Building2 className="h-4 w-4 text-foreground/50" />
+                      {item.name}
+                    </a>
+                  )
                 ))}
 
                 {/* Investment Sales - Internal link */}
