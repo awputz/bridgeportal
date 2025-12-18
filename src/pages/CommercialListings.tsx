@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Building2, Store, Download, MessageSquare, MapPin, Ruler, Calendar, Clock, Map } from "lucide-react";
+import { Building2, Store, Download, MessageSquare, MapPin, Ruler, Calendar, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -133,14 +133,21 @@ const CommercialListings = () => {
                 )}
               </div>
 
-              {/* Map Placeholder - Hidden on mobile */}
+              {/* Interactive Map - Hidden on mobile */}
               <div className="hidden lg:block lg:sticky lg:top-32 h-fit">
-                <div className="bg-muted rounded-lg border border-border overflow-hidden">
-                  <div className="aspect-square flex flex-col items-center justify-center text-muted-foreground p-8">
-                    <Map className="h-16 w-16 mb-4 opacity-30" />
-                    <p className="text-lg font-medium mb-2">Mapbox Integration</p>
-                    <p className="text-sm text-center">Map will display listing locations</p>
-                  </div>
+                <div className="rounded-lg border border-border overflow-hidden h-[500px]">
+                  <iframe 
+                    src="https://my.atlist.com/map/7edc464b-60f5-4879-96c6-54f12da852bf?share=true" 
+                    allow="geolocation 'self' https://my.atlist.com" 
+                    width="100%" 
+                    height="100%" 
+                    loading="lazy" 
+                    frameBorder="0" 
+                    scrolling="no" 
+                    allowFullScreen 
+                    title="Commercial Listings Map"
+                    className="w-full h-full"
+                  />
                 </div>
               </div>
             </div>
