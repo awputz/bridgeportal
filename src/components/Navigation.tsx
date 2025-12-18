@@ -208,6 +208,24 @@ export const Navigation = () => {
                       );
                     }
                     
+                    // Handle internal vs external links
+                    if (item.external === false && item.url) {
+                      return (
+                        <DropdownMenuItem key={item.name} asChild>
+                          <Link 
+                            to={item.url}
+                            className="flex items-center justify-between px-3 py-2.5 rounded-md cursor-pointer"
+                          >
+                            <div className="flex items-center gap-3">
+                              <IconComponent className="h-4 w-4 text-white/60" />
+                              <span className="text-sm text-white/90 font-light">{item.name}</span>
+                            </div>
+                            <ChevronDown className="h-3 w-3 text-white/40 -rotate-90" />
+                          </Link>
+                        </DropdownMenuItem>
+                      );
+                    }
+                    
                     return (
                       <DropdownMenuItem key={item.name} asChild>
                         <a 
@@ -350,20 +368,33 @@ export const Navigation = () => {
                   </div>
                 ))}
 
-                {/* Investment Sales - Direct link */}
+                {/* Investment Sales - Internal link */}
                 {listingsNav?.items.filter(item => item.name === "Investment Sales").map((item, index) => (
-                  <a 
-                    key={item.name}
-                    href={item.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
-                    style={{ transitionDelay: `${((services?.length || 0) + leftNavItems.length + 2) * 40}ms` }}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <TrendingUp className="h-4 w-4 text-foreground/50" />
-                    {item.name}
-                  </a>
+                  item.external === false && item.url ? (
+                    <Link 
+                      key={item.name}
+                      to={item.url}
+                      className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                      style={{ transitionDelay: `${((services?.length || 0) + leftNavItems.length + 2) * 40}ms` }}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <TrendingUp className="h-4 w-4 text-foreground/50" />
+                      {item.name}
+                    </Link>
+                  ) : (
+                    <a 
+                      key={item.name}
+                      href={item.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                      style={{ transitionDelay: `${((services?.length || 0) + leftNavItems.length + 2) * 40}ms` }}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <TrendingUp className="h-4 w-4 text-foreground/50" />
+                      {item.name}
+                    </a>
+                  )
                 ))}
               </div>
 

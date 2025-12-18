@@ -1,5 +1,6 @@
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Download, Lock, Building2, MapPin, TrendingUp, Layers } from "lucide-react";
+import { Download, Lock, Building2, MapPin, TrendingUp, Layers, Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SEOHelmet } from "@/components/SEOHelmet";
@@ -8,6 +9,13 @@ import { useInvestmentListings } from "@/hooks/useInvestmentListings";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import brooklynBridgeHero from "@/assets/brooklyn-bridge-hero.jpg";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const formatPrice = (price: number | null) => {
   if (!price) return "Price Upon Request";
@@ -22,10 +30,81 @@ const formatCapRate = (rate: number | null) => {
   return `${rate.toFixed(2)}%`;
 };
 
+const PRICE_RANGES = [
+  { label: "All Prices", value: "all", min: 0, max: Infinity },
+  { label: "Under $1M", value: "under-1m", min: 0, max: 1000000 },
+  { label: "$1M - $5M", value: "1m-5m", min: 1000000, max: 5000000 },
+  { label: "$5M - $10M", value: "5m-10m", min: 5000000, max: 10000000 },
+  { label: "$10M - $25M", value: "10m-25m", min: 10000000, max: 25000000 },
+  { label: "$25M+", value: "25m-plus", min: 25000000, max: Infinity },
+];
+
 const InvestmentListings = () => {
   const { data: listings, isLoading } = useInvestmentListings();
   const { elementRef: heroRef, isVisible: heroVisible } = useScrollReveal();
   const { elementRef: gridRef, isVisible: gridVisible } = useScrollReveal();
+
+  // Filter states
+  const [selectedBorough, setSelectedBorough] = useState<string>("all");
+  const [selectedAssetClass, setSelectedAssetClass] = useState<string>("all");
+  const [selectedPriceRange, setSelectedPriceRange] = useState<string>("all");
+
+  // Extract unique boroughs and asset classes from listings
+  const { boroughs, assetClasses } = useMemo(() => {
+    if (!listings) return { boroughs: [], assetClasses: [] };
+    
+    const boroughSet = new Set<string>();
+    const assetClassSet = new Set<string>();
+    
+    listings.forEach((listing) => {
+      if (listing.borough) boroughSet.add(listing.borough);
+      if (listing.asset_class) assetClassSet.add(listing.asset_class);
+    });
+    
+    return {
+      boroughs: Array.from(boroughSet).sort(),
+      assetClasses: Array.from(assetClassSet).sort(),
+    };
+  }, [listings]);
+
+  // Filter listings based on selected filters
+  const filteredListings = useMemo(() => {
+    if (!listings) return [];
+    
+    return listings.filter((listing) => {
+      // Borough filter
+      if (selectedBorough !== "all" && listing.borough !== selectedBorough) {
+        return false;
+      }
+      
+      // Asset class filter
+      if (selectedAssetClass !== "all" && listing.asset_class !== selectedAssetClass) {
+        return false;
+      }
+      
+      // Price range filter
+      if (selectedPriceRange !== "all") {
+        const priceRange = PRICE_RANGES.find((r) => r.value === selectedPriceRange);
+        if (priceRange && listing.asking_price) {
+          if (listing.asking_price < priceRange.min || listing.asking_price >= priceRange.max) {
+            return false;
+          }
+        } else if (priceRange && !listing.asking_price) {
+          return false; // Exclude "Price Upon Request" when filtering by price
+        }
+      }
+      
+      return true;
+    });
+  }, [listings, selectedBorough, selectedAssetClass, selectedPriceRange]);
+
+  const hasActiveFilters = selectedBorough !== "all" || selectedAssetClass !== "all" || selectedPriceRange !== "all";
+
+  const clearFilters = () => {
+    setSelectedBorough("all");
+    setSelectedAssetClass("all");
+    setSelectedPriceRange("all");
+  };
 
   const getPlaceholderImage = (index: number) => {
     const images = [
@@ -69,6 +148,82 @@ const InvestmentListings = () => {
           </div>
         </section>
 
+        {/* Filters Section */}
+        <section className="px-6 py-6 border-b border-white/10">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Filter className="w-4 h-4" />
+                <span>Filter by:</span>
+              </div>
+              
+              <div className="flex flex-wrap items-center gap-3">
+                {/* Borough Filter */}
+                <Select value={selectedBorough} onValueChange={setSelectedBorough}>
+                  <SelectTrigger className="w-[140px] h-9 text-sm bg-white/[0.02] border-white/10">
+                    <SelectValue placeholder="Borough" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Boroughs</SelectItem>
+                    {boroughs.map((borough) => (
+                      <SelectItem key={borough} value={borough}>
+                        {borough}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* Asset Class Filter */}
+                <Select value={selectedAssetClass} onValueChange={setSelectedAssetClass}>
+                  <SelectTrigger className="w-[160px] h-9 text-sm bg-white/[0.02] border-white/10">
+                    <SelectValue placeholder="Asset Class" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Asset Classes</SelectItem>
+                    {assetClasses.map((assetClass) => (
+                      <SelectItem key={assetClass} value={assetClass}>
+                        {assetClass}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* Price Range Filter */}
+                <Select value={selectedPriceRange} onValueChange={setSelectedPriceRange}>
+                  <SelectTrigger className="w-[140px] h-9 text-sm bg-white/[0.02] border-white/10">
+                    <SelectValue placeholder="Price Range" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PRICE_RANGES.map((range) => (
+                      <SelectItem key={range.value} value={range.value}>
+                        {range.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* Clear Filters */}
+                {hasActiveFilters && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearFilters}
+                    className="h-9 text-sm text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="w-3 h-3 mr-1" />
+                    Clear
+                  </Button>
+                )}
+              </div>
+
+              {/* Results Count */}
+              <div className="sm:ml-auto text-sm text-muted-foreground">
+                {filteredListings.length} {filteredListings.length === 1 ? "listing" : "listings"}
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Split Layout: Listings + Map */}
         <section 
           ref={gridRef} 
@@ -84,9 +239,9 @@ const InvestmentListings = () => {
                       <div key={i} className="aspect-[4/3] bg-white/[0.02] animate-pulse rounded-xl" />
                     ))}
                   </div>
-                ) : listings && listings.length > 0 ? (
+                ) : filteredListings.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {listings.map((listing, index) => (
+                    {filteredListings.map((listing, index) => (
                       <article
                         key={listing.id}
                         className="group relative bg-white/[0.02] border border-white/10 rounded-xl overflow-hidden hover:bg-white/[0.04] hover:border-white/20 transition-all duration-500"
@@ -199,15 +354,23 @@ const InvestmentListings = () => {
                   <div className="text-center py-16">
                     <Building2 className="w-12 h-12 mx-auto text-muted-foreground/30 mb-4" />
                     <h3 className="text-xl font-semibold text-foreground mb-2">
-                      No Active Listings
+                      {hasActiveFilters ? "No Matching Listings" : "No Active Listings"}
                     </h3>
                     <p className="text-muted-foreground text-sm max-w-md mx-auto mb-6">
-                      Our team is currently sourcing new investment opportunities. 
-                      Contact us to discuss off-market deals.
+                      {hasActiveFilters 
+                        ? "Try adjusting your filters to see more results."
+                        : "Our team is currently sourcing new investment opportunities. Contact us to discuss off-market deals."
+                      }
                     </p>
-                    <Button size="sm" asChild>
-                      <Link to="/contact">Contact Our Team</Link>
-                    </Button>
+                    {hasActiveFilters ? (
+                      <Button size="sm" onClick={clearFilters}>
+                        Clear Filters
+                      </Button>
+                    ) : (
+                      <Button size="sm" asChild>
+                        <Link to="/contact">Contact Our Team</Link>
+                      </Button>
+                    )}
                   </div>
                 )}
               </div>
