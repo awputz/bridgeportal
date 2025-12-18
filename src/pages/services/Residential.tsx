@@ -84,8 +84,8 @@ export default function ResidentialServices() {
           
           {/* StreetEasy Link */}
           <a 
-            href="https://streeteasy.com/building/bridge-advisory-group" 
-            target="_blank" 
+            href="https://streeteasy.com/profile/957575-bridge-advisory-group?tab_profile=active_listings" 
+            target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-accent hover:text-accent/80 font-light transition-colors animate-fade-in text-sm md:text-base mt-6"
             style={{ animationDelay: '300ms' }}
@@ -159,7 +159,7 @@ export default function ResidentialServices() {
               Browse our complete portfolio of available rentals and sales.
             </p>
             <Button asChild className="font-light">
-              <a href="https://streeteasy.com/building/bridge-advisory-group" target="_blank" rel="noopener noreferrer">
+              <a href="https://streeteasy.com/profile/957575-bridge-advisory-group?tab_profile=active_listings" target="_blank" rel="noopener noreferrer">
                 View All Listings on StreetEasy
               </a>
             </Button>
