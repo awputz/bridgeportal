@@ -14,7 +14,6 @@ export const SERVICE_SUB_PAGES = {
     basePath: "/services/commercial-leasing",
     pages: [
       { name: "Overview", path: "/services/commercial-leasing" },
-      { name: "Available Spaces", path: "/services/commercial-leasing/listings" },
       { name: "Tenant Rep", path: "/services/commercial-leasing/tenant-rep" },
       { name: "Landlord Rep", path: "/services/commercial-leasing/landlord-rep" },
     ],
