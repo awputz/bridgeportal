@@ -177,7 +177,7 @@ export const Navigation = () => {
                 <DropdownMenuContent 
                   align="end" 
                   sideOffset={24}
-                  className="w-[220px] p-2 glass-nav z-40 mt-2"
+                  className="min-w-[200px] p-2 glass-nav z-40 mt-2"
                 >
                   {listingsNav?.items.map((item) => {
                     const IconComponent = listingIcons[item.name] || Building2;
@@ -217,7 +217,7 @@ export const Navigation = () => {
                           >
                             <div className="flex items-center gap-3">
                               <IconComponent className="h-4 w-4 text-white/60" />
-                              <span className="text-sm text-white/90 font-light">{item.name}</span>
+                              <span className="text-sm text-white/90 font-light whitespace-nowrap">{item.name}</span>
                             </div>
                             <ChevronDown className="h-3 w-3 text-white/40 -rotate-90" />
                           </Link>
@@ -235,7 +235,7 @@ export const Navigation = () => {
                         >
                           <div className="flex items-center gap-3">
                             <IconComponent className="h-4 w-4 text-white/60" />
-                            <span className="text-sm text-white/90 font-light">{item.name}</span>
+                            <span className="text-sm text-white/90 font-light whitespace-nowrap">{item.name}</span>
                           </div>
                           <ChevronDown className="h-3 w-3 text-white/40 -rotate-90" />
                         </a>
