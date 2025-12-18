@@ -375,15 +375,21 @@ const InvestmentListings = () => {
                 )}
               </div>
 
-              {/* Right: Mapbox Placeholder */}
-              <div className="lg:w-[40%]">
-                <div className="sticky top-24 h-[500px] lg:h-[600px] bg-white/[0.02] border border-white/10 rounded-2xl flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/5 flex items-center justify-center">
-                      <MapPin className="w-8 h-8 text-muted-foreground/50" />
-                    </div>
-                    <span className="text-2xl font-light text-muted-foreground">Mapbox</span>
-                  </div>
+              {/* Right: Interactive Map */}
+              <div className="lg:w-[40%] hidden lg:block">
+                <div className="sticky top-24 h-[500px] lg:h-[600px] rounded-2xl overflow-hidden border border-white/10">
+                  <iframe 
+                    src="https://my.atlist.com/map/56e87263-fdcd-4bad-9e1f-645a9fd7096e?share=true" 
+                    allow="geolocation 'self' https://my.atlist.com" 
+                    width="100%" 
+                    height="100%" 
+                    loading="lazy" 
+                    frameBorder="0" 
+                    scrolling="no" 
+                    allowFullScreen 
+                    title="Investment Listings Map"
+                    className="w-full h-full"
+                  />
                 </div>
               </div>
             </div>
