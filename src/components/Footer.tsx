@@ -5,6 +5,7 @@ import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { Instagram, Linkedin, Phone, Mail, ArrowUp } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -20,11 +21,33 @@ export const Footer = () => {
     data: services
   } = useBridgeServices();
   const [email, setEmail] = useState("");
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
-      toast.success("Thanks for subscribing!", { description: "You'll receive our latest updates." });
+    if (!email || isSubmitting) return;
+    
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase
+        .from('newsletter_subscriptions')
+        .insert({ email });
+      
+      if (error) {
+        if (error.code === '23505') {
+          toast.info("You're already subscribed!", { description: "This email is already on our list." });
+        } else {
+          throw error;
+        }
+      } else {
+        toast.success("Thanks for subscribing!", { description: "You'll receive our latest updates." });
+      }
       setEmail("");
+    } catch (error) {
+      console.error("Newsletter subscription error:", error);
+      toast.error("Subscription failed", { description: "Please try again later." });
+    } finally {
+      setIsSubmitting(false);
     }
   };
   return <footer className="bg-dark-bg text-foreground">
@@ -37,9 +60,9 @@ export const Footer = () => {
               Subscribe To Our Newsletter
             </h3>
             <form onSubmit={handleNewsletterSubmit} className="space-y-4">
-              <input type="email" placeholder="Enter Your Email Here" value={email} onChange={e => setEmail(e.target.value)} className="w-full bg-transparent border-b border-muted-foreground/30 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors" />
-              <button type="submit" className="w-full bg-foreground text-background py-3 text-sm font-medium hover:bg-foreground/90 transition-colors">
-                Submit
+              <input type="email" placeholder="Enter Your Email Here" value={email} onChange={e => setEmail(e.target.value)} className="w-full bg-transparent border-b border-muted-foreground/30 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors" required />
+              <button type="submit" disabled={isSubmitting} className="w-full bg-foreground text-background py-3 text-sm font-medium hover:bg-foreground/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                {isSubmitting ? "Subscribing..." : "Submit"}
               </button>
             </form>
           </div>
@@ -53,11 +76,6 @@ export const Footer = () => {
               <li>
                 <Link to="/services/investment-sales" className="text-muted-foreground hover:text-foreground transition-colors font-light">
                   Services
-                </Link>
-              </li>
-              <li>
-                <Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors font-light">
-                  About
                 </Link>
               </li>
               <li>
@@ -150,7 +168,7 @@ export const Footer = () => {
         {/* Option 4: Founded line */}
         <div className="py-3 md:py-4 border-t border-border/20 text-center">
           <p className="text-[10px] md:text-xs text-muted-foreground font-light">
-            © 2024 Bridge Advisory Group. Founded 2024.
+            © {new Date().getFullYear()} Bridge Advisory Group. Founded 2024.
           </p>
         </div>
 
