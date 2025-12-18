@@ -191,15 +191,16 @@ export const Navigation = () => {
                           </DropdownMenuSubTrigger>
                           <DropdownMenuSubContent className="glass-nav p-2 z-40">
                             {item.items.map((subItem) => (
-                              <DropdownMenuItem key={subItem.name} asChild>
-                                <a 
-                                  href={subItem.url} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="flex items-center gap-3 px-3 py-2.5 rounded-md cursor-pointer"
-                                >
-                                  <span className="text-sm text-white/90 font-light">{subItem.name}</span>
-                                </a>
+                              <DropdownMenuItem 
+                                key={subItem.name} 
+                                onSelect={() => {
+                                  if (subItem.url) {
+                                    window.open(subItem.url, '_blank', 'noopener,noreferrer');
+                                  }
+                                }}
+                                className="flex items-center gap-3 px-3 py-2.5 rounded-md cursor-pointer"
+                              >
+                                <span className="text-sm text-white/90 font-light">{subItem.name}</span>
                               </DropdownMenuItem>
                             ))}
                           </DropdownMenuSubContent>
