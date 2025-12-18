@@ -45,7 +45,7 @@ export default function Home() {
       <SEOHelmet title="Bridge Advisory Group | NYC Real Estate Brokerage" description="New York City's premier multi-division real estate platform. Investment sales, commercial leasing, residential services, and capital advisory." path="/" />
       
       {/* Hero Section */}
-      <section className="relative h-screen flex flex-col overflow-hidden px-3 sm:px-4 md:px-6">
+      <section className="relative h-screen flex flex-col overflow-hidden px-4 md:px-6">
         <div className="absolute inset-0 bg-cover bg-center" style={{
         backgroundImage: `url(${heroImage})`,
         filter: "brightness(0.6) contrast(1.1)"
@@ -53,24 +53,24 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
 
         {/* Zone 1: Logo at top */}
-        <div className="relative z-10 flex-shrink-0 pt-20 sm:pt-24 md:pt-28 text-center mb-4 sm:mb-6 md:mb-8">
+        <div className="relative z-10 flex-shrink-0 pt-12 md:pt-16 text-center">
           <div className="animate-fade-in" style={{
           animationDelay: "200ms",
           animationFillMode: "backwards"
         }}>
-            <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="mx-auto w-[280px] xs:w-[320px] sm:w-[400px] md:w-[500px] lg:w-[600px] xl:w-[720px] invert" />
+            <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="mx-auto w-[260px] sm:w-[320px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert" />
           </div>
         </div>
 
         {/* Zone 2: Content centered in middle */}
-        <div className="relative z-10 flex-1 flex items-start justify-center pb-20 sm:pb-28 md:pb-40">
-          <div className="container mx-auto text-center max-w-5xl">
+        <div className="relative z-10 flex-1 flex items-center justify-center pb-32 md:pb-40">
+          <div className="container mx-auto text-center max-w-5xl -translate-y-8 md:-translate-y-16">
             
 
-            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-foreground/60 mb-4 md:mb-5 max-w-3xl mx-auto font-light px-4 animate-fade-in line-clamp-3 sm:line-clamp-none" style={{
+            <p style={{
             animationDelay: "500ms",
             animationFillMode: "backwards"
-          }}>
+          }} className="text-sm sm:text-base md:text-lg lg:text-xl mb-4 md:mb-5 max-w-3xl mx-auto px-4 animate-fade-in line-clamp-3 sm:line-clamp-none text-primary bg-black/0 font-medium">
               {COMPANY_INFO.description.full}
             </p>
 
@@ -100,20 +100,20 @@ export default function Home() {
             </div>
 
             {/* Quick Access Service Buttons */}
-            <div className="flex flex-wrap gap-1.5 sm:gap-2 md:gap-3 justify-center px-2 sm:px-4 mt-3 sm:mt-4 animate-fade-in" style={{
+            <div className="flex flex-wrap gap-2 sm:gap-3 justify-center px-4 mt-4 animate-fade-in" style={{
             animationDelay: "700ms",
             animationFillMode: "backwards"
           }}>
-              <Button asChild variant="outline" size="sm" className="font-light px-2.5 sm:px-3 md:px-5 text-[10px] sm:text-xs md:text-sm h-8 sm:h-9 bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white">
+              <Button asChild variant="outline" size="sm" className="font-light px-3 sm:px-5 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white">
                 <Link to="/services/residential">Residential</Link>
               </Button>
-              <Button asChild variant="outline" size="sm" className="font-light px-2.5 sm:px-3 md:px-5 text-[10px] sm:text-xs md:text-sm h-8 sm:h-9 bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white">
+              <Button asChild variant="outline" size="sm" className="font-light px-3 sm:px-5 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white">
                 <Link to="/services/commercial-leasing">Commercial</Link>
               </Button>
-              <Button asChild variant="outline" size="sm" className="font-light px-2.5 sm:px-3 md:px-5 text-[10px] sm:text-xs md:text-sm h-8 sm:h-9 bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white">
+              <Button asChild variant="outline" size="sm" className="font-light px-3 sm:px-5 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white">
                 <Link to="/services/investment-sales">Investment Sales</Link>
               </Button>
-              <Button asChild variant="outline" size="sm" className="font-light px-2.5 sm:px-3 md:px-5 text-[10px] sm:text-xs md:text-sm h-8 sm:h-9 bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white hidden sm:inline-flex">
+              <Button asChild variant="outline" size="sm" className="font-light px-3 sm:px-5 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white hidden sm:inline-flex">
                 <Link to="/services/capital-advisory">Capital Markets</Link>
               </Button>
             </div>
@@ -144,31 +144,31 @@ export default function Home() {
           </div>
 
           {/* Mission, Vision & Approach Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 md:gap-6 mb-8">
-            <div className={`p-4 sm:p-6 md:p-8 rounded-xl border border-border/50 bg-card/50 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <div className={`p-6 md:p-8 rounded-xl border border-border/50 bg-card/50 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
             transitionDelay: missionReveal.isVisible ? "100ms" : "0ms"
           }}>
-              <Target className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-primary mb-3 sm:mb-4" />
-              <h3 className="text-lg sm:text-xl font-medium mb-2 sm:mb-3">Mission</h3>
-              <p className="text-muted-foreground font-light text-xs sm:text-sm leading-relaxed">
+              <Target className="h-8 w-8 text-primary mb-4" />
+              <h3 className="text-xl font-medium mb-3">Mission</h3>
+              <p className="text-muted-foreground font-light text-sm leading-relaxed">
                 Deliver exceptional real estate advisory through integrity, expertise, and client-first service.
               </p>
             </div>
-            <div className={`p-4 sm:p-6 md:p-8 rounded-xl border border-border/50 bg-card/50 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
+            <div className={`p-6 md:p-8 rounded-xl border border-border/50 bg-card/50 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
             transitionDelay: missionReveal.isVisible ? "200ms" : "0ms"
           }}>
-              <Eye className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-primary mb-3 sm:mb-4" />
-              <h3 className="text-lg sm:text-xl font-medium mb-2 sm:mb-3">Vision</h3>
-              <p className="text-muted-foreground font-light text-xs sm:text-sm leading-relaxed">
+              <Eye className="h-8 w-8 text-primary mb-4" />
+              <h3 className="text-xl font-medium mb-3">Vision</h3>
+              <p className="text-muted-foreground font-light text-sm leading-relaxed">
                 Be New York's most trusted real estate platform—where every transaction builds lasting relationships.
               </p>
             </div>
-            <div className={`p-4 sm:p-6 md:p-8 rounded-xl border border-border/50 bg-card/50 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
+            <div className={`p-6 md:p-8 rounded-xl border border-border/50 bg-card/50 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
             transitionDelay: missionReveal.isVisible ? "300ms" : "0ms"
           }}>
-              <Compass className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 text-primary mb-3 sm:mb-4" />
-              <h3 className="text-lg sm:text-xl font-medium mb-2 sm:mb-3">Approach</h3>
-              <p className="text-muted-foreground font-light text-xs sm:text-sm leading-relaxed">
+              <Compass className="h-8 w-8 text-primary mb-4" />
+              <h3 className="text-xl font-medium mb-3">Approach</h3>
+              <p className="text-muted-foreground font-light text-sm leading-relaxed">
                 Principal-level thinking combined with hands-on execution across every transaction.
               </p>
             </div>
@@ -195,7 +195,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-5 mb-8 sm:mb-10">
+          <div className="grid md:grid-cols-3 gap-5 mb-10">
             {[{
             icon: Users,
             title: "Tenant & Landlord Rep",
@@ -246,7 +246,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-5 mb-8 sm:mb-10">
+          <div className="grid md:grid-cols-3 gap-5 mb-10">
             {[{
             icon: Key,
             title: "Landlord Leasing Programs",
@@ -291,7 +291,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-5 mb-8 sm:mb-10">
+          <div className="grid md:grid-cols-3 gap-5 mb-10">
             {[{
             icon: CreditCard,
             title: "Debt Placement",
@@ -333,7 +333,7 @@ export default function Home() {
             <h2 className="text-2xl md:text-3xl font-light mb-4">More Ways We Can Help</h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
+          <div className="grid md:grid-cols-3 gap-5">
             {[{
             icon: Settings,
             title: "Property Management",
