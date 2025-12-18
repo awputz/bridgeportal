@@ -53,18 +53,18 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
 
         {/* Zone 1: Logo at top */}
-        <div className="relative z-10 flex-shrink-0 pt-10 sm:pt-12 md:pt-16 text-center">
+        <div className="relative z-10 flex-shrink-0 pt-16 sm:pt-20 md:pt-24 text-center">
           <div className="animate-fade-in" style={{
           animationDelay: "200ms",
           animationFillMode: "backwards"
         }}>
-            <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="mx-auto w-[220px] xs:w-[260px] sm:w-[320px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert" />
+            <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="mx-auto w-[280px] xs:w-[320px] sm:w-[400px] md:w-[500px] lg:w-[600px] xl:w-[720px] invert" />
           </div>
         </div>
 
         {/* Zone 2: Content centered in middle */}
         <div className="relative z-10 flex-1 flex items-center justify-center pb-20 sm:pb-28 md:pb-40">
-          <div className="container mx-auto text-center max-w-5xl -translate-y-4 sm:-translate-y-8 md:-translate-y-16">
+          <div className="container mx-auto text-center max-w-5xl -translate-y-8 sm:-translate-y-12 md:-translate-y-20">
             
 
             <p className="text-sm sm:text-base md:text-lg lg:text-xl text-foreground/60 mb-4 md:mb-5 max-w-3xl mx-auto font-light px-4 animate-fade-in line-clamp-3 sm:line-clamp-none" style={{
