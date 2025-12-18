@@ -52,7 +52,7 @@ export default function ResidentialServices() {
   return (
     <div className="min-h-screen">
       {/* Hero with Background Image - Restructured Copy */}
-      <section className="relative min-h-[45vh] md:min-h-[55vh] lg:min-h-[70vh] flex items-center justify-center pt-20 md:pt-28 lg:pt-32 xl:pt-40 pb-8 md:pb-12 lg:pb-16 xl:pb-24">
+      <section className="relative min-h-[40vh] sm:min-h-[45vh] md:min-h-[55vh] lg:min-h-[70vh] flex items-center justify-center pt-16 sm:pt-20 md:pt-28 lg:pt-32 xl:pt-40 pb-6 sm:pb-8 md:pb-12 lg:pb-16 xl:pb-24">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${PLACEHOLDER_IMAGES.building.apartment})` }}
@@ -60,10 +60,10 @@ export default function ResidentialServices() {
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/70 to-background" />
         
         <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-4 md:mb-6 animate-fade-in">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-3 sm:mb-4 md:mb-6 animate-fade-in">
             Bridge Residential
           </h1>
-          <p className="text-base md:text-lg lg:text-xl text-muted-foreground font-light animate-fade-in max-w-2xl mx-auto mb-6 md:mb-8" style={{ animationDelay: '100ms' }}>
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground font-light animate-fade-in max-w-2xl mx-auto mb-5 sm:mb-6 md:mb-8" style={{ animationDelay: '100ms' }}>
             New York residential advisory for renters, buyers, landlords, and sellers
           </p>
           
@@ -99,15 +99,15 @@ export default function ResidentialServices() {
       <ServicePageNav serviceKey="residential" />
 
       {/* Stats Bar */}
-      <section className="py-12 md:py-16 border-b border-white/5 bg-white/[0.02]" ref={statsReveal.elementRef}>
+      <section className="py-8 sm:py-10 md:py-16 border-b border-white/5 bg-white/[0.02]" ref={statsReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6">
-          <div className={`grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 transition-all duration-700 ${
+          <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-12 transition-all duration-700 ${
             statsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
             {defaultStats.map((stat, index) => (
               <div key={stat.label} className="text-center" style={{ transitionDelay: `${index * 100}ms` }}>
-                <div className="text-3xl md:text-4xl font-light text-foreground mb-2">{stat.value}</div>
-                <div className="text-sm text-muted-foreground font-light">{stat.label}</div>
+                <div className="text-2xl sm:text-3xl md:text-4xl font-light text-foreground mb-1 sm:mb-2">{stat.value}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground font-light">{stat.label}</div>
               </div>
             ))}
           </div>

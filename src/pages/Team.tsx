@@ -78,13 +78,13 @@ const Team = () => {
   const renderSection = (category: TeamCategory, isLeadership: boolean = false) => {
     const agents = data?.grouped[category] || [];
     if (agents.length === 0) return null;
-    return <div className="mb-16 md:mb-24 lg:mb-32">
-        <div className="flex items-center gap-4 mb-8 md:mb-12 lg:mb-16">
-          <h2 className="text-xl md:text-2xl lg:text-3xl font-light">{CATEGORY_LABELS[category]}</h2>
+    return <div className="mb-10 sm:mb-16 md:mb-24 lg:mb-32">
+        <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8 md:mb-12 lg:mb-16">
+          <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-light">{CATEGORY_LABELS[category]}</h2>
           <div className="h-px flex-1 bg-border" />
         </div>
         
-        <div className={`grid ${isLeadership ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6' : 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5'} stagger-reveal`}>
+        <div className={`grid ${isLeadership ? 'grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6' : 'grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-5'} stagger-reveal`}>
           {agents.map(agent => renderAgentCard(agent, isLeadership))}
         </div>
       </div>;
@@ -102,13 +102,13 @@ const Team = () => {
         </div>
       </div>;
   }
-  return <div className="min-h-screen pt-24 md:pt-32 lg:pt-40 pb-16 md:pb-24 lg:pb-32 px-4 md:px-6 lg:px-8">
+  return <div className="min-h-screen pt-20 sm:pt-24 md:pt-32 lg:pt-40 pb-12 sm:pb-16 md:pb-24 lg:pb-32 px-4 md:px-6 lg:px-8">
       <SEOHelmet title="Our Team | Bridge Advisory Group - NYC Real Estate Experts" description="Meet the Bridge Advisory Group team - senior professionals with deep NYC market expertise and proven investment sales track records." path="/team" />
       <div className="container mx-auto max-w-7xl">
         {/* Header */}
-        <div className="mb-12 md:mb-20 lg:mb-24 max-w-4xl">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-6 md:mb-8 lg:mb-10 tracking-tight">Meet the Team</h1>
-          <p className="text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed font-light">
+        <div className="mb-8 sm:mb-12 md:mb-20 lg:mb-24 max-w-4xl">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-4 sm:mb-6 md:mb-8 lg:mb-10 tracking-tight">Meet the Team</h1>
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed font-light">
             Senior professionals with deep NYC market expertise and proven investment sales track records
           </p>
         </div>
