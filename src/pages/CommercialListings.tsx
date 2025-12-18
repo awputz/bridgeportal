@@ -9,7 +9,7 @@ import { useCommercialListings, CommercialListing } from "@/hooks/useCommercialL
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { cn } from "@/lib/utils";
-import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
+import commercialHero from "@/assets/commercial-listings-hero.jpg";
 
 const CommercialListings = () => {
   const [activeTab, setActiveTab] = useState<"office" | "retail">("office");
@@ -38,7 +38,7 @@ const CommercialListings = () => {
           className={`relative h-[45vh] min-h-[400px] flex items-center justify-center transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
           <img 
-            src={PLACEHOLDER_IMAGES.building.commercial} 
+            src={commercialHero} 
             alt="Commercial Real Estate" 
             className="absolute inset-0 w-full h-full object-cover"
           />
