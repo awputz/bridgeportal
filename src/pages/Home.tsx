@@ -53,7 +53,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
 
         {/* Zone 1: Logo at top */}
-        <div className="relative z-10 flex-shrink-0 pt-16 sm:pt-20 md:pt-24 text-center">
+        <div className="relative z-10 flex-shrink-0 pt-24 sm:pt-28 md:pt-32 text-center">
           <div className="animate-fade-in" style={{
           animationDelay: "200ms",
           animationFillMode: "backwards"
@@ -63,8 +63,8 @@ export default function Home() {
         </div>
 
         {/* Zone 2: Content centered in middle */}
-        <div className="relative z-10 flex-1 flex items-center justify-center pb-20 sm:pb-28 md:pb-40">
-          <div className="container mx-auto text-center max-w-5xl -translate-y-8 sm:-translate-y-12 md:-translate-y-20">
+        <div className="relative z-10 flex-1 flex items-start justify-center pt-6 sm:pt-8 md:pt-10 pb-20 sm:pb-28 md:pb-40">
+          <div className="container mx-auto text-center max-w-5xl">
             
 
             <p className="text-sm sm:text-base md:text-lg lg:text-xl text-foreground/60 mb-4 md:mb-5 max-w-3xl mx-auto font-light px-4 animate-fade-in line-clamp-3 sm:line-clamp-none" style={{
