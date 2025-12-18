@@ -20,7 +20,6 @@ import Team from "./pages/Team";
 import MarketInsights from "./pages/MarketInsights";
 import Research from "./pages/Research";
 import Contact from "./pages/Contact";
-import TrackRecord from "./pages/TrackRecord";
 import Transactions from "./pages/Transactions";
 import Auth from "./pages/Auth";
 import TeamAdmin from "./pages/admin/TeamAdmin";
@@ -184,8 +183,8 @@ const App = () => {
                     <Route path="/services/billboard/pricing" element={<Navigate to="/services/billboard" replace />} />
                     <Route path="/services/billboard/case-studies" element={<Navigate to="/services/billboard" replace />} />
                     
-                    {/* Track Record / Transactions */}
-                    <Route path="/track-record" element={<TrackRecord />} />
+                    {/* Transactions */}
+                    <Route path="/track-record" element={<Navigate to="/transactions" replace />} />
                     <Route path="/transactions" element={<Transactions />} />
                     
                     {/* Markets Coming Soon */}
