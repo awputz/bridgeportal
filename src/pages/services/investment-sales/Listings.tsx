@@ -140,7 +140,7 @@ const InvestmentListings = () => {
           <div className="absolute inset-0 bg-black/60" />
           <div className="relative z-10 text-center px-6">
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 tracking-tight">
-              Exclusive Listings
+              Investment Sales Exclusives
             </h1>
             <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto">
               Curated investment opportunities across New York City's most dynamic markets
