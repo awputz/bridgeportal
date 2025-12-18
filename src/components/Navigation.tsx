@@ -226,19 +226,20 @@ export const Navigation = () => {
                     }
                     
                     return (
-                      <DropdownMenuItem key={item.name} asChild>
-                        <a 
-                          href={item.url} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-between px-3 py-2.5 rounded-md cursor-pointer"
-                        >
-                          <div className="flex items-center gap-3">
-                            <IconComponent className="h-4 w-4 text-white/60" />
-                            <span className="text-sm text-white/90 font-light whitespace-nowrap">{item.name}</span>
-                          </div>
-                          <ChevronDown className="h-3 w-3 text-white/40 -rotate-90" />
-                        </a>
+                      <DropdownMenuItem 
+                        key={item.name} 
+                        onSelect={() => {
+                          if (item.url) {
+                            window.open(item.url, '_blank', 'noopener,noreferrer');
+                          }
+                        }}
+                        className="flex items-center justify-between px-3 py-2.5 rounded-md cursor-pointer"
+                      >
+                        <div className="flex items-center gap-3">
+                          <IconComponent className="h-4 w-4 text-white/60" />
+                          <span className="text-sm text-white/90 font-light whitespace-nowrap">{item.name}</span>
+                        </div>
+                        <ChevronDown className="h-3 w-3 text-white/40 -rotate-90" />
                       </DropdownMenuItem>
                     );
                   })}
