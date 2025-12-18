@@ -352,6 +352,81 @@ export type Database = {
         }
         Relationships: []
       }
+      commercial_listings: {
+        Row: {
+          asking_rent: number | null
+          borough: string | null
+          building_name: string | null
+          ceiling_height_ft: number | null
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          features: string[] | null
+          flyer_url: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          latitude: number | null
+          lease_term: string | null
+          listing_type: string
+          longitude: number | null
+          neighborhood: string | null
+          possession: string | null
+          property_address: string
+          rent_per_sf: number | null
+          square_footage: number
+          updated_at: string | null
+        }
+        Insert: {
+          asking_rent?: number | null
+          borough?: string | null
+          building_name?: string | null
+          ceiling_height_ft?: number | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          features?: string[] | null
+          flyer_url?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          latitude?: number | null
+          lease_term?: string | null
+          listing_type: string
+          longitude?: number | null
+          neighborhood?: string | null
+          possession?: string | null
+          property_address: string
+          rent_per_sf?: number | null
+          square_footage: number
+          updated_at?: string | null
+        }
+        Update: {
+          asking_rent?: number | null
+          borough?: string | null
+          building_name?: string | null
+          ceiling_height_ft?: number | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          features?: string[] | null
+          flyer_url?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          latitude?: number | null
+          lease_term?: string | null
+          listing_type?: string
+          longitude?: number | null
+          neighborhood?: string | null
+          possession?: string | null
+          property_address?: string
+          rent_per_sf?: number | null
+          square_footage?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       deal_room_documents: {
         Row: {
           category: string

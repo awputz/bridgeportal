@@ -59,6 +59,7 @@ import InvestmentDealRoom from "./pages/services/investment-sales/DealRoom";
 
 import CommercialTenantRep from "./pages/services/commercial-leasing/TenantRep";
 import CommercialLandlordRep from "./pages/services/commercial-leasing/LandlordRep";
+import CommercialListings from "./pages/services/commercial-leasing/Listings";
 
 // Capital Advisory sub-pages removed - consolidated into main page
 // Property Management sub-pages removed - consolidated into main page
@@ -147,6 +148,7 @@ const App = () => {
                     <Route path="/services/investment-sales/dispositions" element={<Navigate to="/services/investment-sales" replace />} />
                     
                     {/* Commercial Leasing Sub-Pages (kept) */}
+                    <Route path="/services/commercial-leasing/listings" element={<CommercialListings />} />
                     <Route path="/services/commercial-leasing/tenant-rep" element={<CommercialTenantRep />} />
                     <Route path="/services/commercial-leasing/landlord-rep" element={<CommercialLandlordRep />} />
                     {/* Commercial Leasing redirects (consolidated pages) */}
