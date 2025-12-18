@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Building2, Store, Download, MessageSquare, MapPin, Ruler, DollarSign, Calendar, Clock, Map } from "lucide-react";
+import { Building2, Store, Download, MessageSquare, MapPin, Ruler, Calendar, Clock, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -202,11 +202,6 @@ const ListingCard = ({
         >
           {isOffice ? "Office" : "Retail"}
         </Badge>
-        {listing.rent_per_sf && (
-          <Badge variant="secondary" className="absolute top-2 right-2 text-xs">
-            ${listing.rent_per_sf}/SF
-          </Badge>
-        )}
       </div>
 
       <CardContent className="p-4">
@@ -239,11 +234,10 @@ const ListingCard = ({
           )}
         </div>
 
-        {/* Asking Rent */}
-        {listing.asking_rent && (
+        {/* Asking Rent - PSF format */}
+        {listing.rent_per_sf && (
           <p className="text-sm font-medium text-foreground mb-3">
-            <DollarSign className="h-3.5 w-3.5 inline" />
-            {listing.asking_rent.toLocaleString()}/mo
+            Asking ${listing.rent_per_sf}/PSF
           </p>
         )}
 
@@ -265,15 +259,26 @@ const ListingCard = ({
 
         {/* Actions */}
         <div className="flex gap-2">
-          {listing.flyer_url && (
-            <Button asChild size="sm" variant="outline" className="flex-1 text-xs h-8">
+          <Button 
+            asChild={!!listing.flyer_url} 
+            size="sm" 
+            variant="outline" 
+            className="flex-1 text-xs h-8 focus-visible:ring-0 focus-visible:ring-offset-0"
+            disabled={!listing.flyer_url}
+          >
+            {listing.flyer_url ? (
               <a href={listing.flyer_url} target="_blank" rel="noopener noreferrer">
                 <Download className="h-3 w-3 mr-1" />
                 Flyer
               </a>
-            </Button>
-          )}
-          <Button size="sm" onClick={onInquire} className="flex-1 text-xs h-8">
+            ) : (
+              <>
+                <Download className="h-3 w-3 mr-1" />
+                Flyer
+              </>
+            )}
+          </Button>
+          <Button size="sm" onClick={onInquire} className="flex-1 text-xs h-8 focus-visible:ring-0 focus-visible:ring-offset-0">
             <MessageSquare className="h-3 w-3 mr-1" />
             Inquire
           </Button>
