@@ -170,7 +170,7 @@ export const Navigation = () => {
                     "flex items-center gap-1 text-[15px] font-light transition-all duration-200 hover:scale-105",
                     "text-foreground/70 hover:text-foreground"
                   )}>
-                    Listings
+                    Exclusive Listings
                     <ChevronDown className="h-3 w-3 transition-transform duration-200" />
                   </button>
                 </DropdownMenuTrigger>
@@ -316,7 +316,7 @@ export const Navigation = () => {
               {/* Listings Section - Optimized for Mobile/Tablet */}
               <div className="pt-3 border-t border-white/15">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-xs uppercase tracking-wider text-muted-foreground">Listings</p>
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground">Exclusive Listings</p>
                   <span className="text-[10px] text-muted-foreground/60">View properties</span>
                 </div>
                 
