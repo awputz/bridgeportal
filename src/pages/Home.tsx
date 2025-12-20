@@ -54,10 +54,10 @@ export default function Home() {
 
         {/* Zone 1: Logo at top */}
         <div className="relative z-10 flex-shrink-0 pt-12 md:pt-16 text-center mb-2 md:mb-4">
-          <div className="animate-fade-in" style={{
+          <div style={{
           animationDelay: "200ms",
           animationFillMode: "backwards"
-        }}>
+        }} className="animate-fade-in pb-0 pt-[100px]">
             <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="mx-auto w-[260px] sm:w-[320px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert" />
           </div>
         </div>
