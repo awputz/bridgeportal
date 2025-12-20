@@ -53,12 +53,12 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
 
         {/* Zone 1: Logo at top */}
-        <div className="relative z-10 flex-shrink-0 pt-12 md:pt-16 text-center">
-          <div className="animate-fade-in" style={{
+        <div className="relative z-10 flex-shrink-0 pt-16 md:pt-16 text-center -mb-10 sm:-mb-8 md:mb-0">
+          <div className="animate-fade-in overflow-hidden" style={{
           animationDelay: "200ms",
           animationFillMode: "backwards"
         }}>
-            <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="mx-auto w-[260px] sm:w-[320px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert" />
+            <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="mx-auto w-[260px] sm:w-[360px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert -mb-6 sm:-mb-4 md:mb-0" />
           </div>
         </div>
 
