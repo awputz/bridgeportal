@@ -6,9 +6,7 @@ import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { DIVISIONS } from "@/lib/constants";
-import LeaseCalculator from "@/components/LeaseCalculator";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
-import { useBridgeCalculatorBySection } from "@/hooks/useBridgeCalculators";
 const stats = [{
   label: "Spaces Leased",
   value: "100+"
@@ -125,9 +123,6 @@ export default function CommercialLeasing() {
   const {
     openContactSheet
   } = useContactSheet();
-  const {
-    data: calculatorConfig
-  } = useBridgeCalculatorBySection("commercial-leasing", "main_calculator");
   const heroReveal = useScrollReveal(0.1);
   const statsReveal = useScrollReveal(0.1);
   const processReveal = useScrollReveal(0.1);
@@ -135,7 +130,6 @@ export default function CommercialLeasing() {
   const categoriesReveal = useScrollReveal(0.1);
   const whyReveal = useScrollReveal(0.1);
   const detailsReveal = useScrollReveal(0.1);
-  const calculatorReveal = useScrollReveal(0.1);
   return <div className="min-h-screen">
       {/* Hero with Image */}
       <section className="relative h-[45vh] md:h-[55vh] lg:h-[60vh] min-h-[320px] md:min-h-[400px] lg:min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
@@ -221,24 +215,6 @@ export default function CommercialLeasing() {
       
 
       {/* Service Details - Truncated */}
-      
-
-      {/* Lease Calculator */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={calculatorReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6">
-          <div className={`text-center mb-12 transition-all duration-700 ${calculatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Lease Calculator</h2>
-            <p className="text-muted-foreground font-light max-w-2xl mx-auto">
-              {calculatorConfig?.subtitle || "Estimate your total lease costs and compare scenarios."}
-            </p>
-          </div>
-          <div className={`transition-all duration-700 ${calculatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
-          transitionDelay: '200ms'
-        }}>
-            <LeaseCalculator />
-          </div>
-        </div>
-      </section>
 
       {/* CTA */}
       <section className="py-12 md:py-20 lg:py-28">

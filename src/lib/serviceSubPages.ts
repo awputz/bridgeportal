@@ -7,6 +7,7 @@ export const SERVICE_SUB_PAGES = {
       { name: "Active Listings", path: "/services/investment-sales/listings" },
       { name: "Valuations", path: "/services/investment-sales/valuations" },
       { name: "Track Record", path: "/transactions" },
+      { name: "Tools", path: "/services/investment-sales/tools" },
     ],
   },
   "commercial-leasing": {
@@ -16,6 +17,7 @@ export const SERVICE_SUB_PAGES = {
       { name: "Overview", path: "/services/commercial-leasing" },
       { name: "Tenant Rep", path: "/services/commercial-leasing/tenant-rep" },
       { name: "Landlord Rep", path: "/services/commercial-leasing/landlord-rep" },
+      { name: "Tools", path: "/services/commercial-leasing/tools" },
     ],
   },
   residential: {
@@ -42,6 +44,7 @@ export const SERVICE_SUB_PAGES = {
     basePath: "/services/property-management",
     pages: [
       { name: "Overview", path: "/services/property-management" },
+      { name: "Tools", path: "/services/property-management/tools" },
     ],
   },
   marketing: {
