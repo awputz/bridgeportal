@@ -130,13 +130,13 @@ export default function InvestmentSales() {
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
-            {consolidatedProcess.map((step, index) => <div key={index} className={`p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-700 ${processReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
+            {consolidatedProcess.map((step, index) => <div key={index} className={`glass-card p-6 md:p-8 transition-all duration-700 ${processReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
             transitionDelay: `${index * 100}ms`
           }}>
                 <step.icon className="h-8 w-8 text-accent mb-4" />
                 <div className="text-3xl md:text-4xl font-light text-accent/50 mb-3">{step.number}</div>
-                <h3 className="text-lg md:text-xl font-light mb-2">{step.title}</h3>
-                <p className="text-muted-foreground font-light text-sm">{step.description}</p>
+                <h3 className="text-lg md:text-xl font-light mb-2 text-white">{step.title}</h3>
+                <p className="text-white/70 font-light text-sm">{step.description}</p>
               </div>)}
           </div>
         </div>

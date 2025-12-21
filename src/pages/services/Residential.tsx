@@ -220,15 +220,15 @@ export default function ResidentialServices() {
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-8 md:mb-12 text-center">For Renters & Buyers</h2>
             <div className="grid md:grid-cols-2 gap-6 md:gap-8">
               {/* Rental Services */}
-              <div className="p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02]">
+              <div className="glass-card p-6 md:p-8">
                 <div className="flex items-center gap-3 mb-4">
                   <Users className="h-6 w-6 text-accent" />
-                  <h3 className="text-xl font-light">Rental Services</h3>
+                  <h3 className="text-xl font-light text-white">Rental Services</h3>
                 </div>
-                <p className="text-muted-foreground font-light text-sm mb-4">
+                <p className="text-white/70 font-light text-sm mb-4">
                   Dedicated representation for renters navigating NYC's competitive market.
                 </p>
-                <ul className="space-y-2 text-muted-foreground font-light text-sm">
+                <ul className="space-y-2 text-white/70 font-light text-sm">
                   <li className="flex items-start gap-2">
                     <ArrowRight className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                     <span>Personalized search based on your criteria</span>
@@ -245,15 +245,15 @@ export default function ResidentialServices() {
               </div>
 
               {/* Buyer Advisory */}
-              <div className="p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02]">
+              <div className="glass-card p-6 md:p-8">
                 <div className="flex items-center gap-3 mb-4">
                   <Award className="h-6 w-6 text-accent" />
-                  <h3 className="text-xl font-light">Buyer Advisory</h3>
+                  <h3 className="text-xl font-light text-white">Buyer Advisory</h3>
                 </div>
-                <p className="text-muted-foreground font-light text-sm mb-4">
+                <p className="text-white/70 font-light text-sm mb-4">
                   Strategic guidance for buyers looking to purchase in NYC.
                 </p>
-                <ul className="space-y-2 text-muted-foreground font-light text-sm">
+                <ul className="space-y-2 text-white/70 font-light text-sm">
                   <li className="flex items-start gap-2">
                     <ArrowRight className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                     <span>Advisory on value and neighborhood positioning</span>
