@@ -400,6 +400,9 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Divider */}
+          <div className="border-t border-border/40 my-8 md:my-10" />
+
           {/* Other Services */}
           <div className="grid md:grid-cols-3 gap-5">
             {[{
