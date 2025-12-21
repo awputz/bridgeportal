@@ -6,7 +6,7 @@ import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
-
+import propertyManagementHeroImg from "@/assets/property-management-hero.jpg";
 const stats = [
   { label: "Units Managed", value: "500+" },
   { label: "Occupancy Rate", value: "98%" },
@@ -52,7 +52,7 @@ export default function PropertyManagement() {
       <section className="relative h-[45vh] md:h-[55vh] lg:h-[60vh] min-h-[320px] md:min-h-[400px] lg:min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img 
-            src={PLACEHOLDER_IMAGES.neighborhoods.nolita} 
+            src={propertyManagementHeroImg} 
             alt="New York City skyline"
             className="w-full h-full object-cover"
           />
