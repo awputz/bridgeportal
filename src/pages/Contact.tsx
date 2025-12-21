@@ -139,7 +139,7 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen pt-20 sm:pt-24 md:pt-32 lg:pt-40 pb-12 sm:pb-16 md:pb-20">
+    <div className="min-h-screen pt-20 sm:pt-24 md:pt-32 lg:pt-40 pb-12 sm:pb-16 md:pb-20 lg:pb-28">
       <SEOHelmet 
         title="Contact Us | Bridge Advisory Group - NYC Real Estate"
         description="Get in touch with Bridge Advisory Group. Reach our residential, commercial, investment sales, capital advisory, marketing, or billboard divisions."

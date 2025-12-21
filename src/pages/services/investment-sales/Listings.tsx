@@ -264,10 +264,10 @@ const InvestmentListings = () => {
                           </Badge>
                         </div>
 
-                        {/* Content - Compact */}
-                        <div className="p-4 space-y-3">
+                        {/* Content - Fixed Height for Consistency */}
+                        <div className="p-4 flex flex-col h-[200px]">
                           {/* Address & Location */}
-                          <div>
+                          <div className="flex-none">
                             <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
                               {listing.property_address}
                             </h3>
@@ -280,7 +280,7 @@ const InvestmentListings = () => {
                           </div>
 
                           {/* Key Metrics - Compact */}
-                          <div className="flex items-center gap-3 text-xs">
+                          <div className="flex items-center gap-3 text-xs mt-3 flex-none">
                             {listing.units && (
                               <div className="flex items-center gap-1 text-muted-foreground">
                                 <Layers className="w-3 h-3 text-primary/70" />
@@ -295,24 +295,28 @@ const InvestmentListings = () => {
                             )}
                           </div>
 
-                          {/* Price & Cap Rate - Compact */}
-                          <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                          {/* Price & Cap Rate - Always Same Height */}
+                          <div className="flex items-center justify-between pt-3 mt-3 border-t border-white/10 flex-none">
                             <p className="text-lg font-bold text-foreground">
                               {formatPrice(listing.asking_price)}
                             </p>
-                            {listing.cap_rate && (
-                              <div className="text-right">
-                                <p className="text-xs text-muted-foreground">Cap</p>
-                                <p className="text-sm font-semibold text-primary flex items-center gap-0.5">
-                                  <TrendingUp className="w-3 h-3" />
-                                  {formatCapRate(listing.cap_rate)}
-                                </p>
-                              </div>
-                            )}
+                            <div className="text-right min-w-[60px]">
+                              {listing.cap_rate ? (
+                                <>
+                                  <p className="text-xs text-muted-foreground">Cap</p>
+                                  <p className="text-sm font-semibold text-primary flex items-center justify-end gap-0.5">
+                                    <TrendingUp className="w-3 h-3" />
+                                    {formatCapRate(listing.cap_rate)}
+                                  </p>
+                                </>
+                              ) : (
+                                <span className="text-xs text-muted-foreground">—</span>
+                              )}
+                            </div>
                           </div>
 
-                          {/* Action Buttons - Fixed Spacing */}
-                          <div className="flex gap-2 pt-1">
+                          {/* Action Buttons - Push to Bottom */}
+                          <div className="flex gap-2 mt-auto pt-3 flex-none">
                             {listing.om_url ? (
                               <Button 
                                 size="sm"
