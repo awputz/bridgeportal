@@ -270,7 +270,7 @@ const InvestmentListings = () => {
                         </div>
 
                         {/* Content - Fixed Height for Consistency */}
-                        <div className="p-4 pb-3 flex flex-col h-[230px]">
+                        <div className="px-4 pt-3 pb-2 flex flex-col min-h-[220px]">
                           {/* Address & Location */}
                           <div className="flex-none">
                             <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
@@ -285,7 +285,7 @@ const InvestmentListings = () => {
                           </div>
 
                           {/* Key Metrics - Compact */}
-                          <div className="flex items-center gap-3 text-xs mt-3 flex-none">
+                          <div className="flex items-center gap-3 text-xs mt-1 flex-none">
                             {listing.units && (
                               <div className="flex items-center gap-1 text-muted-foreground">
                                 <Layers className="w-3 h-3 text-primary/70" />
@@ -301,18 +301,18 @@ const InvestmentListings = () => {
                           </div>
 
                           {/* Price */}
-                          <div className="pt-2 mt-2 border-t border-white/10 flex-none">
+                          <div className="pt-1 mt-1 border-t border-white/10 flex-none">
                             <p className="text-lg font-bold text-foreground">
                               {formatPrice(listing.asking_price)}
                             </p>
                           </div>
 
                           {/* Action Buttons - Push to Bottom */}
-                          <div className="flex gap-2 mt-auto pt-2 flex-none">
+                          <div className="flex gap-2 mt-1 flex-none">
                             {listing.om_url ? (
                               <Button 
                                 size="sm"
-                                className="flex-1 text-xs" 
+                                className="flex-1 text-xs whitespace-nowrap"
                                 asChild
                               >
                                 <a href={listing.om_url} target="_blank" rel="noopener noreferrer">
@@ -323,7 +323,7 @@ const InvestmentListings = () => {
                             ) : (
                               <Button 
                                 size="sm"
-                                className="flex-1 text-xs" 
+                                className="flex-1 text-xs whitespace-nowrap" 
                                 disabled
                               >
                                 <Download className="w-3 h-3 mr-1" />
@@ -333,7 +333,7 @@ const InvestmentListings = () => {
                             <Button 
                               size="sm"
                               variant="outline" 
-                              className="flex-1 text-xs border-white/20 hover:bg-white/5"
+                              className="flex-1 text-xs whitespace-nowrap border-white/20 hover:bg-white/5"
                               asChild
                             >
                               <Link to={`/services/investment-sales/deal-room/${listing.id}`}>
