@@ -11,7 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import manhattanImg from "@/assets/manhattan-market.jpg";
 import brooklynImg from "@/assets/brooklyn-market.jpg";
 import queensImg from "@/assets/queens-market.jpg";
-import residentialHeroImg from "@/assets/residential-hero.jpg";
+import residentialHeroImg from "@/assets/residential-services-hero.jpg";
 
 const defaultStats = [
   { label: "Units Represented", value: "500+" },

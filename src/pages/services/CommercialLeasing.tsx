@@ -7,6 +7,7 @@ import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { DIVISIONS } from "@/lib/constants";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
+import commercialLeasingHeroImg from "@/assets/commercial-leasing-hero.jpg";
 const stats = [{
   label: "Spaces Leased",
   value: "100+"
@@ -134,7 +135,7 @@ export default function CommercialLeasing() {
       {/* Hero with Image */}
       <section className="relative h-[45vh] md:h-[55vh] lg:h-[60vh] min-h-[320px] md:min-h-[400px] lg:min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
-          <img src={PLACEHOLDER_IMAGES.retail.street} alt="NYC retail and commercial streets" className="w-full h-full object-cover" />
+          <img src={commercialLeasingHeroImg} alt="NYC retail and commercial streets" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
         </div>
         <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
