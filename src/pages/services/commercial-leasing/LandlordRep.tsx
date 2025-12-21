@@ -114,9 +114,9 @@ const LandlordRep = () => {
       {/* CTA */}
       <section className="py-16 px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-primary/5 border border-primary/20 rounded-2xl p-10">
-            <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-4">List Your Space</h2>
-            <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
+          <div className="glass-nav p-10">
+            <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">List Your Space</h2>
+            <p className="text-white/70 mb-6 max-w-xl mx-auto">
               Let us help you find quality tenants and maximize your property's performance.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
