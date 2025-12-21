@@ -31,7 +31,7 @@ export const useInvestmentListings = () => {
         .from("investment_listings")
         .select("*")
         .eq("is_active", true)
-        .order("display_order", { ascending: true });
+        .order("asking_price", { ascending: false, nullsFirst: false });
 
       if (error) throw error;
       return data as InvestmentListing[];
