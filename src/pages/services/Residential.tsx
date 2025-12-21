@@ -6,6 +6,8 @@ import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { TeamHighlight } from "@/components/TeamHighlight";
+import { useBridgeBuildings } from "@/hooks/useBridgeBuildings";
+import { Skeleton } from "@/components/ui/skeleton";
 import manhattanImg from "@/assets/manhattan-market.jpg";
 import brooklynImg from "@/assets/brooklyn-market.jpg";
 import queensImg from "@/assets/queens-market.jpg";
@@ -31,15 +33,8 @@ const processSteps = [
   { step: "04", title: "Move-In", description: "Seamless closing coordination." },
 ];
 
-// Exclusive portfolio buildings placeholder
-const portfolioBuildings = [
-  { name: "The Waverly", location: "Greenwich Village", units: 48 },
-  { name: "Brooklyn Heights Tower", location: "Brooklyn Heights", units: 72 },
-  { name: "LIC Living", location: "Long Island City", units: 120 },
-  { name: "Chelsea Modern", location: "Chelsea", units: 36 },
-];
-
 export default function ResidentialServices() {
+  const { data: buildings, isLoading: buildingsLoading } = useBridgeBuildings();
   const { openContactSheet } = useContactSheet();
   
   const statsReveal = useScrollReveal(0.1);
@@ -125,17 +120,29 @@ export default function ResidentialServices() {
               Buildings we exclusively manage across Manhattan, Brooklyn, and Queens
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-              {portfolioBuildings.map((building, index) => (
-                <div 
-                  key={building.name}
-                  className="p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all"
-                  style={{ transitionDelay: `${index * 100}ms` }}
-                >
-                  <h3 className="text-lg font-light mb-1">{building.name}</h3>
-                  <p className="text-sm text-muted-foreground font-light mb-3">{building.location}</p>
-                  <p className="text-accent text-sm font-medium">{building.units} units</p>
-                </div>
-              ))}
+              {buildingsLoading ? (
+                Array.from({ length: 4 }).map((_, index) => (
+                  <div key={index} className="p-6 rounded-lg border border-white/10 bg-white/[0.02]">
+                    <Skeleton className="h-5 w-32 mb-2" />
+                    <Skeleton className="h-4 w-24 mb-3" />
+                    <Skeleton className="h-4 w-16" />
+                  </div>
+                ))
+              ) : (
+                buildings?.slice(0, 4).map((building, index) => (
+                  <div 
+                    key={building.id}
+                    className="p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all"
+                    style={{ transitionDelay: `${index * 100}ms` }}
+                  >
+                    <h3 className="text-lg font-light mb-1">{building.name}</h3>
+                    <p className="text-sm text-muted-foreground font-light mb-3">{building.neighborhood || building.borough}</p>
+                    {building.unit_count && (
+                      <p className="text-accent text-sm font-medium">{building.unit_count} units</p>
+                    )}
+                  </div>
+                ))
+              )}
             </div>
             <div className="text-center mt-8">
               <Button asChild variant="outline" className="font-light">
