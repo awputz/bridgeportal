@@ -264,31 +264,31 @@ export const Navigation = () => {
           isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
         )}>
           {/* Full Glass Backdrop */}
-          <div className="absolute inset-0 bg-black/85 backdrop-blur-3xl" />
+          <div className="absolute inset-0 bg-black/90 backdrop-blur-3xl" />
           
           {/* Content Container */}
-          <div className="relative h-full flex flex-col">
+          <div className="relative h-full flex flex-col pt-safe">
             {/* Integrated Header */}
-            <div className="flex items-center justify-between h-14 px-4 mx-3 mt-3 md:mx-4 md:mt-3">
+            <div className="flex items-center justify-between h-16 px-4 mx-3 mt-2 flex-shrink-0">
               <Link to="/" className="flex items-center flex-shrink-0" onClick={() => setIsOpen(false)}>
-                <img src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" alt="Bridge Advisory Group" className="h-11 sm:h-12 w-auto" />
+                <img src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" alt="Bridge Advisory Group" className="h-10 sm:h-11 w-auto" />
               </Link>
               <button 
                 onClick={() => setIsOpen(false)} 
-                className="p-3 -mr-2 text-foreground hover:text-foreground/80 transition-colors touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center" 
+                className="p-3 -mr-2 text-foreground hover:text-foreground/80 transition-colors touch-manipulation min-h-[48px] min-w-[48px] flex items-center justify-center rounded-full active:bg-white/10" 
                 aria-label="Close menu"
               >
-                <X size={22} />
+                <X size={24} />
               </button>
             </div>
             
             {/* Scrollable Menu Content */}
-            <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-4 pb-safe mx-3 md:mx-4">
-            <div className="space-y-3">
+            <div className="flex-1 overflow-y-auto overscroll-contain scroll-smooth-touch px-4 py-4 mx-3 md:mx-4" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 2rem)' }}>
+            <div className="space-y-2">
               {/* Left Nav Items */}
               <div>
                 {leftNavItems.map((item, index) => (
-                  <Link key={item.name} to={item.path} className={`block text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] flex items-center ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
+                  <Link key={item.name} to={item.path} className={`block text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[48px] flex items-center active:bg-white/5 rounded-lg px-2 -mx-2 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
                     transitionDelay: `${index * 40}ms`
                   }} onClick={() => setIsOpen(false)}>
                     {item.name}
@@ -297,27 +297,25 @@ export const Navigation = () => {
               </div>
 
               {/* Services Section */}
-              <div className="pt-3 border-t border-white/15">
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-xs uppercase tracking-wider text-muted-foreground">Services</p>
-                  <span className="text-[10px] text-muted-foreground/60">Tap to explore</span>
+              <div className="pt-4 border-t border-white/10">
+                <div className="flex items-center justify-between mb-3 px-2">
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Services</p>
                 </div>
                 {services?.map((service, index) => {
                 const IconComponent = serviceIcons[service.name] || Building2;
-                return <Link key={service.id} to={service.path} className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
+                return <Link key={service.id} to={service.path} className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3.5 min-h-[48px] active:bg-white/5 rounded-lg px-2 -mx-2 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
                   transitionDelay: `${(index + leftNavItems.length) * 40}ms`
                 }} onClick={() => setIsOpen(false)}>
-                      <IconComponent className="h-4 w-4 text-foreground/50" />
+                      <IconComponent className="h-5 w-5 text-foreground/50" />
                       {service.name}
                     </Link>;
               })}
               </div>
 
               {/* Listings Section - Optimized for Mobile/Tablet */}
-              <div className="pt-3 border-t border-white/15">
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-xs uppercase tracking-wider text-muted-foreground">Exclusive Listings</p>
-                  <span className="text-[10px] text-muted-foreground/60">View properties</span>
+              <div className="pt-4 border-t border-white/10">
+                <div className="flex items-center justify-between mb-3 px-2">
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Exclusive Listings</p>
                 </div>
                 
                 {/* Residential - Direct link */}
@@ -327,11 +325,11 @@ export const Navigation = () => {
                     href={item.url} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                    className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3.5 min-h-[48px] active:bg-white/5 rounded-lg px-2 -mx-2 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
                     style={{ transitionDelay: `${((services?.length || 0) + leftNavItems.length + index) * 40}ms` }}
                     onClick={() => setIsOpen(false)}
                   >
-                    <Home className="h-4 w-4 text-foreground/50" />
+                    <Home className="h-5 w-5 text-foreground/50" />
                     {item.name}
                   </a>
                 ))}
@@ -342,11 +340,11 @@ export const Navigation = () => {
                     <Link 
                       key={item.name}
                       to={item.url}
-                      className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                      className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3.5 min-h-[48px] active:bg-white/5 rounded-lg px-2 -mx-2 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
                       style={{ transitionDelay: `${((services?.length || 0) + leftNavItems.length + 1) * 40}ms` }}
                       onClick={() => setIsOpen(false)}
                     >
-                      <Building2 className="h-4 w-4 text-foreground/50" />
+                      <Building2 className="h-5 w-5 text-foreground/50" />
                       {item.name}
                     </Link>
                   ) : (
@@ -355,11 +353,11 @@ export const Navigation = () => {
                       href={item.url} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
+                      className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3.5 min-h-[48px] active:bg-white/5 rounded-lg px-2 -mx-2 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
                       style={{ transitionDelay: `${((services?.length || 0) + leftNavItems.length + 1) * 40}ms` }}
                       onClick={() => setIsOpen(false)}
                     >
-                      <Building2 className="h-4 w-4 text-foreground/50" />
+                      <Building2 className="h-5 w-5 text-foreground/50" />
                       {item.name}
                     </a>
                   )

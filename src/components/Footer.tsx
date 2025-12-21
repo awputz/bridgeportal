@@ -51,17 +51,17 @@ export const Footer = () => {
     }
   };
   return <footer className="bg-dark-bg text-foreground">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 bg-primary-foreground">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 bg-primary-foreground" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         {/* Top Section - 4 Columns */}
-        <div className="py-6 sm:py-8 md:py-12 lg:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 lg:gap-12">
+        <div className="py-8 sm:py-10 md:py-12 lg:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-6 md:gap-8 lg:gap-12">
           {/* Newsletter */}
           <div className="sm:col-span-2 lg:col-span-1 lg:pr-8">
-            <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl font-light mb-3 sm:mb-4 md:mb-6 tracking-tight">
+            <h3 className="text-lg sm:text-xl md:text-xl lg:text-2xl font-light mb-4 md:mb-6 tracking-tight">
               Subscribe To Our Newsletter
             </h3>
             <form onSubmit={handleNewsletterSubmit} className="space-y-3 sm:space-y-4">
-              <input type="email" placeholder="Enter Your Email Here" value={email} onChange={e => setEmail(e.target.value)} className="w-full bg-transparent border-b border-muted-foreground/30 py-2.5 sm:py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors min-h-[44px]" required />
-              <button type="submit" disabled={isSubmitting} className="w-full bg-foreground text-background py-2.5 sm:py-3 text-sm font-medium hover:bg-foreground/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]">
+              <input type="email" placeholder="Enter Your Email Here" value={email} onChange={e => setEmail(e.target.value)} className="w-full bg-transparent border-b border-muted-foreground/30 py-3 text-base placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors min-h-[48px]" required />
+              <button type="submit" disabled={isSubmitting} className="w-full bg-foreground text-background py-3 text-sm font-medium hover:bg-foreground/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px] active:opacity-80">
                 {isSubmitting ? "Subscribing..." : "Submit"}
               </button>
             </form>
@@ -69,32 +69,32 @@ export const Footer = () => {
 
           {/* Navigation */}
           <div>
-            <h3 className="font-medium mb-3 md:mb-5 tracking-tight text-sm">
+            <h3 className="font-medium mb-4 md:mb-5 tracking-tight text-sm">
               Navigation
             </h3>
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-3 text-sm">
               <li>
-                <Link to="/services/investment-sales" className="text-muted-foreground hover:text-foreground transition-colors font-light">
+                <Link to="/services/investment-sales" className="text-muted-foreground hover:text-foreground transition-colors font-light py-1 inline-block min-h-[44px] flex items-center">
                   Services
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors font-light">
+                <Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors font-light py-1 inline-block min-h-[44px] flex items-center">
                   About
                 </Link>
               </li>
               <li>
-                <Link to="/team" className="text-muted-foreground hover:text-foreground transition-colors font-light">
+                <Link to="/team" className="text-muted-foreground hover:text-foreground transition-colors font-light py-1 inline-block min-h-[44px] flex items-center">
                   Agents
                 </Link>
               </li>
               <li>
-                <Link to="/careers" className="text-muted-foreground hover:text-foreground transition-colors font-light">
+                <Link to="/careers" className="text-muted-foreground hover:text-foreground transition-colors font-light py-1 inline-block min-h-[44px] flex items-center">
                   Join Us
                 </Link>
               </li>
               <li>
-                <Link to="/markets-coming-soon" className="text-muted-foreground hover:text-foreground transition-colors font-light">
+                <Link to="/markets-coming-soon" className="text-muted-foreground hover:text-foreground transition-colors font-light py-1 inline-block min-h-[44px] flex items-center">
                   Markets Coming Soon
                 </Link>
               </li>
@@ -103,19 +103,19 @@ export const Footer = () => {
 
           {/* Contact Us */}
           <div>
-            <h3 className="font-medium mb-3 md:mb-5 tracking-tight text-sm">
+            <h3 className="font-medium mb-4 md:mb-5 tracking-tight text-sm">
               Contact Us
             </h3>
-            <div className="space-y-3 md:space-y-4 text-sm">
+            <div className="space-y-4 md:space-y-4 text-sm">
               <div>
                 <p className="text-muted-foreground font-light mb-1">Email Address</p>
-                <a href={`mailto:${settings?.company_contact.email}`} className="text-foreground hover:text-muted-foreground transition-colors">
+                <a href={`mailto:${settings?.company_contact.email}`} className="text-foreground hover:text-muted-foreground transition-colors min-h-[44px] inline-flex items-center">
                   {settings?.company_contact.email}
                 </a>
               </div>
               <div>
                 <p className="text-muted-foreground font-light mb-1">Phone Number</p>
-                <a href={`tel:${settings?.company_contact.phone}`} className="text-foreground hover:text-muted-foreground transition-colors">
+                <a href={`tel:${settings?.company_contact.phone}`} className="text-foreground hover:text-muted-foreground transition-colors min-h-[44px] inline-flex items-center">
                   {settings?.company_contact.phone}
                 </a>
               </div>
@@ -124,7 +124,7 @@ export const Footer = () => {
 
           {/* Office */}
           <div>
-            <h3 className="font-medium mb-3 md:mb-5 tracking-tight text-sm">
+            <h3 className="font-medium mb-4 md:mb-5 tracking-tight text-sm">
               Office
             </h3>
             <div className="text-sm text-muted-foreground font-light leading-relaxed whitespace-pre-line">
@@ -134,23 +134,23 @@ export const Footer = () => {
         </div>
 
         {/* Middle Section - Logo & Social */}
-        <div className="py-6 md:py-8 border-t border-border/20 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6">
-          <img alt="Bridge Advisory Group" src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" className="h-8 md:h-10 lg:h-12 w-auto" />
+        <div className="py-6 md:py-8 border-t border-border/20 flex flex-col md:flex-row justify-between items-center gap-5 md:gap-6">
+          <img alt="Bridge Advisory Group" src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" className="h-9 md:h-10 lg:h-12 w-auto" />
           <div className="flex items-center gap-3 md:gap-4">
-            <a href="https://www.instagram.com/bridgeadvisorygroup" target="_blank" rel="noopener noreferrer" className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors">
-              <Instagram className="w-4 h-4 md:w-5 md:h-5" />
+            <a href="https://www.instagram.com/bridgeadvisorygroup" target="_blank" rel="noopener noreferrer" className="w-11 h-11 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors active:bg-foreground/10">
+              <Instagram className="w-5 h-5 md:w-5 md:h-5" />
             </a>
-            <a href="https://www.linkedin.com/company/bridgeadvisorygroup" target="_blank" rel="noopener noreferrer" className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors">
-              <Linkedin className="w-4 h-4 md:w-5 md:h-5" />
+            <a href="https://www.linkedin.com/company/bridgeadvisorygroup" target="_blank" rel="noopener noreferrer" className="w-11 h-11 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors active:bg-foreground/10">
+              <Linkedin className="w-5 h-5 md:w-5 md:h-5" />
             </a>
-            <a href={`mailto:${settings?.company_contact.email}`} className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors">
-              <Mail className="w-4 h-4 md:w-5 md:h-5" />
+            <a href={`mailto:${settings?.company_contact.email}`} className="w-11 h-11 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors active:bg-foreground/10">
+              <Mail className="w-5 h-5 md:w-5 md:h-5" />
             </a>
-            <button onClick={openContactSheet} className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors">
-              <Phone className="w-4 h-4 md:w-5 md:h-5" />
+            <button onClick={openContactSheet} className="w-11 h-11 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground transition-colors active:bg-foreground/10">
+              <Phone className="w-5 h-5 md:w-5 md:h-5" />
             </button>
-            <button onClick={scrollToTop} className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground hover:bg-foreground hover:text-background transition-colors" aria-label="Back to top">
-              <ArrowUp className="w-4 h-4 md:w-5 md:h-5" />
+            <button onClick={scrollToTop} className="w-11 h-11 md:w-12 md:h-12 rounded-full border border-muted-foreground/30 flex items-center justify-center hover:border-foreground hover:bg-foreground hover:text-background transition-colors active:opacity-80" aria-label="Back to top">
+              <ArrowUp className="w-5 h-5 md:w-5 md:h-5" />
             </button>
           </div>
         </div>
@@ -173,14 +173,14 @@ export const Footer = () => {
         </div>
 
         {/* Bottom Links */}
-        <div className="py-3 md:py-4 border-t border-border/20 flex flex-col sm:flex-row flex-wrap justify-center sm:justify-between items-center gap-2 sm:gap-3 md:gap-4 text-[9px] sm:text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider">
-          <a href="https://d1e1jt2fj4r8r.cloudfront.net/b26ab618-2b1e-4a17-8868-498b96b52dc0/qckNAwejF/NY%20Reasonable%20Accommodations%20Notice.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors text-center min-h-[44px] flex items-center">
+        <div className="py-4 md:py-4 border-t border-border/20 flex flex-col sm:flex-row flex-wrap justify-center sm:justify-between items-center gap-3 sm:gap-3 md:gap-4 text-[10px] sm:text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider">
+          <a href="https://d1e1jt2fj4r8r.cloudfront.net/b26ab618-2b1e-4a17-8868-498b96b52dc0/qckNAwejF/NY%20Reasonable%20Accommodations%20Notice.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors text-center min-h-[44px] flex items-center px-2 active:opacity-70">
             NY Reasonable Accommodations Notice
           </a>
-          <a href="https://d1e1jt2fj4r8r.cloudfront.net/b26ab618-2b1e-4a17-8868-498b96b52dc0/LcdbBuJ7w/NY%20Fair%20Housing%20Notice.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors text-center min-h-[44px] flex items-center">
+          <a href="https://d1e1jt2fj4r8r.cloudfront.net/b26ab618-2b1e-4a17-8868-498b96b52dc0/LcdbBuJ7w/NY%20Fair%20Housing%20Notice.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors text-center min-h-[44px] flex items-center px-2 active:opacity-70">
             Fair Housing Notice
           </a>
-          <a href="https://nyresop.tiiny.site/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors text-center min-h-[44px] flex items-center">
+          <a href="https://nyresop.tiiny.site/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors text-center min-h-[44px] flex items-center px-2 active:opacity-70">
             Standard Operating Procedures
           </a>
         </div>

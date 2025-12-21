@@ -24,7 +24,11 @@ export const FloatingContactButton = ({ onContactClick }: { onContactClick: () =
   return (
     <button
       onClick={onContactClick}
-      className="fixed bottom-8 right-24 w-14 h-14 bg-white rounded-full shadow-lg hover:scale-105 transition-all duration-300 z-40 flex items-center justify-center border border-neutral-200"
+      className="fixed w-14 h-14 bg-white rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 z-40 flex items-center justify-center border border-neutral-200"
+      style={{ 
+        bottom: 'max(env(safe-area-inset-bottom, 0px) + 1rem, 1.5rem)',
+        right: '5.5rem'
+      }}
       aria-label="Contact us"
     >
       <Phone 
