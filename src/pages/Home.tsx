@@ -51,7 +51,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
 
         {/* Zone 1: Logo at top */}
-        <div className="relative z-10 flex-shrink-0 pt-20 sm:pt-16 md:pt-16 text-center -mb-16 sm:-mb-12 md:mb-0">
+        <div className="relative z-10 flex-shrink-0 pt-16 sm:pt-14 md:pt-16 text-center -mb-20 sm:-mb-16 md:-mb-8">
           <div className="animate-fade-in overflow-hidden" style={{
           animationDelay: "200ms",
           animationFillMode: "backwards"
@@ -66,7 +66,7 @@ export default function Home() {
 
         {/* Zone 2: Content centered in middle */}
         <div className="relative z-10 flex-1 flex items-center justify-center pb-20 sm:pb-28 md:pb-40">
-          <div className="container mx-auto text-center max-w-5xl -translate-y-4 sm:-translate-y-8 md:-translate-y-16">
+          <div className="container mx-auto text-center max-w-5xl -translate-y-8 sm:-translate-y-12 md:-translate-y-20">
             
 
             <p style={{
