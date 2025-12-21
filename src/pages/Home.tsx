@@ -43,7 +43,7 @@ export default function Home() {
       <SEOHelmet title="Bridge Advisory Group | NYC Real Estate Brokerage" description="New York City's premier multi-division real estate platform. Investment sales, commercial leasing, residential services, and capital advisory." path="/" />
       
       {/* Hero Section */}
-      <section className="relative h-screen flex flex-col overflow-hidden px-4 md:px-6">
+      <section className="relative min-h-screen flex flex-col overflow-hidden px-4 md:px-6">
         <div className="absolute inset-0 bg-cover bg-center" style={{
         backgroundImage: `url(${heroImage})`,
         filter: "brightness(0.6) contrast(1.1)"
@@ -51,68 +51,68 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
 
         {/* Zone 1: Logo at top */}
-        <div className="relative z-10 flex-shrink-0 pt-16 md:pt-16 text-center -mb-20 sm:-mb-16 md:mb-0">
+        <div className="relative z-10 flex-shrink-0 pt-20 sm:pt-16 md:pt-16 text-center -mb-16 sm:-mb-12 md:mb-0">
           <div className="animate-fade-in overflow-hidden" style={{
           animationDelay: "200ms",
           animationFillMode: "backwards"
         }}>
-            <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="mx-auto w-[260px] sm:w-[360px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert -mb-12 sm:-mb-10 md:mb-0" />
+            <img src={bridgeAdvisoryLogo} alt="Bridge Advisory Group" className="mx-auto w-[220px] sm:w-[320px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert -mb-8 sm:-mb-8 md:mb-0" />
           </div>
         </div>
 
         {/* Zone 2: Content centered in middle */}
-        <div className="relative z-10 flex-1 flex items-center justify-center pb-32 md:pb-40">
-          <div className="container mx-auto text-center max-w-5xl -translate-y-8 md:-translate-y-16">
+        <div className="relative z-10 flex-1 flex items-center justify-center pb-20 sm:pb-28 md:pb-40">
+          <div className="container mx-auto text-center max-w-5xl -translate-y-4 sm:-translate-y-8 md:-translate-y-16">
             
 
             <p style={{
             animationDelay: "500ms",
             animationFillMode: "backwards"
-          }} className="text-sm sm:text-base md:text-lg lg:text-xl mb-4 md:mb-5 max-w-3xl mx-auto px-4 animate-fade-in text-primary bg-black/0 font-medium">
+          }} className="text-sm sm:text-base md:text-lg lg:text-xl mb-5 md:mb-5 max-w-3xl mx-auto px-2 sm:px-4 animate-fade-in text-primary bg-black/0 font-medium leading-relaxed">
               {COMPANY_INFO.description.full}
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-2 md:gap-3 justify-center px-4 animate-fade-in" style={{
+            <div className="flex flex-col sm:flex-row gap-3 justify-center px-2 sm:px-4 animate-fade-in" style={{
             animationDelay: "600ms",
             animationFillMode: "backwards"
           }}>
-              <Button asChild size="default" className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto bg-white text-black hover:bg-white/90">
+              <Button asChild size="default" className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto bg-white text-black hover:bg-white/90 min-h-[48px]">
                 <a href="#mission">Explore Services</a>
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button size="default" className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto bg-white text-black hover:bg-white/90">
+                  <Button size="default" className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto bg-white text-black hover:bg-white/90 min-h-[48px]">
                     Current Listings
                     <ChevronDown className="ml-2 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="center" className="bg-white border-border text-black">
+                <DropdownMenuContent align="center" className="bg-white border-border text-black z-50">
                   {LISTINGS_ITEMS.items.map(item => <DropdownMenuItem key={item.name} asChild>
-                      {item.external ? <a href={item.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full cursor-pointer">
+                      {item.external ? <a href={item.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full cursor-pointer min-h-[44px]">
                           {item.name}
                           <ExternalLink className="ml-2 h-3 w-3 opacity-50" />
-                        </a> : <Link to={item.url} className="cursor-pointer bg-white">{item.name}</Link>}
+                        </a> : <Link to={item.url} className="cursor-pointer bg-white min-h-[44px] flex items-center">{item.name}</Link>}
                     </DropdownMenuItem>)}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
 
             {/* Quick Access Service Buttons */}
-            <div className="flex flex-wrap gap-2 sm:gap-3 justify-center px-4 mt-4 animate-fade-in" style={{
+            <div className="flex flex-wrap gap-2 justify-center px-2 sm:px-4 mt-4 animate-fade-in" style={{
             animationDelay: "700ms",
             animationFillMode: "backwards"
           }}>
-              <Button asChild variant="outline" size="sm" className="font-light px-3 sm:px-5 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white">
+              <Button asChild variant="outline" size="sm" className="font-light px-3 sm:px-4 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white min-h-[40px]">
                 <Link to="/services/residential">Residential</Link>
               </Button>
-              <Button asChild variant="outline" size="sm" className="font-light px-3 sm:px-5 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white">
+              <Button asChild variant="outline" size="sm" className="font-light px-3 sm:px-4 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white min-h-[40px]">
                 <Link to="/services/commercial-leasing">Commercial</Link>
               </Button>
-              <Button asChild variant="outline" size="sm" className="font-light px-3 sm:px-5 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white">
-                <Link to="/services/investment-sales">Investment Sales</Link>
+              <Button asChild variant="outline" size="sm" className="font-light px-3 sm:px-4 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white min-h-[40px]">
+                <Link to="/services/investment-sales">Investment</Link>
               </Button>
-              <Button asChild variant="outline" size="sm" className="font-light px-3 sm:px-5 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white hidden sm:inline-flex">
-                <Link to="/services/capital-advisory">Capital Markets</Link>
+              <Button asChild variant="outline" size="sm" className="font-light px-3 sm:px-4 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white min-h-[40px] hidden sm:inline-flex">
+                <Link to="/services/capital-advisory">Capital</Link>
               </Button>
             </div>
           </div>
@@ -184,68 +184,68 @@ export default function Home() {
       </section>
 
       {/* Our Divisions - Unified Services Section */}
-      <section className="py-16 md:py-24 bg-secondary" ref={divisionsReveal.elementRef}>
+      <section className="py-12 sm:py-16 md:py-24 bg-secondary" ref={divisionsReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
           {/* Main Section Header */}
-          <div className={`text-center mb-14 transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Our Divisions</h2>
-            <p className="text-muted-foreground font-light max-w-2xl mx-auto text-sm md:text-base">
+          <div className={`text-center mb-8 sm:mb-10 md:mb-14 transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light mb-3 md:mb-4">Our Divisions</h2>
+            <p className="text-muted-foreground font-light max-w-2xl mx-auto text-sm md:text-base px-2">
               A full-service real estate advisory platform with specialized expertise across commercial, residential, and capital markets.
             </p>
           </div>
 
           {/* Commercial & Investment */}
-          <div className="mb-12">
-            <div className={`flex items-center justify-between mb-6 transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: "100ms" }}>
+          <div className="mb-8 sm:mb-10 md:mb-12">
+            <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-4 sm:mb-6 transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: "100ms" }}>
               <div>
-                <h3 className="text-lg md:text-xl font-medium text-foreground">Commercial & Investment</h3>
-                <p className="text-muted-foreground font-light text-sm">Strategic leasing and investment advisory</p>
+                <h3 className="text-base sm:text-lg md:text-xl font-medium text-foreground">Commercial & Investment</h3>
+                <p className="text-muted-foreground font-light text-xs sm:text-sm">Strategic leasing and investment advisory</p>
               </div>
-              <div className="flex gap-2">
-                <Button asChild variant="ghost" size="sm" className="font-light text-xs text-muted-foreground hover:text-foreground">
-                  <Link to="/services/investment-sales">Investment Sales <ArrowRight className="ml-1 h-3 w-3" /></Link>
+              <div className="flex gap-1 sm:gap-2 flex-wrap">
+                <Button asChild variant="ghost" size="sm" className="font-light text-[11px] sm:text-xs text-muted-foreground hover:text-foreground px-2 sm:px-3 h-8 min-h-[32px]">
+                  <Link to="/services/investment-sales">Investment <ArrowRight className="ml-1 h-3 w-3" /></Link>
                 </Button>
-                <Button asChild variant="ghost" size="sm" className="font-light text-xs text-muted-foreground hover:text-foreground hidden sm:inline-flex">
-                  <Link to="/services/commercial-leasing">Commercial Leasing <ArrowRight className="ml-1 h-3 w-3" /></Link>
+                <Button asChild variant="ghost" size="sm" className="font-light text-[11px] sm:text-xs text-muted-foreground hover:text-foreground px-2 sm:px-3 h-8 min-h-[32px]">
+                  <Link to="/services/commercial-leasing">Leasing <ArrowRight className="ml-1 h-3 w-3" /></Link>
                 </Button>
               </div>
             </div>
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               {[
                 { icon: Users, title: "Tenant & Landlord Rep", desc: "Full-service representation for tenants and landlords" },
                 { icon: TrendingUp, title: "Investment Sales Advisory", desc: "Acquisition and disposition strategies that maximize value" },
                 { icon: Briefcase, title: "Portfolio & Asset Strategy", desc: "Comprehensive analysis for stabilized and value-add assets" }
               ].map((item, index) => (
                 <div key={item.title} className={`p-4 md:p-5 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: `${150 + index * 50}ms` }}>
-                  <item.icon className="h-6 w-6 text-primary mx-auto mb-2" />
+                  <item.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary mx-auto mb-2" />
                   <h4 className="text-sm font-medium mb-1">{item.title}</h4>
-                  <p className="text-muted-foreground font-light text-xs line-clamp-2">{item.desc}</p>
+                  <p className="text-muted-foreground font-light text-xs leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Residential */}
-          <div className="mb-12">
-            <div className={`flex items-center justify-between mb-6 transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: "300ms" }}>
+          <div className="mb-8 sm:mb-10 md:mb-12">
+            <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-4 sm:mb-6 transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: "300ms" }}>
               <div>
-                <h3 className="text-lg md:text-xl font-medium text-foreground">Residential</h3>
-                <p className="text-muted-foreground font-light text-sm">High-quality apartments, townhomes, and condos</p>
+                <h3 className="text-base sm:text-lg md:text-xl font-medium text-foreground">Residential</h3>
+                <p className="text-muted-foreground font-light text-xs sm:text-sm">High-quality apartments, townhomes, and condos</p>
               </div>
-              <Button asChild variant="ghost" size="sm" className="font-light text-xs text-muted-foreground hover:text-foreground">
+              <Button asChild variant="ghost" size="sm" className="font-light text-[11px] sm:text-xs text-muted-foreground hover:text-foreground px-2 sm:px-3 h-8 min-h-[32px] self-start sm:self-auto">
                 <Link to="/services/residential">Explore <ArrowRight className="ml-1 h-3 w-3" /></Link>
               </Button>
             </div>
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               {[
                 { icon: Key, title: "Landlord Leasing Programs", desc: "Maximize occupancy and rental income" },
                 { icon: Building, title: "Rentals And Sales", desc: "Find your next home or investment property" },
                 { icon: BarChart3, title: "Residential Market Intel", desc: "Data-driven insights for informed decisions" }
               ].map((item, index) => (
                 <div key={item.title} className={`p-4 md:p-5 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: `${350 + index * 50}ms` }}>
-                  <item.icon className="h-6 w-6 text-primary mx-auto mb-2" />
+                  <item.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary mx-auto mb-2" />
                   <h4 className="text-sm font-medium mb-1">{item.title}</h4>
-                  <p className="text-muted-foreground font-light text-xs line-clamp-2">{item.desc}</p>
+                  <p className="text-muted-foreground font-light text-xs leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -253,25 +253,25 @@ export default function Home() {
 
           {/* Capital Advisory */}
           <div>
-            <div className={`flex items-center justify-between mb-6 transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: "500ms" }}>
+            <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-4 sm:mb-6 transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: "500ms" }}>
               <div>
-                <h3 className="text-lg md:text-xl font-medium text-foreground">Capital Advisory</h3>
-                <p className="text-muted-foreground font-light text-sm">Debt, equity, and structured finance solutions</p>
+                <h3 className="text-base sm:text-lg md:text-xl font-medium text-foreground">Capital Advisory</h3>
+                <p className="text-muted-foreground font-light text-xs sm:text-sm">Debt, equity, and structured finance solutions</p>
               </div>
-              <Button asChild variant="ghost" size="sm" className="font-light text-xs text-muted-foreground hover:text-foreground">
+              <Button asChild variant="ghost" size="sm" className="font-light text-[11px] sm:text-xs text-muted-foreground hover:text-foreground px-2 sm:px-3 h-8 min-h-[32px] self-start sm:self-auto">
                 <Link to="/services/capital-advisory">Explore <ArrowRight className="ml-1 h-3 w-3" /></Link>
               </Button>
             </div>
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               {[
                 { icon: CreditCard, title: "Debt Placement", desc: "Access to competitive financing across lender types" },
                 { icon: Handshake, title: "Equity And Joint Ventures", desc: "Strategic partnerships for growth and scale" },
                 { icon: RefreshCw, title: "Recapitalization", desc: "Restructure capital stacks to optimize returns" }
               ].map((item, index) => (
                 <div key={item.title} className={`p-4 md:p-5 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: `${550 + index * 50}ms` }}>
-                  <item.icon className="h-6 w-6 text-primary mx-auto mb-2" />
+                  <item.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary mx-auto mb-2" />
                   <h4 className="text-sm font-medium mb-1">{item.title}</h4>
-                  <p className="text-muted-foreground font-light text-xs line-clamp-2">{item.desc}</p>
+                  <p className="text-muted-foreground font-light text-xs leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
