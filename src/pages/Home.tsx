@@ -167,7 +167,7 @@ export default function Home() {
                 size="sm"
                 className="font-light px-3 sm:px-4 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white min-h-[40px] hidden sm:inline-flex"
               >
-                <Link to="/services/capital-advisory">Capital</Link>
+                <Link to="/services/capital-advisory">Capital Advisory</Link>
               </Button>
             </div>
           </div>
