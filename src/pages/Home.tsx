@@ -8,7 +8,7 @@ import { COMPANY_INFO, LISTINGS_ITEMS } from "@/lib/constants";
 import { TrustBadges } from "@/components/TrustBadges";
 import { SEOHelmet } from "@/components/SEOHelmet";
 import heroImage from "@/assets/brooklyn-bridge-hero-light.jpg";
-import bridgeAdvisoryLogo from "@/assets/bridge-advisory-group-logo.png";
+import bridgeAdvisoryLogoWhite from "@/assets/bridge-advisory-group-white.png";
 import floridaLogo from "@/assets/market-logos/florida.png";
 import losAngelesLogo from "@/assets/market-logos/los-angeles.png";
 import bostonLogo from "@/assets/market-logos/boston.png";
@@ -56,7 +56,11 @@ export default function Home() {
           animationDelay: "200ms",
           animationFillMode: "backwards"
         }}>
-            <img alt="Bridge Advisory Group" className="mx-auto w-[220px] sm:w-[320px] md:w-[400px] lg:w-[500px] xl:w-[600px] invert -mb-8 sm:-mb-8 md:mb-0" src="/lovable-uploads/cc37afa6-0369-4b0a-8a4c-369f36ac3609.png" />
+            <img 
+              alt="Bridge Advisory Group" 
+              className="mx-auto w-[200px] sm:w-[280px] md:w-[360px] lg:w-[450px] xl:w-[550px] h-auto object-contain drop-shadow-lg" 
+              src={bridgeAdvisoryLogoWhite} 
+            />
           </div>
         </div>
 
