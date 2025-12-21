@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Building2, Users, TrendingUp, ArrowRight, Store, Briefcase, MapPin, Target, BarChart3, Handshake, CheckCircle } from "lucide-react";
+import { Building2, Users, TrendingUp, ArrowRight, Store, Briefcase, MapPin, Target, BarChart3, Handshake, CheckCircle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
@@ -55,6 +55,10 @@ const services = [{
   icon: BarChart3,
   title: "Market Intelligence",
   description: "Data-driven insights for informed decisions"
+}, {
+  icon: Clock,
+  title: "Pop-Up & Short-Term Leasing",
+  description: "Flexible lease arrangements for seasonal, temporary, or experiential retail"
 }];
 
 // Tenant categories with distinct images for hover effects
