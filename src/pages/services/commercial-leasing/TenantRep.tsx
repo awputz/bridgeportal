@@ -88,21 +88,23 @@ const TenantRep = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-primary">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-primary-foreground mb-6">Need Space?</h2>
-          <p className="text-primary-foreground/80 mb-8 max-w-xl mx-auto">
-            Let us help you find the perfect location for your business.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" asChild>
-              <Link to="/commercial-listings">
-                View Available Spaces <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary" onClick={openContactSheet}>
-              Contact Us
-            </Button>
+      <section className="py-16 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="bg-primary/5 border border-primary/20 rounded-2xl p-10">
+            <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-4">Need Space?</h2>
+            <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
+              Let us help you find the perfect location for your business.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" asChild>
+                <Link to="/commercial-listings">
+                  View Available Spaces <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" onClick={openContactSheet}>
+                Contact Us
+              </Button>
+            </div>
           </div>
         </div>
       </section>

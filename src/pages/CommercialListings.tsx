@@ -155,16 +155,18 @@ const CommercialListings = () => {
         </section>
 
         {/* Compact CTA */}
-        <section className="py-10 bg-primary text-primary-foreground">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-xl font-semibold mb-2">Need Help Finding Space?</h2>
-            <p className="text-sm text-primary-foreground/80 mb-4 max-w-md mx-auto">
-              Our team can help you find the perfect location.
-            </p>
-            <Button size="sm" variant="secondary" onClick={openContactSheet} className="gap-1.5">
-              <MessageSquare className="h-4 w-4" />
-              Contact Us
-            </Button>
+        <section className="py-16 px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="bg-primary/5 border border-primary/20 rounded-2xl p-10">
+              <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-4">Need Help Finding Space?</h2>
+              <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
+                Our team can help you find the perfect location for your business.
+              </p>
+              <Button size="lg" onClick={openContactSheet} className="gap-2">
+                <MessageSquare className="h-4 w-4" />
+                Contact Us
+              </Button>
+            </div>
           </div>
         </section>
       </main>

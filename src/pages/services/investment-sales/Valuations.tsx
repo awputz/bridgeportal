@@ -94,17 +94,19 @@ const Valuations = () => {
       
 
       {/* CTA */}
-      <section className="py-20 bg-primary">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-primary-foreground mb-6">
-            Need a Property Valuation?
-          </h2>
-          <p className="text-primary-foreground/80 mb-8 text-lg">
-            Contact us for a complimentary broker opinion of value on your property.
-          </p>
-          <Button size="lg" variant="secondary" onClick={openContactSheet}>
-            Request Valuation <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
+      <section className="py-16 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="bg-primary/5 border border-primary/20 rounded-2xl p-10">
+            <h2 className="text-2xl md:text-3xl font-semibold text-foreground mb-4">
+              Need a Property Valuation?
+            </h2>
+            <p className="text-muted-foreground mb-6 max-w-xl mx-auto text-lg">
+              Contact us for a complimentary broker opinion of value on your property.
+            </p>
+            <Button size="lg" onClick={openContactSheet}>
+              Request Valuation <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </div>
         </div>
       </section>
     </ServicePageLayout>;
