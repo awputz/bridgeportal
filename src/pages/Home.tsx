@@ -79,7 +79,7 @@ export default function Home() {
             animationFillMode: "backwards"
           }}>
               <Button asChild size="default" className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto">
-                <a href="#mission" className="bg-destructive-foreground">Explore Services</a>
+                <a href="#mission" className="bg-white">Explore Services</a>
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -93,7 +93,7 @@ export default function Home() {
                       {item.external ? <a href={item.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full cursor-pointer">
                           {item.name}
                           <ExternalLink className="ml-2 h-3 w-3 opacity-50" />
-                        </a> : <Link to={item.url} className="cursor-pointer">{item.name}</Link>}
+                        </a> : <Link to={item.url} className="cursor-pointer bg-white">{item.name}</Link>}
                     </DropdownMenuItem>)}
                 </DropdownMenuContent>
               </DropdownMenu>
