@@ -78,8 +78,8 @@ export default function Home() {
             animationDelay: "600ms",
             animationFillMode: "backwards"
           }}>
-              <Button asChild size="default" className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto">
-                <a href="#mission" className="bg-white">Explore Services</a>
+              <Button asChild size="default" className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto bg-white text-black hover:bg-white/90">
+                <a href="#mission">Explore Services</a>
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
