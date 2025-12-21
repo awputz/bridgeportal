@@ -194,25 +194,19 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Commercial & Investment */}
+          {/* Investment Sales Division */}
           <div className="mb-8 sm:mb-10 md:mb-12">
             <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-4 sm:mb-6 transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: "100ms" }}>
               <div>
-                <h3 className="text-base sm:text-lg md:text-xl font-medium text-foreground">Commercial & Investment</h3>
-                <p className="text-muted-foreground font-light text-xs sm:text-sm">Strategic leasing and investment advisory</p>
+                <h3 className="text-base sm:text-lg md:text-xl font-medium text-foreground">Investment Sales Division</h3>
+                <p className="text-muted-foreground font-light text-xs sm:text-sm">Strategic acquisition and disposition advisory</p>
               </div>
-              <div className="flex gap-1 sm:gap-2 flex-wrap">
-                <Button asChild variant="ghost" size="sm" className="font-light text-[11px] sm:text-xs text-muted-foreground hover:text-foreground px-2 sm:px-3 h-8 min-h-[32px]">
-                  <Link to="/services/investment-sales">Investment <ArrowRight className="ml-1 h-3 w-3" /></Link>
-                </Button>
-                <Button asChild variant="ghost" size="sm" className="font-light text-[11px] sm:text-xs text-muted-foreground hover:text-foreground px-2 sm:px-3 h-8 min-h-[32px]">
-                  <Link to="/services/commercial-leasing">Leasing <ArrowRight className="ml-1 h-3 w-3" /></Link>
-                </Button>
-              </div>
+              <Button asChild variant="ghost" size="sm" className="font-light text-[11px] sm:text-xs text-muted-foreground hover:text-foreground px-2 sm:px-3 h-8 min-h-[32px] self-start sm:self-auto">
+                <Link to="/services/investment-sales">Explore <ArrowRight className="ml-1 h-3 w-3" /></Link>
+              </Button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               {[
-                { icon: Users, title: "Tenant & Landlord Rep", desc: "Full-service representation for tenants and landlords" },
                 { icon: TrendingUp, title: "Investment Sales Advisory", desc: "Acquisition and disposition strategies that maximize value" },
                 { icon: Briefcase, title: "Portfolio & Asset Strategy", desc: "Comprehensive analysis for stabilized and value-add assets" }
               ].map((item, index) => (
@@ -225,11 +219,36 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Residential */}
+          {/* Commercial Leasing Division */}
           <div className="mb-8 sm:mb-10 md:mb-12">
-            <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-4 sm:mb-6 transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: "300ms" }}>
+            <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-4 sm:mb-6 transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: "250ms" }}>
               <div>
-                <h3 className="text-base sm:text-lg md:text-xl font-medium text-foreground">Residential</h3>
+                <h3 className="text-base sm:text-lg md:text-xl font-medium text-foreground">Commercial Leasing Division</h3>
+                <p className="text-muted-foreground font-light text-xs sm:text-sm">Full-service tenant and landlord representation</p>
+              </div>
+              <Button asChild variant="ghost" size="sm" className="font-light text-[11px] sm:text-xs text-muted-foreground hover:text-foreground px-2 sm:px-3 h-8 min-h-[32px] self-start sm:self-auto">
+                <Link to="/services/commercial-leasing">Explore <ArrowRight className="ml-1 h-3 w-3" /></Link>
+              </Button>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              {[
+                { icon: Users, title: "Tenant Representation", desc: "Strategic site selection and lease negotiation for occupiers" },
+                { icon: Building2, title: "Landlord Representation", desc: "Maximize occupancy and rental income for property owners" }
+              ].map((item, index) => (
+                <div key={item.title} className={`p-4 md:p-5 rounded-xl bg-black/40 backdrop-blur-xl border border-white/15 text-center transition-all duration-300 ease-out hover:bg-black/50 hover:border-white/25 ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: `${300 + index * 50}ms` }}>
+                  <item.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary mx-auto mb-2" />
+                  <h4 className="text-sm font-medium mb-1 text-white">{item.title}</h4>
+                  <p className="text-white/70 font-light text-xs leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Residential Division */}
+          <div>
+            <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-4 sm:mb-6 transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: "400ms" }}>
+              <div>
+                <h3 className="text-base sm:text-lg md:text-xl font-medium text-foreground">Residential Division</h3>
                 <p className="text-muted-foreground font-light text-xs sm:text-sm">High-quality apartments, townhomes, and condos</p>
               </div>
               <Button asChild variant="ghost" size="sm" className="font-light text-[11px] sm:text-xs text-muted-foreground hover:text-foreground px-2 sm:px-3 h-8 min-h-[32px] self-start sm:self-auto">
@@ -242,7 +261,7 @@ export default function Home() {
                 { icon: Building, title: "Rentals And Sales", desc: "Find your next home or investment property" },
                 { icon: BarChart3, title: "Residential Market Intel", desc: "Data-driven insights for informed decisions" }
               ].map((item, index) => (
-                <div key={item.title} className={`p-4 md:p-5 rounded-xl bg-black/40 backdrop-blur-xl border border-white/15 text-center transition-all duration-300 ease-out hover:bg-black/50 hover:border-white/25 ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: `${350 + index * 50}ms` }}>
+                <div key={item.title} className={`p-4 md:p-5 rounded-xl bg-black/40 backdrop-blur-xl border border-white/15 text-center transition-all duration-300 ease-out hover:bg-black/50 hover:border-white/25 ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: `${450 + index * 50}ms` }}>
                   <item.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary mx-auto mb-2" />
                   <h4 className="text-sm font-medium mb-1 text-white">{item.title}</h4>
                   <p className="text-white/70 font-light text-xs leading-relaxed">{item.desc}</p>
@@ -250,10 +269,19 @@ export default function Home() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* More Ways We Can Help */}
+      <section className="py-16 md:py-24 bg-muted/30" ref={servicesReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+          <div className={`text-center mb-10 transition-all duration-500 ease-out ${servicesReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+            <h2 className="text-2xl md:text-3xl font-light mb-4">More Ways We Can Help</h2>
+          </div>
 
           {/* Capital Advisory */}
-          <div>
-            <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-4 sm:mb-6 transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: "500ms" }}>
+          <div className="mb-10 md:mb-12">
+            <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-4 sm:mb-6 transition-all duration-500 ease-out ${servicesReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: "100ms" }}>
               <div>
                 <h3 className="text-base sm:text-lg md:text-xl font-medium text-foreground">Capital Advisory</h3>
                 <p className="text-muted-foreground font-light text-xs sm:text-sm">Debt, equity, and structured finance solutions</p>
@@ -268,47 +296,41 @@ export default function Home() {
                 { icon: Handshake, title: "Equity And Joint Ventures", desc: "Strategic partnerships for growth and scale" },
                 { icon: RefreshCw, title: "Recapitalization", desc: "Restructure capital stacks to optimize returns" }
               ].map((item, index) => (
-                <div key={item.title} className={`p-4 md:p-5 rounded-xl bg-black/40 backdrop-blur-xl border border-white/15 text-center transition-all duration-300 ease-out hover:bg-black/50 hover:border-white/25 ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: `${550 + index * 50}ms` }}>
+                <div key={item.title} className={`p-4 md:p-5 rounded-xl border border-border/50 bg-card/50 text-center transition-all duration-500 ease-out hover:border-border hover:bg-card ${servicesReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: `${150 + index * 50}ms` }}>
                   <item.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary mx-auto mb-2" />
-                  <h4 className="text-sm font-medium mb-1 text-white">{item.title}</h4>
-                  <p className="text-white/70 font-light text-xs leading-relaxed">{item.desc}</p>
+                  <h4 className="text-sm font-medium mb-1">{item.title}</h4>
+                  <p className="text-muted-foreground font-light text-xs leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Additional Services Teaser */}
-      <section className="py-16 md:py-24 bg-muted/30" ref={servicesReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`text-center mb-10 transition-all duration-500 ease-out ${servicesReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <h2 className="text-2xl md:text-3xl font-light mb-4">More Ways We Can Help</h2>
-          </div>
-
+          {/* Other Services */}
           <div className="grid md:grid-cols-3 gap-5">
             {[{
-            icon: Settings,
-            title: "Property Management",
-            desc: "Full-service asset management and operations",
-            path: "/services/property-management"
-          }, {
-            icon: PenTool,
-            title: "Marketing & Creative",
-            desc: "Branding, campaigns, and creative production",
-            path: "/services/marketing"
-          }, {
-            icon: MapPin,
-            title: "Billboard Advertising",
-            desc: "Premium outdoor advertising placements",
-            path: "/services/billboard"
-          }].map((item, index) => <Link key={item.title} to={item.path} className={`group p-5 md:p-6 rounded-xl border border-border/50 bg-card/50 text-center transition-all duration-500 ease-out hover:border-border hover:bg-card ${servicesReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
-            transitionDelay: servicesReveal.isVisible ? `${150 + index * 100}ms` : "0ms"
-          }}>
+              icon: Settings,
+              title: "Property Management",
+              desc: "Full-service asset management and operations",
+              path: "/services/property-management"
+            }, {
+              icon: PenTool,
+              title: "Marketing & Creative",
+              desc: "Branding, campaigns, and creative production",
+              path: "/services/marketing"
+            }, {
+              icon: MapPin,
+              title: "Billboard Advertising",
+              desc: "Premium outdoor advertising placements",
+              path: "/services/billboard"
+            }].map((item, index) => (
+              <Link key={item.title} to={item.path} className={`group p-5 md:p-6 rounded-xl border border-border/50 bg-card/50 text-center transition-all duration-500 ease-out hover:border-border hover:bg-card ${servicesReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
+                transitionDelay: servicesReveal.isVisible ? `${350 + index * 100}ms` : "0ms"
+              }}>
                 <item.icon className="h-7 w-7 text-primary mx-auto mb-3" />
                 <h3 className="text-base font-medium mb-2 group-hover:text-primary transition-colors">{item.title}</h3>
                 <p className="text-muted-foreground font-light text-xs">{item.desc}</p>
-              </Link>)}
+              </Link>
+            ))}
           </div>
         </div>
       </section>
