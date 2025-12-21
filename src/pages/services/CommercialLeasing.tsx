@@ -169,27 +169,6 @@ export default function CommercialLeasing() {
       {/* Stats Bar */}
       
 
-      {/* Our Process */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={processReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`transition-all duration-700 ${processReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">Our Process</h2>
-            <p className="text-muted-foreground font-light mb-8 md:mb-12 text-center max-w-2xl mx-auto">
-              A proven approach for tenants and landlords.
-            </p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
-              {processSteps.map((item, index) => <div key={item.step} className="p-8 rounded-lg border border-white/10 bg-white/[0.02] text-center" style={{
-              transitionDelay: `${index * 100}ms`
-            }}>
-                  <div className="text-5xl font-light text-accent/50 mb-4">{item.step}</div>
-                  <h3 className="text-xl font-light mb-3">{item.title}</h3>
-                  <p className="text-muted-foreground font-light text-sm leading-relaxed">{item.description}</p>
-                </div>)}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Our Services */}
       <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={servicesReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
@@ -231,6 +210,27 @@ export default function CommercialLeasing() {
                 {/* Content */}
                 
               </div>)}
+          </div>
+        </div>
+      </section>
+
+      {/* Our Process */}
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={processReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+          <div className={`transition-all duration-700 ${processReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">Our Process</h2>
+            <p className="text-muted-foreground font-light mb-8 md:mb-12 text-center max-w-2xl mx-auto">
+              A proven approach for tenants and landlords.
+            </p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+              {processSteps.map((item, index) => <div key={item.step} className="p-8 rounded-lg border border-white/10 bg-white/[0.02] text-center" style={{
+              transitionDelay: `${index * 100}ms`
+            }}>
+                  <div className="text-5xl font-light text-accent/50 mb-4">{item.step}</div>
+                  <h3 className="text-xl font-light mb-3">{item.title}</h3>
+                  <p className="text-muted-foreground font-light text-sm leading-relaxed">{item.description}</p>
+                </div>)}
+            </div>
           </div>
         </div>
       </section>
