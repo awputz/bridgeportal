@@ -270,7 +270,7 @@ const InvestmentListings = () => {
                         </div>
 
                         {/* Content - Fixed Height for Consistency */}
-                        <div className="p-4 flex flex-col h-[230px]">
+                        <div className="p-4 pb-3 flex flex-col h-[230px]">
                           {/* Address & Location */}
                           <div className="flex-none">
                             <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
@@ -301,14 +301,14 @@ const InvestmentListings = () => {
                           </div>
 
                           {/* Price */}
-                          <div className="pt-3 mt-3 border-t border-white/10 flex-none">
+                          <div className="pt-2 mt-2 border-t border-white/10 flex-none">
                             <p className="text-lg font-bold text-foreground">
                               {formatPrice(listing.asking_price)}
                             </p>
                           </div>
 
                           {/* Action Buttons - Push to Bottom */}
-                          <div className="flex gap-2 mt-auto pt-3 flex-none">
+                          <div className="flex gap-2 mt-auto pt-2 flex-none">
                             {listing.om_url ? (
                               <Button 
                                 size="sm"
