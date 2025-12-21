@@ -43,91 +43,148 @@ export default function Home() {
       <SEOHelmet title="Bridge Advisory Group | NYC Real Estate Brokerage" description="New York City's premier multi-division real estate platform. Investment sales, commercial leasing, residential services, and capital advisory." path="/" />
       
       {/* Hero Section */}
-      <section className="relative min-h-screen flex flex-col overflow-hidden px-4 md:px-6">
-        <div className="absolute inset-0 bg-cover bg-center" style={{
-        backgroundImage: `url(${heroImage})`,
-        filter: "brightness(0.6) contrast(1.1)"
-      }} />
+      <section className="relative min-h-screen overflow-hidden px-4 md:px-6">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${heroImage})`,
+            filter: "brightness(0.6) contrast(1.1)",
+          }}
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/60" />
 
-        {/* Zone 1: Logo at top */}
-        <div className="relative z-10 flex-shrink-0 pt-16 sm:pt-14 md:pt-16 text-center -mb-20 sm:-mb-16 md:-mb-8">
-          <div className="animate-fade-in overflow-hidden" style={{
-          animationDelay: "200ms",
-          animationFillMode: "backwards"
-        }}>
-            <img 
-              alt="Bridge Advisory Group" 
-              className="mx-auto w-[200px] sm:w-[280px] md:w-[360px] lg:w-[450px] xl:w-[550px] h-auto object-contain drop-shadow-lg" 
-              src={bridgeAdvisoryLogoWhite} 
+        {/* Hero Content */}
+        <div className="relative z-10 min-h-screen flex flex-col items-center justify-center text-center pt-24 sm:pt-28 md:pt-32 pb-24 sm:pb-28 md:pb-32">
+          <div
+            className="animate-fade-in overflow-hidden"
+            style={{
+              animationDelay: "200ms",
+              animationFillMode: "backwards",
+            }}
+          >
+            <img
+              alt="Bridge Advisory Group"
+              className="mx-auto w-[200px] sm:w-[280px] md:w-[360px] lg:w-[450px] xl:w-[550px] h-auto object-contain drop-shadow-lg mb-6 sm:mb-8 md:mb-10"
+              src={bridgeAdvisoryLogoWhite}
             />
           </div>
-        </div>
 
-        {/* Zone 2: Content centered in middle */}
-        <div className="relative z-10 flex-1 flex items-center justify-center pb-20 sm:pb-28 md:pb-40">
-          <div className="container mx-auto text-center max-w-5xl -translate-y-8 sm:-translate-y-12 md:-translate-y-20">
-            
-
-            <p style={{
-            animationDelay: "500ms",
-            animationFillMode: "backwards"
-          }} className="text-sm sm:text-base md:text-lg lg:text-xl mb-5 md:mb-5 max-w-3xl mx-auto px-2 sm:px-4 animate-fade-in text-primary bg-black/0 font-medium leading-relaxed">
+          <div className="container mx-auto max-w-5xl">
+            <h1 className="sr-only">NYC Real Estate Brokerage | Bridge Advisory Group</h1>
+            <p
+              style={{
+                animationDelay: "500ms",
+                animationFillMode: "backwards",
+              }}
+              className="text-sm sm:text-base md:text-lg lg:text-xl mb-5 md:mb-5 max-w-3xl mx-auto px-2 sm:px-4 animate-fade-in text-primary bg-black/0 font-medium leading-relaxed"
+            >
               {COMPANY_INFO.description.full}
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center px-2 sm:px-4 animate-fade-in" style={{
-            animationDelay: "600ms",
-            animationFillMode: "backwards"
-          }}>
-              <Button asChild size="default" className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto bg-white text-black hover:bg-white/90 min-h-[48px]">
+            <div
+              className="flex flex-col sm:flex-row gap-3 justify-center px-2 sm:px-4 animate-fade-in"
+              style={{
+                animationDelay: "600ms",
+                animationFillMode: "backwards",
+              }}
+            >
+              <Button
+                asChild
+                size="default"
+                className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto bg-white text-black hover:bg-white/90 min-h-[48px]"
+              >
                 <a href="#mission">Explore Services</a>
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button size="default" className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto bg-white text-black hover:bg-white/90 min-h-[48px]">
+                  <Button
+                    size="default"
+                    className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto bg-white text-black hover:bg-white/90 min-h-[48px]"
+                  >
                     Current Listings
                     <ChevronDown className="ml-2 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="center" className="bg-white border-border text-black z-50">
-                  {LISTINGS_ITEMS.items.map(item => <DropdownMenuItem key={item.name} asChild>
-                      {item.external ? <a href={item.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between w-full cursor-pointer min-h-[44px]">
+                  {LISTINGS_ITEMS.items.map(item => (
+                    <DropdownMenuItem key={item.name} asChild>
+                      {item.external ? (
+                        <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-between w-full cursor-pointer min-h-[44px]"
+                        >
                           {item.name}
                           <ExternalLink className="ml-2 h-3 w-3 opacity-50" />
-                        </a> : <Link to={item.url} className="cursor-pointer bg-white min-h-[44px] flex items-center">{item.name}</Link>}
-                    </DropdownMenuItem>)}
+                        </a>
+                      ) : (
+                        <Link to={item.url} className="cursor-pointer bg-white min-h-[44px] flex items-center">
+                          {item.name}
+                        </Link>
+                      )}
+                    </DropdownMenuItem>
+                  ))}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
 
             {/* Quick Access Service Buttons */}
-            <div className="flex flex-wrap gap-2 justify-center px-2 sm:px-4 mt-4 animate-fade-in" style={{
-            animationDelay: "700ms",
-            animationFillMode: "backwards"
-          }}>
-              <Button asChild variant="outline" size="sm" className="font-light px-3 sm:px-4 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white min-h-[40px]">
+            <div
+              className="flex flex-wrap gap-2 justify-center px-2 sm:px-4 mt-4 animate-fade-in"
+              style={{
+                animationDelay: "700ms",
+                animationFillMode: "backwards",
+              }}
+            >
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="font-light px-3 sm:px-4 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white min-h-[40px]"
+              >
                 <Link to="/services/residential">Residential</Link>
               </Button>
-              <Button asChild variant="outline" size="sm" className="font-light px-3 sm:px-4 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white min-h-[40px]">
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="font-light px-3 sm:px-4 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white min-h-[40px]"
+              >
                 <Link to="/services/commercial-leasing">Commercial</Link>
               </Button>
-              <Button asChild variant="outline" size="sm" className="font-light px-3 sm:px-4 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white min-h-[40px]">
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="font-light px-3 sm:px-4 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white min-h-[40px]"
+              >
                 <Link to="/services/investment-sales">Investment</Link>
               </Button>
-              <Button asChild variant="outline" size="sm" className="font-light px-3 sm:px-4 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white min-h-[40px] hidden sm:inline-flex">
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="font-light px-3 sm:px-4 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white min-h-[40px] hidden sm:inline-flex"
+              >
                 <Link to="/services/capital-advisory">Capital</Link>
               </Button>
             </div>
           </div>
         </div>
 
-        {/* Zone 3: Scroll Indicator - absolutely positioned at bottom */}
-        <div className="absolute bottom-6 left-0 right-0 z-10 animate-fade-in hidden md:flex justify-center" style={{
-        animationDelay: "900ms",
-        animationFillMode: "backwards"
-      }}>
-          <a href="#mission" className="flex flex-col items-center gap-2 text-white/60 hover:text-white/90 transition-colors cursor-pointer">
+        {/* Scroll Indicator - absolutely positioned at bottom */}
+        <div
+          className="absolute bottom-6 left-0 right-0 z-10 animate-fade-in hidden md:flex justify-center"
+          style={{
+            animationDelay: "900ms",
+            animationFillMode: "backwards",
+          }}
+        >
+          <a
+            href="#mission"
+            className="flex flex-col items-center gap-2 text-white/60 hover:text-white/90 transition-colors cursor-pointer"
+          >
             <span className="text-sm tracking-wider uppercase font-light">Scroll to Explore</span>
             <ChevronDown className="h-6 w-6 animate-bounce-gentle" />
           </a>
