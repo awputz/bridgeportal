@@ -24,7 +24,7 @@ export default function CapitalAdvisory() {
       <section className="relative h-[45vh] md:h-[55vh] lg:h-[60vh] min-h-[320px] md:min-h-[400px] lg:min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img 
-            src={PLACEHOLDER_IMAGES.finance.charts} 
+            src={PLACEHOLDER_IMAGES.finance.capital} 
             alt="Capital markets and finance" 
             className="w-full h-full object-cover"
           />
