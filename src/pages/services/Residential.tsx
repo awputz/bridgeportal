@@ -9,7 +9,7 @@ import { TeamHighlight } from "@/components/TeamHighlight";
 import manhattanImg from "@/assets/manhattan-market.jpg";
 import brooklynImg from "@/assets/brooklyn-market.jpg";
 import queensImg from "@/assets/queens-market.jpg";
-import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
+import residentialHeroImg from "@/assets/residential-hero.jpg";
 
 const defaultStats = [
   { label: "Units Represented", value: "500+" },
@@ -55,7 +55,7 @@ export default function ResidentialServices() {
       <section className="relative min-h-[40vh] sm:min-h-[45vh] md:min-h-[55vh] lg:min-h-[70vh] flex items-center justify-center pt-16 sm:pt-20 md:pt-28 lg:pt-32 xl:pt-40 pb-6 sm:pb-8 md:pb-12 lg:pb-16 xl:pb-24">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${PLACEHOLDER_IMAGES.building.apartment})` }}
+          style={{ backgroundImage: `url(${residentialHeroImg})` }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/70 to-background" />
         
