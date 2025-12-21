@@ -9,7 +9,7 @@ import { useInvestmentListings, InvestmentListing } from "@/hooks/useInvestmentL
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { InvestmentListingDialog } from "@/components/InvestmentListingDialog";
-import brooklynBridgeHero from "@/assets/brooklyn-bridge-hero.jpg";
+import investmentSalesListingsHero from "@/assets/investment-sales-listings-hero.jpg";
 import {
   Select,
   SelectContent,
@@ -137,7 +137,7 @@ const InvestmentListings = () => {
           className={`relative h-[35vh] sm:h-[40vh] md:h-[45vh] min-h-[280px] sm:min-h-[320px] md:min-h-[400px] flex items-center justify-center transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
           <img 
-            src={brooklynBridgeHero} 
+            src={investmentSalesListingsHero} 
             alt="New York City" 
             className="absolute inset-0 w-full h-full object-cover"
           />
