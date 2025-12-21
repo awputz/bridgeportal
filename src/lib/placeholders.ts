@@ -54,6 +54,7 @@ export const PLACEHOLDER_IMAGES = {
     creative: "https://images.unsplash.com/photo-1542744094-3a31f272c490?w=1200&h=800&fit=crop&q=80",
     digital: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=800&fit=crop&q=80",
     campaign: "https://images.unsplash.com/photo-1533750349088-cd871a92f312?w=1200&h=800&fit=crop&q=80",
+    hero: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1920&h=1080&fit=crop&q=80",
   },
   
   // Finance/Capital images
@@ -61,6 +62,7 @@ export const PLACEHOLDER_IMAGES = {
     charts: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&h=800&fit=crop&q=80",
     handshake: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&h=800&fit=crop&q=80",
     documents: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=1200&h=800&fit=crop&q=80",
+    capital: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&h=1080&fit=crop&q=80",
   },
   
   // Billboard/Outdoor advertising
@@ -75,6 +77,7 @@ export const PLACEHOLDER_IMAGES = {
     brooklyn: "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=800&h=600&fit=crop&q=80",
     queens: "https://images.unsplash.com/photo-1500916434205-0c77489c6cf7?w=800&h=600&fit=crop&q=80",
     bronx: "https://images.unsplash.com/photo-1569974507005-6dc61f97fb5c?w=800&h=600&fit=crop&q=80",
+    nolita: "https://images.unsplash.com/photo-1555529771-835f59fc5efe?w=1920&h=1080&fit=crop&q=80",
   },
   
   // Press/Media images
