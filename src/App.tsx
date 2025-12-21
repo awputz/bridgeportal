@@ -55,10 +55,14 @@ import RenterResources from "./pages/services/residential/RenterResources";
 import InvestmentValuations from "./pages/services/investment-sales/Valuations";
 import InvestmentListings from "./pages/services/investment-sales/Listings";
 import InvestmentDealRoom from "./pages/services/investment-sales/DealRoom";
+import InvestmentSalesTools from "./pages/services/investment-sales/Tools";
 
 import CommercialTenantRep from "./pages/services/commercial-leasing/TenantRep";
 import CommercialLandlordRep from "./pages/services/commercial-leasing/LandlordRep";
+import CommercialLeasingTools from "./pages/services/commercial-leasing/Tools";
 import CommercialListings from "./pages/CommercialListings";
+
+import PropertyManagementTools from "./pages/services/property-management/Tools";
 
 // Capital Advisory sub-pages removed - consolidated into main page
 // Property Management sub-pages removed - consolidated into main page
@@ -141,6 +145,7 @@ const App = () => {
                     <Route path="/services/investment-sales/valuations" element={<InvestmentValuations />} />
                     <Route path="/services/investment-sales/listings" element={<InvestmentListings />} />
                     <Route path="/services/investment-sales/deal-room/:listingId" element={<InvestmentDealRoom />} />
+                    <Route path="/services/investment-sales/tools" element={<InvestmentSalesTools />} />
                     <Route path="/services/investment-sales/track-record" element={<Navigate to="/transactions" replace />} />
                     {/* Investment Sales redirects (consolidated pages) */}
                     <Route path="/services/investment-sales/acquisitions" element={<Navigate to="/services/investment-sales" replace />} />
@@ -152,6 +157,7 @@ const App = () => {
                     {/* Commercial Leasing Sub-Pages (kept) */}
                     <Route path="/services/commercial-leasing/tenant-rep" element={<CommercialTenantRep />} />
                     <Route path="/services/commercial-leasing/landlord-rep" element={<CommercialLandlordRep />} />
+                    <Route path="/services/commercial-leasing/tools" element={<CommercialLeasingTools />} />
                     {/* Commercial Leasing redirects (consolidated pages) */}
                     <Route path="/services/commercial-leasing/listings" element={<Navigate to="/commercial-listings" replace />} />
                     <Route path="/services/commercial-leasing/retail" element={<Navigate to="/services/commercial-leasing" replace />} />
@@ -165,7 +171,8 @@ const App = () => {
                     <Route path="/services/capital-advisory/refinance" element={<Navigate to="/services/capital-advisory" replace />} />
                     <Route path="/services/capital-advisory/construction" element={<Navigate to="/services/capital-advisory" replace />} />
                     
-                    {/* Property Management - All sub-pages redirect to main overview */}
+                    {/* Property Management - Sub-pages and redirects */}
+                    <Route path="/services/property-management/tools" element={<PropertyManagementTools />} />
                     <Route path="/services/property-management/portfolio" element={<Navigate to="/services/property-management" replace />} />
                     <Route path="/services/property-management/services" element={<Navigate to="/services/property-management" replace />} />
                     <Route path="/services/property-management/reporting" element={<Navigate to="/services/property-management" replace />} />

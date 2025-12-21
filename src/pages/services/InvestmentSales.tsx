@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Building2, TrendingUp, Users, ArrowRight, BarChart3, Calculator, Target, FileText, Handshake } from "lucide-react";
+import { Building2, TrendingUp, Users, ArrowRight, BarChart3, Target, FileText, Handshake } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useTransactions } from "@/hooks/useTransactions";
@@ -8,7 +8,6 @@ import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { DIVISIONS } from "@/lib/constants";
 import { MarketStats } from "@/components/MarketStats";
-import { InvestmentCalculator } from "@/components/InvestmentCalculator";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { TeamHighlight } from "@/components/TeamHighlight";
 import { useInvestmentSalesSection, getSectionMetadata, type ProcessStep, type ServiceItem, type ClientProfile, type BoroughData } from "@/hooks/useBridgeInvestmentSalesContent";
@@ -62,7 +61,6 @@ export default function InvestmentSales() {
   const differentiatorReveal = useScrollReveal(0.1);
   const closingsReveal = useScrollReveal(0.1);
   const marketReveal = useScrollReveal(0.1);
-  const calculatorReveal = useScrollReveal(0.1);
   const {
     data: transactions = []
   } = useTransactions();
@@ -187,27 +185,6 @@ export default function InvestmentSales() {
         </section>}
 
       {/* Market Intelligence Section - Enhanced with clarification */}
-      
-
-      {/* Investment Calculator Section */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={calculatorReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6">
-          <div className={`text-center mb-12 transition-all duration-700 ${calculatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <Calculator className="h-10 w-10 text-accent" />
-              <h2 className="text-3xl md:text-4xl font-light">Investment Calculator</h2>
-            </div>
-            <p className="text-muted-foreground font-light max-w-2xl mx-auto">
-              Model your acquisition scenarios with our comprehensive underwriting tool.
-            </p>
-          </div>
-          <div className={`transition-all duration-700 ${calculatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
-          transitionDelay: '200ms'
-        }}>
-            <InvestmentCalculator />
-          </div>
-        </div>
-      </section>
 
       {/* Selected Closings */}
       {recentTransactions.length > 0 && <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={closingsReveal.elementRef}>
