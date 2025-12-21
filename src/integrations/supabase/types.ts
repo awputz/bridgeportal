@@ -468,6 +468,57 @@ export type Database = {
           },
         ]
       }
+      deal_room_registrations: {
+        Row: {
+          access_count: number | null
+          brokerage_firm: string | null
+          company_name: string | null
+          created_at: string | null
+          email: string
+          full_name: string
+          id: string
+          last_accessed_at: string | null
+          listing_id: string
+          notes: string | null
+          phone: string
+          registered_at: string
+          user_type: string
+          working_with: string | null
+        }
+        Insert: {
+          access_count?: number | null
+          brokerage_firm?: string | null
+          company_name?: string | null
+          created_at?: string | null
+          email: string
+          full_name: string
+          id?: string
+          last_accessed_at?: string | null
+          listing_id: string
+          notes?: string | null
+          phone: string
+          registered_at?: string
+          user_type: string
+          working_with?: string | null
+        }
+        Update: {
+          access_count?: number | null
+          brokerage_firm?: string | null
+          company_name?: string | null
+          created_at?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          last_accessed_at?: string | null
+          listing_id?: string
+          notes?: string | null
+          phone?: string
+          registered_at?: string
+          user_type?: string
+          working_with?: string | null
+        }
+        Relationships: []
+      }
       investment_listings: {
         Row: {
           asking_price: number | null
