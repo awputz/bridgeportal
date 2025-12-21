@@ -79,7 +79,7 @@ export default function Home() {
             animationFillMode: "backwards"
           }}>
               <Button asChild size="default" className="font-light text-sm md:text-base px-5 md:px-10 w-full sm:w-auto">
-                <a href="#mission">Explore Services</a>
+                <a href="#mission" className="bg-destructive-foreground">Explore Services</a>
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
