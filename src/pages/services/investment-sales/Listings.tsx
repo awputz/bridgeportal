@@ -300,24 +300,11 @@ const InvestmentListings = () => {
                             )}
                           </div>
 
-                          {/* Price & Cap Rate - Always Same Height */}
-                          <div className="flex items-center justify-between pt-3 mt-3 border-t border-white/10 flex-none">
+                          {/* Price */}
+                          <div className="pt-3 mt-3 border-t border-white/10 flex-none">
                             <p className="text-lg font-bold text-foreground">
                               {formatPrice(listing.asking_price)}
                             </p>
-                            <div className="text-right min-w-[60px]">
-                              {listing.cap_rate ? (
-                                <>
-                                  <p className="text-xs text-muted-foreground">Cap</p>
-                                  <p className="text-sm font-semibold text-primary flex items-center justify-end gap-0.5">
-                                    <TrendingUp className="w-3 h-3" />
-                                    {formatCapRate(listing.cap_rate)}
-                                  </p>
-                                </>
-                              ) : (
-                                <span className="text-xs text-muted-foreground">—</span>
-                              )}
-                            </div>
                           </div>
 
                           {/* Action Buttons - Push to Bottom */}

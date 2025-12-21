@@ -1,8 +1,10 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { X, Download, Building2, Store, MapPin, Ruler, Calendar, Clock, DollarSign, ArrowUp, MessageSquare } from "lucide-react";
+import { X, Download, Building2, Store, MapPin, Ruler, Calendar, Clock, DollarSign, ArrowUp, MessageSquare, Mail, Phone } from "lucide-react";
+import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { CommercialListing } from "@/hooks/useCommercialListings";
 
@@ -11,6 +13,15 @@ interface CommercialListingDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
+
+const getInitials = (name: string) => {
+  return name
+    .split(' ')
+    .map(n => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
+};
 
 export const CommercialListingDialog = ({
   listing,
@@ -162,6 +173,57 @@ export const CommercialListingDialog = ({
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   {listing.description}
                 </p>
+              </div>
+            )}
+
+            {/* Listing Agents */}
+            {listing.agents && listing.agents.length > 0 && (
+              <div className="space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-300 ease-out delay-125">
+                <p className="text-xs text-muted-foreground">Listing Agents</p>
+                <div className="space-y-2">
+                  {listing.agents.map((agent) => (
+                    <div 
+                      key={agent.id}
+                      className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02] border border-white/10"
+                    >
+                      <Avatar className="h-10 w-10 border border-white/10">
+                        <AvatarImage src={agent.image_url || undefined} alt={agent.name} />
+                        <AvatarFallback className="bg-primary/10 text-primary text-sm">
+                          {getInitials(agent.name)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        {agent.slug ? (
+                          <Link 
+                            to={`/team/${agent.slug}`}
+                            className="font-medium text-foreground hover:text-primary transition-colors"
+                          >
+                            {agent.name}
+                          </Link>
+                        ) : (
+                          <p className="font-medium text-foreground">{agent.name}</p>
+                        )}
+                        <p className="text-xs text-muted-foreground truncate">{agent.title}</p>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        {agent.email && (
+                          <Button size="icon" variant="ghost" className="h-8 w-8" asChild>
+                            <a href={`mailto:${agent.email}`} title={`Email ${agent.name}`}>
+                              <Mail className="w-4 h-4" />
+                            </a>
+                          </Button>
+                        )}
+                        {agent.phone && (
+                          <Button size="icon" variant="ghost" className="h-8 w-8" asChild>
+                            <a href={`tel:${agent.phone}`} title={`Call ${agent.name}`}>
+                              <Phone className="w-4 h-4" />
+                            </a>
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
