@@ -79,6 +79,7 @@ export const PLACEHOLDER_IMAGES = {
     bronx: "https://images.unsplash.com/photo-1569974507005-6dc61f97fb5c?w=800&h=600&fit=crop&q=80",
     nolita: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=1920&h=1080&fit=crop&q=80",
     soho: "https://images.unsplash.com/photo-1534430480872-3498386e7856?w=1920&h=1080&fit=crop&q=80",
+    sohoAerial: "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=1920&h=1080&fit=crop&q=80",
   },
   
   // Press/Media images
