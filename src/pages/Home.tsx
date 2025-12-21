@@ -145,33 +145,33 @@ export default function Home() {
 
           {/* Mission, Vision & Approach Cards */}
           <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <div className={`p-6 md:p-8 rounded-xl border border-border/50 bg-card/50 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
+          <div className={`glass-card p-6 md:p-8 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
             transitionDelay: missionReveal.isVisible ? "100ms" : "0ms"
           }}>
-              <Target className="h-8 w-8 text-primary mb-4" />
-              <h3 className="text-xl font-medium mb-3">Mission</h3>
-              <p className="text-muted-foreground font-light text-sm leading-relaxed">
-                Deliver exceptional real estate advisory through integrity, expertise, and client-first service.
-              </p>
-            </div>
-            <div className={`p-6 md:p-8 rounded-xl border border-border/50 bg-card/50 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
+            <Target className="h-8 w-8 text-primary mb-4" />
+            <h3 className="text-xl font-medium mb-3 text-white">Mission</h3>
+            <p className="text-white/70 font-light text-sm leading-relaxed">
+              Deliver exceptional real estate advisory through integrity, expertise, and client-first service.
+            </p>
+          </div>
+          <div className={`glass-card p-6 md:p-8 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
             transitionDelay: missionReveal.isVisible ? "200ms" : "0ms"
           }}>
-              <Eye className="h-8 w-8 text-primary mb-4" />
-              <h3 className="text-xl font-medium mb-3">Vision</h3>
-              <p className="text-muted-foreground font-light text-sm leading-relaxed">
-                Be New York's most trusted real estate platform—where every transaction builds lasting relationships.
-              </p>
-            </div>
-            <div className={`p-6 md:p-8 rounded-xl border border-border/50 bg-card/50 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
+            <Eye className="h-8 w-8 text-primary mb-4" />
+            <h3 className="text-xl font-medium mb-3 text-white">Vision</h3>
+            <p className="text-white/70 font-light text-sm leading-relaxed">
+              Be New York's most trusted real estate platform—where every transaction builds lasting relationships.
+            </p>
+          </div>
+          <div className={`glass-card p-6 md:p-8 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
             transitionDelay: missionReveal.isVisible ? "300ms" : "0ms"
           }}>
-              <Compass className="h-8 w-8 text-primary mb-4" />
-              <h3 className="text-xl font-medium mb-3">Approach</h3>
-              <p className="text-muted-foreground font-light text-sm leading-relaxed">
-                Principal-level thinking combined with hands-on execution across every transaction.
-              </p>
-            </div>
+            <Compass className="h-8 w-8 text-primary mb-4" />
+            <h3 className="text-xl font-medium mb-3 text-white">Approach</h3>
+            <p className="text-white/70 font-light text-sm leading-relaxed">
+              Principal-level thinking combined with hands-on execution across every transaction.
+            </p>
+          </div>
           </div>
 
           {/* About Us Button */}

@@ -152,13 +152,13 @@ export default function Billboard() {
             {boroughs.map((borough, index) => (
               <div 
                 key={borough.name}
-                className={`p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] text-center transition-all duration-700 ${boroughsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                className={`glass-card p-6 text-center transition-all duration-700 ${boroughsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
-                <h3 className="text-lg font-light mb-2">{borough.name}</h3>
+                <h3 className="text-lg font-light mb-2 text-white">{borough.name}</h3>
                 <div className="text-2xl font-light text-accent mb-1">{borough.locations}</div>
-                <p className="text-xs text-muted-foreground font-light">locations</p>
-                <p className="text-sm text-muted-foreground font-light mt-2">{borough.impressions}</p>
+                <p className="text-xs text-white/60 font-light">locations</p>
+                <p className="text-sm text-white/70 font-light mt-2">{borough.impressions}</p>
               </div>
             ))}
           </div>
@@ -267,16 +267,16 @@ export default function Billboard() {
             {pricingTiers.map((tier, index) => (
               <div 
                 key={tier.category}
-                className={`p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-700 ${pricingReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                className={`glass-card p-6 md:p-8 transition-all duration-700 ${pricingReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
-                <h3 className="text-xl font-light mb-2">{tier.category}</h3>
-                <p className="text-sm text-muted-foreground font-light mb-4">{tier.description}</p>
+                <h3 className="text-xl font-light mb-2 text-white">{tier.category}</h3>
+                <p className="text-sm text-white/70 font-light mb-4">{tier.description}</p>
                 <div className="text-2xl font-light text-accent mb-2">{tier.priceRange}</div>
-                <p className="text-sm text-muted-foreground font-light mb-4">Min term: {tier.minTerm}</p>
+                <p className="text-sm text-white/70 font-light mb-4">Min term: {tier.minTerm}</p>
                 <ul className="space-y-2">
                   {tier.includes.map((item) => (
-                    <li key={item} className="text-sm text-muted-foreground font-light flex items-start gap-2">
+                    <li key={item} className="text-sm text-white/70 font-light flex items-start gap-2">
                       <ArrowRight className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                       {item}
                     </li>

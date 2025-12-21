@@ -131,22 +131,22 @@ export default function About() {
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
           <h2 className="text-3xl md:text-4xl font-light mb-10 text-center">Mission & Vision</h2>
           <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-            <div className={`p-6 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-700 ${missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              <Target className="h-8 w-8 text-accent mb-4" />
-              <h3 className="text-xl font-light mb-3">Mission</h3>
-              <p className="text-sm text-muted-foreground font-light leading-relaxed">
-                To redefine real estate service excellence across New York through expert-led strategies that maximize value and foster long-term relationships.
-              </p>
-            </div>
-            <div className={`p-6 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-700 ${missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
+          <div className={`glass-card p-6 transition-all duration-700 ${missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <Target className="h-8 w-8 text-accent mb-4" />
+            <h3 className="text-xl font-light mb-3 text-white">Mission</h3>
+            <p className="text-sm text-white/70 font-light leading-relaxed">
+              To redefine real estate service excellence across New York through expert-led strategies that maximize value and foster long-term relationships.
+            </p>
+          </div>
+          <div className={`glass-card p-6 transition-all duration-700 ${missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
             transitionDelay: '100ms'
           }}>
-              <Eye className="h-8 w-8 text-accent mb-4" />
-              <h3 className="text-xl font-light mb-3">Vision</h3>
-              <p className="text-sm text-muted-foreground font-light leading-relaxed">
-                To be New York's leading real estate advisory firm, known for innovative approaches and unwavering commitment to client success.
-              </p>
-            </div>
+            <Eye className="h-8 w-8 text-accent mb-4" />
+            <h3 className="text-xl font-light mb-3 text-white">Vision</h3>
+            <p className="text-sm text-white/70 font-light leading-relaxed">
+              To be New York's leading real estate advisory firm, known for innovative approaches and unwavering commitment to client success.
+            </p>
+          </div>
           </div>
         </div>
       </section>
