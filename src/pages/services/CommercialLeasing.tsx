@@ -199,7 +199,7 @@ export default function CommercialLeasing() {
               Comprehensive commercial leasing services.
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-              {services.map((service, index) => <div key={service.title} className="p-6 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-300 hover:bg-white/[0.04]" style={{
+              {services.map((service, index) => <div key={service.title} className="px-6 pt-6 pb-4 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-300 hover:bg-white/[0.04]" style={{
               transitionDelay: `${index * 50}ms`
             }}>
                   <service.icon className="h-8 w-8 text-accent mb-4" />
