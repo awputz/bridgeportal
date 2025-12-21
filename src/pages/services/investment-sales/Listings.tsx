@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SEOHelmet } from "@/components/SEOHelmet";
 import { ServicePageNav } from "@/components/ServicePageNav";
-import { useInvestmentListings } from "@/hooks/useInvestmentListings";
+import { useInvestmentListings, InvestmentListing } from "@/hooks/useInvestmentListings";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
+import { InvestmentListingDialog } from "@/components/InvestmentListingDialog";
 import brooklynBridgeHero from "@/assets/brooklyn-bridge-hero.jpg";
 import {
   Select,
@@ -43,6 +44,9 @@ const InvestmentListings = () => {
   const { data: listings, isLoading } = useInvestmentListings();
   const { elementRef: heroRef, isVisible: heroVisible } = useScrollReveal();
   const { elementRef: gridRef, isVisible: gridVisible } = useScrollReveal();
+
+  // Selected listing for dialog
+  const [selectedListing, setSelectedListing] = useState<InvestmentListing | null>(null);
 
   // Filter states
   const [selectedBorough, setSelectedBorough] = useState<string>("all");
@@ -244,7 +248,8 @@ const InvestmentListings = () => {
                     {filteredListings.map((listing, index) => (
                       <article
                         key={listing.id}
-                        className="group relative bg-white/[0.02] border border-white/10 rounded-xl overflow-hidden hover:bg-white/[0.04] hover:border-white/20 transition-all duration-500"
+                        onClick={() => setSelectedListing(listing)}
+                        className="group relative bg-white/[0.02] border border-white/10 rounded-xl overflow-hidden hover:bg-white/[0.04] hover:border-white/20 transition-all duration-500 cursor-pointer"
                         style={{ animationDelay: `${index * 100}ms` }}
                       >
                         {/* Property Image - Compact */}
@@ -423,6 +428,13 @@ const InvestmentListings = () => {
           </div>
         </section>
       </main>
+
+      {/* Listing Detail Dialog */}
+      <InvestmentListingDialog
+        listing={selectedListing}
+        open={!!selectedListing}
+        onOpenChange={(open) => !open && setSelectedListing(null)}
+      />
     </>
   );
 };

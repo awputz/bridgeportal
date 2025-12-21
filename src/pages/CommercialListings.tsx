@@ -9,6 +9,7 @@ import { useCommercialListings, CommercialListing } from "@/hooks/useCommercialL
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { cn } from "@/lib/utils";
+import { CommercialListingDialog } from "@/components/CommercialListingDialog";
 import commercialHero from "@/assets/commercial-listings-hero.jpg";
 
 const CommercialListings = () => {
@@ -16,6 +17,9 @@ const CommercialListings = () => {
   const { data: listings, isLoading } = useCommercialListings();
   const { openContactSheet } = useContactSheet();
   const { elementRef: heroRef, isVisible: heroVisible } = useScrollReveal();
+
+  // Selected listing for dialog
+  const [selectedListing, setSelectedListing] = useState<CommercialListing | null>(null);
 
   const officeListings = listings?.filter((l) => l.listing_type === "office") || [];
   const retailListings = listings?.filter((l) => l.listing_type === "retail") || [];
@@ -110,6 +114,7 @@ const CommercialListings = () => {
                         key={listing.id}
                         listing={listing}
                         onInquire={openContactSheet}
+                        onClick={() => setSelectedListing(listing)}
                       />
                     ))}
                   </div>
@@ -170,6 +175,13 @@ const CommercialListings = () => {
           </div>
         </section>
       </main>
+
+      {/* Listing Detail Dialog */}
+      <CommercialListingDialog
+        listing={selectedListing}
+        open={!!selectedListing}
+        onOpenChange={(open) => !open && setSelectedListing(null)}
+      />
     </>
   );
 };
@@ -178,14 +190,19 @@ const CommercialListings = () => {
 const ListingCard = ({
   listing,
   onInquire,
+  onClick,
 }: {
   listing: CommercialListing;
   onInquire: () => void;
+  onClick: () => void;
 }) => {
   const isOffice = listing.listing_type === "office";
 
   return (
-    <Card className="overflow-hidden hover:shadow-md transition-shadow">
+    <Card 
+      className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+      onClick={onClick}
+    >
       {/* Image */}
       <div className="aspect-[16/10] bg-muted relative">
         {listing.image_url ? (
@@ -252,7 +269,7 @@ const ListingCard = ({
 
 
         {/* Actions */}
-        <div className="flex gap-2">
+        <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
           <Button 
             asChild={!!listing.flyer_url} 
             size="sm" 
