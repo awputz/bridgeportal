@@ -352,6 +352,55 @@ export type Database = {
         }
         Relationships: []
       }
+      commercial_listing_agents: {
+        Row: {
+          agent_id: string
+          created_at: string | null
+          display_order: number | null
+          id: string
+          listing_id: string
+          role: string | null
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          listing_id: string
+          role?: string | null
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          listing_id?: string
+          role?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commercial_listing_agents_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "team_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commercial_listing_agents_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "team_members_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commercial_listing_agents_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "commercial_listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       commercial_listings: {
         Row: {
           asking_rent: number | null
@@ -518,6 +567,55 @@ export type Database = {
           working_with?: string | null
         }
         Relationships: []
+      }
+      investment_listing_agents: {
+        Row: {
+          agent_id: string
+          created_at: string | null
+          display_order: number | null
+          id: string
+          listing_id: string
+          role: string | null
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          listing_id: string
+          role?: string | null
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          listing_id?: string
+          role?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investment_listing_agents_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "team_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "investment_listing_agents_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "team_members_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "investment_listing_agents_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "investment_listings"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       investment_listings: {
         Row: {
