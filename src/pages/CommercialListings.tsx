@@ -45,7 +45,7 @@ const CommercialListings = () => {
           <div className="absolute inset-0 bg-black/60" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
           <div className="relative z-10 text-center px-4 sm:px-6">
-            <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-bold text-white mb-2 sm:mb-4 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-light text-white mb-2 sm:mb-4 tracking-tight">
               Exclusive Commercial Listings
             </h1>
             <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/70 max-w-2xl mx-auto">
