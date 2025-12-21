@@ -142,7 +142,7 @@ export default function Transactions() {
       </section>
 
       {/* Transactions Grid */}
-      <section className="py-8 sm:py-12 md:py-16" ref={gridReveal.elementRef}>
+      <section className="py-12 md:py-20" ref={gridReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
           {isLoading ? (
             <div className="text-center py-16 sm:py-20">
@@ -238,7 +238,7 @@ export default function Transactions() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-24 bg-muted/30" ref={ctaReveal.elementRef}>
+      <section className="py-12 md:py-20 lg:py-28 bg-muted/30" ref={ctaReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
           <div className={`transition-all duration-700 ${
             ctaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'

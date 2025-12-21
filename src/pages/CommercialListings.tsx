@@ -81,7 +81,7 @@ const CommercialListings = () => {
         </div>
 
         {/* Map and Listings Container */}
-        <section className="py-8">
+        <section className="py-8 sm:py-12">
           <div className="container mx-auto px-4">
             <div className="grid lg:grid-cols-2 gap-6">
               {/* Listings Grid */}
@@ -155,7 +155,7 @@ const CommercialListings = () => {
         </section>
 
         {/* Compact CTA */}
-        <section className="py-16 px-6">
+        <section className="py-12 md:py-20 lg:py-28 px-6">
           <div className="max-w-4xl mx-auto text-center">
             <div className="glass-nav p-10">
               <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">Need Help Finding Space?</h2>

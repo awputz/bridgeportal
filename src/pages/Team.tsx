@@ -78,7 +78,7 @@ const Team = () => {
   const renderSection = (category: TeamCategory, isLeadership: boolean = false) => {
     const agents = data?.grouped[category] || [];
     if (agents.length === 0) return null;
-    return <div className="mb-10 sm:mb-16 md:mb-24 lg:mb-32">
+    return <div className="mb-12 sm:mb-16 md:mb-20 lg:mb-28">
         <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8 md:mb-12 lg:mb-16">
           <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-light">{CATEGORY_LABELS[category]}</h2>
           <div className="h-px flex-1 bg-border" />
