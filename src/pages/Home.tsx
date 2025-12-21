@@ -216,10 +216,10 @@ export default function Home() {
                 { icon: TrendingUp, title: "Investment Sales Advisory", desc: "Acquisition and disposition strategies that maximize value" },
                 { icon: Briefcase, title: "Portfolio & Asset Strategy", desc: "Comprehensive analysis for stabilized and value-add assets" }
               ].map((item, index) => (
-                <div key={item.title} className={`p-4 md:p-5 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: `${150 + index * 50}ms` }}>
+                <div key={item.title} className={`p-4 md:p-5 rounded-xl bg-black/40 backdrop-blur-xl border border-white/15 text-center transition-all duration-300 ease-out hover:bg-black/50 hover:border-white/25 ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: `${150 + index * 50}ms` }}>
                   <item.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary mx-auto mb-2" />
-                  <h4 className="text-sm font-medium mb-1">{item.title}</h4>
-                  <p className="text-muted-foreground font-light text-xs leading-relaxed">{item.desc}</p>
+                  <h4 className="text-sm font-medium mb-1 text-white">{item.title}</h4>
+                  <p className="text-white/70 font-light text-xs leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -242,10 +242,10 @@ export default function Home() {
                 { icon: Building, title: "Rentals And Sales", desc: "Find your next home or investment property" },
                 { icon: BarChart3, title: "Residential Market Intel", desc: "Data-driven insights for informed decisions" }
               ].map((item, index) => (
-                <div key={item.title} className={`p-4 md:p-5 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: `${350 + index * 50}ms` }}>
+                <div key={item.title} className={`p-4 md:p-5 rounded-xl bg-black/40 backdrop-blur-xl border border-white/15 text-center transition-all duration-300 ease-out hover:bg-black/50 hover:border-white/25 ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: `${350 + index * 50}ms` }}>
                   <item.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary mx-auto mb-2" />
-                  <h4 className="text-sm font-medium mb-1">{item.title}</h4>
-                  <p className="text-muted-foreground font-light text-xs leading-relaxed">{item.desc}</p>
+                  <h4 className="text-sm font-medium mb-1 text-white">{item.title}</h4>
+                  <p className="text-white/70 font-light text-xs leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -268,10 +268,10 @@ export default function Home() {
                 { icon: Handshake, title: "Equity And Joint Ventures", desc: "Strategic partnerships for growth and scale" },
                 { icon: RefreshCw, title: "Recapitalization", desc: "Restructure capital stacks to optimize returns" }
               ].map((item, index) => (
-                <div key={item.title} className={`p-4 md:p-5 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: `${550 + index * 50}ms` }}>
+                <div key={item.title} className={`p-4 md:p-5 rounded-xl bg-black/40 backdrop-blur-xl border border-white/15 text-center transition-all duration-300 ease-out hover:bg-black/50 hover:border-white/25 ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: `${550 + index * 50}ms` }}>
                   <item.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary mx-auto mb-2" />
-                  <h4 className="text-sm font-medium mb-1">{item.title}</h4>
-                  <p className="text-muted-foreground font-light text-xs leading-relaxed">{item.desc}</p>
+                  <h4 className="text-sm font-medium mb-1 text-white">{item.title}</h4>
+                  <p className="text-white/70 font-light text-xs leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
