@@ -35,9 +35,7 @@ export default function Home() {
     openContactSheet
   } = useContactSheet();
   const missionReveal = useScrollReveal(0.1);
-  const commercialReveal = useScrollReveal(0.1);
-  const residentialReveal = useScrollReveal(0.1);
-  const capitalReveal = useScrollReveal(0.1);
+  const divisionsReveal = useScrollReveal(0.1);
   const servicesReveal = useScrollReveal(0.1);
   const marketsReveal = useScrollReveal(0.1);
   const ctaReveal = useScrollReveal(0.1);
@@ -185,143 +183,98 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Commercial & Investment Expertise Section */}
-      <section className="py-16 md:py-24 bg-secondary" ref={commercialReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`text-center mb-12 transition-all duration-500 ease-out ${commercialReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Commercial & Investment Expertise</h2>
+      {/* Our Divisions - Unified Services Section */}
+      <section className="py-16 md:py-24 bg-secondary" ref={divisionsReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+          {/* Main Section Header */}
+          <div className={`text-center mb-14 transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Our Divisions</h2>
             <p className="text-muted-foreground font-light max-w-2xl mx-auto text-sm md:text-base">
-              Strategic leasing and investment advisory for office, retail, mixed-use, and multifamily assets across New York.
+              A full-service real estate advisory platform with specialized expertise across commercial, residential, and capital markets.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-5 mb-10">
-            {[{
-            icon: Users,
-            title: "Tenant & Landlord Rep",
-            desc: "Full-service representation for tenants and landlords"
-          }, {
-            icon: TrendingUp,
-            title: "Investment Sales Advisory",
-            desc: "Acquisition and disposition strategies that maximize value"
-          }, {
-            icon: Briefcase,
-            title: "Portfolio & Asset Strategy",
-            desc: "Comprehensive analysis for stabilized and value-add assets"
-          }].map((item, index) => <div key={item.title} className={`p-4 md:p-6 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${commercialReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
-            transitionDelay: commercialReveal.isVisible ? `${150 + index * 100}ms` : "0ms"
-          }}>
-                <item.icon className="h-6 w-6 md:h-7 md:w-7 text-primary mx-auto mb-2 md:mb-3" />
-                <h3 className="text-sm md:text-base font-medium mb-1 md:mb-2">{item.title}</h3>
-                <p className="text-muted-foreground font-light text-xs line-clamp-2">{item.desc}</p>
-              </div>)}
+          {/* Commercial & Investment */}
+          <div className="mb-12">
+            <div className={`flex items-center justify-between mb-6 transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: "100ms" }}>
+              <div>
+                <h3 className="text-lg md:text-xl font-medium text-foreground">Commercial & Investment</h3>
+                <p className="text-muted-foreground font-light text-sm">Strategic leasing and investment advisory</p>
+              </div>
+              <div className="flex gap-2">
+                <Button asChild variant="ghost" size="sm" className="font-light text-xs text-muted-foreground hover:text-foreground">
+                  <Link to="/services/investment-sales">Investment Sales <ArrowRight className="ml-1 h-3 w-3" /></Link>
+                </Button>
+                <Button asChild variant="ghost" size="sm" className="font-light text-xs text-muted-foreground hover:text-foreground hidden sm:inline-flex">
+                  <Link to="/services/commercial-leasing">Commercial Leasing <ArrowRight className="ml-1 h-3 w-3" /></Link>
+                </Button>
+              </div>
+            </div>
+            <div className="grid md:grid-cols-3 gap-4">
+              {[
+                { icon: Users, title: "Tenant & Landlord Rep", desc: "Full-service representation for tenants and landlords" },
+                { icon: TrendingUp, title: "Investment Sales Advisory", desc: "Acquisition and disposition strategies that maximize value" },
+                { icon: Briefcase, title: "Portfolio & Asset Strategy", desc: "Comprehensive analysis for stabilized and value-add assets" }
+              ].map((item, index) => (
+                <div key={item.title} className={`p-4 md:p-5 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: `${150 + index * 50}ms` }}>
+                  <item.icon className="h-6 w-6 text-primary mx-auto mb-2" />
+                  <h4 className="text-sm font-medium mb-1">{item.title}</h4>
+                  <p className="text-muted-foreground font-light text-xs line-clamp-2">{item.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className={`flex flex-wrap gap-4 justify-center transition-all duration-500 ease-out ${commercialReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
-          transitionDelay: commercialReveal.isVisible ? "450ms" : "0ms"
-        }}>
-            <Button asChild variant="link" className="font-light group text-muted-foreground hover:text-foreground">
-              <Link to="/services/investment-sales">
-                Explore Investment Sales
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-              </Link>
-            </Button>
-            <Button asChild variant="link" className="font-light group text-muted-foreground hover:text-foreground">
-              <Link to="/services/commercial-leasing">
-                Explore Commercial Leasing
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Residential Section */}
-      <section className="py-16 md:py-24" ref={residentialReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`text-center mb-12 transition-all duration-500 ease-out ${residentialReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Residential In A City That Never Slows Down</h2>
-            <p className="text-muted-foreground font-light max-w-2xl mx-auto text-sm md:text-base">
-              High-quality apartments, townhomes, and condos. Sharp process, clear communication.
-            </p>
+          {/* Residential */}
+          <div className="mb-12">
+            <div className={`flex items-center justify-between mb-6 transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: "300ms" }}>
+              <div>
+                <h3 className="text-lg md:text-xl font-medium text-foreground">Residential</h3>
+                <p className="text-muted-foreground font-light text-sm">High-quality apartments, townhomes, and condos</p>
+              </div>
+              <Button asChild variant="ghost" size="sm" className="font-light text-xs text-muted-foreground hover:text-foreground">
+                <Link to="/services/residential">Explore <ArrowRight className="ml-1 h-3 w-3" /></Link>
+              </Button>
+            </div>
+            <div className="grid md:grid-cols-3 gap-4">
+              {[
+                { icon: Key, title: "Landlord Leasing Programs", desc: "Maximize occupancy and rental income" },
+                { icon: Building, title: "Rentals And Sales", desc: "Find your next home or investment property" },
+                { icon: BarChart3, title: "Residential Market Intel", desc: "Data-driven insights for informed decisions" }
+              ].map((item, index) => (
+                <div key={item.title} className={`p-4 md:p-5 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: `${350 + index * 50}ms` }}>
+                  <item.icon className="h-6 w-6 text-primary mx-auto mb-2" />
+                  <h4 className="text-sm font-medium mb-1">{item.title}</h4>
+                  <p className="text-muted-foreground font-light text-xs line-clamp-2">{item.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-5 mb-10">
-            {[{
-            icon: Key,
-            title: "Landlord Leasing Programs",
-            desc: "Maximize occupancy and rental income"
-          }, {
-            icon: Building,
-            title: "Rentals And Sales",
-            desc: "Find your next home or investment property"
-          }, {
-            icon: BarChart3,
-            title: "Residential Market Intel",
-            desc: "Data-driven insights for informed decisions"
-          }].map((item, index) => <div key={item.title} className={`p-4 md:p-6 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${residentialReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
-            transitionDelay: residentialReveal.isVisible ? `${150 + index * 100}ms` : "0ms"
-          }}>
-                <item.icon className="h-6 w-6 md:h-7 md:w-7 text-primary mx-auto mb-2 md:mb-3" />
-                <h3 className="text-sm md:text-base font-medium mb-1 md:mb-2">{item.title}</h3>
-                <p className="text-muted-foreground font-light text-xs line-clamp-2">{item.desc}</p>
-              </div>)}
-          </div>
-
-          <div className={`text-center transition-all duration-500 ease-out ${residentialReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
-          transitionDelay: residentialReveal.isVisible ? "450ms" : "0ms"
-        }}>
-            <Button asChild variant="link" className="font-light group text-muted-foreground hover:text-foreground">
-              <Link to="/services/residential">
-                Explore Residential
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Capital Advisory Section */}
-      <section className="py-16 md:py-24 bg-secondary" ref={capitalReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`text-center mb-12 transition-all duration-500 ease-out ${capitalReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Capital Advisory That Understands The Real Asset</h2>
-            <p className="text-muted-foreground font-light max-w-2xl mx-auto text-sm md:text-base">
-              Debt, equity, and structured finance solutions tailored to your real estate objectives.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-5 mb-10">
-            {[{
-            icon: CreditCard,
-            title: "Debt Placement",
-            desc: "Access to competitive financing across lender types"
-          }, {
-            icon: Handshake,
-            title: "Equity And Joint Ventures",
-            desc: "Strategic partnerships for growth and scale"
-          }, {
-            icon: RefreshCw,
-            title: "Recapitalization",
-            desc: "Restructure capital stacks to optimize returns"
-          }].map((item, index) => <div key={item.title} className={`p-4 md:p-6 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${capitalReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
-            transitionDelay: capitalReveal.isVisible ? `${150 + index * 100}ms` : "0ms"
-          }}>
-                <item.icon className="h-6 w-6 md:h-7 md:w-7 text-primary mx-auto mb-2 md:mb-3" />
-                <h3 className="text-sm md:text-base font-medium mb-1 md:mb-2">{item.title}</h3>
-                <p className="text-muted-foreground font-light text-xs line-clamp-2">{item.desc}</p>
-              </div>)}
-          </div>
-
-          <div className={`text-center transition-all duration-500 ease-out ${capitalReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
-          transitionDelay: capitalReveal.isVisible ? "450ms" : "0ms"
-        }}>
-            <Button asChild variant="link" className="font-light group text-muted-foreground hover:text-foreground">
-              <Link to="/services/capital-advisory">
-                View Capital Advisory
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-              </Link>
-            </Button>
+          {/* Capital Advisory */}
+          <div>
+            <div className={`flex items-center justify-between mb-6 transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: "500ms" }}>
+              <div>
+                <h3 className="text-lg md:text-xl font-medium text-foreground">Capital Advisory</h3>
+                <p className="text-muted-foreground font-light text-sm">Debt, equity, and structured finance solutions</p>
+              </div>
+              <Button asChild variant="ghost" size="sm" className="font-light text-xs text-muted-foreground hover:text-foreground">
+                <Link to="/services/capital-advisory">Explore <ArrowRight className="ml-1 h-3 w-3" /></Link>
+              </Button>
+            </div>
+            <div className="grid md:grid-cols-3 gap-4">
+              {[
+                { icon: CreditCard, title: "Debt Placement", desc: "Access to competitive financing across lender types" },
+                { icon: Handshake, title: "Equity And Joint Ventures", desc: "Strategic partnerships for growth and scale" },
+                { icon: RefreshCw, title: "Recapitalization", desc: "Restructure capital stacks to optimize returns" }
+              ].map((item, index) => (
+                <div key={item.title} className={`p-4 md:p-5 rounded-xl border border-border/50 bg-card/30 text-center transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{ transitionDelay: `${550 + index * 50}ms` }}>
+                  <item.icon className="h-6 w-6 text-primary mx-auto mb-2" />
+                  <h4 className="text-sm font-medium mb-1">{item.title}</h4>
+                  <p className="text-muted-foreground font-light text-xs line-clamp-2">{item.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
