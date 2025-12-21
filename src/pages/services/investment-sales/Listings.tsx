@@ -270,7 +270,7 @@ const InvestmentListings = () => {
                         </div>
 
                         {/* Content - Fixed Height for Consistency */}
-                        <div className="p-4 flex flex-col h-[200px]">
+                        <div className="p-4 flex flex-col h-[230px]">
                           {/* Address & Location */}
                           <div className="flex-none">
                             <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
