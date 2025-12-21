@@ -2,21 +2,11 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown, Building2, Home, Briefcase, TrendingUp, Megaphone, Image, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuTrigger,
-  DropdownMenuItem,
-  DropdownMenuSub,
-  DropdownMenuSubTrigger,
-  DropdownMenuSubContent
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent } from "@/components/ui/dropdown-menu";
 import { useBridgeServices } from "@/hooks/useBridgeServices";
 import { useBridgeListingNavItems } from "@/hooks/useBridgeListingLinks";
-
 import { cn } from "@/lib/utils";
 import { ContactSheet } from "@/components/ContactSheet";
-
 const leftNavItems = [{
   name: "About Us",
   path: "/about"
@@ -48,15 +38,16 @@ const listingIcons: Record<string, typeof Building2> = {
   "Commercial Leasing": Building2,
   "Investment Sales": TrendingUp
 };
-
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const location = useLocation();
-  
-  const { data: services } = useBridgeServices();
-  const { data: listingsNav } = useBridgeListingNavItems();
-
+  const {
+    data: services
+  } = useBridgeServices();
+  const {
+    data: listingsNav
+  } = useBridgeListingNavItems();
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -72,9 +63,7 @@ export const Navigation = () => {
   useEffect(() => {
     setIsOpen(false);
   }, [location.pathname]);
-
   const isServicesActive = location.pathname.startsWith('/services');
-
   return <>
       {/* Desktop Navigation Header - Hidden on mobile when menu is open */}
       <nav className="fixed top-0 left-0 right-0 z-50 px-3 pt-3 md:px-4 md:pt-3 lg:px-5 lg:pt-4">
@@ -96,11 +85,9 @@ export const Navigation = () => {
           <div className="hidden lg:grid grid-cols-3 items-center h-20 px-8">
             {/* Left: Navigation Links */}
             <div className="flex items-center space-x-6">
-              {leftNavItems.map(item => (
-                <Link key={item.name} to={item.path} className={`text-[15px] font-light transition-all duration-200 whitespace-nowrap hover:scale-105 ${location.pathname === item.path ? "text-foreground" : "text-foreground/80 hover:text-foreground"}`}>
+              {leftNavItems.map(item => <Link key={item.name} to={item.path} className={`text-[15px] font-light transition-all duration-200 whitespace-nowrap hover:scale-105 ${location.pathname === item.path ? "text-foreground" : "text-foreground/80 hover:text-foreground"}`}>
                   {item.name}
-                </Link>
-              ))}
+                </Link>)}
             </div>
 
             {/* Center: Logo */}
@@ -116,49 +103,29 @@ export const Navigation = () => {
               {/* Services Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className={cn(
-                    "flex items-center gap-1 text-[15px] font-light transition-all duration-200 hover:scale-105",
-                    isServicesActive ? "text-foreground" : "text-foreground/80 hover:text-foreground"
-                  )}>
+                  <button className={cn("flex items-center gap-1 text-[15px] font-light transition-all duration-200 hover:scale-105", isServicesActive ? "text-foreground" : "text-foreground/80 hover:text-foreground")}>
                     Services
                     <ChevronDown className="h-3 w-3 transition-transform duration-200" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent 
-                  align="end" 
-                  sideOffset={24}
-                  className="w-[340px] p-3 glass-nav z-40 mt-2"
-                >
+                <DropdownMenuContent align="end" sideOffset={24} className="w-[340px] p-3 glass-nav z-40 mt-2">
                   {services?.slice().sort((a, b) => {
-                    const order = ["Investment Sales", "Commercial Leasing", "Residential", "Capital Advisory", "Property Management", "Marketing", "Billboard"];
-                    return order.indexOf(a.name) - order.indexOf(b.name);
-                  }).map((service) => {
-                    const IconComponent = serviceIcons[service.name] || Building2;
-                    
-                    return (
-                      <Link
-                        key={service.id}
-                        to={service.path}
-                        className={cn(
-                          "flex items-start gap-3 rounded-md px-3 py-3 transition-colors",
-                          "hover:bg-white/10",
-                          location.pathname.startsWith(service.path) && "bg-white/10"
-                        )}
-                      >
+                  const order = ["Investment Sales", "Commercial Leasing", "Residential", "Capital Advisory", "Property Management", "Marketing", "Billboard"];
+                  return order.indexOf(a.name) - order.indexOf(b.name);
+                }).map(service => {
+                  const IconComponent = serviceIcons[service.name] || Building2;
+                  return <Link key={service.id} to={service.path} className={cn("flex items-start gap-3 rounded-md px-3 py-3 transition-colors", "hover:bg-white/10", location.pathname.startsWith(service.path) && "bg-white/10")}>
                         <IconComponent className="h-5 w-5 text-white/60 mt-0.5 flex-shrink-0" />
                         <div className="flex flex-col gap-0.5">
                           <span className="text-sm text-white/90 font-light">
                             {service.name}
                           </span>
-                          {service.tagline && (
-                            <span className="text-xs text-white/50 font-light leading-snug">
+                          {service.tagline && <span className="text-xs text-white/50 font-light leading-snug">
                               {service.tagline}
-                            </span>
-                          )}
+                            </span>}
                         </div>
-                      </Link>
-                    );
-                  })}
+                      </Link>;
+                })}
                 </DropdownMenuContent>
               </DropdownMenu>
 
@@ -166,92 +133,60 @@ export const Navigation = () => {
               {/* Listings Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className={cn(
-                    "flex items-center gap-1 text-[15px] font-light transition-all duration-200 hover:scale-105",
-                    "text-foreground/80 hover:text-foreground"
-                  )}>
+                  <button className={cn("flex items-center gap-1 text-[15px] font-light transition-all duration-200 hover:scale-105", "text-foreground/80 hover:text-foreground")}>
                     Exclusive Listings
                     <ChevronDown className="h-3 w-3 transition-transform duration-200" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent 
-                  align="end" 
-                  sideOffset={24}
-                  className="min-w-[200px] p-2 glass-nav z-40 mt-2"
-                >
-                  {listingsNav?.items.map((item) => {
-                    const IconComponent = listingIcons[item.name] || Building2;
-                    
-                    if (item.nested && item.items) {
-                      return (
-                        <DropdownMenuSub key={item.name}>
+                <DropdownMenuContent align="end" sideOffset={24} className="min-w-[200px] p-2 glass-nav z-40 mt-2">
+                  {listingsNav?.items.map(item => {
+                  const IconComponent = listingIcons[item.name] || Building2;
+                  if (item.nested && item.items) {
+                    return <DropdownMenuSub key={item.name}>
                           <DropdownMenuSubTrigger className="flex items-center gap-3 px-3 py-2.5 rounded-md text-white/90">
                             <IconComponent className="h-4 w-4 text-white/60" />
                             <span className="text-sm font-light">{item.name}</span>
                           </DropdownMenuSubTrigger>
                           <DropdownMenuSubContent className="glass-nav p-2 z-40">
-                            {item.items.map((subItem) => (
-                              <DropdownMenuItem 
-                                key={subItem.name} 
-                                onSelect={() => {
-                                  if (subItem.url) {
-                                    window.open(subItem.url, '_blank', 'noopener,noreferrer');
-                                  }
-                                }}
-                                className="flex items-center gap-3 px-3 py-2.5 rounded-md cursor-pointer"
-                              >
+                            {item.items.map(subItem => <DropdownMenuItem key={subItem.name} onSelect={() => {
+                          if (subItem.url) {
+                            window.open(subItem.url, '_blank', 'noopener,noreferrer');
+                          }
+                        }} className="flex items-center gap-3 px-3 py-2.5 rounded-md cursor-pointer">
                                 <span className="text-sm text-white/90 font-light">{subItem.name}</span>
-                              </DropdownMenuItem>
-                            ))}
+                              </DropdownMenuItem>)}
                           </DropdownMenuSubContent>
-                        </DropdownMenuSub>
-                      );
-                    }
-                    
-                    // Handle internal vs external links
-                    if (item.external === false && item.url) {
-                      return (
-                        <DropdownMenuItem key={item.name} asChild>
-                          <Link 
-                            to={item.url}
-                            className="flex items-center justify-between px-3 py-2.5 rounded-md cursor-pointer"
-                          >
+                        </DropdownMenuSub>;
+                  }
+
+                  // Handle internal vs external links
+                  if (item.external === false && item.url) {
+                    return <DropdownMenuItem key={item.name} asChild>
+                          <Link to={item.url} className="flex items-center justify-between px-3 py-2.5 rounded-md cursor-pointer">
                             <div className="flex items-center gap-3">
                               <IconComponent className="h-4 w-4 text-white/60" />
                               <span className="text-sm text-white/90 font-light whitespace-nowrap">{item.name}</span>
                             </div>
                             <ChevronDown className="h-3 w-3 text-white/40 -rotate-90 ml-4" />
                           </Link>
-                        </DropdownMenuItem>
-                      );
+                        </DropdownMenuItem>;
+                  }
+                  return <DropdownMenuItem key={item.name} onSelect={() => {
+                    if (item.url) {
+                      window.open(item.url, '_blank', 'noopener,noreferrer');
                     }
-                    
-                    return (
-                      <DropdownMenuItem 
-                        key={item.name} 
-                        onSelect={() => {
-                          if (item.url) {
-                            window.open(item.url, '_blank', 'noopener,noreferrer');
-                          }
-                        }}
-                        className="flex items-center justify-between px-3 py-2.5 rounded-md cursor-pointer"
-                      >
+                  }} className="flex items-center justify-between px-3 py-2.5 rounded-md cursor-pointer">
                         <div className="flex items-center gap-3">
                           <IconComponent className="h-4 w-4 text-white/60" />
                           <span className="text-sm text-white/90 font-light whitespace-nowrap">{item.name}</span>
                         </div>
                         <ChevronDown className="h-3 w-3 text-white/40 -rotate-90" />
-                      </DropdownMenuItem>
-                    );
-                  })}
+                      </DropdownMenuItem>;
+                })}
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              <Button 
-                size="sm" 
-                className="font-light"
-                onClick={() => setContactOpen(true)}
-              >
+              <Button size="sm" onClick={() => setContactOpen(true)} className="font-light text-white bg-muted">
                 Contact Us
               </Button>
             </div>
@@ -259,10 +194,7 @@ export const Navigation = () => {
         </div>
 
         {/* Mobile Full-Screen Menu - Unified Glass Overlay */}
-        <div className={cn(
-          "lg:hidden fixed inset-0 z-50 transition-all duration-500 ease-out",
-          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
-        )}>
+        <div className={cn("lg:hidden fixed inset-0 z-50 transition-all duration-500 ease-out", isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none')}>
           {/* Full Glass Backdrop */}
           <div className="absolute inset-0 bg-black/90 backdrop-blur-3xl" />
           
@@ -273,27 +205,23 @@ export const Navigation = () => {
               <Link to="/" className="flex items-center flex-shrink-0" onClick={() => setIsOpen(false)}>
                 <img src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" alt="Bridge Advisory Group" className="h-10 sm:h-11 w-auto" />
               </Link>
-              <button 
-                onClick={() => setIsOpen(false)} 
-                className="p-3 -mr-2 text-foreground hover:text-foreground/80 transition-colors touch-manipulation min-h-[48px] min-w-[48px] flex items-center justify-center rounded-full active:bg-white/10" 
-                aria-label="Close menu"
-              >
+              <button onClick={() => setIsOpen(false)} className="p-3 -mr-2 text-foreground hover:text-foreground/80 transition-colors touch-manipulation min-h-[48px] min-w-[48px] flex items-center justify-center rounded-full active:bg-white/10" aria-label="Close menu">
                 <X size={24} />
               </button>
             </div>
             
             {/* Scrollable Menu Content */}
-            <div className="flex-1 overflow-y-auto overscroll-contain scroll-smooth-touch px-4 py-4 mx-3 md:mx-4" style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 2rem)' }}>
+            <div className="flex-1 overflow-y-auto overscroll-contain scroll-smooth-touch px-4 py-4 mx-3 md:mx-4" style={{
+            paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 2rem)'
+          }}>
             <div className="space-y-2">
               {/* Left Nav Items */}
               <div>
-                {leftNavItems.map((item, index) => (
-                  <Link key={item.name} to={item.path} className={`block text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[48px] flex items-center active:bg-white/5 rounded-lg px-2 -mx-2 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
-                    transitionDelay: `${index * 40}ms`
-                  }} onClick={() => setIsOpen(false)}>
+                {leftNavItems.map((item, index) => <Link key={item.name} to={item.path} className={`block text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[48px] flex items-center active:bg-white/5 rounded-lg px-2 -mx-2 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
+                  transitionDelay: `${index * 40}ms`
+                }} onClick={() => setIsOpen(false)}>
                     {item.name}
-                  </Link>
-                ))}
+                  </Link>)}
               </div>
 
               {/* Services Section */}
@@ -302,14 +230,14 @@ export const Navigation = () => {
                   <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Services</p>
                 </div>
                 {services?.map((service, index) => {
-                const IconComponent = serviceIcons[service.name] || Building2;
-                return <Link key={service.id} to={service.path} className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3.5 min-h-[48px] active:bg-white/5 rounded-lg px-2 -mx-2 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
-                  transitionDelay: `${(index + leftNavItems.length) * 40}ms`
-                }} onClick={() => setIsOpen(false)}>
+                  const IconComponent = serviceIcons[service.name] || Building2;
+                  return <Link key={service.id} to={service.path} className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3.5 min-h-[48px] active:bg-white/5 rounded-lg px-2 -mx-2 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
+                    transitionDelay: `${(index + leftNavItems.length) * 40}ms`
+                  }} onClick={() => setIsOpen(false)}>
                       <IconComponent className="h-5 w-5 text-foreground/50" />
                       {service.name}
                     </Link>;
-              })}
+                })}
               </div>
 
               {/* Listings Section - Optimized for Mobile/Tablet */}
@@ -319,88 +247,46 @@ export const Navigation = () => {
                 </div>
                 
                 {/* Residential - Direct link */}
-                {listingsNav?.items.filter(item => item.name === "Residential").map((item, index) => (
-                  <a 
-                    key={item.name}
-                    href={item.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3.5 min-h-[48px] active:bg-white/5 rounded-lg px-2 -mx-2 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
-                    style={{ transitionDelay: `${((services?.length || 0) + leftNavItems.length + index) * 40}ms` }}
-                    onClick={() => setIsOpen(false)}
-                  >
+                {listingsNav?.items.filter(item => item.name === "Residential").map((item, index) => <a key={item.name} href={item.url} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3.5 min-h-[48px] active:bg-white/5 rounded-lg px-2 -mx-2 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
+                  transitionDelay: `${((services?.length || 0) + leftNavItems.length + index) * 40}ms`
+                }} onClick={() => setIsOpen(false)}>
                     <Home className="h-5 w-5 text-foreground/50" />
                     {item.name}
-                  </a>
-                ))}
+                  </a>)}
 
                 {/* Commercial Leasing - Internal link */}
-                {listingsNav?.items.filter(item => item.name === "Commercial Leasing").map((item, index) => (
-                  item.external === false && item.url ? (
-                    <Link 
-                      key={item.name}
-                      to={item.url}
-                      className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3.5 min-h-[48px] active:bg-white/5 rounded-lg px-2 -mx-2 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
-                      style={{ transitionDelay: `${((services?.length || 0) + leftNavItems.length + 1) * 40}ms` }}
-                      onClick={() => setIsOpen(false)}
-                    >
+                {listingsNav?.items.filter(item => item.name === "Commercial Leasing").map((item, index) => item.external === false && item.url ? <Link key={item.name} to={item.url} className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3.5 min-h-[48px] active:bg-white/5 rounded-lg px-2 -mx-2 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
+                  transitionDelay: `${((services?.length || 0) + leftNavItems.length + 1) * 40}ms`
+                }} onClick={() => setIsOpen(false)}>
                       <Building2 className="h-5 w-5 text-foreground/50" />
                       {item.name}
-                    </Link>
-                  ) : (
-                    <a 
-                      key={item.name}
-                      href={item.url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3.5 min-h-[48px] active:bg-white/5 rounded-lg px-2 -mx-2 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
-                      style={{ transitionDelay: `${((services?.length || 0) + leftNavItems.length + 1) * 40}ms` }}
-                      onClick={() => setIsOpen(false)}
-                    >
+                    </Link> : <a key={item.name} href={item.url} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3.5 min-h-[48px] active:bg-white/5 rounded-lg px-2 -mx-2 ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
+                  transitionDelay: `${((services?.length || 0) + leftNavItems.length + 1) * 40}ms`
+                }} onClick={() => setIsOpen(false)}>
                       <Building2 className="h-5 w-5 text-foreground/50" />
                       {item.name}
-                    </a>
-                  )
-                ))}
+                    </a>)}
 
                 {/* Investment Sales - Internal link */}
-                {listingsNav?.items.filter(item => item.name === "Investment Sales").map((item, index) => (
-                  item.external === false && item.url ? (
-                    <Link 
-                      key={item.name}
-                      to={item.url}
-                      className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
-                      style={{ transitionDelay: `${((services?.length || 0) + leftNavItems.length + 2) * 40}ms` }}
-                      onClick={() => setIsOpen(false)}
-                    >
+                {listingsNav?.items.filter(item => item.name === "Investment Sales").map((item, index) => item.external === false && item.url ? <Link key={item.name} to={item.url} className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
+                  transitionDelay: `${((services?.length || 0) + leftNavItems.length + 2) * 40}ms`
+                }} onClick={() => setIsOpen(false)}>
                       <TrendingUp className="h-4 w-4 text-foreground/50" />
                       {item.name}
-                    </Link>
-                  ) : (
-                    <a 
-                      key={item.name}
-                      href={item.url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
-                      style={{ transitionDelay: `${((services?.length || 0) + leftNavItems.length + 2) * 40}ms` }}
-                      onClick={() => setIsOpen(false)}
-                    >
+                    </Link> : <a key={item.name} href={item.url} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-3 text-sm font-light text-foreground/80 hover:text-foreground transition-all duration-300 py-3 min-h-[44px] ${isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`} style={{
+                  transitionDelay: `${((services?.length || 0) + leftNavItems.length + 2) * 40}ms`
+                }} onClick={() => setIsOpen(false)}>
                       <TrendingUp className="h-4 w-4 text-foreground/50" />
                       {item.name}
-                    </a>
-                  )
-                ))}
+                    </a>)}
               </div>
 
-              <Button 
-                className={`w-full mt-4 font-light transition-all duration-300 ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} 
-                style={{ transitionDelay: '300ms' }} 
-                onClick={() => {
-                  setIsOpen(false);
-                  setContactOpen(true);
-                }}
-              >
+              <Button className={`w-full mt-4 font-light transition-all duration-300 ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{
+                transitionDelay: '300ms'
+              }} onClick={() => {
+                setIsOpen(false);
+                setContactOpen(true);
+              }}>
                 Contact Us
               </Button>
               </div>
