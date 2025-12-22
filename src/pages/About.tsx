@@ -178,14 +178,39 @@ export default function About() {
       
 
       {/* Philosophy */}
-      <section className="py-16 md:py-24 border-b border-white/5 bg-white/[0.01]" ref={philosophyReveal.elementRef}>
+      <section className="py-12 md:py-24 border-b border-white/5 bg-white/[0.01]" ref={philosophyReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${philosophyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="relative aspect-[4/3] rounded-lg overflow-hidden order-2 md:order-1">
+          {/* Mobile: Compact inline list */}
+          <div className={`md:hidden transition-all duration-700 ${philosophyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <h2 className="text-2xl font-light mb-4">Philosophy</h2>
+            <div className="space-y-3">
+              {[
+                { title: "Precision", desc: "Rigorous analysis and clear communication on every transaction." },
+                { title: "Transparency", desc: "Honest assessments and regular updates throughout." },
+                { title: "Long-Term Relationships", desc: "Delivering value that compounds over time." }
+              ].map((item, index) => (
+                <div 
+                  key={item.title}
+                  className="flex items-start gap-3 py-2 border-b border-white/5 last:border-0"
+                  style={{ transitionDelay: `${index * 100}ms` }}
+                >
+                  <div className="h-1.5 w-1.5 rounded-full bg-accent shrink-0 mt-1.5" />
+                  <div>
+                    <h3 className="text-sm font-light mb-0.5">{item.title}</h3>
+                    <p className="text-xs text-muted-foreground font-light">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Desktop: Original 2-column layout with image */}
+          <div className={`hidden md:grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${philosophyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
               <img src={heroImage} alt="Modern building" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" />
             </div>
-            <div className="order-1 md:order-2">
-              <h2 className="text-2xl md:text-3xl font-light mb-6">Philosophy</h2>
+            <div>
+              <h2 className="text-3xl font-light mb-6">Philosophy</h2>
               <div className="space-y-4">
                 <div>
                   <h3 className="text-lg font-light mb-2">Precision</h3>
