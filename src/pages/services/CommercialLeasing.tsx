@@ -150,7 +150,7 @@ export default function CommercialLeasing() {
   const lookingReveal = useScrollReveal(0.1);
   return <div className="min-h-screen">
       {/* Hero with Image */}
-      <section className="relative h-[45vh] md:h-[55vh] lg:h-[60vh] min-h-[320px] md:min-h-[400px] lg:min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
+      <section className="relative min-h-[35vh] sm:min-h-[40vh] md:min-h-[45vh] lg:min-h-[50vh] flex items-center justify-center pt-14 sm:pt-16 md:pt-20 lg:pt-24 xl:pt-28 pb-4 sm:pb-6 md:pb-8 lg:pb-10 xl:pb-12" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img src={commercialLeasingHeroImg} alt="NYC retail and commercial streets" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
