@@ -57,8 +57,6 @@ import InvestmentListings from "./pages/services/investment-sales/Listings";
 import InvestmentDealRoom from "./pages/services/investment-sales/DealRoom";
 import InvestmentSalesTools from "./pages/services/investment-sales/Tools";
 
-import CommercialTenantRep from "./pages/services/commercial-leasing/TenantRep";
-import CommercialLandlordRep from "./pages/services/commercial-leasing/LandlordRep";
 import CommercialLeasingTools from "./pages/services/commercial-leasing/Tools";
 import CommercialListings from "./pages/CommercialListings";
 
@@ -154,10 +152,11 @@ const App = () => {
                     {/* Commercial Listings - Standalone */}
                     <Route path="/commercial-listings" element={<CommercialListings />} />
                     
-                    {/* Commercial Leasing Sub-Pages (kept) */}
-                    <Route path="/services/commercial-leasing/tenant-rep" element={<CommercialTenantRep />} />
-                    <Route path="/services/commercial-leasing/landlord-rep" element={<CommercialLandlordRep />} />
+                    {/* Commercial Leasing Sub-Pages */}
                     <Route path="/services/commercial-leasing/tools" element={<CommercialLeasingTools />} />
+                    {/* Redirect old tenant/landlord rep pages to overview */}
+                    <Route path="/services/commercial-leasing/tenant-rep" element={<Navigate to="/services/commercial-leasing" replace />} />
+                    <Route path="/services/commercial-leasing/landlord-rep" element={<Navigate to="/services/commercial-leasing" replace />} />
                     {/* Commercial Leasing redirects (consolidated pages) */}
                     <Route path="/services/commercial-leasing/listings" element={<Navigate to="/commercial-listings" replace />} />
                     <Route path="/services/commercial-leasing/retail" element={<Navigate to="/services/commercial-leasing" replace />} />

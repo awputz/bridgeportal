@@ -1,13 +1,14 @@
 import { Link } from "react-router-dom";
-import { Building2, Users, TrendingUp, ArrowRight, Store, Briefcase, MapPin, Target, BarChart3, Handshake, CheckCircle, Clock } from "lucide-react";
+import { Building2, Users, TrendingUp, ArrowRight, Store, Briefcase, MapPin, Target, BarChart3, Handshake, CheckCircle, Clock, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
-import { DIVISIONS } from "@/lib/constants";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import commercialLeasingHeroImg from "@/assets/commercial-leasing-hero.jpg";
+
+const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfGrJYsVrcgm0VGWHtaDD3OGv2loKRqqT8x0cdpZyeT69Qktw/viewform?usp=header";
 const stats = [{
   label: "Spaces Leased",
   value: "100+"
@@ -120,6 +121,22 @@ const serviceDetails = [{
   description: "Powered by our in-house marketing team.",
   features: ["Professional photography", "Digital campaigns", "Broker outreach", "Platform syndication"]
 }];
+// Landlord Rep details
+const landlordRepServices = [
+  "Space positioning & pricing strategy",
+  "Professional marketing materials",
+  "Tenant screening & qualification",
+  "Lease negotiation & execution"
+];
+
+// Tenant Rep details
+const tenantRepServices = [
+  "Requirements analysis & budgeting",
+  "Market survey & property tours",
+  "Lease term negotiation",
+  "Move-in coordination"
+];
+
 export default function CommercialLeasing() {
   const {
     openContactSheet
@@ -129,8 +146,8 @@ export default function CommercialLeasing() {
   const processReveal = useScrollReveal(0.1);
   const servicesReveal = useScrollReveal(0.1);
   const categoriesReveal = useScrollReveal(0.1);
-  const whyReveal = useScrollReveal(0.1);
-  const detailsReveal = useScrollReveal(0.1);
+  const repReveal = useScrollReveal(0.1);
+  const lookingReveal = useScrollReveal(0.1);
   return <div className="min-h-screen">
       {/* Hero with Image */}
       <section className="relative h-[45vh] md:h-[55vh] lg:h-[60vh] min-h-[320px] md:min-h-[400px] lg:min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
@@ -215,13 +232,87 @@ export default function CommercialLeasing() {
         </div>
       </section>
 
-      {/* Our Process */}
-      
+      {/* Landlord & Tenant Rep Combined Section */}
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={repReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+          <div className={`text-center mb-8 md:mb-12 transition-all duration-700 ${repReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Full-Service Representation</h2>
+            <p className="text-muted-foreground font-light max-w-2xl mx-auto">
+              Whether you own space or need space, we've got you covered.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+            {/* Landlord Rep */}
+            <div className={`p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-700 ${repReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+              <Building2 className="h-10 w-10 text-accent mb-4" />
+              <h3 className="text-xl md:text-2xl font-light mb-2">For Landlords</h3>
+              <p className="text-muted-foreground font-light mb-6">
+                Full-service leasing programs to maximize your asset's performance and minimize vacancy.
+              </p>
+              <ul className="space-y-3 mb-6">
+                {landlordRepServices.map((service, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                    <span className="text-sm font-light">{service}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex gap-4 text-sm text-muted-foreground">
+                <span className="font-medium text-foreground">100+ Properties</span>
+                <span>•</span>
+                <span className="font-medium text-foreground">98% Occupancy</span>
+              </div>
+            </div>
+            {/* Tenant Rep */}
+            <div className={`p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-700 delay-100 ${repReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+              <Users className="h-10 w-10 text-accent mb-4" />
+              <h3 className="text-xl md:text-2xl font-light mb-2">For Tenants</h3>
+              <p className="text-muted-foreground font-light mb-6">
+                Strategic advisory for businesses seeking the right space at the right terms.
+              </p>
+              <ul className="space-y-3 mb-6">
+                {tenantRepServices.map((service, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                    <span className="text-sm font-light">{service}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex gap-4 text-sm text-muted-foreground">
+                <span className="font-medium text-foreground">500+ Tenants</span>
+                <span>•</span>
+                <span className="font-medium text-foreground">2M+ SF Leased</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      {/* Why Bridge Advisory Group - Truncated */}
-      
-
-      {/* Service Details - Truncated */}
+      {/* Looking for Space? CTA */}
+      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-accent/5" ref={lookingReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6 text-center max-w-3xl">
+          <div className={`transition-all duration-700 ${lookingReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <MapPin className="h-12 w-12 text-accent mx-auto mb-6" />
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Looking for Commercial Space?</h2>
+            <p className="text-muted-foreground font-light mb-8 max-w-2xl mx-auto">
+              Tell us about your requirements and our team will curate the perfect options for your business. Fill out our quick intake form to get started.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="font-light gap-2" asChild>
+                <a href={GOOGLE_FORM_URL} target="_blank" rel="noopener noreferrer">
+                  Fill Out Client Form
+                  <ExternalLink className="h-4 w-4" />
+                </a>
+              </Button>
+              <Button size="lg" variant="outline" className="font-light" asChild>
+                <Link to="/commercial-listings">
+                  View Available Listings
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* CTA */}
       <section className="py-12 md:py-20 lg:py-28">
@@ -234,8 +325,11 @@ export default function CommercialLeasing() {
             <Button size="lg" className="font-light" onClick={openContactSheet}>
               List Your Space
             </Button>
-            <Button size="lg" variant="outline" className="font-light" onClick={openContactSheet}>
-              Find Your Space
+            <Button size="lg" variant="outline" className="font-light gap-2" asChild>
+              <a href={GOOGLE_FORM_URL} target="_blank" rel="noopener noreferrer">
+                Find Your Space
+                <ExternalLink className="h-4 w-4" />
+              </a>
             </Button>
           </div>
         </div>
