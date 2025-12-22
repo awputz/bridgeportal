@@ -203,7 +203,13 @@ export default function CommercialLeasing() {
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent transition-opacity duration-300 group-hover:opacity-90" />
                 {/* Content */}
-                
+                <div className="absolute inset-x-0 bottom-0 p-4 md:p-6">
+                  <category.icon className="h-6 w-6 text-accent mb-2" />
+                  <h3 className="text-lg font-light mb-1">{category.title}</h3>
+                  <p className="text-sm text-muted-foreground font-light opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    {category.description}
+                  </p>
+                </div>
               </div>)}
           </div>
         </div>
