@@ -6,6 +6,7 @@ export interface Transaction {
   closing_date: string | null;
   agent_name: string;
   deal_type: string;
+  division: string | null;
   property_address: string;
   property_type: string | null;
   monthly_rent: number | null;

@@ -815,6 +815,7 @@ export type Database = {
           closing_date: string | null
           created_at: string
           deal_type: string
+          division: string | null
           gross_square_feet: number | null
           id: string
           image_url: string | null
@@ -841,6 +842,7 @@ export type Database = {
           closing_date?: string | null
           created_at?: string
           deal_type?: string
+          division?: string | null
           gross_square_feet?: number | null
           id?: string
           image_url?: string | null
@@ -867,6 +869,7 @@ export type Database = {
           closing_date?: string | null
           created_at?: string
           deal_type?: string
+          division?: string | null
           gross_square_feet?: number | null
           id?: string
           image_url?: string | null
