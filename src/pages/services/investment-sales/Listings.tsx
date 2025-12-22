@@ -128,11 +128,11 @@ const InvestmentListings = () => {
         description="Explore our exclusive portfolio of investment properties available for acquisition in New York City."
       />
       
-      <main className="min-h-screen bg-background pt-16 md:pt-[72px]">
+      <main className="min-h-screen bg-background">
         {/* Hero Section with Background Image */}
         <section 
           ref={heroRef}
-          className={`relative h-[28vh] sm:h-[32vh] md:h-[40vh] min-h-[200px] sm:min-h-[240px] md:min-h-[320px] flex items-center justify-center transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          className={`relative h-[28vh] sm:h-[32vh] md:h-[40vh] min-h-[200px] sm:min-h-[240px] md:min-h-[320px] -mt-16 md:-mt-[72px] pt-16 md:pt-[72px] flex items-center justify-center transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
           <img 
             src={investmentSalesListingsHero} 
