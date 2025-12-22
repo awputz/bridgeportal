@@ -200,9 +200,19 @@ export default function Transactions() {
 
                     {/* Key Metrics */}
                     <div className="space-y-1 text-sm">
-                      {(transaction.sale_price || transaction.total_lease_value) && (
+                      {/* Show Monthly Rent for Residential leases, otherwise show Value */}
+                      {transaction.division === 'Residential' && transaction.monthly_rent ? (
                         <div className="flex items-center justify-between">
-                          <span className="text-muted-foreground font-light">Value</span>
+                          <span className="text-muted-foreground font-light">Monthly Rent</span>
+                          <span className="font-light">
+                            {formatCurrency(transaction.monthly_rent)}/mo
+                          </span>
+                        </div>
+                      ) : (transaction.sale_price || transaction.total_lease_value) && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground font-light">
+                            {transaction.division === 'Capital Advisory' ? 'Loan Amount' : 'Sale Price'}
+                          </span>
                           <span className="font-light">
                             {formatCurrency(transaction.sale_price || transaction.total_lease_value)}
                           </span>
@@ -322,17 +332,25 @@ export default function Transactions() {
                 </div>
               </div>
 
-              {/* Value */}
-              {(selectedTransaction.sale_price || selectedTransaction.total_lease_value) && (
+              {/* Value - Show Monthly Rent for Residential */}
+              {selectedTransaction.division === 'Residential' && selectedTransaction.monthly_rent ? (
+                <div className="flex items-start gap-3">
+                  <DollarSign className="h-5 w-5 text-accent mt-0.5" />
+                  <div>
+                    <p className="text-sm text-muted-foreground font-light">Monthly Rent</p>
+                    <p className="text-lg font-light">
+                      {formatCurrency(selectedTransaction.monthly_rent)}/mo
+                    </p>
+                  </div>
+                </div>
+              ) : (selectedTransaction.sale_price || selectedTransaction.total_lease_value) && (
                 <div className="flex items-start gap-3">
                   <DollarSign className="h-5 w-5 text-accent mt-0.5" />
                   <div>
                     <p className="text-sm text-muted-foreground font-light">
                       {selectedTransaction.division === "Capital Advisory" 
                         ? "Loan Amount" 
-                        : selectedTransaction.sale_price 
-                          ? "Sale Price" 
-                          : "Lease Value"}
+                        : "Sale Price"}
                     </p>
                     <p className="text-lg font-light">
                       {formatCurrency(selectedTransaction.sale_price || selectedTransaction.total_lease_value)}
