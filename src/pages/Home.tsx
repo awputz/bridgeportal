@@ -287,6 +287,9 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Divider */}
+          <div className="border-t border-border/40 my-6 sm:my-8 md:my-10" />
+
           {/* Commercial Leasing Division */}
           <div className="mb-8 sm:mb-10 md:mb-12">
             <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-4 sm:mb-6 transition-all duration-500 ease-out ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
@@ -318,6 +321,9 @@ export default function Home() {
                 </div>)}
             </div>
           </div>
+
+          {/* Divider */}
+          <div className="border-t border-border/40 my-6 sm:my-8 md:my-10" />
 
           {/* Residential Division */}
           <div>
