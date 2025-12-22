@@ -27,6 +27,11 @@ const formatCurrency = (value: number | null) => {
   return `$${value.toLocaleString()}`;
 };
 
+const formatExactCurrency = (value: number | null) => {
+  if (!value) return null;
+  return `$${value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+};
+
 const formatDate = (dateStr: string | null) => {
   if (!dateStr) return null;
   return new Date(dateStr).toLocaleDateString("en-US", { 
@@ -205,7 +210,7 @@ export default function Transactions() {
                         <div className="flex items-center justify-between">
                           <span className="text-muted-foreground font-light">Monthly Rent</span>
                           <span className="font-light">
-                            {formatCurrency(transaction.monthly_rent)}/mo
+                            {formatExactCurrency(transaction.monthly_rent)}/mo
                           </span>
                         </div>
                       ) : (transaction.sale_price || transaction.total_lease_value) && (
@@ -339,7 +344,7 @@ export default function Transactions() {
                   <div>
                     <p className="text-sm text-muted-foreground font-light">Monthly Rent</p>
                     <p className="text-lg font-light">
-                      {formatCurrency(selectedTransaction.monthly_rent)}/mo
+                      {formatExactCurrency(selectedTransaction.monthly_rent)}/mo
                     </p>
                   </div>
                 </div>
