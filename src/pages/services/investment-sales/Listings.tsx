@@ -128,9 +128,11 @@ const InvestmentListings = () => {
         description="Explore our exclusive portfolio of investment properties available for acquisition in New York City."
       />
       
-      <ServicePageNav serviceKey="investment-sales" />
+      <div className="pt-20 md:pt-24">
+        <ServicePageNav serviceKey="investment-sales" />
+      </div>
       
-      <main className="min-h-screen bg-background pt-20 md:pt-24">
+      <main className="min-h-screen bg-background">
         {/* Hero Section with Background Image */}
         <section 
           ref={heroRef}
