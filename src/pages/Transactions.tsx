@@ -11,8 +11,9 @@ import { SEOHelmet } from "@/components/SEOHelmet";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { 
   Building2, DollarSign, Calendar, MapPin, ArrowRight, ExternalLink,
-  Home, Briefcase, TrendingUp, Landmark, FileText, Ruler, User, X
+  Home, Briefcase, TrendingUp, Landmark, FileText, Ruler, X
 } from "lucide-react";
+import { AgentContactCard } from "@/components/AgentContactCard";
 
 const divisions = [
   { id: "all", label: "All Divisions", icon: Building2 },
@@ -469,14 +470,11 @@ function TransactionDetails({
         </div>
       )}
 
-      {/* Agent */}
+      {/* Agent Contact Card */}
       {transaction.agent_name && (
-        <div className="flex items-start gap-3">
-          <User className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-          <div>
-            <p className="text-sm text-muted-foreground font-light">Agent</p>
-            <p className="font-light">{transaction.agent_name}</p>
-          </div>
+        <div className="pt-4 border-t border-border/30">
+          <p className="text-sm text-muted-foreground font-light mb-3">Agent</p>
+          <AgentContactCard agentName={transaction.agent_name} />
         </div>
       )}
 
