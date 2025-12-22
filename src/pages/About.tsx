@@ -68,12 +68,12 @@ export default function About() {
   return <div className="min-h-screen">
       <SEOHelmet title="About Bridge Advisory Group | NYC Real Estate Advisory" description="Learn about Bridge Advisory Group, a multi-division real estate platform at the intersection of brokerage, ownership, and capital in New York City." path="/about" />
       {/* Hero with Stats */}
-      <section className="relative min-h-[50vh] sm:min-h-[55vh] md:min-h-[60vh] flex items-center justify-center pt-20 sm:pt-24 md:pt-28 lg:pt-32 pb-16 sm:pb-20 md:pb-24" ref={heroReveal.elementRef}>
+      <section className="relative min-h-[40vh] sm:min-h-[45vh] md:min-h-[50vh] flex items-center justify-center pt-16 sm:pt-20 md:pt-24 lg:pt-28 pb-10 sm:pb-12 md:pb-16" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img src={heroImage} alt="New York City skyline" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
         </div>
-        <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 mt-6 sm:mt-8 md:mt-12 transition-all duration-700 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+        <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 mt-4 sm:mt-6 md:mt-8 transition-all duration-700 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-3 sm:mb-4">
             About Bridge Advisory Group
           </h1>
