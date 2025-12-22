@@ -219,7 +219,9 @@ export default function Transactions() {
                             {transaction.division === 'Capital Advisory' ? 'Loan Amount' : 'Sale Price'}
                           </span>
                           <span className="font-light">
-                            {formatCurrency(transaction.sale_price || transaction.total_lease_value)}
+                            {transaction.division === 'Investment Sales' 
+                              ? formatExactCurrency(transaction.sale_price || transaction.total_lease_value)
+                              : formatCurrency(transaction.sale_price || transaction.total_lease_value)}
                           </span>
                         </div>
                       )}
@@ -358,7 +360,9 @@ export default function Transactions() {
                         : "Sale Price"}
                     </p>
                     <p className="text-lg font-light">
-                      {formatCurrency(selectedTransaction.sale_price || selectedTransaction.total_lease_value)}
+                      {selectedTransaction.division === 'Investment Sales'
+                        ? formatExactCurrency(selectedTransaction.sale_price || selectedTransaction.total_lease_value)
+                        : formatCurrency(selectedTransaction.sale_price || selectedTransaction.total_lease_value)}
                     </p>
                   </div>
                 </div>
