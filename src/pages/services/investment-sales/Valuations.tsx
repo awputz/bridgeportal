@@ -68,9 +68,6 @@ const Valuations = () => {
         description="Data-driven property valuations and financial analysis to support your investment decisions, financing needs, and transaction execution."
       />
 
-      <ServicesSubNav />
-      <ServicePageNav serviceKey="investment-sales" />
-
       <main className="min-h-screen bg-background">
         {/* Hero Section with Background Image */}
         <section 
@@ -110,6 +107,9 @@ const Valuations = () => {
             </p>
           </div>
         </section>
+
+        <ServicesSubNav />
+        <ServicePageNav serviceKey="investment-sales" />
 
         {/* Introduction & Services Section */}
         <section 
