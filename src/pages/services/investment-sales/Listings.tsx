@@ -4,7 +4,7 @@ import { Download, Lock, Building2, MapPin, TrendingUp, Layers, Filter, X } from
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SEOHelmet } from "@/components/SEOHelmet";
-import { ServicePageNav } from "@/components/ServicePageNav";
+
 import { useInvestmentListings, InvestmentListing } from "@/hooks/useInvestmentListings";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
@@ -128,15 +128,11 @@ const InvestmentListings = () => {
         description="Explore our exclusive portfolio of investment properties available for acquisition in New York City."
       />
       
-      <div className="sticky top-[60px] md:top-[72px] z-30">
-        <ServicePageNav serviceKey="investment-sales" />
-      </div>
-      
-      <main className="min-h-screen bg-background -mt-[60px] md:-mt-[72px]">
+      <main className="min-h-screen bg-background pt-16 md:pt-[72px]">
         {/* Hero Section with Background Image */}
         <section 
           ref={heroRef}
-          className={`relative h-[28vh] sm:h-[32vh] md:h-[40vh] min-h-[200px] sm:min-h-[240px] md:min-h-[320px] pt-[100px] md:pt-[120px] flex items-center justify-center transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          className={`relative h-[28vh] sm:h-[32vh] md:h-[40vh] min-h-[200px] sm:min-h-[240px] md:min-h-[320px] flex items-center justify-center transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
           <img 
             src={investmentSalesListingsHero} 
