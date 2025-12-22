@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ChevronDown, Building2, Home, Briefcase, TrendingUp, Megaphone, Image, Settings } from "lucide-react";
+import { Menu, X, ChevronDown, Building2, Home, Briefcase, TrendingUp, Megaphone, Image, Settings, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent } from "@/components/ui/dropdown-menu";
 import { useBridgeServices } from "@/hooks/useBridgeServices";
@@ -180,7 +180,7 @@ export const Navigation = () => {
                           <IconComponent className="h-4 w-4 text-white/60" />
                           <span className="text-sm text-white/90 font-light whitespace-nowrap">{item.name}</span>
                         </div>
-                        <ChevronDown className="h-3 w-3 text-white/40 -rotate-90" />
+                        <ExternalLink className="h-3 w-3 text-white/40 ml-4" />
                       </DropdownMenuItem>;
                 })}
                 </DropdownMenuContent>
