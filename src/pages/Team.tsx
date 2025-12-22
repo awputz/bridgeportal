@@ -38,7 +38,7 @@ const Team = () => {
     instagram: agent.instagram_url,
     linkedin: agent.linkedin_url,
     email: agent.email,
-    phone: agent.phone,
+    phone: agent.phone
   });
   const handleMemberClick = (member: TeamMember) => {
     setSelectedMember(member);
@@ -108,9 +108,7 @@ const Team = () => {
         {/* Header */}
         <div className="mb-8 sm:mb-12 md:mb-20 lg:mb-24 max-w-4xl">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-4 sm:mb-6 md:mb-8 lg:mb-10 tracking-tight">Meet the Team</h1>
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed font-light">
-            Senior professionals with deep NYC market expertise and proven investment sales track records
-          </p>
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed font-light">Driven team with deep NYC market expertise and proven investment sales track records</p>
         </div>
 
         {/* Team Sections */}
