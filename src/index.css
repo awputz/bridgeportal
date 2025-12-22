@@ -8,6 +8,9 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
+    /* Navigation height - updated dynamically by JS */
+    --app-nav-h: 72px;
+    
     /* BRIDGE Investment Sales - Dark Mode with Warm Off-White Tones */
     
     --background: 30 8% 10%;
