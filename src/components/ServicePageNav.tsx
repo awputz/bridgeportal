@@ -15,7 +15,7 @@ export const ServicePageNav = ({ serviceKey }: ServicePageNavProps) => {
   if (!service) return null;
 
   return (
-    <nav className="bg-black/30 backdrop-blur-xl border-b border-white/10">
+    <nav className="relative bg-black/30 backdrop-blur-xl border-b border-white/10">
       <div className="max-w-7xl mx-auto px-0 sm:px-4 lg:px-8">
         <div className="relative">
           {/* Scroll fade indicators */}
@@ -63,13 +63,14 @@ export const ServicePageNav = ({ serviceKey }: ServicePageNavProps) => {
               );
             })}
           </div>
-          <SwipeHint 
-            text="Swipe for more options" 
-            storageKey={`service-nav-${serviceKey}`}
-            className="sm:hidden"
-          />
         </div>
       </div>
+      <SwipeHint 
+        text="Swipe for more" 
+        direction="horizontal"
+        storageKey={`service-nav-hint-${serviceKey}`}
+        className="absolute -bottom-6 left-1/2 -translate-x-1/2 sm:hidden"
+      />
     </nav>
   );
 };
