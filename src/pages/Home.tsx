@@ -104,7 +104,7 @@ export default function Home() {
                 <Link to="/services/residential">Residential</Link>
               </Button>
               <Button asChild variant="outline" size="sm" className="font-light px-3 sm:px-4 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white min-h-[40px]">
-                <Link to="/services/commercial-leasing">Commercial</Link>
+                <Link to="/services/commercial-leasing">Commercial Leasing </Link>
               </Button>
               <Button asChild variant="outline" size="sm" className="font-light px-3 sm:px-4 text-xs sm:text-sm bg-white/10 backdrop-blur-sm border-white/30 hover:bg-white/20 hover:border-white/50 text-white min-h-[40px]">
                 <Link to="/services/investment-sales">Investment Sales </Link>
