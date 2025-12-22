@@ -86,20 +86,7 @@ export default function About() {
           </div>
           
           {/* Stats inline */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-3xl mx-auto">
-            {stats.map((stat, index) => {
-            const Icon = stat.icon;
-            return <div key={stat.label} className="text-center" style={{
-              transitionDelay: `${index * 100}ms`
-            }}>
-                  <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-accent mx-auto mb-1.5 sm:mb-2" />
-                  <div className="text-lg sm:text-xl md:text-2xl font-light">
-                    <AnimatedCounter end={stat.value} suffix={stat.suffix} duration={2000} />
-                  </div>
-                  <p className="text-[10px] sm:text-xs text-muted-foreground font-light">{stat.label}</p>
-                </div>;
-          })}
-          </div>
+          
         </div>
       </section>
 
@@ -133,25 +120,26 @@ export default function About() {
           
           {/* Mobile: Compact inline list */}
           <div className="md:hidden space-y-4">
-            {[
-              { icon: Target, title: "Mission", desc: "Redefine real estate service excellence through expert-led strategies that maximize value." },
-              { icon: Eye, title: "Vision", desc: "Be New York's leading advisory firm, known for innovation and client commitment." }
-            ].map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <div 
-                  key={item.title}
-                  className={`flex items-start gap-3 py-3 border-b border-white/5 last:border-0 transition-all duration-700 ${missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-                  style={{ transitionDelay: `${index * 100}ms` }}
-                >
+            {[{
+            icon: Target,
+            title: "Mission",
+            desc: "Redefine real estate service excellence through expert-led strategies that maximize value."
+          }, {
+            icon: Eye,
+            title: "Vision",
+            desc: "Be New York's leading advisory firm, known for innovation and client commitment."
+          }].map((item, index) => {
+            const Icon = item.icon;
+            return <div key={item.title} className={`flex items-start gap-3 py-3 border-b border-white/5 last:border-0 transition-all duration-700 ${missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
+              transitionDelay: `${index * 100}ms`
+            }}>
                   <Icon className="h-5 w-5 text-accent shrink-0 mt-0.5" />
                   <div>
                     <h3 className="text-sm font-light mb-1">{item.title}</h3>
                     <p className="text-xs text-muted-foreground font-light leading-relaxed">{item.desc}</p>
                   </div>
-                </div>
-              );
-            })}
+                </div>;
+          })}
           </div>
 
           {/* Desktop: Card layout */}
@@ -163,7 +151,9 @@ export default function About() {
                 To redefine real estate service excellence across New York through expert-led strategies that maximize value and foster long-term relationships.
               </p>
             </div>
-            <div className={`glass-card p-6 transition-all duration-700 ${missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: '100ms' }}>
+            <div className={`glass-card p-6 transition-all duration-700 ${missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
+            transitionDelay: '100ms'
+          }}>
               <Eye className="h-8 w-8 text-accent mb-4" />
               <h3 className="text-xl font-light mb-3 text-white">Vision</h3>
               <p className="text-sm text-white/70 font-light leading-relaxed">
@@ -184,23 +174,24 @@ export default function About() {
           <div className={`md:hidden transition-all duration-700 ${philosophyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <h2 className="text-2xl font-light mb-4">Philosophy</h2>
             <div className="space-y-3">
-              {[
-                { title: "Precision", desc: "Rigorous analysis and clear communication on every transaction." },
-                { title: "Transparency", desc: "Honest assessments and regular updates throughout." },
-                { title: "Long-Term Relationships", desc: "Delivering value that compounds over time." }
-              ].map((item, index) => (
-                <div 
-                  key={item.title}
-                  className="flex items-start gap-3 py-2 border-b border-white/5 last:border-0"
-                  style={{ transitionDelay: `${index * 100}ms` }}
-                >
+              {[{
+              title: "Precision",
+              desc: "Rigorous analysis and clear communication on every transaction."
+            }, {
+              title: "Transparency",
+              desc: "Honest assessments and regular updates throughout."
+            }, {
+              title: "Long-Term Relationships",
+              desc: "Delivering value that compounds over time."
+            }].map((item, index) => <div key={item.title} className="flex items-start gap-3 py-2 border-b border-white/5 last:border-0" style={{
+              transitionDelay: `${index * 100}ms`
+            }}>
                   <div className="h-1.5 w-1.5 rounded-full bg-accent shrink-0 mt-1.5" />
                   <div>
                     <h3 className="text-sm font-light mb-0.5">{item.title}</h3>
                     <p className="text-xs text-muted-foreground font-light">{item.desc}</p>
                   </div>
-                </div>
-              ))}
+                </div>)}
             </div>
           </div>
 
