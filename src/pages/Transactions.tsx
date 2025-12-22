@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from "@/components/ui/drawer";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { useTransactions, Transaction } from "@/hooks/useTransactions";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { SEOHelmet } from "@/components/SEOHelmet";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { 
   Building2, DollarSign, Calendar, MapPin, ArrowRight, ExternalLink,
-  Home, Briefcase, TrendingUp, Landmark, FileText, Ruler, User
+  Home, Briefcase, TrendingUp, Landmark, FileText, Ruler, User, X
 } from "lucide-react";
 
 const divisions = [
@@ -56,6 +58,7 @@ export default function Transactions() {
 
   const [selectedDivision, setSelectedDivision] = useState("all");
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
+  const isMobile = useIsMobile();
 
   const { data: transactions = [], isLoading } = useTransactions();
 
@@ -121,9 +124,9 @@ export default function Transactions() {
       </section>
 
       {/* Filters */}
-      <section className="py-6 border-y border-white/5 bg-white/[0.01] sticky top-16 z-30 backdrop-blur-sm">
+      <section className="py-4 sm:py-6 border-y border-border/30 bg-background/95 sticky top-[72px] sm:top-20 z-30 backdrop-blur-md">
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <div className="flex flex-wrap gap-2">
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1 -mb-1">
             {divisions.map((division) => {
               const Icon = division.icon;
               const isActive = selectedDivision === division.id;
@@ -131,13 +134,13 @@ export default function Transactions() {
                 <button
                   key={division.id}
                   onClick={() => setSelectedDivision(division.id)}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-light transition-all ${
+                  className={`inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-light transition-all whitespace-nowrap flex-shrink-0 ${
                     isActive 
                       ? "bg-accent text-accent-foreground" 
-                      : "bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-foreground"
+                      : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
                   }`}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   {division.label}
                 </button>
               );
@@ -292,157 +295,218 @@ export default function Transactions() {
         </div>
       </section>
 
-      {/* Case Study Modal */}
-      <Dialog open={!!selectedTransaction} onOpenChange={() => setSelectedTransaction(null)}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
-            <DialogTitle className="text-xl font-light">
-              {selectedTransaction?.property_address}
-            </DialogTitle>
-          </DialogHeader>
-          
-          {selectedTransaction && (
-            <div className="space-y-4 pt-4">
-              {/* Property Image in Modal */}
-              <div className="aspect-video rounded-lg overflow-hidden">
-                <img 
-                  src={selectedTransaction.image_url || getPlaceholderImage(selectedTransaction.asset_type)} 
-                  alt={selectedTransaction.property_address}
-                  className="w-full h-full object-cover"
+      {/* Transaction Detail - Drawer for Mobile, Dialog for Desktop */}
+      {isMobile ? (
+        <Drawer open={!!selectedTransaction} onOpenChange={() => setSelectedTransaction(null)}>
+          <DrawerContent className="max-h-[90vh]">
+            <DrawerHeader className="relative border-b border-border/30 pb-4">
+              <button
+                onClick={() => setSelectedTransaction(null)}
+                className="absolute right-4 top-4 p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+              <DrawerTitle className="text-lg font-light pr-10">
+                {selectedTransaction?.property_address}
+              </DrawerTitle>
+              <DrawerDescription className="text-sm text-muted-foreground font-light">
+                Transaction details
+              </DrawerDescription>
+            </DrawerHeader>
+            
+            {selectedTransaction && (
+              <div className="overflow-y-auto px-4 pb-8">
+                <TransactionDetails 
+                  transaction={selectedTransaction} 
+                  formatCurrency={formatCurrency}
+                  formatExactCurrency={formatExactCurrency}
+                  formatDate={formatDate}
+                  getPlaceholderImage={getPlaceholderImage}
                 />
               </div>
+            )}
+          </DrawerContent>
+        </Drawer>
+      ) : (
+        <Dialog open={!!selectedTransaction} onOpenChange={() => setSelectedTransaction(null)}>
+          <DialogContent className="max-w-lg">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-light">
+                {selectedTransaction?.property_address}
+              </DialogTitle>
+              <DialogDescription className="text-sm text-muted-foreground font-light">
+                Transaction details
+              </DialogDescription>
+            </DialogHeader>
+            
+            {selectedTransaction && (
+              <TransactionDetails 
+                transaction={selectedTransaction} 
+                formatCurrency={formatCurrency}
+                formatExactCurrency={formatExactCurrency}
+                formatDate={formatDate}
+                getPlaceholderImage={getPlaceholderImage}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
+      )}
+    </div>
+  );
+}
 
-              {/* Location */}
-              {selectedTransaction.neighborhood && (
-                <div className="flex items-start gap-3">
-                  <MapPin className="h-5 w-5 text-accent mt-0.5" />
-                  <div>
-                    <p className="text-sm text-muted-foreground font-light">Neighborhood</p>
-                    <p className="font-light">
-                      {selectedTransaction.neighborhood}
-                      {selectedTransaction.borough && `, ${selectedTransaction.borough}`}
-                    </p>
-                  </div>
-                </div>
-              )}
+// Shared transaction details component
+function TransactionDetails({ 
+  transaction, 
+  formatCurrency, 
+  formatExactCurrency, 
+  formatDate, 
+  getPlaceholderImage 
+}: { 
+  transaction: Transaction;
+  formatCurrency: (value: number | null) => string | null;
+  formatExactCurrency: (value: number | null) => string | null;
+  formatDate: (dateStr: string | null) => string | null;
+  getPlaceholderImage: (assetType: string | null) => string;
+}) {
+  return (
+    <div className="space-y-4 pt-4">
+      {/* Property Image */}
+      <div className="aspect-video rounded-lg overflow-hidden">
+        <img 
+          src={transaction.image_url || getPlaceholderImage(transaction.asset_type)} 
+          alt={transaction.property_address}
+          className="w-full h-full object-cover"
+        />
+      </div>
 
-              {/* Division & Type */}
-              <div className="flex items-start gap-3">
-                <Building2 className="h-5 w-5 text-accent mt-0.5" />
-                <div>
-                  <p className="text-sm text-muted-foreground font-light">Division</p>
-                  <p className="font-light">
-                    {selectedTransaction.division || selectedTransaction.deal_type}
-                    {selectedTransaction.deal_type && selectedTransaction.division !== selectedTransaction.deal_type && ` • ${selectedTransaction.deal_type}`}
-                    {selectedTransaction.asset_type && ` • ${selectedTransaction.asset_type}`}
-                  </p>
-                </div>
-              </div>
+      {/* Location */}
+      {transaction.neighborhood && (
+        <div className="flex items-start gap-3">
+          <MapPin className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-sm text-muted-foreground font-light">Neighborhood</p>
+            <p className="font-light">
+              {transaction.neighborhood}
+              {transaction.borough && `, ${transaction.borough}`}
+            </p>
+          </div>
+        </div>
+      )}
 
-              {/* Value - Show Monthly Rent for Residential and Commercial */}
-              {(selectedTransaction.division === 'Residential' || selectedTransaction.division === 'Commercial') && selectedTransaction.monthly_rent ? (
-                <div className="flex items-start gap-3">
-                  <DollarSign className="h-5 w-5 text-accent mt-0.5" />
-                  <div>
-                    <p className="text-sm text-muted-foreground font-light">Monthly Rent</p>
-                    <p className="text-lg font-light">
-                      {formatExactCurrency(selectedTransaction.monthly_rent)}/mo
-                    </p>
-                  </div>
-                </div>
-              ) : (selectedTransaction.sale_price || selectedTransaction.total_lease_value) && (
-                <div className="flex items-start gap-3">
-                  <DollarSign className="h-5 w-5 text-accent mt-0.5" />
-                  <div>
-                    <p className="text-sm text-muted-foreground font-light">
-                      {selectedTransaction.division === "Capital Advisory" 
-                        ? "Loan Amount" 
-                        : "Sale Price"}
-                    </p>
-                    <p className="text-lg font-light">
-                      {selectedTransaction.division === 'Investment Sales'
-                        ? formatExactCurrency(selectedTransaction.sale_price || selectedTransaction.total_lease_value)
-                        : formatCurrency(selectedTransaction.sale_price || selectedTransaction.total_lease_value)}
-                    </p>
-                  </div>
-                </div>
-              )}
+      {/* Division & Type */}
+      <div className="flex items-start gap-3">
+        <Building2 className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
+        <div>
+          <p className="text-sm text-muted-foreground font-light">Division</p>
+          <p className="font-light">
+            {transaction.division || transaction.deal_type}
+            {transaction.deal_type && transaction.division !== transaction.deal_type && ` • ${transaction.deal_type}`}
+            {transaction.asset_type && ` • ${transaction.asset_type}`}
+          </p>
+        </div>
+      </div>
 
-              {/* Size */}
-              {selectedTransaction.gross_square_feet && (
-                <div className="flex items-start gap-3">
-                  <Ruler className="h-5 w-5 text-accent mt-0.5" />
-                  <div>
-                    <p className="text-sm text-muted-foreground font-light">Size</p>
-                    <p className="font-light">{selectedTransaction.gross_square_feet.toLocaleString()} SF</p>
-                  </div>
-                </div>
-              )}
+      {/* Value - Show Monthly Rent for Residential and Commercial */}
+      {(transaction.division === 'Residential' || transaction.division === 'Commercial') && transaction.monthly_rent ? (
+        <div className="flex items-start gap-3">
+          <DollarSign className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-sm text-muted-foreground font-light">Monthly Rent</p>
+            <p className="text-lg font-light">
+              {formatExactCurrency(transaction.monthly_rent)}/mo
+            </p>
+          </div>
+        </div>
+      ) : (transaction.sale_price || transaction.total_lease_value) && (
+        <div className="flex items-start gap-3">
+          <DollarSign className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-sm text-muted-foreground font-light">
+              {transaction.division === "Capital Advisory" 
+                ? "Loan Amount" 
+                : "Sale Price"}
+            </p>
+            <p className="text-lg font-light">
+              {transaction.division === 'Investment Sales'
+                ? formatExactCurrency(transaction.sale_price || transaction.total_lease_value)
+                : formatCurrency(transaction.sale_price || transaction.total_lease_value)}
+            </p>
+          </div>
+        </div>
+      )}
 
-              {/* Date */}
-              {selectedTransaction.closing_date && (
-                <div className="flex items-start gap-3">
-                  <Calendar className="h-5 w-5 text-accent mt-0.5" />
-                  <div>
-                    <p className="text-sm text-muted-foreground font-light">Closing Date</p>
-                    <p className="font-light">{formatDate(selectedTransaction.closing_date)}</p>
-                  </div>
-                </div>
-              )}
+      {/* Size */}
+      {transaction.gross_square_feet && (
+        <div className="flex items-start gap-3">
+          <Ruler className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-sm text-muted-foreground font-light">Size</p>
+            <p className="font-light">{transaction.gross_square_feet.toLocaleString()} SF</p>
+          </div>
+        </div>
+      )}
 
-              {/* Role */}
-              {selectedTransaction.role && (
-                <div className="flex items-start gap-3">
-                  <Briefcase className="h-5 w-5 text-accent mt-0.5" />
-                  <div>
-                    <p className="text-sm text-muted-foreground font-light">Role</p>
-                    <p className="font-light capitalize">{selectedTransaction.role.replace(/_/g, " ")}</p>
-                  </div>
-                </div>
-              )}
+      {/* Date */}
+      {transaction.closing_date && (
+        <div className="flex items-start gap-3">
+          <Calendar className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-sm text-muted-foreground font-light">Closing Date</p>
+            <p className="font-light">{formatDate(transaction.closing_date)}</p>
+          </div>
+        </div>
+      )}
 
-              {/* Agent */}
-              {selectedTransaction.agent_name && (
-                <div className="flex items-start gap-3">
-                  <User className="h-5 w-5 text-accent mt-0.5" />
-                  <div>
-                    <p className="text-sm text-muted-foreground font-light">Agent</p>
-                    <p className="font-light">{selectedTransaction.agent_name}</p>
-                  </div>
-                </div>
-              )}
+      {/* Role */}
+      {transaction.role && (
+        <div className="flex items-start gap-3">
+          <Briefcase className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-sm text-muted-foreground font-light">Role</p>
+            <p className="font-light capitalize">{transaction.role.replace(/_/g, " ")}</p>
+          </div>
+        </div>
+      )}
 
-              {/* Notes / Highlights */}
-              {selectedTransaction.notes && (
-                <div className="pt-4 border-t border-white/10">
-                  <p className="text-sm text-muted-foreground font-light mb-2">Highlights</p>
-                  <p className="text-sm font-light text-muted-foreground leading-relaxed">
-                    {selectedTransaction.notes}
-                  </p>
-                </div>
-              )}
+      {/* Agent */}
+      {transaction.agent_name && (
+        <div className="flex items-start gap-3">
+          <User className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-sm text-muted-foreground font-light">Agent</p>
+            <p className="font-light">{transaction.agent_name}</p>
+          </div>
+        </div>
+      )}
 
-              {/* Price Metrics */}
-              {(selectedTransaction.price_per_sf || selectedTransaction.price_per_unit) && (
-                <div className="pt-4 border-t border-white/10 flex gap-6">
-                  {selectedTransaction.price_per_sf && (
-                    <div>
-                      <p className="text-sm text-muted-foreground font-light">Price/SF</p>
-                      <p className="font-light">${selectedTransaction.price_per_sf.toLocaleString()}</p>
-                    </div>
-                  )}
-                  {selectedTransaction.price_per_unit && (
-                    <div>
-                      <p className="text-sm text-muted-foreground font-light">Price/Unit</p>
-                      <p className="font-light">${selectedTransaction.price_per_unit.toLocaleString()}</p>
-                    </div>
-                  )}
-                </div>
-              )}
+      {/* Notes / Highlights */}
+      {transaction.notes && (
+        <div className="pt-4 border-t border-border/30">
+          <p className="text-sm text-muted-foreground font-light mb-2">Highlights</p>
+          <p className="text-sm font-light text-muted-foreground leading-relaxed">
+            {transaction.notes}
+          </p>
+        </div>
+      )}
+
+      {/* Price Metrics */}
+      {(transaction.price_per_sf || transaction.price_per_unit) && (
+        <div className="pt-4 border-t border-border/30 flex gap-6">
+          {transaction.price_per_sf && (
+            <div>
+              <p className="text-sm text-muted-foreground font-light">Price/SF</p>
+              <p className="font-light">${transaction.price_per_sf.toLocaleString()}</p>
             </div>
           )}
-        </DialogContent>
-      </Dialog>
+          {transaction.price_per_unit && (
+            <div>
+              <p className="text-sm text-muted-foreground font-light">Price/Unit</p>
+              <p className="font-light">${transaction.price_per_unit.toLocaleString()}</p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
