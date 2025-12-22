@@ -174,14 +174,20 @@ export const Footer = () => {
 
         {/* Bottom Links */}
         <div className="py-4 md:py-4 border-t border-border/20 flex flex-col sm:flex-row flex-wrap justify-center sm:justify-between items-center gap-3 sm:gap-3 md:gap-4 text-[10px] sm:text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider">
+          <Link to="/privacy" className="hover:text-foreground transition-colors text-center min-h-[44px] flex items-center px-2 active:opacity-70">
+            Privacy Policy
+          </Link>
+          <Link to="/terms" className="hover:text-foreground transition-colors text-center min-h-[44px] flex items-center px-2 active:opacity-70">
+            Terms of Service
+          </Link>
           <a href="https://d1e1jt2fj4r8r.cloudfront.net/b26ab618-2b1e-4a17-8868-498b96b52dc0/qckNAwejF/NY%20Reasonable%20Accommodations%20Notice.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors text-center min-h-[44px] flex items-center px-2 active:opacity-70">
-            NY Reasonable Accommodations Notice
+            NY Accommodations
           </a>
           <a href="https://d1e1jt2fj4r8r.cloudfront.net/b26ab618-2b1e-4a17-8868-498b96b52dc0/LcdbBuJ7w/NY%20Fair%20Housing%20Notice.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors text-center min-h-[44px] flex items-center px-2 active:opacity-70">
-            Fair Housing Notice
+            Fair Housing
           </a>
           <a href="https://nyresop.tiiny.site/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors text-center min-h-[44px] flex items-center px-2 active:opacity-70">
-            Standard Operating Procedures
+            Standard Procedures
           </a>
         </div>
       </div>
