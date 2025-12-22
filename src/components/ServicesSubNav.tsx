@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { NAV_ITEMS } from "@/lib/constants";
+import { SwipeHint } from "@/components/SwipeHint";
 
 export const ServicesSubNav = () => {
   const location = useLocation();
@@ -29,6 +30,11 @@ export const ServicesSubNav = () => {
               );
             })}
           </nav>
+          <SwipeHint 
+            text="Swipe to see all services" 
+            storageKey="services-nav"
+            className="sm:hidden"
+          />
         </div>
       </div>
     </section>
