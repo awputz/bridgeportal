@@ -181,7 +181,6 @@ export default function InvestmentSales() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               {boroughs.map((borough, index) => <div key={index} className="p-4 md:p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all">
                   <h3 className="text-lg md:text-xl font-light mb-2">{borough.name}</h3>
-                  <p className="text-accent text-sm font-medium mb-3">{borough.stats}</p>
                   <p className="text-sm text-muted-foreground font-light mb-2">{borough.focus}</p>
                   <p className="text-xs text-muted-foreground/70 font-light">{borough.neighborhoods}</p>
                 </div>)}
