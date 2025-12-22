@@ -128,15 +128,15 @@ const InvestmentListings = () => {
         description="Explore our exclusive portfolio of investment properties available for acquisition in New York City."
       />
       
-      <div className="pt-20 md:pt-24">
+      <div className="sticky top-[60px] md:top-[72px] z-30">
         <ServicePageNav serviceKey="investment-sales" />
       </div>
       
-      <main className="min-h-screen bg-background">
+      <main className="min-h-screen bg-background -mt-[60px] md:-mt-[72px]">
         {/* Hero Section with Background Image */}
         <section 
           ref={heroRef}
-          className={`relative h-[28vh] sm:h-[32vh] md:h-[40vh] min-h-[200px] sm:min-h-[240px] md:min-h-[320px] flex items-center justify-center transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          className={`relative h-[28vh] sm:h-[32vh] md:h-[40vh] min-h-[200px] sm:min-h-[240px] md:min-h-[320px] pt-[100px] md:pt-[120px] flex items-center justify-center transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
           <img 
             src={investmentSalesListingsHero} 
