@@ -34,6 +34,7 @@ export const SERVICE_SUB_PAGES = {
     basePath: "/services/capital-advisory",
     pages: [
       { name: "Overview", path: "/services/capital-advisory" },
+      { name: "Tools", path: "/services/capital-advisory/tools" },
     ],
   },
   "property-management": {
