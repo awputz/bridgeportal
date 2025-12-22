@@ -127,26 +127,49 @@ export default function About() {
       <TeamHighlight title="Meet Our Leadership" subtitle="The principals guiding Bridge Advisory Group's strategy and client relationships." className="bg-muted/20" />
 
       {/* Mission and Vision */}
-      <section className="py-16 md:py-24 border-b border-white/5 bg-white/[0.01]" ref={missionReveal.elementRef}>
+      <section className="py-12 md:py-24 border-b border-white/5 bg-white/[0.01]" ref={missionReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
-          <h2 className="text-3xl md:text-4xl font-light mb-10 text-center">Mission & Vision</h2>
-          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-          <div className={`glass-card p-6 transition-all duration-700 ${missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <Target className="h-8 w-8 text-accent mb-4" />
-            <h3 className="text-xl font-light mb-3 text-white">Mission</h3>
-            <p className="text-sm text-white/70 font-light leading-relaxed">
-              To redefine real estate service excellence across New York through expert-led strategies that maximize value and foster long-term relationships.
-            </p>
+          <h2 className="text-2xl md:text-4xl font-light mb-6 md:mb-10 text-center">Mission & Vision</h2>
+          
+          {/* Mobile: Compact inline list */}
+          <div className="md:hidden space-y-4">
+            {[
+              { icon: Target, title: "Mission", desc: "Redefine real estate service excellence through expert-led strategies that maximize value." },
+              { icon: Eye, title: "Vision", desc: "Be New York's leading advisory firm, known for innovation and client commitment." }
+            ].map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <div 
+                  key={item.title}
+                  className={`flex items-start gap-3 py-3 border-b border-white/5 last:border-0 transition-all duration-700 ${missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                  style={{ transitionDelay: `${index * 100}ms` }}
+                >
+                  <Icon className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                  <div>
+                    <h3 className="text-sm font-light mb-1">{item.title}</h3>
+                    <p className="text-xs text-muted-foreground font-light leading-relaxed">{item.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-          <div className={`glass-card p-6 transition-all duration-700 ${missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
-            transitionDelay: '100ms'
-          }}>
-            <Eye className="h-8 w-8 text-accent mb-4" />
-            <h3 className="text-xl font-light mb-3 text-white">Vision</h3>
-            <p className="text-sm text-white/70 font-light leading-relaxed">
-              To be New York's leading real estate advisory firm, known for innovative approaches and unwavering commitment to client success.
-            </p>
-          </div>
+
+          {/* Desktop: Card layout */}
+          <div className="hidden md:grid md:grid-cols-2 gap-6 md:gap-8">
+            <div className={`glass-card p-6 transition-all duration-700 ${missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+              <Target className="h-8 w-8 text-accent mb-4" />
+              <h3 className="text-xl font-light mb-3 text-white">Mission</h3>
+              <p className="text-sm text-white/70 font-light leading-relaxed">
+                To redefine real estate service excellence across New York through expert-led strategies that maximize value and foster long-term relationships.
+              </p>
+            </div>
+            <div className={`glass-card p-6 transition-all duration-700 ${missionReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: '100ms' }}>
+              <Eye className="h-8 w-8 text-accent mb-4" />
+              <h3 className="text-xl font-light mb-3 text-white">Vision</h3>
+              <p className="text-sm text-white/70 font-light leading-relaxed">
+                To be New York's leading real estate advisory firm, known for innovative approaches and unwavering commitment to client success.
+              </p>
+            </div>
           </div>
         </div>
       </section>
