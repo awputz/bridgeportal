@@ -134,7 +134,7 @@ const InvestmentListings = () => {
         {/* Hero Section with Background Image */}
         <section 
           ref={heroRef}
-          className={`relative h-[35vh] sm:h-[40vh] md:h-[45vh] min-h-[280px] sm:min-h-[320px] md:min-h-[400px] flex items-center justify-center transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          className={`relative h-[28vh] sm:h-[32vh] md:h-[40vh] min-h-[200px] sm:min-h-[240px] md:min-h-[320px] flex items-center justify-center transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
           <img 
             src={investmentSalesListingsHero} 
@@ -143,7 +143,7 @@ const InvestmentListings = () => {
           />
           <div className="absolute inset-0 bg-black/60" />
           <div className="relative z-10 text-center px-4 sm:px-6">
-            <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-light text-white mb-2 sm:mb-4 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-light text-white mb-1 sm:mb-2 md:mb-4 tracking-tight">
               Investment Sales Exclusives
             </h1>
             <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/70 max-w-2xl mx-auto">
