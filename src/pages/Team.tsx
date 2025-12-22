@@ -90,7 +90,7 @@ const Team = () => {
       </div>;
   };
   if (isLoading) {
-    return <div className="min-h-screen pt-28 md:pt-36 lg:pt-44 pb-20 md:pb-28 lg:pb-36 px-4 md:px-6 lg:px-8">
+    return <div className="min-h-screen pt-28 sm:pt-32 md:pt-36 lg:pt-44 pb-20 md:pb-28 lg:pb-36 px-4 md:px-6 lg:px-8">
         <div className="container mx-auto max-w-7xl">
           <div className="animate-pulse space-y-8">
             <div className="h-12 w-64 bg-muted rounded" />
@@ -102,7 +102,7 @@ const Team = () => {
         </div>
       </div>;
   }
-  return <div className="min-h-screen pt-20 sm:pt-24 md:pt-32 lg:pt-40 pb-12 sm:pb-16 md:pb-24 lg:pb-32 px-4 md:px-6 lg:px-8">
+  return <div className="min-h-screen pt-28 sm:pt-32 md:pt-36 lg:pt-44 pb-12 sm:pb-16 md:pb-24 lg:pb-32 px-4 md:px-6 lg:px-8">
       <SEOHelmet title="Our Team | Bridge Advisory Group - NYC Real Estate Experts" description="Meet the Bridge Advisory Group team - senior professionals with deep NYC market expertise and proven investment sales track records." path="/team" />
       <div className="container mx-auto max-w-7xl">
         {/* Header */}
