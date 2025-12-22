@@ -88,21 +88,21 @@ export default function ResidentialServices() {
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/70 to-background" />
 
         <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-3 sm:mb-4 md:mb-6 animate-fade-in">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-2 sm:mb-3 md:mb-4 animate-fade-in">
             Bridge Residential
           </h1>
           <p
-            className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground font-light animate-fade-in max-w-2xl mx-auto mb-5 sm:mb-6 md:mb-8"
+            className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground font-light animate-fade-in max-w-2xl mx-auto mb-4 sm:mb-5 md:mb-6"
             style={{ animationDelay: "100ms" }}
           >
             New York residential advisory for renters, buyers, landlords, and sellers
           </p>
 
           <div
-            className="flex flex-col gap-4 max-w-md mx-auto animate-fade-in"
+            className="flex flex-col gap-3 max-w-md mx-auto animate-fade-in"
             style={{ animationDelay: "200ms" }}
           >
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
               <Button
                 variant="outline"
                 className="font-light border-white/30 hover:bg-white/10 flex-1"
@@ -127,7 +127,7 @@ export default function ResidentialServices() {
             href="https://streeteasy.com/profile/957575-bridge-advisory-group?tab_profile=active_listings"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-accent hover:text-accent/80 font-light transition-colors animate-fade-in text-sm md:text-base mt-6"
+            className="inline-flex items-center gap-2 text-accent hover:text-accent/80 font-light transition-colors animate-fade-in text-sm md:text-base mt-4 sm:mt-5"
             style={{ animationDelay: "300ms" }}
           >
             View listings on StreetEasy <ArrowRight className="h-4 w-4" />
