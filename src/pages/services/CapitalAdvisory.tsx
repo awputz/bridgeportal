@@ -7,47 +7,62 @@ import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { DIVISIONS } from "@/lib/constants";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
-
 export default function CapitalAdvisory() {
-  const { openContactSheet } = useContactSheet();
+  const {
+    openContactSheet
+  } = useContactSheet();
   const heroReveal = useScrollReveal(0.1);
   const statsReveal = useScrollReveal(0.1);
   const introReveal = useScrollReveal(0.1);
   const cardsReveal = useScrollReveal(0.1);
   const servicesReveal = useScrollReveal(0.1);
   const ctaReveal = useScrollReveal(0.1);
-
-  const stats = [
-    { label: "Capital Raised", value: "$2B+" },
-    { label: "Deals Closed", value: "150+" },
-    { label: "Lender Network", value: "200+" },
-    { label: "Years Experience", value: "25+" },
-  ];
-
-  const services = [
-    { icon: Landmark, title: "Senior Loans", description: "Bank, agency, CMBS, and life company financing" },
-    { icon: RefreshCw, title: "Bridge Financing", description: "Value-add and transitional capital solutions" },
-    { icon: Construction, title: "Construction Loans", description: "Ground-up and renovation financing" },
-    { icon: TrendingUp, title: "Common Equity", description: "Institutional and family office capital" },
-    { icon: Handshake, title: "Joint Ventures", description: "JV structures with promote and co-GP arrangements" },
-    { icon: DollarSign, title: "Recapitalizations", description: "Capital stack resets and restructuring" },
-  ];
-
-  return (
-    <div className="min-h-screen">
+  const stats = [{
+    label: "Capital Raised",
+    value: "$2B+"
+  }, {
+    label: "Deals Closed",
+    value: "150+"
+  }, {
+    label: "Lender Network",
+    value: "200+"
+  }, {
+    label: "Years Experience",
+    value: "25+"
+  }];
+  const services = [{
+    icon: Landmark,
+    title: "Senior Loans",
+    description: "Bank, agency, CMBS, and life company financing"
+  }, {
+    icon: RefreshCw,
+    title: "Bridge Financing",
+    description: "Value-add and transitional capital solutions"
+  }, {
+    icon: Construction,
+    title: "Construction Loans",
+    description: "Ground-up and renovation financing"
+  }, {
+    icon: TrendingUp,
+    title: "Common Equity",
+    description: "Institutional and family office capital"
+  }, {
+    icon: Handshake,
+    title: "Joint Ventures",
+    description: "JV structures with promote and co-GP arrangements"
+  }, {
+    icon: DollarSign,
+    title: "Recapitalizations",
+    description: "Capital stack resets and restructuring"
+  }];
+  return <div className="min-h-screen">
       {/* Hero with Image */}
       <section className="relative h-[45vh] md:h-[55vh] lg:h-[60vh] min-h-[320px] md:min-h-[400px] lg:min-h-[500px] flex items-center justify-center" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
-          <img 
-            src={PLACEHOLDER_IMAGES.finance.capital} 
-            alt="Capital markets and finance" 
-            className="w-full h-full object-cover"
-          />
+          <img src={PLACEHOLDER_IMAGES.finance.capital} alt="Capital markets and finance" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
         </div>
-        <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${
-          heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}>
+        <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-4 md:mb-6">
             Bridge Capital Advisory
           </h1>
@@ -61,27 +76,12 @@ export default function CapitalAdvisory() {
       <ServicePageNav serviceKey="capital-advisory" />
 
       {/* Stats Bar */}
-      <section className="py-8 md:py-12 bg-muted/30 border-y border-border/50" ref={statsReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6">
-          <div className={`grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 transition-all duration-700 ${
-            statsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
-            {stats.map((stat, index) => (
-              <div key={stat.label} className="text-center" style={{ transitionDelay: `${index * 100}ms` }}>
-                <div className="text-2xl md:text-3xl lg:text-4xl font-light text-primary mb-1">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      
 
       {/* Intro */}
       <section className="py-12 md:py-16 lg:py-20" ref={introReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
-          <p className={`text-base md:text-lg lg:text-xl text-muted-foreground font-light leading-relaxed text-center transition-all duration-700 ${
-            introReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
+          <p className={`text-base md:text-lg lg:text-xl text-muted-foreground font-light leading-relaxed text-center transition-all duration-700 ${introReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             Bridge Capital Advisory works with owners, sponsors, and investors to structure financing and equity that supports the actual strategy of each asset. The team engages across senior debt, subordinated structures, and equity partnerships to deliver comprehensive capital solutions.
           </p>
         </div>
@@ -90,9 +90,7 @@ export default function CapitalAdvisory() {
       {/* Two-Column Feature Cards */}
       <section className="py-12 md:py-16 lg:py-20 bg-muted/20" ref={cardsReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <div className={`grid md:grid-cols-2 gap-6 md:gap-8 transition-all duration-700 ${
-            cardsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
+          <div className={`grid md:grid-cols-2 gap-6 md:gap-8 transition-all duration-700 ${cardsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             {/* Debt & Financing Card */}
             <div className="p-8 md:p-10 rounded-xl bg-card border border-border/50 hover:border-primary/30 transition-all duration-300">
               <div className="flex items-center gap-4 mb-6">
@@ -161,25 +159,17 @@ export default function CapitalAdvisory() {
       {/* Services Grid */}
       <section className="py-12 md:py-16 lg:py-20" ref={servicesReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <h2 className={`text-2xl md:text-3xl font-light text-center mb-10 md:mb-12 transition-all duration-700 ${
-            servicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
+          <h2 className={`text-2xl md:text-3xl font-light text-center mb-10 md:mb-12 transition-all duration-700 ${servicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             Our Capital Solutions
           </h2>
-          <div className={`grid sm:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-700 ${
-            servicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
-            {services.map((service, index) => (
-              <div 
-                key={service.title}
-                className="p-6 rounded-lg bg-card/50 border border-border/50 hover:border-primary/30 hover:bg-card transition-all duration-300"
-                style={{ transitionDelay: `${index * 100}ms` }}
-              >
+          <div className={`grid sm:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-700 ${servicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            {services.map((service, index) => <div key={service.title} className="p-6 rounded-lg bg-card/50 border border-border/50 hover:border-primary/30 hover:bg-card transition-all duration-300" style={{
+            transitionDelay: `${index * 100}ms`
+          }}>
                 <service.icon className="h-8 w-8 text-primary mb-4" />
                 <h3 className="text-lg font-medium mb-2">{service.title}</h3>
                 <p className="text-sm text-muted-foreground">{service.description}</p>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -187,9 +177,7 @@ export default function CapitalAdvisory() {
       {/* CTA Section */}
       <section className="py-16 md:py-24 bg-muted/30" ref={ctaReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
-          <div className={`transition-all duration-700 ${
-            ctaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}>
+          <div className={`transition-all duration-700 ${ctaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">
               Ready to Structure Your Capital?
             </h2>
@@ -197,18 +185,11 @@ export default function CapitalAdvisory() {
               Whether you're refinancing, raising equity, or structuring a complex capital stack, our team is ready to help you find the right solution.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                onClick={() => openContactSheet()}
-              >
+              <Button size="lg" onClick={() => openContactSheet()}>
                 <Briefcase className="mr-2 h-5 w-5" />
                 Contact Capital Advisory
               </Button>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                asChild
-              >
+              <Button variant="outline" size="lg" asChild>
                 <Link to="/services/capital-advisory/tools">
                   <Calculator className="mr-2 h-5 w-5" />
                   Underwriting Tools
@@ -218,6 +199,5 @@ export default function CapitalAdvisory() {
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 }
