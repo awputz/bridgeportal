@@ -4,6 +4,8 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Briefcase, Users, TrendingUp, Award, MapPin, Clock, ArrowRight, Shield, Zap, Target, Heart } from "lucide-react";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { SEOHelmet } from "@/components/SEOHelmet";
+import { MobileStickyContact } from "@/components/MobileStickyContact";
+import { useContactSheet } from "@/contexts/ContactSheetContext";
 const openPositions = [{
   title: "Investment Sales Associate",
   department: "Investment Sales",
@@ -57,7 +59,8 @@ const whyBridgeValues = [{
   desc: "Highest standards in every transaction."
 }];
 export default function Careers() {
-  const heroReveal = useScrollReveal(0.1);
+  const { openContactSheet } = useContactSheet();
+  const heroReveal = useScrollReveal(0.1, true); // Hero always visible initially
   const positionsReveal = useScrollReveal(0.1);
   const whyBridgeReveal = useScrollReveal(0.1);
   const cultureReveal = useScrollReveal(0.1);
@@ -179,5 +182,7 @@ export default function Careers() {
           </Button>
         </div>
       </section>
+
+      <MobileStickyContact onContactClick={openContactSheet} />
     </div>;
 }

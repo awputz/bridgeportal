@@ -8,6 +8,7 @@ import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { DIVISIONS } from "@/lib/constants";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
+import { MobileStickyContact } from "@/components/MobileStickyContact";
 
 const creativeServices = [
   {
@@ -87,7 +88,7 @@ const digitalServices = [
 
 export default function Marketing() {
   const { openContactSheet } = useContactSheet();
-  const heroReveal = useScrollReveal(0.1);
+  const heroReveal = useScrollReveal(0.1, true); // Hero always visible initially
   const introReveal = useScrollReveal(0.1);
   const creativeReveal = useScrollReveal(0.1);
   const digitalReveal = useScrollReveal(0.1);
@@ -223,6 +224,8 @@ export default function Marketing() {
           </Button>
         </div>
       </section>
+
+      <MobileStickyContact onContactClick={openContactSheet} />
     </div>
   );
 }

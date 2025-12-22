@@ -5,6 +5,7 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
 import billboardHero from "@/assets/bridge-billboard-hero.png";
+import { MobileStickyContact } from "@/components/MobileStickyContact";
 const featuredLocations = [{
   name: "Times Square",
   borough: "Manhattan",
@@ -302,5 +303,7 @@ export default function Billboard() {
           </div>
         </div>
       </section>
+
+      <MobileStickyContact onContactClick={openContactSheet} />
     </div>;
 }

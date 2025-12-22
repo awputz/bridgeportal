@@ -34,7 +34,7 @@ export default function Home() {
   const {
     openContactSheet
   } = useContactSheet();
-  const missionReveal = useScrollReveal(0.1);
+  const missionReveal = useScrollReveal(0.1, true); // First visible section
   const divisionsReveal = useScrollReveal(0.1);
   const servicesReveal = useScrollReveal(0.1);
   const marketsReveal = useScrollReveal(0.1);
@@ -175,7 +175,7 @@ export default function Home() {
 
         {/* Scroll Indicator - absolutely positioned at bottom */}
         <div
-          className="absolute bottom-6 left-0 right-0 z-10 animate-fade-in hidden md:flex justify-center"
+          className="absolute bottom-4 sm:bottom-6 left-0 right-0 z-10 animate-fade-in flex justify-center"
           style={{
             animationDelay: "900ms",
             animationFillMode: "backwards",
@@ -183,10 +183,10 @@ export default function Home() {
         >
           <a
             href="#mission"
-            className="flex flex-col items-center gap-2 text-white/60 hover:text-white/90 transition-colors cursor-pointer"
+            className="flex flex-col items-center gap-1.5 sm:gap-2 text-white/60 hover:text-white/90 transition-colors cursor-pointer touch-manipulation active:scale-95"
           >
-            <span className="text-sm tracking-wider uppercase font-light">Scroll to Explore</span>
-            <ChevronDown className="h-6 w-6 animate-bounce-gentle" />
+            <span className="text-xs sm:text-sm tracking-wider uppercase font-light">Scroll to Explore</span>
+            <ChevronDown className="h-5 w-5 sm:h-6 sm:w-6 animate-bounce-gentle" />
           </a>
         </div>
       </section>
