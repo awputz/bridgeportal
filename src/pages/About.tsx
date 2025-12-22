@@ -8,6 +8,7 @@ import { SEOHelmet } from "@/components/SEOHelmet";
 import { TeamHighlight } from "@/components/TeamHighlight";
 import { useBridgeSettings } from "@/hooks/useBridgeSettings";
 import heroImage from "@/assets/brooklyn-bridge-hero-light.jpg";
+import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 export default function About() {
   const {
     openContactSheet
@@ -198,7 +199,7 @@ export default function About() {
           {/* Desktop: Original 2-column layout with image */}
           <div className={`hidden md:grid md:grid-cols-2 gap-12 items-center transition-all duration-700 ${philosophyReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
-              <img src={heroImage} alt="Modern building" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" />
+              <img src={PLACEHOLDER_IMAGES.hero.nycSkyline} alt="New York City skyline" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" />
             </div>
             <div>
               <h2 className="text-3xl font-light mb-6">Philosophy</h2>
