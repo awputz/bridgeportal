@@ -32,7 +32,8 @@ import ListingLinksAdmin from "./pages/admin/ListingLinksAdmin";
 import NotFound from "./pages/NotFound";
 import FAQ from "./pages/FAQ";
 import Careers from "./pages/Careers";
-import Press from "./pages/Press";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 
 // Service Pages
 import ResidentialServices from "./pages/services/Residential";
@@ -109,7 +110,8 @@ const App = () => {
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/faq" element={<FAQ />} />
                     <Route path="/careers" element={<Careers />} />
-                    <Route path="/press" element={<Press />} />
+                    <Route path="/privacy" element={<PrivacyPolicy />} />
+                    <Route path="/terms" element={<TermsOfService />} />
                     
                     {/* Service Pages - Main */}
                     <Route path="/services/residential" element={<ResidentialServices />} />
