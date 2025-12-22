@@ -7,7 +7,6 @@ import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import commercialLeasingHeroImg from "@/assets/commercial-leasing-hero.jpg";
-
 const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfGrJYsVrcgm0VGWHtaDD3OGv2loKRqqT8x0cdpZyeT69Qktw/viewform?usp=header";
 const stats = [{
   label: "Spaces Leased",
@@ -122,21 +121,10 @@ const serviceDetails = [{
   features: ["Professional photography", "Digital campaigns", "Broker outreach", "Platform syndication"]
 }];
 // Landlord Rep details
-const landlordRepServices = [
-  "Space positioning & pricing strategy",
-  "Professional marketing materials",
-  "Tenant screening & qualification",
-  "Lease negotiation & execution"
-];
+const landlordRepServices = ["Space positioning & pricing strategy", "Professional marketing materials", "Tenant screening & qualification", "Lease negotiation & execution"];
 
 // Tenant Rep details
-const tenantRepServices = [
-  "Requirements analysis & budgeting",
-  "Market survey & property tours",
-  "Lease term negotiation",
-  "Move-in coordination"
-];
-
+const tenantRepServices = ["Requirements analysis & budgeting", "Market survey & property tours", "Lease term negotiation", "Move-in coordination"];
 export default function CommercialLeasing() {
   const {
     openContactSheet
@@ -250,18 +238,12 @@ export default function CommercialLeasing() {
                 Full-service leasing programs to maximize your asset's performance and minimize vacancy.
               </p>
               <ul className="space-y-3 mb-6">
-                {landlordRepServices.map((service, index) => (
-                  <li key={index} className="flex items-start gap-3">
+                {landlordRepServices.map((service, index) => <li key={index} className="flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-accent shrink-0 mt-0.5" />
                     <span className="text-sm font-light">{service}</span>
-                  </li>
-                ))}
+                  </li>)}
               </ul>
-              <div className="flex gap-4 text-sm text-muted-foreground">
-                <span className="font-medium text-foreground">100+ Properties</span>
-                <span>•</span>
-                <span className="font-medium text-foreground">98% Occupancy</span>
-              </div>
+              
             </div>
             {/* Tenant Rep */}
             <div className={`p-6 md:p-8 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-700 delay-100 ${repReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
@@ -271,18 +253,12 @@ export default function CommercialLeasing() {
                 Strategic advisory for businesses seeking the right space at the right terms.
               </p>
               <ul className="space-y-3 mb-6">
-                {tenantRepServices.map((service, index) => (
-                  <li key={index} className="flex items-start gap-3">
+                {tenantRepServices.map((service, index) => <li key={index} className="flex items-start gap-3">
                     <CheckCircle className="h-5 w-5 text-accent shrink-0 mt-0.5" />
                     <span className="text-sm font-light">{service}</span>
-                  </li>
-                ))}
+                  </li>)}
               </ul>
-              <div className="flex gap-4 text-sm text-muted-foreground">
-                <span className="font-medium text-foreground">500+ Tenants</span>
-                <span>•</span>
-                <span className="font-medium text-foreground">2M+ SF Leased</span>
-              </div>
+              
             </div>
           </div>
         </div>
