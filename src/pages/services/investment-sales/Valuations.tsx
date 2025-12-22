@@ -5,6 +5,7 @@ import { InvestmentCalculator } from "@/components/InvestmentCalculator";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import investmentSalesHero from "@/assets/investment-sales-hero.jpg";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
+import { ServicePageNav } from "@/components/ServicePageNav";
 import { SEOHelmet } from "@/components/SEOHelmet";
 
 const Valuations = () => {
@@ -68,6 +69,7 @@ const Valuations = () => {
       />
 
       <ServicesSubNav />
+      <ServicePageNav serviceKey="investment-sales" />
 
       <main className="min-h-screen bg-background">
         {/* Hero Section with Background Image */}
