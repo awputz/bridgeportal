@@ -155,9 +155,7 @@ export default function Home() {
           }}>
             <Eye className="h-8 w-8 text-primary mb-4" />
             <h3 className="text-xl font-medium mb-3 text-white">Vision</h3>
-            <p className="text-white/70 font-light text-sm leading-relaxed">
-              Be New York's most trusted advisory platform
-            </p>
+            <p className="text-white/70 font-light text-sm leading-relaxed">Be New York's most trusted real estate advisory platform</p>
           </div>
           <div className={`glass-card p-6 md:p-8 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
             transitionDelay: missionReveal.isVisible ? "300ms" : "0ms"
