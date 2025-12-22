@@ -8,6 +8,8 @@ import { ServicePageNav } from "@/components/ServicePageNav";
 import { TeamHighlight } from "@/components/TeamHighlight";
 import { useBridgeBuildings } from "@/hooks/useBridgeBuildings";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SwipeHint } from "@/components/SwipeHint";
+import { MobileStickyContact } from "@/components/MobileStickyContact";
 import manhattanImg from "@/assets/manhattan-market.jpg";
 import brooklynImg from "@/assets/brooklyn-market.jpg";
 import queensImg from "@/assets/queens-market.jpg";
@@ -255,6 +257,11 @@ export default function ResidentialServices() {
                 </div>
               ))}
             </div>
+            <SwipeHint 
+              text="Scroll to explore neighborhoods" 
+              direction="vertical"
+              storageKey="residential-markets"
+            />
           </div>
         </div>
       </section>
@@ -301,6 +308,11 @@ export default function ResidentialServices() {
                     </div>
                   ))}
             </div>
+            <SwipeHint 
+              text="Tap to learn more" 
+              storageKey="residential-portfolio"
+              className="mt-4"
+            />
             <div className="text-center mt-8">
               <Button asChild variant="outline" className="font-light">
                 <Link to="/services/residential/buildings">
@@ -334,6 +346,9 @@ export default function ResidentialServices() {
           </Button>
         </div>
       </section>
+
+      {/* Mobile Sticky CTA */}
+      <MobileStickyContact onContactClick={openContactSheet} />
     </div>
   );
 }

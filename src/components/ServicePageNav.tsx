@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
 import { SERVICE_SUB_PAGES, ServiceKey } from "@/lib/serviceSubPages";
 import { cn } from "@/lib/utils";
+import { SwipeHint } from "@/components/SwipeHint";
 
 interface ServicePageNavProps {
   serviceKey: ServiceKey;
@@ -62,6 +63,11 @@ export const ServicePageNav = ({ serviceKey }: ServicePageNavProps) => {
               );
             })}
           </div>
+          <SwipeHint 
+            text="Swipe for more options" 
+            storageKey={`service-nav-${serviceKey}`}
+            className="sm:hidden"
+          />
         </div>
       </div>
     </nav>
