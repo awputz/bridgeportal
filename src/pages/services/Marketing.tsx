@@ -96,7 +96,7 @@ export default function Marketing() {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="relative min-h-[35vh] sm:min-h-[40vh] md:min-h-[45vh] lg:min-h-[50vh] flex items-center justify-center pt-20 sm:pt-24 md:pt-20 lg:pt-24 xl:pt-28 pb-4 sm:pb-6 md:pb-8 lg:pb-10 xl:pb-12" ref={heroReveal.elementRef}>
+      <section className="relative min-h-[45vh] sm:min-h-[50vh] md:min-h-[50vh] lg:min-h-[55vh] flex items-center justify-center pt-24 sm:pt-28 md:pt-32 lg:pt-36 xl:pt-40 pb-8 sm:pb-10 md:pb-12 lg:pb-16 xl:pb-20" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img 
             src={PLACEHOLDER_IMAGES.marketing.hero}
