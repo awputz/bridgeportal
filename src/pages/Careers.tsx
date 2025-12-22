@@ -65,7 +65,7 @@ export default function Careers() {
       <SEOHelmet title="Careers | Bridge Advisory Group - Join Our Team" description="Build your career at one of NYC's fastest-growing real estate advisory firms. Explore open positions in investment sales, residential, commercial leasing, and more." path="/careers" />
       
       {/* Hero with Image */}
-      <section className="relative h-[40vh] sm:h-[45vh] md:h-[50vh] min-h-[280px] sm:min-h-[320px] md:min-h-[400px] flex items-end pb-8 sm:pb-12 md:pb-16" ref={heroReveal.elementRef}>
+      <section className="relative h-[35vh] sm:h-[40vh] md:h-[45vh] min-h-[260px] sm:min-h-[280px] md:min-h-[340px] flex items-center justify-center" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img src={PLACEHOLDER_IMAGES.office.modern} alt="Modern office workspace" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
