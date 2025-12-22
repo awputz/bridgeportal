@@ -4,6 +4,8 @@ import { Download, Lock, Building2, MapPin, TrendingUp, Layers, Filter, X } from
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SEOHelmet } from "@/components/SEOHelmet";
+import { ServicesSubNav } from "@/components/ServicesSubNav";
+import { ServicePageNav } from "@/components/ServicePageNav";
 
 import { useInvestmentListings, InvestmentListing } from "@/hooks/useInvestmentListings";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -129,23 +131,13 @@ const InvestmentListings = () => {
       />
       
       <main className="min-h-screen bg-background">
-        {/* Hero Section with Background Image - extends behind nav */}
+        {/* Hero Section with Background Image */}
         <section 
           ref={heroRef}
-          className={`relative overflow-hidden flex items-center justify-center transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-          style={{
-            minHeight: 'calc(200px + var(--app-nav-h))',
-            paddingTop: 'var(--app-nav-h)',
-          }}
+          className={`relative overflow-hidden flex items-center justify-center min-h-[40vh] sm:min-h-[45vh] md:min-h-[50vh] pt-24 sm:pt-28 md:pt-32 lg:pt-36 xl:pt-40 pb-8 sm:pb-10 md:pb-12 transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
-          {/* Background image container - extends behind the nav */}
-          <div 
-            className="absolute inset-0"
-            style={{
-              top: 'calc(-1 * var(--app-nav-h))',
-              height: 'calc(100% + var(--app-nav-h))',
-            }}
-          >
+          {/* Background image container */}
+          <div className="absolute inset-0">
             <img 
               src={investmentSalesListingsHero} 
               alt="New York City" 
@@ -154,8 +146,8 @@ const InvestmentListings = () => {
             <div className="absolute inset-0 bg-black/60" />
           </div>
           
-          {/* Hero content - positioned below nav */}
-          <div className="relative z-10 text-center px-4 sm:px-6 py-8 sm:py-12 md:py-16">
+          {/* Hero content */}
+          <div className="relative z-10 text-center px-4 sm:px-6">
             <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-light text-white mb-1 sm:mb-2 md:mb-4 tracking-tight">
               Investment Sales Exclusives
             </h1>
@@ -164,6 +156,9 @@ const InvestmentListings = () => {
             </p>
           </div>
         </section>
+
+        <ServicesSubNav />
+        <ServicePageNav serviceKey="investment-sales" />
 
         {/* Filters Section */}
         <section className="px-4 sm:px-6 py-4 sm:py-6 border-b border-white/10">
