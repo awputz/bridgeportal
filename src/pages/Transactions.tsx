@@ -56,7 +56,7 @@ export default function Transactions() {
 
   const filteredTransactions = transactions.filter((t) => {
     if (selectedDivision === "all") return true;
-    return t.deal_type === selectedDivision;
+    return t.division === selectedDivision;
   });
 
   // Stats
@@ -184,8 +184,13 @@ export default function Transactions() {
                     {/* Division & Deal Type */}
                     <div className="flex flex-wrap gap-2 mb-3">
                       <span className="inline-block text-xs bg-accent/10 text-accent px-2 py-1 rounded">
-                        {transaction.deal_type}
+                        {transaction.division || transaction.deal_type}
                       </span>
+                      {transaction.deal_type && transaction.division !== transaction.deal_type && (
+                        <span className="inline-block text-xs bg-white/10 text-muted-foreground px-2 py-1 rounded">
+                          {transaction.deal_type}
+                        </span>
+                      )}
                       {transaction.asset_type && (
                         <span className="inline-block text-xs bg-white/5 text-muted-foreground px-2 py-1 rounded">
                           {transaction.asset_type}
@@ -310,7 +315,8 @@ export default function Transactions() {
                 <div>
                   <p className="text-sm text-muted-foreground font-light">Division</p>
                   <p className="font-light">
-                    {selectedTransaction.deal_type}
+                    {selectedTransaction.division || selectedTransaction.deal_type}
+                    {selectedTransaction.deal_type && selectedTransaction.division !== selectedTransaction.deal_type && ` • ${selectedTransaction.deal_type}`}
                     {selectedTransaction.asset_type && ` • ${selectedTransaction.asset_type}`}
                   </p>
                 </div>
@@ -322,7 +328,11 @@ export default function Transactions() {
                   <DollarSign className="h-5 w-5 text-accent mt-0.5" />
                   <div>
                     <p className="text-sm text-muted-foreground font-light">
-                      {selectedTransaction.sale_price ? "Sale Price" : "Lease Value"}
+                      {selectedTransaction.division === "Capital Advisory" 
+                        ? "Loan Amount" 
+                        : selectedTransaction.sale_price 
+                          ? "Sale Price" 
+                          : "Lease Value"}
                     </p>
                     <p className="text-lg font-light">
                       {formatCurrency(selectedTransaction.sale_price || selectedTransaction.total_lease_value)}

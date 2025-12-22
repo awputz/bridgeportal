@@ -30,12 +30,13 @@ import { useCreateTransaction, useUpdateTransaction } from "@/hooks/useTransacti
 import { useTeamMembers } from "@/hooks/useTeamMembers";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Upload, X, ImageIcon } from "lucide-react";
+import { X, ImageIcon } from "lucide-react";
 import type { Transaction } from "@/hooks/useTransactions";
 
 const formSchema = z.object({
   agent_name: z.string().min(1, "Agent name is required"),
-  deal_type: z.enum(["Sale", "Lease"]),
+  division: z.enum(["Residential", "Commercial", "Investment Sales", "Capital Advisory"]),
+  deal_type: z.enum(["Sale", "Lease", "Loan"]),
   property_address: z.string().min(1, "Property address is required"),
   borough: z.string().optional(),
   neighborhood: z.string().optional(),
@@ -67,7 +68,8 @@ export function TransactionFormDialog({
   const { data: teamMembers = [] } = useTeamMembers();
   const createMutation = useCreateTransaction();
   const updateMutation = useUpdateTransaction();
-  const [dealType, setDealType] = useState<"Sale" | "Lease">("Sale");
+  const [division, setDivision] = useState<"Residential" | "Commercial" | "Investment Sales" | "Capital Advisory">("Investment Sales");
+  const [dealType, setDealType] = useState<"Sale" | "Lease" | "Loan">("Sale");
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -75,6 +77,7 @@ export function TransactionFormDialog({
     resolver: zodResolver(formSchema),
     defaultValues: {
       agent_name: "",
+      division: "Investment Sales",
       deal_type: "Sale",
       property_address: "",
       borough: "",
@@ -88,9 +91,13 @@ export function TransactionFormDialog({
 
   useEffect(() => {
     if (transaction) {
+      const txDivision = (transaction.division || "Investment Sales") as "Residential" | "Commercial" | "Investment Sales" | "Capital Advisory";
+      const txDealType = (transaction.deal_type || "Sale") as "Sale" | "Lease" | "Loan";
+      
       form.reset({
         agent_name: transaction.agent_name,
-        deal_type: transaction.deal_type as "Sale" | "Lease",
+        division: txDivision,
+        deal_type: txDealType,
         property_address: transaction.property_address,
         borough: transaction.borough || "",
         neighborhood: transaction.neighborhood || "",
@@ -104,11 +111,13 @@ export function TransactionFormDialog({
         role: transaction.role || "",
         notes: transaction.notes || "",
       });
-      setDealType(transaction.deal_type as "Sale" | "Lease");
+      setDivision(txDivision);
+      setDealType(txDealType);
       setImageUrl(transaction.image_url || null);
     } else {
       form.reset({
         agent_name: "",
+        division: "Investment Sales",
         deal_type: "Sale",
         property_address: "",
         borough: "",
@@ -118,6 +127,7 @@ export function TransactionFormDialog({
         role: "",
         notes: "",
       });
+      setDivision("Investment Sales");
       setDealType("Sale");
       setImageUrl(null);
     }
@@ -159,6 +169,43 @@ export function TransactionFormDialog({
     setImageUrl(null);
   };
 
+  // Get available deal types based on division
+  const getDealTypeOptions = () => {
+    if (division === "Capital Advisory") {
+      return [{ value: "Loan", label: "Loan / Financing" }];
+    }
+    if (division === "Residential") {
+      return [
+        { value: "Lease", label: "Lease" },
+        { value: "Sale", label: "Sale" },
+      ];
+    }
+    return [
+      { value: "Sale", label: "Sale" },
+      { value: "Lease", label: "Lease" },
+    ];
+  };
+
+  // Get available role options based on division
+  const getRoleOptions = () => {
+    if (division === "Capital Advisory") {
+      return [
+        { value: "broker", label: "Broker" },
+        { value: "advisor", label: "Advisor" },
+      ];
+    }
+    if (dealType === "Lease") {
+      return [
+        { value: "landlord_representation", label: "Landlord Representation" },
+        { value: "tenant_representation", label: "Tenant Representation" },
+      ];
+    }
+    return [
+      { value: "seller_representation", label: "Seller Representation" },
+      { value: "buyer_representation", label: "Buyer Representation" },
+    ];
+  };
+
   const onSubmit = async (data: FormData) => {
     const closingDate = data.closing_date ? new Date(data.closing_date) : null;
     const year = closingDate ? closingDate.getFullYear() : null;
@@ -167,7 +214,7 @@ export function TransactionFormDialog({
     let pricePerSf = null;
     let totalLeaseValue = null;
 
-    if (data.deal_type === "Sale") {
+    if (data.deal_type === "Sale" || data.deal_type === "Loan") {
       if (data.sale_price && data.units) {
         pricePerUnit = data.sale_price / data.units;
       }
@@ -282,33 +329,80 @@ export function TransactionFormDialog({
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="deal_type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Deal Type*</FormLabel>
-                    <Select
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        setDealType(value as "Sale" | "Lease");
-                      }}
-                      value={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Sale">Sale</SelectItem>
-                        <SelectItem value="Lease">Lease</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="division"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Division*</FormLabel>
+                      <Select
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          const newDivision = value as "Residential" | "Commercial" | "Investment Sales" | "Capital Advisory";
+                          setDivision(newDivision);
+                          // Auto-set deal type based on division
+                          if (newDivision === "Capital Advisory") {
+                            form.setValue("deal_type", "Loan");
+                            setDealType("Loan");
+                          } else if (newDivision === "Residential") {
+                            form.setValue("deal_type", "Lease");
+                            setDealType("Lease");
+                          } else {
+                            form.setValue("deal_type", "Sale");
+                            setDealType("Sale");
+                          }
+                        }}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Residential">Residential</SelectItem>
+                          <SelectItem value="Commercial">Commercial</SelectItem>
+                          <SelectItem value="Investment Sales">Investment Sales</SelectItem>
+                          <SelectItem value="Capital Advisory">Capital Advisory</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="deal_type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Deal Type*</FormLabel>
+                      <Select
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          setDealType(value as "Sale" | "Lease" | "Loan");
+                        }}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {getDealTypeOptions().map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <FormField
                 control={form.control}
@@ -413,20 +507,20 @@ export function TransactionFormDialog({
             <div className="space-y-4">
               <h3 className="font-medium text-sm">Financial Details</h3>
 
-              {dealType === "Sale" ? (
+              {(dealType === "Sale" || dealType === "Loan") ? (
                 <>
                   <FormField
                     control={form.control}
                     name="sale_price"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Sale Price</FormLabel>
+                        <FormLabel>{dealType === "Loan" ? "Loan Amount" : "Sale Price"}</FormLabel>
                         <FormControl>
                           <Input
                             type="number"
                             {...field}
                             onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
-                            placeholder="5000000"
+                            placeholder={dealType === "Loan" ? "26850000" : "5000000"}
                           />
                         </FormControl>
                         <FormMessage />
@@ -487,7 +581,7 @@ export function TransactionFormDialog({
                             type="number"
                             {...field}
                             onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
-                            placeholder="15000"
+                            placeholder="3500"
                           />
                         </FormControl>
                         <FormMessage />
@@ -506,7 +600,7 @@ export function TransactionFormDialog({
                             type="number"
                             {...field}
                             onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
-                            placeholder="60"
+                            placeholder="12"
                           />
                         </FormControl>
                         <FormMessage />
@@ -533,10 +627,11 @@ export function TransactionFormDialog({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="seller_representation">Seller Representation</SelectItem>
-                        <SelectItem value="buyer_representation">Buyer Representation</SelectItem>
-                        <SelectItem value="landlord_representation">Landlord Representation</SelectItem>
-                        <SelectItem value="tenant_representation">Tenant Representation</SelectItem>
+                        {getRoleOptions().map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -551,7 +646,11 @@ export function TransactionFormDialog({
                   <FormItem>
                     <FormLabel>Notes</FormLabel>
                     <FormControl>
-                      <Textarea {...field} rows={3} placeholder="Additional details..." />
+                      <Textarea
+                        {...field}
+                        placeholder="Additional details about the transaction..."
+                        rows={3}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -559,12 +658,12 @@ export function TransactionFormDialog({
               />
             </div>
 
-            <div className="flex justify-end gap-3">
+            <div className="flex justify-end gap-3 pt-4 border-t">
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 Cancel
               </Button>
-              <Button type="submit">
-                {transaction ? "Update" : "Create"}
+              <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
+                {transaction ? "Update" : "Create"} Transaction
               </Button>
             </div>
           </form>

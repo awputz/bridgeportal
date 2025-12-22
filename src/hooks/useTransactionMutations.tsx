@@ -6,6 +6,7 @@ import type { Transaction } from "./useTransactions";
 interface TransactionFormData {
   agent_name: string;
   deal_type: string;
+  division?: string;
   property_address: string;
   borough?: string;
   neighborhood?: string;

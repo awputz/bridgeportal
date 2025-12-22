@@ -40,7 +40,8 @@ export default function TransactionsAdmin() {
       transaction.agent_name.toLowerCase().includes(searchLower) ||
       transaction.property_address.toLowerCase().includes(searchLower) ||
       transaction.borough?.toLowerCase().includes(searchLower) ||
-      transaction.deal_type.toLowerCase().includes(searchLower)
+      transaction.deal_type.toLowerCase().includes(searchLower) ||
+      transaction.division?.toLowerCase().includes(searchLower)
     );
   });
 
@@ -93,6 +94,8 @@ export default function TransactionsAdmin() {
       buyer_representation: "Buyer Rep",
       landlord_representation: "Landlord Rep",
       tenant_representation: "Tenant Rep",
+      broker: "Broker",
+      advisor: "Advisor",
     };
     return labels[role] || role;
   };
@@ -127,6 +130,7 @@ export default function TransactionsAdmin() {
             <TableRow>
               <TableHead>Date</TableHead>
               <TableHead>Agent</TableHead>
+              <TableHead>Division</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Address</TableHead>
               <TableHead>Borough</TableHead>
@@ -138,13 +142,13 @@ export default function TransactionsAdmin() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
                   Loading transactions...
                 </TableCell>
               </TableRow>
             ) : filteredTransactions.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
                   {searchQuery ? "No transactions found matching your search" : "No transactions yet"}
                 </TableCell>
               </TableRow>
@@ -156,7 +160,12 @@ export default function TransactionsAdmin() {
                   </TableCell>
                   <TableCell className="font-medium">{transaction.agent_name}</TableCell>
                   <TableCell>
-                    <Badge variant={transaction.deal_type === "Sale" ? "default" : "secondary"}>
+                    <Badge variant="outline">
+                      {transaction.division || "—"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={transaction.deal_type === "Sale" ? "default" : transaction.deal_type === "Loan" ? "secondary" : "outline"}>
                       {transaction.deal_type}
                     </Badge>
                   </TableCell>
@@ -165,7 +174,7 @@ export default function TransactionsAdmin() {
                   </TableCell>
                   <TableCell>{transaction.borough || "—"}</TableCell>
                   <TableCell className="font-medium">
-                    {transaction.deal_type === "Sale"
+                    {transaction.deal_type === "Sale" || transaction.deal_type === "Loan"
                       ? formatCurrency(transaction.sale_price)
                       : formatCurrency(transaction.total_lease_value)}
                   </TableCell>
