@@ -119,26 +119,7 @@ export default function InvestmentSales() {
       <ServicePageNav serviceKey="investment-sales" />
 
       {/* Consolidated Process Section */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={processReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <div className={`text-center mb-8 md:mb-12 lg:mb-16 transition-all duration-700 ${processReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Our Process</h2>
-            <p className="text-muted-foreground font-light max-w-2xl mx-auto">
-              A disciplined approach from first conversation through closing.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
-            {consolidatedProcess.map((step, index) => <div key={index} className={`glass-card p-6 md:p-8 transition-all duration-700 ${processReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
-            transitionDelay: `${index * 100}ms`
-          }}>
-                <step.icon className="h-8 w-8 text-accent mb-4" />
-                <div className="text-3xl md:text-4xl font-light text-accent/50 mb-3">{step.number}</div>
-                <h3 className="text-lg md:text-xl font-light mb-2 text-white">{step.title}</h3>
-                <p className="text-white/70 font-light text-sm">{step.description}</p>
-              </div>)}
-          </div>
-        </div>
-      </section>
+      
 
       {/* Full-Service Capabilities Card Grid */}
       <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={capabilitiesReveal.elementRef}>
