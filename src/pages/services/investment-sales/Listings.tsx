@@ -130,7 +130,7 @@ const InvestmentListings = () => {
       
       <ServicePageNav serviceKey="investment-sales" />
       
-      <main className="min-h-screen bg-background">
+      <main className="min-h-screen bg-background pt-20 md:pt-24">
         {/* Hero Section with Background Image */}
         <section 
           ref={heroRef}
