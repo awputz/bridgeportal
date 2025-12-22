@@ -16,7 +16,7 @@ export default function About() {
   const {
     data: settings
   } = useBridgeSettings();
-  const heroReveal = useScrollReveal(0.1);
+  const heroReveal = useScrollReveal(0.1, true); // Hero always visible initially
   const storyReveal = useScrollReveal(0.1);
   const missionReveal = useScrollReveal(0.1);
   const howWeWorkReveal = useScrollReveal(0.1);
