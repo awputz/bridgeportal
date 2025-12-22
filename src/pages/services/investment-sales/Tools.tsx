@@ -5,17 +5,17 @@ import { InvestmentCalculator } from "@/components/InvestmentCalculator";
 import { Calculator } from "lucide-react";
 
 export default function InvestmentSalesTools() {
-  const calculatorReveal = useScrollReveal(0.1);
+  const calculatorReveal = useScrollReveal(0.1, true);
 
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="relative py-16 md:py-24 lg:py-32 flex items-center justify-center bg-gradient-to-b from-background to-background/95">
+      <section className="relative py-10 sm:py-14 md:py-24 lg:py-32 flex items-center justify-center bg-gradient-to-b from-background to-background/95">
         <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-light mb-4 md:mb-6">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light mb-3 sm:mb-4 md:mb-6">
             Investment Sales Tools
           </h1>
-          <p className="text-base md:text-lg text-muted-foreground font-light max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base md:text-lg text-muted-foreground font-light max-w-2xl mx-auto">
             Interactive calculators to help you analyze investment opportunities.
           </p>
         </div>
@@ -25,14 +25,14 @@ export default function InvestmentSalesTools() {
       <ServicePageNav serviceKey="investment-sales" />
 
       {/* Investment Calculator */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={calculatorReveal.elementRef}>
+      <section className="py-8 sm:py-12 md:py-20 lg:py-28 border-b border-white/5" ref={calculatorReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6">
-          <div className={`text-center mb-12 transition-all duration-700 ${calculatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <Calculator className="h-10 w-10 text-accent" />
-              <h2 className="text-3xl md:text-4xl font-light">Investment Calculator</h2>
+          <div className={`text-center mb-6 sm:mb-8 md:mb-12 transition-all duration-700 ${calculatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div className="flex items-center justify-center gap-2 sm:gap-4 mb-4 sm:mb-6">
+              <Calculator className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 text-accent" />
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-light">Investment Calculator</h2>
             </div>
-            <p className="text-muted-foreground font-light max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base text-muted-foreground font-light max-w-2xl mx-auto">
               Model your acquisition scenarios with our comprehensive underwriting tool.
             </p>
           </div>
