@@ -175,8 +175,8 @@ export default function InvestmentSales() {
       {boroughs.length > 0 && <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]">
           <div className="container mx-auto px-4 md:px-6 max-w-6xl">
             <div className={`text-center mb-8 md:mb-12 lg:mb-16 transition-all duration-700 ${marketReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">{marketsSection?.title || "Borough Coverage"}</h2>
-              <p className="text-muted-foreground font-light max-w-2xl mx-auto">{marketsSection?.content}</p>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Areas We Cover</h2>
+              <p className="text-muted-foreground font-light max-w-2xl mx-auto">{marketsSection?.content || "Comprehensive coverage across the five boroughs"}</p>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               {boroughs.map((borough, index) => <div key={index} className="p-4 md:p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all">
