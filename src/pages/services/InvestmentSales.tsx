@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Building2, TrendingUp, Users, ArrowRight, BarChart3, Target, FileText, Handshake } from "lucide-react";
+import { Building2, TrendingUp, Users, ArrowRight, BarChart3, Target, FileText, Handshake, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useTransactions } from "@/hooks/useTransactions";
@@ -11,7 +11,29 @@ import { MarketStats } from "@/components/MarketStats";
 import investmentSalesHeroImg from "@/assets/investment-sales-hero.jpg";
 import { TeamHighlight } from "@/components/TeamHighlight";
 import { useInvestmentSalesSection, getSectionMetadata, type ProcessStep, type ServiceItem, type ClientProfile, type BoroughData } from "@/hooks/useBridgeInvestmentSalesContent";
+import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 
+// Helper functions for formatting
+const formatExactCurrency = (value: number | null) => {
+  if (!value) return null;
+  return `$${value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+};
+
+const formatDate = (dateStr: string | null) => {
+  if (!dateStr) return null;
+  return new Date(dateStr).toLocaleDateString("en-US", { 
+    month: "short", 
+    year: "numeric" 
+  });
+};
+
+const getPlaceholderImage = (assetType: string | null) => {
+  const type = assetType?.toLowerCase() || "";
+  if (type.includes("retail")) return PLACEHOLDER_IMAGES.retail.storefront;
+  if (type.includes("office")) return PLACEHOLDER_IMAGES.building.exterior;
+  if (type.includes("multifamily") || type.includes("residential")) return PLACEHOLDER_IMAGES.building.residential;
+  return PLACEHOLDER_IMAGES.building.glass;
+};
 // Consolidated process steps
 const consolidatedProcess = [{
   number: "01",
@@ -64,7 +86,9 @@ export default function InvestmentSales() {
   const {
     data: transactions = []
   } = useTransactions();
-  const recentTransactions = transactions.slice(0, 6);
+  const recentTransactions = transactions
+    .filter(t => t.division === "Investment Sales")
+    .slice(0, 6);
 
   // Fetch CMS content
   const {
@@ -180,22 +204,73 @@ export default function InvestmentSales() {
               </Button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {recentTransactions.map((transaction, index) => <div key={transaction.id} className={`p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-700 ${closingsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
-            transitionDelay: `${index * 100}ms`
-          }}>
-                  <h3 className="text-lg font-light mb-1">{transaction.property_address}</h3>
-                  <p className="text-sm text-muted-foreground font-light mb-3">{transaction.neighborhood}</p>
-                  <div className="space-y-2 text-sm font-light">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Type:</span>
-                      <span>{transaction.property_type}</span>
-                    </div>
-                    {transaction.sale_price && <div className="flex justify-between">
-                        <span className="text-muted-foreground">Price:</span>
-                        <span>${transaction.sale_price.toLocaleString()}</span>
-                      </div>}
+              {recentTransactions.map((transaction, index) => (
+                <Link
+                  key={transaction.id}
+                  to="/transactions"
+                  className={`rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-accent/30 transition-all duration-700 cursor-pointer group overflow-hidden ${closingsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                  style={{ transitionDelay: `${index * 100}ms` }}
+                >
+                  {/* Property Image */}
+                  <div className="aspect-[16/9] overflow-hidden">
+                    <img 
+                      src={transaction.image_url || getPlaceholderImage(transaction.asset_type)} 
+                      alt={transaction.property_address}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
                   </div>
-                </div>)}
+
+                  <div className="p-4 md:p-5">
+                    <h3 className="text-base font-light mb-1 group-hover:text-accent transition-colors line-clamp-1">
+                      {transaction.property_address}
+                    </h3>
+                    {transaction.neighborhood && (
+                      <p className="text-sm text-muted-foreground font-light mb-3 flex items-center gap-1">
+                        <MapPin className="h-3 w-3" />
+                        {transaction.neighborhood}{transaction.borough && `, ${transaction.borough}`}
+                      </p>
+                    )}
+
+                    {/* Asset Type Badge */}
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {transaction.asset_type && (
+                        <span className="inline-block text-xs bg-accent/10 text-accent px-2 py-1 rounded">
+                          {transaction.asset_type}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Metrics */}
+                    <div className="space-y-1 text-sm">
+                      {transaction.sale_price && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground font-light">Sale Price</span>
+                          <span className="font-light">{formatExactCurrency(transaction.sale_price)}</span>
+                        </div>
+                      )}
+                      {transaction.gross_square_feet && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground font-light">Size</span>
+                          <span className="font-light">{transaction.gross_square_feet.toLocaleString()} SF</span>
+                        </div>
+                      )}
+                      {transaction.closing_date && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground font-light">Closed</span>
+                          <span className="font-light">{formatDate(transaction.closing_date)}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* View Details */}
+                    <div className="mt-4 pt-3 border-t border-white/5">
+                      <span className="text-xs text-accent font-light group-hover:underline">
+                        View Details →
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
         </section>}
