@@ -205,8 +205,8 @@ export default function Transactions() {
 
                     {/* Key Metrics */}
                     <div className="space-y-1 text-sm">
-                      {/* Show Monthly Rent for Residential leases, otherwise show Value */}
-                      {transaction.division === 'Residential' && transaction.monthly_rent ? (
+                      {/* Show Monthly Rent for Residential and Commercial leases */}
+                      {(transaction.division === 'Residential' || transaction.division === 'Commercial') && transaction.monthly_rent ? (
                         <div className="flex items-center justify-between">
                           <span className="text-muted-foreground font-light">Monthly Rent</span>
                           <span className="font-light">
@@ -337,8 +337,8 @@ export default function Transactions() {
                 </div>
               </div>
 
-              {/* Value - Show Monthly Rent for Residential */}
-              {selectedTransaction.division === 'Residential' && selectedTransaction.monthly_rent ? (
+              {/* Value - Show Monthly Rent for Residential and Commercial */}
+              {(selectedTransaction.division === 'Residential' || selectedTransaction.division === 'Commercial') && selectedTransaction.monthly_rent ? (
                 <div className="flex items-start gap-3">
                   <DollarSign className="h-5 w-5 text-accent mt-0.5" />
                   <div>
