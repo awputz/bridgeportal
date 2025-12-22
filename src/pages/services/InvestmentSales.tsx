@@ -12,6 +12,7 @@ import investmentSalesHeroImg from "@/assets/investment-sales-hero.jpg";
 import { TeamHighlight } from "@/components/TeamHighlight";
 import { useInvestmentSalesSection, getSectionMetadata, type ProcessStep, type ServiceItem, type ClientProfile, type BoroughData } from "@/hooks/useBridgeInvestmentSalesContent";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
+import { MobileStickyContact } from "@/components/MobileStickyContact";
 
 // Helper functions for formatting
 const formatExactCurrency = (value: number | null) => {
@@ -76,7 +77,7 @@ export default function InvestmentSales() {
   const {
     openContactSheet
   } = useContactSheet();
-  const heroReveal = useScrollReveal(0.1);
+  const heroReveal = useScrollReveal(0.1, true); // Hero always visible initially
   const processReveal = useScrollReveal(0.1);
   const capabilitiesReveal = useScrollReveal(0.1);
   const clientsReveal = useScrollReveal(0.1);
@@ -296,5 +297,7 @@ export default function InvestmentSales() {
           </div>
         </div>
       </section>
+
+      <MobileStickyContact onContactClick={openContactSheet} />
     </div>;
 }

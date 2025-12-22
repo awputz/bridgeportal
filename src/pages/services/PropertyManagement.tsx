@@ -7,6 +7,7 @@ import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import propertyManagementHeroImg from "@/assets/property-management-hero.jpg";
+import { MobileStickyContact } from "@/components/MobileStickyContact";
 
 const services = [
   {
@@ -62,7 +63,7 @@ const markets = [
 
 export default function PropertyManagement() {
   const { openContactSheet } = useContactSheet();
-  const heroReveal = useScrollReveal(0.1);
+  const heroReveal = useScrollReveal(0.1, true); // Hero always visible initially
   const introReveal = useScrollReveal(0.1);
   const partnershipReveal = useScrollReveal(0.1);
   const servicesReveal = useScrollReveal(0.1);
@@ -322,6 +323,8 @@ export default function PropertyManagement() {
           </div>
         </div>
       </section>
+
+      <MobileStickyContact onContactClick={openContactSheet} />
     </div>
   );
 }

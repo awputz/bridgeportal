@@ -7,11 +7,12 @@ import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { DIVISIONS } from "@/lib/constants";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
+import { MobileStickyContact } from "@/components/MobileStickyContact";
 export default function CapitalAdvisory() {
   const {
     openContactSheet
   } = useContactSheet();
-  const heroReveal = useScrollReveal(0.1);
+  const heroReveal = useScrollReveal(0.1, true); // Hero always visible initially
   const statsReveal = useScrollReveal(0.1);
   const introReveal = useScrollReveal(0.1);
   const cardsReveal = useScrollReveal(0.1);
@@ -199,5 +200,7 @@ export default function CapitalAdvisory() {
           </div>
         </div>
       </section>
+
+      <MobileStickyContact onContactClick={openContactSheet} />
     </div>;
 }

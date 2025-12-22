@@ -7,6 +7,7 @@ import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import commercialLeasingHeroImg from "@/assets/commercial-leasing-hero.jpg";
+import { MobileStickyContact } from "@/components/MobileStickyContact";
 
 const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfGrJYsVrcgm0VGWHtaDD3OGv2loKRqqT8x0cdpZyeT69Qktw/viewform?usp=header";
 const stats = [{
@@ -141,7 +142,7 @@ export default function CommercialLeasing() {
   const {
     openContactSheet
   } = useContactSheet();
-  const heroReveal = useScrollReveal(0.1);
+  const heroReveal = useScrollReveal(0.1, true); // Hero always visible initially
   const statsReveal = useScrollReveal(0.1);
   const processReveal = useScrollReveal(0.1);
   const servicesReveal = useScrollReveal(0.1);
@@ -334,5 +335,7 @@ export default function CommercialLeasing() {
           </div>
         </div>
       </section>
+
+      <MobileStickyContact onContactClick={openContactSheet} />
     </div>;
 }
