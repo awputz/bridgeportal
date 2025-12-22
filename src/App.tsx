@@ -61,11 +61,7 @@ import CommercialLeasingTools from "./pages/services/commercial-leasing/Tools";
 import CommercialListings from "./pages/CommercialListings";
 
 import PropertyManagementTools from "./pages/services/property-management/Tools";
-
-// Capital Advisory sub-pages removed - consolidated into main page
-// Property Management sub-pages removed - consolidated into main page
-// Marketing sub-pages removed - consolidated into main page
-// Billboard sub-pages removed - consolidated into main page
+import CapitalAdvisoryTools from "./pages/services/capital-advisory/Tools";
 
 const queryClient = new QueryClient();
 
@@ -162,7 +158,9 @@ const App = () => {
                     <Route path="/services/commercial-leasing/retail" element={<Navigate to="/services/commercial-leasing" replace />} />
                     <Route path="/services/commercial-leasing/office" element={<Navigate to="/services/commercial-leasing" replace />} />
                     
-                    {/* Capital Advisory - All sub-pages redirect to main overview */}
+                    {/* Capital Advisory Sub-Pages */}
+                    <Route path="/services/capital-advisory/tools" element={<CapitalAdvisoryTools />} />
+                    {/* Capital Advisory redirects */}
                     <Route path="/services/capital-advisory/debt-financing" element={<Navigate to="/services/capital-advisory" replace />} />
                     <Route path="/services/capital-advisory/equity-jv" element={<Navigate to="/services/capital-advisory" replace />} />
                     <Route path="/services/capital-advisory/debt" element={<Navigate to="/services/capital-advisory" replace />} />
