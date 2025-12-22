@@ -35,8 +35,7 @@ export const useTransactions = (dealType?: string) => {
     queryFn: async () => {
       let query = supabase
         .from("transactions")
-        .select("*")
-        .order("sale_price", { ascending: false, nullsFirst: false });
+        .select("*");
 
       if (dealType) {
         query = query.eq("deal_type", dealType);
@@ -45,7 +44,15 @@ export const useTransactions = (dealType?: string) => {
       const { data, error } = await query;
 
       if (error) throw error;
-      return data as Transaction[];
+      
+      // Sort by deal size (sale_price or total_lease_value), largest first
+      const sorted = (data as Transaction[]).sort((a, b) => {
+        const aValue = a.sale_price || a.total_lease_value || 0;
+        const bValue = b.sale_price || b.total_lease_value || 0;
+        return bValue - aValue;
+      });
+      
+      return sorted;
     },
   });
 };
