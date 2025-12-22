@@ -129,18 +129,33 @@ const InvestmentListings = () => {
       />
       
       <main className="min-h-screen bg-background">
-        {/* Hero Section with Background Image */}
+        {/* Hero Section with Background Image - extends behind nav */}
         <section 
           ref={heroRef}
-          className={`relative h-[28vh] sm:h-[32vh] md:h-[40vh] min-h-[200px] sm:min-h-[240px] md:min-h-[320px] -mt-16 md:-mt-[72px] pt-16 md:pt-[72px] flex items-center justify-center transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          className={`relative overflow-hidden flex items-center justify-center transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          style={{
+            minHeight: 'calc(200px + var(--app-nav-h))',
+            paddingTop: 'var(--app-nav-h)',
+          }}
         >
-          <img 
-            src={investmentSalesListingsHero} 
-            alt="New York City" 
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-black/60" />
-          <div className="relative z-10 text-center px-4 sm:px-6">
+          {/* Background image container - extends behind the nav */}
+          <div 
+            className="absolute inset-0"
+            style={{
+              top: 'calc(-1 * var(--app-nav-h))',
+              height: 'calc(100% + var(--app-nav-h))',
+            }}
+          >
+            <img 
+              src={investmentSalesListingsHero} 
+              alt="New York City" 
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/60" />
+          </div>
+          
+          {/* Hero content - positioned below nav */}
+          <div className="relative z-10 text-center px-4 sm:px-6 py-8 sm:py-12 md:py-16">
             <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-light text-white mb-1 sm:mb-2 md:mb-4 tracking-tight">
               Investment Sales Exclusives
             </h1>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown, Building2, Home, Briefcase, TrendingUp, Megaphone, Image, Settings, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -42,12 +42,37 @@ export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const location = useLocation();
+  const navRef = useRef<HTMLElement>(null);
   const {
     data: services
   } = useBridgeServices();
   const {
     data: listingsNav
   } = useBridgeListingNavItems();
+
+  // Dynamically update --app-nav-h CSS variable based on actual nav height
+  useEffect(() => {
+    const updateNavHeight = () => {
+      if (navRef.current) {
+        const height = navRef.current.offsetHeight;
+        document.documentElement.style.setProperty('--app-nav-h', `${height}px`);
+      }
+    };
+
+    updateNavHeight();
+    
+    const resizeObserver = new ResizeObserver(updateNavHeight);
+    if (navRef.current) {
+      resizeObserver.observe(navRef.current);
+    }
+
+    window.addEventListener('resize', updateNavHeight);
+    
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', updateNavHeight);
+    };
+  }, []);
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -66,7 +91,7 @@ export const Navigation = () => {
   const isServicesActive = location.pathname.startsWith('/services');
   return <>
       {/* Desktop Navigation Header - Hidden on mobile when menu is open */}
-      <nav className="fixed top-0 left-0 right-0 z-50 px-3 pt-3 md:px-4 md:pt-3 lg:px-5 lg:pt-4">
+      <nav ref={navRef} className="fixed top-0 left-0 right-0 z-50 px-3 pt-3 md:px-4 md:pt-3 lg:px-5 lg:pt-4">
         <div className="max-w-7xl mx-auto glass-nav">
           {/* Mobile & Tablet Layout - Hidden when menu is open */}
           <div className="flex lg:hidden items-center justify-between h-14 px-4">
