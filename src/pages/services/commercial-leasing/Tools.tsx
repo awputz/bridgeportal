@@ -12,7 +12,7 @@ export default function CommercialLeasingTools() {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="relative py-10 sm:py-14 md:py-24 lg:py-32 flex items-center justify-center bg-gradient-to-b from-background to-background/95">
+      <section className="relative pt-20 sm:pt-24 md:pt-32 lg:pt-40 pb-10 sm:pb-14 md:pb-24 lg:pb-32 flex items-center justify-center bg-gradient-to-b from-background to-background/95">
         <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light mb-3 sm:mb-4 md:mb-6">
             Commercial Leasing Tools
