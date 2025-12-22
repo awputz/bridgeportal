@@ -568,6 +568,63 @@ export type Database = {
         }
         Relationships: []
       }
+      inquiries: {
+        Row: {
+          assignment_type: string | null
+          budget: string | null
+          created_at: string
+          email: string
+          id: string
+          inquiry_type: string | null
+          name: string
+          neighborhoods: string | null
+          notes: string | null
+          phone: string | null
+          property_address: string | null
+          requirements: string | null
+          timeline: string | null
+          timing: string | null
+          unit_count: string | null
+          user_type: string | null
+        }
+        Insert: {
+          assignment_type?: string | null
+          budget?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          inquiry_type?: string | null
+          name: string
+          neighborhoods?: string | null
+          notes?: string | null
+          phone?: string | null
+          property_address?: string | null
+          requirements?: string | null
+          timeline?: string | null
+          timing?: string | null
+          unit_count?: string | null
+          user_type?: string | null
+        }
+        Update: {
+          assignment_type?: string | null
+          budget?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          inquiry_type?: string | null
+          name?: string
+          neighborhoods?: string | null
+          notes?: string | null
+          phone?: string | null
+          property_address?: string | null
+          requirements?: string | null
+          timeline?: string | null
+          timing?: string | null
+          unit_count?: string | null
+          user_type?: string | null
+        }
+        Relationships: []
+      }
       investment_listing_agents: {
         Row: {
           agent_id: string
