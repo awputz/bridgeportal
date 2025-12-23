@@ -50,7 +50,7 @@ export const Footer = () => {
       setIsSubmitting(false);
     }
   };
-  return <footer className="text-foreground bg-black/90 backdrop-blur-xl border-t border-white/10" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+  return <footer className="text-foreground bg-black/50 backdrop-blur-2xl border-t border-white/10" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Section - 4 Columns */}
         <div className="py-8 sm:py-10 md:py-12 lg:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-6 md:gap-8 lg:gap-12">
@@ -72,29 +72,29 @@ export const Footer = () => {
             <h3 className="font-medium mb-4 md:mb-5 tracking-tight text-sm">
               Navigation
             </h3>
-            <ul className="space-y-3 text-sm">
+            <ul className="space-y-1 text-sm">
               <li>
-                <Link to="/services/investment-sales" className="text-muted-foreground hover:text-foreground transition-colors font-light py-1 inline-block min-h-[44px] flex items-center">
+                <Link to="/services/investment-sales" className="text-muted-foreground hover:text-foreground transition-colors font-light">
                   Services
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors font-light py-1 inline-block min-h-[44px] flex items-center">
+                <Link to="/about" className="text-muted-foreground hover:text-foreground transition-colors font-light">
                   About
                 </Link>
               </li>
               <li>
-                <Link to="/team" className="text-muted-foreground hover:text-foreground transition-colors font-light py-1 inline-block min-h-[44px] flex items-center">
+                <Link to="/team" className="text-muted-foreground hover:text-foreground transition-colors font-light">
                   Agents
                 </Link>
               </li>
               <li>
-                <Link to="/careers" className="text-muted-foreground hover:text-foreground transition-colors font-light py-1 inline-block min-h-[44px] flex items-center">
+                <Link to="/careers" className="text-muted-foreground hover:text-foreground transition-colors font-light">
                   Join Us
                 </Link>
               </li>
               <li>
-                <Link to="/markets-coming-soon" className="text-muted-foreground hover:text-foreground transition-colors font-light py-1 inline-block min-h-[44px] flex items-center">
+                <Link to="/markets-coming-soon" className="text-muted-foreground hover:text-foreground transition-colors font-light">
                   Markets Coming Soon
                 </Link>
               </li>
