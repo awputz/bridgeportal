@@ -50,8 +50,8 @@ export const Footer = () => {
       setIsSubmitting(false);
     }
   };
-  return <footer className="text-foreground py-4 md:py-6">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 glass-nav" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+  return <footer className="text-foreground bg-black/90 backdrop-blur-xl border-t border-white/10" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Section - 4 Columns */}
         <div className="py-8 sm:py-10 md:py-12 lg:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-6 md:gap-8 lg:gap-12">
           {/* Newsletter */}
