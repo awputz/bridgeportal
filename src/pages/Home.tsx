@@ -168,12 +168,15 @@ export default function Home() {
           </div>
           </div>
 
-          {/* About Us Button */}
-          <div className={`flex justify-center transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
+          {/* CTA Buttons */}
+          <div className={`flex justify-center gap-4 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
           transitionDelay: missionReveal.isVisible ? "400ms" : "0ms"
         }}>
             <Button asChild variant="outline" className="font-light">
               <Link to="/about">About Us</Link>
+            </Button>
+            <Button asChild variant="outline" className="font-light">
+              <Link to="/team">Meet the Team</Link>
             </Button>
           </div>
         </div>
