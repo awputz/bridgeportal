@@ -88,7 +88,7 @@ export default function Transactions() {
           }`}>
             {/* Traded Link */}
             <a 
-              href="https://traded.co" 
+              href="https://traded.co/company/bridge-advisory-group/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-xs sm:text-sm text-accent hover:text-accent/80 transition-colors mb-4 sm:mb-6 group"
