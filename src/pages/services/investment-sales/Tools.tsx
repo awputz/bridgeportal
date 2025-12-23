@@ -2,10 +2,14 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { InvestmentCalculator } from "@/components/InvestmentCalculator";
-import { Calculator } from "lucide-react";
+import { Exchange1031Calculator } from "@/components/Exchange1031Calculator";
+import { CashFlowAnalyzer } from "@/components/CashFlowAnalyzer";
+import { Calculator, ArrowRightLeft, BarChart3 } from "lucide-react";
 
 export default function InvestmentSalesTools() {
   const calculatorReveal = useScrollReveal(0.1, true);
+  const exchangeReveal = useScrollReveal(0.1, true);
+  const cashFlowReveal = useScrollReveal(0.1, true);
 
   return (
     <div className="min-h-screen">
@@ -38,6 +42,42 @@ export default function InvestmentSalesTools() {
           </div>
           <div className={`transition-all duration-700 ${calculatorReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: '200ms' }}>
             <InvestmentCalculator />
+          </div>
+        </div>
+      </section>
+
+      {/* 1031 Exchange Calculator */}
+      <section className="py-8 sm:py-12 md:py-20 lg:py-28 border-b border-white/5" ref={exchangeReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6">
+          <div className={`text-center mb-6 sm:mb-8 md:mb-12 transition-all duration-700 ${exchangeReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div className="flex items-center justify-center gap-2 sm:gap-4 mb-4 sm:mb-6">
+              <ArrowRightLeft className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 text-accent" />
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-light">1031 Exchange Calculator</h2>
+            </div>
+            <p className="text-sm sm:text-base text-muted-foreground font-light max-w-2xl mx-auto">
+              Analyze tax-deferred exchange scenarios and understand potential tax savings.
+            </p>
+          </div>
+          <div className={`transition-all duration-700 ${exchangeReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: '200ms' }}>
+            <Exchange1031Calculator />
+          </div>
+        </div>
+      </section>
+
+      {/* Cash Flow Analyzer */}
+      <section className="py-8 sm:py-12 md:py-20 lg:py-28 border-b border-white/5" ref={cashFlowReveal.elementRef}>
+        <div className="container mx-auto px-4 md:px-6">
+          <div className={`text-center mb-6 sm:mb-8 md:mb-12 transition-all duration-700 ${cashFlowReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div className="flex items-center justify-center gap-2 sm:gap-4 mb-4 sm:mb-6">
+              <BarChart3 className="h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 text-accent" />
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-light">Cash Flow Analyzer</h2>
+            </div>
+            <p className="text-sm sm:text-base text-muted-foreground font-light max-w-2xl mx-auto">
+              Project rental property ROI with year-by-year cash flow analysis.
+            </p>
+          </div>
+          <div className={`transition-all duration-700 ${cashFlowReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: '200ms' }}>
+            <CashFlowAnalyzer />
           </div>
         </div>
       </section>

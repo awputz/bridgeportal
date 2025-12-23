@@ -27,6 +27,7 @@ export const SERVICE_SUB_PAGES = {
       { name: "For Sellers", path: "/services/residential/sellers" },
       { name: "Exclusive Portfolio", path: "/services/residential/buildings" },
       { name: "Renter Resources", path: "/services/residential/renter-resources" },
+      { name: "Tools", path: "/services/residential/tools" },
     ],
   },
   "capital-advisory": {
