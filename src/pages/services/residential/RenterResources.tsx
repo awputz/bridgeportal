@@ -3,70 +3,43 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CheckCircle2, FileText, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
-
-const requiredDocuments = [
-  { title: "Photo ID", description: "Government-issued identification" },
-  { title: "Tax Returns or W-2s", description: "First two pages of 1040 only" },
-  { title: "Recent Pay Stubs", description: "Latest pay period" },
-  { title: "Bank Statements", description: "Summary page only" },
-  { title: "Landlord Reference", description: "6-12 months payment history" },
-  { title: "Employment Letter", description: "Stating current salary" },
-];
-
-const legalResources = [
-  {
-    title: "New York Standard Operating Procedures",
-    description: "Required disclosure document for all New York real estate transactions",
-    url: "https://dos.ny.gov/system/files/documents/2024/01/1736.pdf",
-  },
-  {
-    title: "Fair Housing Information",
-    description: "Federal fair housing guidelines and requirements",
-    url: "https://www.hud.gov/program_offices/fair_housing_equal_opp",
-  },
-  {
-    title: "New York State Division of Licensing Services",
-    description: "Information about real estate licensing and regulations",
-    url: "https://dos.ny.gov/licensing-services",
-  },
-];
-
-const rentalChecklist = [
-  "Government-issued ID",
-  "Proof of income (recent pay stubs or tax returns)",
-  "Bank statements (last 2-3 months)",
-  "Employer contact information",
-  "Previous landlord references",
-  "Credit report",
-  "Application fee (typically $20-100)",
-];
-
-const purchaseChecklist = [
-  "Pre-approval letter from lender",
-  "Proof of funds for down payment",
-  "Financial statements",
-  "Employment verification",
-  "Tax returns (last 2 years)",
-  "Personal references",
-  "Board application materials (for co-ops)",
-];
-
-const leaseTerms = [
-  "Lease term and renewal options",
-  "Rent amount and payment schedule",
-  "Security deposit requirements",
-  "Utilities and who pays what",
-  "Pet policies and fees",
-  "Subletting rules",
-  "Building amenities and access",
-];
-
+const requiredDocuments = [{
+  title: "Photo ID",
+  description: "Government-issued identification"
+}, {
+  title: "Tax Returns or W-2s",
+  description: "First two pages of 1040 only"
+}, {
+  title: "Recent Pay Stubs",
+  description: "Latest pay period"
+}, {
+  title: "Bank Statements",
+  description: "Summary page only"
+}, {
+  title: "Landlord Reference",
+  description: "6-12 months payment history"
+}, {
+  title: "Employment Letter",
+  description: "Stating current salary"
+}];
+const legalResources = [{
+  title: "New York Standard Operating Procedures",
+  description: "Required disclosure document for all New York real estate transactions",
+  url: "https://dos.ny.gov/system/files/documents/2024/01/1736.pdf"
+}, {
+  title: "Fair Housing Information",
+  description: "Federal fair housing guidelines and requirements",
+  url: "https://www.hud.gov/program_offices/fair_housing_equal_opp"
+}, {
+  title: "New York State Division of Licensing Services",
+  description: "Information about real estate licensing and regulations",
+  url: "https://dos.ny.gov/licensing-services"
+}];
+const rentalChecklist = ["Government-issued ID", "Proof of income (recent pay stubs or tax returns)", "Bank statements (last 2-3 months)", "Employer contact information", "Previous landlord references", "Credit report", "Application fee (typically $20-100)"];
+const purchaseChecklist = ["Pre-approval letter from lender", "Proof of funds for down payment", "Financial statements", "Employment verification", "Tax returns (last 2 years)", "Personal references", "Board application materials (for co-ops)"];
+const leaseTerms = ["Lease term and renewal options", "Rent amount and payment schedule", "Security deposit requirements", "Utilities and who pays what", "Pet policies and fees", "Subletting rules", "Building amenities and access"];
 const RenterResources = () => {
-  return (
-    <ServicePageLayout
-      serviceKey="residential"
-      heroContent={
-        <section className="relative pt-32 md:pt-40 pb-16 md:pb-20">
+  return <ServicePageLayout serviceKey="residential" heroContent={<section className="relative pt-32 md:pt-40 pb-16 md:pb-20">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
               <p className="text-sm uppercase tracking-widest text-muted-foreground mb-4">
@@ -80,9 +53,7 @@ const RenterResources = () => {
               </p>
             </div>
           </div>
-        </section>
-      }
-    >
+        </section>}>
       {/* Section 2: Rental Application Requirements */}
       <section className="py-16 md:py-20 bg-card border-y border-border">
         <div className="container mx-auto px-4">
@@ -98,11 +69,7 @@ const RenterResources = () => {
                 Complete application takes 10-15 minutes
               </p>
               <Button asChild className="w-full rounded-full">
-                <a
-                  href="https://secure.weimark.com/ifw/fc33000e21e90819048fbb95b0d70320/6037/new"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href="https://secure.weimark.com/ifw/fc33000e21e90819048fbb95b0d70320/6037/new" target="_blank" rel="noopener noreferrer">
                   Start Application
                   <ExternalLink className="ml-2 h-4 w-4" />
                 </a>
@@ -137,52 +104,20 @@ const RenterResources = () => {
           <Card className="p-6 md:p-8">
             <h3 className="text-xl font-semibold mb-6">Required Documentation</h3>
             <div className="grid sm:grid-cols-2 gap-4">
-              {requiredDocuments.map((doc) => (
-                <div key={doc.title} className="flex items-start gap-3">
+              {requiredDocuments.map(doc => <div key={doc.title} className="flex items-start gap-3">
                   <CheckCircle2 className="h-5 w-5 text-accent mt-0.5 shrink-0" />
                   <div>
                     <span className="font-medium">{doc.title}</span>
                     <span className="text-muted-foreground"> — {doc.description}</span>
                   </div>
-                </div>
-              ))}
+                </div>)}
             </div>
           </Card>
         </div>
       </section>
 
       {/* Section 3: Required Legal Disclosures */}
-      <section className="py-16 md:py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-semibold text-center mb-12">
-            Required Legal Disclosures
-          </h2>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {legalResources.map((resource) => (
-              <Card
-                key={resource.title}
-                className="p-6 hover:shadow-lg transition-shadow"
-              >
-                <FileText className="h-8 w-8 text-accent mb-4" />
-                <h3 className="text-lg font-semibold mb-2">{resource.title}</h3>
-                <p className="text-muted-foreground text-sm mb-4">
-                  {resource.description}
-                </p>
-                <a
-                  href={resource.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-accent hover:underline text-sm font-medium"
-                >
-                  View Resource
-                  <ExternalLink className="ml-1 h-3.5 w-3.5" />
-                </a>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      
 
       {/* Section 4: Client Resources */}
       <section className="py-16 md:py-20 bg-card border-t border-border">
@@ -201,12 +136,10 @@ const RenterResources = () => {
                 Complete list of documents needed for NYC rental applications
               </p>
               <ul className="grid sm:grid-cols-2 gap-2">
-                {rentalChecklist.map((item) => (
-                  <li key={item} className="flex items-center gap-2">
+                {rentalChecklist.map(item => <li key={item} className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
                     <span className="text-sm">{item}</span>
-                  </li>
-                ))}
+                  </li>)}
               </ul>
             </Card>
 
@@ -217,12 +150,10 @@ const RenterResources = () => {
                 Documents required for NYC property purchases
               </p>
               <ul className="grid sm:grid-cols-2 gap-2">
-                {purchaseChecklist.map((item) => (
-                  <li key={item} className="flex items-center gap-2">
+                {purchaseChecklist.map(item => <li key={item} className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
                     <span className="text-sm">{item}</span>
-                  </li>
-                ))}
+                  </li>)}
               </ul>
             </Card>
 
@@ -235,12 +166,10 @@ const RenterResources = () => {
                 Key terms and considerations in New York rental agreements
               </p>
               <ul className="grid sm:grid-cols-2 gap-2">
-                {leaseTerms.map((item) => (
-                  <li key={item} className="flex items-center gap-2">
+                {leaseTerms.map(item => <li key={item} className="flex items-center gap-2">
                     <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
                     <span className="text-sm">{item}</span>
-                  </li>
-                ))}
+                  </li>)}
               </ul>
             </Card>
           </div>
@@ -263,8 +192,6 @@ const RenterResources = () => {
           </Card>
         </div>
       </section>
-    </ServicePageLayout>
-  );
+    </ServicePageLayout>;
 };
-
 export default RenterResources;
