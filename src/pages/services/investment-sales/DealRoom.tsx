@@ -177,7 +177,7 @@ const DealRoom = () => {
           {/* Background gradient */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
           
-          <div className="relative max-w-6xl mx-auto px-6 py-12 lg:py-20">
+          <div className="relative max-w-6xl mx-auto px-6 pt-24 sm:pt-28 md:pt-32 lg:pt-36 pb-12 lg:pb-20">
             {/* Back link */}
             <Link 
               to="/services/investment-sales/listings" 
@@ -323,7 +323,7 @@ const DealRoom = () => {
             <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/95 to-background" />
           </div>
 
-          <div className="relative z-10 max-w-7xl mx-auto px-6 py-8 lg:py-12">
+          <div className="relative z-10 max-w-7xl mx-auto px-6 pt-24 sm:pt-28 md:pt-32 lg:pt-36 pb-8 lg:pb-12">
             {/* Back link */}
             <Link 
               to="/services/investment-sales/listings" 
