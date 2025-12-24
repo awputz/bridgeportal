@@ -88,27 +88,27 @@ const digitalServices = [
 
 export default function Marketing() {
   const { openContactSheet } = useContactSheet();
-  const heroReveal = useScrollReveal(0.1, true); // Hero always visible initially
+  const heroReveal = useScrollReveal(0.1, true);
   const introReveal = useScrollReveal(0.1);
   const creativeReveal = useScrollReveal(0.1);
   const digitalReveal = useScrollReveal(0.1);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       {/* Hero */}
-      <section className="relative min-h-[45vh] sm:min-h-[50vh] md:min-h-[50vh] lg:min-h-[55vh] flex items-center justify-center pt-24 sm:pt-28 md:pt-32 lg:pt-36 xl:pt-40 pb-8 sm:pb-10 md:pb-12 lg:pb-16 xl:pb-20" ref={heroReveal.elementRef}>
+      <section className="relative min-h-[40vh] sm:min-h-[45vh] md:min-h-[45vh] lg:min-h-[50vh] flex items-center justify-center pt-24 sm:pt-28 md:pt-32 lg:pt-36 xl:pt-40 pb-6 sm:pb-8 md:pb-10 lg:pb-12" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img 
             src={PLACEHOLDER_IMAGES.marketing.hero}
             alt="Creative marketing and design studio"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/80 to-background" />
         </div>
         <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${
           heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-4 md:mb-6">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-3 md:mb-4">
             Bridge Marketing
           </h1>
           <p className="text-base md:text-lg lg:text-xl text-muted-foreground font-light">
@@ -120,9 +120,9 @@ export default function Marketing() {
       <ServicesSubNav />
 
       {/* Intro */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={introReveal.elementRef}>
+      <section className="py-10 md:py-12 lg:py-16 border-b border-border/10" ref={introReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-4xl">
-          <p className={`text-base md:text-lg lg:text-xl text-muted-foreground font-light leading-relaxed text-center transition-all duration-700 ${
+          <p className={`text-base md:text-lg text-muted-foreground font-light leading-relaxed text-center transition-all duration-700 ${
             introReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
             Bridge Marketing powers the visual identity and storytelling behind Bridge listings and select client assignments. From brand development through digital distribution, our team delivers work that stands out in a competitive market.
@@ -131,36 +131,38 @@ export default function Marketing() {
       </section>
 
       {/* Creative Studio Section */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={creativeReveal.elementRef}>
+      <section className="py-10 md:py-14 lg:py-16 border-b border-border/10" ref={creativeReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <div className={`mb-12 transition-all duration-700 ${
+          <div className={`mb-8 transition-all duration-700 ${
             creativeReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <div className="flex items-center gap-3 md:gap-4 mb-4">
-              <Megaphone className="h-6 w-6 md:h-8 md:w-8 text-accent" />
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-light">Creative Studio</h2>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="p-2.5 rounded-lg bg-primary/10">
+                <Megaphone className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+              </div>
+              <h2 className="text-2xl md:text-3xl font-light">Creative Studio</h2>
             </div>
-            <p className="text-muted-foreground font-light max-w-3xl">
+            <p className="text-sm md:text-base text-muted-foreground font-light max-w-3xl">
               Full-service creative production for properties and brands.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-4 md:gap-5">
             {creativeServices.map((service, index) => (
               <div
                 key={service.title}
-                className={`group p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-500 ${
+                className={`group p-4 md:p-5 rounded-lg border border-border/30 hover:border-primary/20 transition-all duration-500 ${
                   creativeReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
                 }`}
                 style={{ transitionDelay: `${(index + 1) * 100}ms` }}
               >
-                <service.icon className="h-8 w-8 text-accent mb-4 transition-transform duration-300 group-hover:scale-110" />
+                <service.icon className="h-6 w-6 text-primary mb-3 transition-transform duration-300 group-hover:scale-110" />
                 <h3 className="text-lg font-light mb-2">{service.title}</h3>
-                <p className="text-sm text-muted-foreground font-light mb-4">{service.description}</p>
-                <ul className="space-y-2">
+                <p className="text-sm text-muted-foreground font-light mb-3">{service.description}</p>
+                <ul className="space-y-1.5">
                   {service.items.map(item => (
                     <li key={item} className="text-sm text-muted-foreground/80 font-light flex items-start gap-2">
-                      <ArrowRight className="h-3.5 w-3.5 text-accent mt-0.5 flex-shrink-0" />
+                      <ArrowRight className="h-3 w-3 text-primary mt-0.5 flex-shrink-0" />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -172,36 +174,38 @@ export default function Marketing() {
       </section>
 
       {/* Digital & Campaigns Section */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={digitalReveal.elementRef}>
+      <section className="py-10 md:py-14 lg:py-16 border-b border-border/10" ref={digitalReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <div className={`mb-12 transition-all duration-700 ${
+          <div className={`mb-8 transition-all duration-700 ${
             digitalReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
           }`}>
-            <div className="flex items-center gap-3 md:gap-4 mb-4">
-              <Award className="h-6 w-6 md:h-8 md:w-8 text-accent" />
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-light">Digital & Campaigns</h2>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="p-2.5 rounded-lg bg-primary/10">
+                <Award className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+              </div>
+              <h2 className="text-2xl md:text-3xl font-light">Digital & Campaigns</h2>
             </div>
-            <p className="text-muted-foreground font-light max-w-3xl">
+            <p className="text-sm md:text-base text-muted-foreground font-light max-w-3xl">
               Multi-channel distribution that reaches the right audience with data-driven insights.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-4 md:gap-5">
             {digitalServices.map((service, index) => (
               <div
                 key={service.title}
-                className={`group p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-500 ${
+                className={`group p-4 md:p-5 rounded-lg border border-border/30 hover:border-primary/20 transition-all duration-500 ${
                   digitalReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
                 }`}
                 style={{ transitionDelay: `${(index + 1) * 100}ms` }}
               >
-                <service.icon className="h-8 w-8 text-accent mb-4 transition-transform duration-300 group-hover:scale-110" />
+                <service.icon className="h-6 w-6 text-primary mb-3 transition-transform duration-300 group-hover:scale-110" />
                 <h3 className="text-lg font-light mb-2">{service.title}</h3>
-                <p className="text-sm text-muted-foreground font-light mb-4">{service.description}</p>
-                <ul className="space-y-2">
+                <p className="text-sm text-muted-foreground font-light mb-3">{service.description}</p>
+                <ul className="space-y-1.5">
                   {service.items.map(item => (
                     <li key={item} className="text-sm text-muted-foreground/80 font-light flex items-start gap-2">
-                      <ArrowRight className="h-3.5 w-3.5 text-accent mt-0.5 flex-shrink-0" />
+                      <ArrowRight className="h-3 w-3 text-primary mt-0.5 flex-shrink-0" />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -213,15 +217,17 @@ export default function Marketing() {
       </section>
 
       {/* CTA */}
-      <section className="py-12 md:py-20 lg:py-28">
+      <section className="py-12 md:py-16 lg:py-20">
         <div className="container mx-auto px-4 md:px-6 text-center">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 md:mb-6">Ready To Get Started?</h2>
-          <p className="text-muted-foreground font-light mb-8 max-w-2xl mx-auto">
-            Whether you need creative, digital distribution, or strategic marketing support, Bridge Marketing is ready to help.
-          </p>
-          <Button size="lg" className="font-light" onClick={openContactSheet}>
-            Contact Marketing
-          </Button>
+          <div className="max-w-xl mx-auto">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-light mb-4">Ready To Get Started?</h2>
+            <p className="text-sm md:text-base text-muted-foreground font-light mb-6">
+              Whether you need creative, digital distribution, or strategic marketing support, Bridge Marketing is ready to help.
+            </p>
+            <Button size="default" className="font-light" onClick={openContactSheet}>
+              Contact Marketing
+            </Button>
+          </div>
         </div>
       </section>
 
