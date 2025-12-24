@@ -129,10 +129,10 @@ export default function Home() {
       </section>
 
       {/* About Bridge Advisory Group Section */}
-      <section id="mission" className="py-16 md:py-24 bg-muted/30" ref={missionReveal.elementRef}>
+      <section id="mission" className="py-10 md:py-24 bg-muted/30" ref={missionReveal.elementRef}>
         <div className="container mx-auto px-4 md:px-6 max-w-5xl">
           {/* Part 1: Header, Mission, Vision, Values */}
-          <div className={`text-center mb-10 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
+          <div className={`text-center mb-6 md:mb-10 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">About Bridge Advisory Group</h2>
             <p className="text-muted-foreground font-light max-w-2xl mx-auto text-sm md:text-base">
               A full-service real estate advisory platform built on integrity, expertise, and long-term relationships.
@@ -140,28 +140,28 @@ export default function Home() {
           </div>
 
           {/* Mission, Vision & Approach Cards */}
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <div className={`glass-card p-6 md:p-8 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
+          <div className="grid md:grid-cols-3 gap-3 md:gap-6 mb-5 md:mb-8">
+          <div className={`glass-card p-4 md:p-8 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
             transitionDelay: missionReveal.isVisible ? "100ms" : "0ms"
           }}>
-            <Target className="h-8 w-8 text-primary mb-4" />
-            <h3 className="text-xl font-medium mb-3 text-white">Mission</h3>
+            <Target className="h-6 w-6 md:h-8 md:w-8 text-primary mb-2 md:mb-4" />
+            <h3 className="text-xl font-medium mb-1 md:mb-3 text-white">Mission</h3>
             <p className="text-white/70 font-light text-sm leading-relaxed">
               Deliver exceptional real estate advisory through integrity, expertise, and client-first service.
             </p>
           </div>
-          <div className={`glass-card p-6 md:p-8 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
+          <div className={`glass-card p-4 md:p-8 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
             transitionDelay: missionReveal.isVisible ? "200ms" : "0ms"
           }}>
-            <Eye className="h-8 w-8 text-primary mb-4" />
-            <h3 className="text-xl font-medium mb-3 text-white">Vision</h3>
+            <Eye className="h-6 w-6 md:h-8 md:w-8 text-primary mb-2 md:mb-4" />
+            <h3 className="text-xl font-medium mb-1 md:mb-3 text-white">Vision</h3>
             <p className="text-white/70 font-light text-sm leading-relaxed">Be New York's most trusted real estate advisory platform</p>
           </div>
-          <div className={`glass-card p-6 md:p-8 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
+          <div className={`glass-card p-4 md:p-8 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
             transitionDelay: missionReveal.isVisible ? "300ms" : "0ms"
           }}>
-            <Compass className="h-8 w-8 text-primary mb-4" />
-            <h3 className="text-xl font-medium mb-3 text-white">Approach</h3>
+            <Compass className="h-6 w-6 md:h-8 md:w-8 text-primary mb-2 md:mb-4" />
+            <h3 className="text-xl font-medium mb-1 md:mb-3 text-white">Approach</h3>
             <p className="text-white/70 font-light text-sm leading-relaxed">
               Principal-level thinking combined with hands-on execution across every transaction.
             </p>
