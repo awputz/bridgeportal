@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Building2, MapPin, ArrowRight, Home } from "lucide-react";
+import { Building2, MapPin, ArrowRight, Home, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
@@ -130,6 +130,16 @@ export default function ResidentialBuildings() {
                                   </span>
                                 ))}
                               </div>
+                            )}
+                            {building.website_url && (
+                              <a 
+                                href={building.website_url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 mt-3 text-xs text-accent hover:text-accent/80 transition-colors"
+                              >
+                                View Building Website <ExternalLink className="h-3 w-3" />
+                              </a>
                             )}
                           </div>
                         </div>
