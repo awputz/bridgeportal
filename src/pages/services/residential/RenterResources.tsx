@@ -66,24 +66,7 @@ const RenterResources = () => {
         </section>
       }
     >
-      {/* Section 1: Net Effective Rent Calculator */}
-      <section className="py-12 md:py-16 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-semibold mb-2">
-              Net Effective Rent Calculator
-            </h2>
-            <p className="text-muted-foreground">
-              Calculate your true monthly rent after concessions and specials
-            </p>
-          </div>
-          <div className="max-w-4xl mx-auto">
-            <NetEffectiveRentCalculator />
-          </div>
-        </div>
-      </section>
-
-      {/* Section 2: Rental Application Requirements */}
+      {/* Section 1: Rental Application Requirements */}
       <section className="py-12 md:py-16 bg-card border-y border-border">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-semibold text-center mb-8">
@@ -151,7 +134,7 @@ const RenterResources = () => {
         </div>
       </section>
 
-      {/* Section 3: Client Resources - Compact 3-Column Grid */}
+      {/* Section 2: Client Resources - Compact 3-Column Grid */}
       <section className="py-12 md:py-16 bg-card border-t border-border">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-semibold text-center mb-8">
@@ -199,6 +182,23 @@ const RenterResources = () => {
                 </ul>
               </Card>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 3: Net Effective Rent Calculator */}
+      <section className="py-12 md:py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-semibold mb-2">
+              Net Effective Rent Calculator
+            </h2>
+            <p className="text-muted-foreground">
+              Calculate your true monthly rent after concessions and specials
+            </p>
+          </div>
+          <div className="max-w-4xl mx-auto">
+            <NetEffectiveRentCalculator />
           </div>
         </div>
       </section>
