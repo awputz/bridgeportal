@@ -27,11 +27,12 @@ export interface Transaction {
   sale_price: number | null;
   asset_type: string | null;
   image_url: string | null;
+  is_profile_only: boolean;
 }
 
-export const useTransactions = (dealType?: string) => {
+export const useTransactions = (dealType?: string, includeProfileOnly: boolean = false) => {
   return useQuery({
-    queryKey: ["transactions", dealType],
+    queryKey: ["transactions", dealType, includeProfileOnly],
     queryFn: async () => {
       let query = supabase
         .from("transactions")
@@ -39,6 +40,11 @@ export const useTransactions = (dealType?: string) => {
 
       if (dealType) {
         query = query.eq("deal_type", dealType);
+      }
+
+      // By default, filter out profile-only transactions (for main Transactions page)
+      if (!includeProfileOnly) {
+        query = query.eq("is_profile_only", false);
       }
 
       const { data, error } = await query;
