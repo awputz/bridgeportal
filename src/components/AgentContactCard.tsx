@@ -120,10 +120,10 @@ export function AgentContactCard({ agentName }: AgentContactCardProps) {
           </Avatar>
           
           {/* Info */}
-          <div className="flex-1 min-w-0">
-            <p className="font-medium text-sm truncate">{agent.name}</p>
+          <div className="flex-1 min-w-0 space-y-0.5">
+            <p className="font-medium text-sm truncate leading-tight">{agent.name}</p>
             {agent.member?.title && (
-              <p className="text-xs text-muted-foreground truncate">
+              <p className="text-xs text-muted-foreground truncate leading-tight">
                 {agent.member.title}
               </p>
             )}
