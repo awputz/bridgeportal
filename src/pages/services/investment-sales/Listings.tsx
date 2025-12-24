@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Download, Lock, Building2, MapPin, TrendingUp, Layers, Filter, X } from "lucide-react";
+import { Download, Lock, Building2, MapPin, TrendingUp, Layers, Filter, X, ChevronDown, RotateCcw } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SEOHelmet } from "@/components/SEOHelmet";
@@ -54,6 +55,33 @@ const PRICE_RANGES = [{
   min: 25000000,
   max: Infinity
 }];
+
+const SF_RANGES = [
+  { label: "All Sizes", value: "all", min: 0, max: Infinity },
+  { label: "Under 5,000 SF", value: "under-5k", min: 0, max: 5000 },
+  { label: "5,000 - 10,000 SF", value: "5k-10k", min: 5000, max: 10000 },
+  { label: "10,000 - 25,000 SF", value: "10k-25k", min: 10000, max: 25000 },
+  { label: "25,000 - 50,000 SF", value: "25k-50k", min: 25000, max: 50000 },
+  { label: "50,000+ SF", value: "50k-plus", min: 50000, max: Infinity },
+];
+
+const UNITS_RANGES = [
+  { label: "All Units", value: "all", min: 0, max: Infinity },
+  { label: "1 - 10 Units", value: "1-10", min: 1, max: 10 },
+  { label: "11 - 25 Units", value: "11-25", min: 11, max: 25 },
+  { label: "26 - 50 Units", value: "26-50", min: 26, max: 50 },
+  { label: "50+ Units", value: "50-plus", min: 50, max: Infinity },
+];
+
+const CAP_RATE_RANGES = [
+  { label: "All Cap Rates", value: "all", min: 0, max: Infinity },
+  { label: "Under 4%", value: "under-4", min: 0, max: 4 },
+  { label: "4% - 5%", value: "4-5", min: 4, max: 5 },
+  { label: "5% - 6%", value: "5-6", min: 5, max: 6 },
+  { label: "6% - 7%", value: "6-7", min: 6, max: 7 },
+  { label: "7%+", value: "7-plus", min: 7, max: Infinity },
+];
+
 const InvestmentListings = () => {
   const {
     data: listings,
@@ -75,6 +103,12 @@ const InvestmentListings = () => {
   const [selectedBorough, setSelectedBorough] = useState<string>("all");
   const [selectedAssetClass, setSelectedAssetClass] = useState<string>("all");
   const [selectedPriceRange, setSelectedPriceRange] = useState<string>("all");
+  
+  // Advanced filter states
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [selectedSfRange, setSelectedSfRange] = useState<string>("all");
+  const [selectedUnitsRange, setSelectedUnitsRange] = useState<string>("all");
+  const [selectedCapRateRange, setSelectedCapRateRange] = useState<string>("all");
 
   // Extract unique boroughs and asset classes from listings
   const {
@@ -122,14 +156,62 @@ const InvestmentListings = () => {
           return false; // Exclude "Price Upon Request" when filtering by price
         }
       }
+
+      // Building size (SF) filter
+      if (selectedSfRange !== "all") {
+        const sfRange = SF_RANGES.find(r => r.value === selectedSfRange);
+        if (sfRange && listing.gross_sf) {
+          if (listing.gross_sf < sfRange.min || listing.gross_sf >= sfRange.max) {
+            return false;
+          }
+        } else if (sfRange && !listing.gross_sf) {
+          return false;
+        }
+      }
+
+      // Units filter
+      if (selectedUnitsRange !== "all") {
+        const unitsRange = UNITS_RANGES.find(r => r.value === selectedUnitsRange);
+        if (unitsRange && listing.units) {
+          if (listing.units < unitsRange.min || listing.units > unitsRange.max) {
+            return false;
+          }
+        } else if (unitsRange && !listing.units) {
+          return false;
+        }
+      }
+
+      // Cap rate filter
+      if (selectedCapRateRange !== "all") {
+        const capRateRange = CAP_RATE_RANGES.find(r => r.value === selectedCapRateRange);
+        if (capRateRange && listing.cap_rate) {
+          if (listing.cap_rate < capRateRange.min || listing.cap_rate >= capRateRange.max) {
+            return false;
+          }
+        } else if (capRateRange && !listing.cap_rate) {
+          return false;
+        }
+      }
+
       return true;
     });
-  }, [listings, selectedBorough, selectedAssetClass, selectedPriceRange]);
-  const hasActiveFilters = selectedBorough !== "all" || selectedAssetClass !== "all" || selectedPriceRange !== "all";
+  }, [listings, selectedBorough, selectedAssetClass, selectedPriceRange, selectedSfRange, selectedUnitsRange, selectedCapRateRange]);
+  const hasActiveFilters = selectedBorough !== "all" || selectedAssetClass !== "all" || selectedPriceRange !== "all" || selectedSfRange !== "all" || selectedUnitsRange !== "all" || selectedCapRateRange !== "all";
+  const hasAdvancedFilters = selectedSfRange !== "all" || selectedUnitsRange !== "all" || selectedCapRateRange !== "all";
+  
   const clearFilters = () => {
     setSelectedBorough("all");
     setSelectedAssetClass("all");
     setSelectedPriceRange("all");
+    setSelectedSfRange("all");
+    setSelectedUnitsRange("all");
+    setSelectedCapRateRange("all");
+  };
+
+  const clearAdvancedFilters = () => {
+    setSelectedSfRange("all");
+    setSelectedUnitsRange("all");
+    setSelectedCapRateRange("all");
   };
   const getPlaceholderImage = (index: number) => {
     const images = [PLACEHOLDER_IMAGES.building.brownstone, PLACEHOLDER_IMAGES.building.residential, PLACEHOLDER_IMAGES.building.exterior, PLACEHOLDER_IMAGES.building.glass, PLACEHOLDER_IMAGES.building.apartment];
@@ -215,6 +297,93 @@ const InvestmentListings = () => {
                     Clear
                   </Button>}
               </div>
+
+              {/* Advanced Filters Collapsible */}
+              <Collapsible open={showAdvancedFilters} onOpenChange={setShowAdvancedFilters}>
+                <CollapsibleTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className={`h-9 text-xs sm:text-sm border-white/10 bg-white/[0.02] hover:bg-white/[0.05] ${hasAdvancedFilters ? 'border-primary/50 text-primary' : ''}`}
+                  >
+                    <Filter className="w-3 h-3 mr-1.5" />
+                    Advanced Filters
+                    {hasAdvancedFilters && <Badge variant="secondary" className="ml-2 h-5 px-1.5 text-xs">3</Badge>}
+                    <ChevronDown className={`w-3.5 h-3.5 ml-1.5 transition-transform duration-200 ${showAdvancedFilters ? 'rotate-180' : ''}`} />
+                  </Button>
+                </CollapsibleTrigger>
+                
+                <CollapsibleContent className="mt-3">
+                  <div className="bg-white/[0.02] border border-white/10 rounded-xl p-4">
+                    <div className="flex flex-wrap items-center gap-3">
+                      {/* Building Size (SF) Filter */}
+                      <Select value={selectedSfRange} onValueChange={setSelectedSfRange}>
+                        <SelectTrigger className="w-full sm:w-[160px] h-9 text-xs sm:text-sm bg-white/[0.02] border-white/10">
+                          <SelectValue placeholder="Building Size" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {SF_RANGES.map(range => (
+                            <SelectItem key={range.value} value={range.value}>
+                              {range.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      {/* Units Filter */}
+                      <Select value={selectedUnitsRange} onValueChange={setSelectedUnitsRange}>
+                        <SelectTrigger className="w-full sm:w-[140px] h-9 text-xs sm:text-sm bg-white/[0.02] border-white/10">
+                          <SelectValue placeholder="Units" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {UNITS_RANGES.map(range => (
+                            <SelectItem key={range.value} value={range.value}>
+                              {range.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      {/* Cap Rate Filter */}
+                      <Select value={selectedCapRateRange} onValueChange={setSelectedCapRateRange}>
+                        <SelectTrigger className="w-full sm:w-[140px] h-9 text-xs sm:text-sm bg-white/[0.02] border-white/10">
+                          <SelectValue placeholder="Cap Rate" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {CAP_RATE_RANGES.map(range => (
+                            <SelectItem key={range.value} value={range.value}>
+                              {range.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      <div className="flex gap-2 ml-auto">
+                        {hasAdvancedFilters && (
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={clearAdvancedFilters}
+                            className="h-9 text-xs sm:text-sm text-muted-foreground hover:text-foreground"
+                          >
+                            <RotateCcw className="w-3 h-3 mr-1" />
+                            Reset Filters
+                          </Button>
+                        )}
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          onClick={() => setShowAdvancedFilters(false)}
+                          className="h-9 text-xs sm:text-sm text-muted-foreground hover:text-foreground"
+                        >
+                          <X className="w-3 h-3 mr-1" />
+                          Close Filters
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
 
               {/* Results Count */}
               <div className="text-xs sm:text-sm text-muted-foreground">
