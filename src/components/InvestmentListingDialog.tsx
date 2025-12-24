@@ -189,7 +189,7 @@ const InvestmentListingContent = ({
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-foreground text-left leading-tight">
+                    <p className="font-medium text-foreground text-left leading-none">
                       {agent.name}
                     </p>
                     <p className="text-xs text-muted-foreground truncate leading-tight">{agent.title}</p>
