@@ -50,6 +50,48 @@ const formatCurrency = (value: number | null): string => {
   return `$${value.toLocaleString()}`;
 };
 
+// Format transaction value based on deal type
+const formatTransactionValue = (transaction: {
+  deal_type?: string;
+  division?: string;
+  monthly_rent?: number | null;
+  price_per_sf?: number | null;
+  sale_price?: number | null;
+  total_lease_value?: number | null;
+}): string => {
+  const dealType = (transaction.deal_type || transaction.division || '').toLowerCase();
+  
+  // Residential: Show monthly rent
+  if (dealType === 'residential') {
+    if (transaction.monthly_rent) {
+      return `$${transaction.monthly_rent.toLocaleString()}/mo`;
+    }
+    return formatCurrency(transaction.total_lease_value);
+  }
+  
+  // Commercial/Lease: Show price per SF
+  if (dealType === 'commercial' || dealType === 'lease') {
+    if (transaction.price_per_sf) {
+      return `$${transaction.price_per_sf.toLocaleString()}/SF`;
+    }
+    if (transaction.monthly_rent) {
+      return `$${transaction.monthly_rent.toLocaleString()}/mo`;
+    }
+    return '—';
+  }
+  
+  // Investment Sales/Sale: Show full sale price (no abbreviation)
+  if (dealType === 'investment sales' || dealType === 'sale') {
+    if (transaction.sale_price) {
+      return `$${transaction.sale_price.toLocaleString()}`;
+    }
+    return '—';
+  }
+  
+  // Default fallback
+  return formatCurrency(transaction.sale_price || transaction.total_lease_value);
+};
+
 // Get initials from name
 const getInitials = (name: string): string => {
   return name
@@ -146,9 +188,9 @@ export const TeamMemberDialog = ({
     <div className="space-y-6">
       {/* Header with Photo */}
       <div className="flex items-start gap-5 animate-in fade-in slide-in-from-bottom-4 duration-300 ease-out">
-        <Avatar className="h-20 w-20 md:h-24 md:w-24 ring-2 ring-accent/30 ring-offset-2 ring-offset-background flex-shrink-0">
-          <AvatarImage src={member.image} alt={member.name} className="object-cover" />
-          <AvatarFallback className="text-lg md:text-xl font-light bg-accent/10">
+        <Avatar className="h-20 w-20 md:h-24 md:w-24 rounded-lg border border-border/40 flex-shrink-0">
+          <AvatarImage src={member.image} alt={member.name} className="object-cover rounded-lg" />
+          <AvatarFallback className="text-lg md:text-xl font-light bg-accent/10 rounded-lg">
             {getInitials(member.name)}
           </AvatarFallback>
         </Avatar>
@@ -180,7 +222,7 @@ export const TeamMemberDialog = ({
               <a
                 key={action.label}
                 href={action.url}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-border/40 hover:border-accent/50 hover:bg-accent/10 transition-all duration-300 min-h-[44px] touch-manipulation active:scale-95"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-md border border-border/40 hover:border-accent/50 hover:bg-accent/10 transition-all duration-300 min-h-[44px] touch-manipulation active:scale-95"
               >
                 <Icon className="h-4 w-4" />
                 <span className="text-sm font-light">{action.label}</span>
@@ -199,7 +241,7 @@ export const TeamMemberDialog = ({
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center h-10 w-10 rounded-full border border-border/40 hover:border-accent/50 hover:bg-accent/10 transition-all duration-300 touch-manipulation active:scale-95"
+                  className="flex items-center justify-center h-10 w-10 rounded-md border border-border/40 hover:border-accent/50 hover:bg-accent/10 transition-all duration-300 touch-manipulation active:scale-95"
                   aria-label={link.label}
                 >
                   <Icon className="h-4 w-4" />
@@ -257,7 +299,7 @@ export const TeamMemberDialog = ({
                     </div>
                     <div className="text-right flex-shrink-0">
                       <p className="text-sm font-medium text-accent">
-                        {formatCurrency(transaction.sale_price || transaction.total_lease_value)}
+                        {formatTransactionValue(transaction)}
                       </p>
                       {transaction.closing_date && (
                         <p className="text-xs text-muted-foreground mt-0.5">
