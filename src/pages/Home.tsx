@@ -141,34 +141,28 @@ export default function Home() {
 
           {/* Mission, Vision & Approach Cards */}
           <div className="grid md:grid-cols-3 gap-3 md:gap-6 mb-5 md:mb-8">
-          <div className={`glass-card p-4 md:p-8 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
+          <div className={`rounded-xl bg-black/40 backdrop-blur-xl border border-white/15 p-4 md:p-5 text-center transition-all duration-500 ease-out hover:bg-black/50 hover:border-white/25 hover:scale-[1.02] ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
             transitionDelay: missionReveal.isVisible ? "100ms" : "0ms"
           }}>
-            <div className="flex items-center gap-2 mb-2 md:mb-3">
-              <Target className="h-5 w-5 md:h-8 md:w-8 text-primary" />
-              <h3 className="text-lg md:text-xl font-medium text-white">Mission</h3>
-            </div>
-            <p className="text-white/70 font-light text-sm leading-relaxed">
+            <Target className="h-5 w-5 sm:h-6 sm:w-6 text-primary mx-auto mb-2" />
+            <h3 className="text-sm font-medium mb-1 text-white">Mission</h3>
+            <p className="text-white/70 font-light text-xs leading-relaxed">
               Deliver exceptional real estate advisory through integrity, expertise, and client-first service.
             </p>
           </div>
-          <div className={`glass-card p-4 md:p-8 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
+          <div className={`rounded-xl bg-black/40 backdrop-blur-xl border border-white/15 p-4 md:p-5 text-center transition-all duration-500 ease-out hover:bg-black/50 hover:border-white/25 hover:scale-[1.02] ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
             transitionDelay: missionReveal.isVisible ? "200ms" : "0ms"
           }}>
-            <div className="flex items-center gap-2 mb-2 md:mb-3">
-              <Eye className="h-5 w-5 md:h-8 md:w-8 text-primary" />
-              <h3 className="text-lg md:text-xl font-medium text-white">Vision</h3>
-            </div>
-            <p className="text-white/70 font-light text-sm leading-relaxed">Be New York's most trusted real estate advisory platform</p>
+            <Eye className="h-5 w-5 sm:h-6 sm:w-6 text-primary mx-auto mb-2" />
+            <h3 className="text-sm font-medium mb-1 text-white">Vision</h3>
+            <p className="text-white/70 font-light text-xs leading-relaxed">Be New York's most trusted real estate advisory platform</p>
           </div>
-          <div className={`glass-card p-4 md:p-8 transition-all duration-500 ease-out ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
+          <div className={`rounded-xl bg-black/40 backdrop-blur-xl border border-white/15 p-4 md:p-5 text-center transition-all duration-500 ease-out hover:bg-black/50 hover:border-white/25 hover:scale-[1.02] ${missionReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
             transitionDelay: missionReveal.isVisible ? "300ms" : "0ms"
           }}>
-            <div className="flex items-center gap-2 mb-2 md:mb-3">
-              <Compass className="h-5 w-5 md:h-8 md:w-8 text-primary" />
-              <h3 className="text-lg md:text-xl font-medium text-white">Approach</h3>
-            </div>
-            <p className="text-white/70 font-light text-sm leading-relaxed">
+            <Compass className="h-5 w-5 sm:h-6 sm:w-6 text-primary mx-auto mb-2" />
+            <h3 className="text-sm font-medium mb-1 text-white">Approach</h3>
+            <p className="text-white/70 font-light text-xs leading-relaxed">
               Principal-level thinking combined with hands-on execution across every transaction.
             </p>
           </div>
