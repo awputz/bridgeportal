@@ -297,9 +297,11 @@ export const TeamMemberDialog = ({
     url: string;
   }[];
   const ContentComponent = ({
-    onClose
+    onClose,
+    isMobileView = false
   }: {
     onClose?: () => void;
+    isMobileView?: boolean;
   }) => <div className="space-y-5">
       {/* Header with Photo */}
       <div className="flex items-start gap-5 animate-in fade-in slide-in-from-bottom-4 duration-300 ease-out">
@@ -398,7 +400,7 @@ export const TeamMemberDialog = ({
           {totalExclusives === 0 ? <div className="text-center py-10 text-muted-foreground">
               <Building2 className="h-10 w-10 mx-auto mb-3 opacity-30" />
               <p className="text-sm">No active listings</p>
-            </div> : <ScrollArea className="h-[280px] md:h-[320px] pr-4">
+            </div> : <ScrollArea className={isMobileView ? "pr-4" : "h-[280px] md:h-[320px] pr-4"}>
               <div className="grid gap-3">
                 {/* Investment Sales Listings */}
                 {investmentListings.map(listing => <Link key={listing.id} to="/services/investment-sales/listings" onClick={() => onClose?.()} className="group flex gap-4 p-3 rounded-lg border border-border/30 hover:border-accent/50 hover:bg-accent/5 transition-all duration-200">
@@ -494,7 +496,7 @@ export const TeamMemberDialog = ({
               </div>
 
               {/* Transaction List */}
-              <ScrollArea className="h-[240px] md:h-[280px] pr-4">
+              <ScrollArea className={isMobileView ? "pr-4" : "h-[240px] md:h-[280px] pr-4"}>
                 <div className="space-y-3">
                   {sortedTransactions.map(transaction => <div key={transaction.id} className="group p-3 rounded-lg border border-border/30 hover:border-border/60 hover:bg-accent/5 transition-all duration-200">
                       <div className="flex items-start justify-between gap-3">
@@ -530,13 +532,16 @@ export const TeamMemberDialog = ({
   // Use Drawer on mobile for better touch UX
   if (isMobile) {
     return <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className="px-5 pb-6 max-h-[85vh] flex flex-col">
+        <DrawerContent className="max-h-[85vh] outline-none">
           <DrawerClose className="absolute right-4 top-4 z-10 h-10 w-10 flex items-center justify-center rounded-full bg-muted/80 hover:bg-muted transition-colors touch-manipulation active:scale-95">
             <X className="h-5 w-5" />
             <span className="sr-only">Close</span>
           </DrawerClose>
-          <div className="overflow-y-auto flex-1 pt-2 pb-safe">
-            <ContentComponent onClose={handleClose} />
+          <div 
+            className="overflow-y-auto overscroll-contain px-5 pb-6"
+            style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
+          >
+            <ContentComponent onClose={handleClose} isMobileView />
           </div>
         </DrawerContent>
       </Drawer>;
