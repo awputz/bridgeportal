@@ -61,7 +61,7 @@ export const Footer = () => {
             </h3>
             <form onSubmit={handleNewsletterSubmit} className="space-y-3 sm:space-y-4">
               <input type="email" placeholder="Enter Your Email Here" value={email} onChange={e => setEmail(e.target.value)} className="w-full bg-transparent border-b border-muted-foreground/30 py-3 text-base placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors min-h-[48px]" required />
-              <button type="submit" disabled={isSubmitting} className="w-full bg-foreground text-background py-3 text-sm font-medium hover:bg-foreground/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px] active:opacity-80">
+              <button type="submit" disabled={isSubmitting} className="w-full bg-foreground text-background py-3 text-sm font-medium rounded-md hover:bg-foreground/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px] active:opacity-80">
                 {isSubmitting ? "Subscribing..." : "Submit"}
               </button>
             </form>
