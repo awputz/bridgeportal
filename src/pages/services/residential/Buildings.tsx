@@ -25,7 +25,7 @@ export default function ResidentialBuildings() {
   const totalBuildings = buildings?.length || 0;
 
   const heroContent = (
-    <section className="relative bg-gradient-to-b from-secondary to-background pt-24 pb-16 md:pb-20">
+    <section className="relative bg-gradient-to-b from-secondary to-background pt-32 md:pt-36 pb-16 md:pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <p className="text-primary font-medium mb-3 text-sm">Residential / Exclusive Portfolio</p>
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
