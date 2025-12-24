@@ -188,7 +188,7 @@ const InvestmentListingContent = ({
                       {getInitials(agent.name)}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex-1 min-w-0 space-y-0.5">
+                  <div className="flex-1 min-w-0">
                     <p className="font-medium text-foreground text-left leading-tight">
                       {agent.name}
                     </p>
