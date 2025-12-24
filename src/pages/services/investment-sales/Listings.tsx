@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Download, Lock, Building2, MapPin, TrendingUp, Layers, Filter, X, ChevronDown, RotateCcw } from "lucide-react";
+import { Download, Lock, Building2, MapPin, TrendingUp, Layers, Filter, X, ChevronDown, RotateCcw, DollarSign } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -131,6 +131,18 @@ const InvestmentListings = () => {
     };
   }, [listings]);
 
+  // Calculate portfolio stats
+  const portfolioStats = useMemo(() => {
+    if (!listings || listings.length === 0) {
+      return { totalListings: 0, totalValue: 0 };
+    }
+    const totalListings = listings.length;
+    const totalValue = listings.reduce((sum, listing) => {
+      return sum + (listing.asking_price || 0);
+    }, 0);
+    return { totalListings, totalValue };
+  }, [listings]);
+
   // Filter listings based on selected filters
   const filteredListings = useMemo(() => {
     if (!listings) return [];
@@ -241,7 +253,51 @@ const InvestmentListings = () => {
         </section>
 
         <ListingsToggleNav />
-        
+
+        {/* Portfolio Stats Bar */}
+        <section className="px-4 sm:px-6 py-4 sm:py-6 border-b border-white/10 bg-white/[0.01]">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 md:gap-12">
+              {/* Total Listings */}
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-lg bg-primary/10 border border-primary/20">
+                  <Building2 className="w-5 h-5 text-primary" />
+                </div>
+                <div className="text-center sm:text-left">
+                  <div className="text-2xl sm:text-3xl font-light text-foreground">
+                    {portfolioStats.totalListings}
+                  </div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">
+                    Exclusive Listings
+                  </div>
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="hidden sm:block w-px h-12 bg-white/10" />
+
+              {/* Total Portfolio Value */}
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-lg bg-primary/10 border border-primary/20">
+                  <DollarSign className="w-5 h-5 text-primary" />
+                </div>
+                <div className="text-center sm:text-left">
+                  <div className="text-2xl sm:text-3xl font-light text-foreground">
+                    {portfolioStats.totalValue >= 1000000 
+                      ? `$${(portfolioStats.totalValue / 1000000).toFixed(1)}M`
+                      : portfolioStats.totalValue > 0 
+                        ? `$${portfolioStats.totalValue.toLocaleString()}`
+                        : "—"
+                    }
+                  </div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">
+                    Portfolio Value
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Filters Section */}
         <section className="px-4 sm:px-6 py-4 sm:py-6 border-b border-white/10">
