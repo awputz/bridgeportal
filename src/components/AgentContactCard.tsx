@@ -191,6 +191,7 @@ export function AgentContactCard({ agentName }: AgentContactCardProps) {
       {/* Team Member Dialog */}
       <TeamMemberDialog
         member={selectedMember ? {
+          id: selectedMember.id || undefined,
           name: selectedMember.name || '',
           title: selectedMember.title || '',
           bio: selectedMember.bio || undefined,

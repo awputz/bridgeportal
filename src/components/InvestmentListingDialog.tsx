@@ -1,6 +1,6 @@
+import { useState } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X, Download, Lock, Building2, MapPin, TrendingUp, Layers, Calendar, MessageSquare, Mail, Phone } from "lucide-react";
-import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +9,8 @@ import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { InvestmentListing } from "@/hooks/useInvestmentListings";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { TeamMemberDialog } from "@/components/TeamMemberDialog";
+import { Link } from "react-router-dom";
 import {
   Drawer,
   DrawerContent,
@@ -21,6 +23,19 @@ interface InvestmentListingDialogProps {
   listing: InvestmentListing | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+}
+
+interface SelectedAgent {
+  id: string;
+  name: string;
+  title: string;
+  image: string;
+  email?: string;
+  phone?: string;
+  bio?: string;
+  instagram?: string;
+  linkedin?: string;
+  category?: string;
 }
 
 const formatPrice = (price: number | null) => {
@@ -49,9 +64,11 @@ const getInitials = (name: string) => {
 const InvestmentListingContent = ({
   listing,
   onClose,
+  onAgentClick,
 }: {
   listing: InvestmentListing;
   onClose: () => void;
+  onAgentClick: (agent: SelectedAgent) => void;
 }) => {
   const { openContactSheet } = useContactSheet();
 
@@ -160,16 +177,23 @@ const InvestmentListingContent = ({
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
-                    {agent.slug ? (
-                      <Link 
-                        to={`/team/${agent.slug}`}
-                        className="font-medium text-foreground hover:text-primary transition-colors"
-                      >
-                        {agent.name}
-                      </Link>
-                    ) : (
-                      <p className="font-medium text-foreground">{agent.name}</p>
-                    )}
+                    <button 
+                      onClick={() => onAgentClick({
+                        id: agent.id,
+                        name: agent.name,
+                        title: agent.title,
+                        image: agent.image_url || '',
+                        email: agent.email || undefined,
+                        phone: agent.phone || undefined,
+                        bio: agent.bio || undefined,
+                        instagram: agent.instagram_url || undefined,
+                        linkedin: agent.linkedin_url || undefined,
+                        category: agent.category || undefined,
+                      })}
+                      className="font-medium text-foreground hover:text-primary transition-colors text-left"
+                    >
+                      {agent.name}
+                    </button>
                     <p className="text-xs text-muted-foreground truncate">{agent.title}</p>
                   </div>
                   <div className="flex items-center gap-1">
@@ -241,63 +265,94 @@ export const InvestmentListingDialog = ({
   onOpenChange,
 }: InvestmentListingDialogProps) => {
   const isMobile = useIsMobile();
+  const [selectedAgent, setSelectedAgent] = useState<SelectedAgent | null>(null);
+  const [agentDialogOpen, setAgentDialogOpen] = useState(false);
 
   if (!listing) return null;
 
   const handleClose = () => onOpenChange(false);
 
+  const handleAgentClick = (agent: SelectedAgent) => {
+    setSelectedAgent(agent);
+    setAgentDialogOpen(true);
+  };
+
   // Mobile: Use Drawer that slides from bottom
   if (isMobile) {
     return (
-      <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className="max-h-[90vh]">
-          <DrawerHeader className="relative border-b border-border/30 pb-4">
-            <button
-              onClick={handleClose}
-              className="absolute right-4 top-4 p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors"
-            >
-              <X className="h-5 w-5" />
-            </button>
-            <DrawerTitle className="text-left pr-12">{listing.property_address}</DrawerTitle>
-            <DrawerDescription className="text-left">
-              {listing.asset_class} Investment Opportunity
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="overflow-y-auto pb-8">
-            <InvestmentListingContent listing={listing} onClose={handleClose} />
-          </div>
-        </DrawerContent>
-      </Drawer>
+      <>
+        <Drawer open={open} onOpenChange={onOpenChange}>
+          <DrawerContent className="max-h-[90vh]">
+            <DrawerHeader className="relative border-b border-border/30 pb-4">
+              <button
+                onClick={handleClose}
+                className="absolute right-4 top-4 p-2 rounded-full bg-muted/50 hover:bg-muted transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+              <DrawerTitle className="text-left pr-12">{listing.property_address}</DrawerTitle>
+              <DrawerDescription className="text-left">
+                {listing.asset_class} Investment Opportunity
+              </DrawerDescription>
+            </DrawerHeader>
+            <div className="overflow-y-auto pb-8">
+              <InvestmentListingContent 
+                listing={listing} 
+                onClose={handleClose} 
+                onAgentClick={handleAgentClick}
+              />
+            </div>
+          </DrawerContent>
+        </Drawer>
+        
+        <TeamMemberDialog
+          member={selectedAgent}
+          open={agentDialogOpen}
+          onOpenChange={setAgentDialogOpen}
+        />
+      </>
     );
   }
 
   // Desktop: Use Dialog
   return (
-    <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
-      <DialogPrimitive.Portal>
-        <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 transition-all duration-300 ease-out" />
-        <DialogPrimitive.Content
-          className={cn(
-            "fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%]",
-            "w-full max-w-3xl max-h-[90vh] overflow-y-auto",
-            "bg-background/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-xl",
-            "data-[state=open]:animate-in data-[state=closed]:animate-out",
-            "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-            "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-100",
-            "data-[state=open]:slide-in-from-bottom-2",
-            "transition-all duration-300 ease-out"
-          )}
-        >
-          <DialogPrimitive.Close className="absolute right-4 top-4 z-10 rounded-full p-2 bg-background/80 backdrop-blur-sm opacity-70 ring-offset-background transition-all duration-300 ease-out hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
-            <X className="h-5 w-5" />
-            <span className="sr-only">Close</span>
-          </DialogPrimitive.Close>
+    <>
+      <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
+        <DialogPrimitive.Portal>
+          <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 transition-all duration-300 ease-out" />
+          <DialogPrimitive.Content
+            className={cn(
+              "fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%]",
+              "w-full max-w-3xl max-h-[90vh] overflow-y-auto",
+              "bg-background/95 backdrop-blur-xl border border-border/50 shadow-2xl rounded-xl",
+              "data-[state=open]:animate-in data-[state=closed]:animate-out",
+              "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+              "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-100",
+              "data-[state=open]:slide-in-from-bottom-2",
+              "transition-all duration-300 ease-out"
+            )}
+          >
+            <DialogPrimitive.Close className="absolute right-4 top-4 z-10 rounded-full p-2 bg-background/80 backdrop-blur-sm opacity-70 ring-offset-background transition-all duration-300 ease-out hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+              <X className="h-5 w-5" />
+              <span className="sr-only">Close</span>
+            </DialogPrimitive.Close>
 
-          <div className="rounded-t-xl overflow-hidden">
-            <InvestmentListingContent listing={listing} onClose={handleClose} />
-          </div>
-        </DialogPrimitive.Content>
-      </DialogPrimitive.Portal>
-    </DialogPrimitive.Root>
+            <div className="rounded-t-xl overflow-hidden">
+              <InvestmentListingContent 
+                listing={listing} 
+                onClose={handleClose}
+                onAgentClick={handleAgentClick}
+              />
+            </div>
+          </DialogPrimitive.Content>
+        </DialogPrimitive.Portal>
+      </DialogPrimitive.Root>
+      
+      <TeamMemberDialog
+        member={selectedAgent}
+        open={agentDialogOpen}
+        onOpenChange={setAgentDialogOpen}
+      />
+    </>
   );
 };

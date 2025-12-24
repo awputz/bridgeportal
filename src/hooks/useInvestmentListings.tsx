@@ -9,6 +9,10 @@ export interface ListingAgent {
   phone: string | null;
   image_url: string | null;
   slug: string | null;
+  bio: string | null;
+  instagram_url: string | null;
+  linkedin_url: string | null;
+  category: string | null;
 }
 
 export interface InvestmentListing {
@@ -55,7 +59,7 @@ export const useInvestmentListings = () => {
         .select(`
           listing_id,
           display_order,
-          agent:team_members_public(id, name, title, email, phone, image_url, slug)
+          agent:team_members_public(id, name, title, email, phone, image_url, slug, bio, instagram_url, linkedin_url, category)
         `)
         .in("listing_id", listingIds)
         .order("display_order", { ascending: true });
@@ -97,7 +101,7 @@ export const useInvestmentListing = (id: string) => {
       const { data: listingAgents } = await supabase
         .from("investment_listing_agents")
         .select(`
-          agent:team_members_public(id, name, title, email, phone, image_url, slug)
+          agent:team_members_public(id, name, title, email, phone, image_url, slug, bio, instagram_url, linkedin_url, category)
         `)
         .eq("listing_id", id)
         .order("display_order", { ascending: true });

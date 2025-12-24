@@ -9,6 +9,10 @@ export interface ListingAgent {
   phone: string | null;
   image_url: string | null;
   slug: string | null;
+  bio: string | null;
+  instagram_url: string | null;
+  linkedin_url: string | null;
+  category: string | null;
 }
 
 export interface CommercialListing {
@@ -58,7 +62,7 @@ export const useCommercialListings = () => {
         .select(`
           listing_id,
           display_order,
-          agent:team_members_public(id, name, title, email, phone, image_url, slug)
+          agent:team_members_public(id, name, title, email, phone, image_url, slug, bio, instagram_url, linkedin_url, category)
         `)
         .in("listing_id", listingIds)
         .order("display_order", { ascending: true });
@@ -107,7 +111,7 @@ export const useCommercialListingsByType = (type: "office" | "retail") => {
         .select(`
           listing_id,
           display_order,
-          agent:team_members_public(id, name, title, email, phone, image_url, slug)
+          agent:team_members_public(id, name, title, email, phone, image_url, slug, bio, instagram_url, linkedin_url, category)
         `)
         .in("listing_id", listingIds)
         .order("display_order", { ascending: true });
