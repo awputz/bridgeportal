@@ -36,10 +36,7 @@ const DrawerContent = React.forwardRef<
       )}
       {...props}
     >
-      <p className="text-[10px] text-muted-foreground/40 text-center mt-2 tracking-wide">
-        Swipe down to close
-      </p>
-      <div className="mx-auto mt-1 h-2 w-[100px] rounded-full bg-muted" />
+      <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
       {children}
     </DrawerPrimitive.Content>
   </DrawerPortal>
