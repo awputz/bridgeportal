@@ -53,6 +53,14 @@ const formatFullDate = (dateStr: string | null) => {
   });
 };
 
+const formatRole = (role: string | null): string | null => {
+  if (!role) return null;
+  return role
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+};
+
 const getPlaceholderImage = (assetType: string | null) => {
   const type = assetType?.toLowerCase() || "";
   if (type.includes("retail")) return PLACEHOLDER_IMAGES.retail.storefront;
@@ -185,7 +193,7 @@ const TransactionContent = ({
   if (transaction.role) {
     metrics.push({
       label: "Role",
-      value: transaction.role,
+      value: formatRole(transaction.role) || transaction.role,
       icon: User
     });
   }
