@@ -530,12 +530,14 @@ export const TeamMemberDialog = ({
   // Use Drawer on mobile for better touch UX
   if (isMobile) {
     return <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className="px-5 pb-8 pt-8 max-h-[92vh]">
-          <DrawerClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+        <DrawerContent className="px-5 pb-6 max-h-[85vh] flex flex-col">
+          <DrawerClose className="absolute right-4 top-4 z-10 h-10 w-10 flex items-center justify-center rounded-full bg-muted/80 hover:bg-muted transition-colors touch-manipulation active:scale-95">
             <X className="h-5 w-5" />
             <span className="sr-only">Close</span>
           </DrawerClose>
-          <ContentComponent onClose={handleClose} />
+          <div className="overflow-y-auto flex-1 pt-2 pb-safe">
+            <ContentComponent onClose={handleClose} />
+          </div>
         </DrawerContent>
       </Drawer>;
   }
