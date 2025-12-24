@@ -12,7 +12,7 @@ export const COMPANY_INFO = {
   },
   contact: {
     email: "office@bridgenyre.com",
-    phone: "(212) 203-4881"
+    phone: "(212) 531-9295"
   },
   description: {
     full: "Bridge Advisory Group is a New York based brokerage and advisory platform that unifies residential, commercial leasing, investment sales, capital advisory, and marketing services under one integrated umbrella.",

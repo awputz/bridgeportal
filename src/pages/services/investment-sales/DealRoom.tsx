@@ -570,7 +570,7 @@ const DealRoom = () => {
 
               <div className="lg:ml-auto flex flex-col sm:flex-row gap-4">
                 <Button variant="outline" size="lg" asChild>
-                  <a href="tel:+12125551234">
+                  <a href="tel:+12125319295">
                     <Phone className="w-4 h-4 mr-2" />
                     Call Now
                   </a>
