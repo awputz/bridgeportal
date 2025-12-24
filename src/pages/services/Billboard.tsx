@@ -1,146 +1,64 @@
-import { Link } from "react-router-dom";
-import { Building2, Eye, Clock, ArrowRight, Megaphone, TrendingUp, Users, MapPin, DollarSign, FileText } from "lucide-react";
+import { Building2, Eye, Clock, ArrowRight, Megaphone, TrendingUp, Users, MapPin, Store, Briefcase, Home, Target, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
 import billboardHero from "@/assets/bridge-billboard-hero.png";
 import { MobileStickyContact } from "@/components/MobileStickyContact";
-const featuredLocations = [{
-  name: "Times Square",
-  borough: "Manhattan",
-  impressions: "25M+/month",
-  type: "Digital & Static"
-}, {
-  name: "BQE Corridor",
-  borough: "Brooklyn/Queens",
-  impressions: "15M+/month",
-  type: "Highway Boards"
-}, {
-  name: "Downtown Brooklyn",
-  borough: "Brooklyn",
-  impressions: "8M+/month",
-  type: "Building Wraps"
-}, {
-  name: "LIC Waterfront",
-  borough: "Queens",
-  impressions: "6M+/month",
-  type: "Rooftop & Wall"
-}, {
-  name: "Third Avenue",
-  borough: "Bronx",
-  impressions: "4M+/month",
-  type: "Street Level"
-}, {
-  name: "125th Street",
-  borough: "Manhattan",
-  impressions: "5M+/month",
-  type: "Transit Adjacent"
-}, {
-  name: "FDR Drive",
-  borough: "Manhattan",
-  impressions: "10M+/month",
-  type: "Highway Boards"
-}, {
-  name: "Gowanus",
-  borough: "Brooklyn",
-  impressions: "3M+/month",
-  type: "Wall Murals"
-}, {
-  name: "Williamsburg",
-  borough: "Brooklyn",
-  impressions: "4M+/month",
-  type: "Rooftop"
-}];
-const boroughs = [{
-  name: "Manhattan",
-  locations: 15,
-  impressions: "45M+/month"
-}, {
-  name: "Brooklyn",
-  locations: 20,
-  impressions: "30M+/month"
-}, {
-  name: "Queens",
-  locations: 10,
-  impressions: "15M+/month"
-}, {
-  name: "Bronx",
-  locations: 5,
-  impressions: "8M+/month"
-}, {
-  name: "Staten Island",
-  locations: 2,
-  impressions: "2M+/month"
-}];
-const pricingTiers = [{
-  category: "Highway Boards",
-  description: "High-traffic highway-facing billboards",
-  priceRange: "$15,000 - $50,000/month",
-  minTerm: "3 months",
-  includes: ["Production coordination", "Installation", "Basic reporting"]
-}, {
-  category: "Building Wraps",
-  description: "Large-format building installations",
-  priceRange: "$25,000 - $100,000/month",
-  minTerm: "6 months",
-  includes: ["Creative sizing", "Permitting support", "Installation & removal"]
-}, {
-  category: "Street Level",
-  description: "Neighborhood and transit-adjacent boards",
-  priceRange: "$5,000 - $20,000/month",
-  minTerm: "1 month",
-  includes: ["Flexible terms", "Quick turnaround", "Location selection"]
-}, {
-  category: "Digital Displays",
-  description: "Rotating digital billboard placements",
-  priceRange: "$8,000 - $35,000/month",
-  minTerm: "1 month",
-  includes: ["Multiple creatives", "Dayparting options", "Real-time updates"]
-}];
+
 export default function Billboard() {
-  const {
-    openContactSheet
-  } = useContactSheet();
-  const introReveal = useScrollReveal(0.1);
-  const boroughsReveal = useScrollReveal(0.1);
-  const inventoryReveal = useScrollReveal(0.1);
-  const servicesReveal = useScrollReveal(0.1);
-  const pricingReveal = useScrollReveal(0.1);
-  const termsReveal = useScrollReveal(0.1);
+  const { openContactSheet } = useContactSheet();
+  const heroReveal = useScrollReveal(0.1);
   const statsReveal = useScrollReveal(0.1);
+  const introReveal = useScrollReveal(0.1);
+  const termsReveal = useScrollReveal(0.1);
+  const clientsReveal = useScrollReveal(0.1);
   const ctaReveal = useScrollReveal(0.1);
-  return <div className="min-h-screen pt-24 md:pt-32 lg:pt-40">
-      {/* Hero with Image */}
-      <section className="pb-12 md:pb-16 lg:pb-24 border-b border-white/5">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center max-w-6xl mx-auto">
+
+  return (
+    <div className="min-h-screen bg-background">
+      <ServicesSubNav />
+
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-10 md:pb-14 lg:pb-16 border-b border-border/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div 
+            ref={heroReveal.elementRef}
+            className={`grid lg:grid-cols-2 gap-8 lg:gap-12 items-center transition-all duration-700 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+          >
             <div>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-4 md:mb-6 animate-fade-in">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 md:mb-5 tracking-tight">
                 Bridge Billboard
               </h1>
-              <p className="text-base md:text-lg lg:text-xl text-muted-foreground font-light mb-6 md:mb-8 animate-fade-in" style={{
-              animationDelay: '100ms'
-            }}>
-                Direct landlord access to NYC's most visible outdoor advertising inventory.
+              <p className="text-base md:text-lg text-muted-foreground mb-6 md:mb-8 leading-relaxed max-w-xl">
+                Direct landlord access to NYC's most visible outdoor advertising inventory across all five boroughs.
               </p>
-              <div className="flex flex-wrap gap-4 animate-fade-in" style={{
-              animationDelay: '200ms'
-            }}>
-                <Button size="lg" className="font-light" onClick={openContactSheet}>
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <Button 
+                  size="default"
+                  className="group"
+                  onClick={openContactSheet}
+                >
                   View Inventory
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
-                <Button variant="outline" size="lg" className="font-light" onClick={openContactSheet}>
+                <Button 
+                  variant="outline" 
+                  size="default"
+                  onClick={openContactSheet}
+                >
                   Request Rates
                 </Button>
               </div>
             </div>
-            <div className="relative animate-fade-in" style={{
-            animationDelay: '300ms'
-          }}>
-              <img src={billboardHero} alt="Bridge Billboard - NYC Outdoor Advertising" className="rounded-lg shadow-2xl w-full" />
-              <div className="absolute -bottom-4 -right-4 bg-accent/90 text-accent-foreground px-4 py-2 rounded-lg font-light text-sm">
+            <div className="relative aspect-[4/3] lg:aspect-square rounded-lg overflow-hidden">
+              <img 
+                src={billboardHero}
+                alt="Bridge Billboard - NYC Outdoor Advertising"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
+              <div className="absolute bottom-4 right-4 bg-primary/90 text-primary-foreground px-3 py-1.5 rounded-lg text-sm font-medium">
                 50+ Premium Locations
               </div>
             </div>
@@ -148,110 +66,117 @@ export default function Billboard() {
         </div>
       </section>
 
-      <ServicesSubNav />
-
       {/* Stats Bar */}
-      <section className="py-12 md:py-16 border-b border-white/5 bg-white/[0.02]" ref={statsReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6">
-          <div className={`grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto text-center transition-all duration-700 ${statsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            {[{
-            value: "50+",
-            label: "Board Locations"
-          }, {
-            value: "100M+",
-            label: "Monthly Impressions"
-          }, {
-            value: "5",
-            label: "NYC Boroughs"
-          }, {
-            value: "Direct",
-            label: "LL Access"
-          }].map((stat, index) => <div key={index} style={{
-            transitionDelay: `${index * 100}ms`
-          }}>
-                <div className="text-3xl md:text-4xl font-light text-accent mb-2">{stat.value}</div>
-                <div className="text-sm text-muted-foreground font-light">{stat.label}</div>
-              </div>)}
-          </div>
-        </div>
-      </section>
-
-      {/* Intro Section */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={introReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-4xl">
-          <div className={`transition-all duration-700 ${introReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-6 md:mb-8">Out-of-Home Advertising in New York</h2>
-            <div className="space-y-6 text-muted-foreground font-light leading-relaxed">
-              <p>
-                Bridge Billboard connects brands and advertisers directly with premium outdoor advertising inventory across New York City. Through long-standing relationships with landlords and property owners, Bridge offers access to high-visibility placements that are often unavailable through traditional channels.
-              </p>
-              <p>
-                Whether you're launching a campaign, building brand awareness, or targeting specific neighborhoods, Bridge Billboard provides the inventory, strategy, and execution support to make your out-of-home advertising work harder.
-              </p>
+      <section 
+        ref={statsReveal.elementRef}
+        className={`py-8 md:py-10 bg-muted/30 border-b border-border/10 transition-all duration-700 ${statsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-primary mb-1">50+</div>
+              <div className="text-xs md:text-sm text-muted-foreground">Board Locations</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-primary mb-1">100M+</div>
+              <div className="text-xs md:text-sm text-muted-foreground">Monthly Impressions</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-primary mb-1">5</div>
+              <div className="text-xs md:text-sm text-muted-foreground">NYC Boroughs</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-primary mb-1">Direct</div>
+              <div className="text-xs md:text-sm text-muted-foreground">LL Access</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Coverage By Borough */}
-      
-
-      {/* Featured Inventory */}
-      
-
-      {/* Services Section */}
-      
-
-      {/* Pricing Guide */}
-      
-
-      {/* Terms & Process */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5 bg-white/[0.01]" ref={termsReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <div className={`grid md:grid-cols-2 gap-8 md:gap-12 transition-all duration-700 ${termsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div>
-              <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
-                <Clock className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent" />
-                <h2 className="text-2xl md:text-3xl font-light">Flexible Terms</h2>
+      {/* Introduction Section */}
+      <section 
+        ref={introReveal.elementRef}
+        className={`py-10 md:py-12 lg:py-16 border-b border-border/10 transition-all duration-700 ${introReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2.5 rounded-lg bg-primary/10">
+                <Megaphone className="h-5 w-5 md:h-6 md:w-6 text-primary" />
               </div>
-              <p className="text-muted-foreground font-light mb-6 leading-relaxed">
+              <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground">
+                Out-of-Home Advertising in New York
+              </h2>
+            </div>
+            <p className="text-muted-foreground leading-relaxed mb-6 text-sm md:text-base">
+              Bridge Billboard connects brands and advertisers directly with premium outdoor advertising inventory across New York City. Through long-standing relationships with landlords and property owners, Bridge offers access to high-visibility placements that are often unavailable through traditional channels.
+            </p>
+            <p className="text-muted-foreground leading-relaxed text-sm md:text-base">
+              Whether you're launching a campaign, building brand awareness, or targeting specific neighborhoods, Bridge Billboard provides the inventory, strategy, and execution support to make your out-of-home advertising work harder.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Flexible Terms & Process Section */}
+      <section 
+        ref={termsReveal.elementRef}
+        className={`py-10 md:py-14 lg:py-16 border-b border-border/10 transition-all duration-700 ${termsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-4 md:gap-5">
+            <div className="border border-border/30 rounded-lg p-5 md:p-6 hover:border-primary/20 transition-colors">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2.5 rounded-lg bg-primary/10">
+                  <Clock className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+                </div>
+                <h3 className="text-base md:text-lg font-semibold text-foreground">
+                  Flexible Terms
+                </h3>
+              </div>
+              <p className="text-muted-foreground text-sm md:text-base mb-4">
                 We work with clients to structure agreements that match campaign objectives and budgets.
               </p>
-              <ul className="space-y-3 text-muted-foreground font-light">
+              <ul className="space-y-2">
                 <li className="flex items-start gap-3">
-                  <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span>Short-term campaigns from 1 month</span>
+                  <ArrowRight className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                  <span className="text-muted-foreground text-sm md:text-base">Short-term campaigns from 1 month</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span>Annual placements with volume discounts</span>
+                  <ArrowRight className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                  <span className="text-muted-foreground text-sm md:text-base">Annual placements with volume discounts</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span>Seasonal and event-based campaigns</span>
+                  <ArrowRight className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                  <span className="text-muted-foreground text-sm md:text-base">Seasonal and event-based campaigns</span>
                 </li>
               </ul>
             </div>
-            <div>
-              <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
-                <FileText className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent" />
-                <h2 className="text-2xl md:text-3xl font-light">Process</h2>
+            
+            <div className="border border-border/30 rounded-lg p-5 md:p-6 hover:border-primary/20 transition-colors">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2.5 rounded-lg bg-primary/10">
+                  <FileText className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+                </div>
+                <h3 className="text-base md:text-lg font-semibold text-foreground">
+                  Our Process
+                </h3>
               </div>
-              <p className="text-muted-foreground font-light mb-6 leading-relaxed">
+              <p className="text-muted-foreground text-sm md:text-base mb-4">
                 From inquiry to installation, we handle the details.
               </p>
-              <ul className="space-y-3 text-muted-foreground font-light">
+              <ul className="space-y-2">
                 <li className="flex items-start gap-3">
-                  <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span>Location selection and availability check</span>
+                  <ArrowRight className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                  <span className="text-muted-foreground text-sm md:text-base">Location selection and availability check</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span>Creative sizing and production coordination</span>
+                  <ArrowRight className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                  <span className="text-muted-foreground text-sm md:text-base">Creative sizing and production coordination</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <ArrowRight className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                  <span>Installation and campaign monitoring</span>
+                  <ArrowRight className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                  <span className="text-muted-foreground text-sm md:text-base">Installation and campaign monitoring</span>
                 </li>
               </ul>
             </div>
@@ -259,51 +184,83 @@ export default function Billboard() {
         </div>
       </section>
 
-      {/* Client Types */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5">
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-8 md:mb-12 text-center">Who We Work With</h2>
-          <div className="grid md:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
-            <div>
-              <Users className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent mb-3 md:mb-4" />
-              <h3 className="text-2xl font-light mb-4">Brands & Agencies</h3>
-              <p className="text-muted-foreground font-light leading-relaxed">
-                National brands and creative agencies looking for high-impact placements in New York's most desirable locations. We provide strategic guidance and inventory access for campaigns of all sizes.
-              </p>
+      {/* Client Types Section */}
+      <section 
+        ref={clientsReveal.elementRef}
+        className={`py-10 md:py-14 lg:py-16 border-b border-border/10 transition-all duration-700 ${clientsReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="p-2.5 rounded-lg bg-primary/10">
+              <Users className="h-5 w-5 md:h-6 md:w-6 text-primary" />
             </div>
-            <div>
-              <TrendingUp className="h-6 w-6 md:h-8 md:w-8 lg:h-10 lg:w-10 text-accent mb-3 md:mb-4" />
-              <h3 className="text-xl md:text-2xl font-light mb-3 md:mb-4">Local Businesses</h3>
-              <p className="text-muted-foreground font-light leading-relaxed">
-                Regional businesses and startups seeking to build awareness in specific neighborhoods. Our hyperlocal inventory options make outdoor advertising accessible at every budget level.
-              </p>
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground">
+              Who We Work With
+            </h2>
+          </div>
+          
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+            <div className="border border-border/30 rounded-lg p-5 md:p-6 hover:border-primary/20 transition-colors">
+              <div className="p-2.5 rounded-lg bg-primary/10 w-fit mb-3">
+                <Users className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+              </div>
+              <h3 className="text-base font-semibold text-foreground mb-2">Brands & Agencies</h3>
+              <p className="text-sm text-muted-foreground">National brands and creative agencies seeking high-impact NYC placements</p>
+            </div>
+            
+            <div className="border border-border/30 rounded-lg p-5 md:p-6 hover:border-primary/20 transition-colors">
+              <div className="p-2.5 rounded-lg bg-primary/10 w-fit mb-3">
+                <Store className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+              </div>
+              <h3 className="text-base font-semibold text-foreground mb-2">Local Businesses</h3>
+              <p className="text-sm text-muted-foreground">Regional businesses and startups building neighborhood awareness</p>
+            </div>
+            
+            <div className="border border-border/30 rounded-lg p-5 md:p-6 hover:border-primary/20 transition-colors">
+              <div className="p-2.5 rounded-lg bg-primary/10 w-fit mb-3">
+                <Home className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+              </div>
+              <h3 className="text-base font-semibold text-foreground mb-2">Real Estate</h3>
+              <p className="text-sm text-muted-foreground">Developers and property owners promoting new projects</p>
+            </div>
+            
+            <div className="border border-border/30 rounded-lg p-5 md:p-6 hover:border-primary/20 transition-colors">
+              <div className="p-2.5 rounded-lg bg-primary/10 w-fit mb-3">
+                <TrendingUp className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+              </div>
+              <h3 className="text-base font-semibold text-foreground mb-2">Entertainment</h3>
+              <p className="text-sm text-muted-foreground">Film, TV, and event promotions across the city</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-12 md:py-20 lg:py-28" ref={ctaReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 text-center max-w-4xl">
-          <h2 className={`text-2xl md:text-3xl lg:text-4xl font-light mb-4 md:mb-6 transition-all duration-700 ${ctaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            Ready to Go Big?
-          </h2>
-          <p className={`text-base md:text-lg text-muted-foreground font-light mb-8 md:mb-12 transition-all duration-700 ${ctaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
-          transitionDelay: '100ms'
-        }}>
-            Contact Bridge Billboard to learn about available inventory and campaign opportunities.
-          </p>
-          <div className={`flex flex-col sm:flex-row gap-4 justify-center transition-all duration-700 ${ctaReveal.isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-10 scale-95'}`} style={{
-          transitionDelay: '200ms'
-        }}>
-            <Button size="lg" className="font-light" onClick={openContactSheet}>
+      {/* CTA Section */}
+      <section 
+        ref={ctaReveal.elementRef}
+        className={`py-12 md:py-16 lg:py-20 transition-all duration-700 ${ctaReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-xl mx-auto text-center">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground mb-4">
+              Ready to Go Big?
+            </h2>
+            <p className="text-sm md:text-base text-muted-foreground mb-6">
+              Contact Bridge Billboard to learn about available inventory and campaign opportunities.
+            </p>
+            <Button 
+              size="default"
+              className="group"
+              onClick={openContactSheet}
+            >
               Contact Billboard
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Button>
           </div>
         </div>
       </section>
 
       <MobileStickyContact onContactClick={openContactSheet} />
-    </div>;
+    </div>
+  );
 }
