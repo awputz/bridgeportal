@@ -6,20 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { SEOHelmet } from "@/components/SEOHelmet";
 import { ServicesSubNav } from "@/components/ServicesSubNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
-
 import { useInvestmentListings, InvestmentListing } from "@/hooks/useInvestmentListings";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { InvestmentListingDialog } from "@/components/InvestmentListingDialog";
 import investmentSalesListingsHero from "@/assets/investment-sales-listings-hero.jpg";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 const formatPrice = (price: number | null) => {
   if (!price) return "Price Upon Request";
   if (price >= 1000000) {
@@ -27,25 +19,54 @@ const formatPrice = (price: number | null) => {
   }
   return `$${price.toLocaleString()}`;
 };
-
 const formatCapRate = (rate: number | null) => {
   if (!rate) return "—";
   return `${rate.toFixed(2)}%`;
 };
-
-const PRICE_RANGES = [
-  { label: "All Prices", value: "all", min: 0, max: Infinity },
-  { label: "Under $1M", value: "under-1m", min: 0, max: 1000000 },
-  { label: "$1M - $5M", value: "1m-5m", min: 1000000, max: 5000000 },
-  { label: "$5M - $10M", value: "5m-10m", min: 5000000, max: 10000000 },
-  { label: "$10M - $25M", value: "10m-25m", min: 10000000, max: 25000000 },
-  { label: "$25M+", value: "25m-plus", min: 25000000, max: Infinity },
-];
-
+const PRICE_RANGES = [{
+  label: "All Prices",
+  value: "all",
+  min: 0,
+  max: Infinity
+}, {
+  label: "Under $1M",
+  value: "under-1m",
+  min: 0,
+  max: 1000000
+}, {
+  label: "$1M - $5M",
+  value: "1m-5m",
+  min: 1000000,
+  max: 5000000
+}, {
+  label: "$5M - $10M",
+  value: "5m-10m",
+  min: 5000000,
+  max: 10000000
+}, {
+  label: "$10M - $25M",
+  value: "10m-25m",
+  min: 10000000,
+  max: 25000000
+}, {
+  label: "$25M+",
+  value: "25m-plus",
+  min: 25000000,
+  max: Infinity
+}];
 const InvestmentListings = () => {
-  const { data: listings, isLoading } = useInvestmentListings();
-  const { elementRef: heroRef, isVisible: heroVisible } = useScrollReveal();
-  const { elementRef: gridRef, isVisible: gridVisible } = useScrollReveal();
+  const {
+    data: listings,
+    isLoading
+  } = useInvestmentListings();
+  const {
+    elementRef: heroRef,
+    isVisible: heroVisible
+  } = useScrollReveal();
+  const {
+    elementRef: gridRef,
+    isVisible: gridVisible
+  } = useScrollReveal();
 
   // Selected listing for dialog
   const [selectedListing, setSelectedListing] = useState<InvestmentListing | null>(null);
@@ -56,41 +77,43 @@ const InvestmentListings = () => {
   const [selectedPriceRange, setSelectedPriceRange] = useState<string>("all");
 
   // Extract unique boroughs and asset classes from listings
-  const { boroughs, assetClasses } = useMemo(() => {
-    if (!listings) return { boroughs: [], assetClasses: [] };
-    
+  const {
+    boroughs,
+    assetClasses
+  } = useMemo(() => {
+    if (!listings) return {
+      boroughs: [],
+      assetClasses: []
+    };
     const boroughSet = new Set<string>();
     const assetClassSet = new Set<string>();
-    
-    listings.forEach((listing) => {
+    listings.forEach(listing => {
       if (listing.borough) boroughSet.add(listing.borough);
       if (listing.asset_class) assetClassSet.add(listing.asset_class);
     });
-    
     return {
       boroughs: Array.from(boroughSet).sort(),
-      assetClasses: Array.from(assetClassSet).sort(),
+      assetClasses: Array.from(assetClassSet).sort()
     };
   }, [listings]);
 
   // Filter listings based on selected filters
   const filteredListings = useMemo(() => {
     if (!listings) return [];
-    
-    return listings.filter((listing) => {
+    return listings.filter(listing => {
       // Borough filter
       if (selectedBorough !== "all" && listing.borough !== selectedBorough) {
         return false;
       }
-      
+
       // Asset class filter
       if (selectedAssetClass !== "all" && listing.asset_class !== selectedAssetClass) {
         return false;
       }
-      
+
       // Price range filter
       if (selectedPriceRange !== "all") {
-        const priceRange = PRICE_RANGES.find((r) => r.value === selectedPriceRange);
+        const priceRange = PRICE_RANGES.find(r => r.value === selectedPriceRange);
         if (priceRange && listing.asking_price) {
           if (listing.asking_price < priceRange.min || listing.asking_price >= priceRange.max) {
             return false;
@@ -99,50 +122,28 @@ const InvestmentListings = () => {
           return false; // Exclude "Price Upon Request" when filtering by price
         }
       }
-      
       return true;
     });
   }, [listings, selectedBorough, selectedAssetClass, selectedPriceRange]);
-
   const hasActiveFilters = selectedBorough !== "all" || selectedAssetClass !== "all" || selectedPriceRange !== "all";
-
   const clearFilters = () => {
     setSelectedBorough("all");
     setSelectedAssetClass("all");
     setSelectedPriceRange("all");
   };
-
   const getPlaceholderImage = (index: number) => {
-    const images = [
-      PLACEHOLDER_IMAGES.building.brownstone,
-      PLACEHOLDER_IMAGES.building.residential,
-      PLACEHOLDER_IMAGES.building.exterior,
-      PLACEHOLDER_IMAGES.building.glass,
-      PLACEHOLDER_IMAGES.building.apartment,
-    ];
+    const images = [PLACEHOLDER_IMAGES.building.brownstone, PLACEHOLDER_IMAGES.building.residential, PLACEHOLDER_IMAGES.building.exterior, PLACEHOLDER_IMAGES.building.glass, PLACEHOLDER_IMAGES.building.apartment];
     return images[index % images.length];
   };
-
-  return (
-    <>
-      <SEOHelmet
-        title="Exclusive Listings | Bridge Investment Sales"
-        description="Explore our exclusive portfolio of investment properties available for acquisition in New York City."
-      />
+  return <>
+      <SEOHelmet title="Exclusive Listings | Bridge Investment Sales" description="Explore our exclusive portfolio of investment properties available for acquisition in New York City." />
       
       <main className="min-h-screen bg-background">
         {/* Hero Section with Background Image */}
-        <section 
-          ref={heroRef}
-          className={`relative overflow-hidden flex items-center justify-center min-h-[40vh] sm:min-h-[45vh] md:min-h-[50vh] pt-24 sm:pt-28 md:pt-32 lg:pt-36 xl:pt-40 pb-8 sm:pb-10 md:pb-12 transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-        >
+        <section ref={heroRef} className={`relative overflow-hidden flex items-center justify-center min-h-[40vh] sm:min-h-[45vh] md:min-h-[50vh] pt-24 sm:pt-28 md:pt-32 lg:pt-36 xl:pt-40 pb-8 sm:pb-10 md:pb-12 transition-all duration-700 ${heroVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {/* Background image container */}
           <div className="absolute inset-0">
-            <img 
-              src={investmentSalesListingsHero} 
-              alt="New York City" 
-              className="w-full h-full object-cover"
-            />
+            <img src={investmentSalesListingsHero} alt="New York City" className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-black/60" />
           </div>
           
@@ -158,7 +159,7 @@ const InvestmentListings = () => {
         </section>
 
         <ServicesSubNav />
-        <ServicePageNav serviceKey="investment-sales" />
+        
 
         {/* Filters Section */}
         <section className="px-4 sm:px-6 py-4 sm:py-6 border-b border-white/10">
@@ -177,11 +178,9 @@ const InvestmentListings = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Boroughs</SelectItem>
-                    {boroughs.map((borough) => (
-                      <SelectItem key={borough} value={borough}>
+                    {boroughs.map(borough => <SelectItem key={borough} value={borough}>
                         {borough}
-                      </SelectItem>
-                    ))}
+                      </SelectItem>)}
                   </SelectContent>
                 </Select>
 
@@ -192,11 +191,9 @@ const InvestmentListings = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Asset Classes</SelectItem>
-                    {assetClasses.map((assetClass) => (
-                      <SelectItem key={assetClass} value={assetClass}>
+                    {assetClasses.map(assetClass => <SelectItem key={assetClass} value={assetClass}>
                         {assetClass}
-                      </SelectItem>
-                    ))}
+                      </SelectItem>)}
                   </SelectContent>
                 </Select>
 
@@ -206,26 +203,17 @@ const InvestmentListings = () => {
                     <SelectValue placeholder="Price Range" />
                   </SelectTrigger>
                   <SelectContent>
-                    {PRICE_RANGES.map((range) => (
-                      <SelectItem key={range.value} value={range.value}>
+                    {PRICE_RANGES.map(range => <SelectItem key={range.value} value={range.value}>
                         {range.label}
-                      </SelectItem>
-                    ))}
+                      </SelectItem>)}
                   </SelectContent>
                 </Select>
 
                 {/* Clear Filters */}
-                {hasActiveFilters && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={clearFilters}
-                    className="h-9 text-sm text-muted-foreground hover:text-foreground"
-                  >
+                {hasActiveFilters && <Button variant="ghost" size="sm" onClick={clearFilters} className="h-9 text-sm text-muted-foreground hover:text-foreground">
                     <X className="w-3 h-3 mr-1" />
                     Clear
-                  </Button>
-                )}
+                  </Button>}
               </div>
 
               {/* Results Count */}
@@ -237,42 +225,24 @@ const InvestmentListings = () => {
         </section>
 
         {/* Split Layout: Listings + Map */}
-        <section 
-          ref={gridRef} 
-          className={`px-4 sm:px-6 py-8 sm:py-12 transition-all duration-700 delay-200 ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-        >
+        <section ref={gridRef} className={`px-4 sm:px-6 py-8 sm:py-12 transition-all duration-700 delay-200 ${gridVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
               {/* Left: Listings Grid */}
               <div className="lg:w-[60%]">
-                {isLoading ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div key={i} className="aspect-[4/3] bg-white/[0.02] animate-pulse rounded-xl" />
-                    ))}
-                  </div>
-                ) : filteredListings.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                    {filteredListings.map((listing, index) => (
-                      <article
-                        key={listing.id}
-                        onClick={() => setSelectedListing(listing)}
-                        className="group relative bg-white/[0.02] border border-white/10 rounded-xl overflow-hidden hover:bg-white/[0.04] hover:border-white/20 transition-all duration-500 cursor-pointer"
-                        style={{ animationDelay: `${index * 100}ms` }}
-                      >
+                {isLoading ? <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    {[1, 2, 3, 4].map(i => <div key={i} className="aspect-[4/3] bg-white/[0.02] animate-pulse rounded-xl" />)}
+                  </div> : filteredListings.length > 0 ? <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    {filteredListings.map((listing, index) => <article key={listing.id} onClick={() => setSelectedListing(listing)} className="group relative bg-white/[0.02] border border-white/10 rounded-xl overflow-hidden hover:bg-white/[0.04] hover:border-white/20 transition-all duration-500 cursor-pointer" style={{
+                  animationDelay: `${index * 100}ms`
+                }}>
                         {/* Property Image - Compact */}
                         <div className="aspect-[16/10] relative overflow-hidden">
-                          <img
-                            src={listing.image_url || getPlaceholderImage(index)}
-                            alt={listing.property_address}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                          />
+                          <img src={listing.image_url || getPlaceholderImage(index)} alt={listing.property_address} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
                           
                           {/* Asset Class Badge */}
-                          <Badge 
-                            className="absolute top-3 left-3 bg-primary/90 text-primary-foreground border-0 text-xs"
-                          >
+                          <Badge className="absolute top-3 left-3 bg-primary/90 text-primary-foreground border-0 text-xs">
                             {listing.asset_class}
                           </Badge>
                         </div>
@@ -284,28 +254,22 @@ const InvestmentListings = () => {
                             <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
                               {listing.property_address}
                             </h3>
-                            {(listing.neighborhood || listing.borough) && (
-                              <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+                            {(listing.neighborhood || listing.borough) && <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
                                 <MapPin className="w-3 h-3" />
                                 {[listing.neighborhood, listing.borough].filter(Boolean).join(", ")}
-                              </p>
-                            )}
+                              </p>}
                           </div>
 
                           {/* Key Metrics - Compact */}
                           <div className="flex items-center gap-3 text-xs mt-1 flex-none">
-                            {listing.units && (
-                              <div className="flex items-center gap-1 text-muted-foreground">
+                            {listing.units && <div className="flex items-center gap-1 text-muted-foreground">
                                 <Layers className="w-3 h-3 text-primary/70" />
                                 <span>{listing.units} Units</span>
-                              </div>
-                            )}
-                            {listing.gross_sf && (
-                              <div className="flex items-center gap-1 text-muted-foreground">
+                              </div>}
+                            {listing.gross_sf && <div className="flex items-center gap-1 text-muted-foreground">
                                 <Building2 className="w-3 h-3 text-primary/70" />
                                 <span>{listing.gross_sf.toLocaleString()} SF</span>
-                              </div>
-                            )}
+                              </div>}
                           </div>
 
                           {/* Price */}
@@ -317,33 +281,16 @@ const InvestmentListings = () => {
 
                           {/* Action Buttons - Push to Bottom */}
                           <div className="flex gap-2 mt-1 flex-none">
-                            {listing.om_url ? (
-                              <Button 
-                                size="sm"
-                                className="flex-1 text-xs whitespace-nowrap"
-                                asChild
-                              >
+                            {listing.om_url ? <Button size="sm" className="flex-1 text-xs whitespace-nowrap" asChild>
                                 <a href={listing.om_url} target="_blank" rel="noopener noreferrer">
                                   <Download className="w-3 h-3 mr-1" />
                                   Download OM
                                 </a>
-                              </Button>
-                            ) : (
-                              <Button 
-                                size="sm"
-                                className="flex-1 text-xs whitespace-nowrap" 
-                                disabled
-                              >
+                              </Button> : <Button size="sm" className="flex-1 text-xs whitespace-nowrap" disabled>
                                 <Download className="w-3 h-3 mr-1" />
                                 OM Soon
-                              </Button>
-                            )}
-                            <Button 
-                              size="sm"
-                              variant="outline" 
-                              className="flex-1 text-xs whitespace-nowrap border-white/20 hover:bg-white/5"
-                              asChild
-                            >
+                              </Button>}
+                            <Button size="sm" variant="outline" className="flex-1 text-xs whitespace-nowrap border-white/20 hover:bg-white/5" asChild>
                               <Link to={`/services/investment-sales/deal-room/${listing.id}`}>
                                 <Lock className="w-3 h-3 mr-1" />
                                 Deal Room
@@ -351,49 +298,27 @@ const InvestmentListings = () => {
                             </Button>
                           </div>
                         </div>
-                      </article>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-16">
+                      </article>)}
+                  </div> : <div className="text-center py-16">
                     <Building2 className="w-12 h-12 mx-auto text-muted-foreground/30 mb-4" />
                     <h3 className="text-xl font-semibold text-foreground mb-2">
                       {hasActiveFilters ? "No Matching Listings" : "No Active Listings"}
                     </h3>
                     <p className="text-muted-foreground text-sm max-w-md mx-auto mb-6">
-                      {hasActiveFilters 
-                        ? "Try adjusting your filters to see more results."
-                        : "Our team is currently sourcing new investment opportunities. Contact us to discuss off-market deals."
-                      }
+                      {hasActiveFilters ? "Try adjusting your filters to see more results." : "Our team is currently sourcing new investment opportunities. Contact us to discuss off-market deals."}
                     </p>
-                    {hasActiveFilters ? (
-                      <Button size="sm" onClick={clearFilters}>
+                    {hasActiveFilters ? <Button size="sm" onClick={clearFilters}>
                         Clear Filters
-                      </Button>
-                    ) : (
-                      <Button size="sm" asChild>
+                      </Button> : <Button size="sm" asChild>
                         <Link to="/contact">Contact Our Team</Link>
-                      </Button>
-                    )}
-                  </div>
-                )}
+                      </Button>}
+                  </div>}
               </div>
 
               {/* Right: Interactive Map */}
               <div className="lg:w-[40%] hidden lg:block">
                 <div className="sticky top-24 h-[500px] lg:h-[600px] rounded-2xl overflow-hidden border border-white/10">
-                  <iframe 
-                    src="https://my.atlist.com/map/56e87263-fdcd-4bad-9e1f-645a9fd7096e?share=true" 
-                    allow="geolocation 'self' https://my.atlist.com" 
-                    width="100%" 
-                    height="100%" 
-                    loading="lazy" 
-                    frameBorder="0" 
-                    scrolling="no" 
-                    allowFullScreen 
-                    title="Investment Listings Map"
-                    className="w-full h-full"
-                  />
+                  <iframe src="https://my.atlist.com/map/56e87263-fdcd-4bad-9e1f-645a9fd7096e?share=true" allow="geolocation 'self' https://my.atlist.com" width="100%" height="100%" loading="lazy" frameBorder="0" scrolling="no" allowFullScreen title="Investment Listings Map" className="w-full h-full" />
                 </div>
               </div>
             </div>
@@ -425,13 +350,7 @@ const InvestmentListings = () => {
       </main>
 
       {/* Listing Detail Dialog */}
-      <InvestmentListingDialog
-        listing={selectedListing}
-        open={!!selectedListing}
-        onOpenChange={(open) => !open && setSelectedListing(null)}
-      />
-    </>
-  );
+      <InvestmentListingDialog listing={selectedListing} open={!!selectedListing} onOpenChange={open => !open && setSelectedListing(null)} />
+    </>;
 };
-
 export default InvestmentListings;
