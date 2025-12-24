@@ -138,10 +138,20 @@ export const TeamMemberDialog = ({
 
   if (!member) return null;
 
+  // Helper to get transaction volume for sorting
+  const getTransactionVolume = (t: typeof transactions[0]) => {
+    return t.sale_price || t.total_lease_value || 0;
+  };
+
+  // Sort transactions by volume (highest to lowest)
+  const sortedTransactions = [...transactions].sort((a, b) => {
+    return getTransactionVolume(b) - getTransactionVolume(a);
+  });
+
   // Calculate stats
   const totalDeals = transactions.length;
   const totalVolume = transactions.reduce((sum, t) => {
-    return sum + (t.sale_price || t.total_lease_value || 0);
+    return sum + getTransactionVolume(t);
   }, 0);
 
   // Build contact actions array
@@ -278,7 +288,7 @@ export const TeamMemberDialog = ({
           {/* Transaction List */}
           <ScrollArea className="h-[200px] md:h-[240px] pr-4">
             <div className="space-y-3">
-              {transactions.map((transaction) => (
+              {sortedTransactions.map((transaction) => (
                 <div
                   key={transaction.id}
                   className="group p-3 rounded-lg border border-border/30 hover:border-border/60 hover:bg-accent/5 transition-all duration-200"
