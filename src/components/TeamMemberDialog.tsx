@@ -1,7 +1,8 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Link } from "react-router-dom";
-import { Instagram, Linkedin, X, Mail, Phone, MessageCircle, Building2, TrendingUp, Store, MapPin, ExternalLink } from "lucide-react";
+import { Instagram, Linkedin, X, Mail, Phone, MessageCircle, Building2, TrendingUp, Store, MapPin, ExternalLink, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { downloadVCard } from "@/lib/vcard";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -245,24 +246,43 @@ export const TeamMemberDialog = ({
   }, 0);
   const totalExclusives = investmentListings.length + commercialListings.length;
 
-  // Build contact actions array
-  const contactActions = [member.email && {
-    icon: Mail,
-    label: "Email",
-    url: `mailto:${member.email}`
-  }, member.phone && {
-    icon: Phone,
-    label: "Call",
-    url: `tel:${member.phone}`
-  }, member.phone && {
-    icon: MessageCircle,
-    label: "WhatsApp",
-    url: `https://wa.me/${formatPhoneForWhatsApp(member.phone)}`
-  }].filter(Boolean) as {
+  // Build contact actions array (with url or onClick)
+  type ContactAction = {
     icon: typeof Mail;
     label: string;
-    url: string;
-  }[];
+    url?: string;
+    onClick?: () => void;
+  };
+  
+  const contactActions: ContactAction[] = [
+    member.email && {
+      icon: Mail,
+      label: "Email",
+      url: `mailto:${member.email}`
+    },
+    member.phone && {
+      icon: Phone,
+      label: "Call",
+      url: `tel:${member.phone}`
+    },
+    member.phone && {
+      icon: MessageCircle,
+      label: "WhatsApp",
+      url: `https://wa.me/${formatPhoneForWhatsApp(member.phone)}`
+    },
+    {
+      icon: Download,
+      label: "Save Contact",
+      onClick: () => downloadVCard({
+        name: member.name,
+        title: member.title,
+        email: member.email,
+        phone: member.phone,
+        linkedin: member.linkedin,
+        image: member.image,
+      })
+    }
+  ].filter(Boolean) as ContactAction[];
   const socialLinks = [member.linkedin && {
     icon: Linkedin,
     label: "LinkedIn",
@@ -319,12 +339,29 @@ export const TeamMemberDialog = ({
       <div className="space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-300 ease-out delay-100">
         <div className="flex flex-wrap items-center gap-2">
           {contactActions.map(action => {
-          const Icon = action.icon;
-          return <a key={action.label} href={action.url} className="flex items-center gap-2 px-4 py-2.5 rounded-md border border-border/40 hover:border-accent/50 hover:bg-accent/10 transition-all duration-300 min-h-[44px] touch-manipulation active:scale-95">
+            const Icon = action.icon;
+            const className = "flex items-center gap-2 px-4 py-2.5 rounded-md border border-border/40 hover:border-accent/50 hover:bg-accent/10 transition-all duration-300 min-h-[44px] touch-manipulation active:scale-95 cursor-pointer";
+            
+            if (action.onClick) {
+              return (
+                <button 
+                  key={action.label} 
+                  onClick={action.onClick} 
+                  className={className}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span className="text-sm font-light">{action.label}</span>
+                </button>
+              );
+            }
+            
+            return (
+              <a key={action.label} href={action.url} className={className}>
                 <Icon className="h-4 w-4" />
                 <span className="text-sm font-light">{action.label}</span>
-              </a>;
-        })}
+              </a>
+            );
+          })}
           
           {socialLinks.map(link => {
           const Icon = link.icon;
