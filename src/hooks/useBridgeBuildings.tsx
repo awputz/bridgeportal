@@ -12,6 +12,7 @@ export interface BridgeBuilding {
   description: string | null;
   tags: string[] | null;
   image_url: string | null;
+  website_url: string | null;
   display_order: number | null;
   is_active: boolean | null;
 }
