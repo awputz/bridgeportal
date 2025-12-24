@@ -80,7 +80,7 @@ const RenterResources = () => {
               <p className="text-sm text-muted-foreground mb-4">
                 Complete application takes 10-15 minutes
               </p>
-              <Button asChild className="w-full rounded-full" size="sm">
+              <Button asChild className="w-full" size="sm">
                 <a
                   href="https://secure.weimark.com/ifw/fc33000e21e90819048fbb95b0d70320/6037/new"
                   target="_blank"
@@ -213,7 +213,7 @@ const RenterResources = () => {
             <p className="text-sm text-muted-foreground mb-4">
               Questions about documentation or the process? We're here to help.
             </p>
-            <Button asChild variant="outline" className="rounded-full" size="sm">
+            <Button asChild variant="outline" size="sm">
               <Link to="/contact">Contact our team</Link>
             </Button>
           </Card>
