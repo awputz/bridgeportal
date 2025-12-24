@@ -1,20 +1,11 @@
 import { useState, useRef } from "react";
-import { CheckCircle2, TrendingUp, Users, Building2 } from "lucide-react";
-import { TeamMemberDialog } from "@/components/TeamMemberDialog";
+import { CheckCircle2 } from "lucide-react";
+import { TeamMemberDialog, TeamMember } from "@/components/TeamMemberDialog";
 import { useBridgeAgents, BridgeAgent, TeamCategory } from "@/hooks/useBridgeAgents";
 import { TeamPerformance } from "@/components/TeamPerformance";
 import { use3DTilt } from "@/hooks/useMousePosition";
 import { SEOHelmet } from "@/components/SEOHelmet";
-interface TeamMember {
-  name: string;
-  title: string;
-  bio?: string;
-  image: string;
-  instagram?: string;
-  linkedin?: string;
-  email?: string;
-  phone?: string;
-}
+
 const CATEGORY_LABELS: Record<TeamCategory, string> = {
   'Leadership': 'Leadership',
   'Investment Sales': 'Investment Sales',
@@ -23,6 +14,7 @@ const CATEGORY_LABELS: Record<TeamCategory, string> = {
   'Marketing': 'Marketing',
   'Advisory': 'Advisory'
 };
+
 const Team = () => {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -30,7 +22,9 @@ const Team = () => {
     data,
     isLoading
   } = useBridgeAgents();
+  
   const mapAgentToMember = (agent: BridgeAgent): TeamMember => ({
+    id: agent.id,
     name: agent.name,
     title: agent.title,
     bio: agent.bio,
@@ -38,7 +32,9 @@ const Team = () => {
     instagram: agent.instagram_url,
     linkedin: agent.linkedin_url,
     email: agent.email,
-    phone: agent.phone
+    phone: agent.phone,
+    category: agent.category,
+    licenseNumber: (agent as any).license_number,
   });
   const handleMemberClick = (member: TeamMember) => {
     setSelectedMember(member);
