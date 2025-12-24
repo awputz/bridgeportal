@@ -7,7 +7,7 @@ export const ListingsToggleNav = () => {
   const isCommercial = location.pathname === "/commercial-listings";
   return <div className="sticky top-16 z-40 bg-background/95 backdrop-blur-xl border-b border-border">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex items-center gap-2 py-3">
+        <div className="flex items-center gap-2 py-2">
           <Button variant={isInvestmentSales ? "default" : "ghost"} size="sm" asChild className="gap-2">
             <Link to="/services/investment-sales/listings">
               <Building2 className="h-4 w-4" />
