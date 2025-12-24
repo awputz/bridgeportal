@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { Helmet } from "react-helmet-async";
 import { Building2, Store, Download, MessageSquare, MapPin, Ruler, Calendar, Clock, DollarSign } from "lucide-react";
-import { ListingsToggleNav } from "@/components/ListingsToggleNav";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -101,13 +101,17 @@ const CommercialListings = () => {
             <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/70 max-w-2xl mx-auto">
               Premium office & retail spaces for lease in NYC
             </p>
+            <Button variant="outline" size="sm" className="mt-4 bg-white/10 border-white/20 text-white hover:bg-white/20" asChild>
+              <Link to="/services/investment-sales/listings">
+                <Building2 className="h-4 w-4 mr-2" />
+                View Investment Sales Listings
+              </Link>
+            </Button>
           </div>
         </section>
 
-        <ListingsToggleNav />
-
         {/* Tab Navigation for Office/Retail */}
-        <div className="sticky top-[calc(4rem+44px)] z-30 bg-background border-b border-border">
+        <div className="sticky top-16 z-30 bg-background border-b border-border">
           <div className="container mx-auto px-4">
             <div className="flex gap-1 py-2">
               <Button

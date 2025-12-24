@@ -1,10 +1,9 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Download, Lock, Building2, TrendingUp, Layers, Filter, X } from "lucide-react";
+import { Download, Lock, Building2, TrendingUp, Layers, Filter, X, Store } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SEOHelmet } from "@/components/SEOHelmet";
-import { ListingsToggleNav } from "@/components/ListingsToggleNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { useInvestmentListings, InvestmentListing } from "@/hooks/useInvestmentListings";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -155,10 +154,14 @@ const InvestmentListings = () => {
             <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/70 max-w-2xl mx-auto">
               Curated investment opportunities across New York City's most dynamic markets
             </p>
+            <Button variant="outline" size="sm" className="mt-4 bg-white/10 border-white/20 text-white hover:bg-white/20" asChild>
+              <Link to="/commercial-listings">
+                <Store className="h-4 w-4 mr-2" />
+                View Our Commercial Leasing Listings
+              </Link>
+            </Button>
           </div>
         </section>
-
-        <ListingsToggleNav />
         
 
         {/* Filters Section */}
