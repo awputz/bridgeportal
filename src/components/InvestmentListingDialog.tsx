@@ -188,11 +188,11 @@ const InvestmentListingContent = ({
                       {getInitials(agent.name)}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-foreground text-left">
+                  <div className="flex-1 min-w-0 space-y-0.5">
+                    <p className="font-medium text-foreground text-left leading-tight">
                       {agent.name}
                     </p>
-                    <p className="text-xs text-muted-foreground truncate">{agent.title}</p>
+                    <p className="text-xs text-muted-foreground truncate leading-tight">{agent.title}</p>
                   </div>
                   <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                     {agent.email && (
