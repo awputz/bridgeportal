@@ -168,7 +168,19 @@ const InvestmentListingContent = ({
               {listing.agents.map((agent) => (
                 <div 
                   key={agent.id}
-                  className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/30"
+                  className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/30 cursor-pointer hover:bg-muted/70 transition-colors"
+                  onClick={() => onAgentClick({
+                    id: agent.id,
+                    name: agent.name,
+                    title: agent.title,
+                    image: agent.image_url || '',
+                    email: agent.email || undefined,
+                    phone: agent.phone || undefined,
+                    bio: agent.bio || undefined,
+                    instagram: agent.instagram_url || undefined,
+                    linkedin: agent.linkedin_url || undefined,
+                    category: agent.category || undefined,
+                  })}
                 >
                   <Avatar className="h-10 w-10 border border-border/30">
                     <AvatarImage src={agent.image_url || undefined} alt={agent.name} />
@@ -177,37 +189,23 @@ const InvestmentListingContent = ({
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
-                    <button 
-                      onClick={() => onAgentClick({
-                        id: agent.id,
-                        name: agent.name,
-                        title: agent.title,
-                        image: agent.image_url || '',
-                        email: agent.email || undefined,
-                        phone: agent.phone || undefined,
-                        bio: agent.bio || undefined,
-                        instagram: agent.instagram_url || undefined,
-                        linkedin: agent.linkedin_url || undefined,
-                        category: agent.category || undefined,
-                      })}
-                      className="font-medium text-foreground hover:text-primary transition-colors text-left"
-                    >
+                    <p className="font-medium text-foreground text-left">
                       {agent.name}
-                    </button>
+                    </p>
                     <p className="text-xs text-muted-foreground truncate">{agent.title}</p>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                     {agent.email && (
-                      <Button size="icon" variant="ghost" className="h-8 w-8" asChild>
+                      <Button size="icon" variant="outline" className="h-10 w-10 rounded-lg border-white/60" asChild>
                         <a href={`mailto:${agent.email}`} title={`Email ${agent.name}`}>
-                          <Mail className="w-4 h-4" />
+                          <Mail className="w-5 h-5" />
                         </a>
                       </Button>
                     )}
                     {agent.phone && (
-                      <Button size="icon" variant="ghost" className="h-8 w-8" asChild>
+                      <Button size="icon" variant="outline" className="h-10 w-10 rounded-lg border-white/60" asChild>
                         <a href={`tel:${agent.phone}`} title={`Call ${agent.name}`}>
-                          <Phone className="w-4 h-4" />
+                          <Phone className="w-5 h-5" />
                         </a>
                       </Button>
                     )}
