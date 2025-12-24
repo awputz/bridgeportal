@@ -211,24 +211,24 @@ const CommercialListingContent = ({
                         linkedin: agent.linkedin_url || undefined,
                         category: agent.category || undefined,
                       })}
-                      className="font-medium text-foreground hover:text-primary transition-colors text-left"
+                      className="font-medium text-foreground hover:text-primary transition-colors text-left leading-none m-0"
                     >
                       {agent.name}
                     </button>
-                    <p className="text-xs text-muted-foreground truncate">{agent.title}</p>
+                    <p className="text-xs text-muted-foreground truncate leading-tight m-0">{agent.title}</p>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                     {agent.email && (
-                      <Button size="icon" variant="ghost" className="h-8 w-8" asChild>
+                      <Button size="icon" variant="outline" className="h-10 w-10 rounded-lg border-white/60" asChild>
                         <a href={`mailto:${agent.email}`} title={`Email ${agent.name}`}>
-                          <Mail className="w-4 h-4" />
+                          <Mail className="w-5 h-5" />
                         </a>
                       </Button>
                     )}
                     {agent.phone && (
-                      <Button size="icon" variant="ghost" className="h-8 w-8" asChild>
+                      <Button size="icon" variant="outline" className="h-10 w-10 rounded-lg border-white/60" asChild>
                         <a href={`tel:${agent.phone}`} title={`Call ${agent.name}`}>
-                          <Phone className="w-4 h-4" />
+                          <Phone className="w-5 h-5" />
                         </a>
                       </Button>
                     )}
