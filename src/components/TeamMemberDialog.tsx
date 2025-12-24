@@ -340,17 +340,17 @@ export const TeamMemberDialog = ({
       {/* Tabs Section */}
       <Tabs defaultValue="exclusives" className="animate-in fade-in slide-in-from-bottom-4 duration-300 ease-out delay-150">
         <TabsList className="grid w-full grid-cols-2 h-11">
-          <TabsTrigger value="exclusives" className="text-sm gap-2">
-            <Building2 className="h-4 w-4" />
+          <TabsTrigger value="exclusives" className="text-xs md:text-sm gap-1 md:gap-2">
+            <Building2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
             <span className="hidden sm:inline">Current</span> Exclusives
-            {totalExclusives > 0 && <Badge variant="secondary" className="ml-1 h-5 min-w-5 px-1.5 text-xs">
+            {totalExclusives > 0 && <Badge variant="secondary" className="ml-0.5 md:ml-1 h-4 min-w-4 px-1 text-[10px] md:h-5 md:min-w-5 md:px-1.5 md:text-xs">
                 {totalExclusives}
               </Badge>}
           </TabsTrigger>
-          <TabsTrigger value="transactions" className="text-sm gap-2">
-            <TrendingUp className="h-4 w-4" />
+          <TabsTrigger value="transactions" className="text-xs md:text-sm gap-1 md:gap-2">
+            <TrendingUp className="h-3.5 w-3.5 md:h-4 md:w-4" />
             <span className="hidden sm:inline">Past</span> Transactions
-            {totalDeals > 0 && <Badge variant="secondary" className="ml-1 h-5 min-w-5 px-1.5 text-xs">
+            {totalDeals > 0 && <Badge variant="secondary" className="ml-0.5 md:ml-1 h-4 min-w-4 px-1 text-[10px] md:h-5 md:min-w-5 md:px-1.5 md:text-xs">
                 {totalDeals}
               </Badge>}
           </TabsTrigger>
