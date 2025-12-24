@@ -298,7 +298,15 @@ export const TeamMemberDialog = ({
           <h2 className="text-xl md:text-2xl lg:text-3xl font-light tracking-tight">{member.name}</h2>
           <p className="text-xs md:text-sm uppercase tracking-widest text-muted-foreground mt-1">{member.title}</p>
           
-          
+          {/* License Number Bubble */}
+          {member.licenseNumber && (
+            <div className="mt-2">
+              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-accent/10 text-muted-foreground border border-border/40">
+                LIC# {member.licenseNumber}
+              </span>
+            </div>
+          )}
+        
         </div>
       </div>
 
