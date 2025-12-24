@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Phone, Mail } from "lucide-react";
+import { TeamMemberDialog } from "@/components/TeamMemberDialog";
+import { cn } from "@/lib/utils";
 
 interface AgentContactCardProps {
   agentName: string;
@@ -15,6 +18,10 @@ interface TeamMember {
   phone: string | null;
   image_url: string | null;
   title: string | null;
+  bio: string | null;
+  category: string | null;
+  instagram_url: string | null;
+  linkedin_url: string | null;
 }
 
 // Helper to normalize names for matching
@@ -78,13 +85,16 @@ const findMatchingAgent = (agentName: string, teamMembers: TeamMember[]): TeamMe
 };
 
 export function AgentContactCard({ agentName }: AgentContactCardProps) {
+  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   // Fetch all team members
   const { data: teamMembers = [] } = useQuery({
     queryKey: ['team-members-for-agents'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('team_members_public')
-        .select('id, name, email, phone, image_url, title');
+        .select('id, name, email, phone, image_url, title, bio, category, instagram_url, linkedin_url');
       
       if (error) throw error;
       return (data || []) as TeamMember[];
@@ -101,6 +111,13 @@ export function AgentContactCard({ agentName }: AgentContactCardProps) {
     member: findMatchingAgent(name, teamMembers)
   }));
 
+  const handleAgentClick = (member: TeamMember | null) => {
+    if (member) {
+      setSelectedMember(member);
+      setDialogOpen(true);
+    }
+  };
+
   return (
     <div className="space-y-3">
       {matchedAgents.map((agent, index) => (
@@ -108,25 +125,35 @@ export function AgentContactCard({ agentName }: AgentContactCardProps) {
           key={index}
           className="flex items-center gap-3 bg-muted/30 rounded-lg p-3"
         >
-          {/* Avatar */}
-          <Avatar className="h-12 w-12 border border-accent/20 flex-shrink-0">
-            <AvatarImage 
-              src={agent.member?.image_url || undefined} 
-              alt={agent.name} 
-            />
-            <AvatarFallback className="text-sm font-light bg-accent/10 text-accent">
-              {getInitials(agent.name)}
-            </AvatarFallback>
-          </Avatar>
-          
-          {/* Info */}
-          <div className="flex-1 min-w-0 space-y-0.5">
-            <p className="font-medium text-sm truncate leading-tight mb-0">{agent.name}</p>
-            {agent.member?.title && (
-              <p className="text-xs text-muted-foreground truncate leading-tight mb-0">
-                {agent.member.title}
-              </p>
+          {/* Clickable Avatar + Info */}
+          <div
+            className={cn(
+              "flex items-center gap-3 flex-1 min-w-0",
+              agent.member && "cursor-pointer hover:opacity-80 transition-opacity"
             )}
+            onClick={() => handleAgentClick(agent.member)}
+            role={agent.member ? "button" : undefined}
+          >
+            {/* Avatar */}
+            <Avatar className="h-12 w-12 border border-accent/20 flex-shrink-0">
+              <AvatarImage 
+                src={agent.member?.image_url || undefined} 
+                alt={agent.name} 
+              />
+              <AvatarFallback className="text-sm font-light bg-accent/10 text-accent">
+                {getInitials(agent.name)}
+              </AvatarFallback>
+            </Avatar>
+            
+            {/* Info */}
+            <div className="flex-1 min-w-0 space-y-0.5">
+              <p className="font-medium text-sm truncate leading-tight mb-0">{agent.name}</p>
+              {agent.member?.title && (
+                <p className="text-xs text-muted-foreground truncate leading-tight mb-0">
+                  {agent.member.title}
+                </p>
+              )}
+            </div>
           </div>
           
           {/* Contact Buttons */}
@@ -160,6 +187,23 @@ export function AgentContactCard({ agentName }: AgentContactCardProps) {
           )}
         </div>
       ))}
+      
+      {/* Team Member Dialog */}
+      <TeamMemberDialog
+        member={selectedMember ? {
+          name: selectedMember.name || '',
+          title: selectedMember.title || '',
+          bio: selectedMember.bio || undefined,
+          image: selectedMember.image_url || '',
+          email: selectedMember.email || undefined,
+          phone: selectedMember.phone || undefined,
+          instagram: selectedMember.instagram_url || undefined,
+          linkedin: selectedMember.linkedin_url || undefined,
+          category: selectedMember.category || undefined,
+        } : null}
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+      />
     </div>
   );
 }
