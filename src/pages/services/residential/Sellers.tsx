@@ -5,73 +5,54 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { ServicePageLayout } from "@/components/ServicePageLayout";
 import { SEOHelmet } from "@/components/SEOHelmet";
-
 const ResidentialSellers = () => {
-  const { openContactSheet } = useContactSheet();
-  const { elementRef, isVisible } = useScrollReveal();
-
-  const services = [
-    {
-      icon: DollarSign,
-      title: "Property Valuation",
-      description: "Comprehensive market analysis and competitive pricing strategy to maximize your sale price.",
-    },
-    {
-      icon: TrendingUp,
-      title: "Strategic Pricing",
-      description: "Data-driven pricing recommendations based on current market conditions and buyer demand.",
-    },
-    {
-      icon: Camera,
-      title: "Professional Marketing",
-      description: "High-quality photography, virtual tours, and targeted digital campaigns to attract qualified buyers.",
-    },
-    {
-      icon: Handshake,
-      title: "Negotiation Support",
-      description: "Expert negotiation to secure the best terms and highest price for your property.",
-    },
-  ];
-
-  const benefits = [
-    "Access to our extensive buyer network",
-    "Professional staging consultation",
-    "Premium listing placement on major platforms",
-    "Weekly market updates and feedback reports",
-    "Dedicated listing agent throughout the process",
-    "Transparent communication at every step",
-  ];
-
-  const processSteps = [
-    {
-      step: "01",
-      title: "Consultation",
-      description: "We meet to discuss your goals, timeline, and evaluate your property's unique selling points.",
-    },
-    {
-      step: "02",
-      title: "Valuation",
-      description: "Comprehensive market analysis to determine the optimal listing price for maximum return.",
-    },
-    {
-      step: "03",
-      title: "Marketing",
-      description: "Professional photography, virtual tours, and targeted marketing campaigns launch your listing.",
-    },
-    {
-      step: "04",
-      title: "Showings",
-      description: "We coordinate and host showings, qualifying buyers and gathering feedback.",
-    },
-    {
-      step: "05",
-      title: "Closing",
-      description: "Expert negotiation and transaction management through to a successful closing.",
-    },
-  ];
-
-  const heroContent = (
-    <section className="relative bg-gradient-to-b from-secondary to-background pt-32 pb-20">
+  const {
+    openContactSheet
+  } = useContactSheet();
+  const {
+    elementRef,
+    isVisible
+  } = useScrollReveal();
+  const services = [{
+    icon: DollarSign,
+    title: "Property Valuation",
+    description: "Comprehensive market analysis and competitive pricing strategy to maximize your sale price."
+  }, {
+    icon: TrendingUp,
+    title: "Strategic Pricing",
+    description: "Data-driven pricing recommendations based on current market conditions and buyer demand."
+  }, {
+    icon: Camera,
+    title: "Professional Marketing",
+    description: "High-quality photography, virtual tours, and targeted digital campaigns to attract qualified buyers."
+  }, {
+    icon: Handshake,
+    title: "Negotiation Support",
+    description: "Expert negotiation to secure the best terms and highest price for your property."
+  }];
+  const benefits = ["Access to our extensive buyer network", "Professional staging consultation", "Premium listing placement on major platforms", "Weekly market updates and feedback reports", "Dedicated listing agent throughout the process", "Transparent communication at every step"];
+  const processSteps = [{
+    step: "01",
+    title: "Consultation",
+    description: "We meet to discuss your goals, timeline, and evaluate your property's unique selling points."
+  }, {
+    step: "02",
+    title: "Valuation",
+    description: "Comprehensive market analysis to determine the optimal listing price for maximum return."
+  }, {
+    step: "03",
+    title: "Marketing",
+    description: "Professional photography, virtual tours, and targeted marketing campaigns launch your listing."
+  }, {
+    step: "04",
+    title: "Showings",
+    description: "We coordinate and host showings, qualifying buyers and gathering feedback."
+  }, {
+    step: "05",
+    title: "Closing",
+    description: "Expert negotiation and transaction management through to a successful closing."
+  }];
+  const heroContent = <section className="relative bg-gradient-to-b from-secondary to-background pt-32 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <p className="text-primary font-medium mb-4">Residential / For Sellers</p>
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
@@ -81,15 +62,9 @@ const ResidentialSellers = () => {
           From valuation to closing, our team provides the expertise and marketing power to achieve the best possible outcome for your sale.
         </p>
       </div>
-    </section>
-  );
-
-  return (
-    <>
-      <SEOHelmet
-        title="Sell Your Property | Bridge Advisory Group"
-        description="Maximize your property's value with Bridge Advisory Group. Expert valuations, professional marketing, and skilled negotiation to achieve the best sale price in NYC."
-      />
+    </section>;
+  return <>
+      <SEOHelmet title="Sell Your Property | Bridge Advisory Group" description="Maximize your property's value with Bridge Advisory Group. Expert valuations, professional marketing, and skilled negotiation to achieve the best sale price in NYC." />
 
       <ServicePageLayout serviceKey="residential" heroContent={heroContent}>
         {/* Services Grid */}
@@ -103,12 +78,8 @@ const ResidentialSellers = () => {
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {services.map((service, index) => {
-                const Icon = service.icon;
-                return (
-                  <div
-                    key={index}
-                    className="p-6 rounded-lg border border-border/50 bg-card hover:border-accent/30 transition-colors"
-                  >
+              const Icon = service.icon;
+              return <div key={index} className="p-6 rounded-lg border border-border/50 bg-card hover:border-accent/30 transition-colors">
                     <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
                       <Icon className="w-6 h-6 text-accent" />
                     </div>
@@ -116,9 +87,8 @@ const ResidentialSellers = () => {
                     <p className="text-sm text-muted-foreground font-light">
                       {service.description}
                     </p>
-                  </div>
-                );
-              })}
+                  </div>;
+            })}
             </div>
           </div>
         </section>
@@ -133,31 +103,26 @@ const ResidentialSellers = () => {
                   Our integrated platform combines deep market expertise with powerful marketing capabilities to deliver exceptional results for sellers across NYC.
                 </p>
                 <div className="grid sm:grid-cols-2 gap-4">
-                  {benefits.map((benefit, index) => (
-                    <div key={index} className="flex items-start gap-3">
+                  {benefits.map((benefit, index) => <div key={index} className="flex items-start gap-3">
                       <CheckCircle className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
                       <span className="text-sm font-light">{benefit}</span>
-                    </div>
-                  ))}
+                    </div>)}
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-6 rounded-lg bg-card border border-border/50 text-center">
-                  <div className="text-3xl md:text-4xl font-light text-accent mb-2">98%</div>
-                  <div className="text-sm text-muted-foreground font-light">List-to-Sale Ratio</div>
+                  
+                  
                 </div>
                 <div className="p-6 rounded-lg bg-card border border-border/50 text-center">
-                  <div className="text-3xl md:text-4xl font-light text-accent mb-2">30</div>
-                  <div className="text-sm text-muted-foreground font-light">Avg. Days on Market</div>
+                  
+                  
                 </div>
                 <div className="p-6 rounded-lg bg-card border border-border/50 text-center">
-                  <div className="text-3xl md:text-4xl font-light text-accent mb-2">$50M+</div>
-                  <div className="text-sm text-muted-foreground font-light">Sales Volume 2024</div>
+                  
+                  
                 </div>
-                <div className="p-6 rounded-lg bg-card border border-border/50 text-center">
-                  <div className="text-3xl md:text-4xl font-light text-accent mb-2">100+</div>
-                  <div className="text-sm text-muted-foreground font-light">Properties Sold</div>
-                </div>
+                
               </div>
             </div>
           </div>
@@ -174,18 +139,13 @@ const ResidentialSellers = () => {
             </div>
             <div className="max-w-4xl mx-auto">
               <div className="space-y-6">
-                {processSteps.map((step, index) => (
-                  <div
-                    key={index}
-                    className="flex gap-6 p-6 rounded-lg border border-border/50 bg-card hover:border-accent/30 transition-colors"
-                  >
+                {processSteps.map((step, index) => <div key={index} className="flex gap-6 p-6 rounded-lg border border-border/50 bg-card hover:border-accent/30 transition-colors">
                     <div className="text-3xl font-light text-accent/50">{step.step}</div>
                     <div>
                       <h3 className="text-lg font-medium mb-2">{step.title}</h3>
                       <p className="text-sm text-muted-foreground font-light">{step.description}</p>
                     </div>
-                  </div>
-                ))}
+                  </div>)}
               </div>
             </div>
           </div>
@@ -199,28 +159,16 @@ const ResidentialSellers = () => {
               Get started with a free, no-obligation property valuation from our expert team.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                variant="secondary"
-                onClick={() => openContactSheet()}
-                className="gap-2"
-              >
+              <Button size="lg" variant="secondary" onClick={() => openContactSheet()} className="gap-2">
                 Request Valuation <ArrowRight className="w-4 h-4" />
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-accent-foreground/30 text-accent-foreground hover:bg-accent-foreground/10"
-                asChild
-              >
+              <Button size="lg" variant="outline" className="border-accent-foreground/30 text-accent-foreground hover:bg-accent-foreground/10" asChild>
                 <Link to="/team">Meet Our Team</Link>
               </Button>
             </div>
           </div>
         </section>
       </ServicePageLayout>
-    </>
-  );
+    </>;
 };
-
 export default ResidentialSellers;
