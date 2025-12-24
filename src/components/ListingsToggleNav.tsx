@@ -17,7 +17,7 @@ export const ListingsToggleNav = () => {
           <Button variant={isCommercial ? "default" : "ghost"} size="sm" asChild className="gap-2">
             <Link to="/commercial-listings">
               <Store className="h-4 w-4" />
-              Commercial Leasing
+              Commercial Leasing Listings
             </Link>
           </Button>
         </div>
