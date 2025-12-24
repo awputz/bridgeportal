@@ -300,8 +300,8 @@ export const TeamMemberDialog = ({
           
           {/* License Number Bubble */}
           {member.licenseNumber && (
-            <div className="mt-2">
-              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-accent/10 text-muted-foreground border border-border/40">
+            <div className="mt-1.5 md:mt-2">
+              <span className="inline-flex items-center px-2 py-0.5 md:px-2.5 md:py-1 rounded-full text-[10px] md:text-xs font-medium bg-accent/10 text-muted-foreground border border-border/40">
                 LIC# {member.licenseNumber}
               </span>
             </div>
