@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Helmet } from "react-helmet-async";
 import { Building2, Store, Download, MessageSquare, MapPin, Ruler, Calendar, Clock, DollarSign } from "lucide-react";
 import { ListingsToggleNav } from "@/components/ListingsToggleNav";
@@ -11,6 +11,7 @@ import { useContactSheet } from "@/contexts/ContactSheetContext";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { cn } from "@/lib/utils";
 import { CommercialListingDialog } from "@/components/CommercialListingDialog";
+import { CommercialListingsFilters, CommercialFilters } from "@/components/CommercialListingsFilters";
 import commercialHero from "@/assets/commercial-listings-hero.jpg";
 
 const CommercialListings = () => {
@@ -22,9 +23,53 @@ const CommercialListings = () => {
   // Selected listing for dialog
   const [selectedListing, setSelectedListing] = useState<CommercialListing | null>(null);
 
+  // Filter state
+  const [filters, setFilters] = useState<CommercialFilters>({
+    sqftMin: 0,
+    sqftMax: 50000,
+    rentMin: 0,
+    rentMax: 200,
+    selectedAreas: [],
+  });
+
   const officeListings = listings?.filter((l) => l.listing_type === "office") || [];
   const retailListings = listings?.filter((l) => l.listing_type === "retail") || [];
-  const displayedListings = activeTab === "office" ? officeListings : retailListings;
+  const baseListings = activeTab === "office" ? officeListings : retailListings;
+
+  // Get unique areas (boroughs and neighborhoods) from current tab listings
+  const availableAreas = useMemo(() => {
+    const areas = new Set<string>();
+    baseListings.forEach((listing) => {
+      if (listing.borough) areas.add(listing.borough);
+      if (listing.neighborhood) areas.add(listing.neighborhood);
+    });
+    return Array.from(areas).sort();
+  }, [baseListings]);
+
+  // Apply filters
+  const displayedListings = useMemo(() => {
+    return baseListings.filter((listing) => {
+      // Square footage filter
+      if (listing.square_footage < filters.sqftMin) return false;
+      if (filters.sqftMax < 50000 && listing.square_footage > filters.sqftMax) return false;
+
+      // Rent per SF filter
+      if (listing.rent_per_sf) {
+        if (listing.rent_per_sf < filters.rentMin) return false;
+        if (filters.rentMax < 200 && listing.rent_per_sf > filters.rentMax) return false;
+      }
+
+      // Area filter
+      if (filters.selectedAreas.length > 0) {
+        const matchesArea =
+          filters.selectedAreas.includes(listing.borough || "") ||
+          filters.selectedAreas.includes(listing.neighborhood || "");
+        if (!matchesArea) return false;
+      }
+
+      return true;
+    });
+  }, [baseListings, filters]);
 
   return (
     <>
@@ -86,6 +131,15 @@ const CommercialListings = () => {
             </div>
           </div>
         </div>
+
+        {/* Filters Panel */}
+        <CommercialListingsFilters
+          filters={filters}
+          onFiltersChange={setFilters}
+          availableAreas={availableAreas}
+          totalCount={baseListings.length}
+          filteredCount={displayedListings.length}
+        />
 
         {/* Map and Listings Container */}
         <section className="py-8 sm:py-12">
