@@ -202,8 +202,8 @@ export default function Home() {
                 <h3 className="text-base sm:text-lg md:text-xl font-medium text-foreground">Investment Sales Division</h3>
                 <p className="text-muted-foreground font-light text-xs sm:text-sm">Strategic acquisition and disposition advisory</p>
               </div>
-              <Button asChild variant="ghost" size="sm" className="font-light text-[11px] sm:text-xs text-muted-foreground hover:text-foreground px-2 sm:px-3 h-8 min-h-[32px] self-start sm:self-auto">
-                <Link to="/services/investment-sales">Explore <ArrowRight className="ml-1 h-3 w-3" /></Link>
+              <Button asChild variant="ghost" size="sm" className="font-light text-sm sm:text-base text-muted-foreground hover:text-foreground px-3 sm:px-4 h-9 min-h-[36px] self-start sm:self-auto">
+                <Link to="/services/investment-sales">Explore <ArrowRight className="ml-1 h-4 w-4" /></Link>
               </Button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -237,8 +237,8 @@ export default function Home() {
                 <h3 className="text-base sm:text-lg md:text-xl font-medium text-foreground">Commercial Leasing Division</h3>
                 <p className="text-muted-foreground font-light text-xs sm:text-sm">Full-service tenant and landlord representation</p>
               </div>
-              <Button asChild variant="ghost" size="sm" className="font-light text-[11px] sm:text-xs text-muted-foreground hover:text-foreground px-2 sm:px-3 h-8 min-h-[32px] self-start sm:self-auto">
-                <Link to="/services/commercial-leasing">Explore <ArrowRight className="ml-1 h-3 w-3" /></Link>
+              <Button asChild variant="ghost" size="sm" className="font-light text-sm sm:text-base text-muted-foreground hover:text-foreground px-3 sm:px-4 h-9 min-h-[36px] self-start sm:self-auto">
+                <Link to="/services/commercial-leasing">Explore <ArrowRight className="ml-1 h-4 w-4" /></Link>
               </Button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -272,8 +272,8 @@ export default function Home() {
                 <h3 className="text-base sm:text-lg md:text-xl font-medium text-foreground">Residential Division</h3>
                 <p className="text-muted-foreground font-light text-xs sm:text-sm">High-quality apartments, townhomes, and condos</p>
               </div>
-              <Button asChild variant="ghost" size="sm" className="font-light text-[11px] sm:text-xs text-muted-foreground hover:text-foreground px-2 sm:px-3 h-8 min-h-[32px] self-start sm:self-auto">
-                <Link to="/services/residential">Explore <ArrowRight className="ml-1 h-3 w-3" /></Link>
+              <Button asChild variant="ghost" size="sm" className="font-light text-sm sm:text-base text-muted-foreground hover:text-foreground px-3 sm:px-4 h-9 min-h-[36px] self-start sm:self-auto">
+                <Link to="/services/residential">Explore <ArrowRight className="ml-1 h-4 w-4" /></Link>
               </Button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
