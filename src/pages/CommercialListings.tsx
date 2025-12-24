@@ -107,7 +107,7 @@ const CommercialListings = () => {
         <ListingsToggleNav />
 
         {/* Tab Navigation for Office/Retail */}
-        <div className="sticky top-[calc(4rem+52px)] z-30 bg-background border-b border-border">
+        <div className="sticky top-[calc(4rem+44px)] z-30 bg-background border-b border-border">
           <div className="container mx-auto px-4">
             <div className="flex gap-1 py-2">
               <Button
