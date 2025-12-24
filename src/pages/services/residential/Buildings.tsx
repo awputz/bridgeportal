@@ -81,69 +81,72 @@ export default function ResidentialBuildings() {
                       </span>
                     </div>
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-                      {boroughBuildings?.map((building, index) => (
-                        <div
-                          key={building.id}
-                          className="group rounded-lg border border-border/50 bg-card hover:border-accent/30 hover:shadow-md transition-all duration-300 overflow-hidden"
-                          style={{ transitionDelay: `${(boroughIndex * 3 + index) * 50}ms` }}
-                        >
-                          {/* Building Photo */}
-                          <AspectRatio ratio={16 / 10} className="bg-muted">
-                            {building.image_url ? (
-                              <img
-                                src={building.image_url}
-                                alt={building.name}
-                                className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-secondary to-muted">
-                                <Building2 className="w-8 h-8 text-muted-foreground/30" />
+                      {boroughBuildings?.map((building, index) => {
+                        const CardWrapper = building.website_url ? 'a' : 'div';
+                        const cardProps = building.website_url 
+                          ? { href: building.website_url, target: "_blank", rel: "noopener noreferrer" }
+                          : {};
+                        
+                        return (
+                          <CardWrapper
+                            key={building.id}
+                            {...cardProps}
+                            className={`group rounded-lg border border-border/50 bg-card hover:border-accent/30 hover:shadow-md transition-all duration-300 overflow-hidden ${building.website_url ? 'cursor-pointer' : ''}`}
+                            style={{ transitionDelay: `${(boroughIndex * 3 + index) * 50}ms` }}
+                          >
+                            {/* Building Photo */}
+                            <AspectRatio ratio={16 / 10} className="bg-muted">
+                              {building.image_url ? (
+                                <img
+                                  src={building.image_url}
+                                  alt={building.name}
+                                  className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-secondary to-muted">
+                                  <Building2 className="w-8 h-8 text-muted-foreground/30" />
+                                </div>
+                              )}
+                            </AspectRatio>
+                            
+                            {/* Card Content */}
+                            <div className="p-4">
+                              <div className="flex items-start justify-between mb-1.5">
+                                <h3 className="text-base font-medium group-hover:text-accent transition-colors line-clamp-1">
+                                  {building.name}
+                                </h3>
+                                {building.unit_count && (
+                                  <span className="text-xs text-accent bg-accent/10 px-1.5 py-0.5 rounded shrink-0 ml-2">
+                                    {building.unit_count} units
+                                  </span>
+                                )}
                               </div>
-                            )}
-                          </AspectRatio>
-                          
-                          {/* Card Content */}
-                          <div className="p-4">
-                            <div className="flex items-start justify-between mb-1.5">
-                              <h3 className="text-base font-medium group-hover:text-accent transition-colors line-clamp-1">
-                                {building.name}
-                              </h3>
-                              {building.unit_count && (
-                                <span className="text-xs text-accent bg-accent/10 px-1.5 py-0.5 rounded shrink-0 ml-2">
-                                  {building.unit_count} units
-                                </span>
+                              {building.neighborhood && (
+                                <p className="text-xs text-muted-foreground mb-0.5">
+                                  {building.neighborhood}
+                                </p>
+                              )}
+                              <p className="text-xs text-muted-foreground/70 line-clamp-1">
+                                {building.address}
+                              </p>
+                              {building.tags && building.tags.length > 0 && (
+                                <div className="flex flex-wrap gap-1 mt-2">
+                                  {building.tags.slice(0, 3).map(tag => (
+                                    <span key={tag} className="text-[10px] text-muted-foreground bg-secondary px-1.5 py-0.5 rounded">
+                                      {tag}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                              {building.website_url && (
+                                <div className="inline-flex items-center gap-1 mt-3 text-xs text-accent">
+                                  View Building Website <ExternalLink className="h-3 w-3" />
+                                </div>
                               )}
                             </div>
-                            {building.neighborhood && (
-                              <p className="text-xs text-muted-foreground mb-0.5">
-                                {building.neighborhood}
-                              </p>
-                            )}
-                            <p className="text-xs text-muted-foreground/70 line-clamp-1">
-                              {building.address}
-                            </p>
-                            {building.tags && building.tags.length > 0 && (
-                              <div className="flex flex-wrap gap-1 mt-2">
-                                {building.tags.slice(0, 3).map(tag => (
-                                  <span key={tag} className="text-[10px] text-muted-foreground bg-secondary px-1.5 py-0.5 rounded">
-                                    {tag}
-                                  </span>
-                                ))}
-                              </div>
-                            )}
-                            {building.website_url && (
-                              <a 
-                                href={building.website_url} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 mt-3 text-xs text-accent hover:text-accent/80 transition-colors"
-                              >
-                                View Building Website <ExternalLink className="h-3 w-3" />
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                      ))}
+                          </CardWrapper>
+                        );
+                      })}
                     </div>
                   </div>
                 ))}
