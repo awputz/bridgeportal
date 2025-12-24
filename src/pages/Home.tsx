@@ -210,18 +210,20 @@ export default function Home() {
               {[{
               icon: TrendingUp,
               title: "Investment Sales Advisory",
-              desc: "Acquisition and disposition strategies that maximize value"
+              desc: "Acquisition and disposition strategies that maximize value",
+              link: "/services/investment-sales"
             }, {
               icon: Briefcase,
               title: "Portfolio & Asset Strategy",
-              desc: "Comprehensive analysis for stabilized and value-add assets"
-            }].map((item, index) => <div key={item.title} className={`p-4 md:p-5 rounded-xl bg-black/40 backdrop-blur-xl border border-white/15 text-center transition-all duration-300 ease-out hover:bg-black/50 hover:border-white/25 ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
+              desc: "Comprehensive analysis for stabilized and value-add assets",
+              link: "/services/investment-sales"
+            }].map((item, index) => <Link key={item.title} to={item.link} className={`block p-4 md:p-5 rounded-xl bg-black/40 backdrop-blur-xl border border-white/15 text-center transition-all duration-300 ease-out hover:bg-black/50 hover:border-white/25 hover:scale-[1.02] cursor-pointer ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
               transitionDelay: `${150 + index * 50}ms`
             }}>
                   <item.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary mx-auto mb-2" />
                   <h4 className="text-sm font-medium mb-1 text-white">{item.title}</h4>
                   <p className="text-white/70 font-light text-xs leading-relaxed">{item.desc}</p>
-                </div>)}
+                </Link>)}
             </div>
           </div>
 
@@ -245,18 +247,20 @@ export default function Home() {
               {[{
               icon: Users,
               title: "Tenant Representation",
-              desc: "Strategic site selection and lease negotiation for occupiers"
+              desc: "Strategic site selection and lease negotiation for occupiers",
+              link: "/services/commercial-leasing"
             }, {
               icon: Building2,
               title: "Landlord Representation",
-              desc: "Maximize occupancy and rental income for property owners"
-            }].map((item, index) => <div key={item.title} className={`p-4 md:p-5 rounded-xl bg-black/40 backdrop-blur-xl border border-white/15 text-center transition-all duration-300 ease-out hover:bg-black/50 hover:border-white/25 ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
+              desc: "Maximize occupancy and rental income for property owners",
+              link: "/services/commercial-leasing"
+            }].map((item, index) => <Link key={item.title} to={item.link} className={`block p-4 md:p-5 rounded-xl bg-black/40 backdrop-blur-xl border border-white/15 text-center transition-all duration-300 ease-out hover:bg-black/50 hover:border-white/25 hover:scale-[1.02] cursor-pointer ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
               transitionDelay: `${300 + index * 50}ms`
             }}>
                   <item.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary mx-auto mb-2" />
                   <h4 className="text-sm font-medium mb-1 text-white">{item.title}</h4>
                   <p className="text-white/70 font-light text-xs leading-relaxed">{item.desc}</p>
-                </div>)}
+                </Link>)}
             </div>
           </div>
 
@@ -280,22 +284,25 @@ export default function Home() {
               {[{
               icon: Key,
               title: "Landlord Leasing Programs",
-              desc: "Maximize occupancy and rental income"
+              desc: "Maximize occupancy and rental income",
+              link: "/services/residential/landlords"
             }, {
               icon: Building,
               title: "Rentals And Sales",
-              desc: "Find your next home or investment property"
+              desc: "Find your next home or investment property",
+              link: "/services/residential/find-a-home"
             }, {
               icon: BarChart3,
               title: "Residential Market Intel",
-              desc: "Data-driven insights for informed decisions"
-            }].map((item, index) => <div key={item.title} className={`p-4 md:p-5 rounded-xl bg-black/40 backdrop-blur-xl border border-white/15 text-center transition-all duration-300 ease-out hover:bg-black/50 hover:border-white/25 ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
+              desc: "Data-driven insights for informed decisions",
+              link: "/services/residential"
+            }].map((item, index) => <Link key={item.title} to={item.link} className={`block p-4 md:p-5 rounded-xl bg-black/40 backdrop-blur-xl border border-white/15 text-center transition-all duration-300 ease-out hover:bg-black/50 hover:border-white/25 hover:scale-[1.02] cursor-pointer ${divisionsReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`} style={{
               transitionDelay: `${450 + index * 50}ms`
             }}>
                   <item.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary mx-auto mb-2" />
                   <h4 className="text-sm font-medium mb-1 text-white">{item.title}</h4>
                   <p className="text-white/70 font-light text-xs leading-relaxed">{item.desc}</p>
-                </div>)}
+                </Link>)}
             </div>
           </div>
         </div>
