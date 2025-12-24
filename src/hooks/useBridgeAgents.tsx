@@ -16,6 +16,7 @@ export interface BridgeAgent {
   category: TeamCategory;
   bio?: string;
   display_order: number;
+  license_number?: string;
   // Computed properties
   profileUrl: string;
 }
@@ -64,6 +65,7 @@ export const useBridgeAgents = () => {
         category: (member.category as TeamCategory) || 'Advisory',
         bio: member.bio || undefined,
         display_order: member.display_order || 0,
+        license_number: member.license_number || undefined,
         // Computed properties
         profileUrl: `/team/${member.slug || (member.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '_')}`,
       }));
