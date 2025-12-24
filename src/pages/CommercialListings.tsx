@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Building2, Store, Download, MessageSquare, MapPin, Ruler, Calendar, Clock } from "lucide-react";
+import { Building2, Store, Download, MessageSquare, MapPin, Ruler, Calendar, Clock, DollarSign } from "lucide-react";
+import { ListingsToggleNav } from "@/components/ListingsToggleNav";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -58,8 +59,10 @@ const CommercialListings = () => {
           </div>
         </section>
 
-        {/* Tab Navigation */}
-        <div className="sticky top-16 z-40 bg-background border-b border-border">
+        <ListingsToggleNav />
+
+        {/* Tab Navigation for Office/Retail */}
+        <div className="sticky top-[calc(4rem+52px)] z-30 bg-background border-b border-border">
           <div className="container mx-auto px-4">
             <div className="flex gap-1 py-2">
               <Button

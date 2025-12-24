@@ -4,7 +4,7 @@ import { Download, Lock, Building2, MapPin, TrendingUp, Layers, Filter, X } from
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SEOHelmet } from "@/components/SEOHelmet";
-import { ServicesSubNav } from "@/components/ServicesSubNav";
+import { ListingsToggleNav } from "@/components/ListingsToggleNav";
 import { ServicePageNav } from "@/components/ServicePageNav";
 import { useInvestmentListings, InvestmentListing } from "@/hooks/useInvestmentListings";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
@@ -158,7 +158,7 @@ const InvestmentListings = () => {
           </div>
         </section>
 
-        <ServicesSubNav />
+        <ListingsToggleNav />
         
 
         {/* Filters Section */}
