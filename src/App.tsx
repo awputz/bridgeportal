@@ -61,6 +61,13 @@ const ListingsAdmin = lazy(() => import("./pages/admin/ListingsAdmin"));
 const AnnouncementsAdmin = lazy(() => import("./pages/admin/AnnouncementsAdmin"));
 const InquiriesAdmin = lazy(() => import("./pages/admin/InquiriesAdmin"));
 const ResourcesAdmin = lazy(() => import("./pages/admin/ResourcesAdmin"));
+const UsersAdmin = lazy(() => import("./pages/admin/UsersAdmin"));
+const DealRoomAdmin = lazy(() => import("./pages/admin/DealRoomAdmin"));
+const BuildingsAdmin = lazy(() => import("./pages/admin/BuildingsAdmin"));
+const AgentRequestsAdmin = lazy(() => import("./pages/admin/AgentRequestsAdmin"));
+const NewsletterAdmin = lazy(() => import("./pages/admin/NewsletterAdmin"));
+const ActivityLogsAdmin = lazy(() => import("./pages/admin/ActivityLogsAdmin"));
+const CRMConfigAdmin = lazy(() => import("./pages/admin/CRMConfigAdmin"));
 const MyExclusives = lazy(() => import("./pages/portal/MyExclusives"));
 
 // Optimized QueryClient with better caching
@@ -302,6 +309,41 @@ const App = () => {
                     <Route path="resources" element={
                       <Suspense fallback={<PageLoader />}>
                         <ResourcesAdmin />
+                      </Suspense>
+                    } />
+                    <Route path="users" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <UsersAdmin />
+                      </Suspense>
+                    } />
+                    <Route path="deal-room" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <DealRoomAdmin />
+                      </Suspense>
+                    } />
+                    <Route path="buildings" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <BuildingsAdmin />
+                      </Suspense>
+                    } />
+                    <Route path="agent-requests" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <AgentRequestsAdmin />
+                      </Suspense>
+                    } />
+                    <Route path="newsletter" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <NewsletterAdmin />
+                      </Suspense>
+                    } />
+                    <Route path="activity-logs" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <ActivityLogsAdmin />
+                      </Suspense>
+                    } />
+                    <Route path="crm-config" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <CRMConfigAdmin />
                       </Suspense>
                     } />
                   </Route>
