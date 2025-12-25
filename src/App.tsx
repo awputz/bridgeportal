@@ -33,6 +33,8 @@ const Generators = lazy(() => import("./pages/portal/Generators"));
 const Profile = lazy(() => import("./pages/portal/Profile"));
 const Tasks = lazy(() => import("./pages/portal/Tasks"));
 const Analytics = lazy(() => import("./pages/portal/Analytics"));
+const Resources = lazy(() => import("./pages/portal/Resources"));
+const Requests = lazy(() => import("./pages/portal/Requests"));
 
 // Admin Pages - lazy loaded
 const TeamAdmin = lazy(() => import("./pages/admin/TeamAdmin"));
@@ -156,6 +158,16 @@ const App = () => {
                     <Route path="analytics" element={
                       <Suspense fallback={<PageLoader />}>
                         <Analytics />
+                      </Suspense>
+                    } />
+                    <Route path="resources" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <Resources />
+                      </Suspense>
+                    } />
+                    <Route path="requests" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <Requests />
                       </Suspense>
                     } />
                   </Route>

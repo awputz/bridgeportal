@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, LayoutDashboard, FileText, Wrench, LogOut, Settings, Users, Sparkles, Calculator, Briefcase, Wand2, User, ChevronDown, ListTodo, BarChart3 } from "lucide-react";
+import { Menu, X, LayoutDashboard, FileText, Wrench, LogOut, Settings, Users, Sparkles, Calculator, Briefcase, Wand2, User, ChevronDown, ListTodo, BarChart3, FolderOpen, Send } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { 
@@ -29,6 +29,8 @@ const productivityItems = [
   { name: "Templates", path: "/portal/templates", icon: FileText, description: "Division-specific templates" },
   { name: "Calculators", path: "/portal/calculators", icon: Calculator, description: "Financial calculators" },
   { name: "Tools", path: "/portal/tools", icon: Wrench, description: "External resources" },
+  { name: "Resources", path: "/portal/resources", icon: FolderOpen, description: "Legal & HR documents" },
+  { name: "Requests", path: "/portal/requests", icon: Send, description: "Business cards, marketing, BOV" },
 ];
 
 // All nav items for mobile
@@ -36,6 +38,7 @@ const allNavItems = [
   ...coreNavItems,
   ...productivityItems,
   { name: "AI", path: "/portal/ai", icon: Sparkles },
+  { name: "Directory", path: "/portal/directory", icon: Users },
   { name: "Profile", path: "/portal/profile", icon: User },
 ];
 
@@ -329,13 +332,26 @@ export const PortalNavigation = () => {
                   AI
                 </Link>
                 <Link
+                  to="/portal/directory"
+                  className={cn(
+                    "flex items-center gap-4 text-lg font-light transition-all duration-300 py-4 min-h-[56px] active:bg-white/5 rounded-lg px-4 -mx-2",
+                    location.pathname.startsWith('/portal/directory') ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
+                    isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                  )}
+                  style={{ transitionDelay: `${(coreNavItems.length + productivityItems.length + 1) * 50}ms` }}
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Users className="h-5 w-5" />
+                  Directory
+                </Link>
+                <Link
                   to="/portal/profile"
                   className={cn(
                     "flex items-center gap-4 text-lg font-light transition-all duration-300 py-4 min-h-[56px] active:bg-white/5 rounded-lg px-4 -mx-2",
                     location.pathname.startsWith('/portal/profile') ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
                     isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                   )}
-                  style={{ transitionDelay: `${(coreNavItems.length + productivityItems.length + 1) * 50}ms` }}
+                  style={{ transitionDelay: `${(coreNavItems.length + productivityItems.length + 2) * 50}ms` }}
                   onClick={() => setIsOpen(false)}
                 >
                   <User className="h-5 w-5" />
