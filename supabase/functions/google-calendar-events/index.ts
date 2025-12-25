@@ -11,6 +11,8 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
 Deno.serve(async (req) => {
+  console.log("[google-calendar-events] Request received:", req.method);
+  
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -18,7 +20,10 @@ Deno.serve(async (req) => {
 
   try {
     const authHeader = req.headers.get("Authorization");
+    console.log("[google-calendar-events] Auth header present:", !!authHeader);
+    
     if (!authHeader) {
+      console.log("[google-calendar-events] Missing auth header");
       return new Response(
         JSON.stringify({ error: "Missing authorization header" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -32,25 +37,35 @@ Deno.serve(async (req) => {
     const { data: { user }, error: userError } = await supabase.auth.getUser(token);
 
     if (userError || !user) {
+      console.log("[google-calendar-events] Invalid user token:", userError?.message);
       return new Response(
         JSON.stringify({ error: "Invalid token" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+    
+    console.log("[google-calendar-events] User authenticated:", user.id);
 
     // Get user's Google tokens - use maybeSingle to handle no rows gracefully
-    const { data: tokenData } = await supabase
+    const { data: tokenData, error: tokenError } = await supabase
       .from("user_google_tokens")
       .select("*")
       .eq("user_id", user.id)
       .maybeSingle();
 
+    if (tokenError) {
+      console.log("[google-calendar-events] Token query error:", tokenError.message);
+    }
+
     if (!tokenData) {
+      console.log("[google-calendar-events] No token data found for user");
       return new Response(
         JSON.stringify({ error: "Google Calendar not connected", needsConnection: true }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+    
+    console.log("[google-calendar-events] Token data found, calendar_enabled:", tokenData.calendar_enabled);
 
     // Check if token is expired and refresh if needed
     let accessToken = tokenData.access_token;

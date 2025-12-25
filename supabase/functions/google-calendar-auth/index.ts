@@ -11,6 +11,8 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
 Deno.serve(async (req) => {
+  console.log("[google-calendar-auth] Request received:", req.method);
+  
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -23,12 +25,16 @@ Deno.serve(async (req) => {
 
     // If this is a callback with code, handle the OAuth callback
     if (code && state) {
+      console.log("[google-calendar-auth] OAuth callback received for user:", state);
       return handleOAuthCallback(code, state);
     }
 
     // Otherwise, handle API requests
     const authHeader = req.headers.get("Authorization");
+    console.log("[google-calendar-auth] Auth header present:", !!authHeader);
+    
     if (!authHeader) {
+      console.log("[google-calendar-auth] Missing auth header");
       return new Response(
         JSON.stringify({ error: "Missing authorization header" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }

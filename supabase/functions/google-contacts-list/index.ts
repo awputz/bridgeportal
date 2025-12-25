@@ -12,13 +12,18 @@ const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
 serve(async (req) => {
+  console.log("[google-contacts-list] Request received:", req.method);
+  
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
     const authHeader = req.headers.get('Authorization');
+    console.log("[google-contacts-list] Auth header present:", !!authHeader);
+    
     if (!authHeader) {
+      console.log("[google-contacts-list] Missing auth header");
       return new Response(
         JSON.stringify({ error: 'Missing authorization header' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -30,14 +35,17 @@ serve(async (req) => {
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     
     if (authError || !user) {
+      console.log("[google-contacts-list] Invalid user token:", authError?.message);
       return new Response(
         JSON.stringify({ error: 'Invalid token' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
+    console.log("[google-contacts-list] User authenticated:", user.id);
+
     const { action, pageToken, query } = await req.json();
-    console.log(`Contacts action: ${action} for user: ${user.id}`);
+    console.log("[google-contacts-list] Action:", action);
 
     // Get user's tokens - use maybeSingle to handle no rows gracefully
     const { data: tokenData } = await supabase

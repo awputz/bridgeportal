@@ -164,6 +164,8 @@ async function handleOAuthCallback(code: string, userId: string) {
 }
 
 serve(async (req) => {
+  console.log("[gmail-auth] Request received:", req.method);
+  
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -177,6 +179,7 @@ serve(async (req) => {
     const state = url.searchParams.get('state'); // state contains user_id
     
     if (code && state) {
+      console.log("[gmail-auth] OAuth callback received for user:", state);
       return await handleOAuthCallback(code, state);
     }
 
@@ -185,7 +188,10 @@ serve(async (req) => {
     
     // Get user from auth header
     const authHeader = req.headers.get('Authorization');
+    console.log("[gmail-auth] Auth header present:", !!authHeader);
+    
     if (!authHeader) {
+      console.log("[gmail-auth] Missing auth header");
       return new Response(JSON.stringify({ error: 'No authorization header' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
