@@ -1209,6 +1209,13 @@ export type Database = {
             referencedRelation: "investment_listings"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "deal_room_documents_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "public_investment_listings"
+            referencedColumns: ["id"]
+          },
         ]
       }
       deal_room_registrations: {
@@ -1622,6 +1629,13 @@ export type Database = {
             referencedRelation: "investment_listings"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "investment_listing_agents_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "public_investment_listings"
+            referencedColumns: ["id"]
+          },
         ]
       }
       investment_listings: {
@@ -1766,6 +1780,8 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
+          onboarding_completed: boolean | null
+          onboarding_step: number | null
           phone: string | null
           updated_at: string | null
           user_type: string | null
@@ -1776,6 +1792,8 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id: string
+          onboarding_completed?: boolean | null
+          onboarding_step?: number | null
           phone?: string | null
           updated_at?: string | null
           user_type?: string | null
@@ -1786,6 +1804,8 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          onboarding_completed?: boolean | null
+          onboarding_step?: number | null
           phone?: string | null
           updated_at?: string | null
           user_type?: string | null
@@ -2028,6 +2048,84 @@ export type Database = {
       }
     }
     Views: {
+      public_investment_listings: {
+        Row: {
+          asking_price: number | null
+          asset_class: string | null
+          borough: string | null
+          cap_rate: number | null
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          gross_sf: number | null
+          id: string | null
+          image_url: string | null
+          is_active: boolean | null
+          listing_agent_id: string | null
+          neighborhood: string | null
+          om_url: string | null
+          property_address: string | null
+          units: number | null
+          updated_at: string | null
+          year_built: number | null
+        }
+        Insert: {
+          asking_price?: number | null
+          asset_class?: string | null
+          borough?: string | null
+          cap_rate?: number | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          gross_sf?: number | null
+          id?: string | null
+          image_url?: string | null
+          is_active?: boolean | null
+          listing_agent_id?: string | null
+          neighborhood?: string | null
+          om_url?: string | null
+          property_address?: string | null
+          units?: number | null
+          updated_at?: string | null
+          year_built?: number | null
+        }
+        Update: {
+          asking_price?: number | null
+          asset_class?: string | null
+          borough?: string | null
+          cap_rate?: number | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          gross_sf?: number | null
+          id?: string | null
+          image_url?: string | null
+          is_active?: boolean | null
+          listing_agent_id?: string | null
+          neighborhood?: string | null
+          om_url?: string | null
+          property_address?: string | null
+          units?: number | null
+          updated_at?: string | null
+          year_built?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investment_listings_listing_agent_id_fkey"
+            columns: ["listing_agent_id"]
+            isOneToOne: false
+            referencedRelation: "team_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "investment_listings_listing_agent_id_fkey"
+            columns: ["listing_agent_id"]
+            isOneToOne: false
+            referencedRelation: "team_members_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       team_members_public: {
         Row: {
           bio: string | null
