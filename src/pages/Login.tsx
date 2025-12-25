@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
-import { Lock, Loader2 } from "lucide-react";
-
-const ADMIN_EMAIL = "office@bridgenyre.com";
+import { Lock, Loader2, Mail } from "lucide-react";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
@@ -39,10 +39,10 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!password) {
+    if (!email || !password) {
       toast({
         title: "Error",
-        description: "Please enter the password",
+        description: "Please enter your email and password",
         variant: "destructive",
       });
       return;
@@ -52,40 +52,17 @@ const Login = () => {
 
     try {
       const { error } = await supabase.auth.signInWithPassword({
-        email: ADMIN_EMAIL,
+        email: email.trim().toLowerCase(),
         password: password,
       });
 
       if (error) {
-        if (error.message.includes("Invalid login credentials")) {
-          // Try to create account if it doesn't exist
-          const { error: signUpError } = await supabase.auth.signUp({
-            email: ADMIN_EMAIL,
-            password: password,
-            options: {
-              emailRedirectTo: `${window.location.origin}/portal`,
-            }
-          });
-
-          if (signUpError) {
-            throw signUpError;
-          }
-
-          // Try to sign in again
-          const { error: signInError } = await supabase.auth.signInWithPassword({
-            email: ADMIN_EMAIL,
-            password: password,
-          });
-
-          if (signInError) throw signInError;
-        } else {
-          throw error;
-        }
+        throw error;
       }
 
       toast({
-        title: "Welcome",
-        description: "Access granted",
+        title: "Welcome back",
+        description: "Successfully signed in",
       });
 
       navigate("/portal", { replace: true });
@@ -93,7 +70,9 @@ const Login = () => {
       console.error("Auth error:", error);
       toast({
         title: "Access Denied",
-        description: "Invalid password",
+        description: error.message === "Invalid login credentials" 
+          ? "Invalid email or password" 
+          : error.message,
         variant: "destructive",
       });
     } finally {
@@ -134,33 +113,60 @@ const Login = () => {
               Agent Portal
             </h1>
             <p className="text-sm text-muted-foreground font-light">
-              Enter password to access
+              Sign in with your Bridge credentials
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <Input
-              type="password"
-              placeholder="Enter password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={isLoading}
-              autoFocus
-              className="text-center text-lg tracking-wider h-12 bg-white/5 border-white/10 focus:border-white/20"
-            />
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm font-light text-muted-foreground">
+                Email
+              </Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="your.name@bridgenyre.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={isLoading}
+                  autoFocus
+                  className="pl-10 h-12 bg-white/5 border-white/10 focus:border-white/20"
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-sm font-light text-muted-foreground">
+                Password
+              </Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={isLoading}
+                  className="pl-10 h-12 bg-white/5 border-white/10 focus:border-white/20"
+                />
+              </div>
+            </div>
             
             <Button
               type="submit"
-              className="w-full h-12 font-light text-base"
+              className="w-full h-12 font-light text-base mt-6"
               disabled={isLoading}
             >
               {isLoading ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Verifying...
+                  Signing in...
                 </>
               ) : (
-                "Access Portal"
+                "Sign In"
               )}
             </Button>
           </form>
