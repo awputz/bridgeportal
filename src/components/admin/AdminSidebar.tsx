@@ -1,4 +1,4 @@
-import { Users, DollarSign, LogOut, Settings, MapPin, Link2, Layers, Wrench, FileText } from "lucide-react";
+import { Users, DollarSign, LogOut, Settings, MapPin, Link2, Layers, Wrench, FileText, Home, Building2 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,6 +16,7 @@ import {
 import { toast } from "@/hooks/use-toast";
 
 const menuItems = [
+  { title: "Dashboard", url: "/admin", icon: Home, exact: true },
   { title: "Team", url: "/admin/team", icon: Users },
   { title: "Closed Deals", url: "/admin/transactions", icon: DollarSign },
 ];
@@ -56,8 +57,8 @@ export function AdminSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => {
-                const isActive = item.url === "/admin" 
-                  ? currentPath === "/admin" 
+                const isActive = item.exact 
+                  ? currentPath === item.url 
                   : currentPath.startsWith(item.url);
                 
                 return (
@@ -65,7 +66,7 @@ export function AdminSidebar() {
                     <SidebarMenuButton asChild isActive={isActive}>
                       <NavLink 
                         to={item.url} 
-                        end={item.url === "/admin"}
+                        end={item.exact}
                         className="flex items-center gap-3"
                       >
                         <item.icon className="h-4 w-4" />
@@ -103,6 +104,14 @@ export function AdminSidebar() {
         <SidebarGroup className="mt-auto">
           <SidebarGroupContent>
             <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/portal" className="flex items-center gap-3">
+                    <Building2 className="h-4 w-4" />
+                    {open && <span>Agent Portal</span>}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton onClick={handleLogout} className="flex items-center gap-3">
                   <LogOut className="h-4 w-4" />

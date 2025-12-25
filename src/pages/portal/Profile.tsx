@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { User, Mail, Phone, Lock, Save, TrendingUp, DollarSign, Building2, Calendar, FileText, ExternalLink } from "lucide-react";
+import { User, Mail, Phone, Lock, Save, TrendingUp, DollarSign, Building2, Calendar, FileText, ExternalLink, Home } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -492,8 +492,55 @@ const Profile = () => {
             </Card>
           </div>
 
-          {/* Sidebar - Earnings by Division */}
+          {/* Sidebar - Exclusives + Earnings */}
           <div className="space-y-6">
+            {/* My Exclusives Section */}
+            <Card className="glass-card border-white/10">
+              <CardHeader>
+                <CardTitle className="font-light text-sm flex items-center gap-2">
+                  <Building2 className="h-4 w-4" />
+                  My Exclusives
+                </CardTitle>
+                <CardDescription className="text-xs">
+                  View your current exclusive listings
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <a
+                  href="https://streeteasy.com/profile/957575-bridge-advisory-group?tab_profile=active_listings"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-3 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-lg transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <Home className="h-4 w-4 text-emerald-400" />
+                    <span className="text-sm text-foreground">Residential</span>
+                  </div>
+                  <ExternalLink className="h-3 w-3 text-muted-foreground" />
+                </a>
+                <Link
+                  to="/commercial-listings"
+                  className="flex items-center justify-between p-3 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <Building2 className="h-4 w-4 text-blue-400" />
+                    <span className="text-sm text-foreground">Commercial</span>
+                  </div>
+                  <ExternalLink className="h-3 w-3 text-muted-foreground" />
+                </Link>
+                <Link
+                  to="/services/investment-sales/listings"
+                  className="flex items-center justify-between p-3 bg-purple-500/10 hover:bg-purple-500/20 rounded-lg transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <TrendingUp className="h-4 w-4 text-purple-400" />
+                    <span className="text-sm text-foreground">Investment Sales</span>
+                  </div>
+                  <ExternalLink className="h-3 w-3 text-muted-foreground" />
+                </Link>
+              </CardContent>
+            </Card>
+
             {commissions.byDivision.length > 0 && (
               <Card className="glass-card border-white/10">
                 <CardHeader>
