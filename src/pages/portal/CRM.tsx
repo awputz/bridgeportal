@@ -10,6 +10,7 @@ import {
   Briefcase
 } from "lucide-react";
 import { useCRMContacts, useCRMDeals, useDealStages, useCreateContact, useDeleteContact, useUpdateDeal, CRMContact } from "@/hooks/useCRM";
+import { useCRMRealtime } from "@/hooks/useCRMRealtime";
 import { useDivision } from "@/contexts/DivisionContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -71,6 +72,9 @@ const CRM = () => {
   const createContact = useCreateContact();
   const deleteContact = useDeleteContact();
   const updateDeal = useUpdateDeal();
+
+  // Subscribe to real-time CRM updates
+  useCRMRealtime(division);
 
   // Filter contacts by search
   const filteredContacts = useMemo(() => {

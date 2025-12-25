@@ -191,10 +191,25 @@ const LeaderboardTable = ({
       )}
 
       {sortedData.length === 0 && (
-        <div className="text-center py-12 text-muted-foreground">
-          <Trophy className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <p>No data available for this period</p>
-          <p className="text-sm mt-1">Start closing deals to appear on the leaderboard!</p>
+        <div className="text-center py-16 glass-card">
+          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-500/20 to-amber-500/10 flex items-center justify-center mx-auto mb-6">
+            <Trophy className="h-8 w-8 text-yellow-400/60" />
+          </div>
+          <h3 className="text-xl font-light text-foreground mb-2">
+            No rankings available yet
+          </h3>
+          <p className="text-muted-foreground max-w-md mx-auto mb-6">
+            The leaderboard populates as agents close deals and track their activities. 
+            Start adding deals to the CRM to see your name here!
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="/portal/crm" className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">
+              Open CRM
+            </a>
+            <a href="/portal/crm/deals/new" className="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-border hover:bg-card transition-colors text-foreground">
+              Create First Deal
+            </a>
+          </div>
         </div>
       )}
     </div>
