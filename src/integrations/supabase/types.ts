@@ -47,6 +47,45 @@ export type Database = {
         }
         Relationships: []
       }
+      agent_templates: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          division: string
+          file_type: string | null
+          file_url: string
+          id: string
+          is_active: boolean | null
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          division: string
+          file_type?: string | null
+          file_url: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          division?: string
+          file_type?: string | null
+          file_url?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       bridge_buildings: {
         Row: {
           address: string
@@ -598,6 +637,39 @@ export type Database = {
           registered_at?: string
           user_type?: string
           working_with?: string | null
+        }
+        Relationships: []
+      }
+      external_tools: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          icon: string
+          id: string
+          is_active: boolean | null
+          name: string
+          url: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          icon: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          url: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          icon?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          url?: string
         }
         Relationships: []
       }

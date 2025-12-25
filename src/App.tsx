@@ -4,227 +4,71 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import { Navigation } from "@/components/Navigation";
-import { Footer } from "@/components/Footer";
-import { ScrollToTop } from "@/components/ScrollToTop";
-import { PageTransition } from "@/components/PageTransition";
-import { FloatingBackToTop } from "@/components/FloatingBackToTop";
-import { ScrollProgressBar } from "@/components/ScrollProgressBar";
 
 import { AdminLayout } from "@/components/admin/AdminLayout";
-import { ContactSheetProvider } from "@/contexts/ContactSheetContext";
+import { PortalLayout } from "@/components/portal/PortalLayout";
+
 // Pages
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Team from "./pages/Team";
-import MarketInsights from "./pages/MarketInsights";
-import Research from "./pages/Research";
-import Contact from "./pages/Contact";
-import Transactions from "./pages/Transactions";
-import Auth from "./pages/Auth";
+import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
+
+// Portal Pages
+import Dashboard from "./pages/portal/Dashboard";
+import Templates from "./pages/portal/Templates";
+import TemplateCategory from "./pages/portal/TemplateCategory";
+import Tools from "./pages/portal/Tools";
+
+// Admin Pages
 import TeamAdmin from "./pages/admin/TeamAdmin";
 import TransactionsAdmin from "./pages/admin/TransactionsAdmin";
-
 import SettingsAdmin from "./pages/admin/SettingsAdmin";
 import ServicesAdmin from "./pages/admin/ServicesAdmin";
 import MarketsAdmin from "./pages/admin/MarketsAdmin";
 import ListingLinksAdmin from "./pages/admin/ListingLinksAdmin";
-import NotFound from "./pages/NotFound";
-import FAQ from "./pages/FAQ";
-import Careers from "./pages/Careers";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import TermsOfService from "./pages/TermsOfService";
-
-// Service Pages
-import ResidentialServices from "./pages/services/Residential";
-import CommercialLeasing from "./pages/services/CommercialLeasing";
-import InvestmentSales from "./pages/services/InvestmentSales";
-import CapitalAdvisory from "./pages/services/CapitalAdvisory";
-import PropertyManagement from "./pages/services/PropertyManagement";
-import Marketing from "./pages/services/Marketing";
-import Billboard from "./pages/services/Billboard";
-import MarketsComingSoon from "./pages/MarketsComingSoon";
-
-// Service Sub-Pages
-import ResidentialFindAHome from "./pages/services/residential/FindAHome";
-import ResidentialTransactions from "./pages/services/residential/Transactions";
-import ResidentialLandlords from "./pages/services/residential/Landlords";
-import ResidentialSellers from "./pages/services/residential/Sellers";
-import ResidentialBuildings from "./pages/services/residential/Buildings";
-import RenterResources from "./pages/services/residential/RenterResources";
-import ResidentialTools from "./pages/services/residential/Tools";
-
-import InvestmentValuations from "./pages/services/investment-sales/Valuations";
-import InvestmentListings from "./pages/services/investment-sales/Listings";
-import InvestmentDealRoom from "./pages/services/investment-sales/DealRoom";
-import InvestmentSalesTools from "./pages/services/investment-sales/Tools";
-
-import CommercialLeasingTools from "./pages/services/commercial-leasing/Tools";
-import CommercialListings from "./pages/CommercialListings";
-
-import PropertyManagementTools from "./pages/services/property-management/Tools";
-import CapitalAdvisoryTools from "./pages/services/capital-advisory/Tools";
 
 const queryClient = new QueryClient();
 
 const App = () => {
   return (
     <HelmetProvider>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <ContactSheetProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-          <ScrollToTop />
-          <ScrollProgressBar />
-          <Routes>
-            {/* Auth Route */}
-            <Route path="/auth" element={<Auth />} />
-            
-            {/* Admin Routes */}
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<Navigate to="/admin/team" replace />} />
-              <Route path="team" element={<TeamAdmin />} />
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <Routes>
+              {/* Root redirects to portal */}
+              <Route path="/" element={<Navigate to="/portal" replace />} />
               
-              <Route path="transactions" element={<TransactionsAdmin />} />
-              <Route path="settings" element={<SettingsAdmin />} />
-              <Route path="services" element={<ServicesAdmin />} />
-              <Route path="markets" element={<MarketsAdmin />} />
-              <Route path="listing-links" element={<ListingLinksAdmin />} />
-            </Route>
+              {/* Login */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/auth" element={<Navigate to="/login" replace />} />
+              
+              {/* Portal Routes (Protected) */}
+              <Route path="/portal" element={<PortalLayout />}>
+                <Route index element={<Dashboard />} />
+                <Route path="templates" element={<Templates />} />
+                <Route path="templates/:division" element={<TemplateCategory />} />
+                <Route path="tools" element={<Tools />} />
+              </Route>
+              
+              {/* Admin Routes */}
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<Navigate to="/admin/team" replace />} />
+                <Route path="team" element={<TeamAdmin />} />
+                <Route path="transactions" element={<TransactionsAdmin />} />
+                <Route path="settings" element={<SettingsAdmin />} />
+                <Route path="services" element={<ServicesAdmin />} />
+                <Route path="markets" element={<MarketsAdmin />} />
+                <Route path="listing-links" element={<ListingLinksAdmin />} />
+              </Route>
 
-            {/* Public Routes */}
-            <Route path="*" element={
-              <>
-                <Navigation />
-                <PageTransition>
-                  <Routes>
-                    {/* Home */}
-                    <Route path="/" element={<Home />} />
-                    
-                    {/* Main Pages */}
-                    <Route path="/about" element={<About />} />
-                    <Route path="/team" element={<Team />} />
-                    <Route path="/insights" element={<MarketInsights />} />
-                    <Route path="/research" element={<Research />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/faq" element={<FAQ />} />
-                    <Route path="/careers" element={<Careers />} />
-                    <Route path="/privacy" element={<PrivacyPolicy />} />
-                    <Route path="/terms" element={<TermsOfService />} />
-                    
-                    {/* Service Pages - Main */}
-                    <Route path="/services/residential" element={<ResidentialServices />} />
-                    <Route path="/services/commercial-leasing" element={<CommercialLeasing />} />
-                    <Route path="/services/investment-sales" element={<InvestmentSales />} />
-                    <Route path="/services/capital-advisory" element={<CapitalAdvisory />} />
-                    <Route path="/services/property-management" element={<PropertyManagement />} />
-                    <Route path="/services/marketing" element={<Marketing />} />
-                    <Route path="/services/billboard" element={<Billboard />} />
-                    
-                    {/* Residential Sub-Pages */}
-                    <Route path="/services/residential/landlords" element={<ResidentialLandlords />} />
-                    <Route path="/services/residential/sellers" element={<ResidentialSellers />} />
-                    <Route path="/services/residential/find-a-home" element={<ResidentialFindAHome />} />
-                    <Route path="/services/residential/transactions" element={<ResidentialTransactions />} />
-                    <Route path="/services/residential/renter-resources" element={<RenterResources />} />
-                    <Route path="/services/residential/tools" element={<ResidentialTools />} />
-                    {/* Residential redirects (consolidated pages) */}
-                    <Route path="/services/residential/landlord-services" element={<Navigate to="/services/residential/landlords" replace />} />
-                    <Route path="/services/residential/buildings" element={<ResidentialBuildings />} />
-                    <Route path="/services/residential/resources" element={<Navigate to="/services/residential/renter-resources" replace />} />
-                    <Route path="/services/residential/rentals" element={<Navigate to="/services/residential/find-a-home" replace />} />
-                    <Route path="/services/residential/sales" element={<Navigate to="/services/residential/sellers" replace />} />
-                    <Route path="/services/residential/listings" element={<Navigate to="/services/residential/find-a-home" replace />} />
-                    <Route path="/services/residential/markets" element={<Navigate to="/services/residential" replace />} />
-                    
-                    {/* Investment Sales Sub-Pages (kept) */}
-                    <Route path="/services/investment-sales/valuations" element={<InvestmentValuations />} />
-                    <Route path="/services/investment-sales/listings" element={<InvestmentListings />} />
-                    <Route path="/services/investment-sales/deal-room/:listingId" element={<InvestmentDealRoom />} />
-                    <Route path="/services/investment-sales/tools" element={<InvestmentSalesTools />} />
-                    <Route path="/services/investment-sales/track-record" element={<Navigate to="/transactions" replace />} />
-                    {/* Investment Sales redirects (consolidated pages) */}
-                    <Route path="/services/investment-sales/acquisitions" element={<Navigate to="/services/investment-sales" replace />} />
-                    <Route path="/services/investment-sales/dispositions" element={<Navigate to="/services/investment-sales" replace />} />
-                    
-                    {/* Commercial Listings - Standalone */}
-                    <Route path="/commercial-listings" element={<CommercialListings />} />
-                    
-                    {/* Commercial Leasing Sub-Pages */}
-                    <Route path="/services/commercial-leasing/tools" element={<CommercialLeasingTools />} />
-                    {/* Redirect old tenant/landlord rep pages to overview */}
-                    <Route path="/services/commercial-leasing/tenant-rep" element={<Navigate to="/services/commercial-leasing" replace />} />
-                    <Route path="/services/commercial-leasing/landlord-rep" element={<Navigate to="/services/commercial-leasing" replace />} />
-                    {/* Commercial Leasing redirects (consolidated pages) */}
-                    <Route path="/services/commercial-leasing/listings" element={<Navigate to="/commercial-listings" replace />} />
-                    <Route path="/services/commercial-leasing/retail" element={<Navigate to="/services/commercial-leasing" replace />} />
-                    <Route path="/services/commercial-leasing/office" element={<Navigate to="/services/commercial-leasing" replace />} />
-                    
-                    {/* Capital Advisory Sub-Pages */}
-                    <Route path="/services/capital-advisory/tools" element={<CapitalAdvisoryTools />} />
-                    {/* Capital Advisory redirects */}
-                    <Route path="/services/capital-advisory/debt-financing" element={<Navigate to="/services/capital-advisory" replace />} />
-                    <Route path="/services/capital-advisory/equity-jv" element={<Navigate to="/services/capital-advisory" replace />} />
-                    <Route path="/services/capital-advisory/debt" element={<Navigate to="/services/capital-advisory" replace />} />
-                    <Route path="/services/capital-advisory/equity" element={<Navigate to="/services/capital-advisory" replace />} />
-                    <Route path="/services/capital-advisory/refinance" element={<Navigate to="/services/capital-advisory" replace />} />
-                    <Route path="/services/capital-advisory/construction" element={<Navigate to="/services/capital-advisory" replace />} />
-                    
-                    {/* Property Management - Sub-pages and redirects */}
-                    <Route path="/services/property-management/tools" element={<PropertyManagementTools />} />
-                    <Route path="/services/property-management/portfolio" element={<Navigate to="/services/property-management" replace />} />
-                    <Route path="/services/property-management/services" element={<Navigate to="/services/property-management" replace />} />
-                    <Route path="/services/property-management/reporting" element={<Navigate to="/services/property-management" replace />} />
-                    
-                    {/* Marketing - All sub-pages redirect to main overview */}
-                    <Route path="/services/marketing/creative-studio" element={<Navigate to="/services/marketing" replace />} />
-                    <Route path="/services/marketing/digital-campaigns" element={<Navigate to="/services/marketing" replace />} />
-                    <Route path="/services/marketing/creative" element={<Navigate to="/services/marketing" replace />} />
-                    <Route path="/services/marketing/digital" element={<Navigate to="/services/marketing" replace />} />
-                    <Route path="/services/marketing/strategy" element={<Navigate to="/services/marketing" replace />} />
-                    
-                    {/* Billboard - All sub-pages redirect to main overview */}
-                    <Route path="/services/billboard/inventory" element={<Navigate to="/services/billboard" replace />} />
-                    <Route path="/services/billboard/rates" element={<Navigate to="/services/billboard" replace />} />
-                    <Route path="/services/billboard/pricing" element={<Navigate to="/services/billboard" replace />} />
-                    <Route path="/services/billboard/case-studies" element={<Navigate to="/services/billboard" replace />} />
-                    
-                    {/* Transactions */}
-                    <Route path="/track-record" element={<Navigate to="/transactions" replace />} />
-                    <Route path="/transactions" element={<Transactions />} />
-                    
-                    {/* Markets Coming Soon */}
-                    <Route path="/markets-coming-soon" element={<MarketsComingSoon />} />
-                    
-                    {/* Legacy routes - redirect to new structure */}
-                    <Route path="/commercial" element={<Navigate to="/services/investment-sales" replace />} />
-                    <Route path="/commercial/*" element={<Navigate to="/services/investment-sales" replace />} />
-                    <Route path="/residential" element={<Navigate to="/services/residential" replace />} />
-                    <Route path="/residential/*" element={<Navigate to="/services/residential" replace />} />
-                    <Route path="/capital-markets" element={<Navigate to="/services/capital-advisory" replace />} />
-                    <Route path="/approach" element={<Navigate to="/about" replace />} />
-                    <Route path="/services" element={<Navigate to="/" replace />} />
-                    <Route path="/markets" element={<Navigate to="/markets-coming-soon" replace />} />
-                    <Route path="/market-insights" element={<Navigate to="/insights" replace />} />
-                    <Route path="/submit-deal" element={<Navigate to="/contact" replace />} />
-                    <Route path="/listings" element={<Navigate to="/services/investment-sales/listings" replace />} />
-                    
-                    {/* 404 */}
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </PageTransition>
-                <Footer />
-                <FloatingBackToTop />
-                
-              </>
-            } />
-          </Routes>
-        </BrowserRouter>
-        </ContactSheetProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+              {/* 404 */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
     </HelmetProvider>
   );
 };
