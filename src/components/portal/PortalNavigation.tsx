@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, LayoutDashboard, FileText, Wrench, LogOut, Settings, Users, Sparkles, Calculator, Briefcase, Wand2, User, ChevronDown, ListTodo, FolderOpen, Send, Building2, Heart, Target, Globe, Headphones, Bell } from "lucide-react";
+import { Menu, X, LayoutDashboard, FileText, Wrench, LogOut, Settings, Users, Sparkles, Calculator, Briefcase, Wand2, User, ChevronDown, ListTodo, FolderOpen, Send, Building2, Heart, Target, Globe, Headphones, Bell, StickyNote } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { 
@@ -20,7 +20,6 @@ const coreNavItems = [
   { name: "Dashboard", path: "/portal", icon: LayoutDashboard },
   { name: "CRM", path: "/portal/crm", icon: Briefcase },
   { name: "Tasks", path: "/portal/tasks", icon: ListTodo },
-  { name: "Directory", path: "/portal/directory", icon: Users },
 ];
 
 // Company pages dropdown
@@ -31,6 +30,7 @@ const companyItems = [
   { name: "Expectations", path: "/portal/company/expectations", icon: Users, description: "Agent standards" },
   { name: "Expansion", path: "/portal/company/expansion", icon: Globe, description: "Future markets" },
   { name: "Contact", path: "/portal/company/contact", icon: Headphones, description: "Get support" },
+  { name: "Directory", path: "/portal/directory", icon: Users, description: "Team directory" },
   { name: "Announcements", path: "/portal/announcements", icon: Bell, description: "Company news" },
 ];
 
@@ -42,6 +42,7 @@ const productivityItems = [
   { name: "Tools", path: "/portal/tools", icon: Wrench, description: "External resources" },
   { name: "Resources", path: "/portal/resources", icon: FolderOpen, description: "Legal & HR documents" },
   { name: "Requests", path: "/portal/requests", icon: Send, description: "Business cards, marketing, BOV" },
+  { name: "Notes", path: "/portal/notes", icon: StickyNote, description: "Personal sticky notes" },
 ];
 
 // All nav items for mobile

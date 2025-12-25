@@ -1,4 +1,4 @@
-import { Users, DollarSign, LogOut, Settings, MapPin, Link2, Layers, Wrench, FileText, Home, Building2 } from "lucide-react";
+import { Users, DollarSign, LogOut, Settings, MapPin, Link2, Layers, Wrench, FileText, Home, Building2, Bell, Mail, FolderOpen } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,6 +20,8 @@ const menuItems = [
   { title: "Team", url: "/admin/team", icon: Users },
   { title: "Listings", url: "/admin/listings", icon: Building2 },
   { title: "Closed Deals", url: "/admin/transactions", icon: DollarSign },
+  { title: "Announcements", url: "/admin/announcements", icon: Bell },
+  { title: "Inquiries", url: "/admin/inquiries", icon: Mail },
 ];
 
 const cmsItems = [
@@ -29,6 +31,7 @@ const cmsItems = [
   { title: "Listing Links", url: "/admin/listing-links", icon: Link2 },
   { title: "Tools", url: "/admin/tools", icon: Wrench },
   { title: "Templates", url: "/admin/templates", icon: FileText },
+  { title: "Resources", url: "/admin/resources", icon: FolderOpen },
 ];
 
 export function AdminSidebar() {
