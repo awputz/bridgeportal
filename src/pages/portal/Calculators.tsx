@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calculator, TrendingUp, Building2, Home, DollarSign, Percent, BarChart3, PiggyBank, Receipt, Users, FileText } from "lucide-react";
+import { Calculator, TrendingUp, Building2, Home, DollarSign, Percent, BarChart3, PiggyBank, Receipt, Users, FileText, Landmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InvestmentCalculator } from "@/components/InvestmentCalculator";
@@ -11,12 +11,27 @@ import { RentVsBuyCalculator } from "@/components/RentVsBuyCalculator";
 import { RentOptimizationCalculator } from "@/components/RentOptimizationCalculator";
 import { GRMCalculator } from "@/components/calculators/GRMCalculator";
 import { DSCRCalculator } from "@/components/calculators/DSCRCalculator";
-import { CommissionCalculator } from "@/components/calculators/CommissionCalculator";
 import { TransferTaxCalculator } from "@/components/calculators/TransferTaxCalculator";
 import { RentAffordabilityCalculator } from "@/components/calculators/RentAffordabilityCalculator";
 import { TICalculator } from "@/components/calculators/TICalculator";
+import { InvestmentSalesCommissionCalculator } from "@/components/calculators/InvestmentSalesCommissionCalculator";
+import { CommercialLeasingCommissionCalculator } from "@/components/calculators/CommercialLeasingCommissionCalculator";
+import { ResidentialCommissionCalculator } from "@/components/calculators/ResidentialCommissionCalculator";
+import { CapitalAdvisoryCommissionCalculator } from "@/components/calculators/CapitalAdvisoryCommissionCalculator";
 
 const calculatorCategories = [
+  {
+    id: "commissions",
+    name: "Commissions",
+    icon: DollarSign,
+    description: "Calculate your commission earnings by division",
+    calculators: [
+      { id: "is-commission", name: "Investment Sales Commission", description: "Calculate commissions for property sales", icon: TrendingUp, component: InvestmentSalesCommissionCalculator },
+      { id: "cl-commission", name: "Commercial Leasing Commission", description: "Calculate commissions for commercial leases", icon: Building2, component: CommercialLeasingCommissionCalculator },
+      { id: "res-commission", name: "Residential Commission", description: "Calculate commissions for rentals and sales", icon: Home, component: ResidentialCommissionCalculator },
+      { id: "ca-commission", name: "Capital Advisory Commission", description: "Calculate commissions for debt/equity placements", icon: Landmark, component: CapitalAdvisoryCommissionCalculator },
+    ],
+  },
   {
     id: "investment-sales",
     name: "Investment Sales",
@@ -59,14 +74,13 @@ const calculatorCategories = [
     icon: Calculator,
     description: "Universal calculators for all divisions",
     calculators: [
-      { id: "commission", name: "Commission Calculator", description: "Calculate agent and house commission splits", icon: Users, component: CommissionCalculator },
       { id: "transfer-tax", name: "NYC Transfer Tax", description: "NYC/NYS transfer tax and mansion tax", icon: Receipt, component: TransferTaxCalculator },
     ],
   },
 ];
 
 const Calculators = () => {
-  const [activeCategory, setActiveCategory] = useState("investment-sales");
+  const [activeCategory, setActiveCategory] = useState("commissions");
   const [activeCalculator, setActiveCalculator] = useState<string | null>(null);
 
   const currentCategory = calculatorCategories.find(c => c.id === activeCategory);
@@ -83,7 +97,7 @@ const Calculators = () => {
             Calculator Suite
           </h1>
           <p className="text-muted-foreground font-light">
-            Professional tools for deal analysis and client presentations
+            Professional tools for deal analysis and commission calculations
           </p>
         </div>
 
@@ -91,7 +105,7 @@ const Calculators = () => {
         {activeCalculator && (
           <button
             onClick={() => setActiveCalculator(null)}
-            className="mb-6 text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
+            className="mb-6 text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2 cursor-pointer"
           >
             ← Back to calculators
           </button>
@@ -117,7 +131,7 @@ const Calculators = () => {
                         "flex items-center gap-2 px-4 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-foreground",
                         "text-muted-foreground data-[state=active]:text-foreground",
                         "bg-transparent data-[state=active]:bg-transparent",
-                        "transition-all duration-200"
+                        "transition-all duration-200 cursor-pointer"
                       )}
                     >
                       <Icon className="h-4 w-4" />
@@ -138,7 +152,7 @@ const Calculators = () => {
                         <button
                           key={calc.id}
                           onClick={() => setActiveCalculator(calc.id)}
-                          className="glass-card p-6 text-left group"
+                          className="glass-card p-6 text-left group cursor-pointer hover:border-white/20 transition-all"
                         >
                           <div className="flex items-start gap-4">
                             <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
