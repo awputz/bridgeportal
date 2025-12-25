@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
-import { Lock, Loader2, Mail, ArrowLeft } from "lucide-react";
+import { Lock, Loader2, Mail, ArrowLeft, LogOut, ArrowRight } from "lucide-react";
+import { User } from "@supabase/supabase-js";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,27 +16,39 @@ const Login = () => {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [isResetLoading, setIsResetLoading] = useState(false);
+  const [existingUser, setExistingUser] = useState<User | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        if (session) {
-          navigate("/portal", { replace: true });
+        if (session?.user) {
+          setExistingUser(session.user);
+        } else {
+          setExistingUser(null);
         }
         setIsCheckingSession(false);
       }
     );
 
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        navigate("/portal", { replace: true });
+      if (session?.user) {
+        setExistingUser(session.user);
       }
       setIsCheckingSession(false);
     });
 
     return () => subscription.unsubscribe();
   }, [navigate]);
+
+  const handleContinueToPortal = () => {
+    navigate("/portal", { replace: true });
+  };
+
+  const handleSwitchAccount = async () => {
+    await supabase.auth.signOut();
+    setExistingUser(null);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -136,6 +149,65 @@ const Login = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-foreground/60" />
+      </div>
+    );
+  }
+
+  // If user is already logged in, show options
+  if (existingUser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background px-4">
+        <div className="fixed inset-0 bg-gradient-to-b from-background via-background to-black/50 pointer-events-none" />
+        
+        <div className="relative z-10 w-full max-w-md">
+          <div className="flex justify-center mb-10">
+            <img 
+              src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" 
+              alt="Bridge Advisory Group" 
+              className="h-20 w-auto"
+            />
+          </div>
+
+          <div className="glass-panel-strong p-8 md:p-10">
+            <div className="text-center mb-8">
+              <div className="mx-auto w-14 h-14 rounded-full bg-white/5 flex items-center justify-center mb-4">
+                <Lock className="h-6 w-6 text-foreground/70" />
+              </div>
+              <h1 className="text-2xl font-extralight text-foreground mb-1">
+                Welcome Back
+              </h1>
+              <p className="text-sm text-muted-foreground font-light">
+                You're signed in as
+              </p>
+              <p className="text-foreground font-medium mt-1">
+                {existingUser.email}
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <Button
+                onClick={handleContinueToPortal}
+                className="w-full h-12 font-light text-base"
+              >
+                <ArrowRight className="h-4 w-4 mr-2" />
+                Continue to Portal
+              </Button>
+              
+              <Button
+                variant="outline"
+                onClick={handleSwitchAccount}
+                className="w-full h-12 font-light text-base"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Switch Account
+              </Button>
+            </div>
+          </div>
+
+          <p className="text-center text-xs text-muted-foreground/50 mt-8 font-light">
+            Bridge Advisory Group © {new Date().getFullYear()}
+          </p>
+        </div>
       </div>
     );
   }

@@ -21,6 +21,7 @@ const coreNavItems = [
   { name: "CRM", path: "/portal/crm", icon: Briefcase },
   { name: "Tasks", path: "/portal/tasks", icon: ListTodo },
   { name: "Analytics", path: "/portal/analytics", icon: BarChart3 },
+  { name: "Directory", path: "/portal/directory", icon: Users },
 ];
 
 // Productivity tools (grouped in dropdown)
