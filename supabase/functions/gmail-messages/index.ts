@@ -11,8 +11,9 @@ const GOOGLE_CLIENT_SECRET = Deno.env.get('GOOGLE_CLIENT_SECRET');
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
-async function refreshAccessToken(supabase: any, userId: string, refreshToken: string, isServiceToken: boolean) {
-  console.log('Refreshing Gmail access token for user:', userId);
+// Helper to refresh token
+async function refreshAccessToken(refreshToken: string) {
+  console.log('[gmail-messages] Refreshing access token...');
   
   const response = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
@@ -28,64 +29,105 @@ async function refreshAccessToken(supabase: any, userId: string, refreshToken: s
   const tokens = await response.json();
   
   if (tokens.error) {
-    console.error('Token refresh error:', tokens.error);
-    throw new Error(tokens.error_description || tokens.error);
+    console.error('[gmail-messages] Token refresh error:', tokens.error);
+    return { error: tokens.error_description || tokens.error };
   }
 
-  // Update the appropriate token column
-  const updateData = isServiceToken 
-    ? { gmail_access_token: tokens.access_token, updated_at: new Date().toISOString() }
-    : { access_token: tokens.access_token, updated_at: new Date().toISOString() };
-
-  await supabase
-    .from('user_google_tokens')
-    .update(updateData)
-    .eq('user_id', userId);
-
-  return tokens.access_token;
+  console.log('[gmail-messages] Token refresh successful');
+  return {
+    access_token: tokens.access_token,
+    expires_in: tokens.expires_in,
+  };
 }
 
-async function getValidAccessToken(supabase: any, userId: string) {
-  // Use maybeSingle to handle no rows gracefully
-  const { data: tokenData, error } = await supabase
-    .from('user_google_tokens')
-    .select('gmail_access_token, gmail_refresh_token, gmail_enabled, access_token, refresh_token')
-    .eq('user_id', userId)
-    .maybeSingle();
-
-  if (error) {
-    console.error('Token query error:', error);
-    throw new Error('Failed to fetch tokens');
+// Helper to ensure valid token (pre-emptive refresh)
+async function ensureValidToken(
+  supabase: any,
+  userId: string,
+  tokenData: any
+): Promise<{ accessToken: string | null; error: string | null; needsReconnection: boolean }> {
+  // Use service-specific token or fall back to unified token
+  let accessToken = tokenData?.gmail_access_token || tokenData?.access_token;
+  const refreshToken = tokenData?.gmail_refresh_token || tokenData?.refresh_token;
+  const tokenExpiry = tokenData?.token_expiry ? new Date(tokenData.token_expiry) : null;
+  
+  if (!accessToken && !refreshToken) {
+    return { accessToken: null, error: 'Gmail not connected', needsReconnection: true };
   }
-
-  if (!tokenData) {
-    throw new Error('Gmail not connected');
+  
+  // Check if token is expired or will expire in next 5 minutes
+  const now = new Date();
+  const bufferMs = 5 * 60 * 1000; // 5 minutes buffer
+  const isExpired = tokenExpiry && (tokenExpiry.getTime() - now.getTime()) < bufferMs;
+  
+  if (isExpired && refreshToken) {
+    console.log('[gmail-messages] Token expired or expiring soon, refreshing...');
+    
+    const refreshResult = await refreshAccessToken(refreshToken);
+    
+    if (refreshResult.error) {
+      return { accessToken: null, error: 'Token expired. Please reconnect Gmail.', needsReconnection: true };
+    }
+    
+    accessToken = refreshResult.access_token;
+    
+    // Update token in database
+    const newExpiry = new Date();
+    newExpiry.setSeconds(newExpiry.getSeconds() + refreshResult.expires_in);
+    
+    const updateData: Record<string, any> = {
+      token_expiry: newExpiry.toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    
+    // Update the appropriate token column
+    if (tokenData?.gmail_access_token) {
+      updateData.gmail_access_token = accessToken;
+    } else {
+      updateData.access_token = accessToken;
+    }
+    
+    await supabase
+      .from('user_google_tokens')
+      .update(updateData)
+      .eq('user_id', userId);
+    
+    console.log('[gmail-messages] Token updated in database');
   }
-
-  // Determine which token to use (service-specific or unified)
-  const useServiceToken = !!tokenData.gmail_access_token;
-  let accessToken = tokenData.gmail_access_token || tokenData.access_token;
-  const refreshToken = tokenData.gmail_refresh_token || tokenData.refresh_token;
-
+  
+  // If we still don't have an access token but have refresh, try immediate refresh
+  if (!accessToken && refreshToken) {
+    const refreshResult = await refreshAccessToken(refreshToken);
+    
+    if (refreshResult.error) {
+      return { accessToken: null, error: 'Failed to get access token. Please reconnect Gmail.', needsReconnection: true };
+    }
+    
+    accessToken = refreshResult.access_token;
+    
+    const newExpiry = new Date();
+    newExpiry.setSeconds(newExpiry.getSeconds() + refreshResult.expires_in);
+    
+    const updateData: Record<string, any> = {
+      token_expiry: newExpiry.toISOString(),
+    };
+    if (tokenData?.gmail_access_token !== undefined) {
+      updateData.gmail_access_token = accessToken;
+    } else {
+      updateData.access_token = accessToken;
+    }
+    
+    await supabase
+      .from('user_google_tokens')
+      .update(updateData)
+      .eq('user_id', userId);
+  }
+  
   if (!accessToken) {
-    throw new Error('Gmail not connected');
+    return { accessToken: null, error: 'No access token available', needsReconnection: true };
   }
-
-  // Try the current access token first
-  const testResponse = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/profile', {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
-
-  if (testResponse.ok) {
-    return accessToken;
-  }
-
-  // Token expired, refresh it
-  if (refreshToken) {
-    return await refreshAccessToken(supabase, userId, refreshToken, useServiceToken);
-  }
-
-  throw new Error('Gmail access token expired and no refresh token available');
+  
+  return { accessToken, error: null, needsReconnection: false };
 }
 
 function parseEmailAddress(header: string): { name: string; email: string } {
@@ -160,20 +202,99 @@ serve(async (req) => {
     
     console.log("[gmail-messages] User authenticated:", user.id);
 
-    const { action, messageId, query, pageToken, labelIds, maxResults = 20 } = await req.json();
+    const body = await req.json();
+    const { action, messageId, query, pageToken, labelIds, maxResults = 20 } = body;
+    console.log("[gmail-messages] Action:", action);
+
+    // Get user's tokens
+    const { data: tokenData, error: tokenError } = await supabase
+      .from('user_google_tokens')
+      .select('gmail_access_token, gmail_refresh_token, gmail_enabled, access_token, refresh_token, token_expiry')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (tokenError) {
+      console.error("[gmail-messages] Token query error:", tokenError);
+    }
+
+    console.log("[gmail-messages] Token data found:", !!tokenData, "gmail_enabled:", tokenData?.gmail_enabled);
+
+    // Handle check-connection action
+    if (action === 'check-connection') {
+      if (!tokenData) {
+        return new Response(
+          JSON.stringify({ connected: false, reason: 'no_tokens' }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
+      // Validate token by attempting refresh if expired
+      const tokenResult = await ensureValidToken(supabase, user.id, tokenData);
+      
+      if (tokenResult.needsReconnection) {
+        return new Response(
+          JSON.stringify({ connected: false, reason: 'token_expired', message: tokenResult.error }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
+      return new Response(
+        JSON.stringify({ connected: true, gmail_enabled: tokenData.gmail_enabled }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Ensure valid token
+    const tokenResult = await ensureValidToken(supabase, user.id, tokenData);
     
-    let accessToken;
-    try {
-      accessToken = await getValidAccessToken(supabase, user.id);
-    } catch (tokenError: any) {
-      return new Response(JSON.stringify({ error: tokenError.message, needsConnection: true }), {
+    if (tokenResult.error) {
+      return new Response(JSON.stringify({ error: tokenResult.error, needsConnection: tokenResult.needsReconnection }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+    
+    let accessToken = tokenResult.accessToken!;
+
+    // Helper to retry with fresh token on 401
+    async function fetchWithRetry(url: string, options: RequestInit) {
+      let response = await fetch(url, options);
+      
+      if (response.status === 401) {
+        console.log('[gmail-messages] Got 401, attempting token refresh...');
+        const refreshToken = tokenData?.gmail_refresh_token || tokenData?.refresh_token;
+        
+        if (refreshToken) {
+          const refreshResult = await refreshAccessToken(refreshToken);
+          
+          if (refreshResult.access_token) {
+            accessToken = refreshResult.access_token;
+            
+            // Update token in DB
+            const newExpiry = new Date();
+            newExpiry.setSeconds(newExpiry.getSeconds() + refreshResult.expires_in);
+            
+            const updateData: Record<string, any> = { token_expiry: newExpiry.toISOString() };
+            if (tokenData?.gmail_access_token) {
+              updateData.gmail_access_token = accessToken;
+            } else {
+              updateData.access_token = accessToken;
+            }
+            await supabase.from('user_google_tokens').update(updateData).eq('user_id', user!.id);
+            
+            // Retry request
+            response = await fetch(url, {
+              ...options,
+              headers: { ...options.headers, Authorization: `Bearer ${accessToken}` },
+            });
+          }
+        }
+      }
+      
+      return response;
+    }
 
     if (action === 'list') {
-      // List messages from inbox
       const params = new URLSearchParams({
         maxResults: maxResults.toString(),
       });
@@ -184,7 +305,7 @@ serve(async (req) => {
         labelIds.forEach((id: string) => params.append('labelIds', id));
       }
 
-      const listResponse = await fetch(
+      const listResponse = await fetchWithRetry(
         `https://gmail.googleapis.com/gmail/v1/users/me/messages?${params}`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
@@ -192,7 +313,20 @@ serve(async (req) => {
       const listData = await listResponse.json();
       
       if (listData.error) {
-        console.error('Gmail list error:', listData.error);
+        console.error('[gmail-messages] Gmail list error:', listData.error);
+        
+        const status = listResponse.status;
+        if (status === 401 || status === 403) {
+          return new Response(JSON.stringify({ 
+            error: status === 403 ? 'Insufficient permissions. Please reconnect.' : 'Token expired. Please reconnect.',
+            needsConnection: true,
+            errorCode: status === 403 ? 'INSUFFICIENT_PERMISSIONS' : 'TOKEN_EXPIRED'
+          }), {
+            status,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+        
         return new Response(JSON.stringify({ error: listData.error.message }), {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -230,7 +364,7 @@ serve(async (req) => {
         })
       );
 
-      console.log(`Listed ${messages.length} Gmail messages for user:`, user.id);
+      console.log(`[gmail-messages] Listed ${messages.length} messages`);
 
       return new Response(JSON.stringify({
         messages,
@@ -242,8 +376,7 @@ serve(async (req) => {
     }
 
     if (action === 'get') {
-      // Get full message details
-      const msgResponse = await fetch(
+      const msgResponse = await fetchWithRetry(
         `https://gmail.googleapis.com/gmail/v1/users/me/messages/${messageId}?format=full`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
@@ -251,8 +384,8 @@ serve(async (req) => {
       const msgData = await msgResponse.json();
       
       if (msgData.error) {
-        console.error('Gmail get error:', msgData.error);
-        return new Response(JSON.stringify({ error: msgData.error.message }), {
+        console.error('[gmail-messages] Gmail get error:', msgData.error);
+        return new Response(JSON.stringify({ error: msgData.error.message, needsConnection: msgResponse.status === 401 }), {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
@@ -263,7 +396,6 @@ serve(async (req) => {
       const fromParsed = parseEmailAddress(getHeader('From'));
       const body = extractBody(msgData.payload);
 
-      // Get attachments info
       const attachments: any[] = [];
       const extractAttachments = (parts: any[]) => {
         for (const part of parts || []) {
@@ -282,7 +414,7 @@ serve(async (req) => {
       };
       extractAttachments(msgData.payload?.parts);
 
-      console.log('Fetched Gmail message:', messageId, 'for user:', user.id);
+      console.log('[gmail-messages] Fetched message:', messageId);
 
       return new Response(JSON.stringify({
         id: msgData.id,
@@ -307,10 +439,9 @@ serve(async (req) => {
     }
 
     if (action === 'modify') {
-      // Modify message labels (read/unread, star/unstar, archive, trash)
-      const { addLabelIds, removeLabelIds } = await req.json();
+      const { addLabelIds, removeLabelIds } = body;
       
-      const modifyResponse = await fetch(
+      const modifyResponse = await fetchWithRetry(
         `https://gmail.googleapis.com/gmail/v1/users/me/messages/${messageId}/modify`,
         {
           method: 'POST',
@@ -325,14 +456,14 @@ serve(async (req) => {
       const modifyData = await modifyResponse.json();
       
       if (modifyData.error) {
-        console.error('Gmail modify error:', modifyData.error);
+        console.error('[gmail-messages] Gmail modify error:', modifyData.error);
         return new Response(JSON.stringify({ error: modifyData.error.message }), {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
 
-      console.log('Modified Gmail message:', messageId, 'for user:', user.id);
+      console.log('[gmail-messages] Modified message:', messageId);
 
       return new Response(JSON.stringify({ success: true, message: modifyData }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -340,7 +471,7 @@ serve(async (req) => {
     }
 
     if (action === 'trash') {
-      const trashResponse = await fetch(
+      const trashResponse = await fetchWithRetry(
         `https://gmail.googleapis.com/gmail/v1/users/me/messages/${messageId}/trash`,
         {
           method: 'POST',
@@ -351,14 +482,14 @@ serve(async (req) => {
       const trashData = await trashResponse.json();
       
       if (trashData.error) {
-        console.error('Gmail trash error:', trashData.error);
+        console.error('[gmail-messages] Gmail trash error:', trashData.error);
         return new Response(JSON.stringify({ error: trashData.error.message }), {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
 
-      console.log('Trashed Gmail message:', messageId, 'for user:', user.id);
+      console.log('[gmail-messages] Trashed message:', messageId);
 
       return new Response(JSON.stringify({ success: true }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -371,7 +502,7 @@ serve(async (req) => {
     });
 
   } catch (error) {
-    console.error('Gmail messages error:', error);
+    console.error('[gmail-messages] Error:', error);
     const message = error instanceof Error ? error.message : 'Unknown error';
     return new Response(JSON.stringify({ error: message }), {
       status: 500,
