@@ -17,6 +17,9 @@ import Dashboard from "./pages/portal/Dashboard";
 import Templates from "./pages/portal/Templates";
 import TemplateCategory from "./pages/portal/TemplateCategory";
 import Tools from "./pages/portal/Tools";
+import Directory from "./pages/portal/Directory";
+import Calculators from "./pages/portal/Calculators";
+import AI from "./pages/portal/AI";
 
 // Admin Pages
 import TeamAdmin from "./pages/admin/TeamAdmin";
@@ -49,7 +52,10 @@ const App = () => {
                 <Route index element={<Dashboard />} />
                 <Route path="templates" element={<Templates />} />
                 <Route path="templates/:division" element={<TemplateCategory />} />
+                <Route path="directory" element={<Directory />} />
+                <Route path="calculators" element={<Calculators />} />
                 <Route path="tools" element={<Tools />} />
+                <Route path="ai" element={<AI />} />
               </Route>
               
               {/* Admin Routes */}
