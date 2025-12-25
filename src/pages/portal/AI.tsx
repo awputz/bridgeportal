@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useDivision } from "@/contexts/DivisionContext";
 
 type Message = {
   role: "user" | "assistant";
@@ -48,6 +50,7 @@ const STORAGE_KEY = "bridge-ai-chat-history";
 
 const AI = () => {
   const [searchParams] = useSearchParams();
+  const { division } = useDivision();
   const [messages, setMessages] = useState<Message[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved ? JSON.parse(saved) : [];
@@ -55,10 +58,31 @@ const AI = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [agentContext, setAgentContext] = useState<{ name?: string; email?: string; division?: string } | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const initialPromptSent = useRef(false);
 
+  // Fetch agent context on mount
+  useEffect(() => {
+    const fetchAgentContext = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("full_name, email")
+          .eq("id", user.id)
+          .single();
+        
+        setAgentContext({
+          name: profile?.full_name || user.email?.split("@")[0] || "Agent",
+          email: profile?.email || user.email,
+          division: division,
+        });
+      }
+    };
+    fetchAgentContext();
+  }, [division]);
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -117,6 +141,7 @@ const AI = () => {
           },
           body: JSON.stringify({
             messages: [...messages, userMessage],
+            agent_context: agentContext,
           }),
         }
       );

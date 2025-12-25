@@ -16,6 +16,7 @@ export interface AgentTransaction {
   asset_type: string | null;
   units: number | null;
   gross_square_feet: number | null;
+  commission: number | null;
 }
 
 // Fetch transactions for the current logged-in agent based on their profile name
@@ -66,7 +67,7 @@ export const useAgentTransactions = () => {
       for (const pattern of searchPatterns) {
         const { data, error } = await supabase
           .from('transactions')
-          .select('id, property_address, deal_type, division, sale_price, monthly_rent, total_lease_value, closing_date, agent_name, neighborhood, borough, asset_type, units, gross_square_feet')
+          .select('id, property_address, deal_type, division, sale_price, monthly_rent, total_lease_value, closing_date, agent_name, neighborhood, borough, asset_type, units, gross_square_feet, commission')
           .ilike('agent_name', `%${pattern}%`)
           .order('closing_date', { ascending: false });
         

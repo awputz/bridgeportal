@@ -734,6 +734,7 @@ export type Database = {
       crm_deals: {
         Row: {
           agent_id: string
+          commission: number | null
           contact_id: string | null
           created_at: string | null
           deal_type: string
@@ -752,6 +753,7 @@ export type Database = {
         }
         Insert: {
           agent_id: string
+          commission?: number | null
           contact_id?: string | null
           created_at?: string | null
           deal_type: string
@@ -770,6 +772,7 @@ export type Database = {
         }
         Update: {
           agent_id?: string
+          commission?: number | null
           contact_id?: string | null
           created_at?: string | null
           deal_type?: string
@@ -1233,6 +1236,7 @@ export type Database = {
           borough: string | null
           building_id: string | null
           closing_date: string | null
+          commission: number | null
           created_at: string
           deal_type: string
           division: string | null
@@ -1261,6 +1265,7 @@ export type Database = {
           borough?: string | null
           building_id?: string | null
           closing_date?: string | null
+          commission?: number | null
           created_at?: string
           deal_type?: string
           division?: string | null
@@ -1289,6 +1294,7 @@ export type Database = {
           borough?: string | null
           building_id?: string | null
           closing_date?: string | null
+          commission?: number | null
           created_at?: string
           deal_type?: string
           division?: string | null
