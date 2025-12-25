@@ -6,13 +6,11 @@ import {
   CheckCircle2, 
   AlertCircle, 
   ListTodo,
-  Kanban,
   Filter,
   User,
   Building2,
   MoreHorizontal,
-  Trash2,
-  Edit2
+  Trash2
 } from "lucide-react";
 import { format, isToday, isPast, parseISO } from "date-fns";
 import { useTasks, useCreateTask, useCompleteTask, useDeleteTask, useTaskStats, Task } from "@/hooks/useTasks";
@@ -24,7 +22,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Dialog,
@@ -185,7 +182,6 @@ const TaskCard = ({
 
 const Tasks = () => {
   const [filter, setFilter] = useState<"today" | "week" | "overdue" | "completed" | "all">("all");
-  const [view, setView] = useState<"list" | "kanban">("list");
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [deleteTaskId, setDeleteTaskId] = useState<string | null>(null);
 
@@ -235,13 +231,6 @@ const Tasks = () => {
       deleteTask.mutate(deleteTaskId);
       setDeleteTaskId(null);
     }
-  };
-
-  // Group tasks by status for kanban view
-  const groupedTasks = {
-    todo: tasks?.filter(t => !t.is_completed && (!t.due_date || !isPast(parseISO(t.due_date)))) || [],
-    overdue: tasks?.filter(t => !t.is_completed && t.due_date && isPast(parseISO(t.due_date))) || [],
-    completed: tasks?.filter(t => t.is_completed) || [],
   };
 
   return (
@@ -429,29 +418,8 @@ const Tasks = () => {
           </button>
         </div>
 
-        {/* View Toggle & Filter */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <Button
-              variant={view === "list" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setView("list")}
-              className="gap-2"
-            >
-              <ListTodo className="h-4 w-4" />
-              List
-            </Button>
-            <Button
-              variant={view === "kanban" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setView("kanban")}
-              className="gap-2"
-            >
-              <Kanban className="h-4 w-4" />
-              Kanban
-            </Button>
-          </div>
-
+        {/* Filter */}
+        <div className="flex items-center justify-end mb-6">
           <Button
             variant={filter === "all" ? "default" : "outline"}
             size="sm"
@@ -463,97 +431,36 @@ const Tasks = () => {
           </Button>
         </div>
 
-        {/* Task List View */}
-        {view === "list" && (
-          <div className="space-y-3">
-            {isLoading ? (
-              [...Array(5)].map((_, i) => (
-                <Skeleton key={i} className="h-24 rounded-xl" />
-              ))
-            ) : tasks?.length === 0 ? (
-              <div className="text-center py-16 glass-card">
-                <ListTodo className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
-                <h3 className="text-lg font-light text-foreground mb-2">No tasks found</h3>
-                <p className="text-muted-foreground mb-4">
-                  {filter === "all" ? "Create your first task to get started" : `No ${filter} tasks`}
-                </p>
-                <Button onClick={() => setShowAddDialog(true)}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create Task
-                </Button>
-              </div>
-            ) : (
-              tasks?.map((task) => (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  onComplete={() => completeTask.mutate(task.id)}
-                  onDelete={() => setDeleteTaskId(task.id)}
-                  isCompleting={completeTask.isPending}
-                />
-              ))
-            )}
-          </div>
-        )}
-
-        {/* Kanban View */}
-        {view === "kanban" && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* To Do Column */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-3 h-3 rounded-full bg-blue-500" />
-                <h3 className="font-light text-foreground">To Do</h3>
-                <Badge variant="secondary">{groupedTasks.todo.length}</Badge>
-              </div>
-              {groupedTasks.todo.map((task) => (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  onComplete={() => completeTask.mutate(task.id)}
-                  onDelete={() => setDeleteTaskId(task.id)}
-                  isCompleting={completeTask.isPending}
-                />
-              ))}
+        {/* Task List */}
+        <div className="space-y-3">
+          {isLoading ? (
+            [...Array(5)].map((_, i) => (
+              <Skeleton key={i} className="h-24 rounded-xl" />
+            ))
+          ) : tasks?.length === 0 ? (
+            <div className="text-center py-16 glass-card">
+              <ListTodo className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
+              <h3 className="text-lg font-light text-foreground mb-2">No tasks found</h3>
+              <p className="text-muted-foreground mb-4">
+                {filter === "all" ? "Create your first task to get started" : `No ${filter} tasks`}
+              </p>
+              <Button onClick={() => setShowAddDialog(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Create Task
+              </Button>
             </div>
-
-            {/* Overdue Column */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-3 h-3 rounded-full bg-red-500" />
-                <h3 className="font-light text-red-400">Overdue</h3>
-                <Badge variant="destructive">{groupedTasks.overdue.length}</Badge>
-              </div>
-              {groupedTasks.overdue.map((task) => (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  onComplete={() => completeTask.mutate(task.id)}
-                  onDelete={() => setDeleteTaskId(task.id)}
-                  isCompleting={completeTask.isPending}
-                />
-              ))}
-            </div>
-
-            {/* Completed Column */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-3 h-3 rounded-full bg-green-500" />
-                <h3 className="font-light text-green-400">Completed</h3>
-                <Badge variant="secondary">{groupedTasks.completed.length}</Badge>
-              </div>
-              {groupedTasks.completed.slice(0, 10).map((task) => (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  onComplete={() => completeTask.mutate(task.id)}
-                  onDelete={() => setDeleteTaskId(task.id)}
-                  isCompleting={completeTask.isPending}
-                />
-              ))}
-            </div>
-          </div>
-        )}
+          ) : (
+            tasks?.map((task) => (
+              <TaskCard
+                key={task.id}
+                task={task}
+                onComplete={() => completeTask.mutate(task.id)}
+                onDelete={() => setDeleteTaskId(task.id)}
+                isCompleting={completeTask.isPending}
+              />
+            ))
+          )}
+        </div>
 
         {/* Delete Confirmation */}
         <AlertDialog open={!!deleteTaskId} onOpenChange={() => setDeleteTaskId(null)}>
