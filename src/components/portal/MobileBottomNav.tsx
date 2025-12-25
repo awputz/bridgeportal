@@ -1,13 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, FileText, Sparkles, Wrench, Users } from "lucide-react";
+import { Home, FileText, Sparkles, Briefcase, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { path: "/portal", icon: Home, label: "Home" },
-  { path: "/portal/templates", icon: FileText, label: "Templates" },
+  { path: "/portal/crm", icon: Briefcase, label: "CRM" },
   { path: "/portal/ai", icon: Sparkles, label: "AI" },
-  { path: "/portal/calculators", icon: Wrench, label: "Tools" },
-  { path: "/portal/directory", icon: Users, label: "Directory" },
+  { path: "/portal/templates", icon: FileText, label: "Templates" },
+  { path: "/portal/directory", icon: Users, label: "Team" },
 ];
 
 export const MobileBottomNav = () => {

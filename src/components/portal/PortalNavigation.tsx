@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, LayoutDashboard, FileText, Wrench, LogOut, Settings, Users, Sparkles, Calculator } from "lucide-react";
+import { Menu, X, LayoutDashboard, FileText, Wrench, LogOut, Settings, Users, Sparkles, Calculator, Briefcase } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { 
@@ -16,6 +16,7 @@ import { useIsAdminOrAgent } from "@/hooks/useUserRole";
 
 const navItems = [
   { name: "Dashboard", path: "/portal", icon: LayoutDashboard },
+  { name: "CRM", path: "/portal/crm", icon: Briefcase },
   { name: "Templates", path: "/portal/templates", icon: FileText },
   { name: "Directory", path: "/portal/directory", icon: Users },
   { name: "Calculators", path: "/portal/calculators", icon: Calculator },
