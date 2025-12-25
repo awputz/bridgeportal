@@ -4,6 +4,7 @@ import { MobileBottomNav } from "./MobileBottomNav";
 import { AIAssistant } from "./AIAssistant";
 import { FloatingSearch } from "./FloatingSearch";
 import { CommandPalette, useCommandPalette } from "./CommandPalette";
+import { QuickActivityLogger } from "./QuickActivityLogger";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Loader2 } from "lucide-react";
 import { useStoreGoogleTokensOnLogin } from "@/hooks/useGoogleServices";
@@ -51,6 +52,7 @@ export const PortalLayout = () => {
       </main>
       <MobileBottomNav />
       <FloatingSearch onClick={() => setCommandOpen(true)} />
+      <QuickActivityLogger />
       <AIAssistant />
       <CommandPalette open={commandOpen} onOpenChange={setCommandOpen} />
     </div>

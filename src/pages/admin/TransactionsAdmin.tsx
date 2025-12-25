@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Pencil, Trash2, Plus, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Pencil, Trash2, Plus, ArrowUpDown, ArrowUp, ArrowDown, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -26,6 +26,7 @@ import { useDeleteTransaction } from "@/hooks/useTransactionMutations";
 import { TransactionFormDialog } from "@/components/admin/TransactionFormDialog";
 import { DataTablePagination } from "@/components/admin/DataTablePagination";
 import { usePagination } from "@/hooks/usePagination";
+import { exportToCSV, formatCurrencyCSV, formatDateCSV } from "@/lib/csvExport";
 
 type SortDirection = "asc" | "desc" | null;
 
@@ -189,6 +190,20 @@ export default function TransactionsAdmin() {
     </TableHead>
   );
 
+  const handleExportCSV = () => {
+    exportToCSV(filteredAndSortedTransactions, [
+      { key: "closing_date", header: "Closing Date", formatter: formatDateCSV },
+      { key: "agent_name", header: "Agent" },
+      { key: "division", header: "Division" },
+      { key: "deal_type", header: "Type" },
+      { key: "property_address", header: "Address" },
+      { key: "borough", header: "Borough" },
+      { key: "sale_price", header: "Sale Price", formatter: formatCurrencyCSV },
+      { key: "total_lease_value", header: "Lease Value", formatter: formatCurrencyCSV },
+      { key: "role", header: "Role" },
+    ], `transactions-export-${new Date().toISOString().split('T')[0]}`);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -198,10 +213,16 @@ export default function TransactionsAdmin() {
             Manage transaction history
           </p>
         </div>
-        <Button onClick={handleAdd}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add New Deal
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={handleExportCSV}>
+            <Download className="h-4 w-4 mr-2" />
+            Export CSV
+          </Button>
+          <Button onClick={handleAdd}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add New Deal
+          </Button>
+        </div>
       </div>
 
       <div className="flex items-center gap-4">

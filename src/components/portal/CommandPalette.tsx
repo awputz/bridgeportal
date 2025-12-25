@@ -5,7 +5,6 @@ import {
   Briefcase,
   Users,
   ListTodo,
-  BarChart3,
   Sparkles,
   Calculator,
   FileText,
@@ -13,9 +12,13 @@ import {
   Wand2,
   User,
   Plus,
-  Search,
-  Settings,
   LogOut,
+  DollarSign,
+  Phone,
+  Mail,
+  StickyNote,
+  FolderOpen,
+  Building2,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -29,7 +32,8 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import { useCRMContacts, useCRMDeals } from "@/hooks/useCRM";
-import { toast } from "sonner";
+import { useDivision } from "@/contexts/DivisionContext";
+import { Badge } from "@/components/ui/badge";
 
 interface CommandPaletteProps {
   open: boolean;
@@ -38,8 +42,9 @@ interface CommandPaletteProps {
 
 export const CommandPalette = ({ open, onOpenChange }: CommandPaletteProps) => {
   const navigate = useNavigate();
-  const { data: contacts } = useCRMContacts();
-  const { data: deals } = useCRMDeals();
+  const { division, divisionName } = useDivision();
+  const { data: contacts } = useCRMContacts(division);
+  const { data: deals } = useCRMDeals(division);
 
   const handleSelect = useCallback((action: string) => {
     onOpenChange(false);
@@ -55,9 +60,15 @@ export const CommandPalette = ({ open, onOpenChange }: CommandPaletteProps) => {
       case "new-deal":
         navigate("/portal/crm/deals/new");
         break;
+      case "new-contact":
+        navigate("/portal/crm?action=add-contact");
+        break;
       case "new-task":
         navigate("/portal/tasks");
-        // Could trigger task creation dialog
+        break;
+      case "log-call":
+        // This will open the quick activity logger - for now navigate to CRM
+        navigate("/portal/crm");
         break;
       case "sign-out":
         supabase.auth.signOut().then(() => {
@@ -75,10 +86,34 @@ export const CommandPalette = ({ open, onOpenChange }: CommandPaletteProps) => {
 
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
-      <CommandInput placeholder="Type a command or search..." />
+      <CommandInput placeholder="Search contacts, deals, pages..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
 
+        {/* Quick Actions - Most important */}
+        <CommandGroup heading="Quick Actions">
+          <CommandItem onSelect={() => handleSelect("new-deal")}>
+            <Plus className="mr-2 h-4 w-4" />
+            <span>New Deal</span>
+            <CommandShortcut>⌘N</CommandShortcut>
+          </CommandItem>
+          <CommandItem onSelect={() => handleSelect("new-contact")}>
+            <Users className="mr-2 h-4 w-4" />
+            <span>Add Contact</span>
+          </CommandItem>
+          <CommandItem onSelect={() => handleSelect("new-task")}>
+            <ListTodo className="mr-2 h-4 w-4" />
+            <span>New Task</span>
+          </CommandItem>
+          <CommandItem onSelect={() => handleSelect("/portal/commission-request")}>
+            <DollarSign className="mr-2 h-4 w-4" />
+            <span>Submit Commission</span>
+          </CommandItem>
+        </CommandGroup>
+
+        <CommandSeparator />
+
+        {/* Navigation */}
         <CommandGroup heading="Navigation">
           <CommandItem onSelect={() => handleSelect("/portal")}>
             <LayoutDashboard className="mr-2 h-4 w-4" />
@@ -95,10 +130,17 @@ export const CommandPalette = ({ open, onOpenChange }: CommandPaletteProps) => {
             <span>Tasks</span>
             <CommandShortcut>⌘T</CommandShortcut>
           </CommandItem>
-          <CommandItem onSelect={() => handleSelect("/portal/analytics")}>
-            <BarChart3 className="mr-2 h-4 w-4" />
-            <span>Analytics</span>
-            <CommandShortcut>⌘A</CommandShortcut>
+          <CommandItem onSelect={() => handleSelect("/portal/my-commissions")}>
+            <DollarSign className="mr-2 h-4 w-4" />
+            <span>My Earnings</span>
+          </CommandItem>
+          <CommandItem onSelect={() => handleSelect("/portal/mail")}>
+            <Mail className="mr-2 h-4 w-4" />
+            <span>Mail</span>
+          </CommandItem>
+          <CommandItem onSelect={() => handleSelect("/portal/notes")}>
+            <StickyNote className="mr-2 h-4 w-4" />
+            <span>Notes</span>
           </CommandItem>
           <CommandItem onSelect={() => handleSelect("/portal/directory")}>
             <Users className="mr-2 h-4 w-4" />
@@ -130,27 +172,17 @@ export const CommandPalette = ({ open, onOpenChange }: CommandPaletteProps) => {
             <Wrench className="mr-2 h-4 w-4" />
             <span>External Tools</span>
           </CommandItem>
-        </CommandGroup>
-
-        <CommandSeparator />
-
-        <CommandGroup heading="Quick Actions">
-          <CommandItem onSelect={() => handleSelect("new-deal")}>
-            <Plus className="mr-2 h-4 w-4" />
-            <span>New Deal</span>
-            <CommandShortcut>⌘N</CommandShortcut>
-          </CommandItem>
-          <CommandItem onSelect={() => handleSelect("new-task")}>
-            <Plus className="mr-2 h-4 w-4" />
-            <span>New Task</span>
+          <CommandItem onSelect={() => handleSelect("/portal/resources")}>
+            <FolderOpen className="mr-2 h-4 w-4" />
+            <span>Resources</span>
           </CommandItem>
         </CommandGroup>
 
-        {/* Recent Contacts */}
+        {/* Recent Contacts - Division filtered */}
         {contacts && contacts.length > 0 && (
           <>
             <CommandSeparator />
-            <CommandGroup heading="Recent Contacts">
+            <CommandGroup heading={`Recent Contacts (${divisionName})`}>
               {contacts.slice(0, 5).map((contact) => (
                 <CommandItem 
                   key={contact.id}
@@ -169,18 +201,27 @@ export const CommandPalette = ({ open, onOpenChange }: CommandPaletteProps) => {
           </>
         )}
 
-        {/* Recent Deals */}
+        {/* Recent Deals - Division filtered */}
         {deals && deals.length > 0 && (
           <>
             <CommandSeparator />
-            <CommandGroup heading="Recent Deals">
+            <CommandGroup heading={`Recent Deals (${divisionName})`}>
               {deals.slice(0, 5).map((deal) => (
                 <CommandItem 
                   key={deal.id}
                   onSelect={() => handleSelect(`deal:${deal.id}`)}
                 >
-                  <Briefcase className="mr-2 h-4 w-4" />
-                  <span>{deal.property_address}</span>
+                  <Building2 className="mr-2 h-4 w-4" />
+                  <span className="truncate">{deal.property_address}</span>
+                  {deal.stage && (
+                    <Badge 
+                      variant="outline" 
+                      className="ml-2 text-[10px] px-1"
+                      style={{ borderColor: deal.stage.color, color: deal.stage.color }}
+                    >
+                      {deal.stage.name}
+                    </Badge>
+                  )}
                 </CommandItem>
               ))}
             </CommandGroup>
@@ -193,6 +234,10 @@ export const CommandPalette = ({ open, onOpenChange }: CommandPaletteProps) => {
           <CommandItem onSelect={() => handleSelect("/portal/profile")}>
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
+          </CommandItem>
+          <CommandItem onSelect={() => handleSelect("/portal/company")}>
+            <Building2 className="mr-2 h-4 w-4" />
+            <span>Company</span>
           </CommandItem>
           <CommandItem onSelect={() => handleSelect("sign-out")}>
             <LogOut className="mr-2 h-4 w-4" />
