@@ -1213,8 +1213,11 @@ export type Database = {
         Row: {
           assignment_type: string | null
           budget: string | null
+          contacted_at: string | null
+          contacted_by: string | null
           created_at: string
           email: string
+          follow_up_notes: string | null
           id: string
           inquiry_type: string | null
           name: string
@@ -1223,6 +1226,7 @@ export type Database = {
           phone: string | null
           property_address: string | null
           requirements: string | null
+          status: string | null
           timeline: string | null
           timing: string | null
           unit_count: string | null
@@ -1231,8 +1235,11 @@ export type Database = {
         Insert: {
           assignment_type?: string | null
           budget?: string | null
+          contacted_at?: string | null
+          contacted_by?: string | null
           created_at?: string
           email: string
+          follow_up_notes?: string | null
           id?: string
           inquiry_type?: string | null
           name: string
@@ -1241,6 +1248,7 @@ export type Database = {
           phone?: string | null
           property_address?: string | null
           requirements?: string | null
+          status?: string | null
           timeline?: string | null
           timing?: string | null
           unit_count?: string | null
@@ -1249,8 +1257,11 @@ export type Database = {
         Update: {
           assignment_type?: string | null
           budget?: string | null
+          contacted_at?: string | null
+          contacted_by?: string | null
           created_at?: string
           email?: string
+          follow_up_notes?: string | null
           id?: string
           inquiry_type?: string | null
           name?: string
@@ -1259,6 +1270,7 @@ export type Database = {
           phone?: string | null
           property_address?: string | null
           requirements?: string | null
+          status?: string | null
           timeline?: string | null
           timing?: string | null
           unit_count?: string | null

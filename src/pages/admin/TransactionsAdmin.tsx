@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Pencil, Trash2, Plus } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Pencil, Trash2, Plus, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -24,6 +24,10 @@ import { Badge } from "@/components/ui/badge";
 import { useTransactions, Transaction } from "@/hooks/useTransactions";
 import { useDeleteTransaction } from "@/hooks/useTransactionMutations";
 import { TransactionFormDialog } from "@/components/admin/TransactionFormDialog";
+import { DataTablePagination } from "@/components/admin/DataTablePagination";
+import { usePagination } from "@/hooks/usePagination";
+
+type SortDirection = "asc" | "desc" | null;
 
 export default function TransactionsAdmin() {
   const { data: transactions = [], isLoading } = useTransactions();
@@ -33,17 +37,78 @@ export default function TransactionsAdmin() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | undefined>();
   const [transactionToDelete, setTransactionToDelete] = useState<string | null>(null);
+  
+  // Sorting state
+  const [sortKey, setSortKey] = useState<string | null>("closing_date");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
 
-  const filteredTransactions = transactions.filter((transaction) => {
-    const searchLower = searchQuery.toLowerCase();
-    return (
-      transaction.agent_name.toLowerCase().includes(searchLower) ||
-      transaction.property_address.toLowerCase().includes(searchLower) ||
-      transaction.borough?.toLowerCase().includes(searchLower) ||
-      transaction.deal_type.toLowerCase().includes(searchLower) ||
-      transaction.division?.toLowerCase().includes(searchLower)
-    );
-  });
+  const handleSort = (key: string) => {
+    if (sortKey === key) {
+      if (sortDirection === "asc") {
+        setSortDirection("desc");
+      } else if (sortDirection === "desc") {
+        setSortKey(null);
+        setSortDirection(null);
+      } else {
+        setSortDirection("asc");
+      }
+    } else {
+      setSortKey(key);
+      setSortDirection("asc");
+    }
+  };
+
+  const filteredAndSortedTransactions = useMemo(() => {
+    let filtered = transactions.filter((transaction) => {
+      const searchLower = searchQuery.toLowerCase();
+      return (
+        transaction.agent_name.toLowerCase().includes(searchLower) ||
+        transaction.property_address.toLowerCase().includes(searchLower) ||
+        transaction.borough?.toLowerCase().includes(searchLower) ||
+        transaction.deal_type.toLowerCase().includes(searchLower) ||
+        transaction.division?.toLowerCase().includes(searchLower)
+      );
+    });
+
+    if (sortKey && sortDirection) {
+      filtered = [...filtered].sort((a, b) => {
+        let aValue: any = a[sortKey as keyof Transaction];
+        let bValue: any = b[sortKey as keyof Transaction];
+
+        // Handle value sorting specially
+        if (sortKey === "value") {
+          aValue = a.deal_type === "Sale" || a.deal_type === "Loan" ? a.sale_price : a.total_lease_value;
+          bValue = b.deal_type === "Sale" || b.deal_type === "Loan" ? b.sale_price : b.total_lease_value;
+        }
+
+        if (aValue === null || aValue === undefined) return 1;
+        if (bValue === null || bValue === undefined) return -1;
+
+        let comparison = 0;
+        if (typeof aValue === "number" && typeof bValue === "number") {
+          comparison = aValue - bValue;
+        } else if (typeof aValue === "string" && typeof bValue === "string") {
+          comparison = aValue.localeCompare(bValue);
+        } else {
+          comparison = String(aValue).localeCompare(String(bValue));
+        }
+
+        return sortDirection === "asc" ? comparison : -comparison;
+      });
+    }
+
+    return filtered;
+  }, [transactions, searchQuery, sortKey, sortDirection]);
+
+  const {
+    paginatedData,
+    currentPage,
+    totalPages,
+    pageSize,
+    totalItems,
+    handlePageChange,
+    handlePageSizeChange,
+  } = usePagination(filteredAndSortedTransactions, 10);
 
   const handleEdit = (transaction: Transaction) => {
     setSelectedTransaction(transaction);
@@ -100,6 +165,30 @@ export default function TransactionsAdmin() {
     return labels[role] || role;
   };
 
+  const SortHeader = ({ 
+    children, 
+    sortKeyName 
+  }: { 
+    children: React.ReactNode; 
+    sortKeyName: string;
+  }) => (
+    <TableHead 
+      className="cursor-pointer select-none hover:bg-muted/50"
+      onClick={() => handleSort(sortKeyName)}
+    >
+      <div className="flex items-center gap-1">
+        {children}
+        {sortKey === sortKeyName && sortDirection === "asc" ? (
+          <ArrowUp className="h-4 w-4" />
+        ) : sortKey === sortKeyName && sortDirection === "desc" ? (
+          <ArrowDown className="h-4 w-4" />
+        ) : (
+          <ArrowUpDown className="h-4 w-4 opacity-50" />
+        )}
+      </div>
+    </TableHead>
+  );
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -128,13 +217,13 @@ export default function TransactionsAdmin() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Date</TableHead>
-              <TableHead>Agent</TableHead>
-              <TableHead>Division</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Address</TableHead>
-              <TableHead>Borough</TableHead>
-              <TableHead>Value</TableHead>
+              <SortHeader sortKeyName="closing_date">Date</SortHeader>
+              <SortHeader sortKeyName="agent_name">Agent</SortHeader>
+              <SortHeader sortKeyName="division">Division</SortHeader>
+              <SortHeader sortKeyName="deal_type">Type</SortHeader>
+              <SortHeader sortKeyName="property_address">Address</SortHeader>
+              <SortHeader sortKeyName="borough">Borough</SortHeader>
+              <SortHeader sortKeyName="value">Value</SortHeader>
               <TableHead>Role</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -142,18 +231,18 @@ export default function TransactionsAdmin() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                   Loading transactions...
                 </TableCell>
               </TableRow>
-            ) : filteredTransactions.length === 0 ? (
+            ) : paginatedData.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={10} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                   {searchQuery ? "No transactions found matching your search" : "No transactions yet"}
                 </TableCell>
               </TableRow>
             ) : (
-              filteredTransactions.map((transaction) => (
+              paginatedData.map((transaction) => (
                 <TableRow key={transaction.id}>
                   <TableCell className="whitespace-nowrap">
                     {formatDate(transaction.closing_date)}
@@ -206,6 +295,17 @@ export default function TransactionsAdmin() {
             )}
           </TableBody>
         </Table>
+        
+        {totalItems > 0 && (
+          <DataTablePagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            pageSize={pageSize}
+            totalItems={totalItems}
+            onPageChange={handlePageChange}
+            onPageSizeChange={handlePageSizeChange}
+          />
+        )}
       </div>
 
       <TransactionFormDialog
