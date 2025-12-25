@@ -90,7 +90,7 @@ const Notes = () => {
   const unpinnedNotes = notes?.filter((n) => !n.is_pinned) || [];
 
   return (
-    <div className="container max-w-7xl mx-auto px-4 py-6">
+    <div className="container max-w-7xl mx-auto px-4 py-8 md:py-12">
       <div className="space-y-6 pb-24 md:pb-16">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

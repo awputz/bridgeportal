@@ -92,7 +92,7 @@ const Culture = () => {
             {coreValues.map((value, index) => {
               const Icon = value.icon;
               return (
-                <div key={index} className="glass-card p-5 hover:border-white/20 transition-all duration-300">
+                <div key={index} className="glass-card p-5 hover:border-white/20 transition-all duration-300 min-h-[120px]">
                   <div className={`w-10 h-10 rounded-full ${value.color.split(' ')[0]} flex items-center justify-center mb-3`}>
                     <Icon className={`h-5 w-5 ${value.color.split(' ')[1]}`} />
                   </div>
@@ -138,7 +138,7 @@ const Culture = () => {
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {differentiators.map((item, index) => (
-              <div key={index} className="glass-card p-4 text-center hover:border-white/20 transition-all duration-300">
+              <div key={index} className="glass-card p-4 text-center hover:border-white/20 transition-all duration-300 min-h-[88px] flex flex-col justify-center">
                 <h4 className="text-foreground font-light mb-1 text-sm">{item.title}</h4>
                 <p className="text-xs text-muted-foreground font-light">{item.description}</p>
               </div>
