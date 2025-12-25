@@ -18,33 +18,14 @@ export interface CommissionSummary {
   ytdDeals: number;
 }
 
-// Commission rates by division (agent's take after house split)
-const COMMISSION_RATES = {
-  'Investment Sales': { rate: 0.015, houseSplit: 0.5 }, // 1.5% of sale, 50% to agent
-  'Commercial Leasing': { rate: 0.04, houseSplit: 0.5 }, // 4% of lease value, 50% to agent
-  'Residential': { rate: 0.025, houseSplit: 0.5 }, // 2.5% of sale or 1 month rent
-  'Capital Advisory': { rate: 0.005, houseSplit: 0.5 }, // 0.5% of loan, 50% to agent
-};
-
-const calculateCommission = (transaction: AgentTransaction): number => {
-  const division = transaction.division || 'Investment Sales';
-  const config = COMMISSION_RATES[division as keyof typeof COMMISSION_RATES] || COMMISSION_RATES['Investment Sales'];
-  
-  let grossCommission = 0;
-  
-  if (transaction.sale_price) {
-    // Sale transaction
-    grossCommission = transaction.sale_price * config.rate;
-  } else if (transaction.total_lease_value) {
-    // Lease with total value
-    grossCommission = transaction.total_lease_value * config.rate;
-  } else if (transaction.monthly_rent) {
-    // Rental - typically 1 month rent as commission
-    grossCommission = transaction.monthly_rent;
+// IMPORTANT: Only use actual agent-entered commission values
+// NO estimates - if commission is not entered, it's 0
+const getActualCommission = (transaction: AgentTransaction): number => {
+  // Only return the actual commission value if it exists
+  if (transaction.commission !== null && transaction.commission !== undefined) {
+    return transaction.commission;
   }
-  
-  // Agent's take after house split
-  return grossCommission * config.houseSplit;
+  return 0;
 };
 
 export const useAgentCommissions = (transactions: AgentTransaction[] | undefined): CommissionSummary => {
@@ -62,18 +43,23 @@ export const useAgentCommissions = (transactions: AgentTransaction[] | undefined
 
     const currentYear = new Date().getFullYear();
     
-    // Calculate by division
+    // Only include transactions that have actual commission values entered
+    const transactionsWithCommission = transactions.filter(
+      tx => tx.commission !== null && tx.commission !== undefined && tx.commission > 0
+    );
+    
+    // Calculate by division - only for transactions with actual commissions
     const divisionMap = new Map<string, { earnings: number; dealCount: number }>();
-    // Calculate by year
+    // Calculate by year - only for transactions with actual commissions
     const yearMap = new Map<number, { earnings: number; dealCount: number }>();
     
     let totalEarnings = 0;
     let ytdEarnings = 0;
     let ytdDeals = 0;
 
-    transactions.forEach(tx => {
-      const commission = calculateCommission(tx);
-      const division = tx.division || 'Investment Sales';
+    transactionsWithCommission.forEach(tx => {
+      const commission = getActualCommission(tx);
+      const division = tx.division || 'Other';
       const year = tx.closing_date ? new Date(tx.closing_date).getFullYear() : currentYear;
       
       totalEarnings += commission;
@@ -99,7 +85,7 @@ export const useAgentCommissions = (transactions: AgentTransaction[] | undefined
 
     return {
       totalEarnings,
-      totalDeals: transactions.length,
+      totalDeals: transactions.length, // Total deals count includes all transactions
       byDivision: Array.from(divisionMap.entries())
         .map(([division, data]) => ({ division, ...data }))
         .sort((a, b) => b.earnings - a.earnings),

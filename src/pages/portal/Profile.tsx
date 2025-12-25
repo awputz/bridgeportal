@@ -227,13 +227,14 @@ const Profile = () => {
                                 <div>
                                   <p className="truncate max-w-[200px]">{tx.property_address}</p>
                                   <p className="text-xs text-muted-foreground">
-                                    {tx.closing_date ? new Date(tx.closing_date).toLocaleDateString() : 'N/A'}
+                                    {[tx.neighborhood, tx.borough].filter(Boolean).join(", ") || 
+                                     (tx.closing_date ? new Date(tx.closing_date).toLocaleDateString() : '')}
                                   </p>
                                 </div>
                               </TableCell>
                               <TableCell>
                                 <span className="text-xs px-2 py-1 rounded-full bg-white/10 text-muted-foreground">
-                                  {tx.division || 'N/A'}
+                                  {tx.division || 'Other'}
                                 </span>
                               </TableCell>
                               <TableCell className="text-foreground">
@@ -421,19 +422,13 @@ const Profile = () => {
               </CardContent>
             </Card>
 
-            <Card className="glass-card border-white/10">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3 text-green-400">
-                  <CheckCircle className="h-5 w-5" />
-                  <div>
-                    <p className="text-sm font-medium">Account Active</p>
-                    <p className="text-xs text-muted-foreground">
-                      Member since {new Date(user?.created_at || Date.now()).toLocaleDateString()}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="flex items-center gap-2 px-3 py-2 bg-green-500/10 rounded-lg border border-green-500/20">
+              <CheckCircle className="h-4 w-4 text-green-400" />
+              <span className="text-sm text-green-400">Active</span>
+              <span className="text-xs text-muted-foreground">
+                since {new Date(user?.created_at || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+              </span>
+            </div>
           </div>
         </div>
       </div>

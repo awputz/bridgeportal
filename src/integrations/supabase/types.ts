@@ -86,6 +86,45 @@ export type Database = {
         }
         Relationships: []
       }
+      agent_requests: {
+        Row: {
+          agent_id: string
+          client_name: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          priority: string
+          property_address: string | null
+          request_type: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          agent_id: string
+          client_name?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          priority?: string
+          property_address?: string | null
+          request_type: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: string
+          client_name?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          priority?: string
+          property_address?: string | null
+          request_type?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       agent_templates: {
         Row: {
           created_at: string | null

@@ -14,18 +14,18 @@ const TemplateCategory = () => {
 
   return (
     <div className="min-h-screen pb-16">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
         {/* Back Link */}
         <Link 
           to="/portal/templates"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors font-light mb-6"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors font-light mb-4"
         >
           <ArrowLeft className="h-4 w-4" />
           All Templates
         </Link>
 
         {/* Header */}
-        <div className="mb-10 md:mb-14">
+        <div className="mb-6">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">
             {divisionName}
           </h1>
@@ -62,8 +62,8 @@ const TemplateCategory = () => {
         )}
 
         {/* Other Divisions */}
-        <div className="border-t border-border pt-12">
-          <h2 className="text-lg md:text-xl font-light text-foreground mb-6">
+        <div className="border-t border-border pt-8">
+          <h2 className="text-lg md:text-xl font-light text-foreground mb-4">
             Other Divisions
           </h2>
           <DivisionSelector activeDivision={division} />
