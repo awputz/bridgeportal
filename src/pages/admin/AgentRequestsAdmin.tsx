@@ -39,7 +39,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Search, Trash2, FileEdit, Clock, CheckCircle, XCircle, AlertCircle } from "lucide-react";
+import { Search, Trash2, FileEdit, Clock, CheckCircle, XCircle, AlertCircle, User } from "lucide-react";
+import { AgentDisplay } from "@/components/admin/AgentDisplay";
 import { format } from "date-fns";
 
 const STATUS_CONFIG = {
@@ -162,10 +163,11 @@ export default function AgentRequestsAdmin() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Request</TableHead>
+                  <TableHead>Submitted By</TableHead>
                   <TableHead>Client / Property</TableHead>
                   <TableHead>Priority</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Submitted</TableHead>
+                  <TableHead>Date</TableHead>
                   <TableHead className="w-[100px]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -182,6 +184,13 @@ export default function AgentRequestsAdmin() {
                         {request.notes && (
                           <div className="text-sm text-muted-foreground line-clamp-1">{request.notes}</div>
                         )}
+                      </TableCell>
+                      <TableCell>
+                        <AgentDisplay 
+                          name={request.agent_name} 
+                          email={request.agent_email}
+                          size="sm"
+                        />
                       </TableCell>
                       <TableCell>
                         <div>

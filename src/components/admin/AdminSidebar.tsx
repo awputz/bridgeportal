@@ -23,6 +23,7 @@ const overviewItems = [
 const peopleItems = [
   { title: "Team", url: "/admin/team", icon: Users },
   { title: "Users & Roles", url: "/admin/users", icon: Shield },
+  { title: "CRM Overview", url: "/admin/crm-overview", icon: PieChart },
   { title: "Agent Requests", url: "/admin/agent-requests", icon: ClipboardList },
   { title: "Commission Requests", url: "/admin/commission-requests", icon: DollarSign },
 ];

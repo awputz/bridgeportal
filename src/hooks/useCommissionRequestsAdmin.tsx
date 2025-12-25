@@ -4,43 +4,57 @@ import { toast } from "@/hooks/use-toast";
 import { CommissionRequest } from "./useCommissionRequests";
 
 export interface CommissionRequestWithAgent extends CommissionRequest {
-  agent_name?: string;
-  agent_email?: string;
+  agent_name: string | null;
+  agent_email: string | null;
 }
 
 export const useAllCommissionRequests = () => {
   return useQuery({
     queryKey: ["commission-requests", "all"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      // Fetch commission requests
+      const { data: requestsData, error } = await supabase
         .from("commission_requests")
         .select("*")
         .order("created_at", { ascending: false });
 
       if (error) throw error;
       
-      // Get agent info for each request
-      const requestsWithAgents = await Promise.all(
-        (data as CommissionRequest[]).map(async (request) => {
-          // Try to get from team_members first
-          const { data: teamMember } = await supabase
-            .from("team_members")
-            .select("name, email")
-            .eq("email", (await supabase.auth.admin?.getUserById?.(request.agent_id))?.data?.user?.email || "")
-            .maybeSingle();
-          
-          // If not found, get from auth user
-          const { data: authUser } = await supabase.auth.admin?.getUserById?.(request.agent_id) || {};
-          
-          return {
-            ...request,
-            agent_name: teamMember?.name || authUser?.user?.email?.split("@")[0] || "Unknown",
-            agent_email: teamMember?.email || authUser?.user?.email || "",
-          } as CommissionRequestWithAgent;
-        })
+      // Get unique agent IDs
+      const agentIds = [...new Set(requestsData.map(r => r.agent_id))];
+
+      // Fetch profiles for all agents in a single query
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, full_name, email")
+        .in("id", agentIds);
+
+      // Also try to get names from team_members as a fallback
+      const { data: teamMembers } = await supabase
+        .from("team_members")
+        .select("email, name")
+        .eq("is_active", true);
+
+      // Create maps for quick lookup
+      const profileMap = new Map(
+        profiles?.map(p => [p.id, { full_name: p.full_name, email: p.email }]) || []
       );
       
-      return requestsWithAgents;
+      const teamMemberMap = new Map(
+        teamMembers?.map(t => [t.email, t.name]) || []
+      );
+      
+      // Merge profiles with requests
+      return requestsData.map(request => {
+        const profile = profileMap.get(request.agent_id);
+        const teamMemberName = profile?.email ? teamMemberMap.get(profile.email) : null;
+        
+        return {
+          ...request,
+          agent_name: teamMemberName || profile?.full_name || profile?.email?.split("@")[0] || "Unknown Agent",
+          agent_email: profile?.email || null,
+        } as CommissionRequestWithAgent;
+      });
     },
   });
 };
