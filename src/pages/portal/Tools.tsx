@@ -104,7 +104,7 @@ const Tools = () => {
     <div className="min-h-screen pb-24 md:pb-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {/* Header */}
-        <div className="text-center mb-10 md:mb-14">
+        <div className="text-center mb-10 md:mb-14 animate-fade-in">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 mb-6">
             <Wrench className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm text-muted-foreground font-light">Tools</span>
@@ -118,25 +118,25 @@ const Tools = () => {
         </div>
 
         {/* Internal Tools Section */}
-        <div className="mb-12">
+        <div className="mb-12 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
           <h2 className="text-xl font-light text-foreground mb-6 flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-emerald-500" />
             Internal Tools
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 stagger-grid">
             {internalTools.map((tool) => {
               const Icon = tool.icon;
               return (
                 <Link
                   key={tool.path}
                   to={tool.path}
-                  className="glass-card p-5 group hover:border-white/20 transition-all duration-300"
+                  className="glass-card p-5 group hover:border-white/20"
                 >
                   <div className="flex items-start justify-between mb-4">
-                    <div className={`w-12 h-12 rounded-full ${tool.color.split(' ')[0]} flex items-center justify-center`}>
+                    <div className={`w-12 h-12 rounded-full ${tool.color.split(' ')[0]} flex items-center justify-center transition-transform duration-300 group-hover:scale-110`}>
                       <Icon className={`h-6 w-6 ${tool.color.split(' ')[1]}`} />
                     </div>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-muted-foreground group-hover:translate-x-1 transition-all" />
+                    <ChevronRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-muted-foreground group-hover:translate-x-1 transition-all duration-300" />
                   </div>
                   
                   <h3 className="text-lg font-light text-foreground mb-2">
@@ -153,7 +153,7 @@ const Tools = () => {
         </div>
 
         {/* External Resources Section */}
-        <div>
+        <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
           <h2 className="text-xl font-light text-foreground mb-6 flex items-center gap-2">
             <ExternalLink className="h-4 w-4 text-muted-foreground" />
             External Resources
@@ -161,11 +161,11 @@ const Tools = () => {
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[...Array(6)].map((_, i) => (
-                <Skeleton key={i} className="h-[160px] rounded-xl" />
+                <div key={i} className="skeleton h-[160px] rounded-xl" />
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 stagger-grid">
               {externalTools?.map((tool) => {
                 const Icon = iconMap[tool.icon] || Mail;
                 return (
@@ -176,14 +176,14 @@ const Tools = () => {
                     rel="noopener noreferrer"
                     className={cn(
                       "group glass-card p-5 flex flex-col",
-                      "hover:border-white/20 transition-all duration-300"
+                      "hover:border-white/20"
                     )}
                   >
                     <div className="flex items-start justify-between mb-4">
-                      <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
-                        <Icon className="h-6 w-6 text-foreground/70 group-hover:text-foreground transition-colors" />
+                      <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-all duration-300 group-hover:scale-110">
+                        <Icon className="h-6 w-6 text-foreground/70 group-hover:text-foreground transition-colors duration-300" />
                       </div>
-                      <ExternalLink className="h-4 w-4 text-muted-foreground/50 group-hover:text-muted-foreground transition-colors" />
+                      <ExternalLink className="h-4 w-4 text-muted-foreground/50 group-hover:text-muted-foreground transition-colors duration-300" />
                     </div>
                     
                     <h3 className="text-lg font-light text-foreground mb-2">
