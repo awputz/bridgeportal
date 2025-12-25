@@ -1,4 +1,4 @@
-import { Users, DollarSign, LogOut, Settings, MapPin, Link2, Layers, Wrench, FileText, Home, Building2, Bell, Mail, FolderOpen } from "lucide-react";
+import { Users, DollarSign, LogOut, Settings, MapPin, Link2, Layers, Wrench, FileText, Home, Building2, Bell, Mail, FolderOpen, Shield, KeyRound, Activity, Newspaper, ClipboardList, Building, PieChart } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,17 +15,36 @@ import {
 } from "@/components/ui/sidebar";
 import { toast } from "@/hooks/use-toast";
 
-const menuItems = [
+const overviewItems = [
   { title: "Dashboard", url: "/admin", icon: Home, exact: true },
+  { title: "Activity Logs", url: "/admin/activity-logs", icon: Activity },
+];
+
+const peopleItems = [
   { title: "Team", url: "/admin/team", icon: Users },
+  { title: "Users & Roles", url: "/admin/users", icon: Shield },
+  { title: "Agent Requests", url: "/admin/agent-requests", icon: ClipboardList },
+];
+
+const dealsItems = [
   { title: "Listings", url: "/admin/listings", icon: Building2 },
+  { title: "Deal Room", url: "/admin/deal-room", icon: KeyRound },
   { title: "Closed Deals", url: "/admin/transactions", icon: DollarSign },
-  { title: "Announcements", url: "/admin/announcements", icon: Bell },
+];
+
+const communicationsItems = [
   { title: "Inquiries", url: "/admin/inquiries", icon: Mail },
+  { title: "Announcements", url: "/admin/announcements", icon: Bell },
+  { title: "Newsletter", url: "/admin/newsletter", icon: Newspaper },
+];
+
+const propertiesItems = [
+  { title: "Buildings", url: "/admin/buildings", icon: Building },
 ];
 
 const cmsItems = [
   { title: "Settings", url: "/admin/settings", icon: Settings },
+  { title: "CRM Config", url: "/admin/crm-config", icon: PieChart },
   { title: "Services", url: "/admin/services", icon: Layers },
   { title: "Markets", url: "/admin/markets", icon: MapPin },
   { title: "Listing Links", url: "/admin/listing-links", icon: Link2 },
@@ -53,57 +72,45 @@ export function AdminSidebar() {
     }
   };
 
+  const renderMenuGroup = (items: typeof overviewItems, label: string) => (
+    <SidebarGroup>
+      <SidebarGroupLabel>{label}</SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {items.map((item) => {
+            const isActive = (item as any).exact 
+              ? currentPath === item.url 
+              : currentPath.startsWith(item.url);
+            
+            return (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild isActive={isActive}>
+                  <NavLink 
+                    to={item.url} 
+                    end={(item as any).exact}
+                    className="flex items-center gap-3"
+                  >
+                    <item.icon className="h-4 w-4" />
+                    {open && <span>{item.title}</span>}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
+
   return (
     <Sidebar className={open ? "w-64" : "w-16"} collapsible="icon">
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Management</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => {
-                const isActive = item.exact 
-                  ? currentPath === item.url 
-                  : currentPath.startsWith(item.url);
-                
-                return (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={isActive}>
-                      <NavLink 
-                        to={item.url} 
-                        end={item.exact}
-                        className="flex items-center gap-3"
-                      >
-                        <item.icon className="h-4 w-4" />
-                        {open && <span>{item.title}</span>}
-                      </NavLink>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel>CMS</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {cmsItems.map((item) => {
-                const isActive = currentPath.startsWith(item.url);
-                return (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={isActive}>
-                      <NavLink to={item.url} className="flex items-center gap-3">
-                        <item.icon className="h-4 w-4" />
-                        {open && <span>{item.title}</span>}
-                      </NavLink>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {renderMenuGroup(overviewItems, "Overview")}
+        {renderMenuGroup(peopleItems, "People")}
+        {renderMenuGroup(dealsItems, "Deals")}
+        {renderMenuGroup(communicationsItems, "Communications")}
+        {renderMenuGroup(propertiesItems, "Properties")}
+        {renderMenuGroup(cmsItems, "CMS & Settings")}
 
         <SidebarGroup className="mt-auto">
           <SidebarGroupContent>
