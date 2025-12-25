@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, LayoutDashboard, FileText, Wrench, LogOut, Settings, Users, Sparkles, Calculator, Briefcase, Wand2, User, ChevronDown } from "lucide-react";
+import { Menu, X, LayoutDashboard, FileText, Wrench, LogOut, Settings, Users, Sparkles, Calculator, Briefcase, Wand2, User, ChevronDown, ListTodo, BarChart3 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { 
@@ -13,12 +13,14 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { useIsAdminOrAgent } from "@/hooks/useUserRole";
+import { NotificationCenter } from "./NotificationCenter";
 
 // Core navigation items (always visible)
 const coreNavItems = [
   { name: "Dashboard", path: "/portal", icon: LayoutDashboard },
   { name: "CRM", path: "/portal/crm", icon: Briefcase },
-  { name: "Directory", path: "/portal/directory", icon: Users },
+  { name: "Tasks", path: "/portal/tasks", icon: ListTodo },
+  { name: "Analytics", path: "/portal/analytics", icon: BarChart3 },
 ];
 
 // Productivity tools (grouped in dropdown)
@@ -194,7 +196,8 @@ export const PortalNavigation = () => {
             </div>
 
             {/* Right: User Menu */}
-            <div className="flex items-center justify-end">
+            <div className="flex items-center justify-end gap-2">
+              <NotificationCenter />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm" className="font-light text-foreground/80 hover:text-foreground">
