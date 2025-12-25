@@ -29,10 +29,13 @@ export const GlobalDivisionSwitcher = () => {
           style={{ borderColor: divisionConfig.color + "40" }}
         >
           <CurrentIcon className="h-4 w-4" style={{ color: divisionConfig.color }} />
-          <span className="hidden sm:inline">{divisionConfig.shortName}</span>
+          <span>{divisionConfig.name}</span>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56 glass-dropdown">
+        <div className="px-2 py-1.5 text-xs text-muted-foreground">
+          Click to change division
+        </div>
         {(Object.keys(divisionConfigs) as Division[]).map((div) => {
           const Icon = divisionIcons[div];
           const config = divisionConfigs[div];

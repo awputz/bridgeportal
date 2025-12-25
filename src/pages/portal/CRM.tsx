@@ -8,9 +8,10 @@ import {
   Mail,
   User,
   Briefcase,
-  Upload
+  Upload,
+  Info
 } from "lucide-react";
-import { useCRMContacts, useCRMDeals, useDealStages, useCreateContact, useDeleteContact, useUpdateDeal, CRMContact } from "@/hooks/useCRM";
+import { useCRMContacts, useCRMDeals, useDealStages, useCreateContact, useDeleteContact, useUpdateDeal, useDeleteDeal } from "@/hooks/useCRM";
 import { useCRMRealtime } from "@/hooks/useCRMRealtime";
 import { useDivision } from "@/contexts/DivisionContext";
 import { Input } from "@/components/ui/input";
@@ -30,12 +31,22 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { KanbanBoard } from "@/components/portal/KanbanBoard";
+import { CRMTable } from "@/components/portal/CRMTable";
 import { CSVContactUploader } from "@/components/portal/CSVContactUploader";
 
 const contactTypes = [
@@ -69,6 +80,8 @@ const CRM = () => {
   const [search, setSearch] = useState("");
   const [showContactDialog, setShowContactDialog] = useState(false);
   const [showCSVUploader, setShowCSVUploader] = useState(false);
+  const [deleteContactId, setDeleteContactId] = useState<string | null>(null);
+  const [deleteDealId, setDeleteDealId] = useState<string | null>(null);
 
   const { data: contacts, isLoading: contactsLoading, refetch: refetchContacts } = useCRMContacts(division);
   const { data: deals, isLoading: dealsLoading } = useCRMDeals(division);
@@ -76,6 +89,7 @@ const CRM = () => {
   const createContact = useCreateContact();
   const deleteContact = useDeleteContact();
   const updateDeal = useUpdateDeal();
+  const deleteDeal = useDeleteDeal();
 
   // Subscribe to real-time CRM updates
   useCRMRealtime(division);
@@ -94,8 +108,30 @@ const CRM = () => {
 
   const isLoading = contactsLoading || dealsLoading || stagesLoading;
 
-  const handleDealMove = (dealId: string, newStageId: string) => {
+  const handleStageChange = (dealId: string, newStageId: string) => {
     updateDeal.mutate({ id: dealId, stage_id: newStageId });
+  };
+
+  const handleDeleteDeal = (dealId: string) => {
+    setDeleteDealId(dealId);
+  };
+
+  const confirmDeleteDeal = () => {
+    if (deleteDealId) {
+      deleteDeal.mutate(deleteDealId);
+      setDeleteDealId(null);
+    }
+  };
+
+  const handleDeleteContact = (contactId: string) => {
+    setDeleteContactId(contactId);
+  };
+
+  const confirmDeleteContact = () => {
+    if (deleteContactId) {
+      deleteContact.mutate(deleteContactId);
+      setDeleteContactId(null);
+    }
   };
 
   const handleCreateContact = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -139,7 +175,7 @@ const CRM = () => {
               CRM
             </h1>
             <p className="text-muted-foreground font-light">
-              Manage your {divisionConfig.name.toLowerCase()} pipeline
+              Track your {divisionConfig.name.toLowerCase()} deals from lead to close
             </p>
           </div>
 
@@ -243,6 +279,16 @@ const CRM = () => {
           </div>
         </div>
 
+        {/* Contextual Instructions */}
+        <div className="glass-card p-4 mb-6 flex items-start gap-3 border-white/10">
+          <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+          <div className="text-sm text-muted-foreground font-light">
+            <strong className="text-foreground font-normal">How to use:</strong> Use the Pipeline tab to track your active deals from lead to close. 
+            Change deal status using the dropdown in the Status column. 
+            Use the Contacts tab to manage your network and add new prospects.
+          </div>
+        </div>
+
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "pipeline" | "contacts")}>
           <TabsList className="bg-transparent border-b border-white/10 rounded-none h-auto p-0 mb-6">
@@ -262,19 +308,26 @@ const CRM = () => {
             </TabsTrigger>
           </TabsList>
 
-          {/* Pipeline View */}
+          {/* Pipeline View - Table Based */}
           <TabsContent value="pipeline" className="mt-0">
+            <div className="flex items-center justify-between mb-4">
+              <Link to="/portal/crm/deals/new">
+                <Button variant="outline" className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  New Deal
+                </Button>
+              </Link>
+            </div>
+
             {isLoading ? (
-              <div className="flex gap-4 overflow-x-auto pb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Skeleton key={i} className="h-96 w-72 flex-shrink-0 rounded-xl" />
-                ))}
-              </div>
+              <Skeleton className="h-96 w-full rounded-xl" />
             ) : stages && deals ? (
-              <KanbanBoard
-                stages={stages}
+              <CRMTable
                 deals={deals}
-                onDealMove={handleDealMove}
+                stages={stages}
+                onStageChange={handleStageChange}
+                onDeleteDeal={handleDeleteDeal}
+                division={division}
               />
             ) : null}
 
@@ -282,14 +335,14 @@ const CRM = () => {
             {!isLoading && (!deals || deals.length === 0) && (
               <div className="text-center py-16 glass-card">
                 <Briefcase className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
-                <h3 className="text-lg font-light text-foreground mb-2">No deals yet</h3>
-                <p className="text-muted-foreground mb-4">
-                  Create your first deal to get started
+                <h3 className="text-lg font-light text-foreground mb-2">No deals in your pipeline</h3>
+                <p className="text-muted-foreground mb-4 max-w-md mx-auto">
+                  Create your first deal to start tracking your {divisionConfig.name.toLowerCase()} transactions from lead to close.
                 </p>
                 <Link to="/portal/crm/deals/new">
                   <Button>
                     <Plus className="h-4 w-4 mr-2" />
-                    Create Deal
+                    Create Your First Deal
                   </Button>
                 </Link>
               </div>
@@ -302,7 +355,7 @@ const CRM = () => {
             <div className="relative max-w-md mb-6">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search contacts..."
+                placeholder="Search contacts by name, email, or company..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="pl-10 bg-white/5 border-white/10"
@@ -322,8 +375,10 @@ const CRM = () => {
                 <h3 className="text-lg font-light text-foreground mb-2">
                   {search ? "No contacts found" : "No contacts yet"}
                 </h3>
-                <p className="text-muted-foreground mb-4">
-                  {search ? "Try a different search term" : "Add your first contact or import from CSV"}
+                <p className="text-muted-foreground mb-4 max-w-md mx-auto">
+                  {search 
+                    ? "Try a different search term" 
+                    : "Build your network by adding contacts manually or importing from a CSV file."}
                 </p>
                 {!search && (
                   <div className="flex gap-3 justify-center">
@@ -364,7 +419,7 @@ const CRM = () => {
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => deleteContact.mutate(contact.id)}
+                            onClick={() => handleDeleteContact(contact.id)}
                             className="text-destructive"
                           >
                             Delete
@@ -400,6 +455,42 @@ const CRM = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Delete Contact Confirmation */}
+      <AlertDialog open={!!deleteContactId} onOpenChange={() => setDeleteContactId(null)}>
+        <AlertDialogContent className="glass-panel-strong">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Contact</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this contact? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteContact} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete Deal Confirmation */}
+      <AlertDialog open={!!deleteDealId} onOpenChange={() => setDeleteDealId(null)}>
+        <AlertDialogContent className="glass-panel-strong">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Deal</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this deal? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteDeal} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

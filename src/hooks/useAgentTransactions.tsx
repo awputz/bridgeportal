@@ -45,13 +45,14 @@ export const useAgentTransactions = () => {
         const nameParts = profile.full_name.split(' ');
         if (nameParts.length >= 2) {
           searchPatterns.push(`${nameParts[0]} ${nameParts[nameParts.length - 1]}`);
+          // Add last name only for matching "Smith, Jones" style entries
+          searchPatterns.push(nameParts[nameParts.length - 1]);
         }
       }
       
       // Extract name from email (before @)
       if (profile.email) {
         const emailName = profile.email.split('@')[0];
-        // Convert email format to name (e.g., "john.doe" -> "John Doe")
         const formattedName = emailName
           .split(/[._-]/)
           .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
@@ -70,7 +71,6 @@ export const useAgentTransactions = () => {
           .order('closing_date', { ascending: false });
         
         if (!error && data) {
-          // Merge without duplicates
           const existingIds = new Set(allTransactions.map(t => t.id));
           const newTransactions = data.filter(t => !existingIds.has(t.id));
           allTransactions = [...allTransactions, ...newTransactions];
