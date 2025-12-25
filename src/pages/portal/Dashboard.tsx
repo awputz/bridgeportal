@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Mail, Users, Calendar, HardDrive, MessageSquare, Search, ArrowRight, TrendingUp, Building2, Home, FileText, Calculator, Sparkles, Palette, Database, FileSearch, MapPin, Send, UserPlus, FolderPlus, ListTodo, Wand2, Wrench, FolderOpen, DollarSign, Phone, Settings, ExternalLink } from "lucide-react";
+import { Mail, Users, Calendar, HardDrive, MessageSquare, Search, ArrowRight, TrendingUp, Building2, Home, FileText, Calculator, Sparkles, Palette, Database, FileSearch, MapPin, Send, UserPlus, FolderPlus, ListTodo, Wand2, Wrench, FolderOpen, DollarSign, Phone, Settings } from "lucide-react";
 import { useExternalTools, ExternalTool } from "@/hooks/useExternalTools";
 import { useIsAdminOrAgent } from "@/hooks/useUserRole";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -227,7 +227,7 @@ const Dashboard = () => {
                     <Icon className={`h-5 w-5 ${listing.color.split(' ')[1]}`} />
                   </div>
                   <span className="text-sm font-light text-foreground">{listing.name}</span>
-                  {listing.external && <ExternalLink className="h-3 w-3 text-muted-foreground mt-1" />}
+                  {listing.external}
                 </div>;
             return listing.external ? <a key={listing.name} href={listing.url} target="_blank" rel="noopener noreferrer">
                   {content}
