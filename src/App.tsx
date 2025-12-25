@@ -33,6 +33,7 @@ const NewDeal = lazy(() => import("./pages/portal/NewDeal"));
 const Generators = lazy(() => import("./pages/portal/Generators"));
 const Profile = lazy(() => import("./pages/portal/Profile"));
 const Tasks = lazy(() => import("./pages/portal/Tasks"));
+const Mail = lazy(() => import("./pages/portal/Mail"));
 // Analytics page removed - functionality consolidated into dashboard
 const Resources = lazy(() => import("./pages/portal/Resources"));
 const Requests = lazy(() => import("./pages/portal/Requests"));
@@ -189,6 +190,11 @@ const App = () => {
                     <Route path="tasks" element={
                       <Suspense fallback={<PageLoader />}>
                         <Tasks />
+                      </Suspense>
+                    } />
+                    <Route path="mail" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <Mail />
                       </Suspense>
                     } />
                     {/* Analytics route removed */}

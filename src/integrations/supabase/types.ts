@@ -1331,6 +1331,58 @@ export type Database = {
           },
         ]
       }
+      email_attachments: {
+        Row: {
+          attached_at: string | null
+          attached_by: string
+          contact_id: string | null
+          created_at: string | null
+          deal_id: string | null
+          email_thread_id: string | null
+          id: string
+        }
+        Insert: {
+          attached_at?: string | null
+          attached_by: string
+          contact_id?: string | null
+          created_at?: string | null
+          deal_id?: string | null
+          email_thread_id?: string | null
+          id?: string
+        }
+        Update: {
+          attached_at?: string | null
+          attached_by?: string
+          contact_id?: string | null
+          created_at?: string | null
+          deal_id?: string | null
+          email_thread_id?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_attachments_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_attachments_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_attachments_email_thread_id_fkey"
+            columns: ["email_thread_id"]
+            isOneToOne: false
+            referencedRelation: "email_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_threads: {
         Row: {
           agent_id: string
