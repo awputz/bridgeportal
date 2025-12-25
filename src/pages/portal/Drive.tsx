@@ -18,15 +18,21 @@ import {
   Settings,
   Loader2,
   AlertCircle,
+  ChevronRight,
+  Home,
+  Clock,
+  Star,
+  HardDrive,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { useDriveConnection, useConnectDrive, useDisconnectDrive, useDriveFiles } from "@/hooks/useGoogleDrive";
 import { hardLogout } from "@/lib/auth";
 
+// Google Drive-style file icons and colors
 const getFileIcon = (mimeType: string) => {
   if (mimeType.includes("folder")) return Folder;
   if (mimeType.includes("image")) return Image;
@@ -41,14 +47,15 @@ const getFileIcon = (mimeType: string) => {
 };
 
 const getFileColor = (mimeType: string) => {
-  if (mimeType.includes("folder")) return "text-yellow-400";
-  if (mimeType.includes("image")) return "text-pink-400";
-  if (mimeType.includes("video")) return "text-purple-400";
-  if (mimeType.includes("audio")) return "text-green-400";
-  if (mimeType.includes("pdf")) return "text-red-400";
-  if (mimeType.includes("spreadsheet") || mimeType.includes("excel")) return "text-emerald-400";
-  if (mimeType.includes("presentation") || mimeType.includes("powerpoint")) return "text-orange-400";
-  return "text-blue-400";
+  if (mimeType.includes("folder")) return "text-gdrive-folder bg-gdrive-folder/10";
+  if (mimeType.includes("image")) return "text-pink-500 bg-pink-500/10";
+  if (mimeType.includes("video")) return "text-purple-500 bg-purple-500/10";
+  if (mimeType.includes("audio")) return "text-gdrive-audio bg-gdrive-audio/10";
+  if (mimeType.includes("pdf")) return "text-gdrive-pdf bg-gdrive-pdf/10";
+  if (mimeType.includes("spreadsheet") || mimeType.includes("excel")) return "text-gdrive-sheets bg-gdrive-sheets/10";
+  if (mimeType.includes("presentation") || mimeType.includes("powerpoint")) return "text-gdrive-slides bg-gdrive-slides/10";
+  if (mimeType.includes("document")) return "text-gdrive-docs bg-gdrive-docs/10";
+  return "text-muted-foreground bg-muted/30";
 };
 
 const formatFileSize = (bytes?: number) => {
@@ -72,9 +79,12 @@ const formatDate = (dateString?: string) => {
   });
 };
 
+type QuickFilter = "all" | "recent" | "starred";
+
 export default function Drive() {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [quickFilter, setQuickFilter] = useState<QuickFilter>("all");
 
   const { data: connection, isLoading: isLoadingConnection, error: connectionError } = useDriveConnection();
   const {
@@ -114,14 +124,21 @@ export default function Drive() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">Drive</h1>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-10 h-10 rounded-lg bg-gdrive-folder flex items-center justify-center">
+                <HardDrive className="h-5 w-5 text-white" />
+              </div>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground">
+                Google Drive
+              </h1>
+            </div>
             <p className="text-muted-foreground font-light">Connect your Google Drive to access and manage files</p>
           </div>
 
           {/* Connect Card */}
           <div className="glass-card p-8 md:p-12 max-w-xl mx-auto text-center">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500/20 to-green-500/20 flex items-center justify-center mx-auto mb-6">
-              <FolderOpen className="h-10 w-10 text-blue-400" />
+            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-gdrive-folder/20 to-gdrive-docs/20 flex items-center justify-center mx-auto mb-6">
+              <FolderOpen className="h-10 w-10 text-gdrive-folder" />
             </div>
             <h2 className="text-2xl font-light text-foreground mb-3">Connect Your Google Drive</h2>
             <p className="text-muted-foreground font-light mb-8 max-w-sm mx-auto">
@@ -135,7 +152,12 @@ export default function Drive() {
               </div>
             )}
 
-            <Button size="lg" onClick={() => connectDrive.mutate()} disabled={connectDrive.isPending} className="gap-2">
+            <Button 
+              size="lg" 
+              onClick={() => connectDrive.mutate()} 
+              disabled={connectDrive.isPending} 
+              className="gap-2 bg-gdrive-folder hover:bg-gdrive-folder/90"
+            >
               {connectDrive.isPending ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -159,13 +181,18 @@ export default function Drive() {
   const files = filesData?.files || [];
 
   return (
-    <div className="min-h-screen pb-24 md:pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-        {/* Header */}
+    <div className="min-h-screen pb-24 md:pb-16 bg-background">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+        {/* Google Drive-style Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-          <div>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">Drive</h1>
-            <p className="text-muted-foreground font-light">Your Google Drive files</p>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-gdrive-folder flex items-center justify-center">
+              <HardDrive className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl md:text-3xl font-light text-foreground">Drive</h1>
+              <p className="text-sm text-muted-foreground">Your Google Drive files</p>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" onClick={() => refetchFiles()} className="gap-2">
@@ -177,7 +204,7 @@ export default function Drive() {
                 variant={viewMode === "grid" ? "default" : "ghost"}
                 size="sm"
                 onClick={() => setViewMode("grid")}
-                className="rounded-none"
+                className={cn("rounded-none", viewMode === "grid" && "bg-gdrive-folder hover:bg-gdrive-folder/90")}
               >
                 <Grid3X3 className="h-4 w-4" />
               </Button>
@@ -185,7 +212,7 @@ export default function Drive() {
                 variant={viewMode === "list" ? "default" : "ghost"}
                 size="sm"
                 onClick={() => setViewMode("list")}
-                className="rounded-none"
+                className={cn("rounded-none", viewMode === "list" && "bg-gdrive-folder hover:bg-gdrive-folder/90")}
               >
                 <List className="h-4 w-4" />
               </Button>
@@ -208,7 +235,7 @@ export default function Drive() {
               <div className="flex items-start gap-2">
                 <AlertCircle className="h-4 w-4 mt-0.5 text-muted-foreground" />
                 <div>
-                  <p className="text-sm font-medium">Couldn’t load Drive files</p>
+                  <p className="text-sm font-medium">Couldn't load Drive files</p>
                   <p className="text-sm text-muted-foreground break-words">{(filesError as Error).message}</p>
                 </div>
               </div>
@@ -219,91 +246,172 @@ export default function Drive() {
           </div>
         )}
 
-        {/* Search */}
-        <div className="mb-6">
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search files..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
+        <div className="flex gap-6">
+          {/* Sidebar - Quick Filters */}
+          <div className="hidden md:block w-48 flex-shrink-0">
+            <div className="rounded-2xl border border-border/50 bg-card p-3 shadow-sm">
+              <nav className="space-y-1">
+                <button
+                  onClick={() => setQuickFilter("all")}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                    quickFilter === "all"
+                      ? "bg-gdrive-folder/10 text-gdrive-folder"
+                      : "text-foreground/70 hover:bg-muted/50"
+                  )}
+                >
+                  <Home className="h-4 w-4" />
+                  My Drive
+                </button>
+                <button
+                  onClick={() => setQuickFilter("recent")}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                    quickFilter === "recent"
+                      ? "bg-gdrive-folder/10 text-gdrive-folder"
+                      : "text-foreground/70 hover:bg-muted/50"
+                  )}
+                >
+                  <Clock className="h-4 w-4" />
+                  Recent
+                </button>
+                <button
+                  onClick={() => setQuickFilter("starred")}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                    quickFilter === "starred"
+                      ? "bg-gdrive-folder/10 text-gdrive-folder"
+                      : "text-foreground/70 hover:bg-muted/50"
+                  )}
+                >
+                  <Star className="h-4 w-4" />
+                  Starred
+                </button>
+              </nav>
+            </div>
           </div>
-        </div>
 
-        {/* Files */}
-        <div className="glass-card p-4 md:p-6">
-          {isLoadingFiles ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {[...Array(8)].map((_, i) => (
-                <Skeleton key={i} className="h-24 rounded-lg" />
-              ))}
+          {/* Main Content */}
+          <div className="flex-1 min-w-0">
+            {/* Breadcrumbs */}
+            <div className="flex items-center gap-1 mb-4 text-sm">
+              <button className="flex items-center gap-1 text-gdrive-folder hover:underline">
+                <Home className="h-4 w-4" />
+                <span>My Drive</span>
+              </button>
             </div>
-          ) : files.length === 0 ? (
-            <div className="text-center py-12">
-              <FolderOpen className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
-              <p className="text-muted-foreground">{searchQuery ? "No files match your search" : "No files found"}</p>
+
+            {/* Search */}
+            <div className="mb-6">
+              <div className="relative max-w-md">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search in Drive..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 bg-muted/30 border-transparent focus:border-gdrive-folder/50 focus:bg-background transition-colors"
+                />
+              </div>
             </div>
-          ) : viewMode === "grid" ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {files.map((file) => {
-                const Icon = getFileIcon(file.mimeType);
-                const iconColor = getFileColor(file.mimeType);
-                return (
-                  <a
-                    key={file.id}
-                    href={file.webViewLink || "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group p-4 rounded-xl bg-muted/30 hover:bg-muted/50 transition-all duration-200 border border-transparent hover:border-border/50"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className={cn("p-2 rounded-lg bg-background/50", iconColor)}>
-                        <Icon className="h-5 w-5" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm truncate group-hover:text-primary transition-colors">{file.name}</p>
-                        <div className="flex items-center gap-2 mt-1">
-                          {file.size && <span className="text-xs text-muted-foreground">{formatFileSize(file.size)}</span>}
-                          {file.modifiedTime && (
-                            <span className="text-xs text-muted-foreground">{formatDate(file.modifiedTime)}</span>
-                          )}
+
+            {/* Files */}
+            <div className="rounded-2xl border border-border/50 bg-card p-4 md:p-6 shadow-sm">
+              {isLoadingFiles ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {[...Array(8)].map((_, i) => (
+                    <Skeleton key={i} className="h-24 rounded-xl" />
+                  ))}
+                </div>
+              ) : files.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="w-20 h-20 rounded-full bg-muted/30 flex items-center justify-center mx-auto mb-4">
+                    <FolderOpen className="h-10 w-10 text-muted-foreground/50" />
+                  </div>
+                  <p className="text-muted-foreground font-medium">
+                    {searchQuery ? "No files match your search" : "No files found"}
+                  </p>
+                  <p className="text-sm text-muted-foreground/70 mt-1">
+                    {searchQuery ? "Try a different search term" : "Your Drive appears to be empty"}
+                  </p>
+                </div>
+              ) : viewMode === "grid" ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {files.map((file) => {
+                    const Icon = getFileIcon(file.mimeType);
+                    const colorClass = getFileColor(file.mimeType);
+                    return (
+                      <a
+                        key={file.id}
+                        href={file.webViewLink || "#"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group p-4 rounded-xl bg-muted/20 hover:bg-muted/40 transition-all duration-200 border border-transparent hover:border-border/50 hover:shadow-md"
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className={cn("p-2.5 rounded-xl", colorClass)}>
+                            <Icon className="h-5 w-5" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm truncate group-hover:text-gdrive-folder transition-colors">
+                              {file.name}
+                            </p>
+                            <div className="flex items-center gap-2 mt-1.5">
+                              {file.size && (
+                                <span className="text-xs text-muted-foreground">{formatFileSize(file.size)}</span>
+                              )}
+                              {file.modifiedTime && (
+                                <span className="text-xs text-muted-foreground">{formatDate(file.modifiedTime)}</span>
+                              )}
+                            </div>
+                          </div>
+                          <ExternalLink className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                         </div>
-                      </div>
-                      <ExternalLink className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </div>
-                  </a>
-                );
-              })}
+                      </a>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  {/* List Header */}
+                  <div className="hidden md:flex items-center gap-3 px-3 py-2 text-xs font-medium text-muted-foreground border-b border-border/30">
+                    <div className="flex-1">Name</div>
+                    <div className="w-24 text-right">Size</div>
+                    <div className="w-32 text-right">Modified</div>
+                    <div className="w-8" />
+                  </div>
+                  {files.map((file) => {
+                    const Icon = getFileIcon(file.mimeType);
+                    const colorClass = getFileColor(file.mimeType);
+                    return (
+                      <a
+                        key={file.id}
+                        href={file.webViewLink || "#"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-muted/30 transition-colors"
+                      >
+                        <div className={cn("p-1.5 rounded-lg", colorClass)}>
+                          <Icon className="h-4 w-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm truncate group-hover:text-gdrive-folder transition-colors">
+                            {file.name}
+                          </p>
+                        </div>
+                        <span className="text-xs text-muted-foreground hidden sm:block w-24 text-right">
+                          {formatFileSize(file.size)}
+                        </span>
+                        <span className="text-xs text-muted-foreground hidden md:block w-32 text-right">
+                          {formatDate(file.modifiedTime)}
+                        </span>
+                        <ExternalLink className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="space-y-1">
-              {files.map((file) => {
-                const Icon = getFileIcon(file.mimeType);
-                const iconColor = getFileColor(file.mimeType);
-                return (
-                  <a
-                    key={file.id}
-                    href={file.webViewLink || "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center gap-3 p-3 rounded-lg hover:bg-muted/30 transition-colors"
-                  >
-                    <div className={cn("p-1.5 rounded-lg bg-muted/50", iconColor)}>
-                      <Icon className="h-4 w-4" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-sm truncate group-hover:text-primary transition-colors">{file.name}</p>
-                    </div>
-                    <span className="text-xs text-muted-foreground hidden sm:block">{formatFileSize(file.size)}</span>
-                    <span className="text-xs text-muted-foreground hidden md:block">{formatDate(file.modifiedTime)}</span>
-                    <ExternalLink className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </a>
-                );
-              })}
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

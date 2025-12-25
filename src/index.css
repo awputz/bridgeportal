@@ -63,6 +63,19 @@ All colors MUST be HSL.
     --radius-xl: 1rem;
     --radius-pill: 9999px;
     
+    /* Google Service Colors */
+    --gmail-red: 4 90% 58%;
+    --gmail-orange: 36 100% 50%;
+    --gmail-yellow: 45 100% 51%;
+    --gcal-blue: 217 89% 61%;
+    --gcal-green: 142 71% 45%;
+    --gdrive-folder: 43 89% 50%;
+    --gdrive-docs: 217 89% 61%;
+    --gdrive-sheets: 142 71% 45%;
+    --gdrive-slides: 36 100% 50%;
+    --gdrive-pdf: 4 90% 58%;
+    --gdrive-audio: 142 71% 45%;
+    
     /* Transitions - Simple and clean */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-spring: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
