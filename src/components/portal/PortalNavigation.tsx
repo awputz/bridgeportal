@@ -188,6 +188,47 @@ export const PortalNavigation = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
 
+              {/* Company Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className={cn(
+                      "relative z-10 flex items-center gap-1.5 text-[15px] font-light transition-all duration-200 hover:scale-105 cursor-pointer",
+                      isCompanyActive ? "text-foreground" : "text-foreground/70 hover:text-foreground"
+                    )}
+                  >
+                    <Building2 className="h-4 w-4" />
+                    Company
+                    <ChevronDown className="h-3 w-3 opacity-60" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center" className="w-56 bg-background/95 backdrop-blur-xl border-border">
+                  {companyItems.map(item => {
+                    const Icon = item.icon;
+                    const isActive = location.pathname === item.path || 
+                      location.pathname.startsWith(item.path);
+                    
+                    return (
+                      <DropdownMenuItem key={item.name} asChild>
+                        <Link 
+                          to={item.path} 
+                          className={cn(
+                            "flex items-start gap-3 py-2.5 cursor-pointer",
+                            isActive && "bg-accent/20"
+                          )}
+                        >
+                          <Icon className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <div className="font-light">{item.name}</div>
+                            <div className="text-xs text-muted-foreground font-light">{item.description}</div>
+                          </div>
+                        </Link>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
               {/* AI */}
               <Link
                 to="/portal/ai"
@@ -331,6 +372,31 @@ export const PortalNavigation = () => {
                   );
                 })}
 
+                {/* Company Section */}
+                <div className="text-xs text-muted-foreground uppercase tracking-wider px-4 mb-2 mt-6">Company</div>
+                {companyItems.map((item, index) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.path || 
+                    location.pathname.startsWith(item.path);
+                  
+                  return (
+                    <Link
+                      key={item.name}
+                      to={item.path}
+                      className={cn(
+                        "flex items-center gap-4 text-lg font-light transition-all duration-300 py-4 min-h-[56px] active:bg-white/5 rounded-lg px-4 -mx-2",
+                        isActive ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
+                        isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                      )}
+                      style={{ transitionDelay: `${(coreNavItems.length + productivityItems.length + index) * 50}ms` }}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <Icon className="h-5 w-5" />
+                      {item.name}
+                    </Link>
+                  );
+                })}
+
                 {/* Other Section */}
                 <div className="text-xs text-muted-foreground uppercase tracking-wider px-4 mb-2 mt-6">Other</div>
                 <Link
@@ -340,24 +406,11 @@ export const PortalNavigation = () => {
                     location.pathname.startsWith('/portal/ai') ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
                     isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                   )}
-                  style={{ transitionDelay: `${(coreNavItems.length + productivityItems.length) * 50}ms` }}
+                  style={{ transitionDelay: `${(coreNavItems.length + productivityItems.length + companyItems.length) * 50}ms` }}
                   onClick={() => setIsOpen(false)}
                 >
                   <Sparkles className="h-5 w-5" />
                   AI
-                </Link>
-                <Link
-                  to="/portal/directory"
-                  className={cn(
-                    "flex items-center gap-4 text-lg font-light transition-all duration-300 py-4 min-h-[56px] active:bg-white/5 rounded-lg px-4 -mx-2",
-                    location.pathname.startsWith('/portal/directory') ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
-                    isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
-                  )}
-                  style={{ transitionDelay: `${(coreNavItems.length + productivityItems.length + 1) * 50}ms` }}
-                  onClick={() => setIsOpen(false)}
-                >
-                  <Users className="h-5 w-5" />
-                  Directory
                 </Link>
                 <Link
                   to="/portal/profile"
