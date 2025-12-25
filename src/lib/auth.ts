@@ -38,27 +38,43 @@ export const invokeWithAuthHandling = async <T = unknown>(
   options?: { body?: Record<string, unknown>; headers?: Record<string, string> }
 ): Promise<{ data: T | null; error: Error | null }> => {
   try {
-    const { data, error } = await supabase.functions.invoke<T>(functionName, options);
-    
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    // Most of our backend functions require a user JWT, not the anon key.
+    if (!session?.access_token) {
+      return { data: null, error: new Error("Not authenticated") };
+    }
+
+    const mergedHeaders: Record<string, string> = {
+      Authorization: `Bearer ${session.access_token}`,
+      ...(options?.headers ?? {}),
+    };
+
+    const { data, error } = await supabase.functions.invoke<T>(functionName, {
+      ...options,
+      headers: mergedHeaders,
+    });
+
     if (error) {
       // Check if this is an auth error
-      const errorMessage = error.message?.toLowerCase() || '';
-      const isAuthError = 
-        errorMessage.includes('unauthorized') ||
-        errorMessage.includes('session') ||
-        errorMessage.includes('jwt') ||
-        errorMessage.includes('401') ||
-        errorMessage.includes('403');
-      
+      const errorMessage = error.message?.toLowerCase() || "";
+      const isAuthError =
+        errorMessage.includes("unauthorized") ||
+        errorMessage.includes("session") ||
+        errorMessage.includes("jwt") ||
+        errorMessage.includes("401") ||
+        errorMessage.includes("403");
+
       if (isAuthError) {
         console.error(`Auth error calling ${functionName}:`, error);
         // Don't immediately logout - let the caller decide
-        // But log it for debugging
       }
-      
+
       return { data: null, error };
     }
-    
+
     return { data, error: null };
   } catch (err) {
     console.error(`Exception invoking ${functionName}:`, err);

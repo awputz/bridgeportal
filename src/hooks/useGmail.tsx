@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { invokeWithAuthHandling } from "@/lib/auth";
 
 export interface GmailMessage {
   id: string;
@@ -42,7 +43,9 @@ export function useGmailConnection() {
   return useQuery({
     queryKey: ["gmail-connection"],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return { isConnected: false, email: null };
 
       const { data, error } = await supabase
@@ -61,7 +64,7 @@ export function useGmailConnection() {
       }
 
       return {
-        isConnected: data.gmail_enabled && !!data.gmail_access_token,
+        isConnected: !!data.gmail_enabled && !!data.gmail_access_token,
         email: data.google_email,
       };
     },
@@ -76,33 +79,28 @@ export function useConnectGmail() {
 
   return useMutation({
     mutationFn: async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("Not authenticated");
-
-      const response = await supabase.functions.invoke("gmail-auth", {
+      const { data, error } = await invokeWithAuthHandling<{ url: string }>("gmail-auth", {
         body: { action: "get-auth-url" },
       });
 
-      if (response.error) throw new Error(response.error.message);
-      if (response.data?.error) throw new Error(response.data.error);
+      if (error) throw error;
+      if (!data?.url) throw new Error("Failed to get auth URL");
 
-      const authUrl = response.data.url;
-      
       // Open popup for OAuth
-      const popup = window.open(authUrl, '_blank', 'width=500,height=600');
-      
+      const popup = window.open(data.url, "_blank", "width=500,height=600");
+
       // Poll for popup close and refetch connection
       return new Promise((resolve) => {
         const checkClosed = setInterval(() => {
           if (popup?.closed) {
             clearInterval(checkClosed);
-            queryClient.invalidateQueries({ queryKey: ['gmail-connection'] });
-            queryClient.invalidateQueries({ queryKey: ['gmail-messages'] });
-            queryClient.invalidateQueries({ queryKey: ['gmail-labels'] });
+            queryClient.invalidateQueries({ queryKey: ["gmail-connection"] });
+            queryClient.invalidateQueries({ queryKey: ["gmail-messages"] });
+            queryClient.invalidateQueries({ queryKey: ["gmail-labels"] });
             resolve({ success: true });
           }
         }, 500);
-        
+
         // Timeout after 5 minutes
         setTimeout(() => {
           clearInterval(checkClosed);
@@ -127,17 +125,12 @@ export function useDisconnectGmail() {
 
   return useMutation({
     mutationFn: async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("Not authenticated");
-
-      const response = await supabase.functions.invoke("gmail-auth", {
+      const { data, error } = await invokeWithAuthHandling("gmail-auth", {
         body: { action: "disconnect" },
       });
 
-      if (response.error) throw new Error(response.error.message);
-      if (response.data?.error) throw new Error(response.data.error);
-
-      return response.data;
+      if (error) throw error;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["gmail-connection"] });
@@ -170,17 +163,13 @@ export function useGmailMessages(options: {
   return useQuery({
     queryKey: ["gmail-messages", { labelIds, query, maxResults }],
     queryFn: async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("Not authenticated");
-
-      const response = await supabase.functions.invoke("gmail-messages", {
+      const { data, error } = await invokeWithAuthHandling("gmail-messages", {
         body: { action: "list", labelIds, query, maxResults },
       });
 
-      if (response.error) throw new Error(response.error.message);
-      if (response.data?.error) throw new Error(response.data.error);
+      if (error) throw error;
 
-      return response.data as {
+      return data as {
         messages: GmailMessage[];
         nextPageToken?: string;
         resultSizeEstimate: number;
@@ -198,17 +187,12 @@ export function useGmailMessage(messageId: string | null) {
     queryFn: async () => {
       if (!messageId) return null;
 
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("Not authenticated");
-
-      const response = await supabase.functions.invoke("gmail-messages", {
+      const { data, error } = await invokeWithAuthHandling("gmail-messages", {
         body: { action: "get", messageId },
       });
 
-      if (response.error) throw new Error(response.error.message);
-      if (response.data?.error) throw new Error(response.data.error);
-
-      return response.data as GmailMessage;
+      if (error) throw error;
+      return data as GmailMessage;
     },
     enabled: !!messageId,
   });
@@ -219,17 +203,10 @@ export function useGmailLabels(enabled = true) {
   return useQuery({
     queryKey: ["gmail-labels"],
     queryFn: async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("Not authenticated");
+      const { data, error } = await invokeWithAuthHandling("gmail-labels", { body: {} });
 
-      const response = await supabase.functions.invoke("gmail-labels", {
-        body: {},
-      });
-
-      if (response.error) throw new Error(response.error.message);
-      if (response.data?.error) throw new Error(response.data.error);
-
-      return response.data.labels as GmailLabel[];
+      if (error) throw error;
+      return (data as { labels: GmailLabel[] }).labels;
     },
     enabled,
     staleTime: 60 * 1000,
@@ -251,17 +228,12 @@ export function useSendEmail() {
       replyToMessageId?: string;
       threadId?: string;
     }) => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("Not authenticated");
-
-      const response = await supabase.functions.invoke("gmail-send", {
+      const { data, error } = await invokeWithAuthHandling("gmail-send", {
         body: { action: "send", ...params },
       });
 
-      if (response.error) throw new Error(response.error.message);
-      if (response.data?.error) throw new Error(response.data.error);
-
-      return response.data;
+      if (error) throw error;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["gmail-messages"] });
@@ -291,17 +263,12 @@ export function useModifyMessage() {
       addLabelIds?: string[];
       removeLabelIds?: string[];
     }) => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("Not authenticated");
-
-      const response = await supabase.functions.invoke("gmail-messages", {
+      const { data, error } = await invokeWithAuthHandling("gmail-messages", {
         body: { action: "modify", ...params },
       });
 
-      if (response.error) throw new Error(response.error.message);
-      if (response.data?.error) throw new Error(response.data.error);
-
-      return response.data;
+      if (error) throw error;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["gmail-messages"] });
@@ -318,17 +285,12 @@ export function useTrashMessage() {
 
   return useMutation({
     mutationFn: async (messageId: string) => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("Not authenticated");
-
-      const response = await supabase.functions.invoke("gmail-messages", {
+      const { data, error } = await invokeWithAuthHandling("gmail-messages", {
         body: { action: "trash", messageId },
       });
 
-      if (response.error) throw new Error(response.error.message);
-      if (response.data?.error) throw new Error(response.data.error);
-
-      return response.data;
+      if (error) throw error;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["gmail-messages"] });

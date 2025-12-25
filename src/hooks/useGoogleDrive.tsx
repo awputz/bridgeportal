@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { invokeWithAuthHandling } from "@/lib/auth";
 
 export interface DriveFile {
   id: string;
@@ -17,19 +18,21 @@ export interface DriveFile {
 
 export function useDriveConnection() {
   return useQuery({
-    queryKey: ['drive-connection'],
+    queryKey: ["drive-connection"],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return { isConnected: false };
 
       const { data, error } = await supabase
-        .from('user_google_tokens')
-        .select('drive_enabled, access_token')
-        .eq('user_id', user.id)
+        .from("user_google_tokens")
+        .select("drive_enabled, drive_access_token, access_token")
+        .eq("user_id", user.id)
         .maybeSingle();
 
       if (error) {
-        console.error('Drive connection check error:', error);
+        console.error("Drive connection check error:", error);
         return { isConnected: false };
       }
 
@@ -37,7 +40,8 @@ export function useDriveConnection() {
         return { isConnected: false };
       }
 
-      return { isConnected: data.drive_enabled && !!data.access_token };
+      const hasToken = !!(data.drive_access_token || data.access_token);
+      return { isConnected: !!data.drive_enabled && hasToken };
     },
     staleTime: 30000,
   });
@@ -45,29 +49,33 @@ export function useDriveConnection() {
 
 export function useConnectDrive() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async () => {
-      const { data, error } = await supabase.functions.invoke('google-drive-auth', {
-        body: { action: 'get-auth-url' }
-      });
+      const { data, error } = await invokeWithAuthHandling<{ url: string }>(
+        "google-drive-auth",
+        {
+          body: { action: "get-auth-url" },
+        }
+      );
 
       if (error) throw error;
-      
+      if (!data?.url) throw new Error("Failed to get auth URL");
+
       // Open popup for OAuth
-      const popup = window.open(data.url, '_blank', 'width=500,height=600');
-      
+      const popup = window.open(data.url, "_blank", "width=500,height=600");
+
       // Poll for popup close and refetch connection
       return new Promise((resolve) => {
         const checkClosed = setInterval(() => {
           if (popup?.closed) {
             clearInterval(checkClosed);
-            queryClient.invalidateQueries({ queryKey: ['drive-connection'] });
-            queryClient.invalidateQueries({ queryKey: ['drive-files'] });
+            queryClient.invalidateQueries({ queryKey: ["drive-connection"] });
+            queryClient.invalidateQueries({ queryKey: ["drive-files"] });
             resolve(data);
           }
         }, 500);
-        
+
         // Timeout after 5 minutes
         setTimeout(() => {
           clearInterval(checkClosed);
@@ -76,39 +84,43 @@ export function useConnectDrive() {
       });
     },
     onError: (error: Error) => {
-      toast.error('Failed to connect Google Drive: ' + error.message);
-    }
+      toast.error("Failed to connect Google Drive: " + error.message);
+    },
   });
 }
 
 export function useDisconnectDrive() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async () => {
-      const { data, error } = await supabase.functions.invoke('google-drive-auth', {
-        body: { action: 'disconnect' }
+      const { data, error } = await invokeWithAuthHandling("google-drive-auth", {
+        body: { action: "disconnect" },
       });
       if (error) throw error;
       return data;
     },
     onSuccess: () => {
-      toast.success('Google Drive disconnected');
-      queryClient.invalidateQueries({ queryKey: ['drive-connection'] });
-      queryClient.invalidateQueries({ queryKey: ['drive-files'] });
+      toast.success("Google Drive disconnected");
+      queryClient.invalidateQueries({ queryKey: ["drive-connection"] });
+      queryClient.invalidateQueries({ queryKey: ["drive-files"] });
     },
     onError: (error: Error) => {
-      toast.error('Failed to disconnect: ' + error.message);
-    }
+      toast.error("Failed to disconnect: " + error.message);
+    },
   });
 }
 
 export function useDriveFiles(options?: { query?: string; folderId?: string; enabled?: boolean }) {
   return useQuery({
-    queryKey: ['drive-files', options?.query, options?.folderId],
+    queryKey: ["drive-files", options?.query, options?.folderId],
     queryFn: async () => {
-      const { data, error } = await supabase.functions.invoke('google-drive-files', {
-        body: { action: 'list', query: options?.query, folderId: options?.folderId }
+      const { data, error } = await invokeWithAuthHandling("google-drive-files", {
+        body: {
+          action: "list",
+          query: options?.query,
+          folderId: options?.folderId,
+        },
       });
 
       if (error) throw error;

@@ -10,6 +10,7 @@ import { MailMessage } from "@/components/portal/MailMessage";
 import { MailCompose } from "@/components/portal/MailCompose";
 import { MailSearch } from "@/components/portal/MailSearch";
 import { cn } from "@/lib/utils";
+import { hardLogout } from "@/lib/auth";
 
 const LABEL_CONFIG: Record<string, { icon: React.ElementType; label: string }> = {
   INBOX: { icon: Inbox, label: "Inbox" },
@@ -26,8 +27,18 @@ export default function Mail() {
   const [isComposeOpen, setIsComposeOpen] = useState(false);
 
   const { data: connection, isLoading: isLoadingConnection, error: connectionError } = useGmailConnection();
-  const { data: labels, isLoading: isLoadingLabels, refetch: refetchLabels } = useGmailLabels(connection?.isConnected);
-  const { data: messagesData, isLoading: isLoadingMessages, refetch: refetchMessages } = useGmailMessages({
+  const {
+    data: labels,
+    isLoading: isLoadingLabels,
+    error: labelsError,
+    refetch: refetchLabels,
+  } = useGmailLabels(connection?.isConnected);
+  const {
+    data: messagesData,
+    isLoading: isLoadingMessages,
+    error: messagesError,
+    refetch: refetchMessages,
+  } = useGmailMessages({
     labelIds: [activeLabel],
     query: searchQuery || undefined,
     enabled: connection?.isConnected,
@@ -41,8 +52,10 @@ export default function Mail() {
     refetchMessages();
   };
 
+  const dataError = (labelsError as Error | null) || (messagesError as Error | null);
+
   const getLabelUnreadCount = (labelId: string) => {
-    const label = labels?.find(l => l.id === labelId);
+    const label = labels?.find((l) => l.id === labelId);
     return label?.messagesUnread || 0;
   };
 
@@ -73,9 +86,7 @@ export default function Mail() {
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">
               Mail
             </h1>
-            <p className="text-muted-foreground font-light">
-              Connect your Gmail to send and receive emails
-            </p>
+            <p className="text-muted-foreground font-light">Connect your Gmail to send and receive emails</p>
           </div>
 
           {/* Connect Card */}
@@ -83,13 +94,11 @@ export default function Mail() {
             <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center mx-auto mb-6">
               <MailIcon className="h-10 w-10 text-red-400" />
             </div>
-            <h2 className="text-2xl font-light text-foreground mb-3">
-              Connect Your Gmail
-            </h2>
+            <h2 className="text-2xl font-light text-foreground mb-3">Connect Your Gmail</h2>
             <p className="text-muted-foreground font-light mb-8 max-w-sm mx-auto">
               Access your emails directly from the portal. Send, receive, and link emails to deals and contacts.
             </p>
-            
+
             {connectionError && (
               <div className="flex items-center gap-2 justify-center text-amber-400 mb-6 text-sm">
                 <AlertCircle className="h-4 w-4" />
@@ -97,12 +106,7 @@ export default function Mail() {
               </div>
             )}
 
-            <Button
-              size="lg"
-              onClick={() => connectGmail.mutate()}
-              disabled={connectGmail.isPending}
-              className="gap-2"
-            >
+            <Button size="lg" onClick={() => connectGmail.mutate()} disabled={connectGmail.isPending} className="gap-2">
               {connectGmail.isPending ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -116,9 +120,7 @@ export default function Mail() {
               )}
             </Button>
 
-            <p className="text-xs text-muted-foreground mt-6">
-              We'll only request read and send permissions
-            </p>
+            <p className="text-xs text-muted-foreground mt-6">We'll only request read and send permissions</p>
           </div>
         </div>
       </div>
@@ -131,14 +133,8 @@ export default function Mail() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">
-              Mail
-            </h1>
-            {connection.email && (
-              <p className="text-muted-foreground font-light">
-                {connection.email}
-              </p>
-            )}
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">Mail</h1>
+            {connection.email && <p className="text-muted-foreground font-light">{connection.email}</p>}
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" onClick={handleRefresh} className="gap-2">
@@ -160,6 +156,23 @@ export default function Mail() {
             </Button>
           </div>
         </div>
+
+        {dataError && (
+          <div className="mb-6 rounded-xl border border-border/50 bg-muted/20 p-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="flex items-start gap-2">
+                <AlertCircle className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                <div>
+                  <p className="text-sm font-medium">Couldn’t load Gmail data</p>
+                  <p className="text-sm text-muted-foreground break-words">{dataError.message}</p>
+                </div>
+              </div>
+              <Button variant="outline" size="sm" onClick={hardLogout} className="shrink-0">
+                Sign in again
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* Main Content */}
         <div className="glass-card overflow-hidden">
@@ -190,8 +203,8 @@ export default function Mail() {
                         <span className="hidden md:inline">{config.label}</span>
                       </span>
                       {unreadCount > 0 && id !== "TRASH" && (
-                        <Badge 
-                          variant={isActive ? "secondary" : "default"} 
+                        <Badge
+                          variant={isActive ? "secondary" : "default"}
                           className="text-[10px] h-5 min-w-[20px] justify-center hidden md:flex"
                         >
                           {unreadCount}
@@ -206,10 +219,12 @@ export default function Mail() {
             {/* Content Area */}
             <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
               {/* Email List */}
-              <div className={cn(
-                "flex-col border-b md:border-b-0 md:border-r border-border/50 w-full md:w-96",
-                selectedMessageId ? "hidden md:flex" : "flex"
-              )}>
+              <div
+                className={cn(
+                  "flex-col border-b md:border-b-0 md:border-r border-border/50 w-full md:w-96",
+                  selectedMessageId ? "hidden md:flex" : "flex"
+                )}
+              >
                 <div className="p-3 border-b border-border/50">
                   <MailSearch value={searchQuery} onChange={setSearchQuery} />
                 </div>
@@ -222,10 +237,7 @@ export default function Mail() {
               </div>
 
               {/* Email View */}
-              <div className={cn(
-                "flex-1 flex-col bg-muted/10",
-                selectedMessageId ? "flex" : "hidden md:flex"
-              )}>
+              <div className={cn("flex-1 flex-col bg-muted/10", selectedMessageId ? "flex" : "hidden md:flex")}>
                 <MailMessage
                   messageId={selectedMessageId}
                   onBack={() => setSelectedMessageId(null)}
@@ -238,10 +250,7 @@ export default function Mail() {
       </div>
 
       {/* Compose Dialog */}
-      <MailCompose
-        open={isComposeOpen}
-        onOpenChange={setIsComposeOpen}
-      />
+      <MailCompose open={isComposeOpen} onOpenChange={setIsComposeOpen} />
     </div>
   );
 }

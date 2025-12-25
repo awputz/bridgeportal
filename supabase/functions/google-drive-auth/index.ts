@@ -75,10 +75,10 @@ serve(async (req) => {
         .from('user_google_tokens')
         .select('drive_enabled, drive_access_token')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
       return new Response(
-        JSON.stringify({ connected: tokenData?.drive_enabled && !!tokenData?.drive_access_token }),
+        JSON.stringify({ connected: !!tokenData?.drive_enabled && !!tokenData?.drive_access_token }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
