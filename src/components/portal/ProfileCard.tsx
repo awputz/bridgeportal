@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { User, ArrowRight, TrendingUp, Briefcase } from "lucide-react";
 import { useAgentTransactions } from "@/hooks/useAgentTransactions";
 import { useAgentCommissions } from "@/hooks/useAgentCommissions";
+import { useCurrentAgent } from "@/hooks/useCurrentAgent";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const formatCurrency = (value: number): string => {
@@ -11,8 +12,11 @@ const formatCurrency = (value: number): string => {
 };
 
 export const ProfileCard = () => {
-  const { data: transactions, isLoading } = useAgentTransactions();
+  const { data: transactions, isLoading: transactionsLoading } = useAgentTransactions();
+  const { data: agent, isLoading: agentLoading } = useCurrentAgent();
   const commissions = useAgentCommissions(transactions || []);
+
+  const isLoading = transactionsLoading || agentLoading;
 
   if (isLoading) {
     return (
@@ -27,21 +31,37 @@ export const ProfileCard = () => {
       to="/portal/profile"
       className="glass-card p-4 flex items-center gap-4 hover:border-white/20 transition-all duration-300 group"
     >
-      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center flex-shrink-0">
-        <User className="h-6 w-6 text-foreground" />
-      </div>
+      {/* Agent Photo */}
+      {agent?.photoUrl ? (
+        <img 
+          src={agent.photoUrl} 
+          alt={agent.fullName}
+          className="w-12 h-12 rounded-full object-cover flex-shrink-0"
+        />
+      ) : (
+        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center flex-shrink-0">
+          <User className="h-6 w-6 text-foreground" />
+        </div>
+      )}
       
       <div className="flex-1 min-w-0">
-        <h3 className="text-sm font-light text-foreground mb-1">My Profile</h3>
-        <div className="flex items-center gap-4 text-sm">
+        <h3 className="text-sm font-light text-foreground mb-0.5">
+          {agent?.fullName || "My Profile"}
+        </h3>
+        {agent?.title && (
+          <p className="text-xs text-muted-foreground mb-1">{agent.title}</p>
+        )}
+        <div className="flex items-center gap-4 text-xs">
           <div className="flex items-center gap-1 text-muted-foreground">
             <Briefcase className="h-3 w-3" />
             <span>{commissions.totalDeals} deals</span>
           </div>
-          <div className="flex items-center gap-1 text-muted-foreground">
-            <TrendingUp className="h-3 w-3" />
-            <span>{formatCurrency(commissions.ytdEarnings)} YTD</span>
-          </div>
+          {commissions.ytdEarnings > 0 && (
+            <div className="flex items-center gap-1 text-muted-foreground">
+              <TrendingUp className="h-3 w-3" />
+              <span>{formatCurrency(commissions.ytdEarnings)} YTD</span>
+            </div>
+          )}
         </div>
       </div>
       
