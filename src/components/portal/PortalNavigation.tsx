@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, LayoutDashboard, Wrench, LogOut, Settings, Users, Sparkles, Briefcase, User, Building2, StickyNote, ListTodo } from "lucide-react";
+import { Menu, X, LayoutDashboard, Wrench, LogOut, Settings, Users, Sparkles, Briefcase, User, Building2, StickyNote, ListTodo, Mail } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { 
@@ -22,6 +22,7 @@ const coreNavItems = [
   { name: "Contacts", path: "/portal/contacts", icon: Users },
   { name: "Tasks", path: "/portal/tasks", icon: ListTodo },
   { name: "Notes", path: "/portal/notes", icon: StickyNote },
+  { name: "Mail", path: "/portal/mail", icon: Mail },
 ];
 
 export const PortalNavigation = () => {

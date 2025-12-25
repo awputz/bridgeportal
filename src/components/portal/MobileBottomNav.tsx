@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Sparkles, Briefcase, Users, MoreHorizontal, ListTodo, FileText, Calculator, Wrench, FolderOpen, Send, User, Wand2, DollarSign, StickyNote, Building2, Heart, Target, Globe, Headphones, Bell } from "lucide-react";
+import { Home, Sparkles, Briefcase, Users, MoreHorizontal, ListTodo, FileText, Calculator, Wrench, FolderOpen, Send, User, Wand2, DollarSign, StickyNote, Building2, Heart, Target, Globe, Headphones, Bell, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Sheet,
@@ -14,7 +14,7 @@ const navItems = [
   { path: "/portal", icon: Home, label: "Home" },
   { path: "/portal/crm", icon: Briefcase, label: "CRM" },
   { path: "/portal/tasks", icon: ListTodo, label: "Tasks" },
-  { path: "/portal/notes", icon: StickyNote, label: "Notes" },
+  { path: "/portal/mail", icon: Mail, label: "Mail" },
 ];
 
 const moreItemsGrouped = [
@@ -46,6 +46,7 @@ const moreItemsGrouped = [
       { path: "/portal/resources", icon: FolderOpen, label: "Resources" },
       { path: "/portal/my-transactions", icon: DollarSign, label: "My Deals" },
       { path: "/portal/requests", icon: Send, label: "Requests" },
+      { path: "/portal/notes", icon: StickyNote, label: "Notes" },
     ],
   },
   {

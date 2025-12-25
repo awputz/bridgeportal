@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { User, Mail, Phone, Lock, Save, TrendingUp, DollarSign, Building2, Calendar, FileText, ExternalLink, Home } from "lucide-react";
+import { User, Mail, Phone, Lock, Save, TrendingUp, DollarSign, Building2, Calendar, FileText, ExternalLink, Home, FolderOpen, Users, Check, X, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,10 +8,15 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useAgentTransactions } from "@/hooks/useAgentTransactions";
 import { useAgentCommissions } from "@/hooks/useAgentCommissions";
 import { formatResidentialRent, formatFullCurrency, formatCommercialPricing } from "@/lib/formatters";
+import { useGmailConnection, useConnectGmail, useDisconnectGmail } from "@/hooks/useGmail";
+import { useDriveConnection, useConnectDrive, useDisconnectDrive } from "@/hooks/useGoogleDrive";
+import { useContactsConnection, useConnectContacts, useDisconnectContacts } from "@/hooks/useGoogleContacts";
+import { useGoogleCalendar } from "@/hooks/useGoogleCalendar";
 import {
   Table,
   TableBody,
@@ -490,6 +495,9 @@ const Profile = () => {
                 )}
               </CardContent>
             </Card>
+
+            {/* Connected Services */}
+            <ConnectedServicesCard />
           </div>
 
           {/* Sidebar - Exclusives + Earnings */}
@@ -606,6 +614,107 @@ const Profile = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+// Connected Services Component
+const ConnectedServicesCard = () => {
+  const { data: gmailConnection } = useGmailConnection();
+  const { data: driveConnection } = useDriveConnection();
+  const { data: contactsConnection } = useContactsConnection();
+  const { isConnected: calendarConnected } = useGoogleCalendar();
+  
+  const connectGmail = useConnectGmail();
+  const disconnectGmail = useDisconnectGmail();
+  const connectDrive = useConnectDrive();
+  const disconnectDrive = useDisconnectDrive();
+  const connectContacts = useConnectContacts();
+  const disconnectContacts = useDisconnectContacts();
+
+  const services = [
+    { 
+      name: 'Calendar', 
+      icon: Calendar, 
+      connected: calendarConnected,
+      onConnect: () => window.open('/portal/dashboard', '_self'),
+      onDisconnect: () => {},
+      color: 'text-blue-400'
+    },
+    { 
+      name: 'Gmail', 
+      icon: Mail, 
+      connected: gmailConnection?.connected,
+      onConnect: () => connectGmail.mutate(),
+      onDisconnect: () => disconnectGmail.mutate(),
+      color: 'text-red-400'
+    },
+    { 
+      name: 'Drive', 
+      icon: FolderOpen, 
+      connected: driveConnection?.connected,
+      onConnect: () => connectDrive.mutate(),
+      onDisconnect: () => disconnectDrive.mutate(),
+      color: 'text-yellow-400'
+    },
+    { 
+      name: 'Contacts', 
+      icon: Users, 
+      connected: contactsConnection?.connected,
+      onConnect: () => connectContacts.mutate(),
+      onDisconnect: () => disconnectContacts.mutate(),
+      color: 'text-green-400'
+    },
+  ];
+
+  return (
+    <Card className="glass-card border-white/10">
+      <CardHeader>
+        <CardTitle className="font-light text-sm flex items-center gap-2">
+          <Building2 className="h-4 w-4" />
+          Connected Services
+        </CardTitle>
+        <CardDescription className="text-xs">
+          Connect Google services to enhance your workflow
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        {services.map((service) => {
+          const Icon = service.icon;
+          return (
+            <div key={service.name} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+              <div className="flex items-center gap-3">
+                <Icon className={`h-4 w-4 ${service.color}`} />
+                <span className="text-sm text-foreground">{service.name}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                {service.connected ? (
+                  <>
+                    <Check className="h-4 w-4 text-emerald-400" />
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-xs text-muted-foreground hover:text-destructive"
+                      onClick={service.onDisconnect}
+                    >
+                      Disconnect
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs"
+                    onClick={service.onConnect}
+                  >
+                    Connect
+                  </Button>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </CardContent>
+    </Card>
   );
 };
 

@@ -35,3 +35,18 @@ verify_jwt = true
 
 [functions.gmail-labels]
 verify_jwt = true
+
+[functions.google-drive-auth]
+verify_jwt = true
+
+[functions.google-drive-files]
+verify_jwt = true
+
+[functions.google-contacts-auth]
+verify_jwt = true
+
+[functions.google-contacts-list]
+verify_jwt = true
+
+[functions.google-contacts-import]
+verify_jwt = true
