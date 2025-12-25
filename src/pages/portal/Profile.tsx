@@ -661,7 +661,7 @@ const ConnectedServicesCard = () => {
     { 
       name: 'Contacts', 
       icon: Users, 
-      connected: contactsConnection?.connected,
+      connected: contactsConnection?.connected || false,
       onConnect: () => connectContacts.mutate(),
       onDisconnect: () => disconnectContacts.mutate(),
       color: 'text-green-400'

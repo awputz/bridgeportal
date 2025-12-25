@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Mail as MailIcon, Inbox, Send, FileText, Star, Trash2, Plus, RefreshCw, Settings } from "lucide-react";
+import { Mail as MailIcon, Inbox, Send, FileText, Star, Trash2, Plus, RefreshCw, Settings, AlertCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGmailConnection, useConnectGmail, useDisconnectGmail, useGmailLabels, useGmailMessages, useExchangeGmailCode } from "@/hooks/useGmail";
@@ -11,6 +10,7 @@ import { MailInbox } from "@/components/portal/MailInbox";
 import { MailMessage } from "@/components/portal/MailMessage";
 import { MailCompose } from "@/components/portal/MailCompose";
 import { MailSearch } from "@/components/portal/MailSearch";
+import { cn } from "@/lib/utils";
 
 const LABEL_CONFIG: Record<string, { icon: React.ElementType; label: string }> = {
   INBOX: { icon: Inbox, label: "Inbox" },
@@ -27,7 +27,7 @@ export default function Mail() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isComposeOpen, setIsComposeOpen] = useState(false);
 
-  const { data: connection, isLoading: isLoadingConnection } = useGmailConnection();
+  const { data: connection, isLoading: isLoadingConnection, error: connectionError } = useGmailConnection();
   const { data: labels, isLoading: isLoadingLabels, refetch: refetchLabels } = useGmailLabels(connection?.isConnected);
   const { data: messagesData, isLoading: isLoadingMessages, refetch: refetchMessages } = useGmailMessages({
     labelIds: [activeLabel],
@@ -63,10 +63,17 @@ export default function Mail() {
 
   if (isLoadingConnection) {
     return (
-      <div className="p-6">
-        <div className="space-y-4">
-          <Skeleton className="h-10 w-48" />
-          <Skeleton className="h-64 w-full" />
+      <div className="min-h-screen pb-24 md:pb-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+          <div className="space-y-6">
+            <Skeleton className="h-12 w-64" />
+            <div className="glass-card p-8">
+              <div className="flex items-center justify-center gap-3">
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                <span className="text-muted-foreground">Checking connection...</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -74,145 +81,195 @@ export default function Mail() {
 
   if (!connection?.isConnected) {
     return (
-      <div className="p-6">
-        <div className="max-w-2xl mx-auto">
-          <Card className="p-8 text-center">
-            <div className="flex flex-col items-center gap-4">
-              <div className="p-4 rounded-full bg-primary/10">
-                <MailIcon className="h-12 w-12 text-primary" />
-              </div>
-              <h1 className="text-2xl font-semibold">Connect Your Gmail</h1>
-              <p className="text-muted-foreground max-w-md">
-                Connect your Gmail account to view and send emails directly from the portal.
-                Your emails will be synced and you can link them to deals and contacts.
-              </p>
-              <Button
-                size="lg"
-                onClick={() => connectGmail.mutate()}
-                disabled={connectGmail.isPending}
-              >
-                {connectGmail.isPending ? (
-                  <>
-                    <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                    Connecting...
-                  </>
-                ) : (
-                  <>
-                    <MailIcon className="h-4 w-4 mr-2" />
-                    Connect Gmail
-                  </>
-                )}
-              </Button>
+      <div className="min-h-screen pb-24 md:pb-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">
+              Mail
+            </h1>
+            <p className="text-muted-foreground font-light">
+              Connect your Gmail to send and receive emails
+            </p>
+          </div>
+
+          {/* Connect Card */}
+          <div className="glass-card p-8 md:p-12 max-w-xl mx-auto text-center">
+            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center mx-auto mb-6">
+              <MailIcon className="h-10 w-10 text-red-400" />
             </div>
-          </Card>
+            <h2 className="text-2xl font-light text-foreground mb-3">
+              Connect Your Gmail
+            </h2>
+            <p className="text-muted-foreground font-light mb-8 max-w-sm mx-auto">
+              Access your emails directly from the portal. Send, receive, and link emails to deals and contacts.
+            </p>
+            
+            {connectionError && (
+              <div className="flex items-center gap-2 justify-center text-amber-400 mb-6 text-sm">
+                <AlertCircle className="h-4 w-4" />
+                <span>Connection check failed. Try connecting anyway.</span>
+              </div>
+            )}
+
+            <Button
+              size="lg"
+              onClick={() => connectGmail.mutate()}
+              disabled={connectGmail.isPending}
+              className="gap-2"
+            >
+              {connectGmail.isPending ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Connecting...
+                </>
+              ) : (
+                <>
+                  <MailIcon className="h-4 w-4" />
+                  Connect Gmail
+                </>
+              )}
+            </Button>
+
+            <p className="text-xs text-muted-foreground mt-6">
+              We'll only request read and send permissions
+            </p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b">
-        <div className="flex items-center gap-4">
-          <h1 className="text-xl font-semibold">Mail</h1>
-          {connection.email && (
-            <span className="text-sm text-muted-foreground">{connection.email}</span>
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={handleRefresh}>
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh
-          </Button>
-          <Button size="sm" onClick={() => setIsComposeOpen(true)}>
-            <Plus className="h-4 w-4 mr-2" />
-            Compose
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => disconnectGmail.mutate()}
-            disabled={disconnectGmail.isPending}
-          >
-            <Settings className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-
-      {/* Main content */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar - Labels */}
-        <div className="w-48 border-r p-2 overflow-y-auto hidden md:block">
-          <div className="space-y-1">
-            {Object.entries(LABEL_CONFIG).map(([id, config]) => {
-              const Icon = config.icon;
-              const unreadCount = getLabelUnreadCount(id);
-              return (
-                <button
-                  key={id}
-                  onClick={() => {
-                    setActiveLabel(id);
-                    setSelectedMessageId(null);
-                  }}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-colors ${
-                    activeLabel === id
-                      ? "bg-primary text-primary-foreground"
-                      : "hover:bg-muted"
-                  }`}
-                >
-                  <span className="flex items-center gap-2">
-                    <Icon className="h-4 w-4" />
-                    {config.label}
-                  </span>
-                  {unreadCount > 0 && id !== "TRASH" && (
-                    <Badge variant={activeLabel === id ? "secondary" : "default"} className="text-xs">
-                      {unreadCount}
-                    </Badge>
-                  )}
-                </button>
-              );
-            })}
+    <div className="min-h-screen pb-24 md:pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+          <div>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">
+              Mail
+            </h1>
+            {connection.email && (
+              <p className="text-muted-foreground font-light">
+                {connection.email}
+              </p>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={handleRefresh} className="gap-2">
+              <RefreshCw className="h-4 w-4" />
+              Refresh
+            </Button>
+            <Button size="sm" onClick={() => setIsComposeOpen(true)} className="gap-2">
+              <Plus className="h-4 w-4" />
+              Compose
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => disconnectGmail.mutate()}
+              disabled={disconnectGmail.isPending}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <Settings className="h-4 w-4" />
+            </Button>
           </div>
         </div>
 
-        {/* Mobile Tabs */}
-        <div className="md:hidden w-full border-b">
-          <Tabs value={activeLabel} onValueChange={setActiveLabel} className="w-full">
-            <TabsList className="w-full h-auto flex-wrap justify-start p-1">
-              {Object.entries(LABEL_CONFIG).map(([id, config]) => {
-                const Icon = config.icon;
-                return (
-                  <TabsTrigger key={id} value={id} className="flex items-center gap-1 text-xs">
-                    <Icon className="h-3 w-3" />
-                    {config.label}
-                  </TabsTrigger>
-                );
-              })}
-            </TabsList>
-          </Tabs>
-        </div>
+        {/* Main Content */}
+        <div className="glass-card overflow-hidden">
+          <div className="flex h-[calc(100vh-16rem)] md:h-[600px]">
+            {/* Sidebar - Labels */}
+            <div className="w-48 border-r border-border/50 p-3 overflow-y-auto hidden md:block bg-muted/20">
+              <div className="space-y-1">
+                {Object.entries(LABEL_CONFIG).map(([id, config]) => {
+                  const Icon = config.icon;
+                  const unreadCount = getLabelUnreadCount(id);
+                  const isActive = activeLabel === id;
+                  return (
+                    <button
+                      key={id}
+                      onClick={() => {
+                        setActiveLabel(id);
+                        setSelectedMessageId(null);
+                      }}
+                      className={cn(
+                        "w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-all",
+                        isActive
+                          ? "bg-primary text-primary-foreground shadow-sm"
+                          : "text-foreground/70 hover:bg-muted hover:text-foreground"
+                      )}
+                    >
+                      <span className="flex items-center gap-2.5">
+                        <Icon className="h-4 w-4" />
+                        {config.label}
+                      </span>
+                      {unreadCount > 0 && id !== "TRASH" && (
+                        <Badge 
+                          variant={isActive ? "secondary" : "default"} 
+                          className="text-[10px] h-5 min-w-[20px] justify-center"
+                        >
+                          {unreadCount}
+                        </Badge>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
-        {/* Content Area */}
-        <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-          {/* Email List */}
-          <div className={`${selectedMessageId ? 'hidden md:flex' : 'flex'} flex-col w-full md:w-96 border-r`}>
-            <MailSearch value={searchQuery} onChange={setSearchQuery} />
-            <MailInbox
-              messages={messagesData?.messages || []}
-              isLoading={isLoadingMessages}
-              selectedId={selectedMessageId}
-              onSelect={setSelectedMessageId}
-            />
-          </div>
+            {/* Mobile Tabs */}
+            <div className="md:hidden absolute top-0 left-0 right-0 bg-background/80 backdrop-blur-sm border-b border-border/50 z-10">
+              <Tabs value={activeLabel} onValueChange={setActiveLabel} className="w-full">
+                <TabsList className="w-full h-auto flex justify-start p-1 bg-transparent overflow-x-auto">
+                  {Object.entries(LABEL_CONFIG).map(([id, config]) => {
+                    const Icon = config.icon;
+                    return (
+                      <TabsTrigger 
+                        key={id} 
+                        value={id} 
+                        className="flex items-center gap-1.5 text-xs px-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                        onClick={() => setSelectedMessageId(null)}
+                      >
+                        <Icon className="h-3.5 w-3.5" />
+                        {config.label}
+                      </TabsTrigger>
+                    );
+                  })}
+                </TabsList>
+              </Tabs>
+            </div>
 
-          {/* Email View */}
-          <div className={`${selectedMessageId ? 'flex' : 'hidden md:flex'} flex-1 flex-col`}>
-            <MailMessage
-              messageId={selectedMessageId}
-              onBack={() => setSelectedMessageId(null)}
-              onReply={() => setIsComposeOpen(true)}
-            />
+            {/* Content Area */}
+            <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
+              {/* Email List */}
+              <div className={cn(
+                "flex-col border-r border-border/50 w-full md:w-96",
+                selectedMessageId ? "hidden md:flex" : "flex"
+              )}>
+                <div className="p-3 border-b border-border/50">
+                  <MailSearch value={searchQuery} onChange={setSearchQuery} />
+                </div>
+                <MailInbox
+                  messages={messagesData?.messages || []}
+                  isLoading={isLoadingMessages}
+                  selectedId={selectedMessageId}
+                  onSelect={setSelectedMessageId}
+                />
+              </div>
+
+              {/* Email View */}
+              <div className={cn(
+                "flex-1 flex-col bg-muted/10",
+                selectedMessageId ? "flex" : "hidden md:flex"
+              )}>
+                <MailMessage
+                  messageId={selectedMessageId}
+                  onBack={() => setSelectedMessageId(null)}
+                  onReply={() => setIsComposeOpen(true)}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -1,5 +1,28 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Sparkles, Briefcase, Users, MoreHorizontal, ListTodo, FileText, Calculator, Wrench, FolderOpen, Send, User, Wand2, DollarSign, StickyNote, Building2, Heart, Target, Globe, Headphones, Bell, Mail } from "lucide-react";
+import { 
+  Home, 
+  Sparkles, 
+  Briefcase, 
+  Users, 
+  MoreHorizontal, 
+  ListTodo, 
+  FileText, 
+  Calculator, 
+  Wrench, 
+  FolderOpen, 
+  Send, 
+  User, 
+  Wand2, 
+  DollarSign, 
+  StickyNote, 
+  Building2, 
+  Heart, 
+  Target, 
+  Globe, 
+  Headphones, 
+  Bell, 
+  Mail 
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Sheet,
@@ -12,22 +35,23 @@ import {
 
 const navItems = [
   { path: "/portal", icon: Home, label: "Home" },
+  { path: "/portal/mail", icon: Mail, label: "Mail" },
   { path: "/portal/crm", icon: Briefcase, label: "CRM" },
   { path: "/portal/tasks", icon: ListTodo, label: "Tasks" },
-  { path: "/portal/mail", icon: Mail, label: "Mail" },
 ];
 
 const moreItemsGrouped = [
   {
-    category: "Company",
+    category: "Google",
     items: [
-      { path: "/portal/company/about", icon: Building2, label: "About Us" },
-      { path: "/portal/company/mission", icon: Target, label: "Mission" },
-      { path: "/portal/company/culture", icon: Heart, label: "Culture" },
-      { path: "/portal/company/expansion", icon: Globe, label: "Expansion" },
-      { path: "/portal/company/contact", icon: Headphones, label: "Contact" },
-      { path: "/portal/directory", icon: Users, label: "Directory" },
-      { path: "/portal/announcements", icon: Bell, label: "News" },
+      { path: "/portal/contacts", icon: Users, label: "Contacts" },
+      { path: "/portal/drive", icon: FolderOpen, label: "Drive" },
+    ],
+  },
+  {
+    category: "Essentials",
+    items: [
+      { path: "/portal/notes", icon: StickyNote, label: "Notes" },
     ],
   },
   {
@@ -41,12 +65,23 @@ const moreItemsGrouped = [
     ],
   },
   {
+    category: "Company",
+    items: [
+      { path: "/portal/company/about", icon: Building2, label: "About Us" },
+      { path: "/portal/company/mission", icon: Target, label: "Mission" },
+      { path: "/portal/company/culture", icon: Heart, label: "Culture" },
+      { path: "/portal/company/expansion", icon: Globe, label: "Expansion" },
+      { path: "/portal/company/contact", icon: Headphones, label: "Contact" },
+      { path: "/portal/directory", icon: Users, label: "Directory" },
+      { path: "/portal/announcements", icon: Bell, label: "News" },
+    ],
+  },
+  {
     category: "Data",
     items: [
       { path: "/portal/resources", icon: FolderOpen, label: "Resources" },
       { path: "/portal/my-transactions", icon: DollarSign, label: "My Deals" },
       { path: "/portal/requests", icon: Send, label: "Requests" },
-      { path: "/portal/notes", icon: StickyNote, label: "Notes" },
     ],
   },
   {

@@ -1,6 +1,23 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, LayoutDashboard, Wrench, LogOut, Settings, Users, Sparkles, Briefcase, User, Building2, StickyNote, ListTodo, Mail } from "lucide-react";
+import { 
+  Menu, 
+  X, 
+  LayoutDashboard, 
+  Wrench, 
+  LogOut, 
+  Settings, 
+  Sparkles, 
+  Briefcase, 
+  User, 
+  Building2, 
+  StickyNote, 
+  ListTodo, 
+  Mail, 
+  Users,
+  FolderOpen,
+  ChevronDown
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { 
@@ -8,21 +25,26 @@ import {
   DropdownMenuContent, 
   DropdownMenuItem, 
   DropdownMenuSeparator, 
-  DropdownMenuTrigger 
+  DropdownMenuTrigger,
+  DropdownMenuLabel
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { useIsAdminOrAgent } from "@/hooks/useUserRole";
 import { NotificationCenter } from "./NotificationCenter";
 
-// Core navigation items (always visible)
-const coreNavItems = [
-  { name: "Dashboard", path: "/portal", icon: LayoutDashboard },
-  { name: "CRM", path: "/portal/crm", icon: Briefcase },
+// Google items
+const googleItems = [
+  { name: "Mail", path: "/portal/mail", icon: Mail },
   { name: "Contacts", path: "/portal/contacts", icon: Users },
+  { name: "Drive", path: "/portal/drive", icon: FolderOpen },
+];
+
+// Essentials items
+const essentialsItems = [
+  { name: "CRM", path: "/portal/crm", icon: Briefcase },
   { name: "Tasks", path: "/portal/tasks", icon: ListTodo },
   { name: "Notes", path: "/portal/notes", icon: StickyNote },
-  { name: "Mail", path: "/portal/mail", icon: Mail },
 ];
 
 export const PortalNavigation = () => {
@@ -49,12 +71,19 @@ export const PortalNavigation = () => {
     location.pathname.startsWith('/portal/templates') ||
     location.pathname.startsWith('/portal/calculators') ||
     location.pathname.startsWith('/portal/resources') ||
-    location.pathname.startsWith('/portal/requests') ||
-    location.pathname.startsWith('/portal/notes');
+    location.pathname.startsWith('/portal/requests');
 
   const isCompanyActive = location.pathname.startsWith('/portal/company') ||
     location.pathname === '/portal/directory' ||
     location.pathname === '/portal/announcements';
+
+  const isGoogleActive = googleItems.some(item => 
+    location.pathname === item.path || location.pathname.startsWith(item.path + '/')
+  );
+
+  const isEssentialsActive = essentialsItems.some(item => 
+    location.pathname === item.path || location.pathname.startsWith(item.path + '/')
+  );
 
   return (
     <>
@@ -101,29 +130,88 @@ export const PortalNavigation = () => {
             </div>
 
             {/* Center: Navigation */}
-            <div className="flex items-center justify-center space-x-6">
-              {/* Core Items */}
-              {coreNavItems.map(item => {
-                const Icon = item.icon;
-                const isActive = location.pathname === item.path || 
-                  (item.path !== '/portal' && location.pathname.startsWith(item.path));
-                
-                return (
-                  <Link
-                    key={item.name}
-                    to={item.path}
-                    className={cn(
-                      "relative z-10 flex items-center gap-2 text-[15px] font-light transition-all duration-200 hover:scale-105 cursor-pointer",
-                      isActive ? "text-foreground" : "text-foreground/70 hover:text-foreground"
-                    )}
-                  >
-                    <Icon className="h-4 w-4" />
-                    {item.name}
-                  </Link>
-                );
-              })}
+            <div className="flex items-center justify-center space-x-5">
+              {/* Dashboard */}
+              <Link
+                to="/portal"
+                className={cn(
+                  "relative z-10 flex items-center gap-2 text-[15px] font-light transition-all duration-200 hover:scale-105 cursor-pointer",
+                  location.pathname === '/portal' ? "text-foreground" : "text-foreground/70 hover:text-foreground"
+                )}
+              >
+                <LayoutDashboard className="h-4 w-4" />
+                Dashboard
+              </Link>
 
-              {/* Tools - Direct Link */}
+              {/* Google Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className={cn(
+                    "flex items-center gap-1.5 text-[15px] font-light transition-all duration-200 hover:scale-105",
+                    isGoogleActive ? "text-foreground" : "text-foreground/70 hover:text-foreground"
+                  )}>
+                    <Mail className="h-4 w-4" />
+                    Google
+                    <ChevronDown className="h-3 w-3 opacity-60" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center" className="w-44 bg-background/95 backdrop-blur-xl border-border">
+                  {googleItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
+                    return (
+                      <DropdownMenuItem key={item.name} asChild>
+                        <Link 
+                          to={item.path} 
+                          className={cn(
+                            "flex items-center gap-2 cursor-pointer",
+                            isActive && "bg-accent"
+                          )}
+                        >
+                          <Icon className="h-4 w-4" />
+                          {item.name}
+                        </Link>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Essentials Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className={cn(
+                    "flex items-center gap-1.5 text-[15px] font-light transition-all duration-200 hover:scale-105",
+                    isEssentialsActive ? "text-foreground" : "text-foreground/70 hover:text-foreground"
+                  )}>
+                    <Briefcase className="h-4 w-4" />
+                    Essentials
+                    <ChevronDown className="h-3 w-3 opacity-60" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center" className="w-44 bg-background/95 backdrop-blur-xl border-border">
+                  {essentialsItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
+                    return (
+                      <DropdownMenuItem key={item.name} asChild>
+                        <Link 
+                          to={item.path} 
+                          className={cn(
+                            "flex items-center gap-2 cursor-pointer",
+                            isActive && "bg-accent"
+                          )}
+                        >
+                          <Icon className="h-4 w-4" />
+                          {item.name}
+                        </Link>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Tools */}
               <Link
                 to="/portal/tools"
                 className={cn(
@@ -135,7 +223,7 @@ export const PortalNavigation = () => {
                 Tools
               </Link>
 
-              {/* Company - Direct Link */}
+              {/* Company */}
               <Link
                 to="/portal/company"
                 className={cn(
@@ -158,18 +246,6 @@ export const PortalNavigation = () => {
                 <Sparkles className="h-4 w-4" />
                 AI
               </Link>
-
-              {/* Profile */}
-              <Link
-                to="/portal/profile"
-                className={cn(
-                  "relative z-10 flex items-center gap-2 text-[15px] font-light transition-all duration-200 hover:scale-105 cursor-pointer",
-                  location.pathname.startsWith('/portal/profile') ? "text-foreground" : "text-foreground/70 hover:text-foreground"
-                )}
-              >
-                <User className="h-4 w-4" />
-                Profile
-              </Link>
             </div>
 
             {/* Right: User Menu */}
@@ -178,7 +254,7 @@ export const PortalNavigation = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm" className="font-light text-foreground/80 hover:text-foreground">
-                    <Settings className="h-4 w-4 mr-2" />
+                    <User className="h-4 w-4 mr-2" />
                     Account
                   </Button>
                 </DropdownMenuTrigger>
@@ -240,13 +316,26 @@ export const PortalNavigation = () => {
             {/* Menu Content */}
             <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-8 mx-3">
               <div className="space-y-1">
-                {/* Core Section */}
-                <div className="text-xs text-muted-foreground uppercase tracking-wider px-4 mb-2">Core</div>
-                {coreNavItems.map((item, index) => {
+                {/* Dashboard */}
+                <Link
+                  to="/portal"
+                  className={cn(
+                    "flex items-center gap-4 text-lg font-light transition-all duration-300 py-4 min-h-[56px] active:bg-white/5 rounded-lg px-4 -mx-2",
+                    location.pathname === '/portal' ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
+                    isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                  )}
+                  style={{ transitionDelay: '0ms' }}
+                  onClick={() => setIsOpen(false)}
+                >
+                  <LayoutDashboard className="h-5 w-5" />
+                  Dashboard
+                </Link>
+
+                {/* Google Section */}
+                <div className="text-xs text-muted-foreground uppercase tracking-wider px-4 mb-2 mt-6">Google</div>
+                {googleItems.map((item, index) => {
                   const Icon = item.icon;
-                  const isActive = location.pathname === item.path || 
-                    (item.path !== '/portal' && location.pathname.startsWith(item.path));
-                  
+                  const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
                   return (
                     <Link
                       key={item.name}
@@ -256,7 +345,7 @@ export const PortalNavigation = () => {
                         isActive ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
                         isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                       )}
-                      style={{ transitionDelay: `${index * 50}ms` }}
+                      style={{ transitionDelay: `${(index + 1) * 50}ms` }}
                       onClick={() => setIsOpen(false)}
                     >
                       <Icon className="h-5 w-5" />
@@ -265,7 +354,30 @@ export const PortalNavigation = () => {
                   );
                 })}
 
-                {/* Tools & Company Direct Links */}
+                {/* Essentials Section */}
+                <div className="text-xs text-muted-foreground uppercase tracking-wider px-4 mb-2 mt-6">Essentials</div>
+                {essentialsItems.map((item, index) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
+                  return (
+                    <Link
+                      key={item.name}
+                      to={item.path}
+                      className={cn(
+                        "flex items-center gap-4 text-lg font-light transition-all duration-300 py-4 min-h-[56px] active:bg-white/5 rounded-lg px-4 -mx-2",
+                        isActive ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
+                        isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                      )}
+                      style={{ transitionDelay: `${(index + 4) * 50}ms` }}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <Icon className="h-5 w-5" />
+                      {item.name}
+                    </Link>
+                  );
+                })}
+
+                {/* Explore Section */}
                 <div className="text-xs text-muted-foreground uppercase tracking-wider px-4 mb-2 mt-6">Explore</div>
                 <Link
                   to="/portal/tools"
@@ -274,7 +386,7 @@ export const PortalNavigation = () => {
                     isToolsActive ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
                     isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                   )}
-                  style={{ transitionDelay: `${(coreNavItems.length) * 50}ms` }}
+                  style={{ transitionDelay: '350ms' }}
                   onClick={() => setIsOpen(false)}
                 >
                   <Wrench className="h-5 w-5" />
@@ -287,15 +399,12 @@ export const PortalNavigation = () => {
                     isCompanyActive ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
                     isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                   )}
-                  style={{ transitionDelay: `${(coreNavItems.length + 1) * 50}ms` }}
+                  style={{ transitionDelay: '400ms' }}
                   onClick={() => setIsOpen(false)}
                 >
                   <Building2 className="h-5 w-5" />
                   Company
                 </Link>
-
-                {/* AI & Profile */}
-                <div className="text-xs text-muted-foreground uppercase tracking-wider px-4 mb-2 mt-6">Account</div>
                 <Link
                   to="/portal/ai"
                   className={cn(
@@ -303,12 +412,15 @@ export const PortalNavigation = () => {
                     location.pathname.startsWith('/portal/ai') ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
                     isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                   )}
-                  style={{ transitionDelay: `${(coreNavItems.length + 2) * 50}ms` }}
+                  style={{ transitionDelay: '450ms' }}
                   onClick={() => setIsOpen(false)}
                 >
                   <Sparkles className="h-5 w-5" />
                   AI
                 </Link>
+
+                {/* Account Section */}
+                <div className="text-xs text-muted-foreground uppercase tracking-wider px-4 mb-2 mt-6">Account</div>
                 <Link
                   to="/portal/profile"
                   className={cn(
@@ -316,7 +428,7 @@ export const PortalNavigation = () => {
                     location.pathname.startsWith('/portal/profile') ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
                     isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                   )}
-                  style={{ transitionDelay: `${(coreNavItems.length + 3) * 50}ms` }}
+                  style={{ transitionDelay: '500ms' }}
                   onClick={() => setIsOpen(false)}
                 >
                   <User className="h-5 w-5" />
@@ -332,7 +444,7 @@ export const PortalNavigation = () => {
                       location.pathname.startsWith('/admin') ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
                       isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                     )}
-                    style={{ transitionDelay: `${(coreNavItems.length + 4) * 50}ms` }}
+                    style={{ transitionDelay: '550ms' }}
                     onClick={() => setIsOpen(false)}
                   >
                     <Settings className="h-5 w-5" />
@@ -353,7 +465,7 @@ export const PortalNavigation = () => {
                   "w-full flex items-center justify-center gap-3 text-lg font-light py-4 min-h-[56px] rounded-xl border border-white/10 text-foreground/70 hover:text-foreground hover:bg-white/5 transition-all duration-300",
                   isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 )}
-                style={{ transitionDelay: '400ms' }}
+                style={{ transitionDelay: '600ms' }}
               >
                 <LogOut className="h-5 w-5" />
                 Sign Out
