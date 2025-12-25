@@ -8,10 +8,12 @@ import { cn } from "@/lib/utils";
 
 const divisions = [
   { id: "all", name: "All", icon: Users },
-  { id: "investment-sales", name: "Investment Sales", icon: TrendingUp },
-  { id: "commercial-leasing", name: "Commercial", icon: Building2 },
-  { id: "residential", name: "Residential", icon: Home },
   { id: "leadership", name: "Leadership", icon: Users },
+  { id: "investment-sales", name: "Investment Sales", icon: TrendingUp },
+  { id: "residential", name: "Residential", icon: Home },
+  { id: "operations", name: "Operations", icon: Users },
+  { id: "marketing", name: "Marketing", icon: Users },
+  { id: "advisory", name: "Advisory", icon: Users },
 ];
 
 const Directory = () => {

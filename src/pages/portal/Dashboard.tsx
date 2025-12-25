@@ -19,13 +19,19 @@ import {
   BarChart3,
   FileSearch,
   MapPin,
-  Send
+  Send,
+  UserPlus,
+  FolderPlus
 } from "lucide-react";
 import { useExternalTools, ExternalTool } from "@/hooks/useExternalTools";
 import { Skeleton } from "@/components/ui/skeleton";
 import { QuickActionCard } from "@/components/portal/QuickActionCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { DashboardStats } from "@/components/portal/DashboardStats";
+import { DealPipelinePreview } from "@/components/portal/DealPipelinePreview";
+import { TodaysPriorities } from "@/components/portal/TodaysPriorities";
+import { GlobalDivisionSwitcher } from "@/components/portal/GlobalDivisionSwitcher";
 
 // Icon mapping for dynamic icons from database
 const iconMap: Record<string, typeof Mail> = {
@@ -90,18 +96,26 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen pb-24 md:pb-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-        {/* Header */}
-        <div className="mb-10 md:mb-14">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">
-            {getGreeting()}
-          </h1>
-          <p className="text-muted-foreground font-light">
-            Welcome to the Bridge Agent Portal
-          </p>
+        {/* Header with Division Switcher */}
+        <div className="mb-8 md:mb-10 flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">
+              {getGreeting()}
+            </h1>
+            <p className="text-muted-foreground font-light">
+              Welcome to the Bridge Agent Portal
+            </p>
+          </div>
+          <GlobalDivisionSwitcher />
         </div>
 
+        {/* CRM Stats */}
+        <section className="mb-8">
+          <DashboardStats />
+        </section>
+
         {/* AI Quick Prompt */}
-        <section className="mb-10">
+        <section className="mb-8">
           <form onSubmit={handleAiSubmit} className="glass-card p-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center flex-shrink-0">
@@ -125,8 +139,43 @@ const Dashboard = () => {
           </form>
         </section>
 
+        {/* CRM Quick Actions + Today's Priorities + Pipeline */}
+        <section className="mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Left: Today's Priorities */}
+            <TodaysPriorities />
+            
+            {/* Right: Deal Pipeline Preview */}
+            <DealPipelinePreview />
+          </div>
+        </section>
+
+        {/* Quick CRM Actions */}
+        <section className="mb-8">
+          <div className="flex items-center gap-3">
+            <Link
+              to="/portal/crm?action=add-contact"
+              className="glass-card p-4 flex items-center gap-3 hover:border-white/20 transition-all duration-300 flex-1"
+            >
+              <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                <UserPlus className="h-5 w-5 text-green-400" />
+              </div>
+              <span className="text-sm font-light text-foreground">Add Contact</span>
+            </Link>
+            <Link
+              to="/portal/crm?action=new-deal"
+              className="glass-card p-4 flex items-center gap-3 hover:border-white/20 transition-all duration-300 flex-1"
+            >
+              <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                <FolderPlus className="h-5 w-5 text-blue-400" />
+              </div>
+              <span className="text-sm font-light text-foreground">New Deal</span>
+            </Link>
+          </div>
+        </section>
+
         {/* Research Tools */}
-        <section className="mb-10">
+        <section className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
               <Database className="h-5 w-5 text-muted-foreground" />
@@ -159,7 +208,7 @@ const Dashboard = () => {
         </section>
 
         {/* Productivity Tools */}
-        <section className="mb-10">
+        <section className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
               <HardDrive className="h-5 w-5 text-muted-foreground" />
@@ -192,7 +241,7 @@ const Dashboard = () => {
         </section>
 
         {/* Calculator Quick Access */}
-        <section className="mb-10">
+        <section className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
               <Calculator className="h-5 w-5 text-muted-foreground" />
