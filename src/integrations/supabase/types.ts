@@ -907,6 +907,50 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_sync_log: {
+        Row: {
+          agent_id: string
+          created_at: string | null
+          crm_contact_id: string | null
+          google_contact_id: string
+          google_etag: string | null
+          id: string
+          last_synced_at: string | null
+          sync_direction: string | null
+          sync_status: string | null
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string | null
+          crm_contact_id?: string | null
+          google_contact_id: string
+          google_etag?: string | null
+          id?: string
+          last_synced_at?: string | null
+          sync_direction?: string | null
+          sync_status?: string | null
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string | null
+          crm_contact_id?: string | null
+          google_contact_id?: string
+          google_etag?: string | null
+          id?: string
+          last_synced_at?: string | null
+          sync_direction?: string | null
+          sync_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contact_sync_log_crm_contact_id_fkey"
+            columns: ["crm_contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       crm_activities: {
         Row: {
           activity_type: string
@@ -1217,6 +1261,162 @@ export type Database = {
           working_with?: string | null
         }
         Relationships: []
+      }
+      drive_documents: {
+        Row: {
+          agent_id: string
+          category: string | null
+          contact_id: string | null
+          created_at: string | null
+          deal_id: string | null
+          drive_file_id: string
+          id: string
+          mime_type: string | null
+          name: string
+          property_address: string | null
+          size_bytes: number | null
+          thumbnail_url: string | null
+          updated_at: string | null
+          web_content_link: string | null
+          web_view_link: string | null
+        }
+        Insert: {
+          agent_id: string
+          category?: string | null
+          contact_id?: string | null
+          created_at?: string | null
+          deal_id?: string | null
+          drive_file_id: string
+          id?: string
+          mime_type?: string | null
+          name: string
+          property_address?: string | null
+          size_bytes?: number | null
+          thumbnail_url?: string | null
+          updated_at?: string | null
+          web_content_link?: string | null
+          web_view_link?: string | null
+        }
+        Update: {
+          agent_id?: string
+          category?: string | null
+          contact_id?: string | null
+          created_at?: string | null
+          deal_id?: string | null
+          drive_file_id?: string
+          id?: string
+          mime_type?: string | null
+          name?: string
+          property_address?: string | null
+          size_bytes?: number | null
+          thumbnail_url?: string | null
+          updated_at?: string | null
+          web_content_link?: string | null
+          web_view_link?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "drive_documents_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "drive_documents_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_threads: {
+        Row: {
+          agent_id: string
+          body_html: string | null
+          body_text: string | null
+          cc_addresses: string[] | null
+          contact_id: string | null
+          created_at: string | null
+          deal_id: string | null
+          from_address: string | null
+          from_name: string | null
+          gmail_message_id: string | null
+          gmail_thread_id: string
+          has_attachments: boolean | null
+          id: string
+          is_read: boolean | null
+          is_starred: boolean | null
+          labels: string[] | null
+          received_at: string | null
+          snippet: string | null
+          subject: string | null
+          to_addresses: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          agent_id: string
+          body_html?: string | null
+          body_text?: string | null
+          cc_addresses?: string[] | null
+          contact_id?: string | null
+          created_at?: string | null
+          deal_id?: string | null
+          from_address?: string | null
+          from_name?: string | null
+          gmail_message_id?: string | null
+          gmail_thread_id: string
+          has_attachments?: boolean | null
+          id?: string
+          is_read?: boolean | null
+          is_starred?: boolean | null
+          labels?: string[] | null
+          received_at?: string | null
+          snippet?: string | null
+          subject?: string | null
+          to_addresses?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          agent_id?: string
+          body_html?: string | null
+          body_text?: string | null
+          cc_addresses?: string[] | null
+          contact_id?: string | null
+          created_at?: string | null
+          deal_id?: string | null
+          from_address?: string | null
+          from_name?: string | null
+          gmail_message_id?: string | null
+          gmail_thread_id?: string
+          has_attachments?: boolean | null
+          id?: string
+          is_read?: boolean | null
+          is_starred?: boolean | null
+          labels?: string[] | null
+          received_at?: string | null
+          snippet?: string | null
+          subject?: string | null
+          to_addresses?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_threads_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_threads_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       external_tools: {
         Row: {
@@ -1655,7 +1855,19 @@ export type Database = {
         Row: {
           access_token: string | null
           calendar_enabled: boolean | null
+          contacts_access_token: string | null
+          contacts_enabled: boolean | null
+          contacts_refresh_token: string | null
           created_at: string | null
+          drive_access_token: string | null
+          drive_enabled: boolean | null
+          drive_refresh_token: string | null
+          gmail_access_token: string | null
+          gmail_enabled: boolean | null
+          gmail_refresh_token: string | null
+          google_avatar_url: string | null
+          google_email: string | null
+          google_name: string | null
           refresh_token: string | null
           token_expiry: string | null
           updated_at: string | null
@@ -1664,7 +1876,19 @@ export type Database = {
         Insert: {
           access_token?: string | null
           calendar_enabled?: boolean | null
+          contacts_access_token?: string | null
+          contacts_enabled?: boolean | null
+          contacts_refresh_token?: string | null
           created_at?: string | null
+          drive_access_token?: string | null
+          drive_enabled?: boolean | null
+          drive_refresh_token?: string | null
+          gmail_access_token?: string | null
+          gmail_enabled?: boolean | null
+          gmail_refresh_token?: string | null
+          google_avatar_url?: string | null
+          google_email?: string | null
+          google_name?: string | null
           refresh_token?: string | null
           token_expiry?: string | null
           updated_at?: string | null
@@ -1673,7 +1897,19 @@ export type Database = {
         Update: {
           access_token?: string | null
           calendar_enabled?: boolean | null
+          contacts_access_token?: string | null
+          contacts_enabled?: boolean | null
+          contacts_refresh_token?: string | null
           created_at?: string | null
+          drive_access_token?: string | null
+          drive_enabled?: boolean | null
+          drive_refresh_token?: string | null
+          gmail_access_token?: string | null
+          gmail_enabled?: boolean | null
+          gmail_refresh_token?: string | null
+          google_avatar_url?: string | null
+          google_email?: string | null
+          google_name?: string | null
           refresh_token?: string | null
           token_expiry?: string | null
           updated_at?: string | null
