@@ -3,6 +3,7 @@ import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { PortalNavigation } from "./PortalNavigation";
 import { MobileBottomNav } from "./MobileBottomNav";
+import { AIAssistant } from "./AIAssistant";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Loader2 } from "lucide-react";
 
@@ -56,12 +57,13 @@ export const PortalLayout = () => {
   return (
     <div className="min-h-screen bg-background">
       <PortalNavigation />
-      <main className="pt-20 md:pt-24">
+      <main className="pt-16 md:pt-20">
         <ErrorBoundary>
           <Outlet />
         </ErrorBoundary>
       </main>
       <MobileBottomNav />
+      <AIAssistant />
     </div>
   );
 };

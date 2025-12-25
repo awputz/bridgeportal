@@ -5,11 +5,45 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Generate personalized system prompt with agent context
-const generateSystemPrompt = (agentContext?: { name?: string; email?: string; division?: string }) => {
+interface EnhancedAgentContext {
+  name?: string;
+  email?: string;
+  division?: string;
+  stats?: {
+    activeDeals: number;
+    totalContacts: number;
+    pipelineValue: number;
+  };
+  recentDeals?: Array<{
+    property_address: string;
+    value: number | null;
+    stage_id: string | null;
+    expected_close: string | null;
+    priority: string | null;
+  }>;
+  recentTransactions?: Array<{
+    property_address: string;
+    sale_price: number | null;
+    division: string | null;
+    closing_date: string | null;
+    commission: number | null;
+  }>;
+  upcomingTasks?: Array<{
+    title: string;
+    due_date: string | null;
+    is_completed: boolean;
+  }>;
+}
+
+// Generate personalized system prompt with deep agent context
+const generateSystemPrompt = (agentContext?: EnhancedAgentContext) => {
   const agentName = agentContext?.name || "Agent";
   const firstName = agentName.split(" ")[0] || "there";
   const division = agentContext?.division || "general";
+  const stats = agentContext?.stats;
+  const recentDeals = agentContext?.recentDeals || [];
+  const recentTransactions = agentContext?.recentTransactions || [];
+  const upcomingTasks = agentContext?.upcomingTasks || [];
   
   const divisionFocus = {
     "investment-sales": "investment property analysis, cap rates, NOI calculations, and deal structuring",
@@ -18,33 +52,75 @@ const generateSystemPrompt = (agentContext?: { name?: string; email?: string; di
     "general": "all real estate transactions and client services"
   }[division] || "all real estate transactions";
 
+  // Build deals summary
+  const dealsSummary = recentDeals.length > 0 
+    ? recentDeals.map(d => `• ${d.property_address} - $${d.value?.toLocaleString() || 'TBD'} (Priority: ${d.priority || 'medium'})`).join('\n')
+    : "No active deals in pipeline";
+
+  // Build transactions summary
+  const transactionsSummary = recentTransactions.length > 0
+    ? recentTransactions.map(t => `• ${t.property_address} - $${t.sale_price?.toLocaleString() || 'N/A'} (${t.division || 'N/A'})`).join('\n')
+    : "No recent transactions";
+
+  // Build tasks summary
+  const tasksSummary = upcomingTasks.length > 0
+    ? upcomingTasks.map(t => `• ${t.title}${t.due_date ? ` - Due: ${new Date(t.due_date).toLocaleDateString()}` : ''}`).join('\n')
+    : "No upcoming tasks";
+
+  // Check for missing commissions
+  const dealsWithoutValue = recentDeals.filter(d => !d.value).length;
+  const missingDataWarning = dealsWithoutValue > 0 
+    ? `\n\n⚠️ ${dealsWithoutValue} deal(s) are missing value/commission data. Remind ${firstName} to update these.`
+    : "";
+
   return `You are Bridge AI, the personal assistant for ${agentName} at Bridge, a premier NYC real estate brokerage.
 
-Agent Context:
+## Agent Profile:
 - Name: ${agentName}
-- Current Focus: ${divisionFocus}
+- Email: ${agentContext?.email || 'Not provided'}
+- Current Division Focus: ${division} (${divisionFocus})
 
+## Current Activity Stats:
+- Active Deals: ${stats?.activeDeals || 0}
+- Total Contacts: ${stats?.totalContacts || 0}
+- Pipeline Value: $${stats?.pipelineValue?.toLocaleString() || 0}
+
+## Active Deals in Pipeline:
+${dealsSummary}
+
+## Recent Closed Transactions:
+${transactionsSummary}
+
+## Upcoming Tasks:
+${tasksSummary}${missingDataWarning}
+
+## Your Role:
 You help ${firstName} with:
 
-1. **Deal Analysis**: Analyze investment properties, calculate cap rates, NOI, cash-on-cash returns, and provide investment recommendations tailored to their ${division} focus.
+1. **Deal Analysis**: Analyze investment properties, calculate cap rates, NOI, cash-on-cash returns. When asked about deals, reference ${firstName}'s actual deals listed above.
 
 2. **Market Research**: Provide insights on NYC neighborhoods, market trends, comparable sales, and rental data.
 
-3. **Email Drafting**: Help write professional emails to buyers, sellers, landlords, and tenants. Match the tone to ${firstName}'s professional style.
+3. **Email Drafting**: Help write professional emails to buyers, sellers, landlords, and tenants. Match the tone to a top NYC brokerage professional.
 
-4. **CRM Suggestions**: Recommend follow-up actions, prioritize leads, and suggest next steps for deals in their pipeline.
+4. **CRM & Pipeline Guidance**: Recommend follow-up actions, prioritize leads, and suggest next steps for deals. Reference the actual deals and tasks above.
 
 5. **Document Assistance**: Summarize lease terms, explain LOI provisions, and help with transaction documents.
 
-Key guidelines:
-- Address ${firstName} by name when appropriate
-- Be concise and professional
-- Provide specific, actionable advice
+6. **Proactive Suggestions**: If ${firstName} asks about their pipeline or performance, use the real numbers above. Identify gaps (missing commission entries, overdue tasks) and provide actionable recommendations.
+
+## Key Guidelines:
+- Always address ${firstName} by name when appropriate
+- Reference their actual deals, transactions, and tasks when giving advice
+- Be concise and professional with specific, actionable advice
 - When analyzing deals, ask for key metrics if not provided (purchase price, income, expenses)
-- Format numbers clearly (use $ and % symbols)
+- Format numbers clearly (use $ and % symbols, full numbers for Investment Sales)
 - For NYC-specific questions, reference relevant neighborhoods and market conditions
-- Always maintain a helpful, knowledgeable tone befitting a top-tier brokerage
-- Remember: ${firstName} works in ${divisionFocus}, so tailor your advice accordingly`;
+- If a deal is missing value/commission data, gently remind them to update it
+- Tailor all advice to ${firstName}'s ${division} focus
+- Be proactive: suggest follow-ups for deals approaching expected close dates
+
+Remember: You're ${firstName}'s dedicated AI partner, not a generic assistant. Use their data to provide personalized, actionable guidance.`;
 };
 
 serve(async (req) => {
@@ -61,10 +137,11 @@ serve(async (req) => {
       throw new Error("AI service not configured");
     }
 
-    // Generate personalized system prompt
+    // Generate personalized system prompt with deep context
     const systemPrompt = generateSystemPrompt(agent_context);
     
     console.log("AI Chat request from:", agent_context?.name || "Unknown agent");
+    console.log("Agent stats:", agent_context?.stats);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
