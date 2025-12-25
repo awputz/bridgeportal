@@ -32,6 +32,7 @@ import { DashboardStats } from "@/components/portal/DashboardStats";
 import { DealPipelinePreview } from "@/components/portal/DealPipelinePreview";
 import { TodaysPriorities } from "@/components/portal/TodaysPriorities";
 import { GlobalDivisionSwitcher } from "@/components/portal/GlobalDivisionSwitcher";
+import { ProfileCard } from "@/components/portal/ProfileCard";
 
 // Icon mapping for dynamic icons from database
 const iconMap: Record<string, typeof Mail> = {
@@ -108,6 +109,11 @@ const Dashboard = () => {
           </div>
           <GlobalDivisionSwitcher />
         </div>
+
+        {/* My Profile Card */}
+        <section className="mb-8">
+          <ProfileCard />
+        </section>
 
         {/* CRM Stats */}
         <section className="mb-8">

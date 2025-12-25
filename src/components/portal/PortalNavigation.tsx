@@ -23,6 +23,7 @@ const navItems = [
   { name: "Calculators", path: "/portal/calculators", icon: Calculator },
   { name: "Tools", path: "/portal/tools", icon: Wrench },
   { name: "AI", path: "/portal/ai", icon: Sparkles },
+  { name: "Profile", path: "/portal/profile", icon: User },
 ];
 
 export const PortalNavigation = () => {
