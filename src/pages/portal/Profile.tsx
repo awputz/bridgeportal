@@ -653,7 +653,7 @@ const ConnectedServicesCard = () => {
     { 
       name: 'Drive', 
       icon: FolderOpen, 
-      connected: driveConnection?.connected,
+      connected: driveConnection?.isConnected,
       onConnect: () => connectDrive.mutate(),
       onDisconnect: () => disconnectDrive.mutate(),
       color: 'text-yellow-400'
