@@ -26,6 +26,7 @@ const Directory = lazy(() => import("./pages/portal/Directory"));
 const Calculators = lazy(() => import("./pages/portal/Calculators"));
 const AI = lazy(() => import("./pages/portal/AI"));
 const CRM = lazy(() => import("./pages/portal/CRM"));
+const Contacts = lazy(() => import("./pages/portal/Contacts"));
 const DealDetail = lazy(() => import("./pages/portal/DealDetail"));
 const ContactDetail = lazy(() => import("./pages/portal/ContactDetail"));
 const NewDeal = lazy(() => import("./pages/portal/NewDeal"));
@@ -153,6 +154,11 @@ const App = () => {
                     <Route path="crm" element={
                       <Suspense fallback={<PageLoader />}>
                         <CRM />
+                      </Suspense>
+                    } />
+                    <Route path="contacts" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <Contacts />
                       </Suspense>
                     } />
                     <Route path="crm/deals/new" element={

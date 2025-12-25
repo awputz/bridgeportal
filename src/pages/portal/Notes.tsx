@@ -93,19 +93,11 @@ const Notes = () => {
   return (
     <div className="container max-w-7xl mx-auto px-4 py-8 md:py-12">
       <div className="space-y-6 pb-24 md:pb-16">
-        {/* Back to Tools */}
-        <Link 
-          to="/portal/tools" 
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          ← Back to Tools
-        </Link>
-
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl font-light tracking-tight">Sticky Notes</h1>
-            <p className="text-muted-foreground text-sm mt-1">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">Notes</h1>
+            <p className="text-muted-foreground font-light">
               Keep track of ideas, action items, and deal notes with AI assistance
             </p>
           </div>

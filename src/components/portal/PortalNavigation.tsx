@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, LayoutDashboard, Wrench, LogOut, Settings, Users, Sparkles, Briefcase, User, Building2 } from "lucide-react";
+import { Menu, X, LayoutDashboard, Wrench, LogOut, Settings, Users, Sparkles, Briefcase, User, Building2, StickyNote, ListTodo } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { 
@@ -14,13 +14,14 @@ import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { useIsAdminOrAgent } from "@/hooks/useUserRole";
 import { NotificationCenter } from "./NotificationCenter";
-import { ListTodo } from "lucide-react";
 
 // Core navigation items (always visible)
 const coreNavItems = [
   { name: "Dashboard", path: "/portal", icon: LayoutDashboard },
   { name: "CRM", path: "/portal/crm", icon: Briefcase },
+  { name: "Contacts", path: "/portal/contacts", icon: Users },
   { name: "Tasks", path: "/portal/tasks", icon: ListTodo },
+  { name: "Notes", path: "/portal/notes", icon: StickyNote },
 ];
 
 export const PortalNavigation = () => {
