@@ -6,7 +6,6 @@ import {
   LayoutDashboard, 
   Wrench, 
   LogOut, 
-  Settings, 
   Sparkles, 
   Briefcase, 
   User, 
@@ -16,7 +15,8 @@ import {
   Mail, 
   Users,
   FolderOpen,
-  ChevronDown
+  ChevronDown,
+  Calendar
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -26,17 +26,18 @@ import {
   DropdownMenuItem, 
   DropdownMenuSeparator, 
   DropdownMenuTrigger,
-  DropdownMenuLabel
 } from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { useIsAdminOrAgent } from "@/hooks/useUserRole";
 import { NotificationCenter } from "./NotificationCenter";
+import { useUserProfile } from "@/hooks/useGoogleServices";
 
 // Google items
 const googleItems = [
   { name: "Mail", path: "/portal/mail", icon: Mail },
-  { name: "Calendar", path: "/portal/calendar", icon: LayoutDashboard },
+  { name: "Calendar", path: "/portal/calendar", icon: Calendar },
   { name: "Contacts", path: "/portal/contacts", icon: Users },
   { name: "Drive", path: "/portal/drive", icon: FolderOpen },
 ];
@@ -53,6 +54,7 @@ export const PortalNavigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAdminOrAgent } = useIsAdminOrAgent();
+  const { data: userProfile } = useUserProfile();
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
@@ -254,13 +256,29 @@ export const PortalNavigation = () => {
               <NotificationCenter />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="font-light text-foreground/80 hover:text-foreground">
-                    <User className="h-4 w-4 mr-2" />
-                    Account
+                  <Button variant="ghost" size="sm" className="font-light text-foreground/80 hover:text-foreground gap-2">
+                    {userProfile?.avatarUrl ? (
+                      <Avatar className="h-6 w-6">
+                        <AvatarImage src={userProfile.avatarUrl} alt={userProfile.fullName || 'User'} />
+                        <AvatarFallback className="text-xs">
+                          {userProfile.fullName?.charAt(0) || userProfile.email?.charAt(0) || 'U'}
+                        </AvatarFallback>
+                      </Avatar>
+                    ) : (
+                      <User className="h-4 w-4" />
+                    )}
+                    <span className="hidden xl:inline">{userProfile?.fullName?.split(' ')[0] || 'Account'}</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 bg-background/95 backdrop-blur-xl border-border">
-                <DropdownMenuItem asChild>
+                  {userProfile && (
+                    <div className="px-2 py-1.5 text-sm">
+                      <p className="font-medium truncate">{userProfile.fullName}</p>
+                      <p className="text-xs text-muted-foreground truncate">{userProfile.email}</p>
+                    </div>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
                     <Link to="/portal/profile" className="flex items-center gap-2 cursor-pointer">
                       <User className="h-4 w-4" />
                       Profile

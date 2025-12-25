@@ -75,6 +75,18 @@ const Login = () => {
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true);
     try {
+      // Request all Google service scopes during login
+      const scopes = [
+        'openid',
+        'email',
+        'profile',
+        'https://www.googleapis.com/auth/gmail.readonly',
+        'https://www.googleapis.com/auth/gmail.send',
+        'https://www.googleapis.com/auth/calendar.readonly',
+        'https://www.googleapis.com/auth/drive.readonly',
+        'https://www.googleapis.com/auth/contacts.readonly',
+      ].join(' ');
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -83,6 +95,7 @@ const Login = () => {
             access_type: 'offline',
             prompt: 'consent',
           },
+          scopes,
         },
       });
 

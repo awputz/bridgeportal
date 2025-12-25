@@ -8,6 +8,7 @@ import { FloatingSearch } from "./FloatingSearch";
 import { CommandPalette, useCommandPalette } from "./CommandPalette";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Loader2 } from "lucide-react";
+import { useStoreGoogleTokensOnLogin } from "@/hooks/useGoogleServices";
 
 export const PortalLayout = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -15,6 +16,9 @@ export const PortalLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { open: commandOpen, setOpen: setCommandOpen } = useCommandPalette();
+  
+  // Store Google tokens when user signs in with Google OAuth
+  useStoreGoogleTokensOnLogin();
 
   useEffect(() => {
     // Set up auth state listener
