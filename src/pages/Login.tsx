@@ -454,6 +454,18 @@ const Login = () => {
                   )}
                 </Button>
               </form>
+
+              {/* Apply Link */}
+              <div className="mt-6 pt-6 border-t border-white/10 text-center">
+                <p className="text-sm text-muted-foreground mb-2">New to Bridge?</p>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => navigate("/apply")}
+                >
+                  Apply to Join the Team
+                </Button>
+              </div>
             </>
           )}
         </div>
