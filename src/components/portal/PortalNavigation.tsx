@@ -259,23 +259,12 @@ export const PortalNavigation = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 bg-background/95 backdrop-blur-xl border-border">
-                  <DropdownMenuItem asChild>
+                <DropdownMenuItem asChild>
                     <Link to="/portal/profile" className="flex items-center gap-2 cursor-pointer">
                       <User className="h-4 w-4" />
                       Profile
                     </Link>
                   </DropdownMenuItem>
-                  {isAdminOrAgent && (
-                    <>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem asChild>
-                        <Link to="/admin" className="flex items-center gap-2 cursor-pointer">
-                          <Settings className="h-4 w-4" />
-                          Admin Panel
-                        </Link>
-                      </DropdownMenuItem>
-                    </>
-                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer">
                     <LogOut className="h-4 w-4 mr-2" />
@@ -434,23 +423,6 @@ export const PortalNavigation = () => {
                   <User className="h-5 w-5" />
                   Profile
                 </Link>
-                
-                {/* Admin Link */}
-                {isAdminOrAgent && (
-                  <Link
-                    to="/admin"
-                    className={cn(
-                      "flex items-center gap-4 text-lg font-light transition-all duration-300 py-4 min-h-[56px] active:bg-white/5 rounded-lg px-4 -mx-2",
-                      location.pathname.startsWith('/admin') ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
-                      isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
-                    )}
-                    style={{ transitionDelay: '550ms' }}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <Settings className="h-5 w-5" />
-                    Admin Panel
-                  </Link>
-                )}
               </div>
             </div>
             
