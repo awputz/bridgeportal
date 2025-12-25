@@ -117,7 +117,7 @@ export const PortalNavigation = () => {
                     key={item.name}
                     to={item.path}
                     className={cn(
-                      "flex items-center gap-2 text-[15px] font-light transition-all duration-200 hover:scale-105",
+                      "relative z-10 flex items-center gap-2 text-[15px] font-light transition-all duration-200 hover:scale-105 cursor-pointer",
                       isActive ? "text-foreground" : "text-foreground/70 hover:text-foreground"
                     )}
                   >
@@ -132,7 +132,7 @@ export const PortalNavigation = () => {
                 <DropdownMenuTrigger asChild>
                   <button
                     className={cn(
-                      "flex items-center gap-1.5 text-[15px] font-light transition-all duration-200 hover:scale-105 cursor-pointer",
+                      "relative z-10 flex items-center gap-1.5 text-[15px] font-light transition-all duration-200 hover:scale-105 cursor-pointer",
                       isProductivityActive ? "text-foreground" : "text-foreground/70 hover:text-foreground"
                     )}
                   >
@@ -141,7 +141,7 @@ export const PortalNavigation = () => {
                     <ChevronDown className="h-3 w-3 opacity-60" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="center" className="w-56 glass-nav">
+                <DropdownMenuContent align="center" className="w-56 bg-background/95 backdrop-blur-xl border-border">
                   {productivityItems.map(item => {
                     const Icon = item.icon;
                     const isActive = location.pathname === item.path || 
@@ -153,7 +153,7 @@ export const PortalNavigation = () => {
                           to={item.path} 
                           className={cn(
                             "flex items-start gap-3 py-2.5 cursor-pointer",
-                            isActive && "bg-white/5"
+                            isActive && "bg-accent/20"
                           )}
                         >
                           <Icon className="h-4 w-4 mt-0.5 flex-shrink-0" />
@@ -172,7 +172,7 @@ export const PortalNavigation = () => {
               <Link
                 to="/portal/ai"
                 className={cn(
-                  "flex items-center gap-2 text-[15px] font-light transition-all duration-200 hover:scale-105",
+                  "relative z-10 flex items-center gap-2 text-[15px] font-light transition-all duration-200 hover:scale-105 cursor-pointer",
                   location.pathname.startsWith('/portal/ai') ? "text-foreground" : "text-foreground/70 hover:text-foreground"
                 )}
               >
@@ -184,7 +184,7 @@ export const PortalNavigation = () => {
               <Link
                 to="/portal/profile"
                 className={cn(
-                  "flex items-center gap-2 text-[15px] font-light transition-all duration-200 hover:scale-105",
+                  "relative z-10 flex items-center gap-2 text-[15px] font-light transition-all duration-200 hover:scale-105 cursor-pointer",
                   location.pathname.startsWith('/portal/profile') ? "text-foreground" : "text-foreground/70 hover:text-foreground"
                 )}
               >
@@ -202,7 +202,7 @@ export const PortalNavigation = () => {
                     Account
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 glass-nav">
+                <DropdownMenuContent align="end" className="w-48 bg-background/95 backdrop-blur-xl border-border">
                   <DropdownMenuItem asChild>
                     <Link to="/portal/profile" className="flex items-center gap-2 cursor-pointer">
                       <User className="h-4 w-4" />

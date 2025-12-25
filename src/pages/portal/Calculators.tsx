@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Calculator, TrendingUp, Building2, Home, DollarSign, Percent, BarChart3, PiggyBank, Receipt, Users, FileText, Landmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -80,8 +81,31 @@ const calculatorCategories = [
 ];
 
 const Calculators = () => {
-  const [activeCategory, setActiveCategory] = useState("commissions");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  
+  // Initialize from URL param or default to commissions
+  const [activeCategory, setActiveCategory] = useState(() => {
+    const validCategory = calculatorCategories.find(c => c.id === tabParam);
+    return validCategory ? tabParam! : "commissions";
+  });
   const [activeCalculator, setActiveCalculator] = useState<string | null>(null);
+
+  // Sync URL param changes to state
+  useEffect(() => {
+    if (tabParam) {
+      const validCategory = calculatorCategories.find(c => c.id === tabParam);
+      if (validCategory) {
+        setActiveCategory(tabParam);
+      }
+    }
+  }, [tabParam]);
+
+  // Update URL when category changes
+  const handleCategoryChange = (newCategory: string) => {
+    setActiveCategory(newCategory);
+    setSearchParams({ tab: newCategory });
+  };
 
   const currentCategory = calculatorCategories.find(c => c.id === activeCategory);
   const CurrentCalculatorComponent = activeCalculator
@@ -119,7 +143,7 @@ const Calculators = () => {
         ) : (
           <>
             {/* Category Tabs */}
-            <Tabs value={activeCategory} onValueChange={setActiveCategory} className="w-full">
+            <Tabs value={activeCategory} onValueChange={handleCategoryChange} className="w-full">
               <TabsList className="w-full justify-start bg-transparent border-b border-white/10 rounded-none h-auto p-0 mb-8 overflow-x-auto">
                 {calculatorCategories.map((category) => {
                   const Icon = category.icon;
