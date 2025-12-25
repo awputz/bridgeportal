@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -26,8 +27,9 @@ import {
 } from "@/hooks/useCRMAdmin";
 import { useAgentsList } from "@/hooks/useAgentMetrics";
 import { AgentDisplay } from "@/components/admin/AgentDisplay";
-import { Search, Users, Briefcase, Activity, DollarSign, Filter } from "lucide-react";
+import { Search, Users, Briefcase, Activity, DollarSign, Filter, Download } from "lucide-react";
 import { format } from "date-fns";
+import { exportToCSV, formatCurrencyCSV, formatDateCSV } from "@/lib/csvExport";
 
 const formatCurrency = (value: number | null) => {
   if (!value) return "—";
@@ -89,13 +91,50 @@ export default function CRMOverviewAdmin() {
     a.agent_name?.toLowerCase().includes(searchActivities.toLowerCase())
   );
 
+  const handleExportContacts = () => {
+    if (!filteredContacts) return;
+    exportToCSV(filteredContacts, [
+      { key: "full_name", header: "Name" },
+      { key: "email", header: "Email" },
+      { key: "phone", header: "Phone" },
+      { key: "company", header: "Company" },
+      { key: "agent_name", header: "Agent" },
+      { key: "division", header: "Division" },
+      { key: "contact_type", header: "Type" },
+      { key: "created_at", header: "Created", formatter: formatDateCSV },
+    ], `crm-contacts-${new Date().toISOString().split('T')[0]}`);
+  };
+
+  const handleExportDeals = () => {
+    if (!filteredDeals) return;
+    exportToCSV(filteredDeals, [
+      { key: "property_address", header: "Property" },
+      { key: "agent_name", header: "Agent" },
+      { key: "division", header: "Division" },
+      { key: "value", header: "Value", formatter: formatCurrencyCSV },
+      { key: "expected_close", header: "Expected Close", formatter: formatDateCSV },
+    ], `crm-deals-${new Date().toISOString().split('T')[0]}`);
+  };
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">CRM Overview</h1>
-        <p className="text-muted-foreground mt-1">
-          View all agent contacts, deals, and activities
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">CRM Overview</h1>
+          <p className="text-muted-foreground mt-1">
+            View all agent contacts, deals, and activities
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={handleExportContacts}>
+            <Download className="h-4 w-4 mr-2" />
+            Export Contacts
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleExportDeals}>
+            <Download className="h-4 w-4 mr-2" />
+            Export Deals
+          </Button>
+        </div>
       </div>
 
       {/* Agent Filter */}

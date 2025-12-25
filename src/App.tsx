@@ -46,6 +46,7 @@ const Requests = lazy(() => import("./pages/portal/Requests"));
 const MyTransactions = lazy(() => import("./pages/portal/MyTransactions"));
 const CommissionRequest = lazy(() => import("./pages/portal/CommissionRequest"));
 const MyCommissionRequests = lazy(() => import("./pages/portal/MyCommissionRequests"));
+const MyCommissions = lazy(() => import("./pages/portal/MyCommissions"));
 const Tools = lazy(() => import("./pages/portal/Tools"));
 
 // Company Pages - lazy loaded
@@ -263,6 +264,11 @@ const App = () => {
                     <Route path="my-commission-requests" element={
                       <Suspense fallback={<PageLoader />}>
                         <MyCommissionRequests />
+                      </Suspense>
+                    } />
+                    <Route path="my-commissions" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <MyCommissions />
                       </Suspense>
                     } />
                     
