@@ -7,6 +7,7 @@ import { HelmetProvider } from "react-helmet-async";
 
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { PortalLayout } from "@/components/portal/PortalLayout";
+import { DivisionProvider } from "@/contexts/DivisionContext";
 
 // Pages
 import Login from "./pages/Login";
@@ -20,6 +21,7 @@ import Tools from "./pages/portal/Tools";
 import Directory from "./pages/portal/Directory";
 import Calculators from "./pages/portal/Calculators";
 import AI from "./pages/portal/AI";
+import CRM from "./pages/portal/CRM";
 
 // Admin Pages
 import TeamAdmin from "./pages/admin/TeamAdmin";
@@ -38,45 +40,48 @@ const App = () => {
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-            <Routes>
-              {/* Root redirects to portal */}
-              <Route path="/" element={<Navigate to="/portal" replace />} />
-              
-              {/* Login */}
-              <Route path="/login" element={<Login />} />
-              <Route path="/auth" element={<Navigate to="/login" replace />} />
-              
-              {/* Portal Routes (Protected) */}
-              <Route path="/portal" element={<PortalLayout />}>
-                <Route index element={<Dashboard />} />
-                <Route path="templates" element={<Templates />} />
-                <Route path="templates/:division" element={<TemplateCategory />} />
-                <Route path="directory" element={<Directory />} />
-                <Route path="calculators" element={<Calculators />} />
-                <Route path="tools" element={<Tools />} />
-                <Route path="ai" element={<AI />} />
-              </Route>
-              
-              {/* Admin Routes */}
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<Navigate to="/admin/team" replace />} />
-                <Route path="team" element={<TeamAdmin />} />
-                <Route path="transactions" element={<TransactionsAdmin />} />
-                <Route path="settings" element={<SettingsAdmin />} />
-                <Route path="services" element={<ServicesAdmin />} />
-                <Route path="markets" element={<MarketsAdmin />} />
-                <Route path="listing-links" element={<ListingLinksAdmin />} />
-                <Route path="tools" element={<ToolsAdmin />} />
-                <Route path="templates" element={<TemplatesAdmin />} />
-              </Route>
+          <DivisionProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+              <Routes>
+                {/* Root redirects to portal */}
+                <Route path="/" element={<Navigate to="/portal" replace />} />
+                
+                {/* Login */}
+                <Route path="/login" element={<Login />} />
+                <Route path="/auth" element={<Navigate to="/login" replace />} />
+                
+                {/* Portal Routes (Protected) */}
+                <Route path="/portal" element={<PortalLayout />}>
+                  <Route index element={<Dashboard />} />
+                  <Route path="templates" element={<Templates />} />
+                  <Route path="templates/:division" element={<TemplateCategory />} />
+                  <Route path="directory" element={<Directory />} />
+                  <Route path="calculators" element={<Calculators />} />
+                  <Route path="tools" element={<Tools />} />
+                  <Route path="ai" element={<AI />} />
+                  <Route path="crm" element={<CRM />} />
+                </Route>
+                
+                {/* Admin Routes */}
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route index element={<Navigate to="/admin/team" replace />} />
+                  <Route path="team" element={<TeamAdmin />} />
+                  <Route path="transactions" element={<TransactionsAdmin />} />
+                  <Route path="settings" element={<SettingsAdmin />} />
+                  <Route path="services" element={<ServicesAdmin />} />
+                  <Route path="markets" element={<MarketsAdmin />} />
+                  <Route path="listing-links" element={<ListingLinksAdmin />} />
+                  <Route path="tools" element={<ToolsAdmin />} />
+                  <Route path="templates" element={<TemplatesAdmin />} />
+                </Route>
 
-              {/* 404 */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
+                {/* 404 */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </DivisionProvider>
         </TooltipProvider>
       </QueryClientProvider>
     </HelmetProvider>

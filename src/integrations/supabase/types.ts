@@ -47,6 +47,45 @@ export type Database = {
         }
         Relationships: []
       }
+      agent_metrics: {
+        Row: {
+          activities_completed: number | null
+          agent_id: string
+          contacts_added: number | null
+          created_at: string | null
+          deals_closed: number | null
+          division: string
+          id: string
+          period_end: string
+          period_start: string
+          total_volume: number | null
+        }
+        Insert: {
+          activities_completed?: number | null
+          agent_id: string
+          contacts_added?: number | null
+          created_at?: string | null
+          deals_closed?: number | null
+          division: string
+          id?: string
+          period_end: string
+          period_start: string
+          total_volume?: number | null
+        }
+        Update: {
+          activities_completed?: number | null
+          agent_id?: string
+          contacts_added?: number | null
+          created_at?: string | null
+          deals_closed?: number | null
+          division?: string
+          id?: string
+          period_end?: string
+          period_start?: string
+          total_volume?: number | null
+        }
+        Relationships: []
+      }
       agent_templates: {
         Row: {
           created_at: string | null
@@ -547,6 +586,222 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      crm_activities: {
+        Row: {
+          activity_type: string
+          agent_id: string
+          completed_at: string | null
+          contact_id: string | null
+          created_at: string | null
+          deal_id: string | null
+          description: string | null
+          due_date: string | null
+          id: string
+          is_completed: boolean | null
+          title: string
+        }
+        Insert: {
+          activity_type: string
+          agent_id: string
+          completed_at?: string | null
+          contact_id?: string | null
+          created_at?: string | null
+          deal_id?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          is_completed?: boolean | null
+          title: string
+        }
+        Update: {
+          activity_type?: string
+          agent_id?: string
+          completed_at?: string | null
+          contact_id?: string | null
+          created_at?: string | null
+          deal_id?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          is_completed?: boolean | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_activities_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crm_activities_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crm_contacts: {
+        Row: {
+          address: string | null
+          agent_id: string
+          company: string | null
+          contact_type: string
+          created_at: string | null
+          division: string
+          email: string | null
+          full_name: string
+          id: string
+          is_active: boolean | null
+          notes: string | null
+          phone: string | null
+          source: string | null
+          tags: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          address?: string | null
+          agent_id: string
+          company?: string | null
+          contact_type?: string
+          created_at?: string | null
+          division: string
+          email?: string | null
+          full_name: string
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          phone?: string | null
+          source?: string | null
+          tags?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          address?: string | null
+          agent_id?: string
+          company?: string | null
+          contact_type?: string
+          created_at?: string | null
+          division?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          phone?: string | null
+          source?: string | null
+          tags?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      crm_deal_stages: {
+        Row: {
+          color: string
+          created_at: string | null
+          display_order: number
+          division: string
+          id: string
+          is_active: boolean | null
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          color?: string
+          created_at?: string | null
+          display_order?: number
+          division: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          color?: string
+          created_at?: string | null
+          display_order?: number
+          division?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      crm_deals: {
+        Row: {
+          agent_id: string
+          contact_id: string | null
+          created_at: string | null
+          deal_type: string
+          division: string
+          expected_close: string | null
+          id: string
+          is_active: boolean | null
+          notes: string | null
+          priority: string | null
+          probability: number | null
+          property_address: string
+          stage_id: string | null
+          updated_at: string | null
+          value: number | null
+          won: boolean | null
+        }
+        Insert: {
+          agent_id: string
+          contact_id?: string | null
+          created_at?: string | null
+          deal_type: string
+          division: string
+          expected_close?: string | null
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          priority?: string | null
+          probability?: number | null
+          property_address: string
+          stage_id?: string | null
+          updated_at?: string | null
+          value?: number | null
+          won?: boolean | null
+        }
+        Update: {
+          agent_id?: string
+          contact_id?: string | null
+          created_at?: string | null
+          deal_type?: string
+          division?: string
+          expected_close?: string | null
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          priority?: string | null
+          probability?: number | null
+          property_address?: string
+          stage_id?: string | null
+          updated_at?: string | null
+          value?: number | null
+          won?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_deals_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crm_deals_stage_id_fkey"
+            columns: ["stage_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deal_stages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       deal_room_documents: {
         Row: {
