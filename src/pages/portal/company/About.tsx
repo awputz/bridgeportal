@@ -63,7 +63,7 @@ const About = () => {
         {/* Key Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
           {stats.map((stat, index) => (
-            <div key={index} className="glass-card p-6 text-center">
+            <div key={index} className="glass-card p-5 text-center min-h-[88px] flex flex-col justify-center">
               <div className="text-2xl md:text-3xl font-light text-foreground mb-1">
                 {stat.prefix && <span>{stat.prefix}</span>}
                 <AnimatedCounter end={stat.value} duration={2000} />
@@ -116,7 +116,7 @@ const About = () => {
             {divisions.map((division, index) => {
               const Icon = division.icon;
               return (
-                <div key={index} className="glass-card p-5 hover:border-white/20 transition-all duration-300">
+                <div key={index} className="glass-card p-5 hover:border-white/20 transition-all duration-300 min-h-[120px]">
                   <div className={`w-10 h-10 rounded-full ${division.color.split(' ')[0]} flex items-center justify-center mb-3`}>
                     <Icon className={`h-5 w-5 ${division.color.split(' ')[1]}`} />
                   </div>

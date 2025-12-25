@@ -22,20 +22,20 @@ export const QuickActionCard = ({
       target="_blank"
       rel="noopener noreferrer"
       className={cn(
-        "group glass-card p-6 flex flex-col items-center justify-center text-center",
-        "min-h-[140px] md:min-h-[160px]",
+        "group glass-card p-4 flex flex-col items-center justify-center text-center",
+        "min-h-[120px] md:min-h-[130px]",
         "hover:border-white/20 transition-all duration-300",
         className
       )}
     >
-      <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/5 flex items-center justify-center mb-4 group-hover:bg-white/10 transition-colors">
-        <Icon className="h-6 w-6 md:h-7 md:w-7 text-foreground/70 group-hover:text-foreground transition-colors" />
+      <div className="w-10 h-10 md:w-11 md:h-11 rounded-full bg-white/5 flex items-center justify-center mb-3 group-hover:bg-white/10 transition-colors">
+        <Icon className="h-5 w-5 md:h-5 md:w-5 text-foreground/70 group-hover:text-foreground transition-colors" />
       </div>
-      <h3 className="text-sm md:text-base font-light text-foreground mb-1">
+      <h3 className="text-sm font-light text-foreground mb-1">
         {name}
       </h3>
       {description && (
-        <p className="text-xs text-muted-foreground font-light">
+        <p className="text-xs text-muted-foreground font-light line-clamp-2">
           {description}
         </p>
       )}

@@ -158,7 +158,7 @@ const Dashboard = () => {
 
         {/* Quick Actions Row: Call Office + Request */}
         <section className="mb-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <a
               href="tel:2125319295"
               className="glass-card p-4 flex items-center gap-3 hover:border-primary/50 transition-all duration-300"
@@ -228,7 +228,7 @@ const Dashboard = () => {
               View Our Exclusive Listings
             </h2>
           </div>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-4">
             {exclusiveListings.map((listing) => {
               const Icon = listing.icon;
               const content = (
@@ -302,13 +302,13 @@ const Dashboard = () => {
           </div>
           
           {isLoading ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {[...Array(6)].map((_, i) => (
                 <Skeleton key={i} className="h-[120px] rounded-xl" />
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {groupedTools.research?.map((tool) => {
                 const Icon = iconMap[tool.icon] || Database;
                 return (
@@ -335,13 +335,13 @@ const Dashboard = () => {
           </div>
           
           {isLoading ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {[...Array(5)].map((_, i) => (
                 <Skeleton key={i} className="h-[120px] rounded-xl" />
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
               {groupedTools.productivity?.map((tool) => {
                 const Icon = iconMap[tool.icon] || Mail;
                 return (
@@ -374,7 +374,7 @@ const Dashboard = () => {
             </Link>
           </div>
           
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-4">
             {calculatorQuickAccess.map((calc) => {
               const Icon = calc.icon;
               return (
@@ -409,7 +409,7 @@ const Dashboard = () => {
             </Link>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Link 
               to="/portal/templates/investment-sales"
               className="glass-card p-4 flex flex-col items-center gap-2 hover:border-white/20 transition-all duration-300"
@@ -461,7 +461,7 @@ const Dashboard = () => {
             </h2>
           </div>
           
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
             {quickLinks.map((link) => {
               const Icon = link.icon;
               return (

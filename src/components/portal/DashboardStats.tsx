@@ -55,13 +55,13 @@ export const DashboardStats = () => {
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {statCards.map((stat) => {
         const Icon = stat.icon;
         return (
           <div
             key={stat.label}
-            className="glass-card p-4 flex flex-col justify-between"
+            className="glass-card p-4 flex flex-col justify-between min-h-[88px]"
           >
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-muted-foreground font-light">

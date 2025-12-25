@@ -113,7 +113,7 @@ const Calculators = () => {
     : null;
 
   return (
-    <div className="min-h-screen pb-16">
+    <div className="min-h-screen pb-24 md:pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {/* Header */}
         <div className="mb-8 md:mb-10">
@@ -169,21 +169,21 @@ const Calculators = () => {
                 <TabsContent key={category.id} value={category.id} className="mt-0">
                   <p className="text-muted-foreground mb-6">{category.description}</p>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {category.calculators.map((calc) => {
                       const Icon = calc.icon;
                       return (
                         <button
                           key={calc.id}
                           onClick={() => setActiveCalculator(calc.id)}
-                          className="glass-card p-6 text-left group cursor-pointer hover:border-white/20 transition-all"
+                          className="glass-card p-5 text-left group cursor-pointer hover:border-white/20 transition-all min-h-[100px]"
                         >
                           <div className="flex items-start gap-4">
-                            <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
-                              <Icon className="h-6 w-6 text-foreground/70 group-hover:text-foreground transition-colors" />
+                            <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors flex-shrink-0">
+                              <Icon className="h-5 w-5 text-foreground/70 group-hover:text-foreground transition-colors" />
                             </div>
                             <div className="flex-1">
-                              <h3 className="text-lg font-light text-foreground mb-1">
+                              <h3 className="text-base font-light text-foreground mb-1">
                                 {calc.name}
                               </h3>
                               <p className="text-sm text-muted-foreground">
