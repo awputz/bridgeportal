@@ -9,9 +9,16 @@ import {
   ArrowRight,
   TrendingUp,
   Building2,
-  Home
+  Home,
+  FileText,
+  Calculator,
+  Sparkles,
+  Palette,
+  Database,
+  BarChart3,
+  FileSearch,
+  MapPin
 } from "lucide-react";
-import { QuickActionCard } from "@/components/portal/QuickActionCard";
 import { useExternalTools } from "@/hooks/useExternalTools";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -26,7 +33,25 @@ const iconMap: Record<string, typeof Mail> = {
   TrendingUp,
   Building2,
   Home,
+  Database,
+  BarChart3,
+  FileSearch,
+  MapPin,
 };
+
+const quickActions = [
+  { name: "Templates", path: "/portal/templates", icon: FileText, description: "Documents & forms" },
+  { name: "Directory", path: "/portal/directory", icon: Users, description: "Find colleagues" },
+  { name: "Calculators", path: "/portal/calculators", icon: Calculator, description: "Deal analysis" },
+  { name: "Bridge AI", path: "/portal/ai", icon: Sparkles, description: "AI assistant" },
+];
+
+const divisions = [
+  { id: "investment-sales", name: "Investment Sales", icon: TrendingUp, path: "/portal/templates/investment-sales" },
+  { id: "commercial-leasing", name: "Commercial", icon: Building2, path: "/portal/templates/commercial-leasing" },
+  { id: "residential", name: "Residential", icon: Home, path: "/portal/templates/residential" },
+  { id: "marketing", name: "Marketing", icon: Palette, path: "/portal/templates/marketing" },
+];
 
 const getGreeting = () => {
   const hour = new Date().getHours();
