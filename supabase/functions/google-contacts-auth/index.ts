@@ -12,6 +12,8 @@ const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
 serve(async (req) => {
+  console.log("[google-contacts-auth] Request received:", req.method);
+  
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -23,12 +25,16 @@ serve(async (req) => {
 
     // If this is a callback with code
     if (code && state) {
+      console.log("[google-contacts-auth] OAuth callback received for user:", state);
       return await handleOAuthCallback(code, state);
     }
 
     // Otherwise, this is an API request
     const authHeader = req.headers.get('Authorization');
+    console.log("[google-contacts-auth] Auth header present:", !!authHeader);
+    
     if (!authHeader) {
+      console.log("[google-contacts-auth] Missing auth header");
       return new Response(
         JSON.stringify({ error: 'Missing authorization header' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

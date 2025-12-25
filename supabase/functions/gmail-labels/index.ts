@@ -86,6 +86,8 @@ async function getValidAccessToken(supabase: any, userId: string) {
 }
 
 serve(async (req) => {
+  console.log("[gmail-labels] Request received:", req.method);
+  
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -94,7 +96,10 @@ serve(async (req) => {
     const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
     
     const authHeader = req.headers.get('Authorization');
+    console.log("[gmail-labels] Auth header present:", !!authHeader);
+    
     if (!authHeader) {
+      console.log("[gmail-labels] Missing auth header");
       return new Response(JSON.stringify({ error: 'No authorization header' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -105,11 +110,14 @@ serve(async (req) => {
     const { data: { user }, error: userError } = await supabase.auth.getUser(token);
     
     if (userError || !user) {
+      console.log("[gmail-labels] Invalid user token:", userError?.message);
       return new Response(JSON.stringify({ error: 'Invalid token' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+    
+    console.log("[gmail-labels] User authenticated:", user.id);
 
     const accessToken = await getValidAccessToken(supabase, user.id);
 
