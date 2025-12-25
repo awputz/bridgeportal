@@ -26,6 +26,11 @@ const Directory = lazy(() => import("./pages/portal/Directory"));
 const Calculators = lazy(() => import("./pages/portal/Calculators"));
 const AI = lazy(() => import("./pages/portal/AI"));
 const CRM = lazy(() => import("./pages/portal/CRM"));
+const DealDetail = lazy(() => import("./pages/portal/DealDetail"));
+const ContactDetail = lazy(() => import("./pages/portal/ContactDetail"));
+const NewDeal = lazy(() => import("./pages/portal/NewDeal"));
+const Generators = lazy(() => import("./pages/portal/Generators"));
+const Profile = lazy(() => import("./pages/portal/Profile"));
 
 // Admin Pages - lazy loaded
 const TeamAdmin = lazy(() => import("./pages/admin/TeamAdmin"));
@@ -114,6 +119,31 @@ const App = () => {
                     <Route path="crm" element={
                       <Suspense fallback={<PageLoader />}>
                         <CRM />
+                      </Suspense>
+                    } />
+                    <Route path="crm/deals/new" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <NewDeal />
+                      </Suspense>
+                    } />
+                    <Route path="crm/deals/:id" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <DealDetail />
+                      </Suspense>
+                    } />
+                    <Route path="crm/contacts/:id" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <ContactDetail />
+                      </Suspense>
+                    } />
+                    <Route path="generators" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <Generators />
+                      </Suspense>
+                    } />
+                    <Route path="profile" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <Profile />
                       </Suspense>
                     } />
                   </Route>
