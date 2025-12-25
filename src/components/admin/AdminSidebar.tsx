@@ -18,6 +18,7 @@ import { toast } from "@/hooks/use-toast";
 const menuItems = [
   { title: "Dashboard", url: "/admin", icon: Home, exact: true },
   { title: "Team", url: "/admin/team", icon: Users },
+  { title: "Listings", url: "/admin/listings", icon: Building2 },
   { title: "Closed Deals", url: "/admin/transactions", icon: DollarSign },
 ];
 

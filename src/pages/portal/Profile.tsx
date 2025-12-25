@@ -497,15 +497,34 @@ const Profile = () => {
             {/* My Exclusives Section */}
             <Card className="glass-card border-white/10">
               <CardHeader>
-                <CardTitle className="font-light text-sm flex items-center gap-2">
-                  <Building2 className="h-4 w-4" />
-                  My Exclusives
-                </CardTitle>
-                <CardDescription className="text-xs">
-                  View your current exclusive listings
-                </CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="font-light text-sm flex items-center gap-2">
+                      <Building2 className="h-4 w-4" />
+                      My Exclusives
+                    </CardTitle>
+                    <CardDescription className="text-xs">
+                      View your assigned listings & documents
+                    </CardDescription>
+                  </div>
+                  <Link to="/portal/my-exclusives">
+                    <Button variant="ghost" size="sm" className="text-xs">
+                      View All →
+                    </Button>
+                  </Link>
+                </div>
               </CardHeader>
               <CardContent className="space-y-3">
+                <Link
+                  to="/portal/my-exclusives"
+                  className="flex items-center justify-between p-3 bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <FileText className="h-4 w-4 text-primary" />
+                    <span className="text-sm text-foreground">Document Center</span>
+                  </div>
+                  <ExternalLink className="h-3 w-3 text-muted-foreground" />
+                </Link>
                 <a
                   href="https://streeteasy.com/profile/957575-bridge-advisory-group?tab_profile=active_listings"
                   target="_blank"
@@ -514,30 +533,10 @@ const Profile = () => {
                 >
                   <div className="flex items-center gap-3">
                     <Home className="h-4 w-4 text-emerald-400" />
-                    <span className="text-sm text-foreground">Residential</span>
+                    <span className="text-sm text-foreground">Residential (StreetEasy)</span>
                   </div>
                   <ExternalLink className="h-3 w-3 text-muted-foreground" />
                 </a>
-                <Link
-                  to="/commercial-listings"
-                  className="flex items-center justify-between p-3 bg-blue-500/10 hover:bg-blue-500/20 rounded-lg transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <Building2 className="h-4 w-4 text-blue-400" />
-                    <span className="text-sm text-foreground">Commercial</span>
-                  </div>
-                  <ExternalLink className="h-3 w-3 text-muted-foreground" />
-                </Link>
-                <Link
-                  to="/services/investment-sales/listings"
-                  className="flex items-center justify-between p-3 bg-purple-500/10 hover:bg-purple-500/20 rounded-lg transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <TrendingUp className="h-4 w-4 text-purple-400" />
-                    <span className="text-sm text-foreground">Investment Sales</span>
-                  </div>
-                  <ExternalLink className="h-3 w-3 text-muted-foreground" />
-                </Link>
               </CardContent>
             </Card>
 
