@@ -43,6 +43,7 @@ const NewDeal = () => {
     stage_id: "",
     contact_id: preselectedContactId || "",
     value: "",
+    commission: "",
     expected_close: "",
     probability: "50",
     priority: "medium",
@@ -74,6 +75,7 @@ const NewDeal = () => {
         stage_id: stageId,
         contact_id: formData.contact_id || null,
         value: formData.value ? parseFloat(formData.value) : null,
+        commission: formData.commission ? parseFloat(formData.commission) : null,
         expected_close: formData.expected_close || null,
         probability: parseInt(formData.probability) || 50,
         priority: formData.priority,
@@ -189,7 +191,7 @@ const NewDeal = () => {
                 </Select>
               </div>
 
-              {/* Value & Expected Close */}
+              {/* Value & Commission */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="value">Deal Value ($)</Label>
@@ -202,14 +204,27 @@ const NewDeal = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="expected_close">Expected Close Date</Label>
+                  <Label htmlFor="commission">Your Commission ($)</Label>
                   <Input
-                    id="expected_close"
-                    type="date"
-                    value={formData.expected_close}
-                    onChange={(e) => setFormData({ ...formData, expected_close: e.target.value })}
+                    id="commission"
+                    type="number"
+                    value={formData.commission}
+                    onChange={(e) => setFormData({ ...formData, commission: e.target.value })}
+                    placeholder="Actual amount earned"
                   />
+                  <p className="text-xs text-muted-foreground">Enter your actual commission</p>
                 </div>
+              </div>
+
+              {/* Expected Close */}
+              <div className="space-y-2">
+                <Label htmlFor="expected_close">Expected Close Date</Label>
+                <Input
+                  id="expected_close"
+                  type="date"
+                  value={formData.expected_close}
+                  onChange={(e) => setFormData({ ...formData, expected_close: e.target.value })}
+                />
               </div>
 
               {/* Probability & Priority */}

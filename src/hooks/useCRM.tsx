@@ -39,6 +39,7 @@ export interface CRMDeal {
   deal_type: string;
   division: string;
   value: number | null;
+  commission: number | null;
   expected_close: string | null;
   probability: number;
   notes: string | null;

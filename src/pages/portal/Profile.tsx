@@ -18,10 +18,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+// Use full number formatting - never abbreviate
 const formatCurrency = (value: number) => {
-  if (value >= 1000000) return `$${(value / 1000000).toFixed(2)}M`;
-  if (value >= 1000) return `$${(value / 1000).toFixed(0)}K`;
-  return `$${value.toFixed(0)}`;
+  return `$${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
 };
 
 const Profile = () => {
@@ -211,13 +210,17 @@ const Profile = () => {
                           <TableHead className="text-muted-foreground">Address</TableHead>
                           <TableHead className="text-muted-foreground">Division</TableHead>
                           <TableHead className="text-muted-foreground">Deal Value</TableHead>
-                          <TableHead className="text-muted-foreground text-right">Est. Commission</TableHead>
+                          <TableHead className="text-muted-foreground text-right">Commission</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {transactions.slice(0, 10).map((tx) => {
                           const dealValue = tx.sale_price || tx.total_lease_value || tx.monthly_rent || 0;
-                          const commission = dealValue * (tx.sale_price ? 0.015 : tx.total_lease_value ? 0.04 : 1) * 0.5;
+                          // Use actual commission if available, otherwise show "—"
+                          const hasActualCommission = tx.commission !== null && tx.commission !== undefined;
+                          const commissionDisplay = hasActualCommission 
+                            ? formatCurrency(tx.commission as number)
+                            : "—";
                           return (
                             <TableRow key={tx.id} className="border-border/30">
                               <TableCell className="font-medium text-foreground">
@@ -237,7 +240,7 @@ const Profile = () => {
                                 {formatCurrency(dealValue)}
                               </TableCell>
                               <TableCell className="text-right font-medium text-emerald-400">
-                                {formatCurrency(commission)}
+                                {commissionDisplay}
                               </TableCell>
                             </TableRow>
                           );
