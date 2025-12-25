@@ -46,6 +46,7 @@ const ExpectationsCompany = lazy(() => import("./pages/portal/company/Expectatio
 const ExpansionCompany = lazy(() => import("./pages/portal/company/Expansion"));
 const ContactCompany = lazy(() => import("./pages/portal/company/Contact"));
 const Announcements = lazy(() => import("./pages/portal/Announcements"));
+const CompanyHub = lazy(() => import("./pages/portal/Company"));
 
 // Admin Pages - lazy loaded
 const TeamAdmin = lazy(() => import("./pages/admin/TeamAdmin"));
@@ -240,6 +241,11 @@ const App = () => {
                     <Route path="announcements" element={
                       <Suspense fallback={<PageLoader />}>
                         <Announcements />
+                      </Suspense>
+                    } />
+                    <Route path="company" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <CompanyHub />
                       </Suspense>
                     } />
                   </Route>

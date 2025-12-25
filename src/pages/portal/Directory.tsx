@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { Search, Phone, Mail, Linkedin, Instagram, Download, Users, Building2, Home, TrendingUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useTeamMembers } from "@/hooks/useTeamMembers";
@@ -50,6 +51,14 @@ const Directory = () => {
   return (
     <div className="min-h-screen pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        {/* Back to Company */}
+        <Link 
+          to="/portal/company" 
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
+        >
+          ← Back to Company
+        </Link>
+
         {/* Header */}
         <div className="mb-8 md:mb-10">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">

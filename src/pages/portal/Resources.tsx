@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { FileText, Download, ExternalLink, FileCheck, Building2, Users, Palette } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -87,6 +88,14 @@ const Resources = () => {
   return (
     <div className="min-h-screen pb-24 md:pb-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        {/* Back to Tools */}
+        <Link 
+          to="/portal/tools" 
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
+        >
+          ← Back to Tools
+        </Link>
+
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">
