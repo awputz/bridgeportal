@@ -26,9 +26,14 @@ export const useGoogleCalendarConnection = () => {
         .eq("user_id", user.id)
         .maybeSingle();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error checking calendar connection:", error);
+        return null;
+      }
+      
       return data as GoogleToken | null;
     },
+    staleTime: 30000,
   });
 };
 
@@ -77,6 +82,8 @@ export const useGoogleCalendarEvents = (startDate?: Date, endDate?: Date) => {
 };
 
 export const useConnectGoogleCalendar = () => {
+  const queryClient = useQueryClient();
+  
   return useMutation({
     mutationFn: async () => {
       // Get the OAuth URL from the edge function
@@ -87,8 +94,26 @@ export const useConnectGoogleCalendar = () => {
       if (error) throw error;
       if (!data?.url) throw new Error("Failed to get auth URL");
 
-      // Open in new window for OAuth flow
-      window.open(data.url, "_blank", "width=500,height=600");
+      // Open popup for OAuth
+      const popup = window.open(data.url, "_blank", "width=500,height=600");
+      
+      // Poll for popup close and refetch connection
+      return new Promise((resolve) => {
+        const checkClosed = setInterval(() => {
+          if (popup?.closed) {
+            clearInterval(checkClosed);
+            queryClient.invalidateQueries({ queryKey: ["google-calendar-connection"] });
+            queryClient.invalidateQueries({ queryKey: ["google-calendar-events"] });
+            resolve({ success: true });
+          }
+        }, 500);
+        
+        // Timeout after 5 minutes
+        setTimeout(() => {
+          clearInterval(checkClosed);
+          resolve({ success: true });
+        }, 300000);
+      });
     },
     onError: (error) => {
       toast({
@@ -108,12 +133,25 @@ export const useDisconnectGoogleCalendar = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      const { error } = await supabase
+      // Use maybeSingle to handle case where no row exists
+      const { data: existing } = await supabase
         .from("user_google_tokens")
-        .delete()
-        .eq("user_id", user.id);
+        .select("user_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
 
-      if (error) throw error;
+      if (existing) {
+        const { error } = await supabase
+          .from("user_google_tokens")
+          .update({
+            calendar_enabled: false,
+            access_token: null,
+            refresh_token: null,
+          })
+          .eq("user_id", user.id);
+
+        if (error) throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["google-calendar-connection"] });

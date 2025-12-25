@@ -43,28 +43,33 @@ export function useGmailConnection() {
     queryKey: ["gmail-connection"],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return null;
+      if (!user) return { isConnected: false, email: null };
 
       const { data, error } = await supabase
         .from("user_google_tokens")
         .select("gmail_enabled, gmail_access_token, google_email")
         .eq("user_id", user.id)
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== "PGRST116") {
+      if (error) {
         console.error("Error checking Gmail connection:", error);
-        return null;
+        return { isConnected: false, email: null };
+      }
+
+      if (!data) {
+        return { isConnected: false, email: null };
       }
 
       return {
-        isConnected: data?.gmail_enabled && !!data?.gmail_access_token,
-        email: data?.google_email,
+        isConnected: data.gmail_enabled && !!data.gmail_access_token,
+        email: data.google_email,
       };
     },
+    staleTime: 30000,
   });
 }
 
-// Connect to Gmail
+// Connect to Gmail using popup flow
 export function useConnectGmail() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -74,58 +79,35 @@ export function useConnectGmail() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) throw new Error("Not authenticated");
 
-      const redirectUri = `${window.location.origin}/portal/mail`;
-      
       const response = await supabase.functions.invoke("gmail-auth", {
-        body: { action: "get-auth-url", redirectUri },
+        body: { action: "get-auth-url" },
       });
 
       if (response.error) throw new Error(response.error.message);
       if (response.data?.error) throw new Error(response.data.error);
 
-      return response.data.authUrl;
-    },
-    onSuccess: (authUrl) => {
-      window.location.href = authUrl;
-    },
-    onError: (error) => {
-      toast({
-        title: "Connection Failed",
-        description: error.message,
-        variant: "destructive",
-      });
-    },
-  });
-}
-
-// Exchange OAuth code for tokens
-export function useExchangeGmailCode() {
-  const queryClient = useQueryClient();
-  const { toast } = useToast();
-
-  return useMutation({
-    mutationFn: async (code: string) => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("Not authenticated");
-
-      const redirectUri = `${window.location.origin}/portal/mail`;
+      const authUrl = response.data.url;
       
-      const response = await supabase.functions.invoke("gmail-auth", {
-        body: { action: "exchange-code", code, redirectUri },
-      });
-
-      if (response.error) throw new Error(response.error.message);
-      if (response.data?.error) throw new Error(response.data.error);
-
-      return response.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["gmail-connection"] });
-      queryClient.invalidateQueries({ queryKey: ["gmail-messages"] });
-      queryClient.invalidateQueries({ queryKey: ["gmail-labels"] });
-      toast({
-        title: "Gmail Connected",
-        description: "Your Gmail account has been connected successfully.",
+      // Open popup for OAuth
+      const popup = window.open(authUrl, '_blank', 'width=500,height=600');
+      
+      // Poll for popup close and refetch connection
+      return new Promise((resolve) => {
+        const checkClosed = setInterval(() => {
+          if (popup?.closed) {
+            clearInterval(checkClosed);
+            queryClient.invalidateQueries({ queryKey: ['gmail-connection'] });
+            queryClient.invalidateQueries({ queryKey: ['gmail-messages'] });
+            queryClient.invalidateQueries({ queryKey: ['gmail-labels'] });
+            resolve({ success: true });
+          }
+        }, 500);
+        
+        // Timeout after 5 minutes
+        setTimeout(() => {
+          clearInterval(checkClosed);
+          resolve({ success: true });
+        }, 300000);
       });
     },
     onError: (error) => {
@@ -205,7 +187,7 @@ export function useGmailMessages(options: {
       };
     },
     enabled,
-    staleTime: 30 * 1000, // 30 seconds
+    staleTime: 30 * 1000,
   });
 }
 
@@ -250,7 +232,7 @@ export function useGmailLabels(enabled = true) {
       return response.data.labels as GmailLabel[];
     },
     enabled,
-    staleTime: 60 * 1000, // 1 minute
+    staleTime: 60 * 1000,
   });
 }
 
