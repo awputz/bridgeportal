@@ -3,16 +3,13 @@ import { Link } from "react-router-dom";
 import { 
   Plus, 
   Search, 
-  Filter,
-  ArrowUpDown,
   MoreHorizontal,
   Phone,
   Mail,
-  Building2,
   User,
   Briefcase
 } from "lucide-react";
-import { useCRMContacts, useCRMDeals, useDealStages, useCreateContact, useDeleteContact, CRMContact } from "@/hooks/useCRM";
+import { useCRMContacts, useCRMDeals, useDealStages, useCreateContact, useDeleteContact, useUpdateDeal, CRMContact } from "@/hooks/useCRM";
 import { useDivision } from "@/contexts/DivisionContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -34,10 +31,9 @@ import {
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { KanbanBoard } from "@/components/portal/KanbanBoard";
 
 const contactTypes = [
   { value: "owner", label: "Owner" },
@@ -74,6 +70,7 @@ const CRM = () => {
   const { data: stages, isLoading: stagesLoading } = useDealStages(division);
   const createContact = useCreateContact();
   const deleteContact = useDeleteContact();
+  const updateDeal = useUpdateDeal();
 
   // Filter contacts by search
   const filteredContacts = useMemo(() => {
@@ -87,17 +84,11 @@ const CRM = () => {
     );
   }, [contacts, search]);
 
-  // Group deals by stage for kanban
-  const dealsByStage = useMemo(() => {
-    if (!deals || !stages) return {};
-    const grouped: Record<string, typeof deals> = {};
-    stages.forEach((stage) => {
-      grouped[stage.id] = deals.filter((d) => d.stage_id === stage.id);
-    });
-    return grouped;
-  }, [deals, stages]);
-
   const isLoading = contactsLoading || dealsLoading || stagesLoading;
+
+  const handleDealMove = (dealId: string, newStageId: string) => {
+    updateDeal.mutate({ id: dealId, stage_id: newStageId });
+  };
 
   const handleCreateContact = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -250,55 +241,13 @@ const CRM = () => {
                   <Skeleton key={i} className="h-96 w-72 flex-shrink-0 rounded-xl" />
                 ))}
               </div>
-            ) : (
-              <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4">
-                {stages?.map((stage) => (
-                  <div
-                    key={stage.id}
-                    className="flex-shrink-0 w-72 glass-card p-4"
-                  >
-                    <div className="flex items-center gap-2 mb-4">
-                      <div
-                        className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: stage.color }}
-                      />
-                      <h3 className="text-sm font-medium text-foreground">{stage.name}</h3>
-                      <span className="text-xs text-muted-foreground ml-auto">
-                        {dealsByStage[stage.id]?.length || 0}
-                      </span>
-                    </div>
-                    <div className="space-y-2 min-h-[200px]">
-                      {dealsByStage[stage.id]?.map((deal) => (
-                        <Link
-                          key={deal.id}
-                          to={`/portal/crm/deals/${deal.id}`}
-                          className="block p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
-                        >
-                          <p className="text-sm font-light text-foreground truncate">
-                            {deal.property_address}
-                          </p>
-                          {deal.contact && (
-                            <p className="text-xs text-muted-foreground truncate">
-                              {deal.contact.full_name}
-                            </p>
-                          )}
-                          {deal.value && (
-                            <p className="text-xs text-muted-foreground mt-1">
-                              ${deal.value.toLocaleString()}
-                            </p>
-                          )}
-                        </Link>
-                      ))}
-                      {(!dealsByStage[stage.id] || dealsByStage[stage.id].length === 0) && (
-                        <p className="text-xs text-muted-foreground/50 text-center py-8">
-                          No deals
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            ) : stages && deals ? (
+              <KanbanBoard
+                stages={stages}
+                deals={deals}
+                onDealMove={handleDealMove}
+              />
+            ) : null}
 
             {/* Empty state for pipeline */}
             {!isLoading && (!deals || deals.length === 0) && (
