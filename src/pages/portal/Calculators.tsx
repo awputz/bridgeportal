@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calculator, TrendingUp, Building2, Home, DollarSign, Percent, BarChart3, PiggyBank } from "lucide-react";
+import { Calculator, TrendingUp, Building2, Home, DollarSign, Percent, BarChart3, PiggyBank, Receipt, Users, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { InvestmentCalculator } from "@/components/InvestmentCalculator";
@@ -9,6 +9,12 @@ import LeaseCalculator from "@/components/LeaseCalculator";
 import NetEffectiveRentCalculator from "@/components/NetEffectiveRentCalculator";
 import { RentVsBuyCalculator } from "@/components/RentVsBuyCalculator";
 import { RentOptimizationCalculator } from "@/components/RentOptimizationCalculator";
+import { GRMCalculator } from "@/components/calculators/GRMCalculator";
+import { DSCRCalculator } from "@/components/calculators/DSCRCalculator";
+import { CommissionCalculator } from "@/components/calculators/CommissionCalculator";
+import { TransferTaxCalculator } from "@/components/calculators/TransferTaxCalculator";
+import { RentAffordabilityCalculator } from "@/components/calculators/RentAffordabilityCalculator";
+import { TICalculator } from "@/components/calculators/TICalculator";
 
 const calculatorCategories = [
   {
@@ -17,27 +23,11 @@ const calculatorCategories = [
     icon: TrendingUp,
     description: "Analyze deals, cap rates, and returns",
     calculators: [
-      {
-        id: "cap-rate",
-        name: "Cap Rate & NOI",
-        description: "Calculate capitalization rates and net operating income",
-        icon: Percent,
-        component: InvestmentCalculator,
-      },
-      {
-        id: "cash-flow",
-        name: "Cash Flow Analyzer",
-        description: "Multi-year ROI projections with IRR analysis",
-        icon: BarChart3,
-        component: CashFlowAnalyzer,
-      },
-      {
-        id: "1031-exchange",
-        name: "1031 Exchange",
-        description: "Tax-deferred exchange calculations",
-        icon: DollarSign,
-        component: Exchange1031Calculator,
-      },
+      { id: "cap-rate", name: "Cap Rate & NOI", description: "Calculate capitalization rates and net operating income", icon: Percent, component: InvestmentCalculator },
+      { id: "cash-flow", name: "Cash Flow Analyzer", description: "Multi-year ROI projections with IRR analysis", icon: BarChart3, component: CashFlowAnalyzer },
+      { id: "1031-exchange", name: "1031 Exchange", description: "Tax-deferred exchange calculations", icon: DollarSign, component: Exchange1031Calculator },
+      { id: "grm", name: "Gross Rent Multiplier", description: "Quick property valuation by GRM", icon: TrendingUp, component: GRMCalculator },
+      { id: "dscr", name: "DSCR Calculator", description: "Debt service coverage ratio for loan qualification", icon: FileText, component: DSCRCalculator },
     ],
   },
   {
@@ -46,20 +36,9 @@ const calculatorCategories = [
     icon: Building2,
     description: "Lease analysis and tenant calculations",
     calculators: [
-      {
-        id: "lease-calc",
-        name: "Lease Calculator",
-        description: "Commercial lease term analysis",
-        icon: Calculator,
-        component: LeaseCalculator,
-      },
-      {
-        id: "net-effective",
-        name: "Net Effective Rent",
-        description: "Calculate effective rent with concessions",
-        icon: DollarSign,
-        component: NetEffectiveRentCalculator,
-      },
+      { id: "lease-calc", name: "Lease Calculator", description: "Commercial lease term analysis", icon: Calculator, component: LeaseCalculator },
+      { id: "net-effective-commercial", name: "Net Effective Rent", description: "Calculate effective rent with concessions", icon: DollarSign, component: NetEffectiveRentCalculator },
+      { id: "ti-calculator", name: "TI Allowance", description: "Tenant improvement and concession analysis", icon: Building2, component: TICalculator },
     ],
   },
   {
@@ -68,20 +47,20 @@ const calculatorCategories = [
     icon: Home,
     description: "Home buying and rental analysis",
     calculators: [
-      {
-        id: "rent-vs-buy",
-        name: "Rent vs Buy",
-        description: "Compare renting versus buying costs",
-        icon: Home,
-        component: RentVsBuyCalculator,
-      },
-      {
-        id: "rent-optimization",
-        name: "Rent Optimization",
-        description: "Optimize rental pricing and vacancy",
-        icon: PiggyBank,
-        component: RentOptimizationCalculator,
-      },
+      { id: "rent-vs-buy", name: "Rent vs Buy", description: "Compare renting versus buying costs", icon: Home, component: RentVsBuyCalculator },
+      { id: "rent-affordability", name: "Rent Affordability (40x)", description: "NYC 40x income rule calculator", icon: PiggyBank, component: RentAffordabilityCalculator },
+      { id: "net-effective-residential", name: "Net Effective Rent", description: "Residential rent with concessions", icon: DollarSign, component: NetEffectiveRentCalculator },
+      { id: "rent-optimization", name: "Rent Optimization", description: "Optimize rental pricing and vacancy", icon: TrendingUp, component: RentOptimizationCalculator },
+    ],
+  },
+  {
+    id: "general",
+    name: "General",
+    icon: Calculator,
+    description: "Universal calculators for all divisions",
+    calculators: [
+      { id: "commission", name: "Commission Calculator", description: "Calculate agent and house commission splits", icon: Users, component: CommissionCalculator },
+      { id: "transfer-tax", name: "NYC Transfer Tax", description: "NYC/NYS transfer tax and mansion tax", icon: Receipt, component: TransferTaxCalculator },
     ],
   },
 ];

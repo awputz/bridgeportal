@@ -1,0 +1,423 @@
+import { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
+import { 
+  Plus, 
+  Search, 
+  Filter,
+  ArrowUpDown,
+  MoreHorizontal,
+  Phone,
+  Mail,
+  Building2,
+  User,
+  Briefcase
+} from "lucide-react";
+import { useCRMContacts, useCRMDeals, useDealStages, useCreateContact, useDeleteContact, CRMContact } from "@/hooks/useCRM";
+import { useDivision } from "@/contexts/DivisionContext";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+const contactTypes = [
+  { value: "owner", label: "Owner" },
+  { value: "buyer", label: "Buyer" },
+  { value: "tenant", label: "Tenant" },
+  { value: "landlord", label: "Landlord" },
+  { value: "investor", label: "Investor" },
+  { value: "attorney", label: "Attorney" },
+  { value: "lender", label: "Lender" },
+  { value: "broker", label: "Broker" },
+  { value: "prospect", label: "Prospect" },
+  { value: "other", label: "Other" },
+];
+
+const sourceOptions = [
+  { value: "referral", label: "Referral" },
+  { value: "cold-call", label: "Cold Call" },
+  { value: "website", label: "Website" },
+  { value: "open-house", label: "Open House" },
+  { value: "networking", label: "Networking" },
+  { value: "repeat-client", label: "Repeat Client" },
+  { value: "marketing", label: "Marketing" },
+  { value: "other", label: "Other" },
+];
+
+const CRM = () => {
+  const { division, divisionConfig } = useDivision();
+  const [activeTab, setActiveTab] = useState<"pipeline" | "contacts">("pipeline");
+  const [search, setSearch] = useState("");
+  const [showContactDialog, setShowContactDialog] = useState(false);
+
+  const { data: contacts, isLoading: contactsLoading } = useCRMContacts(division);
+  const { data: deals, isLoading: dealsLoading } = useCRMDeals(division);
+  const { data: stages, isLoading: stagesLoading } = useDealStages(division);
+  const createContact = useCreateContact();
+  const deleteContact = useDeleteContact();
+
+  // Filter contacts by search
+  const filteredContacts = useMemo(() => {
+    if (!contacts) return [];
+    if (!search) return contacts;
+    return contacts.filter(
+      (c) =>
+        c.full_name.toLowerCase().includes(search.toLowerCase()) ||
+        c.email?.toLowerCase().includes(search.toLowerCase()) ||
+        c.company?.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [contacts, search]);
+
+  // Group deals by stage for kanban
+  const dealsByStage = useMemo(() => {
+    if (!deals || !stages) return {};
+    const grouped: Record<string, typeof deals> = {};
+    stages.forEach((stage) => {
+      grouped[stage.id] = deals.filter((d) => d.stage_id === stage.id);
+    });
+    return grouped;
+  }, [deals, stages]);
+
+  const isLoading = contactsLoading || dealsLoading || stagesLoading;
+
+  const handleCreateContact = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast.error("You must be logged in to create contacts");
+      return;
+    }
+
+    createContact.mutate({
+      agent_id: user.id,
+      full_name: formData.get("full_name") as string,
+      email: formData.get("email") as string || null,
+      phone: formData.get("phone") as string || null,
+      company: formData.get("company") as string || null,
+      contact_type: formData.get("contact_type") as string || "prospect",
+      source: formData.get("source") as string || null,
+      division,
+      tags: [],
+      notes: formData.get("notes") as string || null,
+      address: null,
+    }, {
+      onSuccess: () => {
+        setShowContactDialog(false);
+        form.reset();
+      },
+    });
+  };
+
+  return (
+    <div className="min-h-screen pb-24 md:pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+          <div>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">
+              CRM
+            </h1>
+            <p className="text-muted-foreground font-light">
+              Manage your {divisionConfig.name.toLowerCase()} pipeline
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Dialog open={showContactDialog} onOpenChange={setShowContactDialog}>
+              <DialogTrigger asChild>
+                <Button className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Add Contact
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="glass-panel-strong max-w-lg">
+                <DialogHeader>
+                  <DialogTitle className="font-light">New Contact</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleCreateContact} className="space-y-4 mt-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="col-span-2 space-y-2">
+                      <Label htmlFor="full_name">Full Name *</Label>
+                      <Input id="full_name" name="full_name" required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Input id="email" name="email" type="email" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Phone</Label>
+                      <Input id="phone" name="phone" type="tel" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="company">Company</Label>
+                      <Input id="company" name="company" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="contact_type">Type</Label>
+                      <Select name="contact_type" defaultValue="prospect">
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {contactTypes.map((type) => (
+                            <SelectItem key={type.value} value={type.value}>
+                              {type.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="col-span-2 space-y-2">
+                      <Label htmlFor="source">Source</Label>
+                      <Select name="source">
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select source" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {sourceOptions.map((opt) => (
+                            <SelectItem key={opt.value} value={opt.value}>
+                              {opt.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="col-span-2 space-y-2">
+                      <Label htmlFor="notes">Notes</Label>
+                      <Textarea id="notes" name="notes" rows={3} />
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-3 pt-4">
+                    <Button type="button" variant="ghost" onClick={() => setShowContactDialog(false)}>
+                      Cancel
+                    </Button>
+                    <Button type="submit" disabled={createContact.isPending}>
+                      {createContact.isPending ? "Creating..." : "Create Contact"}
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "pipeline" | "contacts")}>
+          <TabsList className="bg-transparent border-b border-white/10 rounded-none h-auto p-0 mb-6">
+            <TabsTrigger
+              value="pipeline"
+              className="flex items-center gap-2 px-4 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-foreground text-muted-foreground data-[state=active]:text-foreground bg-transparent data-[state=active]:bg-transparent"
+            >
+              <Briefcase className="h-4 w-4" />
+              Pipeline
+            </TabsTrigger>
+            <TabsTrigger
+              value="contacts"
+              className="flex items-center gap-2 px-4 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-foreground text-muted-foreground data-[state=active]:text-foreground bg-transparent data-[state=active]:bg-transparent"
+            >
+              <User className="h-4 w-4" />
+              Contacts
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Pipeline View */}
+          <TabsContent value="pipeline" className="mt-0">
+            {isLoading ? (
+              <div className="flex gap-4 overflow-x-auto pb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Skeleton key={i} className="h-96 w-72 flex-shrink-0 rounded-xl" />
+                ))}
+              </div>
+            ) : (
+              <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4">
+                {stages?.map((stage) => (
+                  <div
+                    key={stage.id}
+                    className="flex-shrink-0 w-72 glass-card p-4"
+                  >
+                    <div className="flex items-center gap-2 mb-4">
+                      <div
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: stage.color }}
+                      />
+                      <h3 className="text-sm font-medium text-foreground">{stage.name}</h3>
+                      <span className="text-xs text-muted-foreground ml-auto">
+                        {dealsByStage[stage.id]?.length || 0}
+                      </span>
+                    </div>
+                    <div className="space-y-2 min-h-[200px]">
+                      {dealsByStage[stage.id]?.map((deal) => (
+                        <Link
+                          key={deal.id}
+                          to={`/portal/crm/deals/${deal.id}`}
+                          className="block p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
+                        >
+                          <p className="text-sm font-light text-foreground truncate">
+                            {deal.property_address}
+                          </p>
+                          {deal.contact && (
+                            <p className="text-xs text-muted-foreground truncate">
+                              {deal.contact.full_name}
+                            </p>
+                          )}
+                          {deal.value && (
+                            <p className="text-xs text-muted-foreground mt-1">
+                              ${deal.value.toLocaleString()}
+                            </p>
+                          )}
+                        </Link>
+                      ))}
+                      {(!dealsByStage[stage.id] || dealsByStage[stage.id].length === 0) && (
+                        <p className="text-xs text-muted-foreground/50 text-center py-8">
+                          No deals
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Empty state for pipeline */}
+            {!isLoading && (!deals || deals.length === 0) && (
+              <div className="text-center py-16 glass-card">
+                <Briefcase className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
+                <h3 className="text-lg font-light text-foreground mb-2">No deals yet</h3>
+                <p className="text-muted-foreground mb-4">
+                  Create your first deal to get started
+                </p>
+                <Link to="/portal/crm/deals/new">
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Create Deal
+                  </Button>
+                </Link>
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Contacts View */}
+          <TabsContent value="contacts" className="mt-0">
+            {/* Search */}
+            <div className="relative max-w-md mb-6">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search contacts..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-10 bg-white/5 border-white/10"
+              />
+            </div>
+
+            {/* Contacts Grid */}
+            {contactsLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(6)].map((_, i) => (
+                  <Skeleton key={i} className="h-40 rounded-xl" />
+                ))}
+              </div>
+            ) : filteredContacts.length === 0 ? (
+              <div className="text-center py-16 glass-card">
+                <User className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
+                <h3 className="text-lg font-light text-foreground mb-2">
+                  {search ? "No contacts found" : "No contacts yet"}
+                </h3>
+                <p className="text-muted-foreground mb-4">
+                  {search ? "Try a different search term" : "Add your first contact to get started"}
+                </p>
+                {!search && (
+                  <Button onClick={() => setShowContactDialog(true)}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Contact
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredContacts.map((contact) => (
+                  <div key={contact.id} className="glass-card p-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="min-w-0">
+                        <h3 className="text-base font-light text-foreground truncate">
+                          {contact.full_name}
+                        </h3>
+                        <p className="text-sm text-muted-foreground truncate">
+                          {contact.company || contact.contact_type}
+                        </p>
+                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem asChild>
+                            <Link to={`/portal/crm/contacts/${contact.id}`}>
+                              View Details
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => deleteContact.mutate(contact.id)}
+                            className="text-destructive"
+                          >
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                    <div className="flex items-center gap-2 mt-3">
+                      {contact.phone && (
+                        <a
+                          href={`tel:${contact.phone}`}
+                          className="p-2 rounded-full bg-white/5 hover:bg-white/10"
+                        >
+                          <Phone className="h-4 w-4 text-muted-foreground" />
+                        </a>
+                      )}
+                      {contact.email && (
+                        <a
+                          href={`mailto:${contact.email}`}
+                          className="p-2 rounded-full bg-white/5 hover:bg-white/10"
+                        >
+                          <Mail className="h-4 w-4 text-muted-foreground" />
+                        </a>
+                      )}
+                      <span className="ml-auto text-xs px-2 py-1 bg-white/10 rounded-full text-muted-foreground">
+                        {contactTypes.find((t) => t.value === contact.contact_type)?.label || contact.contact_type}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  );
+};
+
+export default CRM;
