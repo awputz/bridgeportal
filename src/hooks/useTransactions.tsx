@@ -28,6 +28,7 @@ export interface Transaction {
   asset_type: string | null;
   image_url: string | null;
   is_profile_only: boolean;
+  commission: number | null;
 }
 
 export const useTransactions = (dealType?: string, includeProfileOnly: boolean = false) => {

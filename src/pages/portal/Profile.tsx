@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
-import { User, Mail, Phone, Lock, Save, CheckCircle, TrendingUp, DollarSign, Building2, Calendar, FileText } from "lucide-react";
+import { Link } from "react-router-dom";
+import { User, Mail, Phone, Lock, Save, TrendingUp, DollarSign, Building2, Calendar, FileText, ExternalLink } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { useAgentTransactions } from "@/hooks/useAgentTransactions";
 import { useAgentCommissions } from "@/hooks/useAgentCommissions";
+import { formatResidentialRent, formatFullCurrency, formatCommercialPricing } from "@/lib/formatters";
 import {
   Table,
   TableBody,
@@ -18,14 +21,51 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-// Use full number formatting - never abbreviate
-const formatCurrency = (value: number) => {
-  return `$${value.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
+// Format deal value based on division
+const formatDealValueByDivision = (tx: any): string => {
+  const division = tx.division || 'Other';
+  
+  if (division === 'Residential') {
+    if (tx.deal_type === 'Lease' && tx.monthly_rent) {
+      return formatResidentialRent(tx.monthly_rent);
+    }
+    return formatFullCurrency(tx.sale_price || tx.monthly_rent);
+  }
+  
+  if (division === 'Commercial') {
+    if (tx.deal_type === 'Lease') {
+      if (tx.price_per_sf && tx.gross_square_feet) {
+        const pricing = formatCommercialPricing(tx.price_per_sf, tx.gross_square_feet);
+        return `${pricing.pricePerSF} | ${pricing.totalSF}`;
+      }
+      if (tx.monthly_rent) {
+        return `${formatFullCurrency(tx.monthly_rent)}/month`;
+      }
+    }
+    return formatFullCurrency(tx.sale_price || tx.total_lease_value);
+  }
+  
+  if (division === 'Investment Sales' || division === 'Capital Advisory') {
+    return formatFullCurrency(tx.sale_price);
+  }
+  
+  return formatFullCurrency(tx.sale_price || tx.total_lease_value || tx.monthly_rent);
 };
+
+interface TeamMember {
+  id: string;
+  name: string;
+  title: string;
+  email: string;
+  phone: string | null;
+  image_url: string | null;
+  category: string;
+}
 
 const Profile = () => {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
+  const [teamMember, setTeamMember] = useState<TeamMember | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Password change state
@@ -44,6 +84,7 @@ const Profile = () => {
       if (user) {
         setUser(user);
         
+        // Get profile
         const { data: profileData } = await supabase
           .from("profiles")
           .select("*")
@@ -51,6 +92,20 @@ const Profile = () => {
           .single();
         
         setProfile(profileData);
+
+        // Try to match with team_members by email
+        if (user.email) {
+          const { data: teamData } = await supabase
+            .from("team_members")
+            .select("id, name, title, email, phone, image_url, category")
+            .eq("email", user.email)
+            .eq("is_active", true)
+            .single();
+          
+          if (teamData) {
+            setTeamMember(teamData);
+          }
+        }
       }
       setIsLoading(false);
     };
@@ -89,6 +144,19 @@ const Profile = () => {
     }
   };
 
+  // Get initials from name
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(n => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  const displayName = teamMember?.name || profile?.full_name || user?.email?.split("@")[0] || "Agent";
+  const displayTitle = teamMember?.title || "Agent";
+
   if (isLoading) {
     return (
       <div className="min-h-screen pb-24 md:pb-16">
@@ -106,15 +174,65 @@ const Profile = () => {
   return (
     <div className="min-h-screen pb-24 md:pb-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">
-            Agent Profile
-          </h1>
-          <p className="text-muted-foreground font-light">
-            Your performance dashboard and account settings
-          </p>
-        </div>
+        {/* Agent Header with Photo */}
+        <Card className="glass-card border-white/10 mb-8">
+          <CardContent className="pt-8 pb-6">
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              {/* Agent Photo */}
+              <Avatar className="h-28 w-28 md:h-32 md:w-32 border-4 border-primary/20">
+                <AvatarImage 
+                  src={teamMember?.image_url || undefined} 
+                  alt={displayName}
+                  className="object-cover"
+                />
+                <AvatarFallback className="text-3xl md:text-4xl bg-primary/20 text-primary">
+                  {getInitials(displayName)}
+                </AvatarFallback>
+              </Avatar>
+
+              {/* Agent Info */}
+              <div className="flex-1 text-center md:text-left">
+                <h1 className="text-3xl md:text-4xl font-extralight text-foreground mb-1">
+                  {displayName}
+                </h1>
+                <p className="text-lg text-primary mb-3">{displayTitle}</p>
+                <div className="flex flex-wrap justify-center md:justify-start gap-4 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-4 w-4" />
+                    {user?.email}
+                  </div>
+                  {(teamMember?.phone || profile?.phone) && (
+                    <div className="flex items-center gap-2">
+                      <Phone className="h-4 w-4" />
+                      {teamMember?.phone || profile?.phone}
+                    </div>
+                  )}
+                  {teamMember?.category && (
+                    <div className="flex items-center gap-2 px-2 py-0.5 bg-white/10 rounded-full text-xs">
+                      {teamMember.category}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Quick Stats */}
+              <div className="grid grid-cols-2 gap-4 text-center">
+                <div className="p-4 bg-white/5 rounded-lg">
+                  <p className="text-2xl md:text-3xl font-light text-foreground">
+                    {commissions.totalDeals}
+                  </p>
+                  <p className="text-xs text-muted-foreground">Total Deals</p>
+                </div>
+                <div className="p-4 bg-white/5 rounded-lg">
+                  <p className="text-2xl md:text-3xl font-light text-emerald-400">
+                    {formatFullCurrency(commissions.totalEarnings)}
+                  </p>
+                  <p className="text-xs text-muted-foreground">Total Earnings</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Commission Summary Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -127,7 +245,7 @@ const Profile = () => {
                 <div>
                   <p className="text-xs text-muted-foreground">Total Earnings</p>
                   <p className="text-xl font-light text-foreground">
-                    {formatCurrency(commissions.totalEarnings)}
+                    {formatFullCurrency(commissions.totalEarnings)}
                   </p>
                 </div>
               </div>
@@ -143,7 +261,7 @@ const Profile = () => {
                 <div>
                   <p className="text-xs text-muted-foreground">YTD Earnings</p>
                   <p className="text-xl font-light text-foreground">
-                    {formatCurrency(commissions.ytdEarnings)}
+                    {formatFullCurrency(commissions.ytdEarnings)}
                   </p>
                 </div>
               </div>
@@ -189,11 +307,21 @@ const Profile = () => {
             {/* Transactions Table */}
             <Card className="glass-card border-white/10">
               <CardHeader>
-                <CardTitle className="font-light flex items-center gap-2">
-                  <FileText className="h-5 w-5" />
-                  My Transactions
-                </CardTitle>
-                <CardDescription>Your closed deals and commission history</CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="font-light flex items-center gap-2">
+                      <FileText className="h-5 w-5" />
+                      Recent Transactions
+                    </CardTitle>
+                    <CardDescription>Your closed deals and commission history</CardDescription>
+                  </div>
+                  <Link to="/portal/my-transactions">
+                    <Button variant="outline" size="sm" className="gap-2">
+                      View All
+                      <ExternalLink className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                </div>
               </CardHeader>
               <CardContent>
                 {transactionsLoading ? (
@@ -214,12 +342,10 @@ const Profile = () => {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {transactions.slice(0, 10).map((tx) => {
-                          const dealValue = tx.sale_price || tx.total_lease_value || tx.monthly_rent || 0;
-                          // Use actual commission if available, otherwise show "—"
-                          const hasActualCommission = tx.commission !== null && tx.commission !== undefined;
+                        {transactions.slice(0, 5).map((tx) => {
+                          const hasActualCommission = tx.commission !== null && tx.commission !== undefined && tx.commission > 0;
                           const commissionDisplay = hasActualCommission 
-                            ? formatCurrency(tx.commission as number)
+                            ? formatFullCurrency(tx.commission as number)
                             : "—";
                           return (
                             <TableRow key={tx.id} className="border-border/30">
@@ -238,7 +364,7 @@ const Profile = () => {
                                 </span>
                               </TableCell>
                               <TableCell className="text-foreground">
-                                {formatCurrency(dealValue)}
+                                {formatDealValueByDivision(tx)}
                               </TableCell>
                               <TableCell className="text-right font-medium text-emerald-400">
                                 {commissionDisplay}
@@ -248,10 +374,14 @@ const Profile = () => {
                         })}
                       </TableBody>
                     </Table>
-                    {transactions.length > 10 && (
-                      <p className="text-center text-sm text-muted-foreground mt-4">
-                        Showing 10 of {transactions.length} transactions
-                      </p>
+                    {transactions.length > 5 && (
+                      <div className="text-center mt-4">
+                        <Link to="/portal/my-transactions">
+                          <Button variant="ghost" size="sm">
+                            View all {transactions.length} transactions →
+                          </Button>
+                        </Link>
+                      </div>
                     )}
                   </div>
                 ) : (
@@ -275,18 +405,6 @@ const Profile = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center gap-4 p-4 bg-white/5 rounded-lg">
-                  <div className="h-16 w-16 rounded-full bg-primary/20 flex items-center justify-center">
-                    <User className="h-8 w-8 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-light text-foreground">
-                      {profile?.full_name || user?.email?.split("@")[0] || "Agent"}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">{user?.email}</p>
-                  </div>
-                </div>
-
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label className="text-muted-foreground">Email</Label>
@@ -299,7 +417,7 @@ const Profile = () => {
                     <Label className="text-muted-foreground">Phone</Label>
                     <div className="flex items-center gap-2 p-3 bg-white/5 rounded-lg">
                       <Phone className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-foreground">{profile?.phone || "Not set"}</span>
+                      <span className="text-foreground">{teamMember?.phone || profile?.phone || "Not set"}</span>
                     </div>
                   </div>
                 </div>
@@ -376,59 +494,68 @@ const Profile = () => {
 
           {/* Sidebar - Earnings by Division */}
           <div className="space-y-6">
-            <Card className="glass-card border-white/10">
-              <CardHeader>
-                <CardTitle className="font-light text-sm">Earnings by Division</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {commissions.byDivision.length > 0 ? (
-                  commissions.byDivision.map((div) => (
+            {commissions.byDivision.length > 0 && (
+              <Card className="glass-card border-white/10">
+                <CardHeader>
+                  <CardTitle className="font-light text-sm">Earnings by Division</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {commissions.byDivision.map((div) => (
                     <div key={div.division} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
                       <div>
                         <span className="text-sm text-foreground">{div.division}</span>
                         <p className="text-xs text-muted-foreground">{div.dealCount} deals</p>
                       </div>
                       <span className="text-sm font-medium text-emerald-400">
-                        {formatCurrency(div.earnings)}
+                        {formatFullCurrency(div.earnings)}
                       </span>
                     </div>
-                  ))
-                ) : (
-                  <p className="text-sm text-muted-foreground text-center py-4">No data yet</p>
-                )}
-              </CardContent>
-            </Card>
+                  ))}
+                </CardContent>
+              </Card>
+            )}
 
-            <Card className="glass-card border-white/10">
-              <CardHeader>
-                <CardTitle className="font-light text-sm">Earnings by Year</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {commissions.byYear.length > 0 ? (
-                  commissions.byYear.map((year) => (
+            {commissions.byYear.length > 0 && (
+              <Card className="glass-card border-white/10">
+                <CardHeader>
+                  <CardTitle className="font-light text-sm">Earnings by Year</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {commissions.byYear.map((year) => (
                     <div key={year.year} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
                       <div>
                         <span className="text-sm text-foreground">{year.year}</span>
                         <p className="text-xs text-muted-foreground">{year.dealCount} deals</p>
                       </div>
                       <span className="text-sm font-medium text-emerald-400">
-                        {formatCurrency(year.earnings)}
+                        {formatFullCurrency(year.earnings)}
                       </span>
                     </div>
-                  ))
-                ) : (
-                  <p className="text-sm text-muted-foreground text-center py-4">No data yet</p>
-                )}
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            <Card className="glass-card border-white/10 border-dashed">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+                    <Calendar className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted-foreground">Active since</p>
+                    <p className="text-sm font-light text-foreground">
+                      {user?.created_at
+                        ? new Date(user.created_at).toLocaleDateString('en-US', { 
+                            month: 'long', 
+                            year: 'numeric' 
+                          })
+                        : 'Unknown'}
+                    </p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
-
-            <div className="flex items-center gap-2 px-3 py-2 bg-green-500/10 rounded-lg border border-green-500/20">
-              <CheckCircle className="h-4 w-4 text-green-400" />
-              <span className="text-sm text-green-400">Active</span>
-              <span className="text-xs text-muted-foreground">
-                since {new Date(user?.created_at || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-              </span>
-            </div>
           </div>
         </div>
       </div>

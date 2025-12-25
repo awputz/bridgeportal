@@ -26,15 +26,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useCreateTransaction, useUpdateTransaction } from "@/hooks/useTransactionMutations";
-import { useTeamMembers } from "@/hooks/useTeamMembers";
+import { useUpdateTransaction } from "@/hooks/useTransactionMutations";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
-import { X, ImageIcon } from "lucide-react";
-import type { Transaction } from "@/hooks/useTransactions";
+import { DollarSign } from "lucide-react";
 
 const formSchema = z.object({
-  agent_name: z.string().min(1, "Agent name is required"),
   division: z.enum(["Residential", "Commercial", "Investment Sales", "Capital Advisory"]),
   deal_type: z.enum(["Sale", "Lease", "Loan"]),
   property_address: z.string().min(1, "Property address is required"),
@@ -54,30 +50,44 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-interface TransactionFormDialogProps {
+interface AgentTransactionFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  transaction?: Transaction;
+  transaction?: any;
 }
 
-export function TransactionFormDialog({
+export function AgentTransactionFormDialog({
   open,
   onOpenChange,
   transaction,
-}: TransactionFormDialogProps) {
-  const { toast } = useToast();
-  const { data: teamMembers = [] } = useTeamMembers();
-  const createMutation = useCreateTransaction();
+}: AgentTransactionFormDialogProps) {
   const updateMutation = useUpdateTransaction();
   const [division, setDivision] = useState<"Residential" | "Commercial" | "Investment Sales" | "Capital Advisory">("Investment Sales");
   const [dealType, setDealType] = useState<"Sale" | "Lease" | "Loan">("Sale");
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const [agentName, setAgentName] = useState<string>("");
+
+  // Get current user's name for new transactions
+  useEffect(() => {
+    const fetchAgentName = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("full_name")
+          .eq("id", user.id)
+          .single();
+        
+        if (profile?.full_name) {
+          setAgentName(profile.full_name);
+        }
+      }
+    };
+    fetchAgentName();
+  }, []);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      agent_name: "",
       division: "Investment Sales",
       deal_type: "Sale",
       property_address: "",
@@ -96,7 +106,6 @@ export function TransactionFormDialog({
       const txDealType = (transaction.deal_type || "Sale") as "Sale" | "Lease" | "Loan";
       
       form.reset({
-        agent_name: transaction.agent_name,
         division: txDivision,
         deal_type: txDealType,
         property_address: transaction.property_address,
@@ -115,10 +124,9 @@ export function TransactionFormDialog({
       });
       setDivision(txDivision);
       setDealType(txDealType);
-      setImageUrl(transaction.image_url || null);
+      setAgentName(transaction.agent_name);
     } else {
       form.reset({
-        agent_name: "",
         division: "Investment Sales",
         deal_type: "Sale",
         property_address: "",
@@ -131,45 +139,8 @@ export function TransactionFormDialog({
       });
       setDivision("Investment Sales");
       setDealType("Sale");
-      setImageUrl(null);
     }
   }, [transaction, open, form]);
-
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const fileExt = file.name.split(".").pop();
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-
-    setUploading(true);
-    try {
-      const { error: uploadError } = await supabase.storage
-        .from("property-images")
-        .upload(fileName, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data: publicUrl } = supabase.storage
-        .from("property-images")
-        .getPublicUrl(fileName);
-
-      setImageUrl(publicUrl.publicUrl);
-      toast({ title: "Image uploaded successfully" });
-    } catch (error: any) {
-      toast({
-        title: "Upload failed",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const removeImage = () => {
-    setImageUrl(null);
-  };
 
   // Get available deal types based on division
   const getDealTypeOptions = () => {
@@ -209,6 +180,8 @@ export function TransactionFormDialog({
   };
 
   const onSubmit = async (data: FormData) => {
+    if (!transaction) return;
+
     const closingDate = data.closing_date ? new Date(data.closing_date) : null;
     const year = closingDate ? closingDate.getFullYear() : null;
 
@@ -235,18 +208,13 @@ export function TransactionFormDialog({
       price_per_unit: pricePerUnit,
       price_per_sf: pricePerSf,
       total_lease_value: totalLeaseValue,
-      image_url: imageUrl,
       commission: data.commission,
     };
 
-    if (transaction) {
-      await updateMutation.mutateAsync({
-        id: transaction.id,
-        data: submitData,
-      });
-    } else {
-      await createMutation.mutateAsync(submitData);
-    }
+    await updateMutation.mutateAsync({
+      id: transaction.id,
+      data: submitData,
+    });
 
     onOpenChange(false);
   };
@@ -256,81 +224,50 @@ export function TransactionFormDialog({
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {transaction ? "Edit Transaction" : "Add New Transaction"}
+            Edit Transaction
           </DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* Property Image */}
-            <div className="space-y-4">
-              <h3 className="font-medium text-sm">Property Image</h3>
-              
-              {imageUrl ? (
-                <div className="relative w-full aspect-video rounded-lg overflow-hidden border border-border">
-                  <img 
-                    src={imageUrl} 
-                    alt="Property" 
-                    className="w-full h-full object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={removeImage}
-                    className="absolute top-2 right-2 p-1.5 rounded-full bg-background/80 hover:bg-background transition-colors"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                </div>
-              ) : (
-                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
-                  <div className="flex flex-col items-center justify-center py-4">
-                    {uploading ? (
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-foreground" />
-                    ) : (
-                      <>
-                        <ImageIcon className="h-8 w-8 text-muted-foreground mb-2" />
-                        <p className="text-sm text-muted-foreground">Click to upload property image</p>
-                      </>
-                    )}
-                  </div>
-                  <input 
-                    type="file" 
-                    className="hidden" 
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    disabled={uploading}
-                  />
-                </label>
-              )}
+            {/* Agent Name (Read-only) */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Agent</label>
+              <div className="p-3 bg-muted/50 rounded-md text-foreground">
+                {agentName || "Loading..."}
+              </div>
             </div>
 
-            <div className="space-y-4">
-              <h3 className="font-medium text-sm">Basic Information</h3>
+            {/* Commission Field - Highlighted */}
+            <div className="p-4 rounded-lg border-2 border-emerald-500/30 bg-emerald-500/5">
+              <div className="flex items-center gap-2 mb-3">
+                <DollarSign className="h-5 w-5 text-emerald-400" />
+                <h3 className="font-medium text-emerald-400">Commission</h3>
+              </div>
               
               <FormField
                 control={form.control}
-                name="agent_name"
+                name="commission"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Agent Name*</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select agent" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {teamMembers.map((member) => (
-                          <SelectItem key={member.id} value={member.name}>
-                            {member.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormLabel>Your Commission ($)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        {...field}
+                        onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
+                        placeholder="Enter your commission amount"
+                        className="text-lg"
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="font-medium text-sm">Transaction Details</h3>
 
               <div className="grid grid-cols-2 gap-4">
                 <FormField
@@ -338,13 +275,12 @@ export function TransactionFormDialog({
                   name="division"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Division*</FormLabel>
+                      <FormLabel>Division</FormLabel>
                       <Select
                         onValueChange={(value) => {
                           field.onChange(value);
                           const newDivision = value as "Residential" | "Commercial" | "Investment Sales" | "Capital Advisory";
                           setDivision(newDivision);
-                          // Auto-set deal type based on division
                           if (newDivision === "Capital Advisory") {
                             form.setValue("deal_type", "Loan");
                             setDealType("Loan");
@@ -380,7 +316,7 @@ export function TransactionFormDialog({
                   name="deal_type"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Deal Type*</FormLabel>
+                      <FormLabel>Deal Type</FormLabel>
                       <Select
                         onValueChange={(value) => {
                           field.onChange(value);
@@ -412,7 +348,7 @@ export function TransactionFormDialog({
                 name="property_address"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Property Address*</FormLabel>
+                    <FormLabel>Property Address</FormLabel>
                     <FormControl>
                       <Input {...field} placeholder="123 Main Street" />
                     </FormControl>
@@ -461,36 +397,6 @@ export function TransactionFormDialog({
                   )}
                 />
               </div>
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="font-medium text-sm">Property Details</h3>
-
-              <FormField
-                control={form.control}
-                name="asset_type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Asset Type</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Multifamily">Multifamily</SelectItem>
-                        <SelectItem value="Mixed-Use">Mixed-Use</SelectItem>
-                        <SelectItem value="Retail">Retail</SelectItem>
-                        <SelectItem value="Office">Office</SelectItem>
-                        <SelectItem value="Industrial">Industrial</SelectItem>
-                        <SelectItem value="Land">Land</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
               <FormField
                 control={form.control}
@@ -614,83 +520,30 @@ export function TransactionFormDialog({
               )}
             </div>
 
-            {/* Commission Field */}
-            <div className="space-y-4">
-              <h3 className="font-medium text-sm">Commission</h3>
-              
-              <FormField
-                control={form.control}
-                name="commission"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Agent Commission ($)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
-                        placeholder="15000"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="font-medium text-sm">Additional Information</h3>
-
-              <FormField
-                control={form.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Role</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select role" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {getRoleOptions().map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="notes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Notes</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        {...field}
-                        placeholder="Additional details about the transaction..."
-                        rows={3}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name="notes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Notes</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      placeholder="Additional details..."
+                      rows={2}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <div className="flex justify-end gap-3 pt-4 border-t">
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
-                {transaction ? "Update" : "Create"} Transaction
+              <Button type="submit" disabled={updateMutation.isPending}>
+                {updateMutation.isPending ? "Saving..." : "Save Changes"}
               </Button>
             </div>
           </form>
