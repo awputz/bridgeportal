@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Send, Bot, User, Sparkles, FileText, Mail, TrendingUp, Loader2, Copy, Check, Trash2, Building2, DollarSign, Users } from "lucide-react";
+import { Send, Bot, User, Sparkles, FileText, Mail, TrendingUp, Loader2, Copy, Check, Trash2, Building2, DollarSign, Users, Calendar, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -13,7 +13,37 @@ type Message = {
   content: string;
 };
 
-const quickPrompts = [
+interface EnhancedAgentContext {
+  name?: string;
+  email?: string;
+  division?: string;
+  stats?: {
+    activeDeals: number;
+    totalContacts: number;
+    pipelineValue: number;
+  };
+  recentDeals?: Array<{
+    property_address: string;
+    value: number | null;
+    stage_id: string | null;
+    expected_close: string | null;
+    priority: string | null;
+  }>;
+  recentTransactions?: Array<{
+    property_address: string;
+    sale_price: number | null;
+    division: string | null;
+    closing_date: string | null;
+    commission: number | null;
+  }>;
+  upcomingTasks?: Array<{
+    title: string;
+    due_date: string | null;
+    is_completed: boolean;
+  }>;
+}
+
+const defaultQuickPrompts = [
   {
     icon: TrendingUp,
     label: "Deal Analysis",
@@ -58,31 +88,110 @@ const AI = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-  const [agentContext, setAgentContext] = useState<{ name?: string; email?: string; division?: string } | null>(null);
+  const [agentContext, setAgentContext] = useState<EnhancedAgentContext | null>(null);
+  const [quickPrompts, setQuickPrompts] = useState(defaultQuickPrompts);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const initialPromptSent = useRef(false);
 
-  // Fetch agent context on mount
+  // Fetch enhanced agent context on mount
   useEffect(() => {
-    const fetchAgentContext = async () => {
+    const fetchEnhancedAgentContext = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("full_name, email")
-          .eq("id", user.id)
-          .single();
-        
-        setAgentContext({
-          name: profile?.full_name || user.email?.split("@")[0] || "Agent",
-          email: profile?.email || user.email,
-          division: division,
+      if (!user) return;
+
+      // Fetch profile
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("full_name, email")
+        .eq("id", user.id)
+        .single();
+
+      // Fetch active CRM deals
+      const { data: deals } = await supabase
+        .from("crm_deals")
+        .select("id, property_address, value, division, stage_id, expected_close, priority")
+        .eq("agent_id", user.id)
+        .eq("is_active", true)
+        .order("created_at", { ascending: false })
+        .limit(10);
+
+      // Fetch contact count
+      const { count: contactCount } = await supabase
+        .from("crm_contacts")
+        .select("id", { count: "exact", head: true })
+        .eq("agent_id", user.id)
+        .eq("is_active", true);
+
+      // Fetch recent transactions
+      const { data: transactions } = await supabase
+        .from("transactions")
+        .select("property_address, sale_price, division, closing_date, commission")
+        .order("closing_date", { ascending: false })
+        .limit(5);
+
+      // Fetch upcoming tasks
+      const { data: tasks } = await supabase
+        .from("crm_activities")
+        .select("title, due_date, is_completed")
+        .eq("agent_id", user.id)
+        .eq("is_completed", false)
+        .order("due_date", { ascending: true })
+        .limit(5);
+
+      const pipelineValue = deals?.reduce((sum, d) => sum + (d.value || 0), 0) || 0;
+
+      const enhancedContext: EnhancedAgentContext = {
+        name: profile?.full_name || user.email?.split("@")[0] || "Agent",
+        email: profile?.email || user.email,
+        division: division,
+        stats: {
+          activeDeals: deals?.length || 0,
+          totalContacts: contactCount || 0,
+          pipelineValue,
+        },
+        recentDeals: deals?.slice(0, 5) || [],
+        recentTransactions: transactions || [],
+        upcomingTasks: tasks || [],
+      };
+
+      setAgentContext(enhancedContext);
+
+      // Generate dynamic quick prompts based on agent's data
+      const dynamicPrompts = [];
+      
+      if (deals && deals.length > 0) {
+        const topDeal = deals[0];
+        dynamicPrompts.push({
+          icon: Building2,
+          label: `Analyze ${topDeal.property_address.substring(0, 20)}...`,
+          prompt: `Help me analyze my deal at ${topDeal.property_address}. Current value: $${topDeal.value?.toLocaleString() || 'TBD'}. What should I focus on next?`,
         });
       }
+
+      if (tasks && tasks.length > 0) {
+        dynamicPrompts.push({
+          icon: Calendar,
+          label: "Review My Tasks",
+          prompt: "Review my upcoming tasks and help me prioritize them for maximum productivity.",
+        });
+      }
+
+      if (pipelineValue > 0) {
+        dynamicPrompts.push({
+          icon: Target,
+          label: "Pipeline Strategy",
+          prompt: `I have ${deals?.length || 0} active deals worth $${pipelineValue.toLocaleString()} in my pipeline. Help me develop a strategy to close more deals this month.`,
+        });
+      }
+
+      // Combine dynamic prompts with defaults, prioritizing dynamic ones
+      setQuickPrompts([...dynamicPrompts, ...defaultQuickPrompts.slice(0, 6 - dynamicPrompts.length)]);
     };
-    fetchAgentContext();
+
+    fetchEnhancedAgentContext();
   }, [division]);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -224,11 +333,13 @@ const AI = () => {
     }
   };
 
+  const firstName = agentContext?.name?.split(" ")[0] || "there";
+
   return (
     <div className="min-h-screen pb-24 md:pb-16 flex flex-col">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 flex-1 flex flex-col w-full">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 flex-1 flex flex-col w-full">
         {/* Header */}
-        <div className="mb-8 flex items-start justify-between">
+        <div className="mb-6 flex items-start justify-between">
           <div>
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center">
@@ -239,7 +350,7 @@ const AI = () => {
               </h1>
             </div>
             <p className="text-muted-foreground font-light">
-              Your intelligent assistant for deal analysis, emails, and market research
+              {agentContext?.name ? `Hi ${firstName}! ` : ""}Your intelligent assistant for deal analysis, emails, and market research
             </p>
           </div>
           {messages.length > 0 && (
@@ -255,18 +366,38 @@ const AI = () => {
           )}
         </div>
 
+        {/* Agent Stats Badge */}
+        {agentContext?.stats && agentContext.stats.activeDeals > 0 && messages.length === 0 && (
+          <div className="mb-6 p-4 rounded-xl bg-white/5 border border-white/10">
+            <p className="text-sm text-muted-foreground mb-2">Your current activity:</p>
+            <div className="flex flex-wrap gap-4 text-sm">
+              <span className="text-foreground">
+                <strong>{agentContext.stats.activeDeals}</strong> active deals
+              </span>
+              <span className="text-foreground">
+                <strong>{agentContext.stats.totalContacts}</strong> contacts
+              </span>
+              <span className="text-foreground">
+                <strong>${agentContext.stats.pipelineValue.toLocaleString()}</strong> pipeline
+              </span>
+            </div>
+          </div>
+        )}
+
         {/* Chat Container */}
         <div className="flex-1 flex flex-col min-h-0">
           {/* Messages */}
           <div className="flex-1 overflow-y-auto space-y-4 mb-4">
             {messages.length === 0 ? (
-              <div className="text-center py-12">
+              <div className="text-center py-8">
                 <Bot className="h-16 w-16 text-muted-foreground/30 mx-auto mb-6" />
                 <h3 className="text-xl font-light text-foreground mb-2">
-                  How can I help you today?
+                  How can I help you today{firstName !== "there" ? `, ${firstName}` : ""}?
                 </h3>
-                <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-                  Ask me about deal analysis, market research, or let me help you draft professional emails.
+                <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                  {agentContext?.recentDeals?.length 
+                    ? `I can see you have ${agentContext.recentDeals.length} active deals. Ask me about deal analysis, market research, or let me help you draft professional emails.`
+                    : "Ask me about deal analysis, market research, or let me help you draft professional emails."}
                 </p>
 
                 {/* Quick Prompts */}
