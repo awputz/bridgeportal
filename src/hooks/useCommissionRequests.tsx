@@ -110,7 +110,7 @@ export const useUpdateCommissionRequest = () => {
   });
 };
 
-// File upload helper
+// File upload helper - stores file and returns the path (not public URL)
 export const uploadCommissionDocument = async (
   file: File,
   requestId: string,
@@ -128,9 +128,18 @@ export const uploadCommissionDocument = async (
 
   if (uploadError) throw uploadError;
 
-  const { data: { publicUrl } } = supabase.storage
-    .from("private-documents")
-    .getPublicUrl(fileName);
+  // Return the path, not the public URL (private bucket needs signed URLs)
+  return fileName;
+};
 
-  return publicUrl;
+// Helper to get signed URL for viewing private documents
+export const getDocumentSignedUrl = async (path: string): Promise<string | null> => {
+  if (!path) return null;
+  
+  const { data, error } = await supabase.storage
+    .from("private-documents")
+    .createSignedUrl(path, 3600); // 1 hour expiry
+
+  if (error) return null;
+  return data.signedUrl;
 };

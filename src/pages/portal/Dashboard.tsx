@@ -9,11 +9,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DashboardStats } from "@/components/portal/DashboardStats";
 import { DealPipelinePreview } from "@/components/portal/DealPipelinePreview";
-import { GlobalDivisionSwitcher } from "@/components/portal/GlobalDivisionSwitcher";
+import { InlineDivisionSwitcher } from "@/components/portal/InlineDivisionSwitcher";
 import { ProfileCard } from "@/components/portal/ProfileCard";
 import { WelcomeBanner } from "@/components/portal/WelcomeBanner";
 import { DashboardTasks } from "@/components/portal/DashboardTasks";
 import { AnnouncementsWidget } from "@/components/portal/AnnouncementsWidget";
+import { CalendarWidget } from "@/components/portal/CalendarWidget";
 
 // Icon mapping for dynamic icons from database
 const iconMap: Record<string, typeof Mail> = {
@@ -161,14 +162,9 @@ const Dashboard = () => {
   return <div className="min-h-screen pb-24 md:pb-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {/* Personalized Welcome Banner */}
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-8 animate-fade-in">
+        <div className="flex flex-col gap-6 mb-8 animate-fade-in">
           <WelcomeBanner />
-          <div className="flex items-center gap-2">
-            <GlobalDivisionSwitcher />
-            {isAdmin && <Link to="/admin">
-                
-              </Link>}
-          </div>
+          <InlineDivisionSwitcher />
         </div>
 
         {/* Quick Actions Row: Call Office + Request */}
@@ -223,9 +219,12 @@ const Dashboard = () => {
           <DashboardStats />
         </section>
 
-        {/* Announcements Widget */}
+        {/* Announcements + Calendar Widget */}
         <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-          <AnnouncementsWidget />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <AnnouncementsWidget />
+            <CalendarWidget />
+          </div>
         </section>
 
         {/* Exclusive Listings */}
