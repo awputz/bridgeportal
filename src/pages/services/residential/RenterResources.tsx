@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { ServicePageLayout } from "@/components/ServicePageLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { CheckCircle2, ExternalLink } from "lucide-react";
+import { CheckCircle2, ExternalLink, Copy, Check, Home, Building2, Landmark } from "lucide-react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 import NetEffectiveRentCalculator from "@/components/NetEffectiveRentCalculator";
+
+const APPLICATION_LINK = "https://secure.weimark.com/ifw/fc33000e21e90819048fbb95b0d70320/6037/new";
 
 const requiredDocuments = [
   { title: "Photo ID", description: "Government-issued identification" },
@@ -44,7 +48,41 @@ const leaseTerms = [
   "Building amenities",
 ];
 
+const exclusiveListings = [
+  {
+    division: "Residential",
+    description: "Browse our exclusive residential listings on StreetEasy",
+    url: "https://streeteasy.com/profile/957575-bridge-advisory-group?tab_profile=active_listings",
+    icon: Home,
+  },
+  {
+    division: "Commercial",
+    description: "View available commercial spaces for lease",
+    url: "https://bridgenyre.com/commercial-listings",
+    icon: Building2,
+  },
+  {
+    division: "Investment Sales",
+    description: "Explore investment property opportunities",
+    url: "https://bridgenyre.com/services/investment-sales/listings",
+    icon: Landmark,
+  },
+];
+
 const RenterResources = () => {
+  const [copied, setCopied] = useState(false);
+
+  const copyApplicationLink = async () => {
+    try {
+      await navigator.clipboard.writeText(APPLICATION_LINK);
+      setCopied(true);
+      toast.success("Application link copied to clipboard!");
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      toast.error("Failed to copy link");
+    }
+  };
+
   return (
     <ServicePageLayout
       serviceKey="residential"
@@ -80,16 +118,26 @@ const RenterResources = () => {
               <p className="text-sm text-muted-foreground mb-4">
                 Complete application takes 10-15 minutes
               </p>
-              <Button asChild className="w-full" size="sm">
-                <a
-                  href="https://secure.weimark.com/ifw/fc33000e21e90819048fbb95b0d70320/6037/new"
-                  target="_blank"
-                  rel="noopener noreferrer"
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Button 
+                  onClick={copyApplicationLink}
+                  className="flex-1" 
+                  size="sm"
                 >
-                  Start Application
-                  <ExternalLink className="ml-2 h-4 w-4" />
-                </a>
-              </Button>
+                  {copied ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
+                  {copied ? "Copied!" : "Copy Application Link"}
+                </Button>
+                <Button asChild variant="outline" size="sm" className="flex-1">
+                  <a
+                    href={APPLICATION_LINK}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Open Application
+                    <ExternalLink className="ml-2 h-4 w-4" />
+                  </a>
+                </Button>
+              </div>
             </Card>
 
             {/* Financial Requirements Card */}
@@ -134,7 +182,44 @@ const RenterResources = () => {
         </div>
       </section>
 
-      {/* Section 2: Client Resources - Compact 3-Column Grid */}
+      {/* Section 2: Exclusive Listings */}
+      <section className="py-12 md:py-16 bg-background">
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-semibold text-center mb-2">
+            View Our Exclusive Listings
+          </h2>
+          <p className="text-muted-foreground text-center mb-8">
+            Browse available properties across all our divisions
+          </p>
+
+          <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-4">
+            {exclusiveListings.map((listing) => (
+              <Card key={listing.division} className="p-5 hover:bg-accent/5 transition-all group">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="p-2 rounded-lg bg-accent/10">
+                    <listing.icon className="h-5 w-5 text-accent" />
+                  </div>
+                  <h3 className="font-semibold">{listing.division}</h3>
+                </div>
+                <p className="text-sm text-muted-foreground mb-4">{listing.description}</p>
+                <Button 
+                  asChild 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full group-hover:bg-accent group-hover:text-accent-foreground transition-all"
+                >
+                  <a href={listing.url} target="_blank" rel="noopener noreferrer">
+                    View Listings
+                    <ExternalLink className="ml-2 h-4 w-4" />
+                  </a>
+                </Button>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 3: Client Resources - Compact 3-Column Grid */}
       <section className="py-12 md:py-16 bg-card border-t border-border">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-semibold text-center mb-8">
@@ -186,7 +271,7 @@ const RenterResources = () => {
         </div>
       </section>
 
-      {/* Section 3: Net Effective Rent Calculator */}
+      {/* Section 4: Net Effective Rent Calculator */}
       <section className="py-12 md:py-16 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8">
@@ -203,7 +288,7 @@ const RenterResources = () => {
         </div>
       </section>
 
-      {/* Section 4: CTA */}
+      {/* Section 5: CTA */}
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4">
           <Card className="max-w-2xl mx-auto p-6 text-center bg-surface border">
