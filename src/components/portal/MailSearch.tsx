@@ -22,7 +22,7 @@ export function MailSearch({ value, onChange }: MailSearchProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-2 border-b">
+    <form onSubmit={handleSubmit}>
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
@@ -30,7 +30,7 @@ export function MailSearch({ value, onChange }: MailSearchProps) {
           placeholder="Search emails..."
           value={localValue}
           onChange={(e) => setLocalValue(e.target.value)}
-          className="pl-9 pr-9"
+          className="pl-9 pr-9 bg-muted/30 border-transparent focus:border-gmail-red/50 focus:bg-background transition-colors"
         />
         {localValue && (
           <Button

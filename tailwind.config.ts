@@ -51,6 +51,24 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Google Service Colors
+        gmail: {
+          red: "hsl(var(--gmail-red))",
+          orange: "hsl(var(--gmail-orange))",
+          yellow: "hsl(var(--gmail-yellow))",
+        },
+        gcal: {
+          blue: "hsl(var(--gcal-blue))",
+          green: "hsl(var(--gcal-green))",
+        },
+        gdrive: {
+          folder: "hsl(var(--gdrive-folder))",
+          docs: "hsl(var(--gdrive-docs))",
+          sheets: "hsl(var(--gdrive-sheets))",
+          slides: "hsl(var(--gdrive-slides))",
+          pdf: "hsl(var(--gdrive-pdf))",
+          audio: "hsl(var(--gdrive-audio))",
+        },
       },
       borderRadius: {
         lg: "0.5rem",
