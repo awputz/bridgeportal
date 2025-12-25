@@ -21,7 +21,13 @@ import {
   MapPin,
   Send,
   UserPlus,
-  FolderPlus
+  FolderPlus,
+  ListTodo,
+  Wand2,
+  Wrench,
+  FolderOpen,
+  DollarSign,
+  User
 } from "lucide-react";
 import { useExternalTools, ExternalTool } from "@/hooks/useExternalTools";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -51,6 +57,22 @@ const iconMap: Record<string, typeof Mail> = {
   FileSearch,
   MapPin,
 };
+
+// Quick links to all portal pages
+const quickLinks = [
+  { name: "CRM", path: "/portal/crm", icon: Building2 },
+  { name: "Tasks", path: "/portal/tasks", icon: ListTodo },
+  { name: "Analytics", path: "/portal/analytics", icon: BarChart3 },
+  { name: "Directory", path: "/portal/directory", icon: Users },
+  { name: "AI", path: "/portal/ai", icon: Sparkles },
+  { name: "Templates", path: "/portal/templates", icon: FileText },
+  { name: "Generators", path: "/portal/generators", icon: Wand2 },
+  { name: "Calculators", path: "/portal/calculators", icon: Calculator },
+  { name: "Tools", path: "/portal/tools", icon: Wrench },
+  { name: "Resources", path: "/portal/resources", icon: FolderOpen },
+  { name: "Requests", path: "/portal/requests", icon: Send },
+  { name: "Transactions", path: "/portal/my-transactions", icon: DollarSign },
+];
 
 const calculatorQuickAccess = [
   { name: "Cap Rate", path: "/portal/calculators?tab=investment-sales", icon: TrendingUp },
@@ -269,7 +291,7 @@ const Dashboard = () => {
         </section>
 
         {/* Templates Section */}
-        <section>
+        <section className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
               <FileText className="h-5 w-5 text-muted-foreground" />
@@ -324,6 +346,32 @@ const Dashboard = () => {
               </div>
               <span className="text-sm font-light text-foreground text-center">Marketing</span>
             </Link>
+          </div>
+        </section>
+
+        {/* All Portal Pages - Quick Links */}
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
+              <ArrowRight className="h-5 w-5 text-muted-foreground" />
+              All Pages
+            </h2>
+          </div>
+          
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
+            {quickLinks.map((link) => {
+              const Icon = link.icon;
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className="glass-card p-3 flex flex-col items-center justify-center text-center hover:border-white/20 transition-all duration-300 min-h-[80px]"
+                >
+                  <Icon className="h-5 w-5 text-foreground/60 mb-1.5" />
+                  <span className="text-xs font-light text-foreground">{link.name}</span>
+                </Link>
+              );
+            })}
           </div>
         </section>
       </div>

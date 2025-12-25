@@ -97,9 +97,13 @@ export const useCRMContacts = (division?: string) => {
   return useQuery({
     queryKey: ["crm-contacts", division],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
       let query = supabase
         .from("crm_contacts")
         .select("*")
+        .eq("agent_id", user.id)
         .eq("is_active", true)
         .order("created_at", { ascending: false });
 
@@ -208,6 +212,9 @@ export const useCRMDeals = (division?: string) => {
   return useQuery({
     queryKey: ["crm-deals", division],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
       let query = supabase
         .from("crm_deals")
         .select(`
@@ -215,6 +222,7 @@ export const useCRMDeals = (division?: string) => {
           contact:crm_contacts(*),
           stage:crm_deal_stages(*)
         `)
+        .eq("agent_id", user.id)
         .eq("is_active", true)
         .order("created_at", { ascending: false });
 
@@ -327,6 +335,9 @@ export const useCRMActivities = (filters?: { contactId?: string; dealId?: string
   return useQuery({
     queryKey: ["crm-activities", filters],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
       let query = supabase
         .from("crm_activities")
         .select(`
@@ -334,6 +345,7 @@ export const useCRMActivities = (filters?: { contactId?: string; dealId?: string
           contact:crm_contacts(id, full_name),
           deal:crm_deals(id, property_address)
         `)
+        .eq("agent_id", user.id)
         .order("created_at", { ascending: false });
 
       if (filters?.contactId) {
@@ -357,6 +369,9 @@ export const useTodaysTasks = () => {
   return useQuery({
     queryKey: ["crm-todays-tasks"],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
       const today = new Date();
       const startOfDay = new Date(today.setHours(0, 0, 0, 0)).toISOString();
       const endOfDay = new Date(today.setHours(23, 59, 59, 999)).toISOString();
@@ -368,6 +383,7 @@ export const useTodaysTasks = () => {
           contact:crm_contacts(id, full_name),
           deal:crm_deals(id, property_address)
         `)
+        .eq("agent_id", user.id)
         .eq("is_completed", false)
         .gte("due_date", startOfDay)
         .lte("due_date", endOfDay)
@@ -435,10 +451,14 @@ export const useCRMStats = (division?: string) => {
   return useQuery({
     queryKey: ["crm-stats", division],
     queryFn: async () => {
-      // Get active deals
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      // Get active deals for this agent
       let dealsQuery = supabase
         .from("crm_deals")
         .select("id, value", { count: "exact" })
+        .eq("agent_id", user.id)
         .eq("is_active", true)
         .is("won", null);
 
@@ -448,10 +468,11 @@ export const useCRMStats = (division?: string) => {
 
       const { count: activeDeals, data: dealsData } = await dealsQuery;
 
-      // Get contacts
+      // Get contacts for this agent
       let contactsQuery = supabase
         .from("crm_contacts")
         .select("id", { count: "exact" })
+        .eq("agent_id", user.id)
         .eq("is_active", true);
 
       if (division) {
@@ -460,7 +481,7 @@ export const useCRMStats = (division?: string) => {
 
       const { count: totalContacts } = await contactsQuery;
 
-      // Get today's incomplete tasks
+      // Get today's incomplete tasks for this agent
       const today = new Date();
       const startOfDay = new Date(today.setHours(0, 0, 0, 0)).toISOString();
       const endOfDay = new Date(today.setHours(23, 59, 59, 999)).toISOString();
@@ -468,6 +489,7 @@ export const useCRMStats = (division?: string) => {
       const { count: todaysTasks } = await supabase
         .from("crm_activities")
         .select("id", { count: "exact" })
+        .eq("agent_id", user.id)
         .eq("is_completed", false)
         .gte("due_date", startOfDay)
         .lte("due_date", endOfDay);
