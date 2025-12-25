@@ -1,0 +1,163 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
+const GOOGLE_CLIENT_ID = Deno.env.get("GOOGLE_CLIENT_ID");
+const GOOGLE_CLIENT_SECRET = Deno.env.get("GOOGLE_CLIENT_SECRET");
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+
+Deno.serve(async (req) => {
+  // Handle CORS preflight
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: "Missing authorization header" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
+
+    // Get user from token
+    const token = authHeader.replace("Bearer ", "");
+    const { data: { user }, error: userError } = await supabase.auth.getUser(token);
+
+    if (userError || !user) {
+      return new Response(
+        JSON.stringify({ error: "Invalid token" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Get user's Google tokens
+    const { data: tokenData, error: tokenError } = await supabase
+      .from("user_google_tokens")
+      .select("*")
+      .eq("user_id", user.id)
+      .single();
+
+    if (tokenError || !tokenData) {
+      return new Response(
+        JSON.stringify({ error: "Google Calendar not connected" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Check if token is expired and refresh if needed
+    let accessToken = tokenData.access_token;
+    const tokenExpiry = new Date(tokenData.token_expiry);
+    
+    if (tokenExpiry < new Date()) {
+      // Token expired, refresh it
+      const refreshResult = await refreshAccessToken(tokenData.refresh_token);
+      
+      if (refreshResult.error) {
+        return new Response(
+          JSON.stringify({ error: "Failed to refresh token. Please reconnect Google Calendar." }),
+          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      accessToken = refreshResult.access_token;
+      
+      // Update token in database
+      const newExpiry = new Date();
+      newExpiry.setSeconds(newExpiry.getSeconds() + refreshResult.expires_in);
+      
+      await supabase
+        .from("user_google_tokens")
+        .update({
+          access_token: refreshResult.access_token,
+          token_expiry: newExpiry.toISOString(),
+        })
+        .eq("user_id", user.id);
+    }
+
+    // Parse request body for date range
+    const body = await req.json().catch(() => ({}));
+    const { startDate, endDate } = body;
+
+    // Fetch calendar events
+    const calendarUrl = new URL("https://www.googleapis.com/calendar/v3/calendars/primary/events");
+    calendarUrl.searchParams.set("singleEvents", "true");
+    calendarUrl.searchParams.set("orderBy", "startTime");
+    calendarUrl.searchParams.set("maxResults", "50");
+    
+    if (startDate) {
+      calendarUrl.searchParams.set("timeMin", new Date(startDate).toISOString());
+    } else {
+      calendarUrl.searchParams.set("timeMin", new Date().toISOString());
+    }
+    
+    if (endDate) {
+      calendarUrl.searchParams.set("timeMax", new Date(endDate).toISOString());
+    }
+
+    const calendarResponse = await fetch(calendarUrl.toString(), {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!calendarResponse.ok) {
+      const errorData = await calendarResponse.json();
+      console.error("Calendar API error:", errorData);
+      return new Response(
+        JSON.stringify({ error: "Failed to fetch calendar events" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const calendarData = await calendarResponse.json();
+
+    return new Response(
+      JSON.stringify({ events: calendarData.items || [] }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  } catch (error: unknown) {
+    console.error("Error:", error);
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return new Response(
+      JSON.stringify({ error: message }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  }
+});
+
+async function refreshAccessToken(refreshToken: string) {
+  try {
+    const response = await fetch("https://oauth2.googleapis.com/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        client_id: GOOGLE_CLIENT_ID!,
+        client_secret: GOOGLE_CLIENT_SECRET!,
+        refresh_token: refreshToken,
+        grant_type: "refresh_token",
+      }),
+    });
+
+    const data = await response.json();
+    
+    if (data.error) {
+      return { error: data.error };
+    }
+
+    return {
+      access_token: data.access_token,
+      expires_in: data.expires_in,
+    };
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return { error: message };
+  }
+}
