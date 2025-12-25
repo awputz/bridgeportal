@@ -14,6 +14,8 @@ interface AgentAccount {
 }
 
 const agentAccounts: AgentAccount[] = [
+  // Office account - Admin role
+  { email: "office@bridgenyre.com", password: "BridgeOffice2025!", role: "admin", name: "Bridge Office" },
   // Leadership - Admin role
   { email: "alex@bridgenyre.com", password: "BridgeAlex2025!", role: "admin", name: "Alex W. Putzer" },
   { email: "joshua@bridgenyre.com", password: "BridgeJosh2025!", role: "admin", name: "Joshua S. Malekan" },

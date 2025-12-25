@@ -14,6 +14,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 // Pages - eager loaded for fast initial load
 import Login from "./pages/Login";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/portal/Dashboard";
 
@@ -74,6 +75,7 @@ const App = () => {
                   
                   {/* Login */}
                   <Route path="/login" element={<Login />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/auth" element={<Navigate to="/login" replace />} />
                   
                   {/* Portal Routes (Protected) */}
