@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PortalNavigation } from "./PortalNavigation";
 import { MobileBottomNav } from "./MobileBottomNav";
 import { AIAssistant } from "./AIAssistant";
+import { FloatingSearch } from "./FloatingSearch";
 import { CommandPalette, useCommandPalette } from "./CommandPalette";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Loader2 } from "lucide-react";
@@ -65,6 +66,7 @@ export const PortalLayout = () => {
         </ErrorBoundary>
       </main>
       <MobileBottomNav />
+      <FloatingSearch onClick={() => setCommandOpen(true)} />
       <AIAssistant />
       <CommandPalette open={commandOpen} onOpenChange={setCommandOpen} />
     </div>

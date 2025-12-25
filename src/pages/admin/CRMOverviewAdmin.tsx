@@ -11,14 +11,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { 
   useAllCRMContacts, 
   useAllCRMDeals, 
   useAllCRMActivities,
   useAdminCRMStats 
 } from "@/hooks/useCRMAdmin";
+import { useAgentsList } from "@/hooks/useAgentMetrics";
 import { AgentDisplay } from "@/components/admin/AgentDisplay";
-import { Search, Users, Briefcase, Activity, DollarSign } from "lucide-react";
+import { Search, Users, Briefcase, Activity, DollarSign, Filter } from "lucide-react";
 import { format } from "date-fns";
 
 const formatCurrency = (value: number | null) => {
@@ -41,26 +49,42 @@ export default function CRMOverviewAdmin() {
   const [searchContacts, setSearchContacts] = useState("");
   const [searchDeals, setSearchDeals] = useState("");
   const [searchActivities, setSearchActivities] = useState("");
+  const [selectedAgent, setSelectedAgent] = useState<string>("all");
 
   const { data: contacts, isLoading: loadingContacts } = useAllCRMContacts();
   const { data: deals, isLoading: loadingDeals } = useAllCRMDeals();
   const { data: activities, isLoading: loadingActivities } = useAllCRMActivities();
   const { data: stats } = useAdminCRMStats();
+  const { data: agents } = useAgentsList();
 
-  const filteredContacts = contacts?.filter(c =>
+  // Filter by agent first
+  const agentFilteredContacts = selectedAgent === "all" 
+    ? contacts 
+    : contacts?.filter(c => c.agent_id === selectedAgent);
+  
+  const agentFilteredDeals = selectedAgent === "all"
+    ? deals
+    : deals?.filter(d => d.agent_id === selectedAgent);
+  
+  const agentFilteredActivities = selectedAgent === "all"
+    ? activities
+    : activities?.filter(a => a.agent_id === selectedAgent);
+
+  // Then filter by search
+  const filteredContacts = agentFilteredContacts?.filter(c =>
     c.full_name.toLowerCase().includes(searchContacts.toLowerCase()) ||
     c.email?.toLowerCase().includes(searchContacts.toLowerCase()) ||
     c.company?.toLowerCase().includes(searchContacts.toLowerCase()) ||
     c.agent_name?.toLowerCase().includes(searchContacts.toLowerCase())
   );
 
-  const filteredDeals = deals?.filter(d =>
+  const filteredDeals = agentFilteredDeals?.filter(d =>
     d.property_address.toLowerCase().includes(searchDeals.toLowerCase()) ||
     d.agent_name?.toLowerCase().includes(searchDeals.toLowerCase()) ||
     d.contact?.full_name?.toLowerCase().includes(searchDeals.toLowerCase())
   );
 
-  const filteredActivities = activities?.filter(a =>
+  const filteredActivities = agentFilteredActivities?.filter(a =>
     a.title.toLowerCase().includes(searchActivities.toLowerCase()) ||
     a.agent_name?.toLowerCase().includes(searchActivities.toLowerCase())
   );
@@ -72,6 +96,35 @@ export default function CRMOverviewAdmin() {
         <p className="text-muted-foreground mt-1">
           View all agent contacts, deals, and activities
         </p>
+      </div>
+
+      {/* Agent Filter */}
+      <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg border">
+        <div className="flex items-center gap-2">
+          <Filter className="h-4 w-4 text-muted-foreground" />
+          <span className="text-sm font-medium">Filter by Agent:</span>
+        </div>
+        <Select value={selectedAgent} onValueChange={setSelectedAgent}>
+          <SelectTrigger className="w-[250px]">
+            <SelectValue placeholder="All Agents" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Agents</SelectItem>
+            {agents?.map((agent) => (
+              <SelectItem key={agent.id} value={agent.id}>
+                {agent.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {selectedAgent !== "all" && (
+          <button
+            onClick={() => setSelectedAgent("all")}
+            className="text-sm text-muted-foreground hover:text-foreground underline"
+          >
+            Clear filter
+          </button>
+        )}
       </div>
 
       {/* Stats Cards */}
@@ -133,9 +186,15 @@ export default function CRMOverviewAdmin() {
       {/* Tabs */}
       <Tabs defaultValue="contacts">
         <TabsList>
-          <TabsTrigger value="contacts">Contacts ({contacts?.length || 0})</TabsTrigger>
-          <TabsTrigger value="deals">Deals ({deals?.length || 0})</TabsTrigger>
-          <TabsTrigger value="activities">Activities ({activities?.length || 0})</TabsTrigger>
+          <TabsTrigger value="contacts">
+            Contacts ({filteredContacts?.length || 0})
+          </TabsTrigger>
+          <TabsTrigger value="deals">
+            Deals ({filteredDeals?.length || 0})
+          </TabsTrigger>
+          <TabsTrigger value="activities">
+            Activities ({filteredActivities?.length || 0})
+          </TabsTrigger>
         </TabsList>
 
         {/* Contacts Tab */}

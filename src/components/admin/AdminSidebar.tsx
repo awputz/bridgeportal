@@ -17,6 +17,7 @@ import { toast } from "@/hooks/use-toast";
 
 const overviewItems = [
   { title: "Dashboard", url: "/admin", icon: Home, exact: true },
+  { title: "Agent Performance", url: "/admin/agent-performance", icon: Activity },
   { title: "Activity Logs", url: "/admin/activity-logs", icon: Activity },
 ];
 
