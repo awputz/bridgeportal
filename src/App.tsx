@@ -36,6 +36,8 @@ const Tasks = lazy(() => import("./pages/portal/Tasks"));
 const Resources = lazy(() => import("./pages/portal/Resources"));
 const Requests = lazy(() => import("./pages/portal/Requests"));
 const MyTransactions = lazy(() => import("./pages/portal/MyTransactions"));
+const CommissionRequest = lazy(() => import("./pages/portal/CommissionRequest"));
+const MyCommissionRequests = lazy(() => import("./pages/portal/MyCommissionRequests"));
 const Tools = lazy(() => import("./pages/portal/Tools"));
 
 // Company Pages - lazy loaded
@@ -70,6 +72,7 @@ const NewsletterAdmin = lazy(() => import("./pages/admin/NewsletterAdmin"));
 const ActivityLogsAdmin = lazy(() => import("./pages/admin/ActivityLogsAdmin"));
 const CRMConfigAdmin = lazy(() => import("./pages/admin/CRMConfigAdmin"));
 const MyExclusives = lazy(() => import("./pages/portal/MyExclusives"));
+const CommissionRequestsAdmin = lazy(() => import("./pages/admin/CommissionRequestsAdmin"));
 
 // Optimized QueryClient with better caching
 const queryClient = new QueryClient({

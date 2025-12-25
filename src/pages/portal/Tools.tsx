@@ -17,7 +17,8 @@ import {
   Send,
   StickyNote,
   ChevronRight,
-  Wrench
+  Wrench,
+  DollarSign
 } from "lucide-react";
 import { useExternalTools } from "@/hooks/useExternalTools";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -39,6 +40,20 @@ const iconMap: Record<string, typeof Mail> = {
 // Internal productivity tools
 const internalTools = [
   {
+    name: "Commission Request",
+    path: "/portal/commission-request",
+    icon: DollarSign,
+    description: "Submit payment request",
+    color: "bg-emerald-500/20 text-emerald-400"
+  },
+  {
+    name: "My Payments",
+    path: "/portal/my-commission-requests",
+    icon: DollarSign,
+    description: "Track your commission requests",
+    color: "bg-green-500/20 text-green-400"
+  },
+  {
     name: "Generators",
     path: "/portal/generators",
     icon: Wand2,
@@ -57,14 +72,14 @@ const internalTools = [
     path: "/portal/calculators",
     icon: Calculator,
     description: "Financial calculators",
-    color: "bg-emerald-500/20 text-emerald-400"
+    color: "bg-amber-500/20 text-amber-400"
   },
   {
     name: "Resources",
     path: "/portal/resources",
     icon: FolderOpen,
     description: "Legal & HR documents",
-    color: "bg-amber-500/20 text-amber-400"
+    color: "bg-orange-500/20 text-orange-400"
   },
   {
     name: "Requests",

@@ -47,6 +47,42 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_notifications: {
+        Row: {
+          action_url: string | null
+          created_at: string
+          entity_id: string | null
+          id: string
+          is_read: boolean
+          message: string | null
+          priority: string
+          title: string
+          type: string
+        }
+        Insert: {
+          action_url?: string | null
+          created_at?: string
+          entity_id?: string | null
+          id?: string
+          is_read?: boolean
+          message?: string | null
+          priority?: string
+          title: string
+          type: string
+        }
+        Update: {
+          action_url?: string | null
+          created_at?: string
+          entity_id?: string | null
+          id?: string
+          is_read?: boolean
+          message?: string | null
+          priority?: string
+          title?: string
+          type?: string
+        }
+        Relationships: []
+      }
       agent_metrics: {
         Row: {
           activities_completed: number | null
@@ -724,6 +760,66 @@ export type Database = {
           rent_per_sf?: number | null
           square_footage?: number
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      commission_requests: {
+        Row: {
+          admin_notes: string | null
+          agent_id: string
+          closing_date: string
+          commission_amount: number
+          contract_url: string | null
+          created_at: string
+          deal_type: string
+          id: string
+          invoice_url: string | null
+          notes: string | null
+          paid_at: string | null
+          property_address: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+          w9_url: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          agent_id: string
+          closing_date: string
+          commission_amount: number
+          contract_url?: string | null
+          created_at?: string
+          deal_type: string
+          id?: string
+          invoice_url?: string | null
+          notes?: string | null
+          paid_at?: string | null
+          property_address: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          w9_url?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          agent_id?: string
+          closing_date?: string
+          commission_amount?: number
+          contract_url?: string | null
+          created_at?: string
+          deal_type?: string
+          id?: string
+          invoice_url?: string | null
+          notes?: string | null
+          paid_at?: string | null
+          property_address?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          w9_url?: string | null
         }
         Relationships: []
       }
