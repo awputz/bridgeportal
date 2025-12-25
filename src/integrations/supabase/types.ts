@@ -83,6 +83,81 @@ export type Database = {
         }
         Relationships: []
       }
+      agent_applications: {
+        Row: {
+          admin_notes: string | null
+          bio: string | null
+          contract_signed: boolean | null
+          created_at: string | null
+          cultural_values_acknowledged: boolean | null
+          date_of_birth: string | null
+          divisions: string[]
+          email: string
+          full_name: string
+          headshot_url: string | null
+          id: string
+          id_photo_url: string | null
+          instagram_url: string | null
+          license_number: string | null
+          linkedin_url: string | null
+          mailing_address: string | null
+          phone: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string | null
+          w9_submitted: boolean | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          bio?: string | null
+          contract_signed?: boolean | null
+          created_at?: string | null
+          cultural_values_acknowledged?: boolean | null
+          date_of_birth?: string | null
+          divisions?: string[]
+          email: string
+          full_name: string
+          headshot_url?: string | null
+          id?: string
+          id_photo_url?: string | null
+          instagram_url?: string | null
+          license_number?: string | null
+          linkedin_url?: string | null
+          mailing_address?: string | null
+          phone: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string | null
+          w9_submitted?: boolean | null
+        }
+        Update: {
+          admin_notes?: string | null
+          bio?: string | null
+          contract_signed?: boolean | null
+          created_at?: string | null
+          cultural_values_acknowledged?: boolean | null
+          date_of_birth?: string | null
+          divisions?: string[]
+          email?: string
+          full_name?: string
+          headshot_url?: string | null
+          id?: string
+          id_photo_url?: string | null
+          instagram_url?: string | null
+          license_number?: string | null
+          linkedin_url?: string | null
+          mailing_address?: string | null
+          phone?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string | null
+          w9_submitted?: boolean | null
+        }
+        Relationships: []
+      }
       agent_metrics: {
         Row: {
           activities_completed: number | null
@@ -1780,6 +1855,7 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
+          onboarding_checklist: Json | null
           onboarding_completed: boolean | null
           onboarding_step: number | null
           phone: string | null
@@ -1792,6 +1868,7 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id: string
+          onboarding_checklist?: Json | null
           onboarding_completed?: boolean | null
           onboarding_step?: number | null
           phone?: string | null
@@ -1804,6 +1881,7 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
+          onboarding_checklist?: Json | null
           onboarding_completed?: boolean | null
           onboarding_step?: number | null
           phone?: string | null

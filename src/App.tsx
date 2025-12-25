@@ -124,6 +124,16 @@ const App = () => {
                   {/* Login & Auth */}
                   <Route path="/login" element={<Login />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
+                  <Route path="/apply" element={
+                    <Suspense fallback={<PageLoader />}>
+                      {(() => { const Apply = lazy(() => import("./pages/Apply")); return <Apply />; })()}
+                    </Suspense>
+                  } />
+                  <Route path="/apply/success" element={
+                    <Suspense fallback={<PageLoader />}>
+                      {(() => { const ApplySuccess = lazy(() => import("./pages/ApplySuccess")); return <ApplySuccess />; })()}
+                    </Suspense>
+                  } />
                   <Route path="/auth/callback" element={
                     <Suspense fallback={<PageLoader />}>
                       <AuthCallback />
