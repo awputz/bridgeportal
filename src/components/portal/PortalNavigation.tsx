@@ -38,13 +38,13 @@ import { useAuth } from "@/contexts/AuthContext";
 const googleItems = [
   { name: "Mail", path: "/portal/mail", icon: Mail },
   { name: "Calendar", path: "/portal/calendar", icon: Calendar },
-  { name: "Contacts", path: "/portal/contacts", icon: Users },
   { name: "Drive", path: "/portal/drive", icon: FolderOpen },
 ];
 
 // Essentials items
 const essentialsItems = [
   { name: "CRM", path: "/portal/crm", icon: Briefcase },
+  { name: "Contacts", path: "/portal/contacts", icon: Users },
   { name: "Tasks", path: "/portal/tasks", icon: ListTodo },
   { name: "Notes", path: "/portal/notes", icon: StickyNote },
 ];
