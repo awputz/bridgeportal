@@ -17,6 +17,7 @@ import { useGmailConnection, useConnectGmail, useDisconnectGmail } from "@/hooks
 import { useDriveConnection, useConnectDrive, useDisconnectDrive } from "@/hooks/useGoogleDrive";
 import { useContactsConnection, useConnectContacts, useDisconnectContacts } from "@/hooks/useGoogleContacts";
 import { useGoogleCalendarConnection, useConnectGoogleCalendar, useDisconnectGoogleCalendar } from "@/hooks/useGoogleCalendar";
+import ProfileNotificationsCard from "@/components/portal/ProfileNotificationsCard";
 import {
   Table,
   TableBody,
@@ -500,8 +501,10 @@ const Profile = () => {
             <ConnectedServicesCard />
           </div>
 
-          {/* Sidebar - Exclusives + Earnings */}
+          {/* Sidebar - Notifications, Exclusives, Earnings */}
           <div className="space-y-6">
+            {/* Notifications Section - NEW */}
+            <ProfileNotificationsCard />
             {/* My Exclusives Section */}
             <Card className="glass-card border-white/10">
               <CardHeader>
