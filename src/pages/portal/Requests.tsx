@@ -238,9 +238,9 @@ const Requests = () => {
           <CardContent className="pt-6">
             <div className="text-center">
               <p className="text-muted-foreground text-sm">
-                Need immediate assistance? Call{" "}
-                <a href="tel:9173531916" className="text-primary hover:underline">
-                  (917) 353-1916
+                Need immediate assistance? Call the office at{" "}
+                <a href="tel:2125319295" className="text-primary hover:underline font-medium">
+                  (212) 531-9295
                 </a>{" "}
                 or email{" "}
                 <a href="mailto:office@bridgenyre.com" className="text-primary hover:underline">

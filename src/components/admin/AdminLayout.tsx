@@ -1,14 +1,16 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, Link } from "react-router-dom";
 import { useIsAdminOrAgent } from "@/hooks/useUserRole";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "./AdminSidebar";
+import { Button } from "@/components/ui/button";
+import { Building2 } from "lucide-react";
 
 export const AdminLayout = () => {
   const { isAdminOrAgent, isLoading } = useIsAdminOrAgent();
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <p className="text-muted-foreground">Loading...</p>
       </div>
     );
@@ -24,12 +26,25 @@ export const AdminLayout = () => {
         <AdminSidebar />
         
         <div className="flex-1 flex flex-col">
-          <header className="h-16 border-b border-border flex items-center px-6 bg-background sticky top-0 z-10">
-            <SidebarTrigger className="-ml-2" />
-            <h1 className="text-xl font-semibold ml-4">BRIDGE Admin</h1>
+          <header className="h-16 border-b border-border flex items-center justify-between px-4 md:px-6 bg-background sticky top-0 z-10">
+            <div className="flex items-center gap-3">
+              <SidebarTrigger className="-ml-2" />
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded bg-primary flex items-center justify-center">
+                  <span className="text-xs font-bold text-primary-foreground">B</span>
+                </div>
+                <span className="text-lg font-semibold hidden sm:block">BRIDGE Admin</span>
+              </div>
+            </div>
+            <Link to="/portal">
+              <Button variant="ghost" size="sm" className="gap-2">
+                <Building2 className="h-4 w-4" />
+                <span className="hidden sm:inline">Agent Portal</span>
+              </Button>
+            </Link>
           </header>
           
-          <main className="flex-1 p-6 bg-muted/30">
+          <main className="flex-1 p-4 md:p-6 bg-muted/30 overflow-auto">
             <Outlet />
           </main>
         </div>

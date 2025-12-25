@@ -32,7 +32,7 @@ const NewDeal = lazy(() => import("./pages/portal/NewDeal"));
 const Generators = lazy(() => import("./pages/portal/Generators"));
 const Profile = lazy(() => import("./pages/portal/Profile"));
 const Tasks = lazy(() => import("./pages/portal/Tasks"));
-const Analytics = lazy(() => import("./pages/portal/Analytics"));
+// Analytics page removed - functionality consolidated into dashboard
 const Resources = lazy(() => import("./pages/portal/Resources"));
 const Requests = lazy(() => import("./pages/portal/Requests"));
 const MyTransactions = lazy(() => import("./pages/portal/MyTransactions"));
@@ -46,6 +46,7 @@ const MarketsAdmin = lazy(() => import("./pages/admin/MarketsAdmin"));
 const ListingLinksAdmin = lazy(() => import("./pages/admin/ListingLinksAdmin"));
 const ToolsAdmin = lazy(() => import("./pages/admin/ToolsAdmin"));
 const TemplatesAdmin = lazy(() => import("./pages/admin/TemplatesAdmin"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 
 // Optimized QueryClient with better caching
 const queryClient = new QueryClient({
@@ -156,11 +157,7 @@ const App = () => {
                         <Tasks />
                       </Suspense>
                     } />
-                    <Route path="analytics" element={
-                      <Suspense fallback={<PageLoader />}>
-                        <Analytics />
-                      </Suspense>
-                    } />
+                    {/* Analytics route removed */}
                     <Route path="resources" element={
                       <Suspense fallback={<PageLoader />}>
                         <Resources />
@@ -180,7 +177,11 @@ const App = () => {
                   
                   {/* Admin Routes */}
                   <Route path="/admin" element={<AdminLayout />}>
-                    <Route index element={<Navigate to="/admin/team" replace />} />
+                    <Route index element={
+                      <Suspense fallback={<PageLoader />}>
+                        <AdminDashboard />
+                      </Suspense>
+                    } />
                     <Route path="team" element={
                       <Suspense fallback={<PageLoader />}>
                         <TeamAdmin />

@@ -16,7 +16,6 @@ import {
   Sparkles,
   Palette,
   Database,
-  BarChart3,
   FileSearch,
   MapPin,
   Send,
@@ -27,9 +26,12 @@ import {
   Wrench,
   FolderOpen,
   DollarSign,
-  User
+  Phone,
+  Settings,
+  ExternalLink
 } from "lucide-react";
 import { useExternalTools, ExternalTool } from "@/hooks/useExternalTools";
+import { useIsAdminOrAgent } from "@/hooks/useUserRole";
 import { Skeleton } from "@/components/ui/skeleton";
 import { QuickActionCard } from "@/components/portal/QuickActionCard";
 import { Input } from "@/components/ui/input";
@@ -53,16 +55,14 @@ const iconMap: Record<string, typeof Mail> = {
   Building2,
   Home,
   Database,
-  BarChart3,
   FileSearch,
   MapPin,
 };
 
-// Quick links to all portal pages
+// Quick links to all portal pages (removed Analytics)
 const quickLinks = [
   { name: "CRM", path: "/portal/crm", icon: Building2 },
   { name: "Tasks", path: "/portal/tasks", icon: ListTodo },
-  { name: "Analytics", path: "/portal/analytics", icon: BarChart3 },
   { name: "Directory", path: "/portal/directory", icon: Users },
   { name: "AI", path: "/portal/ai", icon: Sparkles },
   { name: "Templates", path: "/portal/templates", icon: FileText },
@@ -78,6 +78,31 @@ const calculatorQuickAccess = [
   { name: "Cap Rate", path: "/portal/calculators?tab=investment-sales", icon: TrendingUp },
   { name: "Lease Analysis", path: "/portal/calculators?tab=commercial-leasing", icon: Building2 },
   { name: "Rent vs Buy", path: "/portal/calculators?tab=residential", icon: Home },
+];
+
+// Exclusive listings links
+const exclusiveListings = [
+  { 
+    name: "Residential", 
+    url: "https://streeteasy.com/profile/957575-bridge-advisory-group?tab_profile=active_listings",
+    icon: Home,
+    external: true,
+    color: "bg-emerald-500/20 text-emerald-400"
+  },
+  { 
+    name: "Commercial", 
+    url: "/commercial-listings",
+    icon: Building2,
+    external: false,
+    color: "bg-blue-500/20 text-blue-400"
+  },
+  { 
+    name: "Investment Sales", 
+    url: "/services/investment-sales/listings",
+    icon: TrendingUp,
+    external: false,
+    color: "bg-purple-500/20 text-purple-400"
+  },
 ];
 
 // Group tools by category
@@ -98,10 +123,12 @@ const groupToolsByCategory = (tools: ExternalTool[]) => {
 
 const Dashboard = () => {
   const { data: tools, isLoading } = useExternalTools();
+  const { isAdminOrAgent, role } = useIsAdminOrAgent();
   const [aiPrompt, setAiPrompt] = useState("");
   const navigate = useNavigate();
   
   const groupedTools = tools ? groupToolsByCategory(tools) : { research: [], productivity: [] };
+  const isAdmin = role === 'admin';
 
   const handleAiSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -116,8 +143,72 @@ const Dashboard = () => {
         {/* Personalized Welcome Banner */}
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-8">
           <WelcomeBanner />
-          <GlobalDivisionSwitcher />
+          <div className="flex items-center gap-2">
+            <GlobalDivisionSwitcher />
+            {isAdmin && (
+              <Link to="/admin">
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Settings className="h-4 w-4" />
+                  <span className="hidden sm:inline">Admin</span>
+                </Button>
+              </Link>
+            )}
+          </div>
         </div>
+
+        {/* Quick Actions Row: Call Office + Request */}
+        <section className="mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <a
+              href="tel:2125319295"
+              className="glass-card p-4 flex items-center gap-3 hover:border-primary/50 transition-all duration-300"
+            >
+              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                <Phone className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <span className="text-sm font-medium text-foreground">Call Office</span>
+                <p className="text-xs text-muted-foreground">(212) 531-9295</p>
+              </div>
+            </a>
+            <Link
+              to="/portal/requests"
+              className="glass-card p-4 flex items-center gap-3 hover:border-amber-500/50 transition-all duration-300"
+            >
+              <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
+                <Send className="h-5 w-5 text-amber-400" />
+              </div>
+              <div>
+                <span className="text-sm font-medium text-foreground">Submit Request</span>
+                <p className="text-xs text-muted-foreground">Cards, BOV, etc.</p>
+              </div>
+            </Link>
+            <Link
+              to="/portal/crm?action=add-contact"
+              className="glass-card p-4 flex items-center gap-3 hover:border-green-500/50 transition-all duration-300"
+            >
+              <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                <UserPlus className="h-5 w-5 text-green-400" />
+              </div>
+              <div>
+                <span className="text-sm font-medium text-foreground">Add Contact</span>
+                <p className="text-xs text-muted-foreground">CRM</p>
+              </div>
+            </Link>
+            <Link
+              to="/portal/crm?action=new-deal"
+              className="glass-card p-4 flex items-center gap-3 hover:border-blue-500/50 transition-all duration-300"
+            >
+              <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                <FolderPlus className="h-5 w-5 text-blue-400" />
+              </div>
+              <div>
+                <span className="text-sm font-medium text-foreground">New Deal</span>
+                <p className="text-xs text-muted-foreground">Pipeline</p>
+              </div>
+            </Link>
+          </div>
+        </section>
 
         {/* My Profile Card */}
         <section className="mb-8">
@@ -127,6 +218,42 @@ const Dashboard = () => {
         {/* CRM Stats */}
         <section className="mb-8">
           <DashboardStats />
+        </section>
+
+        {/* Exclusive Listings */}
+        <section className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
+              <Building2 className="h-5 w-5 text-muted-foreground" />
+              View Our Exclusive Listings
+            </h2>
+          </div>
+          <div className="grid grid-cols-3 gap-3">
+            {exclusiveListings.map((listing) => {
+              const Icon = listing.icon;
+              const content = (
+                <div className="glass-card p-4 flex flex-col items-center justify-center text-center hover:border-white/20 transition-all duration-300 min-h-[100px]">
+                  <div className={`w-10 h-10 rounded-full ${listing.color.split(' ')[0]} flex items-center justify-center mb-2`}>
+                    <Icon className={`h-5 w-5 ${listing.color.split(' ')[1]}`} />
+                  </div>
+                  <span className="text-sm font-light text-foreground">{listing.name}</span>
+                  {listing.external && (
+                    <ExternalLink className="h-3 w-3 text-muted-foreground mt-1" />
+                  )}
+                </div>
+              );
+              
+              return listing.external ? (
+                <a key={listing.name} href={listing.url} target="_blank" rel="noopener noreferrer">
+                  {content}
+                </a>
+              ) : (
+                <Link key={listing.name} to={listing.url}>
+                  {content}
+                </Link>
+              );
+            })}
+          </div>
         </section>
 
         {/* AI Quick Prompt */}
@@ -162,30 +289,6 @@ const Dashboard = () => {
             
             {/* Right: Deal Pipeline Preview */}
             <DealPipelinePreview />
-          </div>
-        </section>
-
-        {/* Quick CRM Actions */}
-        <section className="mb-8">
-          <div className="flex items-center gap-3">
-            <Link
-              to="/portal/crm?action=add-contact"
-              className="glass-card p-4 flex items-center gap-3 hover:border-white/20 transition-all duration-300 flex-1"
-            >
-              <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
-                <UserPlus className="h-5 w-5 text-green-400" />
-              </div>
-              <span className="text-sm font-light text-foreground">Add Contact</span>
-            </Link>
-            <Link
-              to="/portal/crm?action=new-deal"
-              className="glass-card p-4 flex items-center gap-3 hover:border-white/20 transition-all duration-300 flex-1"
-            >
-              <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
-                <FolderPlus className="h-5 w-5 text-blue-400" />
-              </div>
-              <span className="text-sm font-light text-foreground">New Deal</span>
-            </Link>
           </div>
         </section>
 
