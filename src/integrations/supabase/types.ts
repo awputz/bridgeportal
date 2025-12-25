@@ -611,6 +611,47 @@ export type Database = {
           },
         ]
       }
+      commercial_listing_documents: {
+        Row: {
+          category: string
+          created_at: string | null
+          display_order: number | null
+          document_name: string
+          document_url: string | null
+          id: string
+          is_active: boolean | null
+          listing_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          display_order?: number | null
+          document_name: string
+          document_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          listing_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          display_order?: number | null
+          document_name?: string
+          document_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          listing_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commercial_listing_documents_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "commercial_listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       commercial_listings: {
         Row: {
           asking_rent: number | null

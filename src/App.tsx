@@ -48,6 +48,8 @@ const ListingLinksAdmin = lazy(() => import("./pages/admin/ListingLinksAdmin"));
 const ToolsAdmin = lazy(() => import("./pages/admin/ToolsAdmin"));
 const TemplatesAdmin = lazy(() => import("./pages/admin/TemplatesAdmin"));
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const ListingsAdmin = lazy(() => import("./pages/admin/ListingsAdmin"));
+const MyExclusives = lazy(() => import("./pages/portal/MyExclusives"));
 
 // Optimized QueryClient with better caching
 const queryClient = new QueryClient({
@@ -179,6 +181,11 @@ const App = () => {
                         <Notes />
                       </Suspense>
                     } />
+                    <Route path="my-exclusives" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <MyExclusives />
+                      </Suspense>
+                    } />
                   </Route>
                   
                   {/* Admin Routes */}
@@ -226,6 +233,11 @@ const App = () => {
                     <Route path="templates" element={
                       <Suspense fallback={<PageLoader />}>
                         <TemplatesAdmin />
+                      </Suspense>
+                    } />
+                    <Route path="listings" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <ListingsAdmin />
                       </Suspense>
                     } />
                   </Route>
