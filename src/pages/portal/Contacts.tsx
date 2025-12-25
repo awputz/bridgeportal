@@ -7,34 +7,35 @@ import {
   Mail,
   Building2,
   User,
-  Filter,
   Grid3X3,
   List,
-  Star,
   MoreHorizontal,
   Upload,
   Home,
   Store,
   Tag,
   X,
-  ArrowUpDown
+  ArrowUpDown,
+  Loader2,
+  Check,
+  Users
 } from "lucide-react";
 import { useCRMContacts, useCreateContact, useDeleteContact, useUpdateContact } from "@/hooks/useCRM";
 import { useCRMRealtime } from "@/hooks/useCRMRealtime";
 import { useDivision, Division } from "@/contexts/DivisionContext";
+import { useContactsConnection, useConnectContacts, useGoogleContactsList, useImportGoogleContacts, GoogleContact } from "@/hooks/useGoogleContacts";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-  DropdownMenuCheckboxItem,
-  DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import {
   Dialog,
@@ -42,6 +43,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   AlertDialog,
@@ -68,6 +70,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const contactTypes = [
   { value: "owner", label: "Owner" },
@@ -91,6 +94,7 @@ const sourceOptions = [
   { value: "repeat-client", label: "Repeat Client" },
   { value: "marketing", label: "Marketing" },
   { value: "csv-import", label: "CSV Import" },
+  { value: "google-contacts", label: "Google Contacts" },
   { value: "other", label: "Other" },
 ];
 
@@ -103,12 +107,239 @@ const divisionOptions = [
 type SortField = "name" | "created_at" | "updated_at";
 type SortOrder = "asc" | "desc";
 
+// Google Contacts Import Dialog Component
+const GoogleContactsImportDialog = ({ 
+  open, 
+  onOpenChange,
+  onSuccess 
+}: { 
+  open: boolean; 
+  onOpenChange: (open: boolean) => void;
+  onSuccess: () => void;
+}) => {
+  const { division } = useDivision();
+  const { data: connectionData, isLoading: isCheckingConnection } = useContactsConnection();
+  const connectContacts = useConnectContacts();
+  const { data: googleContactsData, isLoading: isLoadingContacts } = useGoogleContactsList(connectionData?.connected);
+  const importContacts = useImportGoogleContacts();
+  
+  const [selectedContacts, setSelectedContacts] = useState<Set<string>>(new Set());
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const googleContacts = googleContactsData?.contacts || [];
+  
+  const filteredContacts = useMemo(() => {
+    if (!searchQuery) return googleContacts;
+    const query = searchQuery.toLowerCase();
+    return googleContacts.filter(c => 
+      c.name.toLowerCase().includes(query) ||
+      c.email?.toLowerCase().includes(query) ||
+      c.company?.toLowerCase().includes(query)
+    );
+  }, [googleContacts, searchQuery]);
+
+  const toggleContact = (resourceName: string) => {
+    const newSelected = new Set(selectedContacts);
+    if (newSelected.has(resourceName)) {
+      newSelected.delete(resourceName);
+    } else {
+      newSelected.add(resourceName);
+    }
+    setSelectedContacts(newSelected);
+  };
+
+  const toggleAll = () => {
+    if (selectedContacts.size === filteredContacts.length) {
+      setSelectedContacts(new Set());
+    } else {
+      setSelectedContacts(new Set(filteredContacts.map(c => c.resourceName)));
+    }
+  };
+
+  const handleImport = () => {
+    const contactsToImport = googleContacts.filter(c => selectedContacts.has(c.resourceName));
+    importContacts.mutate(
+      { contacts: contactsToImport, division },
+      {
+        onSuccess: () => {
+          setSelectedContacts(new Set());
+          onOpenChange(false);
+          onSuccess();
+        },
+      }
+    );
+  };
+
+  if (isCheckingConnection) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="glass-panel-strong max-w-2xl">
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  if (!connectionData?.connected) {
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="glass-panel-strong max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-light">Import from Google Contacts</DialogTitle>
+            <DialogDescription>
+              Connect your Google account to import contacts
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col items-center gap-4 py-8">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-green-500/20 flex items-center justify-center">
+              <Users className="h-8 w-8 text-blue-400" />
+            </div>
+            <p className="text-center text-muted-foreground text-sm max-w-xs">
+              Connect your Google account to import contacts directly into your CRM
+            </p>
+            <Button 
+              onClick={() => connectContacts.mutate()}
+              disabled={connectContacts.isPending}
+              className="gap-2"
+            >
+              {connectContacts.isPending ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Connecting...
+                </>
+              ) : (
+                <>
+                  <Users className="h-4 w-4" />
+                  Connect Google Contacts
+                </>
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="glass-panel-strong max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
+        <DialogHeader>
+          <DialogTitle className="font-light">Import from Google Contacts</DialogTitle>
+          <DialogDescription>
+            Select contacts to import into your CRM
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div className="space-y-4 flex-1 overflow-hidden flex flex-col">
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search contacts..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+
+          {/* Selection info */}
+          <div className="flex items-center justify-between text-sm">
+            <button
+              onClick={toggleAll}
+              className="text-primary hover:underline"
+            >
+              {selectedContacts.size === filteredContacts.length ? "Deselect all" : "Select all"}
+            </button>
+            <span className="text-muted-foreground">
+              {selectedContacts.size} selected
+            </span>
+          </div>
+
+          {/* Contacts list */}
+          {isLoadingContacts ? (
+            <div className="space-y-2">
+              {[...Array(5)].map((_, i) => (
+                <Skeleton key={i} className="h-16 w-full" />
+              ))}
+            </div>
+          ) : filteredContacts.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              No contacts found
+            </div>
+          ) : (
+            <ScrollArea className="flex-1">
+              <div className="space-y-1 pr-4">
+                {filteredContacts.map((contact) => (
+                  <div
+                    key={contact.resourceName}
+                    className={cn(
+                      "flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors",
+                      selectedContacts.has(contact.resourceName) 
+                        ? "bg-primary/10 border border-primary/30" 
+                        : "hover:bg-muted/50"
+                    )}
+                    onClick={() => toggleContact(contact.resourceName)}
+                  >
+                    <Checkbox
+                      checked={selectedContacts.has(contact.resourceName)}
+                      onCheckedChange={() => toggleContact(contact.resourceName)}
+                    />
+                    <Avatar className="h-10 w-10">
+                      {contact.photoUrl && <AvatarImage src={contact.photoUrl} />}
+                      <AvatarFallback className="bg-muted text-foreground text-sm">
+                        {contact.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium truncate">{contact.name}</p>
+                      <p className="text-sm text-muted-foreground truncate">
+                        {contact.email || contact.phone || contact.company || 'No details'}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="flex justify-end gap-3 pt-4 border-t">
+          <Button variant="ghost" onClick={() => onOpenChange(false)}>
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleImport}
+            disabled={selectedContacts.size === 0 || importContacts.isPending}
+            className="gap-2"
+          >
+            {importContacts.isPending ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Importing...
+              </>
+            ) : (
+              <>
+                <Check className="h-4 w-4" />
+                Import {selectedContacts.size} Contact{selectedContacts.size !== 1 ? 's' : ''}
+              </>
+            )}
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 const Contacts = () => {
   const { division } = useDivision();
   const [search, setSearch] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showContactDialog, setShowContactDialog] = useState(false);
   const [showCSVUploader, setShowCSVUploader] = useState(false);
+  const [showGoogleImport, setShowGoogleImport] = useState(false);
   const [deleteContactId, setDeleteContactId] = useState<string | null>(null);
   
   // Filters
@@ -280,27 +511,26 @@ const Contacts = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            {/* CSV Import Button */}
-            <Dialog open={showCSVUploader} onOpenChange={setShowCSVUploader}>
-              <DialogTrigger asChild>
+          <div className="flex items-center gap-2 flex-wrap">
+            {/* Import Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="gap-2">
                   <Upload className="h-4 w-4" />
-                  Import CSV
+                  Import
                 </Button>
-              </DialogTrigger>
-              <DialogContent className="glass-panel-strong max-w-2xl max-h-[80vh] overflow-y-auto">
-                <DialogHeader>
-                  <DialogTitle className="font-light">Import Contacts from CSV</DialogTitle>
-                </DialogHeader>
-                <CSVContactUploader 
-                  onSuccess={() => {
-                    setShowCSVUploader(false);
-                    refetchContacts();
-                  }} 
-                />
-              </DialogContent>
-            </Dialog>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setShowGoogleImport(true)}>
+                  <Users className="h-4 w-4 mr-2" />
+                  Google Contacts
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setShowCSVUploader(true)}>
+                  <Upload className="h-4 w-4 mr-2" />
+                  CSV File
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             <Dialog open={showContactDialog} onOpenChange={setShowContactDialog}>
               <DialogTrigger asChild>
@@ -465,9 +695,9 @@ const Contacts = () => {
               {/* Tag Filter */}
               {allTags.length > 0 && (
                 <Select value={tagFilter} onValueChange={setTagFilter}>
-                  <SelectTrigger className="w-[120px] bg-white/5 border-white/10">
+                  <SelectTrigger className="w-[130px] bg-white/5 border-white/10">
                     <Tag className="h-4 w-4 mr-2" />
-                    <SelectValue placeholder="Tags" />
+                    <SelectValue placeholder="Tag" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Tags</SelectItem>
@@ -483,186 +713,134 @@ const Contacts = () => {
               {/* Sort */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="icon" className="bg-white/5 border-white/10">
+                  <Button variant="outline" size="sm" className="gap-2 bg-white/5 border-white/10">
                     <ArrowUpDown className="h-4 w-4" />
+                    Sort
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Sort by</DropdownMenuLabel>
+                  <DropdownMenuItem onClick={() => { setSortField("name"); setSortOrder("asc"); }}>
+                    Name (A-Z)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => { setSortField("name"); setSortOrder("desc"); }}>
+                    Name (Z-A)
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuCheckboxItem
-                    checked={sortField === "name"}
-                    onCheckedChange={() => setSortField("name")}
-                  >
-                    Name
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem
-                    checked={sortField === "created_at"}
-                    onCheckedChange={() => setSortField("created_at")}
-                  >
-                    Date Added
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem
-                    checked={sortField === "updated_at"}
-                    onCheckedChange={() => setSortField("updated_at")}
-                  >
+                  <DropdownMenuItem onClick={() => { setSortField("created_at"); setSortOrder("desc"); }}>
+                    Newest First
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => { setSortField("created_at"); setSortOrder("asc"); }}>
+                    Oldest First
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => { setSortField("updated_at"); setSortOrder("desc"); }}>
                     Recently Updated
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuCheckboxItem
-                    checked={sortOrder === "asc"}
-                    onCheckedChange={() => setSortOrder("asc")}
-                  >
-                    Ascending
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem
-                    checked={sortOrder === "desc"}
-                    onCheckedChange={() => setSortOrder("desc")}
-                  >
-                    Descending
-                  </DropdownMenuCheckboxItem>
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* View Toggle */}
+              {/* View Mode */}
               <div className="flex border border-white/10 rounded-lg overflow-hidden">
-                <Button
-                  variant={viewMode === "grid" ? "default" : "ghost"}
-                  size="icon"
-                  className="rounded-none"
+                <button
                   onClick={() => setViewMode("grid")}
+                  className={cn(
+                    "p-2 transition-colors",
+                    viewMode === "grid" ? "bg-white/10 text-foreground" : "text-muted-foreground hover:bg-white/5"
+                  )}
                 >
                   <Grid3X3 className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant={viewMode === "list" ? "default" : "ghost"}
-                  size="icon"
-                  className="rounded-none"
+                </button>
+                <button
                   onClick={() => setViewMode("list")}
+                  className={cn(
+                    "p-2 transition-colors",
+                    viewMode === "list" ? "bg-white/10 text-foreground" : "text-muted-foreground hover:bg-white/5"
+                  )}
                 >
                   <List className="h-4 w-4" />
-                </Button>
+                </button>
               </div>
+
+              {/* Clear Filters */}
+              {hasActiveFilters && (
+                <Button variant="ghost" size="sm" onClick={clearAllFilters} className="gap-1 text-muted-foreground">
+                  <X className="h-4 w-4" />
+                  Clear
+                </Button>
+              )}
             </div>
           </div>
-
-          {/* Active filters */}
-          {hasActiveFilters && (
-            <div className="flex items-center gap-2 mt-4 pt-4 border-t border-white/10">
-              <span className="text-xs text-muted-foreground">Active filters:</span>
-              <div className="flex flex-wrap gap-2">
-                {contactTypeFilter !== "all" && (
-                  <Badge variant="secondary" className="gap-1">
-                    {contactTypes.find(t => t.value === contactTypeFilter)?.label}
-                    <X className="h-3 w-3 cursor-pointer" onClick={() => setContactTypeFilter("all")} />
-                  </Badge>
-                )}
-                {sourceFilter !== "all" && (
-                  <Badge variant="secondary" className="gap-1">
-                    {sourceOptions.find(s => s.value === sourceFilter)?.label}
-                    <X className="h-3 w-3 cursor-pointer" onClick={() => setSourceFilter("all")} />
-                  </Badge>
-                )}
-                {divisionFilter !== "all" && (
-                  <Badge variant="secondary" className="gap-1">
-                    {divisionOptions.find(d => d.key === divisionFilter)?.label}
-                    <X className="h-3 w-3 cursor-pointer" onClick={() => setDivisionFilter("all")} />
-                  </Badge>
-                )}
-                {tagFilter !== "all" && (
-                  <Badge variant="secondary" className="gap-1">
-                    {tagFilter}
-                    <X className="h-3 w-3 cursor-pointer" onClick={() => setTagFilter("all")} />
-                  </Badge>
-                )}
-              </div>
-              <Button variant="ghost" size="sm" onClick={clearAllFilters} className="text-xs">
-                Clear all
-              </Button>
-            </div>
-          )}
         </div>
 
-        {/* Stats */}
-        <div className="flex items-center justify-between mb-6">
+        {/* Results count */}
+        <div className="flex items-center justify-between mb-4">
           <p className="text-sm text-muted-foreground">
             {filteredContacts.length} contact{filteredContacts.length !== 1 ? 's' : ''}
-            {hasActiveFilters && ` (filtered from ${allContacts?.length || 0})`}
+            {hasActiveFilters && ' (filtered)'}
           </p>
         </div>
 
         {/* Contacts Grid/List */}
         {isLoading ? (
-          <div className={cn(
-            "gap-4",
-            viewMode === "grid" 
-              ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
-              : "flex flex-col"
-          )}>
-            {[...Array(8)].map((_, i) => (
-              <Skeleton key={i} className="h-48 rounded-lg" />
+          <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" : "space-y-2"}>
+            {[...Array(6)].map((_, i) => (
+              <Skeleton key={i} className={viewMode === "grid" ? "h-48" : "h-16"} />
             ))}
           </div>
         ) : filteredContacts.length === 0 ? (
-          <div className="text-center py-16 glass-card">
-            <User className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
-            <h3 className="text-lg font-light text-foreground mb-2">
-              {hasActiveFilters ? "No contacts match your filters" : "No contacts yet"}
-            </h3>
-            <p className="text-muted-foreground mb-4 max-w-md mx-auto">
+          <div className="glass-card p-12 text-center">
+            <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-medium mb-2">No contacts found</h3>
+            <p className="text-muted-foreground mb-6">
               {hasActiveFilters 
-                ? "Try adjusting your filters or search term"
-                : "Add your first contact to start building your network"}
+                ? "Try adjusting your filters or search query" 
+                : "Add your first contact to get started"}
             </p>
             {!hasActiveFilters && (
-              <Button onClick={() => setShowContactDialog(true)}>
-                <Plus className="h-4 w-4 mr-2" />
-                Add Your First Contact
-              </Button>
+              <div className="flex gap-3 justify-center">
+                <Button onClick={() => setShowGoogleImport(true)} variant="outline" className="gap-2">
+                  <Users className="h-4 w-4" />
+                  Import from Google
+                </Button>
+                <Button onClick={() => setShowContactDialog(true)} className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Add Contact
+                </Button>
+              </div>
             )}
           </div>
         ) : viewMode === "grid" ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredContacts.map((contact) => {
               const DivIcon = getDivisionIcon(contact.division);
               return (
                 <Link
                   key={contact.id}
-                  to={`/portal/crm/contacts/${contact.id}`}
-                  className="glass-card p-4 hover:bg-white/5 transition-all duration-200 group"
+                  to={`/portal/contacts/${contact.id}`}
+                  className="glass-card p-5 hover:bg-white/5 transition-colors group"
                 >
-                  <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-start justify-between mb-4">
                     <Avatar className="h-12 w-12">
-                      <AvatarFallback className="bg-primary/20 text-primary">
+                      <AvatarFallback className="bg-primary/20 text-primary text-sm font-medium">
                         {getInitials(contact.full_name)}
                       </AvatarFallback>
                     </Avatar>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.preventDefault()}>
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
+                        <button 
+                          className="p-1.5 rounded-lg hover:bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={(e) => e.preventDefault()}
+                        >
+                          <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+                        </button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
-                        {contact.phone && (
-                          <DropdownMenuItem asChild>
-                            <a href={`tel:${contact.phone}`} className="flex items-center gap-2">
-                              <Phone className="h-4 w-4" />
-                              Call
-                            </a>
-                          </DropdownMenuItem>
-                        )}
-                        {contact.email && (
-                          <DropdownMenuItem asChild>
-                            <a href={`mailto:${contact.email}`} className="flex items-center gap-2">
-                              <Mail className="h-4 w-4" />
-                              Email
-                            </a>
-                          </DropdownMenuItem>
-                        )}
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem asChild>
+                          <Link to={`/portal/contacts/${contact.id}`}>View Details</Link>
+                        </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem 
-                          className="text-destructive" 
+                          className="text-destructive"
                           onClick={(e) => {
                             e.preventDefault();
                             handleDeleteContact(contact.id);
@@ -673,156 +851,148 @@ const Contacts = () => {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
-                  
+
                   <h3 className="font-medium text-foreground mb-1 truncate">{contact.full_name}</h3>
-                  
-                  <div className="flex items-center gap-2 mb-3">
+                  {contact.company && (
+                    <p className="text-sm text-muted-foreground mb-3 truncate">{contact.company}</p>
+                  )}
+
+                  <div className="flex flex-wrap gap-2 mb-4">
                     <Badge variant="outline" className={cn("text-xs", getTypeColor(contact.contact_type))}>
-                      {contactTypes.find(t => t.value === contact.contact_type)?.label || contact.contact_type}
+                      {contact.contact_type}
                     </Badge>
-                    <DivIcon className="h-3 w-3 text-muted-foreground" />
+                    <Badge variant="outline" className="text-xs bg-white/5">
+                      <DivIcon className="h-3 w-3 mr-1" />
+                      {divisionOptions.find(d => d.key === contact.division)?.label?.split(' ')[0] || contact.division}
+                    </Badge>
                   </div>
-                  
-                  <div className="space-y-1 text-sm text-muted-foreground">
+
+                  <div className="space-y-1.5 text-sm">
                     {contact.email && (
-                      <div className="flex items-center gap-2 truncate">
-                        <Mail className="h-3 w-3 flex-shrink-0" />
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Mail className="h-3.5 w-3.5" />
                         <span className="truncate">{contact.email}</span>
                       </div>
                     )}
                     {contact.phone && (
-                      <div className="flex items-center gap-2">
-                        <Phone className="h-3 w-3 flex-shrink-0" />
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Phone className="h-3.5 w-3.5" />
                         <span>{contact.phone}</span>
                       </div>
                     )}
-                    {contact.company && (
-                      <div className="flex items-center gap-2 truncate">
-                        <Building2 className="h-3 w-3 flex-shrink-0" />
-                        <span className="truncate">{contact.company}</span>
-                      </div>
-                    )}
                   </div>
-                  
-                  {contact.tags && contact.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-3">
-                      {contact.tags.slice(0, 3).map((tag) => (
-                        <Badge key={tag} variant="secondary" className="text-xs">
-                          {tag}
-                        </Badge>
-                      ))}
-                      {contact.tags.length > 3 && (
-                        <Badge variant="secondary" className="text-xs">
-                          +{contact.tags.length - 3}
-                        </Badge>
-                      )}
-                    </div>
-                  )}
                 </Link>
               );
             })}
           </div>
         ) : (
-          /* List View */
           <div className="glass-card overflow-hidden">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
+                  <TableHead className="hidden md:table-cell">Company</TableHead>
+                  <TableHead className="hidden lg:table-cell">Email</TableHead>
+                  <TableHead className="hidden lg:table-cell">Phone</TableHead>
                   <TableHead>Type</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Phone</TableHead>
-                  <TableHead>Company</TableHead>
-                  <TableHead>Division</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredContacts.map((contact) => {
-                  const DivIcon = getDivisionIcon(contact.division);
-                  return (
-                    <TableRow key={contact.id} className="cursor-pointer hover:bg-white/5">
-                      <TableCell>
-                        <Link to={`/portal/crm/contacts/${contact.id}`} className="flex items-center gap-3">
-                          <Avatar className="h-8 w-8">
-                            <AvatarFallback className="bg-primary/20 text-primary text-xs">
-                              {getInitials(contact.full_name)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="font-medium">{contact.full_name}</span>
-                        </Link>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline" className={cn("text-xs", getTypeColor(contact.contact_type))}>
-                          {contactTypes.find(t => t.value === contact.contact_type)?.label || contact.contact_type}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">{contact.email || "-"}</TableCell>
-                      <TableCell className="text-muted-foreground">{contact.phone || "-"}</TableCell>
-                      <TableCell className="text-muted-foreground">{contact.company || "-"}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                          <DivIcon className="h-4 w-4" />
-                          <span className="text-xs">{divisionOptions.find(d => d.key === contact.division)?.label}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem asChild>
-                              <Link to={`/portal/crm/contacts/${contact.id}`}>View Details</Link>
-                            </DropdownMenuItem>
-                            {contact.phone && (
-                              <DropdownMenuItem asChild>
-                                <a href={`tel:${contact.phone}`}>Call</a>
-                              </DropdownMenuItem>
-                            )}
-                            {contact.email && (
-                              <DropdownMenuItem asChild>
-                                <a href={`mailto:${contact.email}`}>Email</a>
-                              </DropdownMenuItem>
-                            )}
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem 
-                              className="text-destructive" 
-                              onClick={() => handleDeleteContact(contact.id)}
-                            >
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
+                {filteredContacts.map((contact) => (
+                  <TableRow key={contact.id} className="cursor-pointer hover:bg-white/5">
+                    <TableCell>
+                      <Link to={`/portal/contacts/${contact.id}`} className="flex items-center gap-3">
+                        <Avatar className="h-8 w-8">
+                          <AvatarFallback className="bg-primary/20 text-primary text-xs">
+                            {getInitials(contact.full_name)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="font-medium">{contact.full_name}</span>
+                      </Link>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell text-muted-foreground">
+                      {contact.company || '-'}
+                    </TableCell>
+                    <TableCell className="hidden lg:table-cell text-muted-foreground">
+                      {contact.email || '-'}
+                    </TableCell>
+                    <TableCell className="hidden lg:table-cell text-muted-foreground">
+                      {contact.phone || '-'}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className={cn("text-xs", getTypeColor(contact.contact_type))}>
+                        {contact.contact_type}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="p-1.5 rounded-lg hover:bg-white/10">
+                            <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem asChild>
+                            <Link to={`/portal/contacts/${contact.id}`}>View Details</Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem 
+                            className="text-destructive"
+                            onClick={() => handleDeleteContact(contact.id)}
+                          >
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </div>
         )}
-
-        {/* Delete Confirmation */}
-        <AlertDialog open={!!deleteContactId} onOpenChange={() => setDeleteContactId(null)}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Delete Contact</AlertDialogTitle>
-              <AlertDialogDescription>
-                Are you sure you want to delete this contact? This action cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={confirmDeleteContact} className="bg-destructive text-destructive-foreground">
-                Delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
       </div>
+
+      {/* CSV Uploader Dialog */}
+      <Dialog open={showCSVUploader} onOpenChange={setShowCSVUploader}>
+        <DialogContent className="glass-panel-strong max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="font-light">Import Contacts from CSV</DialogTitle>
+          </DialogHeader>
+          <CSVContactUploader 
+            onSuccess={() => {
+              setShowCSVUploader(false);
+              refetchContacts();
+            }} 
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Google Contacts Import Dialog */}
+      <GoogleContactsImportDialog
+        open={showGoogleImport}
+        onOpenChange={setShowGoogleImport}
+        onSuccess={() => refetchContacts()}
+      />
+
+      {/* Delete Confirmation */}
+      <AlertDialog open={!!deleteContactId} onOpenChange={() => setDeleteContactId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Contact</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this contact? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteContact} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
