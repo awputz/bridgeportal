@@ -16,7 +16,7 @@ import { formatResidentialRent, formatFullCurrency, formatCommercialPricing } fr
 import { useGmailConnection, useConnectGmail, useDisconnectGmail } from "@/hooks/useGmail";
 import { useDriveConnection, useConnectDrive, useDisconnectDrive } from "@/hooks/useGoogleDrive";
 import { useContactsConnection, useConnectContacts, useDisconnectContacts } from "@/hooks/useGoogleContacts";
-import { useGoogleCalendar } from "@/hooks/useGoogleCalendar";
+import { useGoogleCalendarConnection, useConnectGoogleCalendar, useDisconnectGoogleCalendar } from "@/hooks/useGoogleCalendar";
 import {
   Table,
   TableBody,
@@ -619,11 +619,13 @@ const Profile = () => {
 
 // Connected Services Component
 const ConnectedServicesCard = () => {
+  const { data: calendarConnection } = useGoogleCalendarConnection();
   const { data: gmailConnection } = useGmailConnection();
   const { data: driveConnection } = useDriveConnection();
   const { data: contactsConnection } = useContactsConnection();
-  const { isConnected: calendarConnected } = useGoogleCalendar();
   
+  const connectCalendar = useConnectGoogleCalendar();
+  const disconnectCalendar = useDisconnectGoogleCalendar();
   const connectGmail = useConnectGmail();
   const disconnectGmail = useDisconnectGmail();
   const connectDrive = useConnectDrive();
@@ -635,15 +637,15 @@ const ConnectedServicesCard = () => {
     { 
       name: 'Calendar', 
       icon: Calendar, 
-      connected: calendarConnected,
-      onConnect: () => window.open('/portal/dashboard', '_self'),
-      onDisconnect: () => {},
+      connected: !!calendarConnection?.calendar_enabled,
+      onConnect: () => connectCalendar.mutate(),
+      onDisconnect: () => disconnectCalendar.mutate(),
       color: 'text-blue-400'
     },
     { 
       name: 'Gmail', 
       icon: Mail, 
-      connected: gmailConnection?.connected,
+      connected: gmailConnection?.isConnected,
       onConnect: () => connectGmail.mutate(),
       onDisconnect: () => disconnectGmail.mutate(),
       color: 'text-red-400'
