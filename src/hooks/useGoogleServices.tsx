@@ -20,12 +20,21 @@ export function useGoogleServicesStatus() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return { connected: false, services: { gmail: false, calendar: false, drive: false, contacts: false } };
 
-      // Check user_google_tokens table directly
-      const { data: tokens } = await supabase
+      // Check user_google_tokens table directly - use maybeSingle for graceful handling
+      const { data: tokens, error } = await supabase
         .from('user_google_tokens')
         .select('gmail_enabled, calendar_enabled, drive_enabled, contacts_enabled, google_email, access_token')
         .eq('user_id', user.id)
         .maybeSingle();
+
+      if (error) {
+        console.error('Error fetching Google services status:', error);
+        return { 
+          connected: false, 
+          services: { gmail: false, calendar: false, drive: false, contacts: false },
+          email: user.email
+        };
+      }
 
       if (!tokens) {
         return { 
@@ -47,6 +56,7 @@ export function useGoogleServicesStatus() {
       } as GoogleServicesStatus;
     },
     staleTime: 30000,
+    retry: 1,
   });
 }
 

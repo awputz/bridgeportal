@@ -39,22 +39,23 @@ serve(async (req) => {
     const { action, query, pageToken, folderId, fileId } = await req.json();
     console.log(`Drive files action: ${action} for user: ${user.id}`);
 
-    // Get user's Drive tokens
+    // Get user's tokens - use maybeSingle to handle no rows gracefully
     const { data: tokenData } = await supabase
       .from('user_google_tokens')
-      .select('drive_access_token, drive_refresh_token')
+      .select('drive_access_token, drive_refresh_token, drive_enabled, access_token, refresh_token')
       .eq('user_id', user.id)
-      .single();
+      .maybeSingle();
 
-    if (!tokenData?.drive_access_token) {
+    // Use service-specific token or fall back to unified token
+    let accessToken = tokenData?.drive_access_token || tokenData?.access_token;
+    let refreshToken = tokenData?.drive_refresh_token || tokenData?.refresh_token;
+
+    if (!accessToken) {
       return new Response(
-        JSON.stringify({ error: 'Drive not connected' }),
+        JSON.stringify({ error: 'Drive not connected', needsConnection: true }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-
-    let accessToken = tokenData.drive_access_token;
-    const refreshToken = tokenData.drive_refresh_token;
 
     // Helper to refresh token if needed
     async function refreshTokenIfNeeded(response: Response) {
@@ -74,9 +75,13 @@ serve(async (req) => {
         const refreshData = await refreshResponse.json();
         if (refreshData.access_token) {
           accessToken = refreshData.access_token;
+          // Update the appropriate token column
+          const updateData = tokenData?.drive_access_token 
+            ? { drive_access_token: accessToken }
+            : { access_token: accessToken };
           await supabase
             .from('user_google_tokens')
-            .update({ drive_access_token: accessToken })
+            .update(updateData)
             .eq('user_id', user!.id);
           return true;
         }

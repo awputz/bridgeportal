@@ -38,31 +38,32 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Get user's Google tokens
-    const { data: tokenData, error: tokenError } = await supabase
+    // Get user's Google tokens - use maybeSingle to handle no rows gracefully
+    const { data: tokenData } = await supabase
       .from("user_google_tokens")
       .select("*")
       .eq("user_id", user.id)
-      .single();
+      .maybeSingle();
 
-    if (tokenError || !tokenData) {
+    if (!tokenData) {
       return new Response(
-        JSON.stringify({ error: "Google Calendar not connected" }),
+        JSON.stringify({ error: "Google Calendar not connected", needsConnection: true }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
     // Check if token is expired and refresh if needed
     let accessToken = tokenData.access_token;
-    const tokenExpiry = new Date(tokenData.token_expiry);
+    const refreshToken = tokenData.refresh_token;
+    const tokenExpiry = tokenData.token_expiry ? new Date(tokenData.token_expiry) : null;
     
-    if (tokenExpiry < new Date()) {
+    if (tokenExpiry && tokenExpiry < new Date() && refreshToken) {
       // Token expired, refresh it
-      const refreshResult = await refreshAccessToken(tokenData.refresh_token);
+      const refreshResult = await refreshAccessToken(refreshToken);
       
       if (refreshResult.error) {
         return new Response(
-          JSON.stringify({ error: "Failed to refresh token. Please reconnect Google Calendar." }),
+          JSON.stringify({ error: "Failed to refresh token. Please reconnect Google Calendar.", needsConnection: true }),
           { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
@@ -80,6 +81,13 @@ Deno.serve(async (req) => {
           token_expiry: newExpiry.toISOString(),
         })
         .eq("user_id", user.id);
+    }
+
+    if (!accessToken) {
+      return new Response(
+        JSON.stringify({ error: "No access token available", needsConnection: true }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     // Parse request body for date range
@@ -111,6 +119,15 @@ Deno.serve(async (req) => {
     if (!calendarResponse.ok) {
       const errorData = await calendarResponse.json();
       console.error("Calendar API error:", errorData);
+      
+      // If 401, token might be invalid
+      if (calendarResponse.status === 401) {
+        return new Response(
+          JSON.stringify({ error: "Calendar access token expired", needsConnection: true }),
+          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      
       return new Response(
         JSON.stringify({ error: "Failed to fetch calendar events" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }

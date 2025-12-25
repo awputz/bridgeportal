@@ -18,6 +18,9 @@ import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/portal/Dashboard";
 
+// Auth callback - lazy loaded
+const AuthCallback = lazy(() => import("./pages/AuthCallback"));
+
 // Portal Pages - lazy loaded for better performance
 const Templates = lazy(() => import("./pages/portal/Templates"));
 const TemplateCategory = lazy(() => import("./pages/portal/TemplateCategory"));
@@ -116,9 +119,14 @@ const App = () => {
                   {/* Root redirects to portal */}
                   <Route path="/" element={<Navigate to="/portal" replace />} />
                   
-                  {/* Login */}
+                  {/* Login & Auth */}
                   <Route path="/login" element={<Login />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
+                  <Route path="/auth/callback" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <AuthCallback />
+                    </Suspense>
+                  } />
                   <Route path="/auth" element={<Navigate to="/login" replace />} />
                   
                   {/* Portal Routes (Protected) */}

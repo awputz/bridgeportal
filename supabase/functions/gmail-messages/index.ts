@@ -11,7 +11,7 @@ const GOOGLE_CLIENT_SECRET = Deno.env.get('GOOGLE_CLIENT_SECRET');
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
-async function refreshAccessToken(supabase: any, userId: string, refreshToken: string) {
+async function refreshAccessToken(supabase: any, userId: string, refreshToken: string, isServiceToken: boolean) {
   console.log('Refreshing Gmail access token for user:', userId);
   
   const response = await fetch('https://oauth2.googleapis.com/token', {
@@ -32,41 +32,57 @@ async function refreshAccessToken(supabase: any, userId: string, refreshToken: s
     throw new Error(tokens.error_description || tokens.error);
   }
 
-  // Update access token in database
+  // Update the appropriate token column
+  const updateData = isServiceToken 
+    ? { gmail_access_token: tokens.access_token, updated_at: new Date().toISOString() }
+    : { access_token: tokens.access_token, updated_at: new Date().toISOString() };
+
   await supabase
     .from('user_google_tokens')
-    .update({
-      gmail_access_token: tokens.access_token,
-      updated_at: new Date().toISOString(),
-    })
+    .update(updateData)
     .eq('user_id', userId);
 
   return tokens.access_token;
 }
 
 async function getValidAccessToken(supabase: any, userId: string) {
+  // Use maybeSingle to handle no rows gracefully
   const { data: tokenData, error } = await supabase
     .from('user_google_tokens')
-    .select('gmail_access_token, gmail_refresh_token, gmail_enabled')
+    .select('gmail_access_token, gmail_refresh_token, gmail_enabled, access_token, refresh_token')
     .eq('user_id', userId)
-    .single();
+    .maybeSingle();
 
-  if (error || !tokenData || !tokenData.gmail_enabled) {
+  if (error) {
+    console.error('Token query error:', error);
+    throw new Error('Failed to fetch tokens');
+  }
+
+  if (!tokenData) {
+    throw new Error('Gmail not connected');
+  }
+
+  // Determine which token to use (service-specific or unified)
+  const useServiceToken = !!tokenData.gmail_access_token;
+  let accessToken = tokenData.gmail_access_token || tokenData.access_token;
+  const refreshToken = tokenData.gmail_refresh_token || tokenData.refresh_token;
+
+  if (!accessToken) {
     throw new Error('Gmail not connected');
   }
 
   // Try the current access token first
   const testResponse = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/profile', {
-    headers: { Authorization: `Bearer ${tokenData.gmail_access_token}` },
+    headers: { Authorization: `Bearer ${accessToken}` },
   });
 
   if (testResponse.ok) {
-    return tokenData.gmail_access_token;
+    return accessToken;
   }
 
   // Token expired, refresh it
-  if (tokenData.gmail_refresh_token) {
-    return await refreshAccessToken(supabase, userId, tokenData.gmail_refresh_token);
+  if (refreshToken) {
+    return await refreshAccessToken(supabase, userId, refreshToken, useServiceToken);
   }
 
   throw new Error('Gmail access token expired and no refresh token available');
@@ -137,7 +153,16 @@ serve(async (req) => {
     }
 
     const { action, messageId, query, pageToken, labelIds, maxResults = 20 } = await req.json();
-    const accessToken = await getValidAccessToken(supabase, user.id);
+    
+    let accessToken;
+    try {
+      accessToken = await getValidAccessToken(supabase, user.id);
+    } catch (tokenError: any) {
+      return new Response(JSON.stringify({ error: tokenError.message, needsConnection: true }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
     if (action === 'list') {
       // List messages from inbox
