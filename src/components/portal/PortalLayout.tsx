@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { PortalNavigation } from "./PortalNavigation";
+import { MobileBottomNav } from "./MobileBottomNav";
 import { Loader2 } from "lucide-react";
 
 export const PortalLayout = () => {
@@ -57,6 +58,7 @@ export const PortalLayout = () => {
       <main className="pt-20 md:pt-24">
         <Outlet />
       </main>
+      <MobileBottomNav />
     </div>
   );
 };

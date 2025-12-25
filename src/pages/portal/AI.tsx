@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Bot, User, Sparkles, FileText, Mail, TrendingUp, Loader2 } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
+import { Send, Bot, User, Sparkles, FileText, Mail, TrendingUp, Loader2, Copy, Check, Trash2, Building2, DollarSign, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 type Message = {
   role: "user" | "assistant";
@@ -26,14 +27,37 @@ const quickPrompts = [
     label: "LOI Summary",
     prompt: "Help me summarize the key terms I should include in a Letter of Intent.",
   },
+  {
+    icon: Building2,
+    label: "Market Analysis",
+    prompt: "Help me create a market analysis for a specific NYC neighborhood. I'll provide the details.",
+  },
+  {
+    icon: DollarSign,
+    label: "Price Negotiation",
+    prompt: "Help me craft a response to a price objection from a seller who thinks their property is worth more.",
+  },
+  {
+    icon: Users,
+    label: "Client Follow-up",
+    prompt: "Help me write a follow-up email to a client I haven't heard from in 2 weeks.",
+  },
 ];
 
+const STORAGE_KEY = "bridge-ai-chat-history";
+
 const AI = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [searchParams] = useSearchParams();
+  const [messages, setMessages] = useState<Message[]>(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : [];
+  });
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const initialPromptSent = useRef(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -42,6 +66,37 @@ const AI = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Save messages to localStorage
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+  }, [messages]);
+
+  // Handle initial prompt from URL
+  useEffect(() => {
+    const promptFromUrl = searchParams.get("prompt");
+    if (promptFromUrl && !initialPromptSent.current && messages.length === 0) {
+      initialPromptSent.current = true;
+      sendMessage(promptFromUrl);
+    }
+  }, [searchParams]);
+
+  const copyToClipboard = async (text: string, index: number) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedIndex(index);
+      toast.success("Copied to clipboard");
+      setTimeout(() => setCopiedIndex(null), 2000);
+    } catch (err) {
+      toast.error("Failed to copy");
+    }
+  };
+
+  const clearChat = () => {
+    setMessages([]);
+    localStorage.removeItem(STORAGE_KEY);
+    toast.success("Chat cleared");
+  };
 
   const sendMessage = async (content: string) => {
     if (!content.trim() || isLoading) return;
@@ -145,21 +200,34 @@ const AI = () => {
   };
 
   return (
-    <div className="min-h-screen pb-16 flex flex-col">
+    <div className="min-h-screen pb-24 md:pb-16 flex flex-col">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 flex-1 flex flex-col w-full">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center">
-              <Sparkles className="h-5 w-5 text-foreground" />
+        <div className="mb-8 flex items-start justify-between">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center">
+                <Sparkles className="h-5 w-5 text-foreground" />
+              </div>
+              <h1 className="text-3xl md:text-4xl font-extralight text-foreground">
+                Bridge AI
+              </h1>
             </div>
-            <h1 className="text-3xl md:text-4xl font-extralight text-foreground">
-              Bridge AI
-            </h1>
+            <p className="text-muted-foreground font-light">
+              Your intelligent assistant for deal analysis, emails, and market research
+            </p>
           </div>
-          <p className="text-muted-foreground font-light">
-            Your intelligent assistant for deal analysis, emails, and market research
-          </p>
+          {messages.length > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearChat}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Clear
+            </Button>
+          )}
         </div>
 
         {/* Chat Container */}
@@ -209,7 +277,7 @@ const AI = () => {
                   )}
                   <div
                     className={cn(
-                      "max-w-[80%] rounded-2xl px-4 py-3",
+                      "max-w-[80%] rounded-2xl px-4 py-3 relative group",
                       message.role === "user"
                         ? "bg-foreground text-background"
                         : "bg-white/5 text-foreground"
@@ -224,6 +292,18 @@ const AI = () => {
                         </span>
                       )}
                     </p>
+                    {message.role === "assistant" && message.content && (
+                      <button
+                        onClick={() => copyToClipboard(message.content, index)}
+                        className="absolute -right-2 -top-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-full bg-white/10 hover:bg-white/20"
+                      >
+                        {copiedIndex === index ? (
+                          <Check className="h-3 w-3 text-green-400" />
+                        ) : (
+                          <Copy className="h-3 w-3 text-foreground/70" />
+                        )}
+                      </button>
+                    )}
                   </div>
                   {message.role === "user" && (
                     <div className="w-8 h-8 rounded-full bg-foreground flex items-center justify-center flex-shrink-0">
