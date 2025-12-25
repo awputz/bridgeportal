@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { CalendarEvent } from "./useCalendarEvents";
+import { invokeWithAuthHandling } from "@/lib/auth";
 
 interface GoogleToken {
   user_id: string;
@@ -17,7 +18,9 @@ export const useGoogleCalendarConnection = () => {
   return useQuery({
     queryKey: ["google-calendar-connection"],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return null;
 
       const { data, error } = await supabase
@@ -30,7 +33,7 @@ export const useGoogleCalendarConnection = () => {
         console.error("Error checking calendar connection:", error);
         return null;
       }
-      
+
       return data as GoogleToken | null;
     },
     staleTime: 30000,
@@ -47,35 +50,34 @@ export const useGoogleCalendarEvents = (startDate?: Date, endDate?: Date) => {
         return [];
       }
 
-      try {
-        const { data, error } = await supabase.functions.invoke("google-calendar-events", {
+      const { data, error } = await invokeWithAuthHandling<{ events: any[] }>(
+        "google-calendar-events",
+        {
           body: {
             startDate: startDate?.toISOString(),
             endDate: endDate?.toISOString(),
           },
-        });
+        }
+      );
 
-        if (error) throw error;
-        return (data?.events || []).map((event: any) => ({
-          id: event.id,
-          title: event.summary || "Untitled",
-          description: event.description || null,
-          start_time: event.start?.dateTime || event.start?.date,
-          end_time: event.end?.dateTime || event.end?.date || null,
-          all_day: !!event.start?.date,
-          event_type: "personal",
-          location: event.location || null,
-          created_by: null,
-          is_active: true,
-          created_at: event.created,
-          updated_at: event.updated,
-          source: "google" as const,
-          calendar_id: event.calendarId,
-        }));
-      } catch {
-        // Silently fail if Google Calendar fetch fails
-        return [];
-      }
+      if (error) throw error;
+
+      return (data?.events || []).map((event: any) => ({
+        id: event.id,
+        title: event.summary || "Untitled",
+        description: event.description || null,
+        start_time: event.start?.dateTime || event.start?.date,
+        end_time: event.end?.dateTime || event.end?.date || null,
+        all_day: !!event.start?.date,
+        event_type: "personal",
+        location: event.location || null,
+        created_by: null,
+        is_active: true,
+        created_at: event.created,
+        updated_at: event.updated,
+        source: "google" as const,
+        calendar_id: event.calendarId,
+      }));
     },
     enabled: !!connection?.access_token && connection.calendar_enabled,
   });
@@ -83,20 +85,22 @@ export const useGoogleCalendarEvents = (startDate?: Date, endDate?: Date) => {
 
 export const useConnectGoogleCalendar = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async () => {
-      // Get the OAuth URL from the edge function
-      const { data, error } = await supabase.functions.invoke("google-calendar-auth", {
-        body: { action: "get-auth-url" },
-      });
+      const { data, error } = await invokeWithAuthHandling<{ url: string }>(
+        "google-calendar-auth",
+        {
+          body: { action: "get-auth-url" },
+        }
+      );
 
       if (error) throw error;
       if (!data?.url) throw new Error("Failed to get auth URL");
 
       // Open popup for OAuth
       const popup = window.open(data.url, "_blank", "width=500,height=600");
-      
+
       // Poll for popup close and refetch connection
       return new Promise((resolve) => {
         const checkClosed = setInterval(() => {
@@ -107,7 +111,7 @@ export const useConnectGoogleCalendar = () => {
             resolve({ success: true });
           }
         }, 500);
-        
+
         // Timeout after 5 minutes
         setTimeout(() => {
           clearInterval(checkClosed);
@@ -130,7 +134,9 @@ export const useDisconnectGoogleCalendar = () => {
 
   return useMutation({
     mutationFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
       // Use maybeSingle to handle case where no row exists
@@ -176,7 +182,9 @@ export const useToggleGoogleCalendar = () => {
 
   return useMutation({
     mutationFn: async (enabled: boolean) => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
       const { error } = await supabase
@@ -197,3 +205,4 @@ export const useToggleGoogleCalendar = () => {
     },
   });
 };
+

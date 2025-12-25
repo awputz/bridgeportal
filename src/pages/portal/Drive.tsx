@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { 
-  FolderOpen, 
-  File, 
-  Image, 
-  FileText, 
-  Sheet, 
-  Presentation, 
-  Film, 
-  Music, 
+import {
+  FolderOpen,
+  File,
+  Image,
+  FileText,
+  Sheet,
+  Presentation,
+  Film,
+  Music,
   Archive,
   Folder,
   Search,
@@ -17,42 +17,43 @@ import {
   RefreshCw,
   Settings,
   Loader2,
-  AlertCircle
+  AlertCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { useDriveConnection, useConnectDrive, useDisconnectDrive, useDriveFiles, DriveFile } from "@/hooks/useGoogleDrive";
+import { useDriveConnection, useConnectDrive, useDisconnectDrive, useDriveFiles } from "@/hooks/useGoogleDrive";
+import { hardLogout } from "@/lib/auth";
 
 const getFileIcon = (mimeType: string) => {
-  if (mimeType.includes('folder')) return Folder;
-  if (mimeType.includes('image')) return Image;
-  if (mimeType.includes('video')) return Film;
-  if (mimeType.includes('audio')) return Music;
-  if (mimeType.includes('pdf')) return FileText;
-  if (mimeType.includes('spreadsheet') || mimeType.includes('excel')) return Sheet;
-  if (mimeType.includes('presentation') || mimeType.includes('powerpoint')) return Presentation;
-  if (mimeType.includes('zip') || mimeType.includes('archive') || mimeType.includes('compressed')) return Archive;
-  if (mimeType.includes('document') || mimeType.includes('text')) return FileText;
+  if (mimeType.includes("folder")) return Folder;
+  if (mimeType.includes("image")) return Image;
+  if (mimeType.includes("video")) return Film;
+  if (mimeType.includes("audio")) return Music;
+  if (mimeType.includes("pdf")) return FileText;
+  if (mimeType.includes("spreadsheet") || mimeType.includes("excel")) return Sheet;
+  if (mimeType.includes("presentation") || mimeType.includes("powerpoint")) return Presentation;
+  if (mimeType.includes("zip") || mimeType.includes("archive") || mimeType.includes("compressed")) return Archive;
+  if (mimeType.includes("document") || mimeType.includes("text")) return FileText;
   return File;
 };
 
 const getFileColor = (mimeType: string) => {
-  if (mimeType.includes('folder')) return 'text-yellow-400';
-  if (mimeType.includes('image')) return 'text-pink-400';
-  if (mimeType.includes('video')) return 'text-purple-400';
-  if (mimeType.includes('audio')) return 'text-green-400';
-  if (mimeType.includes('pdf')) return 'text-red-400';
-  if (mimeType.includes('spreadsheet') || mimeType.includes('excel')) return 'text-emerald-400';
-  if (mimeType.includes('presentation') || mimeType.includes('powerpoint')) return 'text-orange-400';
-  return 'text-blue-400';
+  if (mimeType.includes("folder")) return "text-yellow-400";
+  if (mimeType.includes("image")) return "text-pink-400";
+  if (mimeType.includes("video")) return "text-purple-400";
+  if (mimeType.includes("audio")) return "text-green-400";
+  if (mimeType.includes("pdf")) return "text-red-400";
+  if (mimeType.includes("spreadsheet") || mimeType.includes("excel")) return "text-emerald-400";
+  if (mimeType.includes("presentation") || mimeType.includes("powerpoint")) return "text-orange-400";
+  return "text-blue-400";
 };
 
 const formatFileSize = (bytes?: number) => {
-  if (!bytes) return '';
-  const units = ['B', 'KB', 'MB', 'GB'];
+  if (!bytes) return "";
+  const units = ["B", "KB", "MB", "GB"];
   let size = bytes;
   let unitIndex = 0;
   while (size >= 1024 && unitIndex < units.length - 1) {
@@ -63,11 +64,11 @@ const formatFileSize = (bytes?: number) => {
 };
 
 const formatDate = (dateString?: string) => {
-  if (!dateString) return '';
-  return new Date(dateString).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
+  if (!dateString) return "";
+  return new Date(dateString).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
   });
 };
 
@@ -76,9 +77,14 @@ export default function Drive() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const { data: connection, isLoading: isLoadingConnection, error: connectionError } = useDriveConnection();
-  const { data: filesData, isLoading: isLoadingFiles, refetch: refetchFiles } = useDriveFiles({ 
+  const {
+    data: filesData,
+    isLoading: isLoadingFiles,
+    error: filesError,
+    refetch: refetchFiles,
+  } = useDriveFiles({
     query: searchQuery || undefined,
-    enabled: connection?.isConnected 
+    enabled: connection?.isConnected,
   });
 
   const connectDrive = useConnectDrive();
@@ -108,12 +114,8 @@ export default function Drive() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">
-              Drive
-            </h1>
-            <p className="text-muted-foreground font-light">
-              Connect your Google Drive to access and manage files
-            </p>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">Drive</h1>
+            <p className="text-muted-foreground font-light">Connect your Google Drive to access and manage files</p>
           </div>
 
           {/* Connect Card */}
@@ -121,13 +123,11 @@ export default function Drive() {
             <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500/20 to-green-500/20 flex items-center justify-center mx-auto mb-6">
               <FolderOpen className="h-10 w-10 text-blue-400" />
             </div>
-            <h2 className="text-2xl font-light text-foreground mb-3">
-              Connect Your Google Drive
-            </h2>
+            <h2 className="text-2xl font-light text-foreground mb-3">Connect Your Google Drive</h2>
             <p className="text-muted-foreground font-light mb-8 max-w-sm mx-auto">
               Access your files directly from the portal. View, organize, and link documents to deals and contacts.
             </p>
-            
+
             {connectionError && (
               <div className="flex items-center gap-2 justify-center text-amber-400 mb-6 text-sm">
                 <AlertCircle className="h-4 w-4" />
@@ -135,12 +135,7 @@ export default function Drive() {
               </div>
             )}
 
-            <Button
-              size="lg"
-              onClick={() => connectDrive.mutate()}
-              disabled={connectDrive.isPending}
-              className="gap-2"
-            >
+            <Button size="lg" onClick={() => connectDrive.mutate()} disabled={connectDrive.isPending} className="gap-2">
               {connectDrive.isPending ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -154,9 +149,7 @@ export default function Drive() {
               )}
             </Button>
 
-            <p className="text-xs text-muted-foreground mt-6">
-              We'll only request read permissions for your files
-            </p>
+            <p className="text-xs text-muted-foreground mt-6">We'll only request read permissions for your files</p>
           </div>
         </div>
       </div>
@@ -171,36 +164,27 @@ export default function Drive() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">
-              Drive
-            </h1>
-            <p className="text-muted-foreground font-light">
-              Your Google Drive files
-            </p>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">Drive</h1>
+            <p className="text-muted-foreground font-light">Your Google Drive files</p>
           </div>
           <div className="flex items-center gap-2">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => refetchFiles()} 
-              className="gap-2"
-            >
+            <Button variant="outline" size="sm" onClick={() => refetchFiles()} className="gap-2">
               <RefreshCw className="h-4 w-4" />
               <span className="hidden sm:inline">Refresh</span>
             </Button>
             <div className="hidden sm:flex items-center border rounded-lg overflow-hidden">
               <Button
-                variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                variant={viewMode === "grid" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode('grid')}
+                onClick={() => setViewMode("grid")}
                 className="rounded-none"
               >
                 <Grid3X3 className="h-4 w-4" />
               </Button>
               <Button
-                variant={viewMode === 'list' ? 'default' : 'ghost'}
+                variant={viewMode === "list" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode('list')}
+                onClick={() => setViewMode("list")}
                 className="rounded-none"
               >
                 <List className="h-4 w-4" />
@@ -217,6 +201,23 @@ export default function Drive() {
             </Button>
           </div>
         </div>
+
+        {filesError && (
+          <div className="mb-6 rounded-xl border border-border/50 bg-muted/20 p-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div className="flex items-start gap-2">
+                <AlertCircle className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                <div>
+                  <p className="text-sm font-medium">Couldn’t load Drive files</p>
+                  <p className="text-sm text-muted-foreground break-words">{(filesError as Error).message}</p>
+                </div>
+              </div>
+              <Button variant="outline" size="sm" onClick={hardLogout} className="shrink-0">
+                Sign in again
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* Search */}
         <div className="mb-6">
@@ -242,11 +243,9 @@ export default function Drive() {
           ) : files.length === 0 ? (
             <div className="text-center py-12">
               <FolderOpen className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
-              <p className="text-muted-foreground">
-                {searchQuery ? 'No files match your search' : 'No files found'}
-              </p>
+              <p className="text-muted-foreground">{searchQuery ? "No files match your search" : "No files found"}</p>
             </div>
-          ) : viewMode === 'grid' ? (
+          ) : viewMode === "grid" ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {files.map((file) => {
                 const Icon = getFileIcon(file.mimeType);
@@ -254,7 +253,7 @@ export default function Drive() {
                 return (
                   <a
                     key={file.id}
-                    href={file.webViewLink || '#'}
+                    href={file.webViewLink || "#"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group p-4 rounded-xl bg-muted/30 hover:bg-muted/50 transition-all duration-200 border border-transparent hover:border-border/50"
@@ -264,19 +263,11 @@ export default function Drive() {
                         <Icon className="h-5 w-5" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm truncate group-hover:text-primary transition-colors">
-                          {file.name}
-                        </p>
+                        <p className="font-medium text-sm truncate group-hover:text-primary transition-colors">{file.name}</p>
                         <div className="flex items-center gap-2 mt-1">
-                          {file.size && (
-                            <span className="text-xs text-muted-foreground">
-                              {formatFileSize(file.size)}
-                            </span>
-                          )}
+                          {file.size && <span className="text-xs text-muted-foreground">{formatFileSize(file.size)}</span>}
                           {file.modifiedTime && (
-                            <span className="text-xs text-muted-foreground">
-                              {formatDate(file.modifiedTime)}
-                            </span>
+                            <span className="text-xs text-muted-foreground">{formatDate(file.modifiedTime)}</span>
                           )}
                         </div>
                       </div>
@@ -294,7 +285,7 @@ export default function Drive() {
                 return (
                   <a
                     key={file.id}
-                    href={file.webViewLink || '#'}
+                    href={file.webViewLink || "#"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group flex items-center gap-3 p-3 rounded-lg hover:bg-muted/30 transition-colors"
@@ -303,16 +294,10 @@ export default function Drive() {
                       <Icon className="h-4 w-4" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-sm truncate group-hover:text-primary transition-colors">
-                        {file.name}
-                      </p>
+                      <p className="font-medium text-sm truncate group-hover:text-primary transition-colors">{file.name}</p>
                     </div>
-                    <span className="text-xs text-muted-foreground hidden sm:block">
-                      {formatFileSize(file.size)}
-                    </span>
-                    <span className="text-xs text-muted-foreground hidden md:block">
-                      {formatDate(file.modifiedTime)}
-                    </span>
+                    <span className="text-xs text-muted-foreground hidden sm:block">{formatFileSize(file.size)}</span>
+                    <span className="text-xs text-muted-foreground hidden md:block">{formatDate(file.modifiedTime)}</span>
                     <ExternalLink className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                   </a>
                 );
