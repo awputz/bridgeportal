@@ -3,6 +3,9 @@ project_id = "dqqgfzarfvydcckiaqak"
 [functions.create-agent-accounts]
 verify_jwt = false
 
+[functions.create-investor-accounts]
+verify_jwt = false
+
 [functions.ai-chat]
 verify_jwt = false
 

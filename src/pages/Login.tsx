@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
-import { Lock, Loader2, Mail, ArrowLeft, LogOut, ArrowRight } from "lucide-react";
+import { Lock, Loader2, Mail, ArrowLeft, LogOut, ArrowRight, Briefcase } from "lucide-react";
 import { User } from "@supabase/supabase-js";
 
 const GoogleIcon = () => (
@@ -465,6 +465,19 @@ const Login = () => {
                 >
                   Apply to Join the Team
                 </Button>
+              </div>
+
+              {/* Investor Portal Link */}
+              <div className="mt-4 pt-4 border-t border-amber-500/20 text-center">
+                <Button
+                  variant="ghost"
+                  className="w-full text-amber-500 hover:text-amber-400 hover:bg-amber-500/10 gap-2"
+                  onClick={() => navigate("/investor-login")}
+                >
+                  <Briefcase className="h-4 w-4" />
+                  Investor Portal
+                </Button>
+                <p className="text-xs text-muted-foreground/60 mt-1">Hudson Point Group</p>
               </div>
             </>
           )}

@@ -9,6 +9,7 @@ import { Loader2 } from "lucide-react";
 
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { PortalLayout } from "@/components/portal/PortalLayout";
+import { InvestorLayout } from "@/components/investor/InvestorLayout";
 import { DivisionProvider } from "@/contexts/DivisionContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -18,6 +19,10 @@ import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/portal/Dashboard";
+
+// Investor pages - lazy loaded
+const InvestorLogin = lazy(() => import("./pages/InvestorLogin"));
+const InvestorDashboard = lazy(() => import("./pages/investor/Dashboard"));
 
 // Auth callback - lazy loaded
 const AuthCallback = lazy(() => import("./pages/AuthCallback"));
@@ -143,6 +148,22 @@ const App = () => {
                   } />
                   <Route path="/auth" element={<Navigate to="/login" replace />} />
                   
+                  {/* Investor Login */}
+                  <Route path="/investor-login" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <InvestorLogin />
+                    </Suspense>
+                  } />
+                  
+                  {/* Investor Portal Routes */}
+                  <Route path="/investor" element={<InvestorLayout />}>
+                    <Route index element={<Navigate to="/investor/dashboard" replace />} />
+                    <Route path="dashboard" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <InvestorDashboard />
+                      </Suspense>
+                    } />
+                  </Route>
                   {/* Portal Routes (Protected) */}
                   <Route path="/portal" element={<PortalLayout />}>
                     <Route index element={<Dashboard />} />

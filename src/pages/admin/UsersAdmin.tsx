@@ -28,18 +28,22 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Search, Shield, ShieldCheck, User, Plus, X, MoreHorizontal } from "lucide-react";
+import { Search, Shield, ShieldCheck, User, Plus, X, MoreHorizontal, Briefcase } from "lucide-react";
 import { format } from "date-fns";
 
-const ROLE_COLORS = {
+type AppRole = "admin" | "agent" | "investor" | "user";
+
+const ROLE_COLORS: Record<AppRole, string> = {
   admin: "bg-red-500/10 text-red-600 border-red-200",
   agent: "bg-blue-500/10 text-blue-600 border-blue-200",
+  investor: "bg-amber-500/10 text-amber-600 border-amber-200",
   user: "bg-gray-500/10 text-gray-600 border-gray-200",
 };
 
-const ROLE_ICONS = {
+const ROLE_ICONS: Record<AppRole, React.ComponentType<{ className?: string }>> = {
   admin: ShieldCheck,
   agent: Shield,
+  investor: Briefcase,
   user: User,
 };
 
@@ -50,7 +54,7 @@ export default function UsersAdmin() {
     open: boolean;
     type: "add" | "remove";
     userId: string;
-    role: "admin" | "agent" | "user";
+    role: AppRole;
     userName: string;
   } | null>(null);
 
@@ -60,11 +64,11 @@ export default function UsersAdmin() {
       user.full_name?.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleAddRole = (userId: string, role: "admin" | "agent" | "user", userName: string) => {
+  const handleAddRole = (userId: string, role: AppRole, userName: string) => {
     setConfirmDialog({ open: true, type: "add", userId, role, userName });
   };
 
-  const handleRemoveRole = (userId: string, role: "admin" | "agent" | "user", userName: string) => {
+  const handleRemoveRole = (userId: string, role: AppRole, userName: string) => {
     setConfirmDialog({ open: true, type: "remove", userId, role, userName });
   };
 
@@ -79,9 +83,9 @@ export default function UsersAdmin() {
     setConfirmDialog(null);
   };
 
-  const getAvailableRoles = (currentRoles: Array<{ role: "admin" | "agent" | "user" }>) => {
+  const getAvailableRoles = (currentRoles: Array<{ role: AppRole }>) => {
     const existingRoles = currentRoles.map((r) => r.role);
-    return (["admin", "agent", "user"] as const).filter((r) => !existingRoles.includes(r));
+    return (["admin", "agent", "investor", "user"] as const).filter((r) => !existingRoles.includes(r));
   };
 
   return (

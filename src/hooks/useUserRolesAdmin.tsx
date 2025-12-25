@@ -2,12 +2,14 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
+type AppRole = "admin" | "agent" | "investor" | "user";
+
 interface UserWithRole {
   id: string;
   email: string;
   full_name: string | null;
   created_at: string | null;
-  roles: Array<{ role: "admin" | "agent" | "user" }>;
+  roles: Array<{ role: AppRole }>;
 }
 
 export function useUserRolesAdmin() {
@@ -36,7 +38,7 @@ export function useUserRolesAdmin() {
         ...profile,
         roles: (roles || [])
           .filter((r) => r.user_id === profile.id)
-          .map((r) => ({ role: r.role })),
+          .map((r) => ({ role: r.role as AppRole })),
       }));
 
       return usersWithRoles;
@@ -44,7 +46,7 @@ export function useUserRolesAdmin() {
   });
 
   const addRole = useMutation({
-    mutationFn: async ({ userId, role }: { userId: string; role: "admin" | "agent" | "user" }) => {
+    mutationFn: async ({ userId, role }: { userId: string; role: AppRole }) => {
       const { error } = await supabase
         .from("user_roles")
         .insert({ user_id: userId, role });
@@ -61,7 +63,7 @@ export function useUserRolesAdmin() {
   });
 
   const removeRole = useMutation({
-    mutationFn: async ({ userId, role }: { userId: string; role: "admin" | "agent" | "user" }) => {
+    mutationFn: async ({ userId, role }: { userId: string; role: AppRole }) => {
       const { error } = await supabase
         .from("user_roles")
         .delete()
