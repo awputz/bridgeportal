@@ -28,6 +28,8 @@ import SettingsAdmin from "./pages/admin/SettingsAdmin";
 import ServicesAdmin from "./pages/admin/ServicesAdmin";
 import MarketsAdmin from "./pages/admin/MarketsAdmin";
 import ListingLinksAdmin from "./pages/admin/ListingLinksAdmin";
+import ToolsAdmin from "./pages/admin/ToolsAdmin";
+import TemplatesAdmin from "./pages/admin/TemplatesAdmin";
 
 const queryClient = new QueryClient();
 
@@ -67,6 +69,8 @@ const App = () => {
                 <Route path="services" element={<ServicesAdmin />} />
                 <Route path="markets" element={<MarketsAdmin />} />
                 <Route path="listing-links" element={<ListingLinksAdmin />} />
+                <Route path="tools" element={<ToolsAdmin />} />
+                <Route path="templates" element={<TemplatesAdmin />} />
               </Route>
 
               {/* 404 */}

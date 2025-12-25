@@ -1,4 +1,4 @@
-import { Users, DollarSign, LogOut, Settings, MapPin, Link2, Layers } from "lucide-react";
+import { Users, DollarSign, LogOut, Settings, MapPin, Link2, Layers, Wrench, FileText } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -25,6 +25,8 @@ const cmsItems = [
   { title: "Services", url: "/admin/services", icon: Layers },
   { title: "Markets", url: "/admin/markets", icon: MapPin },
   { title: "Listing Links", url: "/admin/listing-links", icon: Link2 },
+  { title: "Tools", url: "/admin/tools", icon: Wrench },
+  { title: "Templates", url: "/admin/templates", icon: FileText },
 ];
 
 export function AdminSidebar() {

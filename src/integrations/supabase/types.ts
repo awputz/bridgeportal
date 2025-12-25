@@ -642,6 +642,7 @@ export type Database = {
       }
       external_tools: {
         Row: {
+          category: string | null
           created_at: string | null
           description: string | null
           display_order: number | null
@@ -652,6 +653,7 @@ export type Database = {
           url: string
         }
         Insert: {
+          category?: string | null
           created_at?: string | null
           description?: string | null
           display_order?: number | null
@@ -662,6 +664,7 @@ export type Database = {
           url: string
         }
         Update: {
+          category?: string | null
           created_at?: string | null
           description?: string | null
           display_order?: number | null

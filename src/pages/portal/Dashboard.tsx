@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { 
   Mail, 
   Users, 
@@ -17,10 +18,14 @@ import {
   Database,
   BarChart3,
   FileSearch,
-  MapPin
+  MapPin,
+  Send
 } from "lucide-react";
-import { useExternalTools } from "@/hooks/useExternalTools";
+import { useExternalTools, ExternalTool } from "@/hooks/useExternalTools";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QuickActionCard } from "@/components/portal/QuickActionCard";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 // Icon mapping for dynamic icons from database
 const iconMap: Record<string, typeof Mail> = {
@@ -39,18 +44,10 @@ const iconMap: Record<string, typeof Mail> = {
   MapPin,
 };
 
-const quickActions = [
-  { name: "Templates", path: "/portal/templates", icon: FileText, description: "Documents & forms" },
-  { name: "Directory", path: "/portal/directory", icon: Users, description: "Find colleagues" },
-  { name: "Calculators", path: "/portal/calculators", icon: Calculator, description: "Deal analysis" },
-  { name: "Bridge AI", path: "/portal/ai", icon: Sparkles, description: "AI assistant" },
-];
-
-const divisions = [
-  { id: "investment-sales", name: "Investment Sales", icon: TrendingUp, path: "/portal/templates/investment-sales" },
-  { id: "commercial-leasing", name: "Commercial", icon: Building2, path: "/portal/templates/commercial-leasing" },
-  { id: "residential", name: "Residential", icon: Home, path: "/portal/templates/residential" },
-  { id: "marketing", name: "Marketing", icon: Palette, path: "/portal/templates/marketing" },
+const calculatorQuickAccess = [
+  { name: "Cap Rate", path: "/portal/calculators?tab=investment-sales", icon: TrendingUp },
+  { name: "Lease Analysis", path: "/portal/calculators?tab=commercial-leasing", icon: Building2 },
+  { name: "Rent vs Buy", path: "/portal/calculators?tab=residential", icon: Home },
 ];
 
 const getGreeting = () => {
@@ -60,11 +57,38 @@ const getGreeting = () => {
   return "Good evening";
 };
 
+// Group tools by category
+const groupToolsByCategory = (tools: ExternalTool[]) => {
+  const groups: Record<string, ExternalTool[]> = {
+    research: [],
+    productivity: [],
+  };
+  
+  tools.forEach(tool => {
+    const category = (tool as any).category || 'research';
+    if (!groups[category]) groups[category] = [];
+    groups[category].push(tool);
+  });
+  
+  return groups;
+};
+
 const Dashboard = () => {
   const { data: tools, isLoading } = useExternalTools();
+  const [aiPrompt, setAiPrompt] = useState("");
+  const navigate = useNavigate();
+  
+  const groupedTools = tools ? groupToolsByCategory(tools) : { research: [], productivity: [] };
+
+  const handleAiSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (aiPrompt.trim()) {
+      navigate(`/portal/ai?prompt=${encodeURIComponent(aiPrompt)}`);
+    }
+  };
 
   return (
-    <div className="min-h-screen pb-16">
+    <div className="min-h-screen pb-24 md:pb-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {/* Header */}
         <div className="mb-10 md:mb-14">
@@ -76,23 +100,82 @@ const Dashboard = () => {
           </p>
         </div>
 
-        {/* Quick Actions */}
-        <section className="mb-12 md:mb-16">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg md:text-xl font-light text-foreground">
-              Quick Actions
+        {/* AI Quick Prompt */}
+        <section className="mb-10">
+          <form onSubmit={handleAiSubmit} className="glass-card p-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center flex-shrink-0">
+                <Sparkles className="h-5 w-5 text-foreground" />
+              </div>
+              <Input
+                value={aiPrompt}
+                onChange={(e) => setAiPrompt(e.target.value)}
+                placeholder="Ask Bridge AI anything... (deal analysis, emails, market research)"
+                className="flex-1 bg-transparent border-0 focus-visible:ring-0 text-foreground placeholder:text-muted-foreground"
+              />
+              <Button
+                type="submit"
+                size="icon"
+                disabled={!aiPrompt.trim()}
+                className="h-10 w-10 rounded-full bg-foreground text-background hover:bg-foreground/90 disabled:opacity-50 flex-shrink-0"
+              >
+                <Send className="h-4 w-4" />
+              </Button>
+            </div>
+          </form>
+        </section>
+
+        {/* Research Tools */}
+        <section className="mb-10">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
+              <Database className="h-5 w-5 text-muted-foreground" />
+              Research Tools
             </h2>
           </div>
           
           {isLoading ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
               {[...Array(6)].map((_, i) => (
-                <Skeleton key={i} className="h-[140px] md:h-[160px] rounded-xl" />
+                <Skeleton key={i} className="h-[120px] rounded-xl" />
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-              {tools?.map((tool) => {
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+              {groupedTools.research?.map((tool) => {
+                const Icon = iconMap[tool.icon] || Database;
+                return (
+                  <QuickActionCard
+                    key={tool.id}
+                    name={tool.name}
+                    description={tool.description || undefined}
+                    icon={Icon}
+                    url={tool.url}
+                  />
+                );
+              })}
+            </div>
+          )}
+        </section>
+
+        {/* Productivity Tools */}
+        <section className="mb-10">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
+              <HardDrive className="h-5 w-5 text-muted-foreground" />
+              Productivity
+            </h2>
+          </div>
+          
+          {isLoading ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+              {[...Array(5)].map((_, i) => (
+                <Skeleton key={i} className="h-[120px] rounded-xl" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+              {groupedTools.productivity?.map((tool) => {
                 const Icon = iconMap[tool.icon] || Mail;
                 return (
                   <QuickActionCard
@@ -108,10 +191,46 @@ const Dashboard = () => {
           )}
         </section>
 
+        {/* Calculator Quick Access */}
+        <section className="mb-10">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
+              <Calculator className="h-5 w-5 text-muted-foreground" />
+              Calculators
+            </h2>
+            <Link 
+              to="/portal/calculators" 
+              className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors font-light"
+            >
+              View All
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          
+          <div className="grid grid-cols-3 gap-3">
+            {calculatorQuickAccess.map((calc) => {
+              const Icon = calc.icon;
+              return (
+                <Link
+                  key={calc.name}
+                  to={calc.path}
+                  className="glass-card p-4 flex flex-col items-center justify-center text-center hover:border-white/20 transition-all duration-300 min-h-[100px]"
+                >
+                  <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center mb-2">
+                    <Icon className="h-5 w-5 text-foreground/70" />
+                  </div>
+                  <span className="text-sm font-light text-foreground">{calc.name}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+
         {/* Templates Section */}
         <section>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg md:text-xl font-light text-foreground">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
+              <FileText className="h-5 w-5 text-muted-foreground" />
               Templates
             </h2>
             <Link 
@@ -123,44 +242,45 @@ const Dashboard = () => {
             </Link>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <Link 
               to="/portal/templates/investment-sales"
-              className="glass-card p-6 flex items-center gap-4 hover:border-white/20 transition-all duration-300"
+              className="glass-card p-4 flex flex-col items-center gap-2 hover:border-white/20 transition-all duration-300"
             >
-              <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center">
-                <TrendingUp className="h-6 w-6 text-foreground/60" />
+              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+                <TrendingUp className="h-5 w-5 text-foreground/60" />
               </div>
-              <div>
-                <h3 className="text-base font-light text-foreground">Investment Sales</h3>
-                <p className="text-xs text-muted-foreground font-light">LOIs, exclusives, setup sheets</p>
-              </div>
+              <span className="text-sm font-light text-foreground text-center">Investment Sales</span>
             </Link>
             
             <Link 
               to="/portal/templates/commercial-leasing"
-              className="glass-card p-6 flex items-center gap-4 hover:border-white/20 transition-all duration-300"
+              className="glass-card p-4 flex flex-col items-center gap-2 hover:border-white/20 transition-all duration-300"
             >
-              <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center">
-                <Building2 className="h-6 w-6 text-foreground/60" />
+              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+                <Building2 className="h-5 w-5 text-foreground/60" />
               </div>
-              <div>
-                <h3 className="text-base font-light text-foreground">Commercial Leasing</h3>
-                <p className="text-xs text-muted-foreground font-light">Tenant & landlord documents</p>
-              </div>
+              <span className="text-sm font-light text-foreground text-center">Commercial</span>
             </Link>
             
             <Link 
               to="/portal/templates/residential"
-              className="glass-card p-6 flex items-center gap-4 hover:border-white/20 transition-all duration-300"
+              className="glass-card p-4 flex flex-col items-center gap-2 hover:border-white/20 transition-all duration-300"
             >
-              <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center">
-                <Home className="h-6 w-6 text-foreground/60" />
+              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+                <Home className="h-5 w-5 text-foreground/60" />
               </div>
-              <div>
-                <h3 className="text-base font-light text-foreground">Residential</h3>
-                <p className="text-xs text-muted-foreground font-light">Rental & sales templates</p>
+              <span className="text-sm font-light text-foreground text-center">Residential</span>
+            </Link>
+            
+            <Link 
+              to="/portal/templates/marketing"
+              className="glass-card p-4 flex flex-col items-center gap-2 hover:border-white/20 transition-all duration-300"
+            >
+              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+                <Palette className="h-5 w-5 text-foreground/60" />
               </div>
+              <span className="text-sm font-light text-foreground text-center">Marketing</span>
             </Link>
           </div>
         </section>
