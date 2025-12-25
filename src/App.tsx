@@ -10,6 +10,7 @@ import { Loader2 } from "lucide-react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { PortalLayout } from "@/components/portal/PortalLayout";
 import { DivisionProvider } from "@/contexts/DivisionContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 // Pages - eager loaded for fast initial load
@@ -109,12 +110,13 @@ const App = () => {
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <DivisionProvider>
-            <ErrorBoundary>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <AuthProvider>
+          <TooltipProvider>
+            <DivisionProvider>
+              <ErrorBoundary>
+                <Toaster />
+                <Sonner />
+                <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                 <Routes>
                   {/* Root redirects to portal */}
                   <Route path="/" element={<Navigate to="/portal" replace />} />
@@ -423,8 +425,9 @@ const App = () => {
             </ErrorBoundary>
           </DivisionProvider>
         </TooltipProvider>
-      </QueryClientProvider>
-    </HelmetProvider>
+      </AuthProvider>
+    </QueryClientProvider>
+  </HelmetProvider>
   );
 };
 
