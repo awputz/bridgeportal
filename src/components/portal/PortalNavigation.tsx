@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, LayoutDashboard, FileText, Wrench, LogOut, Settings, Users, Sparkles, Calculator, Briefcase } from "lucide-react";
+import { Menu, X, LayoutDashboard, FileText, Wrench, LogOut, Settings, Users, Sparkles, Calculator, Briefcase, Wand2, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { 
@@ -17,8 +17,8 @@ import { useIsAdminOrAgent } from "@/hooks/useUserRole";
 const navItems = [
   { name: "Dashboard", path: "/portal", icon: LayoutDashboard },
   { name: "CRM", path: "/portal/crm", icon: Briefcase },
+  { name: "Generators", path: "/portal/generators", icon: Wand2 },
   { name: "Templates", path: "/portal/templates", icon: FileText },
-  { name: "Directory", path: "/portal/directory", icon: Users },
   { name: "Calculators", path: "/portal/calculators", icon: Calculator },
   { name: "Tools", path: "/portal/tools", icon: Wrench },
   { name: "AI", path: "/portal/ai", icon: Sparkles },
@@ -120,17 +120,24 @@ export const PortalNavigation = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 glass-nav">
+                  <DropdownMenuItem asChild>
+                    <Link to="/portal/profile" className="flex items-center gap-2 cursor-pointer">
+                      <User className="h-4 w-4" />
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
                   {isAdminOrAgent && (
                     <>
+                      <DropdownMenuSeparator />
                       <DropdownMenuItem asChild>
                         <Link to="/admin" className="flex items-center gap-2 cursor-pointer">
                           <Settings className="h-4 w-4" />
                           Admin Panel
                         </Link>
                       </DropdownMenuItem>
-                      <DropdownMenuSeparator />
                     </>
                   )}
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer">
                     <LogOut className="h-4 w-4 mr-2" />
                     Sign Out
