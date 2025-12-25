@@ -36,6 +36,7 @@ const Tasks = lazy(() => import("./pages/portal/Tasks"));
 const Resources = lazy(() => import("./pages/portal/Resources"));
 const Requests = lazy(() => import("./pages/portal/Requests"));
 const MyTransactions = lazy(() => import("./pages/portal/MyTransactions"));
+const Tools = lazy(() => import("./pages/portal/Tools"));
 
 // Admin Pages - lazy loaded
 const TeamAdmin = lazy(() => import("./pages/admin/TeamAdmin"));
@@ -171,6 +172,11 @@ const App = () => {
                     <Route path="my-transactions" element={
                       <Suspense fallback={<PageLoader />}>
                         <MyTransactions />
+                      </Suspense>
+                    } />
+                    <Route path="notes" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <Notes />
                       </Suspense>
                     } />
                   </Route>
