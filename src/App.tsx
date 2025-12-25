@@ -84,6 +84,7 @@ const MyExclusives = lazy(() => import("./pages/portal/MyExclusives"));
 const CommissionRequestsAdmin = lazy(() => import("./pages/admin/CommissionRequestsAdmin"));
 const CRMOverviewAdmin = lazy(() => import("./pages/admin/CRMOverviewAdmin"));
 const AgentPerformanceAdmin = lazy(() => import("./pages/admin/AgentPerformanceAdmin"));
+const ApplicationsAdmin = lazy(() => import("./pages/admin/ApplicationsAdmin"));
 
 // Optimized QueryClient with better caching
 const queryClient = new QueryClient({
@@ -430,6 +431,11 @@ const App = () => {
                     <Route path="commission-requests" element={
                       <Suspense fallback={<PageLoader />}>
                         <CommissionRequestsAdmin />
+                      </Suspense>
+                    } />
+                    <Route path="applications" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <ApplicationsAdmin />
                       </Suspense>
                     } />
                   </Route>

@@ -81,6 +81,7 @@ const moreItemsGrouped = [
     items: [
       { path: "/portal/resources", icon: FolderOpen, label: "Resources" },
       { path: "/portal/my-transactions", icon: DollarSign, label: "My Deals" },
+      { path: "/portal/my-commissions", icon: DollarSign, label: "Earnings" },
       { path: "/portal/requests", icon: Send, label: "Requests" },
     ],
   },
