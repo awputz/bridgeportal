@@ -5,19 +5,45 @@ import { Tables, TablesUpdate } from "@/integrations/supabase/types";
 
 type AgentRequest = Tables<"agent_requests">;
 
+export interface AgentRequestWithProfile extends AgentRequest {
+  agent_name: string | null;
+  agent_email: string | null;
+}
+
 export function useAgentRequestsAdmin() {
   const queryClient = useQueryClient();
 
   const { data: requests, isLoading } = useQuery({
     queryKey: ["admin-agent-requests"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      // Fetch agent requests
+      const { data: requestsData, error: requestsError } = await supabase
         .from("agent_requests")
         .select("*")
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
-      return data as AgentRequest[];
+      if (requestsError) throw requestsError;
+
+      // Get unique agent IDs
+      const agentIds = [...new Set(requestsData.map(r => r.agent_id))];
+
+      // Fetch profiles for all agents
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, full_name, email")
+        .in("id", agentIds);
+
+      // Create a map of agent_id -> profile
+      const profileMap = new Map(
+        profiles?.map(p => [p.id, { full_name: p.full_name, email: p.email }]) || []
+      );
+
+      // Merge profiles with requests
+      return requestsData.map(request => ({
+        ...request,
+        agent_name: profileMap.get(request.agent_id)?.full_name || null,
+        agent_email: profileMap.get(request.agent_id)?.email || null,
+      })) as AgentRequestWithProfile[];
     },
   });
 
