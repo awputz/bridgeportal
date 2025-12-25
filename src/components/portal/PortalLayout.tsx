@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PortalNavigation } from "./PortalNavigation";
 import { MobileBottomNav } from "./MobileBottomNav";
 import { AIAssistant } from "./AIAssistant";
+import { CommandPalette, useCommandPalette } from "./CommandPalette";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Loader2 } from "lucide-react";
 
@@ -12,6 +13,7 @@ export const PortalLayout = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { open: commandOpen, setOpen: setCommandOpen } = useCommandPalette();
 
   useEffect(() => {
     // Set up auth state listener
@@ -64,6 +66,7 @@ export const PortalLayout = () => {
       </main>
       <MobileBottomNav />
       <AIAssistant />
+      <CommandPalette open={commandOpen} onOpenChange={setCommandOpen} />
     </div>
   );
 };

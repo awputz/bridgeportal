@@ -1,4 +1,27 @@
 /**
+ * Convert image URL to base64
+ */
+const imageToBase64 = async (imageUrl: string): Promise<string | null> => {
+  try {
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64 = reader.result as string;
+        // Remove the data URL prefix to get just the base64 content
+        const base64Content = base64.split(',')[1];
+        resolve(base64Content);
+      };
+      reader.onerror = () => resolve(null);
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    return null;
+  }
+};
+
+/**
  * Generate vCard (VCF) data for a team member
  */
 export const generateVCard = (member: {
@@ -8,7 +31,7 @@ export const generateVCard = (member: {
   phone?: string;
   linkedin?: string;
   image?: string;
-}): string => {
+}, photoBase64?: string | null): string => {
   // Parse name into structured format (Last;First;;;)
   const nameParts = member.name.split(' ');
   const firstName = nameParts[0] || '';
@@ -40,6 +63,11 @@ export const generateVCard = (member: {
   if (member.linkedin) {
     lines.push(`URL;TYPE=LinkedIn:${member.linkedin}`);
   }
+
+  // Add photo if available
+  if (photoBase64) {
+    lines.push(`PHOTO;ENCODING=b;TYPE=JPEG:${photoBase64}`);
+  }
   
   lines.push('END:VCARD');
   
@@ -47,10 +75,23 @@ export const generateVCard = (member: {
 };
 
 /**
- * Download a vCard file for a team member
+ * Download a vCard file for a team member (with photo support)
  */
-export const downloadVCard = (member: Parameters<typeof generateVCard>[0]): void => {
-  const vCardData = generateVCard(member);
+export const downloadVCard = async (member: {
+  name: string;
+  title?: string;
+  email?: string;
+  phone?: string;
+  linkedin?: string;
+  image?: string;
+}): Promise<void> => {
+  // Fetch and convert photo to base64 if available
+  let photoBase64: string | null = null;
+  if (member.image) {
+    photoBase64 = await imageToBase64(member.image);
+  }
+
+  const vCardData = generateVCard(member, photoBase64);
   const blob = new Blob([vCardData], { type: 'text/vcard;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   
