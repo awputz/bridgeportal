@@ -18,7 +18,6 @@ import {
   ChevronDown,
   Calendar
 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { 
   DropdownMenu, 
@@ -33,6 +32,7 @@ import { toast } from "@/hooks/use-toast";
 import { useIsAdminOrAgent } from "@/hooks/useUserRole";
 import { NotificationCenter } from "./NotificationCenter";
 import { useUserProfile } from "@/hooks/useGoogleServices";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Google items
 const googleItems = [
@@ -55,17 +55,16 @@ export const PortalNavigation = () => {
   const navigate = useNavigate();
   const { isAdminOrAgent } = useIsAdminOrAgent();
   const { data: userProfile } = useUserProfile();
+  const { signOut, hardLogout } = useAuth();
 
   const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast({
-        title: "Error",
-        description: "Failed to sign out",
-        variant: "destructive",
-      });
-    } else {
+    try {
+      await signOut();
       navigate('/login');
+    } catch (error) {
+      console.error("Sign out failed, using hard logout:", error);
+      // If signOut fails for any reason, force hard logout
+      hardLogout();
     }
   };
 

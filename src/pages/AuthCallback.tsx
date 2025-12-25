@@ -33,35 +33,43 @@ const AuthCallback = () => {
             const expiryDate = new Date();
             expiryDate.setSeconds(expiryDate.getSeconds() + (session.expires_in || 3600));
 
-            // Store tokens in BOTH unified AND service-specific columns
+            // Build the base upsert data - NEVER overwrite refresh tokens with null
+            // Using explicit object to ensure all columns are set
+            const baseData = {
+              user_id: session.user.id,
+              // Unified access token
+              access_token: session.provider_token,
+              token_expiry: expiryDate.toISOString(),
+              // Service-specific access tokens (for backwards compatibility)
+              gmail_access_token: session.provider_token,
+              drive_access_token: session.provider_token,
+              contacts_access_token: session.provider_token,
+              // User info
+              google_email: session.user.email,
+              google_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name,
+              google_avatar_url: session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture,
+              // Enable all services
+              gmail_enabled: true,
+              calendar_enabled: true,
+              drive_enabled: true,
+              contacts_enabled: true,
+              updated_at: new Date().toISOString(),
+            };
+
+            // Add refresh tokens ONLY if we have a new one (prevents overwriting with null)
+            const upsertData = session.provider_refresh_token 
+              ? {
+                  ...baseData,
+                  refresh_token: session.provider_refresh_token,
+                  gmail_refresh_token: session.provider_refresh_token,
+                  drive_refresh_token: session.provider_refresh_token,
+                  contacts_refresh_token: session.provider_refresh_token,
+                }
+              : baseData;
+
             const { error: tokenError } = await supabase
               .from('user_google_tokens')
-              .upsert({
-                user_id: session.user.id,
-                // Unified columns
-                access_token: session.provider_token,
-                refresh_token: session.provider_refresh_token || null,
-                token_expiry: expiryDate.toISOString(),
-                // Service-specific columns (for backwards compatibility)
-                gmail_access_token: session.provider_token,
-                gmail_refresh_token: session.provider_refresh_token || null,
-                calendar_access_token: session.provider_token,
-                calendar_refresh_token: session.provider_refresh_token || null,
-                drive_access_token: session.provider_token,
-                drive_refresh_token: session.provider_refresh_token || null,
-                contacts_access_token: session.provider_token,
-                contacts_refresh_token: session.provider_refresh_token || null,
-                // User info
-                google_email: session.user.email,
-                google_name: session.user.user_metadata?.full_name || session.user.user_metadata?.name,
-                google_avatar_url: session.user.user_metadata?.avatar_url || session.user.user_metadata?.picture,
-                // Enable all services
-                gmail_enabled: true,
-                calendar_enabled: true,
-                drive_enabled: true,
-                contacts_enabled: true,
-                updated_at: new Date().toISOString(),
-              }, {
+              .upsert(upsertData, {
                 onConflict: 'user_id',
               });
 

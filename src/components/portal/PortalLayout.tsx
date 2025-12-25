@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { PortalNavigation } from "./PortalNavigation";
 import { MobileBottomNav } from "./MobileBottomNav";
 import { AIAssistant } from "./AIAssistant";
@@ -9,10 +7,11 @@ import { CommandPalette, useCommandPalette } from "./CommandPalette";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Loader2 } from "lucide-react";
 import { useStoreGoogleTokensOnLogin } from "@/hooks/useGoogleServices";
+import { useAuth } from "@/contexts/AuthContext";
+import { useEffect } from "react";
 
 export const PortalLayout = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { isLoading, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { open: commandOpen, setOpen: setCommandOpen } = useCommandPalette();
@@ -20,31 +19,12 @@ export const PortalLayout = () => {
   // Store Google tokens when user signs in with Google OAuth
   useStoreGoogleTokensOnLogin();
 
+  // Redirect to login if not authenticated
   useEffect(() => {
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setIsAuthenticated(!!session);
-        setIsLoading(false);
-        
-        if (!session && location.pathname.startsWith('/portal')) {
-          navigate('/login', { replace: true });
-        }
-      }
-    );
-
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsAuthenticated(!!session);
-      setIsLoading(false);
-      
-      if (!session && location.pathname.startsWith('/portal')) {
-        navigate('/login', { replace: true });
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate, location.pathname]);
+    if (!isLoading && !isAuthenticated && location.pathname.startsWith('/portal')) {
+      navigate('/login', { replace: true });
+    }
+  }, [isLoading, isAuthenticated, location.pathname, navigate]);
 
   if (isLoading) {
     return (
