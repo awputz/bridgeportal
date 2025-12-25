@@ -60,8 +60,8 @@ export const WelcomeBanner = () => {
 
       {/* Greeting */}
       <div className="flex-1">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-1 leading-tight">
-          <span>{greeting},</span> <span>{agent?.firstName || "Agent"}</span>
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-1 leading-tight whitespace-nowrap">
+          {greeting}, {agent?.firstName || "Agent"}
         </h1>
         <div className="flex flex-wrap items-center gap-2 text-muted-foreground font-light">
           {agent?.title && (
