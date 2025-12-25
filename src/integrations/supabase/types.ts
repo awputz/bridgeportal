@@ -86,6 +86,66 @@ export type Database = {
         }
         Relationships: []
       }
+      agent_notes: {
+        Row: {
+          agent_id: string
+          ai_summary: string | null
+          color: string | null
+          contact_id: string | null
+          content: string | null
+          created_at: string | null
+          deal_id: string | null
+          id: string
+          is_pinned: boolean | null
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          agent_id: string
+          ai_summary?: string | null
+          color?: string | null
+          contact_id?: string | null
+          content?: string | null
+          created_at?: string | null
+          deal_id?: string | null
+          id?: string
+          is_pinned?: boolean | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          agent_id?: string
+          ai_summary?: string | null
+          color?: string | null
+          contact_id?: string | null
+          content?: string | null
+          created_at?: string | null
+          deal_id?: string | null
+          id?: string
+          is_pinned?: boolean | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_notes_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_notes_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agent_requests: {
         Row: {
           agent_id: string
