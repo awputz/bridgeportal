@@ -21,7 +21,7 @@ import Dashboard from "./pages/portal/Dashboard";
 // Portal Pages - lazy loaded for better performance
 const Templates = lazy(() => import("./pages/portal/Templates"));
 const TemplateCategory = lazy(() => import("./pages/portal/TemplateCategory"));
-const Tools = lazy(() => import("./pages/portal/Tools"));
+const Notes = lazy(() => import("./pages/portal/Notes"));
 const Directory = lazy(() => import("./pages/portal/Directory"));
 const Calculators = lazy(() => import("./pages/portal/Calculators"));
 const AI = lazy(() => import("./pages/portal/AI"));

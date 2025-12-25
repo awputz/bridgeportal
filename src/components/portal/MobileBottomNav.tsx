@@ -78,30 +78,37 @@ export const MobileBottomNav = () => {
               <span className="text-[10px] font-light">More</span>
             </button>
           </SheetTrigger>
-          <SheetContent side="bottom" className="h-auto max-h-[70vh] rounded-t-2xl">
-            <SheetHeader className="pb-2">
+          <SheetContent side="bottom" className="h-auto max-h-[75vh] rounded-t-2xl">
+            <SheetHeader className="pb-4">
               <SheetTitle className="text-lg font-light">More Pages</SheetTitle>
             </SheetHeader>
-            <div className="grid grid-cols-4 gap-3 py-4">
-              {moreItems.map((item) => {
-                const Icon = item.icon;
-                const active = isActive(item.path);
-                
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onClick={() => setIsMoreOpen(false)}
-                    className={cn(
-                      "flex flex-col items-center justify-center gap-2 p-3 rounded-xl transition-colors min-h-[72px]",
-                      active ? "bg-accent text-foreground" : "text-muted-foreground hover:bg-accent/50"
-                    )}
-                  >
-                    <Icon className="h-5 w-5" />
-                    <span className="text-[11px] font-light text-center leading-tight">{item.label}</span>
-                  </Link>
-                );
-              })}
+            <div className="space-y-4 py-2 pb-6">
+              {["Tools", "Data", "Account"].map((group) => (
+                <div key={group}>
+                  <p className="text-xs font-medium text-muted-foreground mb-2 px-1">{group}</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {moreItems.filter(i => i.group === group).map((item) => {
+                      const Icon = item.icon;
+                      const active = isActive(item.path);
+                      
+                      return (
+                        <Link
+                          key={item.path}
+                          to={item.path}
+                          onClick={() => setIsMoreOpen(false)}
+                          className={cn(
+                            "flex flex-col items-center justify-center gap-2 p-4 rounded-xl transition-colors min-h-[80px]",
+                            active ? "bg-accent text-foreground" : "text-muted-foreground hover:bg-accent/50"
+                          )}
+                        >
+                          <Icon className="h-5 w-5" />
+                          <span className="text-xs font-light text-center leading-tight">{item.label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
             </div>
           </SheetContent>
         </Sheet>
