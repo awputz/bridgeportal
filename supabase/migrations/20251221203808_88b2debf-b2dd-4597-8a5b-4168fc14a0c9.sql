@@ -1,1 +1,0 @@
-ALTER TABLE investment_listings ALTER COLUMN deal_room_password SET DEFAULT 'bridgedeals';
