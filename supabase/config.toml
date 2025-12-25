@@ -14,3 +14,6 @@ verify_jwt = false
 
 [functions.log-activity]
 verify_jwt = false
+
+[functions.notes-ai]
+verify_jwt = true

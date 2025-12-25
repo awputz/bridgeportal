@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Sparkles, Briefcase, Users, MoreHorizontal, ListTodo, FileText, Calculator, Wrench, FolderOpen, Send, User, BarChart3, Wand2, DollarSign } from "lucide-react";
+import { Home, Sparkles, Briefcase, Users, MoreHorizontal, ListTodo, FileText, Calculator, Wrench, FolderOpen, Send, User, Wand2, DollarSign, StickyNote } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Sheet,
@@ -14,20 +14,20 @@ const navItems = [
   { path: "/portal", icon: Home, label: "Home" },
   { path: "/portal/crm", icon: Briefcase, label: "CRM" },
   { path: "/portal/tasks", icon: ListTodo, label: "Tasks" },
-  { path: "/portal/directory", icon: Users, label: "Team" },
+  { path: "/portal/notes", icon: StickyNote, label: "Notes" },
 ];
 
-const moreItems = [
-  { path: "/portal/ai", icon: Sparkles, label: "AI Assistant" },
-  { path: "/portal/analytics", icon: BarChart3, label: "Analytics" },
-  { path: "/portal/templates", icon: FileText, label: "Templates" },
-  { path: "/portal/generators", icon: Wand2, label: "Generators" },
-  { path: "/portal/calculators", icon: Calculator, label: "Calculators" },
-  { path: "/portal/tools", icon: Wrench, label: "Tools" },
-  { path: "/portal/resources", icon: FolderOpen, label: "Resources" },
-  { path: "/portal/requests", icon: Send, label: "Requests" },
-  { path: "/portal/my-transactions", icon: DollarSign, label: "My Transactions" },
-  { path: "/portal/profile", icon: User, label: "Profile" },
+const moreItems: { path: string; icon: typeof Home; label: string; group: string }[] = [
+  { path: "/portal/ai", icon: Sparkles, label: "AI Assistant", group: "Tools" },
+  { path: "/portal/templates", icon: FileText, label: "Templates", group: "Tools" },
+  { path: "/portal/generators", icon: Wand2, label: "Generators", group: "Tools" },
+  { path: "/portal/calculators", icon: Calculator, label: "Calculators", group: "Tools" },
+  { path: "/portal/tools", icon: Wrench, label: "Tools", group: "Tools" },
+  { path: "/portal/resources", icon: FolderOpen, label: "Resources", group: "Data" },
+  { path: "/portal/my-transactions", icon: DollarSign, label: "My Deals", group: "Data" },
+  { path: "/portal/requests", icon: Send, label: "Requests", group: "Data" },
+  { path: "/portal/directory", icon: Users, label: "Directory", group: "Account" },
+  { path: "/portal/profile", icon: User, label: "Profile", group: "Account" },
 ];
 
 export const MobileBottomNav = () => {
