@@ -24,6 +24,7 @@ const moreItems: { path: string; icon: typeof Home; label: string; group: string
   { path: "/portal/company/culture", icon: Heart, label: "Culture", group: "Company" },
   { path: "/portal/company/expansion", icon: Globe, label: "Expansion", group: "Company" },
   { path: "/portal/company/contact", icon: Headphones, label: "Contact", group: "Company" },
+  { path: "/portal/directory", icon: Users, label: "Directory", group: "Company" },
   { path: "/portal/announcements", icon: Bell, label: "News", group: "Company" },
   // Tools
   { path: "/portal/ai", icon: Sparkles, label: "AI Assistant", group: "Tools" },
@@ -36,7 +37,6 @@ const moreItems: { path: string; icon: typeof Home; label: string; group: string
   { path: "/portal/my-transactions", icon: DollarSign, label: "My Deals", group: "Data" },
   { path: "/portal/requests", icon: Send, label: "Requests", group: "Data" },
   // Account
-  { path: "/portal/directory", icon: Users, label: "Directory", group: "Account" },
   { path: "/portal/profile", icon: User, label: "Profile", group: "Account" },
 ];
 
