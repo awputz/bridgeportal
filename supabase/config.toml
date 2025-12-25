@@ -1,1 +1,16 @@
 project_id = "dqqgfzarfvydcckiaqak"
+
+[functions.create-agent-accounts]
+verify_jwt = false
+
+[functions.ai-chat]
+verify_jwt = false
+
+[functions.submit-inquiry]
+verify_jwt = false
+
+[functions.send-notification]
+verify_jwt = false
+
+[functions.log-activity]
+verify_jwt = false
