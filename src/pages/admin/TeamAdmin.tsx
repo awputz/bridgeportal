@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Plus, Pencil, Trash2, Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -25,6 +25,10 @@ import { TeamMemberFormDialog } from "@/components/admin/TeamMemberFormDialog";
 import { useTeamMembers, useDeleteTeamMember, TeamMember, TeamCategory } from "@/hooks/useTeamMembers";
 import { Switch } from "@/components/ui/switch";
 import { useUpdateTeamMember } from "@/hooks/useTeamMembers";
+import { DataTablePagination } from "@/components/admin/DataTablePagination";
+import { usePagination } from "@/hooks/usePagination";
+
+type SortDirection = "asc" | "desc" | null;
 
 const CATEGORY_COLORS: Record<TeamCategory, "default" | "secondary" | "outline" | "destructive"> = {
   'Leadership': 'default',
@@ -41,17 +45,74 @@ export default function TeamAdmin() {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [memberToDelete, setMemberToDelete] = useState<TeamMember | null>(null);
+  
+  // Sorting state
+  const [sortKey, setSortKey] = useState<string | null>("display_order");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
 
   const { data: teamMembers = [], isLoading } = useTeamMembers(undefined, true);
   const deleteMutation = useDeleteTeamMember();
   const updateMutation = useUpdateTeamMember();
 
-  const filteredMembers = teamMembers.filter((member) =>
-    member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    member.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    member.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    member.category.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const handleSort = (key: string) => {
+    if (sortKey === key) {
+      if (sortDirection === "asc") {
+        setSortDirection("desc");
+      } else if (sortDirection === "desc") {
+        setSortKey(null);
+        setSortDirection(null);
+      } else {
+        setSortDirection("asc");
+      }
+    } else {
+      setSortKey(key);
+      setSortDirection("asc");
+    }
+  };
+
+  const filteredAndSortedMembers = useMemo(() => {
+    let filtered = teamMembers.filter((member) =>
+      member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      member.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      member.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      member.category.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    if (sortKey && sortDirection) {
+      filtered = [...filtered].sort((a, b) => {
+        const aValue = a[sortKey as keyof TeamMember];
+        const bValue = b[sortKey as keyof TeamMember];
+
+        if (aValue === null || aValue === undefined) return 1;
+        if (bValue === null || bValue === undefined) return -1;
+
+        let comparison = 0;
+        if (typeof aValue === "number" && typeof bValue === "number") {
+          comparison = aValue - bValue;
+        } else if (typeof aValue === "string" && typeof bValue === "string") {
+          comparison = aValue.localeCompare(bValue);
+        } else if (typeof aValue === "boolean" && typeof bValue === "boolean") {
+          comparison = aValue === bValue ? 0 : aValue ? -1 : 1;
+        } else {
+          comparison = String(aValue).localeCompare(String(bValue));
+        }
+
+        return sortDirection === "asc" ? comparison : -comparison;
+      });
+    }
+
+    return filtered;
+  }, [teamMembers, searchQuery, sortKey, sortDirection]);
+
+  const {
+    paginatedData,
+    currentPage,
+    totalPages,
+    pageSize,
+    totalItems,
+    handlePageChange,
+    handlePageSizeChange,
+  } = usePagination(filteredAndSortedMembers, 10);
 
   const handleEdit = (member: TeamMember) => {
     setSelectedMember(member);
@@ -82,6 +143,30 @@ export default function TeamAdmin() {
       is_active: !member.is_active,
     });
   };
+
+  const SortHeader = ({ 
+    children, 
+    sortKeyName 
+  }: { 
+    children: React.ReactNode; 
+    sortKeyName: string;
+  }) => (
+    <TableHead 
+      className="cursor-pointer select-none hover:bg-muted/50"
+      onClick={() => handleSort(sortKeyName)}
+    >
+      <div className="flex items-center gap-1">
+        {children}
+        {sortKey === sortKeyName && sortDirection === "asc" ? (
+          <ArrowUp className="h-4 w-4" />
+        ) : sortKey === sortKeyName && sortDirection === "desc" ? (
+          <ArrowDown className="h-4 w-4" />
+        ) : (
+          <ArrowUpDown className="h-4 w-4 opacity-50" />
+        )}
+      </div>
+    </TableHead>
+  );
 
   return (
     <div className="space-y-6">
@@ -115,13 +200,13 @@ export default function TeamAdmin() {
           <TableHeader>
             <TableRow>
               <TableHead>Photo</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Title</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Category</TableHead>
+              <SortHeader sortKeyName="name">Name</SortHeader>
+              <SortHeader sortKeyName="title">Title</SortHeader>
+              <SortHeader sortKeyName="email">Email</SortHeader>
+              <SortHeader sortKeyName="category">Category</SortHeader>
               <TableHead>License</TableHead>
-              <TableHead>Order</TableHead>
-              <TableHead>Active</TableHead>
+              <SortHeader sortKeyName="display_order">Order</SortHeader>
+              <SortHeader sortKeyName="is_active">Active</SortHeader>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -132,14 +217,14 @@ export default function TeamAdmin() {
                   Loading team members...
                 </TableCell>
               </TableRow>
-            ) : filteredMembers.length === 0 ? (
+            ) : paginatedData.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                   No team members found
                 </TableCell>
               </TableRow>
             ) : (
-              filteredMembers.map((member) => (
+              paginatedData.map((member) => (
                 <TableRow key={member.id}>
                   <TableCell>
                     {member.image_url ? (
@@ -206,6 +291,17 @@ export default function TeamAdmin() {
             )}
           </TableBody>
         </Table>
+        
+        {totalItems > 0 && (
+          <DataTablePagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            pageSize={pageSize}
+            totalItems={totalItems}
+            onPageChange={handlePageChange}
+            onPageSizeChange={handlePageSizeChange}
+          />
+        )}
       </div>
 
       <TeamMemberFormDialog
