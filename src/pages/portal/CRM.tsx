@@ -9,11 +9,14 @@ import {
   User,
   Briefcase,
   Upload,
-  Info
+  Info,
+  Building2,
+  Home,
+  Store
 } from "lucide-react";
 import { useCRMContacts, useCRMDeals, useDealStages, useCreateContact, useDeleteContact, useUpdateDeal, useDeleteDeal } from "@/hooks/useCRM";
 import { useCRMRealtime } from "@/hooks/useCRMRealtime";
-import { useDivision } from "@/contexts/DivisionContext";
+import { useDivision, Division } from "@/contexts/DivisionContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -48,6 +51,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { CRMTable } from "@/components/portal/CRMTable";
 import { CSVContactUploader } from "@/components/portal/CSVContactUploader";
+import { DIVISION_DISPLAY_NAMES } from "@/lib/formatters";
+import { cn } from "@/lib/utils";
 
 const contactTypes = [
   { value: "owner", label: "Owner" },
@@ -74,8 +79,30 @@ const sourceOptions = [
   { value: "other", label: "Other" },
 ];
 
+// Division configurations for CRM
+const divisionTabs = [
+  { 
+    key: "investment-sales" as Division, 
+    label: "Investment Sales", 
+    icon: Building2,
+    description: "Track multifamily, mixed-use, and commercial sales"
+  },
+  { 
+    key: "commercial-leasing" as Division, 
+    label: "Commercial Leasing", 
+    icon: Store,
+    description: "Manage office, retail, and specialty leases"
+  },
+  { 
+    key: "residential" as Division, 
+    label: "Residential", 
+    icon: Home,
+    description: "Track residential sales and rentals"
+  },
+];
+
 const CRM = () => {
-  const { division, divisionConfig } = useDivision();
+  const { division, setDivision, divisionConfig } = useDivision();
   const [activeTab, setActiveTab] = useState<"pipeline" | "contacts">("pipeline");
   const [search, setSearch] = useState("");
   const [showContactDialog, setShowContactDialog] = useState(false);
@@ -134,6 +161,10 @@ const CRM = () => {
     }
   };
 
+  const handleDivisionChange = (newDivision: Division) => {
+    setDivision(newDivision);
+  };
+
   const handleCreateContact = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -165,17 +196,19 @@ const CRM = () => {
     });
   };
 
+  const currentDivisionTab = divisionTabs.find(d => d.key === division) || divisionTabs[0];
+
   return (
     <div className="min-h-screen pb-24 md:pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
           <div>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">
               CRM
             </h1>
             <p className="text-muted-foreground font-light">
-              Track your {divisionConfig.name.toLowerCase()} deals from lead to close
+              Track your deals from lead to close
             </p>
           </div>
 
@@ -279,11 +312,39 @@ const CRM = () => {
           </div>
         </div>
 
+        {/* Division Switcher - Visible within CRM */}
+        <div className="mb-6">
+          <div className="flex flex-wrap gap-2">
+            {divisionTabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = division === tab.key;
+              return (
+                <button
+                  key={tab.key}
+                  onClick={() => handleDivisionChange(tab.key)}
+                  className={cn(
+                    "flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-light transition-all duration-200 cursor-pointer",
+                    isActive 
+                      ? "bg-foreground text-background" 
+                      : "bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-foreground border border-white/10"
+                  )}
+                >
+                  <Icon className="h-4 w-4" />
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+          <p className="text-xs text-muted-foreground mt-2 ml-1">
+            {currentDivisionTab.description}
+          </p>
+        </div>
+
         {/* Contextual Instructions */}
         <div className="glass-card p-4 mb-6 flex items-start gap-3 border-white/10">
           <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
           <div className="text-sm text-muted-foreground font-light">
-            <strong className="text-foreground font-normal">How to use:</strong> Use the Pipeline tab to track your active deals from lead to close. 
+            <strong className="text-foreground font-normal">How to use:</strong> Use the Pipeline tab to track your active {DIVISION_DISPLAY_NAMES[division as keyof typeof DIVISION_DISPLAY_NAMES] || division} deals. 
             Change deal status using the dropdown in the Status column. 
             Use the Contacts tab to manage your network and add new prospects.
           </div>
@@ -337,7 +398,7 @@ const CRM = () => {
                 <Briefcase className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
                 <h3 className="text-lg font-light text-foreground mb-2">No deals in your pipeline</h3>
                 <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                  Create your first deal to start tracking your {divisionConfig.name.toLowerCase()} transactions from lead to close.
+                  Create your first {DIVISION_DISPLAY_NAMES[division as keyof typeof DIVISION_DISPLAY_NAMES] || division} deal to start tracking from lead to close.
                 </p>
                 <Link to="/portal/crm/deals/new">
                   <Button>
@@ -427,27 +488,45 @@ const CRM = () => {
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
-                    <div className="flex items-center gap-2 mt-3">
-                      {contact.phone && (
-                        <a
-                          href={`tel:${contact.phone}`}
-                          className="p-2 rounded-full bg-white/5 hover:bg-white/10 cursor-pointer"
-                        >
-                          <Phone className="h-4 w-4 text-muted-foreground" />
-                        </a>
-                      )}
+
+                    <div className="space-y-2">
                       {contact.email && (
-                        <a
+                        <a 
                           href={`mailto:${contact.email}`}
-                          className="p-2 rounded-full bg-white/5 hover:bg-white/10 cursor-pointer"
+                          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                         >
-                          <Mail className="h-4 w-4 text-muted-foreground" />
+                          <Mail className="h-3.5 w-3.5" />
+                          <span className="truncate">{contact.email}</span>
                         </a>
                       )}
-                      <span className="ml-auto text-xs px-2 py-1 bg-white/10 rounded-full text-muted-foreground">
-                        {contactTypes.find((t) => t.value === contact.contact_type)?.label || contact.contact_type}
-                      </span>
+                      {contact.phone && (
+                        <a 
+                          href={`tel:${contact.phone}`}
+                          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          <Phone className="h-3.5 w-3.5" />
+                          <span>{contact.phone}</span>
+                        </a>
+                      )}
                     </div>
+
+                    {contact.tags && contact.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mt-3">
+                        {contact.tags.slice(0, 3).map((tag, i) => (
+                          <span 
+                            key={i}
+                            className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-muted-foreground border border-white/10"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                        {contact.tags.length > 3 && (
+                          <span className="text-xs text-muted-foreground">
+                            +{contact.tags.length - 3}
+                          </span>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -458,7 +537,7 @@ const CRM = () => {
 
       {/* Delete Contact Confirmation */}
       <AlertDialog open={!!deleteContactId} onOpenChange={() => setDeleteContactId(null)}>
-        <AlertDialogContent className="glass-panel-strong">
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Contact</AlertDialogTitle>
             <AlertDialogDescription>
@@ -476,7 +555,7 @@ const CRM = () => {
 
       {/* Delete Deal Confirmation */}
       <AlertDialog open={!!deleteDealId} onOpenChange={() => setDeleteDealId(null)}>
-        <AlertDialogContent className="glass-panel-strong">
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Deal</AlertDialogTitle>
             <AlertDialogDescription>

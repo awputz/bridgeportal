@@ -2,9 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { 
   MoreHorizontal, 
-  ChevronDown,
   Building2,
-  DollarSign,
   Calendar,
   User,
   ArrowUpDown,
@@ -35,6 +33,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { 
+  formatFullCurrency, 
+  formatResidentialRent, 
+  formatInvestmentSalesPrice,
+  DIVISION_DISPLAY_NAMES
+} from "@/lib/formatters";
 
 interface CRMTableProps {
   deals: CRMDeal[];
@@ -50,11 +54,35 @@ const priorityConfig: Record<string, { label: string; className: string }> = {
   low: { label: "Low", className: "bg-green-500/20 text-green-400 border-green-500/30" },
 };
 
-const formatCurrency = (value: number | null | undefined): string => {
+/**
+ * Format deal value based on division type
+ * - Investment Sales: Full purchase price (e.g., $12,500,000)
+ * - Commercial Leasing: Full lease value (e.g., $450,000)
+ * - Residential: Full monthly rent or sale price (e.g., $4,500/month or $1,200,000)
+ */
+const formatDealValueByDivision = (value: number | null | undefined, division: string): string => {
   if (!value) return "—";
-  if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
-  if (value >= 1000) return `$${(value / 1000).toFixed(0)}K`;
-  return `$${value.toLocaleString()}`;
+  
+  switch (division) {
+    case "investment-sales":
+      // Always show full price, no abbreviations
+      return formatInvestmentSalesPrice(value);
+    
+    case "commercial-leasing":
+      // Show full lease value
+      return formatFullCurrency(value);
+    
+    case "residential":
+      // For residential, if value < 10000, assume it's monthly rent
+      // Otherwise, assume it's a sale price
+      if (value < 50000) {
+        return formatResidentialRent(value);
+      }
+      return formatFullCurrency(value);
+    
+    default:
+      return formatFullCurrency(value);
+  }
 };
 
 const formatDate = (dateString: string | null | undefined): string => {
@@ -130,21 +158,37 @@ export const CRMTable = ({
     </button>
   );
 
-  // Division-specific columns
+  // Division-specific column labels
   const getDivisionColumns = () => {
     switch (division) {
       case "investment-sales":
-        return { valueLabel: "Sale Price", typeLabel: "Asset Type" };
+        return { 
+          valueLabel: "Sale Price", 
+          typeLabel: "Asset Type",
+          valueHint: "Full purchase price"
+        };
       case "commercial-leasing":
-        return { valueLabel: "Lease Value", typeLabel: "Space Type" };
+        return { 
+          valueLabel: "Lease Value", 
+          typeLabel: "Space Type",
+          valueHint: "Total lease value"
+        };
       case "residential":
-        return { valueLabel: "Price/Rent", typeLabel: "Deal Type" };
+        return { 
+          valueLabel: "Price/Rent", 
+          typeLabel: "Deal Type",
+          valueHint: "Monthly rent or sale price"
+        };
       default:
-        return { valueLabel: "Value", typeLabel: "Type" };
+        return { 
+          valueLabel: "Value", 
+          typeLabel: "Type",
+          valueHint: ""
+        };
     }
   };
 
-  const { valueLabel, typeLabel } = getDivisionColumns();
+  const { valueLabel, typeLabel, valueHint } = getDivisionColumns();
 
   return (
     <div className="glass-card overflow-hidden">
@@ -233,9 +277,8 @@ export const CRMTable = ({
                     </Select>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-1 text-foreground/80">
-                      <DollarSign className="h-3 w-3 text-muted-foreground" />
-                      {formatCurrency(deal.value)}
+                    <div className="text-foreground/90 font-medium">
+                      {formatDealValueByDivision(deal.value, division)}
                     </div>
                   </TableCell>
                   <TableCell>
