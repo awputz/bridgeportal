@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, LayoutDashboard, FileText, Wrench, LogOut, Settings, Users, Sparkles, Calculator, Briefcase, Wand2, User } from "lucide-react";
+import { Menu, X, LayoutDashboard, FileText, Wrench, LogOut, Settings, Users, Sparkles, Calculator, Briefcase, Wand2, User, ChevronDown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { 
@@ -14,14 +14,25 @@ import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { useIsAdminOrAgent } from "@/hooks/useUserRole";
 
-const navItems = [
+// Core navigation items (always visible)
+const coreNavItems = [
   { name: "Dashboard", path: "/portal", icon: LayoutDashboard },
   { name: "CRM", path: "/portal/crm", icon: Briefcase },
   { name: "Directory", path: "/portal/directory", icon: Users },
-  { name: "Generators", path: "/portal/generators", icon: Wand2 },
-  { name: "Templates", path: "/portal/templates", icon: FileText },
-  { name: "Calculators", path: "/portal/calculators", icon: Calculator },
-  { name: "Tools", path: "/portal/tools", icon: Wrench },
+];
+
+// Productivity tools (grouped in dropdown)
+const productivityItems = [
+  { name: "Generators", path: "/portal/generators", icon: Wand2, description: "AI-powered document generation" },
+  { name: "Templates", path: "/portal/templates", icon: FileText, description: "Division-specific templates" },
+  { name: "Calculators", path: "/portal/calculators", icon: Calculator, description: "Financial calculators" },
+  { name: "Tools", path: "/portal/tools", icon: Wrench, description: "External resources" },
+];
+
+// All nav items for mobile
+const allNavItems = [
+  ...coreNavItems,
+  ...productivityItems,
   { name: "AI", path: "/portal/ai", icon: Sparkles },
   { name: "Profile", path: "/portal/profile", icon: User },
 ];
@@ -44,6 +55,10 @@ export const PortalNavigation = () => {
       navigate('/login');
     }
   };
+
+  const isProductivityActive = productivityItems.some(
+    item => location.pathname === item.path || location.pathname.startsWith(item.path)
+  );
 
   return (
     <>
@@ -90,8 +105,9 @@ export const PortalNavigation = () => {
             </div>
 
             {/* Center: Navigation */}
-            <div className="flex items-center justify-center space-x-8">
-              {navItems.map(item => {
+            <div className="flex items-center justify-center space-x-6">
+              {/* Core Items */}
+              {coreNavItems.map(item => {
                 const Icon = item.icon;
                 const isActive = location.pathname === item.path || 
                   (item.path !== '/portal' && location.pathname.startsWith(item.path));
@@ -110,6 +126,71 @@ export const PortalNavigation = () => {
                   </Link>
                 );
               })}
+
+              {/* Productivity Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className={cn(
+                      "flex items-center gap-1.5 text-[15px] font-light transition-all duration-200 hover:scale-105 cursor-pointer",
+                      isProductivityActive ? "text-foreground" : "text-foreground/70 hover:text-foreground"
+                    )}
+                  >
+                    <Wrench className="h-4 w-4" />
+                    Productivity
+                    <ChevronDown className="h-3 w-3 opacity-60" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center" className="w-56 glass-nav">
+                  {productivityItems.map(item => {
+                    const Icon = item.icon;
+                    const isActive = location.pathname === item.path || 
+                      location.pathname.startsWith(item.path);
+                    
+                    return (
+                      <DropdownMenuItem key={item.name} asChild>
+                        <Link 
+                          to={item.path} 
+                          className={cn(
+                            "flex items-start gap-3 py-2.5 cursor-pointer",
+                            isActive && "bg-white/5"
+                          )}
+                        >
+                          <Icon className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <div className="font-light">{item.name}</div>
+                            <div className="text-xs text-muted-foreground font-light">{item.description}</div>
+                          </div>
+                        </Link>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* AI */}
+              <Link
+                to="/portal/ai"
+                className={cn(
+                  "flex items-center gap-2 text-[15px] font-light transition-all duration-200 hover:scale-105",
+                  location.pathname.startsWith('/portal/ai') ? "text-foreground" : "text-foreground/70 hover:text-foreground"
+                )}
+              >
+                <Sparkles className="h-4 w-4" />
+                AI
+              </Link>
+
+              {/* Profile */}
+              <Link
+                to="/portal/profile"
+                className={cn(
+                  "flex items-center gap-2 text-[15px] font-light transition-all duration-200 hover:scale-105",
+                  location.pathname.startsWith('/portal/profile') ? "text-foreground" : "text-foreground/70 hover:text-foreground"
+                )}
+              >
+                <User className="h-4 w-4" />
+                Profile
+              </Link>
             </div>
 
             {/* Right: User Menu */}
@@ -178,8 +259,10 @@ export const PortalNavigation = () => {
             
             {/* Menu Content */}
             <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-8 mx-3">
-              <div className="space-y-2">
-                {navItems.map((item, index) => {
+              <div className="space-y-1">
+                {/* Core Section */}
+                <div className="text-xs text-muted-foreground uppercase tracking-wider px-4 mb-2">Core</div>
+                {coreNavItems.map((item, index) => {
                   const Icon = item.icon;
                   const isActive = location.pathname === item.path || 
                     (item.path !== '/portal' && location.pathname.startsWith(item.path));
@@ -202,6 +285,60 @@ export const PortalNavigation = () => {
                   );
                 })}
 
+                {/* Productivity Section */}
+                <div className="text-xs text-muted-foreground uppercase tracking-wider px-4 mb-2 mt-6">Productivity</div>
+                {productivityItems.map((item, index) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.path || 
+                    location.pathname.startsWith(item.path);
+                  
+                  return (
+                    <Link
+                      key={item.name}
+                      to={item.path}
+                      className={cn(
+                        "flex items-center gap-4 text-lg font-light transition-all duration-300 py-4 min-h-[56px] active:bg-white/5 rounded-lg px-4 -mx-2",
+                        isActive ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
+                        isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                      )}
+                      style={{ transitionDelay: `${(coreNavItems.length + index) * 50}ms` }}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <Icon className="h-5 w-5" />
+                      {item.name}
+                    </Link>
+                  );
+                })}
+
+                {/* Other Section */}
+                <div className="text-xs text-muted-foreground uppercase tracking-wider px-4 mb-2 mt-6">Other</div>
+                <Link
+                  to="/portal/ai"
+                  className={cn(
+                    "flex items-center gap-4 text-lg font-light transition-all duration-300 py-4 min-h-[56px] active:bg-white/5 rounded-lg px-4 -mx-2",
+                    location.pathname.startsWith('/portal/ai') ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
+                    isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                  )}
+                  style={{ transitionDelay: `${(coreNavItems.length + productivityItems.length) * 50}ms` }}
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Sparkles className="h-5 w-5" />
+                  AI
+                </Link>
+                <Link
+                  to="/portal/profile"
+                  className={cn(
+                    "flex items-center gap-4 text-lg font-light transition-all duration-300 py-4 min-h-[56px] active:bg-white/5 rounded-lg px-4 -mx-2",
+                    location.pathname.startsWith('/portal/profile') ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
+                    isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                  )}
+                  style={{ transitionDelay: `${(coreNavItems.length + productivityItems.length + 1) * 50}ms` }}
+                  onClick={() => setIsOpen(false)}
+                >
+                  <User className="h-5 w-5" />
+                  Profile
+                </Link>
+
                 <div className="pt-6 border-t border-white/10 mt-6">
                   {isAdminOrAgent && (
                     <Link
@@ -210,7 +347,7 @@ export const PortalNavigation = () => {
                         "flex items-center gap-4 text-lg font-light transition-all duration-300 py-4 min-h-[56px] active:bg-white/5 rounded-lg px-4 -mx-2 text-foreground/70 hover:text-foreground",
                         isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                       )}
-                      style={{ transitionDelay: `${navItems.length * 50}ms` }}
+                      style={{ transitionDelay: `${(allNavItems.length) * 50}ms` }}
                       onClick={() => setIsOpen(false)}
                     >
                       <Settings className="h-5 w-5" />
@@ -227,7 +364,7 @@ export const PortalNavigation = () => {
                       "w-full flex items-center gap-4 text-lg font-light transition-all duration-300 py-4 min-h-[56px] active:bg-white/5 rounded-lg px-4 -mx-2 text-destructive",
                       isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                     )}
-                    style={{ transitionDelay: `${(navItems.length + 1) * 50}ms` }}
+                    style={{ transitionDelay: `${(allNavItems.length + 1) * 50}ms` }}
                   >
                     <LogOut className="h-5 w-5" />
                     Sign Out
