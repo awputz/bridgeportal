@@ -39,29 +39,33 @@ serve(async (req) => {
     const { action, pageToken, query } = await req.json();
     console.log(`Contacts action: ${action} for user: ${user.id}`);
 
-    // Get user's Contacts tokens
+    // Get user's tokens - use maybeSingle to handle no rows gracefully
     const { data: tokenData } = await supabase
       .from('user_google_tokens')
-      .select('contacts_access_token, contacts_refresh_token, contacts_enabled')
+      .select('contacts_access_token, contacts_refresh_token, contacts_enabled, access_token, refresh_token')
       .eq('user_id', user.id)
-      .single();
+      .maybeSingle();
 
     if (action === 'check-connection') {
+      // Check if either service-specific or unified tokens exist
+      const hasServiceToken = tokenData?.contacts_enabled && !!tokenData?.contacts_access_token;
+      const hasUnifiedToken = !!tokenData?.access_token && tokenData?.contacts_enabled !== false;
       return new Response(
-        JSON.stringify({ connected: tokenData?.contacts_enabled && !!tokenData?.contacts_access_token }),
+        JSON.stringify({ connected: hasServiceToken || hasUnifiedToken }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    if (!tokenData?.contacts_access_token) {
+    // Use service-specific token or fall back to unified token
+    let accessToken = tokenData?.contacts_access_token || tokenData?.access_token;
+    let refreshToken = tokenData?.contacts_refresh_token || tokenData?.refresh_token;
+
+    if (!accessToken) {
       return new Response(
-        JSON.stringify({ error: 'Contacts not connected' }),
+        JSON.stringify({ error: 'Contacts not connected', needsConnection: true }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
-
-    let accessToken = tokenData.contacts_access_token;
-    const refreshToken = tokenData.contacts_refresh_token;
 
     // Helper to refresh token if needed
     async function refreshTokenIfNeeded(response: Response) {
@@ -81,9 +85,13 @@ serve(async (req) => {
         const refreshData = await refreshResponse.json();
         if (refreshData.access_token) {
           accessToken = refreshData.access_token;
+          // Update the appropriate token column
+          const updateData = tokenData?.contacts_access_token 
+            ? { contacts_access_token: accessToken }
+            : { access_token: accessToken };
           await supabase
             .from('user_google_tokens')
-            .update({ contacts_access_token: accessToken })
+            .update(updateData)
             .eq('user_id', user!.id);
           return true;
         }
