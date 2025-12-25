@@ -1,7 +1,6 @@
-import { TrendingUp, Building2, Home, ArrowRight, Sparkles } from "lucide-react";
+import { TrendingUp, Building2, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useDivision, Division, divisionConfigs } from "@/contexts/DivisionContext";
-import { useState, useEffect } from "react";
 
 const divisionIcons: Record<Division, typeof TrendingUp> = {
   "investment-sales": TrendingUp,
@@ -12,46 +11,13 @@ const divisionIcons: Record<Division, typeof TrendingUp> = {
 const divisionOrder: Division[] = ["investment-sales", "commercial-leasing", "residential"];
 
 export const InlineDivisionSwitcher = () => {
-  const { division, setDivision, divisionConfig } = useDivision();
-  const [showHint, setShowHint] = useState(false);
-
-  useEffect(() => {
-    // Check if user has seen the hint before
-    const hasSeenHint = localStorage.getItem("division-switcher-hint-seen");
-    if (!hasSeenHint) {
-      setShowHint(true);
-    }
-  }, []);
-
-  const handleDivisionChange = (newDivision: Division) => {
-    setDivision(newDivision);
-    // Mark hint as seen after first interaction
-    if (showHint) {
-      localStorage.setItem("division-switcher-hint-seen", "true");
-      setShowHint(false);
-    }
-  };
+  const { division, setDivision } = useDivision();
 
   return (
     <div className="relative">
-      {/* Hint banner for first-time users */}
-      {showHint && (
-        <div className="absolute -top-12 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium animate-bounce whitespace-nowrap z-10">
-          <Sparkles className="h-4 w-4" />
-          <span>Click to switch your division</span>
-          <ArrowRight className="h-4 w-4 animate-pulse" />
-        </div>
-      )}
-
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <span>Working in:</span>
-          {showHint && (
-            <span className="text-primary animate-pulse flex items-center gap-1">
-              <ArrowRight className="h-3 w-3" />
-              tap to change
-            </span>
-          )}
         </div>
         
         <div className="flex flex-wrap gap-3">
@@ -63,7 +29,7 @@ export const InlineDivisionSwitcher = () => {
             return (
               <button
                 key={div}
-                onClick={() => handleDivisionChange(div)}
+                onClick={() => setDivision(div)}
                 className={cn(
                   "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300",
                   "border-2 bg-card hover:shadow-lg",

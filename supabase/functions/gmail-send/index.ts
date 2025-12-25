@@ -29,10 +29,13 @@ async function refreshAccessToken(supabase: any, userId: string, refreshToken: s
     throw new Error(tokens.error_description || tokens.error);
   }
 
+  // Update both unified and service-specific columns
   await supabase
     .from('user_google_tokens')
     .update({
+      access_token: tokens.access_token,
       gmail_access_token: tokens.access_token,
+      token_expiry: new Date(Date.now() + (tokens.expires_in || 3600) * 1000).toISOString(),
       updated_at: new Date().toISOString(),
     })
     .eq('user_id', userId);
@@ -43,27 +46,43 @@ async function refreshAccessToken(supabase: any, userId: string, refreshToken: s
 async function getValidAccessToken(supabase: any, userId: string) {
   const { data: tokenData, error } = await supabase
     .from('user_google_tokens')
-    .select('gmail_access_token, gmail_refresh_token, gmail_enabled')
+    .select('access_token, refresh_token, gmail_access_token, gmail_refresh_token, gmail_enabled')
     .eq('user_id', userId)
-    .single();
+    .maybeSingle();
 
-  if (error || !tokenData || !tokenData.gmail_enabled) {
+  if (error) {
+    console.error('Error fetching tokens:', error);
+    throw new Error('Failed to fetch tokens');
+  }
+
+  if (!tokenData) {
     throw new Error('Gmail not connected');
   }
 
+  // Use unified token or fallback to service-specific
+  const accessToken = tokenData.access_token || tokenData.gmail_access_token;
+  const refreshToken = tokenData.refresh_token || tokenData.gmail_refresh_token;
+
+  if (!accessToken) {
+    throw new Error('Gmail not connected');
+  }
+
+  // Test if token is valid
   const testResponse = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/profile', {
-    headers: { Authorization: `Bearer ${tokenData.gmail_access_token}` },
+    headers: { Authorization: `Bearer ${accessToken}` },
   });
 
   if (testResponse.ok) {
-    return tokenData.gmail_access_token;
+    return accessToken;
   }
 
-  if (tokenData.gmail_refresh_token) {
-    return await refreshAccessToken(supabase, userId, tokenData.gmail_refresh_token);
+  // Token expired, try to refresh
+  if (refreshToken) {
+    console.log('Token expired, refreshing...');
+    return await refreshAccessToken(supabase, userId, refreshToken);
   }
 
-  throw new Error('Gmail access token expired');
+  throw new Error('Gmail access token expired and no refresh token available');
 }
 
 function encodeBase64Url(str: string): string {
