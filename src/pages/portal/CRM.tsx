@@ -7,7 +7,8 @@ import {
   Phone,
   Mail,
   User,
-  Briefcase
+  Briefcase,
+  Upload
 } from "lucide-react";
 import { useCRMContacts, useCRMDeals, useDealStages, useCreateContact, useDeleteContact, useUpdateDeal, CRMContact } from "@/hooks/useCRM";
 import { useCRMRealtime } from "@/hooks/useCRMRealtime";
@@ -35,6 +36,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { KanbanBoard } from "@/components/portal/KanbanBoard";
+import { CSVContactUploader } from "@/components/portal/CSVContactUploader";
 
 const contactTypes = [
   { value: "owner", label: "Owner" },
@@ -57,6 +59,7 @@ const sourceOptions = [
   { value: "networking", label: "Networking" },
   { value: "repeat-client", label: "Repeat Client" },
   { value: "marketing", label: "Marketing" },
+  { value: "csv-import", label: "CSV Import" },
   { value: "other", label: "Other" },
 ];
 
@@ -65,8 +68,9 @@ const CRM = () => {
   const [activeTab, setActiveTab] = useState<"pipeline" | "contacts">("pipeline");
   const [search, setSearch] = useState("");
   const [showContactDialog, setShowContactDialog] = useState(false);
+  const [showCSVUploader, setShowCSVUploader] = useState(false);
 
-  const { data: contacts, isLoading: contactsLoading } = useCRMContacts(division);
+  const { data: contacts, isLoading: contactsLoading, refetch: refetchContacts } = useCRMContacts(division);
   const { data: deals, isLoading: dealsLoading } = useCRMDeals(division);
   const { data: stages, isLoading: stagesLoading } = useDealStages(division);
   const createContact = useCreateContact();
@@ -140,6 +144,27 @@ const CRM = () => {
           </div>
 
           <div className="flex items-center gap-3">
+            {/* CSV Import Button */}
+            <Dialog open={showCSVUploader} onOpenChange={setShowCSVUploader}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="gap-2">
+                  <Upload className="h-4 w-4" />
+                  Import CSV
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="glass-panel-strong max-w-2xl max-h-[80vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle className="font-light">Import Contacts from CSV</DialogTitle>
+                </DialogHeader>
+                <CSVContactUploader 
+                  onSuccess={() => {
+                    setShowCSVUploader(false);
+                    refetchContacts();
+                  }} 
+                />
+              </DialogContent>
+            </Dialog>
+
             <Dialog open={showContactDialog} onOpenChange={setShowContactDialog}>
               <DialogTrigger asChild>
                 <Button className="gap-2">
@@ -223,14 +248,14 @@ const CRM = () => {
           <TabsList className="bg-transparent border-b border-white/10 rounded-none h-auto p-0 mb-6">
             <TabsTrigger
               value="pipeline"
-              className="flex items-center gap-2 px-4 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-foreground text-muted-foreground data-[state=active]:text-foreground bg-transparent data-[state=active]:bg-transparent"
+              className="flex items-center gap-2 px-4 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-foreground text-muted-foreground data-[state=active]:text-foreground bg-transparent data-[state=active]:bg-transparent cursor-pointer"
             >
               <Briefcase className="h-4 w-4" />
               Pipeline
             </TabsTrigger>
             <TabsTrigger
               value="contacts"
-              className="flex items-center gap-2 px-4 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-foreground text-muted-foreground data-[state=active]:text-foreground bg-transparent data-[state=active]:bg-transparent"
+              className="flex items-center gap-2 px-4 py-3 rounded-none border-b-2 border-transparent data-[state=active]:border-foreground text-muted-foreground data-[state=active]:text-foreground bg-transparent data-[state=active]:bg-transparent cursor-pointer"
             >
               <User className="h-4 w-4" />
               Contacts
@@ -298,13 +323,19 @@ const CRM = () => {
                   {search ? "No contacts found" : "No contacts yet"}
                 </h3>
                 <p className="text-muted-foreground mb-4">
-                  {search ? "Try a different search term" : "Add your first contact to get started"}
+                  {search ? "Try a different search term" : "Add your first contact or import from CSV"}
                 </p>
                 {!search && (
-                  <Button onClick={() => setShowContactDialog(true)}>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Contact
-                  </Button>
+                  <div className="flex gap-3 justify-center">
+                    <Button variant="outline" onClick={() => setShowCSVUploader(true)}>
+                      <Upload className="h-4 w-4 mr-2" />
+                      Import CSV
+                    </Button>
+                    <Button onClick={() => setShowContactDialog(true)}>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Contact
+                    </Button>
+                  </div>
                 )}
               </div>
             ) : (
@@ -345,7 +376,7 @@ const CRM = () => {
                       {contact.phone && (
                         <a
                           href={`tel:${contact.phone}`}
-                          className="p-2 rounded-full bg-white/5 hover:bg-white/10"
+                          className="p-2 rounded-full bg-white/5 hover:bg-white/10 cursor-pointer"
                         >
                           <Phone className="h-4 w-4 text-muted-foreground" />
                         </a>
@@ -353,7 +384,7 @@ const CRM = () => {
                       {contact.email && (
                         <a
                           href={`mailto:${contact.email}`}
-                          className="p-2 rounded-full bg-white/5 hover:bg-white/10"
+                          className="p-2 rounded-full bg-white/5 hover:bg-white/10 cursor-pointer"
                         >
                           <Mail className="h-4 w-4 text-muted-foreground" />
                         </a>
