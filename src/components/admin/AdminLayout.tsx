@@ -2,6 +2,7 @@ import { Navigate, Outlet, Link } from "react-router-dom";
 import { useIsAdminOrAgent } from "@/hooks/useUserRole";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "./AdminSidebar";
+import { AdminNotificationCenter } from "./AdminNotificationCenter";
 import { Button } from "@/components/ui/button";
 import { Building2 } from "lucide-react";
 
@@ -36,12 +37,15 @@ export const AdminLayout = () => {
                 <span className="text-lg font-semibold hidden sm:block">BRIDGE Admin</span>
               </div>
             </div>
-            <Link to="/portal">
-              <Button variant="ghost" size="sm" className="gap-2">
-                <Building2 className="h-4 w-4" />
-                <span className="hidden sm:inline">Agent Portal</span>
-              </Button>
-            </Link>
+            <div className="flex items-center gap-2">
+              <AdminNotificationCenter />
+              <Link to="/portal">
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <Building2 className="h-4 w-4" />
+                  <span className="hidden sm:inline">Agent Portal</span>
+                </Button>
+              </Link>
+            </div>
           </header>
           
           <main className="flex-1 p-4 md:p-6 bg-muted/30 overflow-auto">

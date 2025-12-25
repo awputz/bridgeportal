@@ -209,6 +209,16 @@ const App = () => {
                         <MyExclusives />
                       </Suspense>
                     } />
+                    <Route path="commission-request" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <CommissionRequest />
+                      </Suspense>
+                    } />
+                    <Route path="my-commission-requests" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <MyCommissionRequests />
+                      </Suspense>
+                    } />
                     
                     {/* Company Pages */}
                     <Route path="company/about" element={
@@ -353,6 +363,11 @@ const App = () => {
                     <Route path="crm-config" element={
                       <Suspense fallback={<PageLoader />}>
                         <CRMConfigAdmin />
+                      </Suspense>
+                    } />
+                    <Route path="commission-requests" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <CommissionRequestsAdmin />
                       </Suspense>
                     } />
                   </Route>
