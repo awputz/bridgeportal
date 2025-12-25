@@ -74,7 +74,7 @@ const Company = () => {
     <div className="min-h-screen pb-24 md:pb-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {/* Header */}
-        <div className="text-center mb-10 md:mb-14">
+        <div className="text-center mb-10 md:mb-14 animate-fade-in">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 mb-6">
             <Building2 className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm text-muted-foreground font-light">Company</span>
@@ -88,20 +88,20 @@ const Company = () => {
         </div>
 
         {/* Company Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 stagger-grid">
           {companyItems.map((item) => {
             const Icon = item.icon;
             return (
               <Link
                 key={item.path}
                 to={item.path}
-                className="glass-card p-5 group hover:border-white/20 transition-all duration-300"
+                className="glass-card p-5 group hover:border-white/20"
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className={`w-12 h-12 rounded-full ${item.color.split(' ')[0]} flex items-center justify-center`}>
+                  <div className={`w-12 h-12 rounded-full ${item.color.split(' ')[0]} flex items-center justify-center transition-transform duration-300 group-hover:scale-110`}>
                     <Icon className={`h-6 w-6 ${item.color.split(' ')[1]}`} />
                   </div>
-                  <ChevronRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-muted-foreground group-hover:translate-x-1 transition-all" />
+                  <ChevronRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-muted-foreground group-hover:translate-x-1 transition-all duration-300" />
                 </div>
                 
                 <h3 className="text-lg font-light text-foreground mb-2">

@@ -7,8 +7,8 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  SheetClose,
 } from "@/components/ui/sheet";
-import { useState } from "react";
 
 const navItems = [
   { path: "/portal", icon: Home, label: "Home" },
@@ -17,32 +17,47 @@ const navItems = [
   { path: "/portal/notes", icon: StickyNote, label: "Notes" },
 ];
 
-const moreItems: { path: string; icon: typeof Home; label: string; group: string }[] = [
-  // Company
-  { path: "/portal/company/about", icon: Building2, label: "About Us", group: "Company" },
-  { path: "/portal/company/mission", icon: Target, label: "Mission", group: "Company" },
-  { path: "/portal/company/culture", icon: Heart, label: "Culture", group: "Company" },
-  { path: "/portal/company/expansion", icon: Globe, label: "Expansion", group: "Company" },
-  { path: "/portal/company/contact", icon: Headphones, label: "Contact", group: "Company" },
-  { path: "/portal/directory", icon: Users, label: "Directory", group: "Company" },
-  { path: "/portal/announcements", icon: Bell, label: "News", group: "Company" },
-  // Tools
-  { path: "/portal/ai", icon: Sparkles, label: "AI Assistant", group: "Tools" },
-  { path: "/portal/templates", icon: FileText, label: "Templates", group: "Tools" },
-  { path: "/portal/generators", icon: Wand2, label: "Generators", group: "Tools" },
-  { path: "/portal/calculators", icon: Calculator, label: "Calculators", group: "Tools" },
-  { path: "/portal/tools", icon: Wrench, label: "Tools", group: "Tools" },
-  // Data
-  { path: "/portal/resources", icon: FolderOpen, label: "Resources", group: "Data" },
-  { path: "/portal/my-transactions", icon: DollarSign, label: "My Deals", group: "Data" },
-  { path: "/portal/requests", icon: Send, label: "Requests", group: "Data" },
-  // Account
-  { path: "/portal/profile", icon: User, label: "Profile", group: "Account" },
+const moreItemsGrouped = [
+  {
+    category: "Company",
+    items: [
+      { path: "/portal/company/about", icon: Building2, label: "About Us" },
+      { path: "/portal/company/mission", icon: Target, label: "Mission" },
+      { path: "/portal/company/culture", icon: Heart, label: "Culture" },
+      { path: "/portal/company/expansion", icon: Globe, label: "Expansion" },
+      { path: "/portal/company/contact", icon: Headphones, label: "Contact" },
+      { path: "/portal/directory", icon: Users, label: "Directory" },
+      { path: "/portal/announcements", icon: Bell, label: "News" },
+    ],
+  },
+  {
+    category: "Tools",
+    items: [
+      { path: "/portal/ai", icon: Sparkles, label: "AI Assistant" },
+      { path: "/portal/templates", icon: FileText, label: "Templates" },
+      { path: "/portal/generators", icon: Wand2, label: "Generators" },
+      { path: "/portal/calculators", icon: Calculator, label: "Calculators" },
+      { path: "/portal/tools", icon: Wrench, label: "Tools" },
+    ],
+  },
+  {
+    category: "Data",
+    items: [
+      { path: "/portal/resources", icon: FolderOpen, label: "Resources" },
+      { path: "/portal/my-transactions", icon: DollarSign, label: "My Deals" },
+      { path: "/portal/requests", icon: Send, label: "Requests" },
+    ],
+  },
+  {
+    category: "Account",
+    items: [
+      { path: "/portal/profile", icon: User, label: "Profile" },
+    ],
+  },
 ];
 
 export const MobileBottomNav = () => {
   const location = useLocation();
-  const [isMoreOpen, setIsMoreOpen] = useState(false);
 
   const isActive = (path: string) => {
     if (path === "/portal") {
@@ -51,69 +66,65 @@ export const MobileBottomNav = () => {
     return location.pathname.startsWith(path);
   };
 
-  const isMoreActive = moreItems.some(item => isActive(item.path));
-
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-background/95 backdrop-blur-xl border-t border-border/50 pb-safe">
-      <div className="flex items-center justify-around h-16 px-2">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden glass-nav rounded-t-2xl safe-bottom">
+      <div className="flex items-center justify-around px-2 py-2 pb-safe">
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.path);
-          
           return (
             <Link
               key={item.path}
               to={item.path}
               className={cn(
-                "flex flex-col items-center justify-center gap-1 w-full h-full transition-colors min-h-[44px]",
-                active ? "text-foreground" : "text-muted-foreground"
+                "flex flex-col items-center justify-center gap-0.5 py-2 px-3 rounded-xl transition-all duration-300 min-w-[60px] active:scale-95",
+                active
+                  ? "text-foreground bg-white/10"
+                  : "text-muted-foreground hover:text-foreground hover:bg-white/5"
               )}
             >
-              <Icon className={cn("h-5 w-5", active && "text-foreground")} />
-              <span className="text-[10px] font-light">{item.label}</span>
+              <Icon className={cn("h-5 w-5 transition-transform duration-300", active && "scale-110")} />
+              <span className="text-[10px] font-medium">{item.label}</span>
             </Link>
           );
         })}
-        
-        {/* More Menu */}
-        <Sheet open={isMoreOpen} onOpenChange={setIsMoreOpen}>
+
+        <Sheet>
           <SheetTrigger asChild>
-            <button
-              className={cn(
-                "flex flex-col items-center justify-center gap-1 w-full h-full transition-colors min-h-[44px]",
-                isMoreActive ? "text-foreground" : "text-muted-foreground"
-              )}
-            >
-              <MoreHorizontal className={cn("h-5 w-5", isMoreActive && "text-foreground")} />
-              <span className="text-[10px] font-light">More</span>
+            <button className="flex flex-col items-center justify-center gap-0.5 py-2 px-3 rounded-xl transition-all duration-300 min-w-[60px] text-muted-foreground hover:text-foreground hover:bg-white/5 active:scale-95">
+              <MoreHorizontal className="h-5 w-5" />
+              <span className="text-[10px] font-medium">More</span>
             </button>
           </SheetTrigger>
-          <SheetContent side="bottom" className="h-auto max-h-[80vh] rounded-t-2xl">
-            <SheetHeader className="pb-4">
-              <SheetTitle className="text-lg font-light">More Pages</SheetTitle>
+          <SheetContent side="bottom" className="glass-panel-strong rounded-t-3xl pb-safe max-h-[85vh] overflow-y-auto">
+            <SheetHeader className="text-left pb-4">
+              <SheetTitle className="text-foreground font-light text-lg">More Options</SheetTitle>
             </SheetHeader>
-            <div className="space-y-4 py-2 pb-6 overflow-y-auto">
-              {["Company", "Tools", "Data", "Account"].map((group) => (
-                <div key={group}>
-                  <p className="text-xs font-medium text-muted-foreground mb-2 px-1">{group}</p>
-                  <div className="grid grid-cols-3 gap-2">
-                    {moreItems.filter(i => i.group === group).map((item) => {
+            <div className="space-y-6 pb-8">
+              {moreItemsGrouped.map((group) => (
+                <div key={group.category}>
+                  <h3 className="text-xs uppercase text-muted-foreground font-medium tracking-wider mb-3 px-1">
+                    {group.category}
+                  </h3>
+                  <div className="grid grid-cols-4 gap-2">
+                    {group.items.map((item) => {
                       const Icon = item.icon;
                       const active = isActive(item.path);
-                      
                       return (
-                        <Link
-                          key={item.path}
-                          to={item.path}
-                          onClick={() => setIsMoreOpen(false)}
-                          className={cn(
-                            "flex flex-col items-center justify-center gap-2 p-4 rounded-xl transition-colors min-h-[80px]",
-                            active ? "bg-accent text-foreground" : "text-muted-foreground hover:bg-accent/50"
-                          )}
-                        >
-                          <Icon className="h-5 w-5" />
-                          <span className="text-xs font-light text-center leading-tight">{item.label}</span>
-                        </Link>
+                        <SheetClose asChild key={item.path}>
+                          <Link
+                            to={item.path}
+                            className={cn(
+                              "flex flex-col items-center justify-center gap-1.5 p-3 rounded-xl transition-all duration-300 active:scale-95",
+                              active ? "bg-white/10 text-foreground" : "hover:bg-white/5 text-muted-foreground hover:text-foreground"
+                            )}
+                          >
+                            <div className={cn("w-10 h-10 rounded-full flex items-center justify-center", active ? "bg-primary/20" : "bg-white/5")}>
+                              <Icon className={cn("h-5 w-5", active ? "text-primary" : "text-foreground/60")} />
+                            </div>
+                            <span className="text-[10px] font-medium text-center">{item.label}</span>
+                          </Link>
+                        </SheetClose>
                       );
                     })}
                   </div>

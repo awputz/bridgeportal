@@ -161,7 +161,7 @@ const Dashboard = () => {
   return <div className="min-h-screen pb-24 md:pb-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {/* Personalized Welcome Banner */}
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-8">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-8 animate-fade-in">
           <WelcomeBanner />
           <div className="flex items-center gap-2">
             <GlobalDivisionSwitcher />
@@ -172,10 +172,10 @@ const Dashboard = () => {
         </div>
 
         {/* Quick Actions Row: Call Office + Request */}
-        <section className="mb-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <a href="tel:2125319295" className="glass-card p-4 flex items-center gap-3 hover:border-primary/50 transition-all duration-300">
-              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.05s' }}>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-grid">
+            <a href="tel:2125319295" className="glass-card p-4 flex items-center gap-3 hover:border-primary/50 group">
+              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
                 <Phone className="h-5 w-5 text-primary" />
               </div>
               <div>
@@ -183,8 +183,8 @@ const Dashboard = () => {
                 <p className="text-xs text-muted-foreground">(212) 531-9295</p>
               </div>
             </a>
-            <Link to="/portal/requests" className="glass-card p-4 flex items-center gap-3 hover:border-amber-500/50 transition-all duration-300">
-              <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
+            <Link to="/portal/requests" className="glass-card p-4 flex items-center gap-3 hover:border-amber-500/50 group">
+              <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
                 <Send className="h-5 w-5 text-amber-400" />
               </div>
               <div>
@@ -192,8 +192,8 @@ const Dashboard = () => {
                 <p className="text-xs text-muted-foreground">Cards, BOV, etc.</p>
               </div>
             </Link>
-            <Link to="/portal/crm?action=add-contact" className="glass-card p-4 flex items-center gap-3 hover:border-green-500/50 transition-all duration-300">
-              <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+            <Link to="/portal/crm?action=add-contact" className="glass-card p-4 flex items-center gap-3 hover:border-green-500/50 group">
+              <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
                 <UserPlus className="h-5 w-5 text-green-400" />
               </div>
               <div>
@@ -201,8 +201,8 @@ const Dashboard = () => {
                 <p className="text-xs text-muted-foreground">CRM</p>
               </div>
             </Link>
-            <Link to="/portal/crm?action=new-deal" className="glass-card p-4 flex items-center gap-3 hover:border-blue-500/50 transition-all duration-300">
-              <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+            <Link to="/portal/crm?action=new-deal" className="glass-card p-4 flex items-center gap-3 hover:border-blue-500/50 group">
+              <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
                 <FolderPlus className="h-5 w-5 text-blue-400" />
               </div>
               <div>
@@ -214,17 +214,17 @@ const Dashboard = () => {
         </section>
 
         {/* My Profile Card */}
-        <section className="mb-8">
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
           <ProfileCard />
         </section>
 
         {/* CRM Stats */}
-        <section className="mb-8">
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
           <DashboardStats />
         </section>
 
         {/* Announcements Widget */}
-        <section className="mb-8">
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
           <AnnouncementsWidget />
         </section>
 
