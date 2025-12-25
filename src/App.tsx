@@ -74,6 +74,7 @@ const CRMConfigAdmin = lazy(() => import("./pages/admin/CRMConfigAdmin"));
 const MyExclusives = lazy(() => import("./pages/portal/MyExclusives"));
 const CommissionRequestsAdmin = lazy(() => import("./pages/admin/CommissionRequestsAdmin"));
 const CRMOverviewAdmin = lazy(() => import("./pages/admin/CRMOverviewAdmin"));
+const AgentPerformanceAdmin = lazy(() => import("./pages/admin/AgentPerformanceAdmin"));
 
 // Optimized QueryClient with better caching
 const queryClient = new QueryClient({
@@ -369,6 +370,11 @@ const App = () => {
                     <Route path="crm-overview" element={
                       <Suspense fallback={<PageLoader />}>
                         <CRMOverviewAdmin />
+                      </Suspense>
+                    } />
+                    <Route path="agent-performance" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <AgentPerformanceAdmin />
                       </Suspense>
                     } />
                     <Route path="commission-requests" element={
