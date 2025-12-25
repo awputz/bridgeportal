@@ -11,6 +11,98 @@ const GOOGLE_CLIENT_SECRET = Deno.env.get('GOOGLE_CLIENT_SECRET');
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
+// Helper to refresh token
+async function refreshAccessToken(refreshToken: string) {
+  console.log('[google-drive-files] Refreshing access token...');
+  
+  const response = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      client_id: GOOGLE_CLIENT_ID!,
+      client_secret: GOOGLE_CLIENT_SECRET!,
+      refresh_token: refreshToken,
+      grant_type: 'refresh_token',
+    }),
+  });
+  
+  const data = await response.json();
+  
+  if (data.error) {
+    console.error('[google-drive-files] Token refresh failed:', data.error);
+    return { error: data.error_description || data.error };
+  }
+  
+  console.log('[google-drive-files] Token refresh successful');
+  return {
+    access_token: data.access_token,
+    expires_in: data.expires_in,
+  };
+}
+
+// Helper to ensure valid token (pre-emptive refresh)
+async function ensureValidToken(
+  supabase: any,
+  userId: string,
+  tokenData: any
+): Promise<{ accessToken: string | null; error: string | null; needsReconnection: boolean }> {
+  // Use service-specific token or fall back to unified token
+  let accessToken = tokenData?.drive_access_token || tokenData?.access_token;
+  const refreshToken = tokenData?.drive_refresh_token || tokenData?.refresh_token;
+  const tokenExpiry = tokenData?.token_expiry ? new Date(tokenData.token_expiry) : null;
+  
+  if (!accessToken && !refreshToken) {
+    return { accessToken: null, error: 'Drive not connected', needsReconnection: true };
+  }
+  
+  // Check if token is expired or will expire in next 5 minutes
+  const now = new Date();
+  const bufferMs = 5 * 60 * 1000; // 5 minutes buffer
+  const isExpired = tokenExpiry && (tokenExpiry.getTime() - now.getTime()) < bufferMs;
+  
+  if (isExpired && refreshToken) {
+    console.log('[google-drive-files] Token expired or expiring soon, refreshing...');
+    
+    const refreshResult = await refreshAccessToken(refreshToken);
+    
+    if (refreshResult.error) {
+      console.error('[google-drive-files] Token refresh failed:', refreshResult.error);
+      return { accessToken: null, error: 'Token expired. Please reconnect Google Drive.', needsReconnection: true };
+    }
+    
+    accessToken = refreshResult.access_token;
+    
+    // Update token in database
+    const newExpiry = new Date();
+    newExpiry.setSeconds(newExpiry.getSeconds() + refreshResult.expires_in);
+    
+    const updateData: Record<string, any> = {
+      token_expiry: newExpiry.toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    
+    // Update the appropriate token column
+    if (tokenData?.drive_access_token) {
+      updateData.drive_access_token = accessToken;
+    } else {
+      updateData.access_token = accessToken;
+    }
+    
+    await supabase
+      .from('user_google_tokens')
+      .update(updateData)
+      .eq('user_id', userId);
+    
+    console.log('[google-drive-files] Token updated in database');
+  }
+  
+  if (!accessToken) {
+    return { accessToken: null, error: 'No access token available', needsReconnection: true };
+  }
+  
+  return { accessToken, error: null, needsReconnection: false };
+}
+
 serve(async (req) => {
   console.log("[google-drive-files] Request received:", req.method);
   
@@ -44,57 +136,98 @@ serve(async (req) => {
 
     console.log("[google-drive-files] User authenticated:", user.id);
 
-    const { action, query, pageToken, folderId, fileId } = await req.json();
+    const body = await req.json();
+    const { action, query, pageToken, folderId, fileId } = body;
     console.log("[google-drive-files] Action:", action);
 
-    // Get user's tokens - use maybeSingle to handle no rows gracefully
-    const { data: tokenData } = await supabase
+    // Get user's tokens
+    const { data: tokenData, error: tokenError } = await supabase
       .from('user_google_tokens')
-      .select('drive_access_token, drive_refresh_token, drive_enabled, access_token, refresh_token')
+      .select('drive_access_token, drive_refresh_token, drive_enabled, access_token, refresh_token, token_expiry')
       .eq('user_id', user.id)
       .maybeSingle();
 
-    // Use service-specific token or fall back to unified token
-    let accessToken = tokenData?.drive_access_token || tokenData?.access_token;
-    let refreshToken = tokenData?.drive_refresh_token || tokenData?.refresh_token;
+    if (tokenError) {
+      console.error("[google-drive-files] Token query error:", tokenError);
+    }
 
-    if (!accessToken) {
+    console.log("[google-drive-files] Token data found:", !!tokenData, "drive_enabled:", tokenData?.drive_enabled);
+
+    // Handle check-connection action
+    if (action === 'check-connection') {
+      if (!tokenData) {
+        return new Response(
+          JSON.stringify({ connected: false, reason: 'no_tokens' }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
+      // Validate token by attempting refresh if expired
+      const tokenResult = await ensureValidToken(supabase, user.id, tokenData);
+      
+      if (tokenResult.needsReconnection) {
+        return new Response(
+          JSON.stringify({ connected: false, reason: 'token_expired', message: tokenResult.error }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      
       return new Response(
-        JSON.stringify({ error: 'Drive not connected', needsConnection: true }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        JSON.stringify({ connected: true }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Helper to refresh token if needed
-    async function refreshTokenIfNeeded(response: Response) {
-      if (response.status === 401 && refreshToken) {
-        console.log('Refreshing Drive access token...');
-        const refreshResponse = await fetch('https://oauth2.googleapis.com/token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams({
-            client_id: GOOGLE_CLIENT_ID!,
-            client_secret: GOOGLE_CLIENT_SECRET!,
-            refresh_token: refreshToken,
-            grant_type: 'refresh_token',
-          }),
-        });
+    // Ensure valid token for data operations
+    const tokenResult = await ensureValidToken(supabase, user.id, tokenData);
+    
+    if (tokenResult.error) {
+      return new Response(
+        JSON.stringify({ error: tokenResult.error, needsConnection: tokenResult.needsReconnection }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    let accessToken = tokenResult.accessToken!;
+
+    // Helper to retry with fresh token on 401
+    async function fetchWithRetry(url: string, options: RequestInit) {
+      let response = await fetch(url, options);
+      
+      if (response.status === 401) {
+        console.log('[google-drive-files] Got 401, attempting token refresh...');
+        const refreshToken = tokenData?.drive_refresh_token || tokenData?.refresh_token;
         
-        const refreshData = await refreshResponse.json();
-        if (refreshData.access_token) {
-          accessToken = refreshData.access_token;
-          // Update the appropriate token column
-          const updateData = tokenData?.drive_access_token 
-            ? { drive_access_token: accessToken }
-            : { access_token: accessToken };
-          await supabase
-            .from('user_google_tokens')
-            .update(updateData)
-            .eq('user_id', user!.id);
-          return true;
+        if (refreshToken) {
+          const refreshResult = await refreshAccessToken(refreshToken);
+          
+          if (refreshResult.access_token) {
+            accessToken = refreshResult.access_token;
+            
+            // Update token in DB
+            const newExpiry = new Date();
+            newExpiry.setSeconds(newExpiry.getSeconds() + refreshResult.expires_in);
+            
+            const updateData: Record<string, any> = {
+              token_expiry: newExpiry.toISOString(),
+            };
+            if (tokenData?.drive_access_token) {
+              updateData.drive_access_token = accessToken;
+            } else {
+              updateData.access_token = accessToken;
+            }
+            await supabase.from('user_google_tokens').update(updateData).eq('user_id', user!.id);
+            
+            // Retry request
+            response = await fetch(url, {
+              ...options,
+              headers: { ...options.headers, Authorization: `Bearer ${accessToken}` },
+            });
+          }
         }
       }
-      return false;
+      
+      return response;
     }
 
     if (action === 'list') {
@@ -114,25 +247,35 @@ serve(async (req) => {
       });
       if (pageToken) params.set('pageToken', pageToken);
 
-      let response = await fetch(`https://www.googleapis.com/drive/v3/files?${params}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-
-      if (response.status === 401 && await refreshTokenIfNeeded(response)) {
-        response = await fetch(`https://www.googleapis.com/drive/v3/files?${params}`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-      }
+      const response = await fetchWithRetry(
+        `https://www.googleapis.com/drive/v3/files?${params}`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
 
       const data = await response.json();
       
       if (data.error) {
-        console.error('Drive API error:', data.error);
+        console.error('[google-drive-files] Drive API error:', data.error);
+        
+        const status = response.status;
+        if (status === 401 || status === 403) {
+          return new Response(
+            JSON.stringify({ 
+              error: status === 403 ? 'Insufficient permissions. Please reconnect with proper scopes.' : 'Token expired. Please reconnect.',
+              needsConnection: true,
+              errorCode: status === 403 ? 'INSUFFICIENT_PERMISSIONS' : 'TOKEN_EXPIRED'
+            }),
+            { status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
+        
         return new Response(
           JSON.stringify({ error: data.error.message }),
           { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
+
+      console.log(`[google-drive-files] Listed ${data.files?.length || 0} files`);
 
       return new Response(
         JSON.stringify(data),
@@ -148,19 +291,21 @@ serve(async (req) => {
         );
       }
 
-      let response = await fetch(
+      const response = await fetchWithRetry(
         `https://www.googleapis.com/drive/v3/files/${fileId}?fields=id,name,mimeType,size,thumbnailLink,webViewLink,webContentLink,createdTime,modifiedTime`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
 
-      if (response.status === 401 && await refreshTokenIfNeeded(response)) {
-        response = await fetch(
-          `https://www.googleapis.com/drive/v3/files/${fileId}?fields=id,name,mimeType,size,thumbnailLink,webViewLink,webContentLink,createdTime,modifiedTime`,
-          { headers: { Authorization: `Bearer ${accessToken}` } }
+      const data = await response.json();
+      
+      if (data.error) {
+        console.error('[google-drive-files] Drive API get error:', data.error);
+        return new Response(
+          JSON.stringify({ error: data.error.message, needsConnection: response.status === 401 }),
+          { status: response.status, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
-
-      const data = await response.json();
+      
       return new Response(
         JSON.stringify(data),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -172,7 +317,7 @@ serve(async (req) => {
       { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error: unknown) {
-    console.error('Drive files error:', error);
+    console.error('[google-drive-files] Error:', error);
     return new Response(
       JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
