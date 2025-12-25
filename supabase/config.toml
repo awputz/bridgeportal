@@ -17,3 +17,21 @@ verify_jwt = false
 
 [functions.notes-ai]
 verify_jwt = true
+
+[functions.google-calendar-auth]
+verify_jwt = true
+
+[functions.google-calendar-events]
+verify_jwt = true
+
+[functions.gmail-auth]
+verify_jwt = true
+
+[functions.gmail-messages]
+verify_jwt = true
+
+[functions.gmail-send]
+verify_jwt = true
+
+[functions.gmail-labels]
+verify_jwt = true
