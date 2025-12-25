@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Mail, Users, Calendar, HardDrive, MessageSquare, Search, ArrowRight, TrendingUp, Building2, Home, FileText, Calculator, Sparkles, Palette, Database, FileSearch, MapPin, Send, UserPlus, FolderPlus, ListTodo, Wand2, Wrench, FolderOpen, DollarSign, Phone, Settings } from "lucide-react";
+import { Mail, Users, Calendar, HardDrive, MessageSquare, Search, ArrowRight, TrendingUp, Building2, Home, FileText, Calculator, Sparkles, Palette, Database, FileSearch, MapPin, Send, UserPlus, FolderPlus, ListTodo, Wand2, Wrench, FolderOpen, DollarSign, Phone, Settings, Target, Heart, Globe, Headphones, Bell } from "lucide-react";
 import { useExternalTools, ExternalTool } from "@/hooks/useExternalTools";
 import { useIsAdminOrAgent } from "@/hooks/useUserRole";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,6 +13,7 @@ import { GlobalDivisionSwitcher } from "@/components/portal/GlobalDivisionSwitch
 import { ProfileCard } from "@/components/portal/ProfileCard";
 import { WelcomeBanner } from "@/components/portal/WelcomeBanner";
 import { DashboardTasks } from "@/components/portal/DashboardTasks";
+import { AnnouncementsWidget } from "@/components/portal/AnnouncementsWidget";
 
 // Icon mapping for dynamic icons from database
 const iconMap: Record<string, typeof Mail> = {
@@ -76,6 +77,17 @@ const quickLinks = [{
   path: "/portal/my-transactions",
   icon: DollarSign
 }];
+
+// Company quick links
+const companyQuickLinks = [
+  { name: "About Us", path: "/portal/company/about", icon: Building2 },
+  { name: "Mission", path: "/portal/company/mission", icon: Target },
+  { name: "Culture", path: "/portal/company/culture", icon: Heart },
+  { name: "Expansion", path: "/portal/company/expansion", icon: Globe },
+  { name: "Contact", path: "/portal/company/contact", icon: Headphones },
+  { name: "News", path: "/portal/announcements", icon: Bell },
+];
+
 const calculatorQuickAccess = [{
   name: "Cap Rate",
   path: "/portal/calculators?tab=investment-sales",
@@ -209,6 +221,11 @@ const Dashboard = () => {
         {/* CRM Stats */}
         <section className="mb-8">
           <DashboardStats />
+        </section>
+
+        {/* Announcements Widget */}
+        <section className="mb-8">
+          <AnnouncementsWidget />
         </section>
 
         {/* Exclusive Listings */}
@@ -369,6 +386,32 @@ const Dashboard = () => {
               </div>
               <span className="text-sm font-light text-foreground text-center">Marketing</span>
             </Link>
+          </div>
+        </section>
+
+        {/* Company Quick Links */}
+        <section className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
+              <Building2 className="h-5 w-5 text-muted-foreground" />
+              Company
+            </h2>
+          </div>
+          
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
+            {companyQuickLinks.map(link => {
+              const Icon = link.icon;
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className="glass-card p-3 flex flex-col items-center justify-center text-center hover:border-white/20 transition-all duration-300 min-h-[80px]"
+                >
+                  <Icon className="h-5 w-5 text-foreground/60 mb-1.5" />
+                  <span className="text-xs font-light text-foreground">{link.name}</span>
+                </Link>
+              );
+            })}
           </div>
         </section>
 

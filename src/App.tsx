@@ -38,6 +38,15 @@ const Requests = lazy(() => import("./pages/portal/Requests"));
 const MyTransactions = lazy(() => import("./pages/portal/MyTransactions"));
 const Tools = lazy(() => import("./pages/portal/Tools"));
 
+// Company Pages - lazy loaded
+const AboutCompany = lazy(() => import("./pages/portal/company/About"));
+const MissionCompany = lazy(() => import("./pages/portal/company/Mission"));
+const CultureCompany = lazy(() => import("./pages/portal/company/Culture"));
+const ExpectationsCompany = lazy(() => import("./pages/portal/company/Expectations"));
+const ExpansionCompany = lazy(() => import("./pages/portal/company/Expansion"));
+const ContactCompany = lazy(() => import("./pages/portal/company/Contact"));
+const Announcements = lazy(() => import("./pages/portal/Announcements"));
+
 // Admin Pages - lazy loaded
 const TeamAdmin = lazy(() => import("./pages/admin/TeamAdmin"));
 const TransactionsAdmin = lazy(() => import("./pages/admin/TransactionsAdmin"));
@@ -184,6 +193,43 @@ const App = () => {
                     <Route path="my-exclusives" element={
                       <Suspense fallback={<PageLoader />}>
                         <MyExclusives />
+                      </Suspense>
+                    } />
+                    
+                    {/* Company Pages */}
+                    <Route path="company/about" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <AboutCompany />
+                      </Suspense>
+                    } />
+                    <Route path="company/mission" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <MissionCompany />
+                      </Suspense>
+                    } />
+                    <Route path="company/culture" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <CultureCompany />
+                      </Suspense>
+                    } />
+                    <Route path="company/expectations" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <ExpectationsCompany />
+                      </Suspense>
+                    } />
+                    <Route path="company/expansion" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <ExpansionCompany />
+                      </Suspense>
+                    } />
+                    <Route path="company/contact" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <ContactCompany />
+                      </Suspense>
+                    } />
+                    <Route path="announcements" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <Announcements />
                       </Suspense>
                     } />
                   </Route>
