@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Plus, Search, Pin, Filter, Grid3X3, List, Sparkles, Building, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -92,6 +93,14 @@ const Notes = () => {
   return (
     <div className="container max-w-7xl mx-auto px-4 py-8 md:py-12">
       <div className="space-y-6 pb-24 md:pb-16">
+        {/* Back to Tools */}
+        <Link 
+          to="/portal/tools" 
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          ← Back to Tools
+        </Link>
+
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>

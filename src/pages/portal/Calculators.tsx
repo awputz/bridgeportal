@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { Calculator, TrendingUp, Building2, Home, DollarSign, Percent, BarChart3, PiggyBank, Receipt, Users, FileText, Landmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -115,6 +115,14 @@ const Calculators = () => {
   return (
     <div className="min-h-screen pb-24 md:pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        {/* Back to Tools */}
+        <Link 
+          to="/portal/tools" 
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
+        >
+          ← Back to Tools
+        </Link>
+
         {/* Header */}
         <div className="mb-8 md:mb-10">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">
