@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, LayoutDashboard, FileText, Wrench, LogOut, Settings, Users, Sparkles, Calculator, Briefcase, Wand2, User, ChevronDown, ListTodo, BarChart3, FolderOpen, Send } from "lucide-react";
+import { Menu, X, LayoutDashboard, FileText, Wrench, LogOut, Settings, Users, Sparkles, Calculator, Briefcase, Wand2, User, ChevronDown, ListTodo, FolderOpen, Send, Building2, Heart, Target, Globe, Headphones, Bell } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { 
@@ -20,8 +20,18 @@ const coreNavItems = [
   { name: "Dashboard", path: "/portal", icon: LayoutDashboard },
   { name: "CRM", path: "/portal/crm", icon: Briefcase },
   { name: "Tasks", path: "/portal/tasks", icon: ListTodo },
-  { name: "Analytics", path: "/portal/analytics", icon: BarChart3 },
   { name: "Directory", path: "/portal/directory", icon: Users },
+];
+
+// Company pages dropdown
+const companyItems = [
+  { name: "About Us", path: "/portal/company/about", icon: Building2, description: "Our story and divisions" },
+  { name: "Mission & Vision", path: "/portal/company/mission", icon: Target, description: "Our guiding principles" },
+  { name: "Culture & Values", path: "/portal/company/culture", icon: Heart, description: "What we believe" },
+  { name: "Expectations", path: "/portal/company/expectations", icon: Users, description: "Agent standards" },
+  { name: "Expansion", path: "/portal/company/expansion", icon: Globe, description: "Future markets" },
+  { name: "Contact", path: "/portal/company/contact", icon: Headphones, description: "Get support" },
+  { name: "Announcements", path: "/portal/announcements", icon: Bell, description: "Company news" },
 ];
 
 // Productivity tools (grouped in dropdown)
@@ -37,9 +47,9 @@ const productivityItems = [
 // All nav items for mobile
 const allNavItems = [
   ...coreNavItems,
+  ...companyItems,
   ...productivityItems,
   { name: "AI", path: "/portal/ai", icon: Sparkles },
-  { name: "Directory", path: "/portal/directory", icon: Users },
   { name: "Profile", path: "/portal/profile", icon: User },
 ];
 
@@ -63,6 +73,10 @@ export const PortalNavigation = () => {
   };
 
   const isProductivityActive = productivityItems.some(
+    item => location.pathname === item.path || location.pathname.startsWith(item.path)
+  );
+
+  const isCompanyActive = companyItems.some(
     item => location.pathname === item.path || location.pathname.startsWith(item.path)
   );
 
