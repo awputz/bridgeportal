@@ -30,9 +30,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DashboardStats } from "@/components/portal/DashboardStats";
 import { DealPipelinePreview } from "@/components/portal/DealPipelinePreview";
-import { TodaysPriorities } from "@/components/portal/TodaysPriorities";
 import { GlobalDivisionSwitcher } from "@/components/portal/GlobalDivisionSwitcher";
 import { ProfileCard } from "@/components/portal/ProfileCard";
+import { WelcomeBanner } from "@/components/portal/WelcomeBanner";
+import { DashboardTasks } from "@/components/portal/DashboardTasks";
 
 // Icon mapping for dynamic icons from database
 const iconMap: Record<string, typeof Mail> = {
@@ -56,13 +57,6 @@ const calculatorQuickAccess = [
   { name: "Lease Analysis", path: "/portal/calculators?tab=commercial-leasing", icon: Building2 },
   { name: "Rent vs Buy", path: "/portal/calculators?tab=residential", icon: Home },
 ];
-
-const getGreeting = () => {
-  const hour = new Date().getHours();
-  if (hour < 12) return "Good morning";
-  if (hour < 18) return "Good afternoon";
-  return "Good evening";
-};
 
 // Group tools by category
 const groupToolsByCategory = (tools: ExternalTool[]) => {
@@ -97,16 +91,9 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen pb-24 md:pb-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-        {/* Header with Division Switcher */}
-        <div className="mb-8 md:mb-10 flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-          <div>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">
-              {getGreeting()}
-            </h1>
-            <p className="text-muted-foreground font-light">
-              Welcome to the Bridge Agent Portal
-            </p>
-          </div>
+        {/* Personalized Welcome Banner */}
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-8">
+          <WelcomeBanner />
           <GlobalDivisionSwitcher />
         </div>
 
@@ -145,11 +132,11 @@ const Dashboard = () => {
           </form>
         </section>
 
-        {/* CRM Quick Actions + Today's Priorities + Pipeline */}
+        {/* Tasks + Deal Pipeline */}
         <section className="mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Left: Today's Priorities */}
-            <TodaysPriorities />
+            {/* Left: Tasks with Filters */}
+            <DashboardTasks />
             
             {/* Right: Deal Pipeline Preview */}
             <DealPipelinePreview />

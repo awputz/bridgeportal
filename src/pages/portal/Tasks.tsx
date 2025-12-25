@@ -10,7 +10,8 @@ import {
   User,
   Building2,
   MoreHorizontal,
-  Trash2
+  Trash2,
+  Search
 } from "lucide-react";
 import { format, isToday, isPast, parseISO } from "date-fns";
 import { useTasks, useCreateTask, useCompleteTask, useDeleteTask, useTaskStats, Task } from "@/hooks/useTasks";
@@ -184,6 +185,9 @@ const Tasks = () => {
   const [filter, setFilter] = useState<"today" | "week" | "overdue" | "completed" | "all">("all");
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [deleteTaskId, setDeleteTaskId] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [priorityFilter, setPriorityFilter] = useState<string>("all");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
 
   const { data: tasks, isLoading } = useTasks(filter);
   const { data: stats } = useTaskStats();
@@ -192,6 +196,23 @@ const Tasks = () => {
   const createTask = useCreateTask();
   const completeTask = useCompleteTask();
   const deleteTask = useDeleteTask();
+
+  // Apply additional filters
+  const filteredTasks = tasks?.filter(task => {
+    // Search filter
+    if (searchTerm && !task.title.toLowerCase().includes(searchTerm.toLowerCase())) {
+      return false;
+    }
+    // Priority filter
+    if (priorityFilter !== "all" && task.priority !== priorityFilter) {
+      return false;
+    }
+    // Category filter
+    if (categoryFilter !== "all" && task.category !== categoryFilter) {
+      return false;
+    }
+    return true;
+  });
 
   const handleCreateTask = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -418,8 +439,48 @@ const Tasks = () => {
           </button>
         </div>
 
-        {/* Filter */}
-        <div className="flex items-center justify-end mb-6">
+        {/* Enhanced Filters */}
+        <div className="flex flex-col md:flex-row gap-4 mb-6">
+          {/* Search */}
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search tasks..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 bg-white/5 border-white/10"
+            />
+          </div>
+          
+          {/* Priority Filter */}
+          <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+            <SelectTrigger className="w-full md:w-40 bg-white/5 border-white/10">
+              <SelectValue placeholder="Priority" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Priorities</SelectItem>
+              <SelectItem value="high">High</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="low">Low</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Category Filter */}
+          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+            <SelectTrigger className="w-full md:w-40 bg-white/5 border-white/10">
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              {activityTypes.map((type) => (
+                <SelectItem key={type.value} value={type.value}>
+                  {type.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* All Tasks Button */}
           <Button
             variant={filter === "all" ? "default" : "outline"}
             size="sm"
@@ -437,12 +498,16 @@ const Tasks = () => {
             [...Array(5)].map((_, i) => (
               <Skeleton key={i} className="h-24 rounded-xl" />
             ))
-          ) : tasks?.length === 0 ? (
+          ) : filteredTasks?.length === 0 ? (
             <div className="text-center py-16 glass-card">
               <ListTodo className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
               <h3 className="text-lg font-light text-foreground mb-2">No tasks found</h3>
               <p className="text-muted-foreground mb-4">
-                {filter === "all" ? "Create your first task to get started" : `No ${filter} tasks`}
+                {searchTerm || priorityFilter !== "all" || categoryFilter !== "all" 
+                  ? "Try adjusting your filters" 
+                  : filter === "all" 
+                    ? "Create your first task to get started" 
+                    : `No ${filter} tasks`}
               </p>
               <Button onClick={() => setShowAddDialog(true)}>
                 <Plus className="h-4 w-4 mr-2" />
@@ -450,7 +515,7 @@ const Tasks = () => {
               </Button>
             </div>
           ) : (
-            tasks?.map((task) => (
+            filteredTasks?.map((task) => (
               <TaskCard
                 key={task.id}
                 task={task}

@@ -109,6 +109,9 @@ const CRM = () => {
   const [showCSVUploader, setShowCSVUploader] = useState(false);
   const [deleteContactId, setDeleteContactId] = useState<string | null>(null);
   const [deleteDealId, setDeleteDealId] = useState<string | null>(null);
+  // Enhanced filters
+  const [contactTypeFilter, setContactTypeFilter] = useState<string>("all");
+  const [sourceFilter, setSourceFilter] = useState<string>("all");
 
   const { data: contacts, isLoading: contactsLoading, refetch: refetchContacts } = useCRMContacts(division);
   const { data: deals, isLoading: dealsLoading } = useCRMDeals(division);
@@ -121,17 +124,31 @@ const CRM = () => {
   // Subscribe to real-time CRM updates
   useCRMRealtime(division);
 
-  // Filter contacts by search
+  // Filter contacts by search and additional filters
   const filteredContacts = useMemo(() => {
     if (!contacts) return [];
-    if (!search) return contacts;
-    return contacts.filter(
-      (c) =>
-        c.full_name.toLowerCase().includes(search.toLowerCase()) ||
-        c.email?.toLowerCase().includes(search.toLowerCase()) ||
-        c.company?.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [contacts, search]);
+    return contacts.filter((c) => {
+      // Search filter
+      if (search) {
+        const searchLower = search.toLowerCase();
+        const matchesSearch = 
+          c.full_name.toLowerCase().includes(searchLower) ||
+          c.email?.toLowerCase().includes(searchLower) ||
+          c.company?.toLowerCase().includes(searchLower) ||
+          c.phone?.includes(search);
+        if (!matchesSearch) return false;
+      }
+      // Contact type filter
+      if (contactTypeFilter !== "all" && c.contact_type !== contactTypeFilter) {
+        return false;
+      }
+      // Source filter
+      if (sourceFilter !== "all" && c.source !== sourceFilter) {
+        return false;
+      }
+      return true;
+    });
+  }, [contacts, search, contactTypeFilter, sourceFilter]);
 
   const isLoading = contactsLoading || dealsLoading || stagesLoading;
 
@@ -412,15 +429,48 @@ const CRM = () => {
 
           {/* Contacts View */}
           <TabsContent value="contacts" className="mt-0">
-            {/* Search */}
-            <div className="relative max-w-md mb-6">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search contacts by name, email, or company..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-10 bg-white/5 border-white/10"
-              />
+            {/* Enhanced Search & Filters */}
+            <div className="flex flex-col md:flex-row gap-4 mb-6">
+              {/* Search */}
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search by name, email, phone, or company..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-10 bg-white/5 border-white/10"
+                />
+              </div>
+              
+              {/* Contact Type Filter */}
+              <Select value={contactTypeFilter} onValueChange={setContactTypeFilter}>
+                <SelectTrigger className="w-full md:w-44 bg-white/5 border-white/10">
+                  <SelectValue placeholder="Contact Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Types</SelectItem>
+                  {contactTypes.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              
+              {/* Source Filter */}
+              <Select value={sourceFilter} onValueChange={setSourceFilter}>
+                <SelectTrigger className="w-full md:w-44 bg-white/5 border-white/10">
+                  <SelectValue placeholder="Source" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Sources</SelectItem>
+                  {sourceOptions.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Contacts Grid */}
@@ -434,11 +484,11 @@ const CRM = () => {
               <div className="text-center py-16 glass-card">
                 <User className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
                 <h3 className="text-lg font-light text-foreground mb-2">
-                  {search ? "No contacts found" : "No contacts yet"}
+                  {search || contactTypeFilter !== "all" || sourceFilter !== "all" ? "No contacts found" : "No contacts yet"}
                 </h3>
                 <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-                  {search 
-                    ? "Try a different search term" 
+                  {search || contactTypeFilter !== "all" || sourceFilter !== "all"
+                    ? "Try adjusting your filters" 
                     : "Build your network by adding contacts manually or importing from a CSV file."}
                 </p>
                 {!search && (
