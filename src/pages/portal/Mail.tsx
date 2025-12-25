@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
 import { Mail as MailIcon, Inbox, Send, FileText, Star, Trash2, Plus, RefreshCw, Settings, AlertCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useGmailConnection, useConnectGmail, useDisconnectGmail, useGmailLabels, useGmailMessages, useExchangeGmailCode } from "@/hooks/useGmail";
+import { useGmailConnection, useConnectGmail, useDisconnectGmail, useGmailLabels, useGmailMessages } from "@/hooks/useGmail";
 import { MailInbox } from "@/components/portal/MailInbox";
 import { MailMessage } from "@/components/portal/MailMessage";
 import { MailCompose } from "@/components/portal/MailCompose";
@@ -21,7 +20,6 @@ const LABEL_CONFIG: Record<string, { icon: React.ElementType; label: string }> =
 };
 
 export default function Mail() {
-  const [searchParams, setSearchParams] = useSearchParams();
   const [activeLabel, setActiveLabel] = useState<string>("INBOX");
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,19 +35,6 @@ export default function Mail() {
 
   const connectGmail = useConnectGmail();
   const disconnectGmail = useDisconnectGmail();
-  const exchangeCode = useExchangeGmailCode();
-
-  // Handle OAuth callback
-  useEffect(() => {
-    const code = searchParams.get("code");
-    if (code && !connection?.isConnected) {
-      exchangeCode.mutate(code, {
-        onSettled: () => {
-          setSearchParams({});
-        },
-      });
-    }
-  }, [searchParams, connection?.isConnected]);
 
   const handleRefresh = () => {
     refetchLabels();
@@ -158,11 +143,11 @@ export default function Mail() {
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" onClick={handleRefresh} className="gap-2">
               <RefreshCw className="h-4 w-4" />
-              Refresh
+              <span className="hidden sm:inline">Refresh</span>
             </Button>
             <Button size="sm" onClick={() => setIsComposeOpen(true)} className="gap-2">
               <Plus className="h-4 w-4" />
-              Compose
+              <span className="hidden sm:inline">Compose</span>
             </Button>
             <Button
               variant="ghost"
@@ -178,10 +163,10 @@ export default function Mail() {
 
         {/* Main Content */}
         <div className="glass-card overflow-hidden">
-          <div className="flex h-[calc(100vh-16rem)] md:h-[600px]">
+          <div className="flex flex-col md:flex-row h-[calc(100vh-16rem)] md:h-[600px]">
             {/* Sidebar - Labels */}
-            <div className="w-48 border-r border-border/50 p-3 overflow-y-auto hidden md:block bg-muted/20">
-              <div className="space-y-1">
+            <div className="w-full md:w-48 border-b md:border-b-0 md:border-r border-border/50 p-2 md:p-3 overflow-x-auto md:overflow-y-auto bg-muted/20">
+              <div className="flex md:flex-col gap-1 md:space-y-1">
                 {Object.entries(LABEL_CONFIG).map(([id, config]) => {
                   const Icon = config.icon;
                   const unreadCount = getLabelUnreadCount(id);
@@ -194,7 +179,7 @@ export default function Mail() {
                         setSelectedMessageId(null);
                       }}
                       className={cn(
-                        "w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-all",
+                        "flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-all whitespace-nowrap",
                         isActive
                           ? "bg-primary text-primary-foreground shadow-sm"
                           : "text-foreground/70 hover:bg-muted hover:text-foreground"
@@ -202,12 +187,12 @@ export default function Mail() {
                     >
                       <span className="flex items-center gap-2.5">
                         <Icon className="h-4 w-4" />
-                        {config.label}
+                        <span className="hidden md:inline">{config.label}</span>
                       </span>
                       {unreadCount > 0 && id !== "TRASH" && (
                         <Badge 
                           variant={isActive ? "secondary" : "default"} 
-                          className="text-[10px] h-5 min-w-[20px] justify-center"
+                          className="text-[10px] h-5 min-w-[20px] justify-center hidden md:flex"
                         >
                           {unreadCount}
                         </Badge>
@@ -218,33 +203,11 @@ export default function Mail() {
               </div>
             </div>
 
-            {/* Mobile Tabs */}
-            <div className="md:hidden absolute top-0 left-0 right-0 bg-background/80 backdrop-blur-sm border-b border-border/50 z-10">
-              <Tabs value={activeLabel} onValueChange={setActiveLabel} className="w-full">
-                <TabsList className="w-full h-auto flex justify-start p-1 bg-transparent overflow-x-auto">
-                  {Object.entries(LABEL_CONFIG).map(([id, config]) => {
-                    const Icon = config.icon;
-                    return (
-                      <TabsTrigger 
-                        key={id} 
-                        value={id} 
-                        className="flex items-center gap-1.5 text-xs px-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                        onClick={() => setSelectedMessageId(null)}
-                      >
-                        <Icon className="h-3.5 w-3.5" />
-                        {config.label}
-                      </TabsTrigger>
-                    );
-                  })}
-                </TabsList>
-              </Tabs>
-            </div>
-
             {/* Content Area */}
             <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
               {/* Email List */}
               <div className={cn(
-                "flex-col border-r border-border/50 w-full md:w-96",
+                "flex-col border-b md:border-b-0 md:border-r border-border/50 w-full md:w-96",
                 selectedMessageId ? "hidden md:flex" : "flex"
               )}>
                 <div className="p-3 border-b border-border/50">

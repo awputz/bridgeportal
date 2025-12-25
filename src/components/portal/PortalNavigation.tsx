@@ -36,6 +36,7 @@ import { NotificationCenter } from "./NotificationCenter";
 // Google items
 const googleItems = [
   { name: "Mail", path: "/portal/mail", icon: Mail },
+  { name: "Calendar", path: "/portal/calendar", icon: LayoutDashboard },
   { name: "Contacts", path: "/portal/contacts", icon: Users },
   { name: "Drive", path: "/portal/drive", icon: FolderOpen },
 ];

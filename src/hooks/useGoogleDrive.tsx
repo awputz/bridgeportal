@@ -19,25 +19,26 @@ export function useDriveConnection() {
   return useQuery({
     queryKey: ['drive-connection'],
     queryFn: async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return { isConnected: false };
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return { isConnected: false };
 
-      try {
-        const { data, error } = await supabase.functions.invoke('google-drive-auth', {
-          body: { action: 'check-connection' }
-        });
+      const { data, error } = await supabase
+        .from('user_google_tokens')
+        .select('drive_enabled, access_token')
+        .eq('user_id', user.id)
+        .maybeSingle();
 
-        if (error) {
-          console.error('Drive connection check error:', error);
-          return { isConnected: false };
-        }
-        return { isConnected: data?.connected || false };
-      } catch (err) {
-        console.error('Drive connection check failed:', err);
+      if (error) {
+        console.error('Drive connection check error:', error);
         return { isConnected: false };
       }
+
+      if (!data) {
+        return { isConnected: false };
+      }
+
+      return { isConnected: data.drive_enabled && !!data.access_token };
     },
-    retry: false,
     staleTime: 30000,
   });
 }
@@ -62,6 +63,7 @@ export function useConnectDrive() {
           if (popup?.closed) {
             clearInterval(checkClosed);
             queryClient.invalidateQueries({ queryKey: ['drive-connection'] });
+            queryClient.invalidateQueries({ queryKey: ['drive-files'] });
             resolve(data);
           }
         }, 500);
