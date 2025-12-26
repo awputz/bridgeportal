@@ -65,7 +65,7 @@ const Team = () => {
             <CardContent className="p-6">
               <div className="flex items-start gap-4">
                 <Avatar className="h-16 w-16 border-2 border-border">
-                  <AvatarImage src={member.photo_url || undefined} alt={member.name} />
+                  <AvatarImage src={member.image_url || undefined} alt={member.name} />
                   <AvatarFallback className="bg-sky-400/10 text-sky-400 text-lg">
                     {member.name?.split(" ").map(n => n[0]).join("").slice(0, 2)}
                   </AvatarFallback>
@@ -73,18 +73,11 @@ const Team = () => {
                 <div className="flex-1 min-w-0">
                   <h3 className="font-medium text-foreground truncate">{member.name}</h3>
                   <p className="text-sm text-muted-foreground truncate">{member.title || "Team Member"}</p>
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {member.divisions?.slice(0, 2).map((div) => (
-                      <Badge key={div} variant="secondary" className="text-xs">
-                        {div}
-                      </Badge>
-                    ))}
-                    {(member.divisions?.length || 0) > 2 && (
-                      <Badge variant="outline" className="text-xs">
-                        +{(member.divisions?.length || 0) - 2}
-                      </Badge>
-                    )}
-                  </div>
+                  {member.category && (
+                    <Badge variant="secondary" className="text-xs mt-2">
+                      {member.category}
+                    </Badge>
+                  )}
                 </div>
               </div>
               <div className="mt-4 pt-4 border-t border-border/50 space-y-2">
@@ -125,7 +118,7 @@ const Team = () => {
             <div className="space-y-6">
               <div className="flex items-center gap-4">
                 <Avatar className="h-20 w-20 border-2 border-border">
-                  <AvatarImage src={selectedMember.photo_url || undefined} alt={selectedMember.name} />
+                  <AvatarImage src={selectedMember.image_url || undefined} alt={selectedMember.name} />
                   <AvatarFallback className="bg-sky-400/10 text-sky-400 text-2xl">
                     {selectedMember.name?.split(" ").map(n => n[0]).join("").slice(0, 2)}
                   </AvatarFallback>
@@ -138,12 +131,12 @@ const Team = () => {
 
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm text-muted-foreground mb-2">Divisions</p>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedMember.divisions?.map((div) => (
-                      <Badge key={div} variant="secondary">{div}</Badge>
-                    )) || <span className="text-sm text-muted-foreground">None assigned</span>}
-                  </div>
+                  <p className="text-sm text-muted-foreground mb-2">Division</p>
+                  {selectedMember.category ? (
+                    <Badge variant="secondary">{selectedMember.category}</Badge>
+                  ) : (
+                    <span className="text-sm text-muted-foreground">None assigned</span>
+                  )}
                 </div>
 
                 <div className="space-y-3">
