@@ -596,7 +596,10 @@ export default function Drive() {
       {/* File Preview */}
       <DriveFilePreview
         file={previewFile}
+        files={processedFiles}
+        isOpen={!!previewFile}
         onClose={() => setPreviewFile(null)}
+        onNavigate={(file) => setPreviewFile(file)}
       />
     </div>
   );

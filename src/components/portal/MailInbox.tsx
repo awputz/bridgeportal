@@ -576,6 +576,7 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
         <MailSnoozeDialog
           open={!!snoozeMessageId}
           onOpenChange={(open) => !open && setSnoozeMessageId(null)}
+          messageId={snoozeMessageId || ""}
           onSnooze={handleSnooze}
         />
       </div>
