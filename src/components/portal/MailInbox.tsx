@@ -539,7 +539,7 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
 
         {/* Email List */}
         <ScrollArea className="flex-1">
-          <div className="py-2">
+          <div className="py-2 pb-20 md:pb-4">
             {/* Unread Section */}
             {unreadMessages.length > 0 && (
               <Collapsible open={unreadOpen} onOpenChange={setUnreadOpen}>

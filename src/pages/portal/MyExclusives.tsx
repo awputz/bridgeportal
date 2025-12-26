@@ -64,8 +64,8 @@ const MyExclusives = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pb-24 md:pb-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+      <div className="flex-1 overflow-auto">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
           <Skeleton className="h-10 w-48 mb-4" />
           <Skeleton className="h-6 w-64 mb-8" />
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -80,8 +80,8 @@ const MyExclusives = () => {
 
   if (!teamMemberId) {
     return (
-      <div className="min-h-screen pb-24 md:pb-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+      <div className="flex-1 overflow-auto">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
           <div className="text-center py-16">
             <Building2 className="h-16 w-16 text-muted-foreground/50 mx-auto mb-4" />
             <h2 className="text-2xl font-light text-foreground mb-2">
@@ -103,8 +103,8 @@ const MyExclusives = () => {
   }
 
   return (
-    <div className="min-h-screen pb-24 md:pb-16">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <div className="flex-1 overflow-auto">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-2 text-muted-foreground text-sm mb-2">

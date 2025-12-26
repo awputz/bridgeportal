@@ -165,8 +165,8 @@ const Profile = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pb-24 md:pb-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+      <div className="flex-1 overflow-auto">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
           <Skeleton className="h-10 w-48 mb-8" />
           <div className="grid gap-6 lg:grid-cols-3">
             <Skeleton className="h-64 lg:col-span-2" />
@@ -178,8 +178,8 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen pb-24 md:pb-16">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <div className="flex-1 overflow-auto">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
         {/* Agent Header with Photo */}
         <Card className="glass-card border-white/10 mb-8">
           <CardContent className="pt-8 pb-6">

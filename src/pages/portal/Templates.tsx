@@ -3,8 +3,8 @@ import { DivisionSelector } from "@/components/portal/DivisionSelector";
 
 const Templates = () => {
   return (
-    <div className="min-h-screen pb-16">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+    <div className="flex-1 overflow-auto">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
         {/* Back to Tools */}
         <Link 
           to="/portal/tools" 

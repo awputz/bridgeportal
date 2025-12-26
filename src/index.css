@@ -8,11 +8,19 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Portal layout spacing */
-    --portal-nav-height: 64px;
-    --portal-nav-height-md: 80px;
-    --portal-bottom-nav-height: 64px;
+    /* Portal layout spacing - precise values matching actual nav components */
+    --portal-nav-height: 56px;        /* Mobile nav h-14 = 56px */
+    --portal-nav-height-md: 80px;     /* Desktop nav h-20 = 80px */
+    --portal-bottom-nav-height: 64px; /* Mobile bottom nav h-16 = 64px */
     --portal-safe-bottom: env(safe-area-inset-bottom, 0px);
+    
+    /* Content spacing standards */
+    --content-padding-x-mobile: 1rem;     /* 16px - px-4 */
+    --content-padding-x-tablet: 1.5rem;   /* 24px - px-6 */
+    --content-padding-x-desktop: 2rem;    /* 32px - px-8 */
+    --content-padding-y: 1.5rem;          /* 24px - py-6 */
+    --section-gap: 2rem;                  /* 32px - space between major sections */
+    --card-padding: 1.25rem;              /* 20px - internal card padding */
     
     /* BRIDGE Investment Sales - Dark Mode with Warm Off-White Tones */
     

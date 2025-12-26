@@ -91,8 +91,8 @@ const Notes = () => {
   const unpinnedNotes = notes?.filter((n) => !n.is_pinned) || [];
 
   return (
-    <div className="container max-w-7xl mx-auto px-4 py-8 md:py-12">
-      <div className="space-y-6 pb-24 md:pb-16">
+    <div className="flex-1 overflow-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8 space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -297,34 +297,34 @@ const Notes = () => {
             )}
           </div>
         )}
-
-        {/* Note Editor */}
-        <NoteEditor
-          note={selectedNote}
-          isOpen={editorOpen}
-          onClose={() => setEditorOpen(false)}
-          onSave={handleSaveNote}
-          onUpdateAiSummary={handleUpdateAiSummary}
-        />
-
-        {/* Delete Confirmation */}
-        <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Delete Note</AlertDialogTitle>
-              <AlertDialogDescription>
-                Are you sure you want to delete this note? This action cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleConfirmDelete} className="bg-destructive text-destructive-foreground">
-                Delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
       </div>
+
+      {/* Note Editor */}
+      <NoteEditor
+        note={selectedNote}
+        isOpen={editorOpen}
+        onClose={() => setEditorOpen(false)}
+        onSave={handleSaveNote}
+        onUpdateAiSummary={handleUpdateAiSummary}
+      />
+
+      {/* Delete Confirmation */}
+      <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Note</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this note? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleConfirmDelete} className="bg-destructive text-destructive-foreground">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

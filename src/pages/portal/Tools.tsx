@@ -101,8 +101,8 @@ const Tools = () => {
   const { data: externalTools, isLoading } = useExternalTools();
 
   return (
-    <div className="min-h-screen pb-24 md:pb-16">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <div className="flex-1 overflow-auto">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
         {/* Header */}
         <div className="text-center mb-10 md:mb-14 animate-fade-in">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 mb-6">
