@@ -1,4 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/components/ui/sonner";
+
+let lastAuthToastAt = 0;
 
 /**
  * Hard logout - clears all auth storage and redirects to login.
@@ -9,24 +12,39 @@ export const hardLogout = () => {
   const keysToRemove: string[] = [];
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
-    if (key && (key.startsWith('sb-') || key.includes('supabase'))) {
+    if (key && (key.startsWith("sb-") || key.includes("supabase"))) {
       keysToRemove.push(key);
     }
   }
-  keysToRemove.forEach(key => localStorage.removeItem(key));
-  
+  keysToRemove.forEach((key) => localStorage.removeItem(key));
+
   // Clear sessionStorage too
   const sessionKeysToRemove: string[] = [];
   for (let i = 0; i < sessionStorage.length; i++) {
     const key = sessionStorage.key(i);
-    if (key && (key.startsWith('sb-') || key.includes('supabase'))) {
+    if (key && (key.startsWith("sb-") || key.includes("supabase"))) {
       sessionKeysToRemove.push(key);
     }
   }
-  sessionKeysToRemove.forEach(key => sessionStorage.removeItem(key));
-  
+  sessionKeysToRemove.forEach((key) => sessionStorage.removeItem(key));
+
   // Full page reload to login - guarantees clean state
   window.location.href = "/login";
+};
+
+const maybeShowReauthToast = () => {
+  // Avoid spamming when multiple queries fail at once
+  const now = Date.now();
+  if (now - lastAuthToastAt < 10_000) return;
+  lastAuthToastAt = now;
+
+  toast.error("Your session needs to be refreshed.", {
+    description: "Click Sign in again to restore Google features.",
+    action: {
+      label: "Sign in again",
+      onClick: () => hardLogout(),
+    },
+  });
 };
 
 /**
@@ -69,7 +87,7 @@ export const invokeWithAuthHandling = async <T = unknown>(
 
       if (isAuthError) {
         console.error(`Auth error calling ${functionName}:`, error);
-        // Don't immediately logout - let the caller decide
+        maybeShowReauthToast();
       }
 
       return { data: null, error };

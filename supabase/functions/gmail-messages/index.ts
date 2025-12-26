@@ -180,24 +180,41 @@ serve(async (req) => {
     
     const authHeader = req.headers.get('Authorization');
     console.log("[gmail-messages] Auth header present:", !!authHeader);
-    
+
     if (!authHeader) {
       console.log("[gmail-messages] Missing auth header");
-      return new Response(JSON.stringify({ error: 'No authorization header' }), {
-        status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return new Response(
+        JSON.stringify({
+          error: 'No authorization header',
+          needsReauth: true,
+          errorCode: 'MISSING_AUTH',
+        }),
+        {
+          status: 401,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: userError } = await supabase.auth.getUser(token);
-    
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser(token);
+
     if (userError || !user) {
       console.log("[gmail-messages] Invalid user token:", userError?.message);
-      return new Response(JSON.stringify({ error: 'Invalid token' }), {
-        status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return new Response(
+        JSON.stringify({
+          error: 'Invalid token',
+          needsReauth: true,
+          errorCode: 'INVALID_AUTH',
+        }),
+        {
+          status: 401,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
     
     console.log("[gmail-messages] User authenticated:", user.id);
