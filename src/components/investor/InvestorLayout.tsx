@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import { Outlet, useNavigate, Link, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Loader2, LogOut, Menu, X} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Loader2, LogOut, Menu, X, Bell } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { InvestorSidebar } from "./InvestorSidebar";
 import { cn } from "@/lib/utils";
+import { usePendingCounts } from "@/hooks/usePendingCounts";
+import { useInvestorRealtime } from "@/hooks/useInvestorRealtime";
 import {
   LayoutDashboard,
   BarChart3,
@@ -36,6 +39,13 @@ export const InvestorLayout = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  
+  // Enable realtime subscriptions for auto-refresh
+  useInvestorRealtime();
+  
+  // Get pending counts for notification badge
+  const { data: pendingCounts } = usePendingCounts();
+  const totalPending = (pendingCounts?.agentRequests || 0) + (pendingCounts?.commissionRequests || 0);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -106,13 +116,27 @@ export const InvestorLayout = () => {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-h-screen">
         {/* Mobile Header */}
-        <header className="lg:hidden sticky top-0 z-50 border-b border-border/50 bg-background/95 backdrop-blur">
+        <header className="lg:hidden sticky top-0 z-50 border-b border-border/50 bg-background/95 backdrop-blur safe-area-top">
           <div className="flex h-14 items-center justify-between px-4">
             <div className="flex items-center gap-3">
               <img src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" alt="Bridge" className="h-7" />
               <span className="text-sm font-medium">Investor Portal</span>
             </div>
             <div className="flex items-center gap-2">
+              {/* Notification Badge */}
+              <Link to="/investor/agent-requests" className="relative">
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <Bell className="h-4 w-4" />
+                  {totalPending > 0 && (
+                    <Badge 
+                      variant="destructive" 
+                      className="absolute -top-1 -right-1 h-4 min-w-4 px-1 text-[10px] flex items-center justify-center"
+                    >
+                      {totalPending > 99 ? "99+" : totalPending}
+                    </Badge>
+                  )}
+                </Button>
+              </Link>
               <Button variant="ghost" size="sm" onClick={handleSignOut}>
                 <LogOut className="h-4 w-4" />
               </Button>
@@ -149,10 +173,26 @@ export const InvestorLayout = () => {
         {/* Desktop Header */}
         <header className="hidden lg:flex sticky top-0 z-40 h-16 items-center justify-between border-b border-border/50 bg-background/95 backdrop-blur px-6">
           <div className="text-sm text-muted-foreground">Welcome, <span className="text-foreground font-medium">{userName}</span></div>
-          <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-2">
-            <LogOut className="h-4 w-4" />
-            Sign Out
-          </Button>
+          <div className="flex items-center gap-3">
+            {/* Notification Badge */}
+            <Link to="/investor/agent-requests" className="relative">
+              <Button variant="ghost" size="icon" className="h-9 w-9">
+                <Bell className="h-4 w-4" />
+                {totalPending > 0 && (
+                  <Badge 
+                    variant="destructive" 
+                    className="absolute -top-1 -right-1 h-4 min-w-4 px-1 text-[10px] flex items-center justify-center"
+                  >
+                    {totalPending > 99 ? "99+" : totalPending}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
+            <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-2">
+              <LogOut className="h-4 w-4" />
+              Sign Out
+            </Button>
+          </div>
         </header>
 
         {/* Main Content */}
@@ -161,7 +201,7 @@ export const InvestorLayout = () => {
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-border/50 py-4 px-6">
+        <footer className="border-t border-border/50 py-3 px-6 pb-safe">
           <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
             <span>Bridge Advisory Group © {new Date().getFullYear()}</span>
             <span>•</span>
