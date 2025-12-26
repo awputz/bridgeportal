@@ -110,7 +110,7 @@ const InvestorLogin = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <div className="fixed inset-0 bg-gradient-to-b from-background via-background to-amber-950/20 pointer-events-none" />
+      <div className="fixed inset-0 bg-gradient-to-b from-background via-background to-sky-950/20 pointer-events-none" />
       
       <div className="relative z-10 w-full max-w-md">
         <div className="flex justify-center mb-10">
@@ -121,7 +121,7 @@ const InvestorLogin = () => {
           />
         </div>
 
-        <div className="glass-panel-strong p-8 md:p-10 border-amber-500/20">
+        <div className="glass-panel-strong p-8 md:p-10 border-sky-400/20">
           <button
             onClick={() => navigate("/login")}
             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
@@ -131,19 +131,18 @@ const InvestorLogin = () => {
           </button>
 
           <div className="text-center mb-8">
-            <div className="mx-auto w-14 h-14 rounded-full bg-amber-500/10 flex items-center justify-center mb-4">
-              <Briefcase className="h-6 w-6 text-amber-500" />
+            <div className="mx-auto w-14 h-14 rounded-full bg-sky-400/10 flex items-center justify-center mb-4">
+              <Briefcase className="h-6 w-6 text-sky-400" />
             </div>
             <h1 className="text-2xl font-extralight text-foreground mb-1">
               Investor Portal
             </h1>
             <div className="flex items-center justify-center gap-2 mt-3">
               <img 
-                src="/lovable-uploads/hpg-logo.jpeg" 
-                alt="Hudson Point Group" 
-                className="h-5 w-auto"
+                src="/lovable-uploads/hpg-logo-white.png" 
+                alt="HPG" 
+                className="h-6 w-auto"
               />
-              <span className="text-xs text-muted-foreground">Hudson Point Group</span>
             </div>
           </div>
 
@@ -157,12 +156,12 @@ const InvestorLogin = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="your.email@hudsonpointgroup.com"
+                  placeholder="your.email@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={isLoading}
                   autoFocus
-                  className="pl-10 h-12 bg-white/5 border-white/10 focus:border-amber-500/30"
+                  className="pl-10 h-12 bg-white/5 border-white/10 focus:border-sky-400/30"
                 />
               </div>
             </div>
@@ -180,14 +179,14 @@ const InvestorLogin = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}
-                  className="pl-10 h-12 bg-white/5 border-white/10 focus:border-amber-500/30"
+                  className="pl-10 h-12 bg-white/5 border-white/10 focus:border-sky-400/30"
                 />
               </div>
             </div>
             
             <Button
               type="submit"
-              className="w-full h-12 font-light text-base bg-amber-600 hover:bg-amber-700 text-white"
+              className="w-full h-12 font-light text-base bg-sky-500 hover:bg-sky-600 text-white"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -203,13 +202,13 @@ const InvestorLogin = () => {
 
           <button
             onClick={() => navigate("/reset-password")}
-            className="block mx-auto text-sm text-amber-500/80 hover:text-amber-400 transition-colors mt-4"
+            className="block mx-auto text-sm text-sky-400/80 hover:text-sky-300 transition-colors mt-4"
           >
             Forgot your password?
           </button>
 
           <p className="text-center text-xs text-muted-foreground/60 mt-4 font-light">
-            For authorized Hudson Point Group investors only
+            For authorized investors only
           </p>
         </div>
 

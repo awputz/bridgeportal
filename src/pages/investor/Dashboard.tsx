@@ -14,7 +14,7 @@ interface Metrics {
   divisionData: { name: string; value: number }[];
 }
 
-const COLORS = ['hsl(var(--primary))', 'hsl(45, 93%, 47%)', 'hsl(173, 58%, 39%)', 'hsl(220, 70%, 50%)'];
+const COLORS = ['hsl(var(--primary))', 'hsl(199, 89%, 48%)', 'hsl(173, 58%, 39%)', 'hsl(220, 70%, 50%)'];
 
 const InvestorDashboard = () => {
   const [userName, setUserName] = useState("");
@@ -143,11 +143,11 @@ const InvestorDashboard = () => {
   return (
     <div className="space-y-6 md:space-y-8">
       {/* Welcome Header */}
-      <div className="rounded-xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent p-4 md:p-6 border border-amber-500/20">
+      <div className="rounded-xl bg-gradient-to-r from-sky-400/10 via-sky-400/5 to-transparent p-4 md:p-6 border border-sky-400/20">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="min-w-0">
             <h1 className="text-xl sm:text-2xl md:text-3xl font-light text-foreground truncate">
-              Welcome back, <span className="text-amber-500 font-normal">{userName}</span>
+              Welcome back, <span className="text-sky-400 font-normal">{userName}</span>
             </h1>
             <p className="text-sm md:text-base text-muted-foreground mt-1">
               Bridge Advisory Group performance overview
@@ -155,11 +155,10 @@ const InvestorDashboard = () => {
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <img 
-              src="/lovable-uploads/hpg-logo.jpeg" 
-              alt="Hudson Point Group" 
-              className="h-5 md:h-6 w-auto"
+              src="/lovable-uploads/hpg-logo-white.png" 
+              alt="HPG" 
+              className="h-6 md:h-7 w-auto"
             />
-            <span className="text-xs md:text-sm text-muted-foreground">Hudson Point Group</span>
           </div>
         </div>
       </div>
@@ -171,7 +170,7 @@ const InvestorDashboard = () => {
             <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
               Total Volume
             </CardTitle>
-            <DollarSign className="h-3.5 w-3.5 md:h-4 md:w-4 text-amber-500" />
+            <DollarSign className="h-3.5 w-3.5 md:h-4 md:w-4 text-sky-400" />
           </CardHeader>
           <CardContent className="p-3 pt-0 md:p-6 md:pt-0">
             <div className="text-lg md:text-2xl font-bold">{formatCurrency(metrics?.totalVolume || 0)}</div>
@@ -225,7 +224,7 @@ const InvestorDashboard = () => {
         <Card className="lg:col-span-2 border-border/50">
           <CardHeader className="p-4 md:p-6">
             <div className="flex items-center gap-2">
-              <BarChart3 className="h-4 w-4 md:h-5 md:w-5 text-amber-500" />
+              <BarChart3 className="h-4 w-4 md:h-5 md:w-5 text-sky-400" />
               <CardTitle className="text-base md:text-lg font-medium">Monthly Volume</CardTitle>
             </div>
             <CardDescription className="text-xs md:text-sm">Transaction volume over 12 months (millions)</CardDescription>
@@ -256,7 +255,7 @@ const InvestorDashboard = () => {
                     }}
                     formatter={(value: number) => [`$${value.toFixed(2)}M`, 'Volume']}
                   />
-                  <Bar dataKey="volume" fill="hsl(45, 93%, 47%)" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="volume" fill="hsl(199, 89%, 48%)" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -318,7 +317,7 @@ const InvestorDashboard = () => {
       </div>
 
       {/* Info Notice */}
-      <Card className="bg-amber-500/5 border-amber-500/20">
+      <Card className="bg-sky-400/5 border-sky-400/20">
         <CardContent className="p-4 md:pt-6">
           <p className="text-xs md:text-sm text-muted-foreground text-center">
             This is a read-only dashboard. For detailed reports or questions, please contact Bridge Advisory Group directly.
