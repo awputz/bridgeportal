@@ -2,12 +2,32 @@ import { useEffect, useState } from "react";
 import { Outlet, useNavigate, Link, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Loader2, LogOut, LayoutDashboard, Briefcase } from "lucide-react";
+import { Loader2, LogOut, Menu, X} from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { InvestorSidebar } from "./InvestorSidebar";
+import { cn } from "@/lib/utils";
+import {
+  LayoutDashboard,
+  BarChart3,
+  Receipt,
+  Users,
+  DollarSign,
+  FileText,
+} from "lucide-react";
+
+const mobileNavItems = [
+  { name: "Dashboard", path: "/investor/dashboard", icon: LayoutDashboard },
+  { name: "Performance", path: "/investor/performance", icon: BarChart3 },
+  { name: "Transactions", path: "/investor/transactions", icon: Receipt },
+  { name: "Team", path: "/investor/team", icon: Users },
+  { name: "Commissions", path: "/investor/commissions", icon: DollarSign },
+  { name: "Reports", path: "/investor/reports", icon: FileText },
+];
 
 export const InvestorLayout = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [userName, setUserName] = useState<string>("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -20,7 +40,6 @@ export const InvestorLayout = () => {
         return;
       }
 
-      // Verify investor role
       const { data: roleData } = await supabase
         .from("user_roles")
         .select("role")
@@ -39,7 +58,6 @@ export const InvestorLayout = () => {
         return;
       }
 
-      // Get user profile
       const { data: profile } = await supabase
         .from("profiles")
         .select("full_name")
@@ -75,84 +93,76 @@ export const InvestorLayout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4">
-          <div className="flex h-16 items-center justify-between">
-            {/* Logo & Brand */}
-            <div className="flex items-center gap-4">
-              <Link to="/investor/dashboard" className="flex items-center gap-3">
-                <img 
-                  src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" 
-                  alt="Bridge Advisory Group" 
-                  className="h-8 w-auto"
-                />
-                <div className="hidden sm:flex items-center gap-3">
-                  <span className="text-sm font-medium text-foreground">Investor Portal</span>
-                  <span className="text-muted-foreground/50">|</span>
-                  <img 
-                    src="/lovable-uploads/hpg-logo-white.png" 
-                    alt="HPG" 
-                    className="h-10 w-auto"
-                  />
-                </div>
-              </Link>
-            </div>
+    <div className="min-h-screen bg-background flex">
+      {/* Desktop Sidebar */}
+      <InvestorSidebar />
 
-            {/* Navigation */}
-            <nav className="flex items-center gap-2">
-              <Link to="/investor/dashboard">
-                <Button 
-                  variant={location.pathname === "/investor/dashboard" ? "secondary" : "ghost"} 
-                  size="sm" 
-                  className="gap-2"
-                >
-                  <LayoutDashboard className="h-4 w-4" />
-                  <span className="hidden sm:inline">Dashboard</span>
-                </Button>
-              </Link>
-            </nav>
-
-            {/* User Menu */}
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-h-screen">
+        {/* Mobile Header */}
+        <header className="lg:hidden sticky top-0 z-50 border-b border-border/50 bg-background/95 backdrop-blur">
+          <div className="flex h-14 items-center justify-between px-4">
             <div className="flex items-center gap-3">
-              <div className="hidden md:flex items-center gap-2 text-sm">
-                <Briefcase className="h-4 w-4 text-sky-400" />
-                <span className="text-muted-foreground">{userName}</span>
-              </div>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={handleSignOut}
-                className="gap-2 text-muted-foreground hover:text-foreground"
-              >
+              <img src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" alt="Bridge" className="h-7" />
+              <span className="text-sm font-medium">Investor Portal</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm" onClick={handleSignOut}>
                 <LogOut className="h-4 w-4" />
-                <span className="hidden sm:inline">Sign Out</span>
+              </Button>
+              <Button variant="ghost" size="icon" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </Button>
             </div>
           </div>
-        </div>
-      </header>
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <nav className="border-t border-border/50 p-2 bg-background">
+              {mobileNavItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = location.pathname === item.path;
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={cn(
+                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium",
+                      isActive ? "bg-sky-400/10 text-sky-400" : "text-muted-foreground"
+                    )}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {item.name}
+                  </Link>
+                );
+              })}
+            </nav>
+          )}
+        </header>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        <Outlet />
-      </main>
+        {/* Desktop Header */}
+        <header className="hidden lg:flex sticky top-0 z-40 h-16 items-center justify-between border-b border-border/50 bg-background/95 backdrop-blur px-6">
+          <div className="text-sm text-muted-foreground">Welcome, <span className="text-foreground font-medium">{userName}</span></div>
+          <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-2">
+            <LogOut className="h-4 w-4" />
+            Sign Out
+          </Button>
+        </header>
 
-      {/* Footer */}
-      <footer className="border-t border-border/50 py-6 mt-auto pb-safe">
-        <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-2 text-xs text-muted-foreground">
-          <span>Bridge Advisory Group © {new Date().getFullYear()}</span>
-          <span className="hidden sm:inline">•</span>
-          <div className="flex items-center gap-2">
-            <img 
-              src="/lovable-uploads/hpg-logo-white.png" 
-              alt="HPG" 
-              className="h-8 w-auto"
-            />
+        {/* Main Content */}
+        <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-auto">
+          <Outlet />
+        </main>
+
+        {/* Footer */}
+        <footer className="border-t border-border/50 py-4 px-6">
+          <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+            <span>Bridge Advisory Group © {new Date().getFullYear()}</span>
+            <span>•</span>
+            <img src="/lovable-uploads/hpg-logo-white.png" alt="HPG" className="h-6 w-auto opacity-60" />
           </div>
-        </div>
-      </footer>
+        </footer>
+      </div>
     </div>
   );
 };

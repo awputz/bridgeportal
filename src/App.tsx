@@ -23,6 +23,11 @@ import Dashboard from "./pages/portal/Dashboard";
 // Investor pages - lazy loaded
 const InvestorLogin = lazy(() => import("./pages/InvestorLogin"));
 const InvestorDashboard = lazy(() => import("./pages/investor/Dashboard"));
+const InvestorPerformance = lazy(() => import("./pages/investor/Performance"));
+const InvestorTransactions = lazy(() => import("./pages/investor/Transactions"));
+const InvestorTeam = lazy(() => import("./pages/investor/Team"));
+const InvestorCommissions = lazy(() => import("./pages/investor/Commissions"));
+const InvestorReports = lazy(() => import("./pages/investor/Reports"));
 
 // Auth callback - lazy loaded
 const AuthCallback = lazy(() => import("./pages/AuthCallback"));
@@ -160,11 +165,12 @@ const App = () => {
                   {/* Investor Portal Routes */}
                   <Route path="/investor" element={<InvestorLayout />}>
                     <Route index element={<Navigate to="/investor/dashboard" replace />} />
-                    <Route path="dashboard" element={
-                      <Suspense fallback={<PageLoader />}>
-                        <InvestorDashboard />
-                      </Suspense>
-                    } />
+                    <Route path="dashboard" element={<Suspense fallback={<PageLoader />}><InvestorDashboard /></Suspense>} />
+                    <Route path="performance" element={<Suspense fallback={<PageLoader />}><InvestorPerformance /></Suspense>} />
+                    <Route path="transactions" element={<Suspense fallback={<PageLoader />}><InvestorTransactions /></Suspense>} />
+                    <Route path="team" element={<Suspense fallback={<PageLoader />}><InvestorTeam /></Suspense>} />
+                    <Route path="commissions" element={<Suspense fallback={<PageLoader />}><InvestorCommissions /></Suspense>} />
+                    <Route path="reports" element={<Suspense fallback={<PageLoader />}><InvestorReports /></Suspense>} />
                   </Route>
                   {/* Portal Routes (Protected) */}
                   <Route path="/portal" element={<PortalLayout />}>
