@@ -18,7 +18,8 @@ import {
   PenTool,
   Upload,
   Loader2,
-  ArrowLeft
+  ArrowLeft,
+  AlertCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,6 +29,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { useCreateApplication, useUploadApplicationFile, CreateApplicationData } from "@/hooks/useAgentApplications";
 import { cn } from "@/lib/utils";
+
+// Validation helpers
+const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const isValidPhone = (phone: string) => /^[\d\s()+-]{10,}$/.test(phone.replace(/\s/g, ''));
 
 const steps = [
   { id: "personal", title: "Personal Info", icon: User },
@@ -74,6 +79,7 @@ const Apply = () => {
   const [headshotFile, setHeadshotFile] = useState<File | null>(null);
   const [idPhotoFile, setIdPhotoFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   const createApplication = useCreateApplication();
   const uploadFile = useUploadApplicationFile();
@@ -84,6 +90,35 @@ const Apply = () => {
 
   const updateFormData = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleBlur = (field: string) => {
+    setTouched(prev => ({ ...prev, [field]: true }));
+  };
+
+  const getFieldError = (field: string): string | null => {
+    if (!touched[field]) return null;
+    
+    switch (field) {
+      case 'full_name':
+        if (!formData.full_name?.trim()) return "Full name is required";
+        if (formData.full_name.length < 2) return "Name must be at least 2 characters";
+        return null;
+      case 'email':
+        if (!formData.email?.trim()) return "Email is required";
+        if (!isValidEmail(formData.email)) return "Please enter a valid email address";
+        return null;
+      case 'phone':
+        if (!formData.phone?.trim()) return "Phone number is required";
+        if (!isValidPhone(formData.phone)) return "Please enter a valid phone number";
+        return null;
+      case 'bio':
+        if (!formData.bio?.trim()) return "Bio is required";
+        if (formData.bio.length < 50) return `Bio must be at least 50 characters (${formData.bio.length}/50)`;
+        return null;
+      default:
+        return null;
+    }
   };
 
   const toggleDivision = (divisionId: string) => {
@@ -133,7 +168,9 @@ const Apply = () => {
   const canProceed = () => {
     switch (step.id) {
       case "personal":
-        return formData.email && formData.full_name && formData.phone;
+        return formData.email && isValidEmail(formData.email) && 
+               formData.full_name && formData.full_name.length >= 2 && 
+               formData.phone && isValidPhone(formData.phone);
       case "professional":
         return true; // Optional fields
       case "divisions":
@@ -147,6 +184,18 @@ const Apply = () => {
       default:
         return true;
     }
+  };
+
+  // Error display component
+  const FieldError = ({ field }: { field: string }) => {
+    const error = getFieldError(field);
+    if (!error) return null;
+    return (
+      <div className="flex items-center gap-1.5 mt-1.5 text-destructive text-sm">
+        <AlertCircle className="h-3.5 w-3.5" />
+        <span>{error}</span>
+      </div>
+    );
   };
 
   const renderStepContent = () => {
@@ -165,9 +214,11 @@ const Apply = () => {
                   id="full_name"
                   value={formData.full_name || ""}
                   onChange={(e) => updateFormData("full_name", e.target.value)}
+                  onBlur={() => handleBlur("full_name")}
                   placeholder="John Doe"
-                  className="mt-1.5"
+                  className={cn("mt-1.5", getFieldError("full_name") && "border-destructive")}
                 />
+                <FieldError field="full_name" />
               </div>
               <div>
                 <Label htmlFor="email">Email Address *</Label>
@@ -176,9 +227,11 @@ const Apply = () => {
                   type="email"
                   value={formData.email || ""}
                   onChange={(e) => updateFormData("email", e.target.value)}
+                  onBlur={() => handleBlur("email")}
                   placeholder="john@example.com"
-                  className="mt-1.5"
+                  className={cn("mt-1.5", getFieldError("email") && "border-destructive")}
                 />
+                <FieldError field="email" />
               </div>
               <div>
                 <Label htmlFor="phone">Phone Number *</Label>
@@ -187,9 +240,11 @@ const Apply = () => {
                   type="tel"
                   value={formData.phone || ""}
                   onChange={(e) => updateFormData("phone", e.target.value)}
+                  onBlur={() => handleBlur("phone")}
                   placeholder="(555) 123-4567"
-                  className="mt-1.5"
+                  className={cn("mt-1.5", getFieldError("phone") && "border-destructive")}
                 />
+                <FieldError field="phone" />
               </div>
               <div>
                 <Label htmlFor="mailing_address">Mailing Address</Label>
@@ -343,12 +398,16 @@ const Apply = () => {
                   id="bio"
                   value={formData.bio || ""}
                   onChange={(e) => updateFormData("bio", e.target.value)}
+                  onBlur={() => handleBlur("bio")}
                   placeholder="Tell us about your background, experience, and why you're interested in joining Bridge..."
-                  className="mt-1.5 min-h-[120px]"
+                  className={cn("mt-1.5 min-h-[120px]", getFieldError("bio") && "border-destructive")}
                 />
-                <p className="text-xs text-muted-foreground mt-1">
-                  {(formData.bio?.length || 0)} characters (minimum 50)
-                </p>
+                <FieldError field="bio" />
+                {!getFieldError("bio") && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {(formData.bio?.length || 0)} characters (minimum 50)
+                  </p>
+                )}
               </div>
               
               <div className="grid grid-cols-2 gap-4">
