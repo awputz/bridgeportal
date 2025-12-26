@@ -6,31 +6,29 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCRMContacts, useCreateActivity } from "@/hooks/useCRM";
 import { useDivision } from "@/contexts/DivisionContext";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-
-const activityTypes = [
-  { value: "call", label: "Call", icon: Phone },
-  { value: "email", label: "Email", icon: Mail },
-  { value: "meeting", label: "Meeting", icon: Users },
-  { value: "note", label: "Note", icon: FileText },
-];
-
+const activityTypes = [{
+  value: "call",
+  label: "Call",
+  icon: Phone
+}, {
+  value: "email",
+  label: "Email",
+  icon: Mail
+}, {
+  value: "meeting",
+  label: "Meeting",
+  icon: Users
+}, {
+  value: "note",
+  label: "Note",
+  icon: FileText
+}];
 export const QuickActivityLogger = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activityType, setActivityType] = useState("call");
@@ -38,11 +36,16 @@ export const QuickActivityLogger = () => {
   const [description, setDescription] = useState("");
   const [contactId, setContactId] = useState<string>("");
   const [dueDate, setDueDate] = useState("");
-  
   const location = useLocation();
-  const { division } = useDivision();
-  const { user } = useAuth();
-  const { data: contacts } = useCRMContacts(division);
+  const {
+    division
+  } = useDivision();
+  const {
+    user
+  } = useAuth();
+  const {
+    data: contacts
+  } = useCRMContacts(division);
   const createActivity = useCreateActivity();
 
   // Pre-fill contact if on a contact page
@@ -52,20 +55,16 @@ export const QuickActivityLogger = () => {
       setContactId(match[1]);
     }
   }, [location.pathname]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!title.trim()) {
       toast.error("Please enter a title");
       return;
     }
-
     if (!user?.id) {
       toast.error("You must be logged in");
       return;
     }
-
     try {
       await createActivity.mutateAsync({
         agent_id: user.id,
@@ -76,16 +75,14 @@ export const QuickActivityLogger = () => {
         deal_id: null,
         due_date: dueDate || null,
         is_completed: false,
-        completed_at: null,
+        completed_at: null
       });
-      
       toast.success("Activity logged successfully");
       handleClose();
     } catch (error) {
       toast.error("Failed to log activity");
     }
   };
-
   const handleClose = () => {
     setIsOpen(false);
     setTitle("");
@@ -93,23 +90,9 @@ export const QuickActivityLogger = () => {
     setDueDate("");
     setActivityType("call");
   };
-
-  return (
-    <>
+  return <>
       {/* Floating Action Button */}
-      <Button
-        onClick={() => setIsOpen(true)}
-        className={cn(
-          "fixed z-40 rounded-full w-14 h-14 shadow-lg",
-          "bg-primary hover:bg-primary/90 text-primary-foreground",
-          "transition-all duration-300 hover:scale-110",
-          // Position above mobile nav on small screens
-          "bottom-24 right-4 md:bottom-6 md:right-6"
-        )}
-        aria-label="Log Activity"
-      >
-        <Plus className="h-6 w-6" />
-      </Button>
+      
 
       {/* Activity Modal */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -124,37 +107,19 @@ export const QuickActivityLogger = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Activity Type Selection */}
             <div className="grid grid-cols-4 gap-2">
-              {activityTypes.map((type) => {
-                const Icon = type.icon;
-                return (
-                  <button
-                    key={type.value}
-                    type="button"
-                    onClick={() => setActivityType(type.value)}
-                    className={cn(
-                      "flex flex-col items-center gap-1 p-3 rounded-lg border transition-all",
-                      activityType === type.value
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border hover:border-primary/50 text-muted-foreground hover:text-foreground"
-                    )}
-                  >
+              {activityTypes.map(type => {
+              const Icon = type.icon;
+              return <button key={type.value} type="button" onClick={() => setActivityType(type.value)} className={cn("flex flex-col items-center gap-1 p-3 rounded-lg border transition-all", activityType === type.value ? "border-primary bg-primary/10 text-primary" : "border-border hover:border-primary/50 text-muted-foreground hover:text-foreground")}>
                     <Icon className="h-5 w-5" />
                     <span className="text-xs">{type.label}</span>
-                  </button>
-                );
-              })}
+                  </button>;
+            })}
             </div>
 
             {/* Title */}
             <div className="space-y-2">
               <Label htmlFor="title">Title *</Label>
-              <Input
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder={`e.g., ${activityType === "call" ? "Follow-up call with John" : "Quick meeting notes"}`}
-                autoFocus
-              />
+              <Input id="title" value={title} onChange={e => setTitle(e.target.value)} placeholder={`e.g., ${activityType === "call" ? "Follow-up call with John" : "Quick meeting notes"}`} autoFocus />
             </div>
 
             {/* Contact Selection */}
@@ -166,12 +131,10 @@ export const QuickActivityLogger = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="">No contact</SelectItem>
-                  {contacts?.map((contact) => (
-                    <SelectItem key={contact.id} value={contact.id}>
+                  {contacts?.map(contact => <SelectItem key={contact.id} value={contact.id}>
                       {contact.full_name}
                       {contact.company && ` - ${contact.company}`}
-                    </SelectItem>
-                  ))}
+                    </SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
@@ -179,47 +142,26 @@ export const QuickActivityLogger = () => {
             {/* Due Date */}
             <div className="space-y-2">
               <Label htmlFor="dueDate">Due Date (optional)</Label>
-              <Input
-                id="dueDate"
-                type="date"
-                value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
-              />
+              <Input id="dueDate" type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} />
             </div>
 
             {/* Notes */}
             <div className="space-y-2">
               <Label htmlFor="description">Notes (optional)</Label>
-              <Textarea
-                id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Add any relevant details..."
-                rows={3}
-              />
+              <Textarea id="description" value={description} onChange={e => setDescription(e.target.value)} placeholder="Add any relevant details..." rows={3} />
             </div>
 
             {/* Actions */}
             <div className="flex gap-3 pt-2">
-              <Button
-                type="button"
-                variant="outline"
-                className="flex-1"
-                onClick={handleClose}
-              >
+              <Button type="button" variant="outline" className="flex-1" onClick={handleClose}>
                 Cancel
               </Button>
-              <Button
-                type="submit"
-                className="flex-1"
-                disabled={createActivity.isPending}
-              >
+              <Button type="submit" className="flex-1" disabled={createActivity.isPending}>
                 {createActivity.isPending ? "Saving..." : "Log Activity"}
               </Button>
             </div>
           </form>
         </DialogContent>
       </Dialog>
-    </>
-  );
+    </>;
 };
