@@ -2,10 +2,8 @@ import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { PortalNavigation } from "./PortalNavigation";
 import { MobileBottomNav } from "./MobileBottomNav";
 import { AIAssistant } from "./AIAssistant";
-import { FloatingSearch } from "./FloatingSearch";
 import { CommandPalette, useCommandPalette } from "./CommandPalette";
 import { QuickActivityLogger } from "./QuickActivityLogger";
-import { SyncStatusIndicator } from "./SyncStatusIndicator";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Loader2 } from "lucide-react";
 import { useStoreGoogleTokensOnLogin } from "@/hooks/useGoogleServices";
@@ -49,10 +47,7 @@ export const PortalLayout = () => {
 
   return (
     <div className="min-h-[100dvh] h-[100dvh] bg-background flex flex-col overflow-hidden">
-      {/* Global Sync Status Indicator */}
-      <SyncStatusIndicator isSyncing={isSyncing} syncedCount={googleContactsCount} />
-      
-      <PortalNavigation />
+      <PortalNavigation onSearchClick={() => setCommandOpen(true)} />
       {/* Main content area - increased padding: pt-[72px] mobile (nav + buffer), pt-24 desktop, pb-16 for mobile bottom nav */}
       <main className="flex-1 flex flex-col pt-[72px] md:pt-24 pb-16 md:pb-0 overflow-hidden min-h-0">
         <ErrorBoundary>
@@ -60,7 +55,6 @@ export const PortalLayout = () => {
         </ErrorBoundary>
       </main>
       <MobileBottomNav />
-      <FloatingSearch onClick={() => setCommandOpen(true)} />
       <QuickActivityLogger />
       <AIAssistant />
       <CommandPalette open={commandOpen} onOpenChange={setCommandOpen} />

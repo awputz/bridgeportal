@@ -18,7 +18,8 @@ import {
   ChevronDown,
   Calendar,
   Settings,
-  Shield
+  Shield,
+  Search
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -51,7 +52,11 @@ const essentialsItems = [
   { name: "Notes", path: "/portal/notes", icon: StickyNote },
 ];
 
-export const PortalNavigation = () => {
+interface PortalNavigationProps {
+  onSearchClick?: () => void;
+}
+
+export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -252,8 +257,16 @@ export const PortalNavigation = () => {
               </Link>
             </div>
 
-            {/* Right: User Menu */}
+            {/* Right: Search & User Menu */}
             <div className="flex items-center justify-end gap-2">
+              <button 
+                onClick={onSearchClick}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground text-sm transition-colors"
+              >
+                <Search className="h-4 w-4" />
+                <span className="hidden xl:inline">Search...</span>
+                <kbd className="hidden xl:inline ml-1 px-1.5 py-0.5 rounded text-xs bg-background border border-border">⌘K</kbd>
+              </button>
               <NotificationCenter />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
