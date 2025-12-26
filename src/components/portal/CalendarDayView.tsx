@@ -124,7 +124,7 @@ export function CalendarDayView({
   const isCurrentDay = isToday(currentDate);
 
   return (
-    <div className="rounded-xl border border-border/50 bg-card overflow-hidden flex flex-col h-[calc(100vh-220px)]">
+    <div className="rounded-xl border border-border/50 bg-card overflow-hidden flex flex-col flex-1 min-h-0">
       {/* Header */}
       <div className="flex border-b border-border/30 bg-muted/5 sticky top-0 z-20">
         <div className="w-20 shrink-0 border-r border-border/30 p-2">

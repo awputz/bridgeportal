@@ -518,8 +518,8 @@ const Contacts = () => {
   };
 
   return (
-    <div className="min-h-screen pb-24 md:pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 lg:pr-16">
+    <div className="flex-1 flex flex-col overflow-hidden min-h-0">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 lg:pr-16">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
           <div className="flex items-start justify-between md:block">

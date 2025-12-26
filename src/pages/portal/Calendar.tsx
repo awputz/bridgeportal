@@ -188,7 +188,7 @@ export default function Calendar() {
 
   if (isLoadingConnection) {
     return (
-      <div className="h-[calc(100vh-4rem)] flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-center">
         <div className="flex items-center gap-3">
           <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
           <span className="text-muted-foreground">Checking connection...</span>
@@ -199,7 +199,7 @@ export default function Calendar() {
 
   if (!isConnected) {
     return (
-      <div className="h-[calc(100vh-4rem)] flex items-center justify-center p-4">
+      <div className="flex-1 flex items-center justify-center p-4">
         <div className="glass-card p-8 md:p-12 max-w-xl text-center">
           <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-gcal-blue/20 to-gcal-green/20 flex items-center justify-center mx-auto mb-6">
             <CalendarIcon className="h-10 w-10 text-gcal-blue" />
@@ -223,7 +223,7 @@ export default function Calendar() {
   }
 
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col overflow-hidden bg-background">
+    <div className="flex-1 flex flex-col overflow-hidden bg-background min-h-0">
       {/* Compact Single-Row Header */}
       <div className="flex items-center justify-between gap-3 px-4 lg:px-6 py-3 border-b border-border/30 bg-card shrink-0">
         {/* Left: Icon + Navigation + Title */}
@@ -354,7 +354,7 @@ export default function Calendar() {
         </div>
 
         {/* Calendar View */}
-        <div className="flex-1 min-w-0 overflow-hidden">
+        <div className="flex-1 min-w-0 flex flex-col overflow-hidden p-4 lg:p-6">
           {viewMode === "day" && (
             <CalendarDayView
               currentDate={selectedDate || currentDate}
@@ -376,7 +376,7 @@ export default function Calendar() {
           )}
 
           {viewMode === "month" && (
-            <div className="h-full p-4 lg:p-6 overflow-auto">
+            <div className="flex-1 overflow-auto min-h-0">
               <div className="rounded-xl border border-border/50 bg-card p-4 lg:p-6 shadow-sm">
                 <div className="grid grid-cols-7 gap-1 mb-3">
                   {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (

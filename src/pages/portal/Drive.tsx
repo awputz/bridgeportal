@@ -203,7 +203,7 @@ export default function Drive() {
 
   if (isLoadingConnection) {
     return (
-      <div className="h-[calc(100vh-4rem)] flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-center">
         <div className="flex items-center gap-3">
           <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
           <span className="text-muted-foreground">Checking connection...</span>
@@ -214,7 +214,7 @@ export default function Drive() {
 
   if (!connection?.isConnected) {
     return (
-      <div className="h-[calc(100vh-4rem)] flex items-center justify-center p-4">
+      <div className="flex-1 flex items-center justify-center p-4">
         <div className="glass-card p-8 md:p-12 max-w-xl text-center">
           <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-gdrive-folder/20 to-gdrive-docs/20 flex items-center justify-center mx-auto mb-6">
             <FolderOpen className="h-10 w-10 text-gdrive-folder" />
@@ -261,7 +261,7 @@ export default function Drive() {
   const activeFilterCount = (fileFilter !== "all" ? 1 : 0) + (sortField !== "name" || sortDirection !== "asc" ? 1 : 0);
 
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col overflow-hidden bg-background">
+    <div className="flex-1 flex flex-col overflow-hidden bg-background min-h-0">
       {/* Compact Header */}
       <div className="flex items-center justify-between gap-3 px-4 lg:px-6 py-3 border-b border-border/30 bg-card shrink-0">
         <div className="flex items-center gap-3 min-w-0">
