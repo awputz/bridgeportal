@@ -1,5 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { 
   Plus, 
   Search, 
@@ -19,12 +18,13 @@ import {
   Loader2,
   Users,
   RefreshCw,
-  Check,
   Cloud,
   CloudOff,
-  ExternalLink
+  ExternalLink,
+  GitMerge,
+  AlertTriangle,
 } from "lucide-react";
-import { useCRMContacts, useCreateContact, useDeleteContact } from "@/hooks/useCRM";
+import { useCRMContacts, useCreateContact, useDeleteContact, CRMContact } from "@/hooks/useCRM";
 import { useCRMRealtime } from "@/hooks/useCRMRealtime";
 import { useDivision, Division } from "@/contexts/DivisionContext";
 import { useAutoSyncContacts } from "@/hooks/useAutoSyncContacts";
@@ -64,6 +64,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { CSVContactUploader } from "@/components/portal/CSVContactUploader";
+import { ContactProfileSlideOver } from "@/components/portal/ContactProfileSlideOver";
+import { ContactAlphaScroll, groupContactsByLetter } from "@/components/portal/ContactAlphaScroll";
+import { ContactMergeWizard, findDuplicateContacts } from "@/components/portal/ContactMergeWizard";
 import { cn } from "@/lib/utils";
 import {
   Table,
@@ -228,6 +231,19 @@ const Contacts = () => {
   const [showCSVUploader, setShowCSVUploader] = useState(false);
   const [deleteContactId, setDeleteContactId] = useState<string | null>(null);
   
+  // Slide-over state
+  const [selectedContact, setSelectedContact] = useState<CRMContact | null>(null);
+  const [showProfileSlideOver, setShowProfileSlideOver] = useState(false);
+  
+  // Merge wizard state
+  const [showMergeWizard, setShowMergeWizard] = useState(false);
+  const [duplicateGroups, setDuplicateGroups] = useState<CRMContact[][]>([]);
+  const [currentMergeGroup, setCurrentMergeGroup] = useState<CRMContact[]>([]);
+  
+  // Alpha scroll state
+  const [currentLetter, setCurrentLetter] = useState<string | undefined>();
+  const letterRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  
   // Filters
   const [contactTypeFilter, setContactTypeFilter] = useState<string>("all");
   const [sourceFilter, setSourceFilter] = useState<string>("all");
@@ -235,8 +251,8 @@ const Contacts = () => {
   const [tagFilter, setTagFilter] = useState<string>("all");
   
   // Sorting
-  const [sortField, setSortField] = useState<SortField>("created_at");
-  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
+  const [sortField, setSortField] = useState<SortField>("name");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
 
   // Fetch contacts without division filter to get all contacts
   const { data: allContacts, isLoading, refetch: refetchContacts } = useCRMContacts();
@@ -248,6 +264,14 @@ const Contacts = () => {
   
   // Auto-sync Google Contacts
   useAutoSyncContacts();
+
+  // Detect duplicates when contacts load
+  useEffect(() => {
+    if (allContacts && allContacts.length > 0) {
+      const duplicates = findDuplicateContacts(allContacts);
+      setDuplicateGroups(duplicates);
+    }
+  }, [allContacts]);
 
   // Get unique tags from all contacts
   const allTags = useMemo(() => {
@@ -310,6 +334,12 @@ const Contacts = () => {
     return result;
   }, [allContacts, search, contactTypeFilter, sourceFilter, divisionFilter, tagFilter, sortField, sortOrder]);
 
+  // Group contacts by letter for alpha scroll
+  const groupedContacts = useMemo(() => {
+    if (sortField !== "name") return null;
+    return groupContactsByLetter(filteredContacts);
+  }, [filteredContacts, sortField]);
+
   const hasActiveFilters = contactTypeFilter !== "all" || sourceFilter !== "all" || divisionFilter !== "all" || tagFilter !== "all";
 
   const clearAllFilters = () => {
@@ -328,6 +358,24 @@ const Contacts = () => {
       deleteContact.mutate(deleteContactId);
       setDeleteContactId(null);
     }
+  };
+
+  const handleContactClick = (contact: CRMContact) => {
+    setSelectedContact(contact);
+    setShowProfileSlideOver(true);
+  };
+
+  const handleLetterClick = useCallback((letter: string) => {
+    const ref = letterRefs.current.get(letter);
+    if (ref) {
+      ref.scrollIntoView({ behavior: "smooth", block: "start" });
+      setCurrentLetter(letter);
+    }
+  }, []);
+
+  const handleStartMerge = (group: CRMContact[]) => {
+    setCurrentMergeGroup(group);
+    setShowMergeWizard(true);
   };
 
   const handleCreateContact = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -385,9 +433,90 @@ const Contacts = () => {
     return opt ? opt.icon : Building2;
   };
 
+  // Render contact card (used in both grid and grouped views)
+  const renderContactCard = (contact: CRMContact) => {
+    const DivIcon = getDivisionIcon(contact.division);
+    return (
+      <button
+        key={contact.id}
+        onClick={() => handleContactClick(contact)}
+        className="glass-card p-5 hover:bg-white/5 transition-colors group text-left w-full"
+      >
+        <div className="flex items-start justify-between mb-4">
+          <Avatar className="h-12 w-12">
+            <AvatarFallback className="bg-primary/20 text-primary text-sm font-medium">
+              {getInitials(contact.full_name)}
+            </AvatarFallback>
+          </Avatar>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button 
+                className="p-1.5 rounded-lg hover:bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleContactClick(contact); }}>
+                View Details
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem 
+                className="text-destructive"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteContact(contact.id);
+                }}
+              >
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
+        <h3 className="font-medium text-foreground mb-1 truncate">{contact.full_name}</h3>
+        {contact.company && (
+          <p className="text-sm text-muted-foreground mb-3 truncate">{contact.company}</p>
+        )}
+
+        <div className="flex flex-wrap gap-2 mb-4">
+          <Badge variant="outline" className={cn("text-xs", getTypeColor(contact.contact_type))}>
+            {contact.contact_type}
+          </Badge>
+          <Badge variant="outline" className="text-xs bg-white/5">
+            <DivIcon className="h-3 w-3 mr-1" />
+            {divisionOptions.find(d => d.key === contact.division)?.label?.split(' ')[0] || contact.division}
+          </Badge>
+          {contact.source === "google-contacts" && (
+            <Badge variant="outline" className="text-xs bg-blue-500/10 text-blue-400 border-blue-500/30">
+              <Cloud className="h-3 w-3 mr-1" />
+              Google
+            </Badge>
+          )}
+        </div>
+
+        <div className="space-y-1.5 text-sm">
+          {contact.email && (
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Mail className="h-3.5 w-3.5" />
+              <span className="truncate">{contact.email}</span>
+            </div>
+          )}
+          {contact.phone && (
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Phone className="h-3.5 w-3.5" />
+              <span>{contact.phone}</span>
+            </div>
+          )}
+        </div>
+      </button>
+    );
+  };
+
   return (
     <div className="min-h-screen pb-24 md:pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 lg:pr-16">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
           <div className="flex items-start justify-between md:block">
@@ -414,6 +543,37 @@ const Contacts = () => {
             <div className="hidden md:block">
               <GoogleSyncStatus />
             </div>
+            
+            {/* Merge Duplicates Button */}
+            {duplicateGroups.length > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="gap-2 border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/10">
+                    <AlertTriangle className="h-4 w-4" />
+                    {duplicateGroups.length} Duplicate{duplicateGroups.length > 1 ? "s" : ""}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-72">
+                  {duplicateGroups.slice(0, 5).map((group, idx) => (
+                    <DropdownMenuItem 
+                      key={idx} 
+                      onClick={() => handleStartMerge(group)}
+                      className="flex items-center gap-2"
+                    >
+                      <GitMerge className="h-4 w-4 text-yellow-400" />
+                      <span className="truncate">
+                        {group.map(c => c.full_name).join(" & ")}
+                      </span>
+                    </DropdownMenuItem>
+                  ))}
+                  {duplicateGroups.length > 5 && (
+                    <DropdownMenuItem className="text-muted-foreground">
+                      +{duplicateGroups.length - 5} more duplicates
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
             
             {/* Import Dropdown */}
             <DropdownMenu>
@@ -704,87 +864,26 @@ const Contacts = () => {
               </div>
             )}
           </div>
+        ) : viewMode === "grid" && sortField === "name" && groupedContacts ? (
+          // Grouped alphabetical view
+          <div className="space-y-8">
+            {Array.from(groupedContacts.entries()).map(([letter, contacts]) => (
+              <div 
+                key={letter} 
+                ref={(el) => { if (el) letterRefs.current.set(letter, el); }}
+              >
+                <div className="sticky top-0 bg-background/80 backdrop-blur-sm z-10 py-2 mb-3">
+                  <h2 className="text-2xl font-bold text-primary">{letter}</h2>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {contacts.map(renderContactCard)}
+                </div>
+              </div>
+            ))}
+          </div>
         ) : viewMode === "grid" ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredContacts.map((contact) => {
-              const DivIcon = getDivisionIcon(contact.division);
-              return (
-                <Link
-                  key={contact.id}
-                  to={`/portal/contacts/${contact.id}`}
-                  className="glass-card p-5 hover:bg-white/5 transition-colors group"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <Avatar className="h-12 w-12">
-                      <AvatarFallback className="bg-primary/20 text-primary text-sm font-medium">
-                        {getInitials(contact.full_name)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <button 
-                          className="p-1.5 rounded-lg hover:bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem asChild>
-                          <Link to={`/portal/contacts/${contact.id}`}>View Details</Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem 
-                          className="text-destructive"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleDeleteContact(contact.id);
-                          }}
-                        >
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-
-                  <h3 className="font-medium text-foreground mb-1 truncate">{contact.full_name}</h3>
-                  {contact.company && (
-                    <p className="text-sm text-muted-foreground mb-3 truncate">{contact.company}</p>
-                  )}
-
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <Badge variant="outline" className={cn("text-xs", getTypeColor(contact.contact_type))}>
-                      {contact.contact_type}
-                    </Badge>
-                    <Badge variant="outline" className="text-xs bg-white/5">
-                      <DivIcon className="h-3 w-3 mr-1" />
-                      {divisionOptions.find(d => d.key === contact.division)?.label?.split(' ')[0] || contact.division}
-                    </Badge>
-                    {contact.source === "google-contacts" && (
-                      <Badge variant="outline" className="text-xs bg-blue-500/10 text-blue-400 border-blue-500/30">
-                        <Cloud className="h-3 w-3 mr-1" />
-                        Google
-                      </Badge>
-                    )}
-                  </div>
-
-                  <div className="space-y-1.5 text-sm">
-                    {contact.email && (
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Mail className="h-3.5 w-3.5" />
-                        <span className="truncate">{contact.email}</span>
-                      </div>
-                    )}
-                    {contact.phone && (
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <Phone className="h-3.5 w-3.5" />
-                        <span>{contact.phone}</span>
-                      </div>
-                    )}
-                  </div>
-                </Link>
-              );
-            })}
+            {filteredContacts.map(renderContactCard)}
           </div>
         ) : (
           <div className="glass-card overflow-hidden">
@@ -802,16 +901,20 @@ const Contacts = () => {
               </TableHeader>
               <TableBody>
                 {filteredContacts.map((contact) => (
-                  <TableRow key={contact.id} className="group">
+                  <TableRow 
+                    key={contact.id} 
+                    className="group cursor-pointer"
+                    onClick={() => handleContactClick(contact)}
+                  >
                     <TableCell>
-                      <Link to={`/portal/contacts/${contact.id}`} className="flex items-center gap-3 hover:text-primary">
+                      <div className="flex items-center gap-3 hover:text-primary">
                         <Avatar className="h-8 w-8">
                           <AvatarFallback className="bg-primary/20 text-primary text-xs">
                             {getInitials(contact.full_name)}
                           </AvatarFallback>
                         </Avatar>
                         <span className="font-medium">{contact.full_name}</span>
-                      </Link>
+                      </div>
                     </TableCell>
                     <TableCell className="hidden md:table-cell text-muted-foreground">
                       {contact.company || "-"}
@@ -840,18 +943,21 @@ const Contacts = () => {
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <button className="p-1.5 rounded-lg hover:bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button 
+                            className="p-1.5 rounded-lg hover:bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={(e) => e.stopPropagation()}
+                          >
                             <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
                           </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem asChild>
-                            <Link to={`/portal/contacts/${contact.id}`}>View Details</Link>
+                          <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleContactClick(contact); }}>
+                            View Details
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem 
                             className="text-destructive"
-                            onClick={() => handleDeleteContact(contact.id)}
+                            onClick={(e) => { e.stopPropagation(); handleDeleteContact(contact.id); }}
                           >
                             Delete
                           </DropdownMenuItem>
@@ -865,6 +971,31 @@ const Contacts = () => {
           </div>
         )}
       </div>
+
+      {/* Alpha Scroll - only show in grid view with name sorting */}
+      {viewMode === "grid" && sortField === "name" && filteredContacts.length > 10 && (
+        <ContactAlphaScroll
+          contacts={filteredContacts}
+          currentLetter={currentLetter}
+          onLetterClick={handleLetterClick}
+        />
+      )}
+
+      {/* Contact Profile Slide-Over */}
+      <ContactProfileSlideOver
+        contact={selectedContact}
+        open={showProfileSlideOver}
+        onOpenChange={setShowProfileSlideOver}
+        onContactDeleted={() => refetchContacts()}
+      />
+
+      {/* Merge Wizard */}
+      <ContactMergeWizard
+        contacts={currentMergeGroup}
+        open={showMergeWizard}
+        onOpenChange={setShowMergeWizard}
+        onMergeComplete={() => refetchContacts()}
+      />
 
       {/* CSV Upload Dialog */}
       <Dialog open={showCSVUploader} onOpenChange={setShowCSVUploader}>
@@ -890,7 +1021,10 @@ const Contacts = () => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDeleteContact} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction 
+              onClick={confirmDeleteContact}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
