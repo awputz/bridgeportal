@@ -27,6 +27,8 @@ import {
   GitMerge,
   AlertTriangle,
 } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { FAB } from "@/components/ui/fab";
 import { useCRMContacts, useCreateContact, useDeleteContact, CRMContact } from "@/hooks/useCRM";
 import { useCRMRealtime } from "@/hooks/useCRMRealtime";
 import { useDivision, Division } from "@/contexts/DivisionContext";
@@ -227,8 +229,10 @@ const GoogleSyncStatus = () => {
 };
 
 const Contacts = () => {
+  const isMobile = useIsMobile();
   const { division } = useDivision();
   const [search, setSearch] = useState("");
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showContactDialog, setShowContactDialog] = useState(false);
   const [showCSVUploader, setShowCSVUploader] = useState(false);
@@ -439,6 +443,66 @@ const Contacts = () => {
   // Render contact card (used in both grid and grouped views)
   const renderContactCard = (contact: CRMContact) => {
     const DivIcon = getDivisionIcon(contact.division);
+    
+    // Mobile-optimized card
+    if (isMobile) {
+      return (
+        <button
+          key={contact.id}
+          onClick={() => handleContactClick(contact)}
+          className="glass-card p-4 hover:bg-white/5 transition-colors group text-left w-full"
+        >
+          <div className="flex items-center gap-3">
+            <Avatar className="h-12 w-12 shrink-0">
+              <AvatarFallback className="bg-primary/20 text-primary text-sm font-medium">
+                {getInitials(contact.full_name)}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <h3 className="font-medium text-foreground truncate">{contact.full_name}</h3>
+              {contact.company && (
+                <p className="text-sm text-muted-foreground truncate">{contact.company}</p>
+              )}
+              <div className="flex items-center gap-2 mt-1">
+                <Badge variant="outline" className={cn("text-[10px] px-1.5 py-0", getTypeColor(contact.contact_type))}>
+                  {contact.contact_type}
+                </Badge>
+                {contact.source === "google-contacts" && (
+                  <Cloud className="h-3 w-3 text-blue-400" />
+                )}
+              </div>
+            </div>
+            {/* Quick action buttons */}
+            <div className="flex flex-col gap-1 shrink-0">
+              {contact.phone && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.location.href = `tel:${contact.phone}`;
+                  }}
+                  className="p-2 rounded-lg bg-green-500/10 text-green-400 hover:bg-green-500/20"
+                >
+                  <Phone className="h-4 w-4" />
+                </button>
+              )}
+              {contact.email && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.location.href = `mailto:${contact.email}`;
+                  }}
+                  className="p-2 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20"
+                >
+                  <Mail className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+          </div>
+        </button>
+      );
+    }
+    
+    // Desktop card (original)
     return (
       <button
         key={contact.id}
@@ -520,7 +584,7 @@ const Contacts = () => {
   return (
     <div className="flex-1 flex flex-col overflow-hidden min-h-0">
       <div className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
-        {/* Header */}
+        {/* Header - Simplified for mobile */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
           <div className="flex items-start justify-between md:block">
             <div>
@@ -528,24 +592,24 @@ const Contacts = () => {
                 <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
                   <Users className="h-5 w-5 text-blue-400" />
                 </div>
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground">
+                <h1 className="text-2xl md:text-4xl lg:text-5xl font-extralight text-foreground">
                   Contacts
                 </h1>
               </div>
-              <p className="text-muted-foreground font-light">
-                Manage your network of clients, prospects, and partners
-              </p>
+              {!isMobile && (
+                <p className="text-muted-foreground font-light">
+                  Manage your network of clients, prospects, and partners
+                </p>
+              )}
             </div>
             <div className="md:hidden">
               <GoogleSyncStatus />
             </div>
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap">
-            {/* Google Sync Status - Desktop */}
-            <div className="hidden md:block">
-              <GoogleSyncStatus />
-            </div>
+          {/* Desktop action buttons */}
+          <div className="hidden md:flex items-center gap-2 flex-wrap">
+            <GoogleSyncStatus />
             
             {/* Merge Duplicates Button */}
             {duplicateGroups.length > 0 && (
@@ -691,14 +755,14 @@ const Contacts = () => {
           </div>
         </div>
 
-        {/* Search & Filters Bar - Single Row */}
+        {/* Search & Filters Bar - Simplified for mobile */}
         <div className="glass-card px-4 py-3 mb-6">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3">
             {/* Search */}
-            <div className="relative flex-1 max-w-md">
+            <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search contacts..."
+                placeholder={isMobile ? "Search..." : "Search contacts..."}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="pl-10 bg-white/5 border-white/10 h-9"
@@ -708,9 +772,9 @@ const Contacts = () => {
             {/* Unified Filters Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2 h-9 bg-white/5 border-white/10">
+                <Button variant="outline" size="sm" className="gap-1.5 h-9 bg-white/5 border-white/10 px-2 md:px-3">
                   <Filter className="h-4 w-4" />
-                  <span>Filters</span>
+                  <span className="hidden sm:inline">Filters</span>
                   {hasActiveFilters && (
                     <Badge variant="secondary" className="h-5 w-5 p-0 text-xs flex items-center justify-center bg-primary text-primary-foreground">
                       {(contactTypeFilter !== "all" ? 1 : 0) + 
@@ -719,7 +783,6 @@ const Contacts = () => {
                        (tagFilter !== "all" ? 1 : 0)}
                     </Badge>
                   )}
-                  <ChevronDown className="h-3.5 w-3.5" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-64">
@@ -763,50 +826,6 @@ const Contacts = () => {
                   </DropdownMenuItem>
                 ))}
                 
-                <DropdownMenuSeparator />
-                
-                {/* Source Section */}
-                <div className="px-2 py-1.5">
-                  <p className="text-xs font-medium text-muted-foreground mb-1">Source</p>
-                </div>
-                <DropdownMenuItem onClick={() => setSourceFilter("all")} className={cn(sourceFilter === "all" && "bg-muted")}>
-                  <Check className={cn("h-4 w-4 mr-2", sourceFilter !== "all" && "opacity-0")} />
-                  All Sources
-                </DropdownMenuItem>
-                {sourceOptions.slice(0, 4).map((opt) => (
-                  <DropdownMenuItem 
-                    key={opt.value} 
-                    onClick={() => setSourceFilter(opt.value)}
-                    className={cn(sourceFilter === opt.value && "bg-muted")}
-                  >
-                    <Check className={cn("h-4 w-4 mr-2", sourceFilter !== opt.value && "opacity-0")} />
-                    {opt.label}
-                  </DropdownMenuItem>
-                ))}
-                
-                {allTags.length > 0 && (
-                  <>
-                    <DropdownMenuSeparator />
-                    <div className="px-2 py-1.5">
-                      <p className="text-xs font-medium text-muted-foreground mb-1">Tags</p>
-                    </div>
-                    <DropdownMenuItem onClick={() => setTagFilter("all")} className={cn(tagFilter === "all" && "bg-muted")}>
-                      <Check className={cn("h-4 w-4 mr-2", tagFilter !== "all" && "opacity-0")} />
-                      All Tags
-                    </DropdownMenuItem>
-                    {allTags.slice(0, 5).map((tag) => (
-                      <DropdownMenuItem 
-                        key={tag} 
-                        onClick={() => setTagFilter(tag)}
-                        className={cn(tagFilter === tag && "bg-muted")}
-                      >
-                        <Check className={cn("h-4 w-4 mr-2", tagFilter !== tag && "opacity-0")} />
-                        {tag}
-                      </DropdownMenuItem>
-                    ))}
-                  </>
-                )}
-                
                 {hasActiveFilters && (
                   <>
                     <DropdownMenuSeparator />
@@ -822,7 +841,7 @@ const Contacts = () => {
             {/* Sort Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2 h-9 bg-white/5 border-white/10">
+                <Button variant="outline" size="sm" className="gap-1.5 h-9 bg-white/5 border-white/10 px-2 md:px-3">
                   <ArrowUpDown className="h-4 w-4" />
                   <span className="hidden sm:inline">Sort</span>
                 </Button>
@@ -844,8 +863,8 @@ const Contacts = () => {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* View Mode */}
-            <div className="flex border border-white/10 rounded-lg overflow-hidden">
+            {/* View Mode - hidden on mobile */}
+            <div className="hidden md:flex border border-white/10 rounded-lg overflow-hidden">
               <button
                 onClick={() => setViewMode("grid")}
                 className={cn(
@@ -903,23 +922,29 @@ const Contacts = () => {
           </div>
         ) : viewMode === "grid" && sortField === "name" && groupedContacts ? (
           // Grouped alphabetical view
-          <div className="space-y-8">
+          <div className="space-y-6 md:space-y-8">
             {Array.from(groupedContacts.entries()).map(([letter, contacts]) => (
               <div 
                 key={letter} 
                 ref={(el) => { if (el) letterRefs.current.set(letter, el); }}
               >
                 <div className="sticky top-0 bg-background/80 backdrop-blur-sm z-10 py-2 mb-3">
-                  <h2 className="text-2xl font-bold text-primary">{letter}</h2>
+                  <h2 className="text-xl md:text-2xl font-bold text-primary">{letter}</h2>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className={cn(
+                  "grid gap-3",
+                  isMobile ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                )}>
                   {contacts.map(renderContactCard)}
                 </div>
               </div>
             ))}
           </div>
         ) : viewMode === "grid" ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className={cn(
+            "grid gap-3",
+            isMobile ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+          )}>
             {filteredContacts.map(renderContactCard)}
           </div>
         ) : (
@@ -1009,13 +1034,20 @@ const Contacts = () => {
         )}
       </div>
 
-      {/* Alpha Scroll - only show in grid view with name sorting */}
-      {viewMode === "grid" && sortField === "name" && filteredContacts.length > 10 && (
+      {/* Alpha Scroll - only show in grid view with name sorting on desktop */}
+      {!isMobile && viewMode === "grid" && sortField === "name" && filteredContacts.length > 10 && (
         <ContactAlphaScroll
           contacts={filteredContacts}
           currentLetter={currentLetter}
           onLetterClick={handleLetterClick}
         />
+      )}
+
+      {/* Mobile FAB for Add Contact */}
+      {isMobile && (
+        <FAB onClick={() => setShowContactDialog(true)}>
+          <Plus className="h-6 w-6" />
+        </FAB>
       )}
 
       {/* Contact Profile Slide-Over */}

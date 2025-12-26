@@ -25,6 +25,8 @@ import {
   Filter,
   ArrowUpDown,
   ChevronDown,
+  Upload,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,6 +45,8 @@ import { hardLogout } from "@/lib/auth";
 import { DriveContextMenu } from "@/components/portal/DriveContextMenu";
 import { DriveFilePreview } from "@/components/portal/DriveFilePreview";
 import { DriveBreadcrumbs, BreadcrumbItem } from "@/components/portal/DriveBreadcrumbs";
+import { FAB } from "@/components/ui/fab";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type SortField = "name" | "modifiedTime" | "size";
 type SortDirection = "asc" | "desc";
@@ -114,7 +118,9 @@ const sortOptions = [
 ];
 
 export default function Drive() {
+  const isMobile = useIsMobile();
   const [searchQuery, setSearchQuery] = useState("");
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [quickFilter, setQuickFilter] = useState<QuickFilter>("all");
   const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
@@ -262,142 +268,283 @@ export default function Drive() {
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-background min-h-0">
-      {/* Compact Header */}
-      <div className="flex items-center justify-between gap-3 px-4 lg:px-6 py-3 border-b border-border/30 bg-card shrink-0">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 rounded-lg bg-gdrive-folder flex items-center justify-center shrink-0">
-            <HardDrive className="h-5 w-5 text-white" />
+      {/* Mobile Header */}
+      {isMobile ? (
+        <div className="flex flex-col gap-2 px-4 py-3 border-b border-border/30 bg-card shrink-0">
+          {/* Top row: icon, breadcrumbs, actions */}
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0 flex-1">
+              <div className="w-8 h-8 rounded-lg bg-gdrive-folder flex items-center justify-center shrink-0">
+                <HardDrive className="h-4 w-4 text-white" />
+              </div>
+              {/* Horizontal scrolling breadcrumbs */}
+              <div className="flex-1 overflow-x-auto scrollbar-hide">
+                <DriveBreadcrumbs 
+                  path={breadcrumbPath} 
+                  onNavigate={handleNavigateToFolder} 
+                />
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-1 shrink-0">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => setMobileSearchOpen(!mobileSearchOpen)} 
+                className="h-8 w-8"
+              >
+                {mobileSearchOpen ? <X className="h-4 w-4" /> : <Search className="h-4 w-4" />}
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Filter className="h-4 w-4" />
+                    {activeFilterCount > 0 && (
+                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-gdrive-folder text-white text-[10px] rounded-full flex items-center justify-center">
+                        {activeFilterCount}
+                      </span>
+                    )}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="px-2 py-1.5">
+                    <p className="text-xs font-medium text-muted-foreground mb-2">Layout</p>
+                    <div className="flex gap-1">
+                      <Button
+                        variant={viewMode === "grid" ? "secondary" : "ghost"}
+                        size="sm"
+                        className="flex-1 h-8"
+                        onClick={() => setViewMode("grid")}
+                      >
+                        <Grid3X3 className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant={viewMode === "list" ? "secondary" : "ghost"}
+                        size="sm"
+                        className="flex-1 h-8"
+                        onClick={() => setViewMode("list")}
+                      >
+                        <List className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <div className="px-2 py-1.5">
+                    <p className="text-xs font-medium text-muted-foreground mb-1">File Type</p>
+                  </div>
+                  {filterOptions.map((option) => {
+                    const Icon = option.icon;
+                    return (
+                      <DropdownMenuItem
+                        key={option.value}
+                        onClick={() => setFileFilter(option.value)}
+                        className={cn("gap-2", fileFilter === option.value && "bg-muted")}
+                      >
+                        <Icon className="h-4 w-4" />
+                        {option.label}
+                      </DropdownMenuItem>
+                    );
+                  })}
+                  <DropdownMenuSeparator />
+                  {sortOptions.map((option) => (
+                    <DropdownMenuItem
+                      key={option.field}
+                      onClick={() => {
+                        if (sortField === option.field) {
+                          setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+                        } else {
+                          setSortField(option.field);
+                          setSortDirection("asc");
+                        }
+                      }}
+                      className={cn("gap-2", sortField === option.field && "bg-muted")}
+                    >
+                      <ArrowUpDown className="h-4 w-4" />
+                      {option.label}
+                      {sortField === option.field && (
+                        <span className="ml-auto text-xs">{sortDirection === "asc" ? "↑" : "↓"}</span>
+                      )}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Settings className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => refetchFiles()}>
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Refresh
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.open('https://drive.google.com', '_blank')}>
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    Open Google Drive
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    onClick={() => disconnectDrive.mutate()}
+                    disabled={disconnectDrive.isPending}
+                    className="text-destructive"
+                  >
+                    Disconnect Drive
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
-          {/* Breadcrumbs inline with title */}
-          <DriveBreadcrumbs 
-            path={breadcrumbPath} 
-            onNavigate={handleNavigateToFolder} 
-          />
+          
+          {/* Expandable search bar */}
+          {mobileSearchOpen && (
+            <div className="relative animate-fade-in">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search in Drive..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 bg-muted/30 border-0 focus-visible:ring-1 focus-visible:ring-gdrive-folder/50 h-9"
+                autoFocus
+              />
+            </div>
+          )}
         </div>
-        
-        {/* Search */}
-        <div className="flex-1 max-w-md">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search in Drive..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-muted/30 border-0 focus-visible:ring-1 focus-visible:ring-gdrive-folder/50 h-9"
+      ) : (
+        /* Desktop Header */
+        <div className="flex items-center justify-between gap-3 px-4 lg:px-6 py-3 border-b border-border/30 bg-card shrink-0">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-9 h-9 rounded-lg bg-gdrive-folder flex items-center justify-center shrink-0">
+              <HardDrive className="h-5 w-5 text-white" />
+            </div>
+            <DriveBreadcrumbs 
+              path={breadcrumbPath} 
+              onNavigate={handleNavigateToFolder} 
             />
           </div>
-        </div>
-        
-        <div className="flex items-center gap-1.5">
-          {/* Unified View Options Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-1.5 h-8 px-2.5">
-                <Filter className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline text-xs">View</span>
-                {activeFilterCount > 0 && (
-                  <Badge variant="secondary" className="h-4 w-4 p-0 text-[10px] flex items-center justify-center bg-gdrive-folder text-white">
-                    {activeFilterCount}
-                  </Badge>
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <div className="px-2 py-1.5">
-                <p className="text-xs font-medium text-muted-foreground mb-2">Layout</p>
-                <div className="flex gap-1">
-                  <Button
-                    variant={viewMode === "grid" ? "secondary" : "ghost"}
-                    size="sm"
-                    className="flex-1 h-8"
-                    onClick={() => setViewMode("grid")}
-                  >
-                    <Grid3X3 className="h-4 w-4 mr-1.5" />
-                    Grid
-                  </Button>
-                  <Button
-                    variant={viewMode === "list" ? "secondary" : "ghost"}
-                    size="sm"
-                    className="flex-1 h-8"
-                    onClick={() => setViewMode("list")}
-                  >
-                    <List className="h-4 w-4 mr-1.5" />
-                    List
-                  </Button>
-                </div>
-              </div>
-              <DropdownMenuSeparator />
-              <div className="px-2 py-1.5">
-                <p className="text-xs font-medium text-muted-foreground mb-2">File Type</p>
-              </div>
-              {filterOptions.map((option) => {
-                const Icon = option.icon;
-                return (
-                  <DropdownMenuItem
-                    key={option.value}
-                    onClick={() => setFileFilter(option.value)}
-                    className={cn("gap-2", fileFilter === option.value && "bg-muted")}
-                  >
-                    <Icon className="h-4 w-4" />
-                    {option.label}
-                  </DropdownMenuItem>
-                );
-              })}
-              <DropdownMenuSeparator />
-              <div className="px-2 py-1.5">
-                <p className="text-xs font-medium text-muted-foreground mb-2">Sort By</p>
-              </div>
-              {sortOptions.map((option) => (
-                <DropdownMenuItem
-                  key={option.field}
-                  onClick={() => {
-                    if (sortField === option.field) {
-                      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-                    } else {
-                      setSortField(option.field);
-                      setSortDirection("asc");
-                    }
-                  }}
-                  className={cn("gap-2", sortField === option.field && "bg-muted")}
-                >
-                  <ArrowUpDown className="h-4 w-4" />
-                  {option.label}
-                  {sortField === option.field && (
-                    <span className="ml-auto text-xs text-muted-foreground">
-                      {sortDirection === "asc" ? "↑" : "↓"}
-                    </span>
+          
+          <div className="flex-1 max-w-md">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search in Drive..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 bg-muted/30 border-0 focus-visible:ring-1 focus-visible:ring-gdrive-folder/50 h-9"
+              />
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-1.5">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-1.5 h-8 px-2.5">
+                  <Filter className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline text-xs">View</span>
+                  {activeFilterCount > 0 && (
+                    <Badge variant="secondary" className="h-4 w-4 p-0 text-[10px] flex items-center justify-center bg-gdrive-folder text-white">
+                      {activeFilterCount}
+                    </Badge>
                   )}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="px-2 py-1.5">
+                  <p className="text-xs font-medium text-muted-foreground mb-2">Layout</p>
+                  <div className="flex gap-1">
+                    <Button
+                      variant={viewMode === "grid" ? "secondary" : "ghost"}
+                      size="sm"
+                      className="flex-1 h-8"
+                      onClick={() => setViewMode("grid")}
+                    >
+                      <Grid3X3 className="h-4 w-4 mr-1.5" />
+                      Grid
+                    </Button>
+                    <Button
+                      variant={viewMode === "list" ? "secondary" : "ghost"}
+                      size="sm"
+                      className="flex-1 h-8"
+                      onClick={() => setViewMode("list")}
+                    >
+                      <List className="h-4 w-4 mr-1.5" />
+                      List
+                    </Button>
+                  </div>
+                </div>
+                <DropdownMenuSeparator />
+                <div className="px-2 py-1.5">
+                  <p className="text-xs font-medium text-muted-foreground mb-2">File Type</p>
+                </div>
+                {filterOptions.map((option) => {
+                  const Icon = option.icon;
+                  return (
+                    <DropdownMenuItem
+                      key={option.value}
+                      onClick={() => setFileFilter(option.value)}
+                      className={cn("gap-2", fileFilter === option.value && "bg-muted")}
+                    >
+                      <Icon className="h-4 w-4" />
+                      {option.label}
+                    </DropdownMenuItem>
+                  );
+                })}
+                <DropdownMenuSeparator />
+                <div className="px-2 py-1.5">
+                  <p className="text-xs font-medium text-muted-foreground mb-2">Sort By</p>
+                </div>
+                {sortOptions.map((option) => (
+                  <DropdownMenuItem
+                    key={option.field}
+                    onClick={() => {
+                      if (sortField === option.field) {
+                        setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+                      } else {
+                        setSortField(option.field);
+                        setSortDirection("asc");
+                      }
+                    }}
+                    className={cn("gap-2", sortField === option.field && "bg-muted")}
+                  >
+                    <ArrowUpDown className="h-4 w-4" />
+                    {option.label}
+                    {sortField === option.field && (
+                      <span className="ml-auto text-xs text-muted-foreground">
+                        {sortDirection === "asc" ? "↑" : "↓"}
+                      </span>
+                    )}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-          <Button variant="ghost" size="icon" onClick={() => refetchFiles()} className="h-8 w-8">
-            <RefreshCw className="h-4 w-4" />
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <Settings className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => window.open('https://drive.google.com', '_blank')}>
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Open Google Drive
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem 
-                onClick={() => disconnectDrive.mutate()}
-                disabled={disconnectDrive.isPending}
-                className="text-destructive"
-              >
-                Disconnect Drive
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            <Button variant="ghost" size="icon" onClick={() => refetchFiles()} className="h-8 w-8">
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <Settings className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => window.open('https://drive.google.com', '_blank')}>
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Open Google Drive
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                  onClick={() => disconnectDrive.mutate()}
+                  disabled={disconnectDrive.isPending}
+                  className="text-destructive"
+                >
+                  Disconnect Drive
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-      </div>
+      )}
 
       {filesError && (
         <div className="mx-4 lg:mx-6 mt-4 rounded-xl border border-border/50 bg-muted/20 p-4 shrink-0">
@@ -417,7 +564,7 @@ export default function Drive() {
       )}
 
       <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar - Quick Filters */}
+        {/* Sidebar - Quick Filters (hidden on mobile) */}
         <div className="hidden md:block w-56 lg:w-64 border-r border-border/30 py-4 overflow-y-auto bg-muted/5 shrink-0">
           <div className="px-3">
             <nav className="space-y-1">
@@ -467,20 +614,23 @@ export default function Drive() {
         {/* Main Content */}
         <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
           {/* Files */}
-          <div className="flex-1 overflow-auto p-4 lg:p-6 animate-fade-in">
+          <div className="flex-1 overflow-auto p-4 lg:p-6 pb-24 md:pb-6 animate-fade-in">
             {isLoadingFiles ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              <div className={cn(
+                "grid gap-3",
+                isMobile ? "grid-cols-2" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+              )}>
                 {[...Array(8)].map((_, i) => (
-                  <Skeleton key={i} className="h-24 rounded-xl" />
+                  <Skeleton key={i} className="h-20 rounded-xl" />
                 ))}
               </div>
             ) : processedFiles.length === 0 ? (
               <div className="flex items-center justify-center h-full">
-                <div className="text-center">
-                  <div className="w-20 h-20 rounded-full bg-muted/30 flex items-center justify-center mx-auto mb-4">
-                    <FolderOpen className="h-10 w-10 text-muted-foreground/50" />
+                <div className="text-center px-4">
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-muted/30 flex items-center justify-center mx-auto mb-4">
+                    <FolderOpen className="h-8 w-8 md:h-10 md:w-10 text-muted-foreground/50" />
                   </div>
-                  <p className="text-lg font-medium text-muted-foreground">
+                  <p className="text-base md:text-lg font-medium text-muted-foreground">
                     {searchQuery ? "No files match your search" : "This folder is empty"}
                   </p>
                   <p className="text-sm text-muted-foreground/70 mt-1">
@@ -489,7 +639,10 @@ export default function Drive() {
                 </div>
               </div>
             ) : viewMode === "grid" ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              <div className={cn(
+                "grid gap-3",
+                isMobile ? "grid-cols-2" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+              )}>
                 {processedFiles.map((file) => {
                   const Icon = getFileIcon(file.mimeType);
                   const colorClass = getFileColor(file.mimeType);
@@ -504,20 +657,39 @@ export default function Drive() {
                     >
                       <button
                         onClick={() => handleFileClick(file)}
-                        className="group w-full text-left rounded-xl border border-border/50 bg-card p-4 hover:border-gdrive-folder/50 hover:shadow-md transition-all"
+                        className={cn(
+                          "group w-full text-left rounded-xl border border-border/50 bg-card hover:border-gdrive-folder/50 hover:shadow-md transition-all",
+                          isMobile ? "p-3" : "p-4"
+                        )}
                       >
-                        <div className="flex items-center gap-4">
-                          <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center shrink-0", colorClass)}>
-                            <Icon className="h-6 w-6" />
+                        {isMobile ? (
+                          /* Mobile: Compact vertical layout */
+                          <div className="flex flex-col items-center text-center gap-2">
+                            <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center shrink-0", colorClass)}>
+                              <Icon className="h-5 w-5" />
+                            </div>
+                            <div className="w-full min-w-0">
+                              <p className="font-medium text-foreground text-xs line-clamp-2">{file.name}</p>
+                              <p className="text-[10px] text-muted-foreground mt-0.5">
+                                {formatDate(file.modifiedTime)}
+                              </p>
+                            </div>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-foreground truncate text-sm">{file.name}</p>
-                            <p className="text-xs text-muted-foreground mt-1">
-                              {formatDate(file.modifiedTime)}
-                              {file.size && ` • ${formatFileSize(file.size)}`}
-                            </p>
+                        ) : (
+                          /* Desktop: Horizontal layout */
+                          <div className="flex items-center gap-4">
+                            <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center shrink-0", colorClass)}>
+                              <Icon className="h-6 w-6" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-foreground truncate text-sm">{file.name}</p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {formatDate(file.modifiedTime)}
+                                {file.size && ` • ${formatFileSize(file.size)}`}
+                              </p>
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </button>
                     </DriveContextMenu>
                   );
@@ -575,6 +747,16 @@ export default function Drive() {
           </div>
         </div>
       </div>
+
+      {/* Mobile FAB for upload */}
+      {isMobile && (
+        <FAB 
+          onClick={() => window.open('https://drive.google.com', '_blank')}
+          className="bg-gdrive-folder hover:bg-gdrive-folder/90"
+        >
+          <Upload className="h-6 w-6" />
+        </FAB>
+      )}
 
       {/* File Preview */}
       <DriveFilePreview
