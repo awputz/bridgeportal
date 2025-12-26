@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
-import { Mail as MailIcon, Inbox, Send, FileText, Star, Trash2, Plus, RefreshCw, Settings, AlertCircle, Loader2, ChevronDown, Search as SearchIcon, ExternalLink, ArrowLeft } from "lucide-react";
+import { Mail as MailIcon, Inbox, Send, FileText, Star, Trash2, Plus, RefreshCw, Settings, AlertCircle, Loader2, ChevronDown, Search as SearchIcon, ExternalLink, ArrowLeft, X } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
@@ -42,6 +43,9 @@ export default function Mail() {
   const [replyToData, setReplyToData] = useState<{ to: string; subject: string; threadId?: string; messageId?: string } | undefined>();
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
 
+  const isMobile = useIsMobile();
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  
   const { data: connection, isLoading: isLoadingConnection, error: connectionError } = useGmailConnection();
   const {
     data: labels,
@@ -163,118 +167,180 @@ export default function Mail() {
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden bg-background min-h-0">
-      {/* Compact Header */}
-      <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-border/30 bg-card shrink-0">
-        <div className="flex items-center gap-3">
-          {/* Back button when viewing message on mobile */}
-          {isViewingMessage && (
+      {/* Mobile Header - Simplified Gmail-style */}
+      {isMobile ? (
+        <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-border/30 bg-card shrink-0">
+          {/* Back button or menu icon */}
+          {isViewingMessage ? (
             <Button 
               variant="ghost" 
               size="icon" 
               onClick={handleBackToList}
-              className="h-9 w-9 md:hidden"
+              className="h-10 w-10"
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
+          ) : (
+            <div className="w-8 h-8 rounded-lg bg-gmail-red flex items-center justify-center shrink-0">
+              <MailIcon className="h-4 w-4 text-white" />
+            </div>
           )}
-          <div className="w-9 h-9 rounded-lg bg-gmail-red flex items-center justify-center shrink-0">
-            <MailIcon className="h-5 w-5 text-white" />
-          </div>
-          <div className="hidden sm:block">
-            <h1 className="text-lg font-medium text-foreground leading-tight">Gmail</h1>
-          </div>
+
+          {/* Mobile Search - expandable */}
+          {mobileSearchOpen ? (
+            <div className="flex-1 flex items-center gap-2">
+              <div className="flex-1 relative">
+                <Input
+                  placeholder="Search mail..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="bg-muted/30 border-0 h-10"
+                  autoFocus
+                />
+              </div>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => {
+                  setMobileSearchOpen(false);
+                  setSearchQuery("");
+                }}
+                className="h-10 w-10"
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+          ) : (
+            <>
+              <div className="flex-1 flex items-center justify-center">
+                <span className="text-sm font-medium">{activeLabel === "INBOX" ? "Inbox" : LABEL_CONFIG[activeLabel]?.label}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => setMobileSearchOpen(true)}
+                  className="h-10 w-10"
+                >
+                  <SearchIcon className="h-5 w-5" />
+                </Button>
+              </div>
+            </>
+          )}
         </div>
-        
-        {/* Search Bar - Center */}
-        <div className="flex-1 max-w-xl">
-          <div className="relative">
-            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search mail..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-10 bg-muted/30 border-0 focus-visible:ring-1 focus-visible:ring-gmail-red/50 h-10"
-            />
-            <DropdownMenu open={showAdvancedSearch} onOpenChange={setShowAdvancedSearch}>
-              <DropdownMenuTrigger asChild>
-                <button className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                  <ChevronDown className="h-4 w-4" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <p className="px-2 py-1.5 text-xs font-medium text-muted-foreground">Quick filters</p>
-                {SEARCH_FILTERS.map((filter) => (
-                  <DropdownMenuItem 
-                    key={filter.value} 
-                    onClick={() => addSearchFilter(filter.value)}
-                  >
-                    {filter.label}
-                  </DropdownMenuItem>
-                ))}
-                {searchQuery && (
-                  <>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => setSearchQuery("")}>
-                      Clear search
+      ) : (
+        /* Desktop Header - Original */
+        <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-border/30 bg-card shrink-0">
+          <div className="flex items-center gap-3">
+            {isViewingMessage && (
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={handleBackToList}
+                className="h-9 w-9 md:hidden"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+            )}
+            <div className="w-9 h-9 rounded-lg bg-gmail-red flex items-center justify-center shrink-0">
+              <MailIcon className="h-5 w-5 text-white" />
+            </div>
+            <div className="hidden sm:block">
+              <h1 className="text-lg font-medium text-foreground leading-tight">Gmail</h1>
+            </div>
+          </div>
+          
+          {/* Search Bar - Center */}
+          <div className="flex-1 max-w-xl">
+            <div className="relative">
+              <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search mail..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-10 bg-muted/30 border-0 focus-visible:ring-1 focus-visible:ring-gmail-red/50 h-10"
+              />
+              <DropdownMenu open={showAdvancedSearch} onOpenChange={setShowAdvancedSearch}>
+                <DropdownMenuTrigger asChild>
+                  <button className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                    <ChevronDown className="h-4 w-4" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <p className="px-2 py-1.5 text-xs font-medium text-muted-foreground">Quick filters</p>
+                  {SEARCH_FILTERS.map((filter) => (
+                    <DropdownMenuItem 
+                      key={filter.value} 
+                      onClick={() => addSearchFilter(filter.value)}
+                    >
+                      {filter.label}
                     </DropdownMenuItem>
-                  </>
-                )}
+                  ))}
+                  {searchQuery && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => setSearchQuery("")}>
+                        Clear search
+                      </DropdownMenuItem>
+                    </>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center gap-1">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={handleRefresh} 
+              className="h-9 w-9"
+            >
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+            <Button 
+              size="sm" 
+              onClick={() => {
+                setReplyToData(undefined);
+                setIsComposeOpen(true);
+              }} 
+              className="gap-2 bg-gmail-red hover:bg-gmail-red/90 text-white h-9 px-4"
+            >
+              <Plus className="h-4 w-4" />
+              <span className="hidden sm:inline">Compose</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => window.open('https://mail.google.com', '_blank')}
+              className="h-9 w-9 hidden sm:flex"
+            >
+              <ExternalLink className="h-4 w-4" />
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-9 w-9">
+                  <Settings className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => window.open('https://mail.google.com', '_blank')}>
+                  Open Gmail
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                  onClick={() => disconnectGmail.mutate()}
+                  disabled={disconnectGmail.isPending}
+                  className="text-destructive"
+                >
+                  Disconnect Gmail
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </div>
-
-        {/* Actions */}
-        <div className="flex items-center gap-1">
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={handleRefresh} 
-            className="h-9 w-9"
-          >
-            <RefreshCw className="h-4 w-4" />
-          </Button>
-          <Button 
-            size="sm" 
-            onClick={() => {
-              setReplyToData(undefined);
-              setIsComposeOpen(true);
-            }} 
-            className="gap-2 bg-gmail-red hover:bg-gmail-red/90 text-white h-9 px-4"
-          >
-            <Plus className="h-4 w-4" />
-            <span className="hidden sm:inline">Compose</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => window.open('https://mail.google.com', '_blank')}
-            className="h-9 w-9 hidden sm:flex"
-          >
-            <ExternalLink className="h-4 w-4" />
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-9 w-9">
-                <Settings className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => window.open('https://mail.google.com', '_blank')}>
-                Open Gmail
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem 
-                onClick={() => disconnectGmail.mutate()}
-                disabled={disconnectGmail.isPending}
-                className="text-destructive"
-              >
-                Disconnect Gmail
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
+      )}
 
       {dataError && (
         <div className="mx-4 mt-3 rounded-xl border border-border/50 bg-muted/20 p-4 shrink-0">
@@ -295,10 +361,11 @@ export default function Mail() {
 
       {/* Main Content - Full Height */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar - Labels */}
+        {/* Sidebar - Labels - Hidden on mobile */}
         <div className={cn(
           "w-16 lg:w-56 border-r border-border/30 py-3 overflow-y-auto bg-muted/5 shrink-0",
-          isViewingMessage && "hidden md:block"
+          "hidden md:block",
+          isViewingMessage && "hidden lg:block"
         )}>
           <div className="flex flex-col gap-1 px-2">
             {Object.entries(LABEL_CONFIG).map(([id, config]) => {
@@ -337,8 +404,46 @@ export default function Mail() {
           </div>
         </div>
 
+        {/* Mobile Label Pills - Show when not viewing message */}
+        {isMobile && !isViewingMessage && (
+          <div className="absolute top-[52px] left-0 right-0 z-10 bg-card border-b border-border/30 px-3 py-2 flex gap-2 overflow-x-auto">
+            {Object.entries(LABEL_CONFIG).map(([id, config]) => {
+              const isActive = activeLabel === id;
+              const unreadCount = getLabelUnreadCount(id);
+              return (
+                <button
+                  key={id}
+                  onClick={() => {
+                    setActiveLabel(id);
+                    setSelectedMessageId(null);
+                  }}
+                  className={cn(
+                    "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all",
+                    isActive
+                      ? "bg-gmail-red text-white"
+                      : "bg-muted/50 text-foreground/70"
+                  )}
+                >
+                  {config.label}
+                  {unreadCount > 0 && id !== "TRASH" && (
+                    <span className={cn(
+                      "px-1.5 py-0.5 rounded-full text-[10px]",
+                      isActive ? "bg-white/20" : "bg-gmail-red/20 text-gmail-red"
+                    )}>
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
         {/* Full-Width Content Area - Shows EITHER list OR message */}
-        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <div className={cn(
+          "flex-1 flex flex-col min-w-0 overflow-hidden",
+          isMobile && !isViewingMessage && "pt-10" // Account for mobile label pills
+        )}>
           {/* Email List View */}
           {!isViewingMessage && (
             <div className="flex-1 flex flex-col overflow-hidden animate-fade-in">
@@ -347,6 +452,7 @@ export default function Mail() {
                 isLoading={isLoadingMessages}
                 selectedId={selectedMessageId}
                 onSelect={setSelectedMessageId}
+                isMobile={isMobile}
               />
             </div>
           )}
@@ -363,6 +469,19 @@ export default function Mail() {
           )}
         </div>
       </div>
+
+      {/* Mobile FAB for Compose */}
+      {isMobile && !isViewingMessage && (
+        <button
+          onClick={() => {
+            setReplyToData(undefined);
+            setIsComposeOpen(true);
+          }}
+          className="fixed bottom-20 right-4 z-50 w-14 h-14 rounded-full bg-gmail-red text-white shadow-lg flex items-center justify-center active:scale-95 transition-transform"
+        >
+          <Plus className="h-6 w-6" />
+        </button>
+      )}
 
       {/* Compose Dialog */}
       <MailCompose 

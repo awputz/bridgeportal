@@ -24,12 +24,14 @@ import type { GmailMessage } from "@/hooks/useGmail";
 import { useModifyMessage, useTrashMessage } from "@/hooks/useGmail";
 import { toast } from "sonner";
 import { MailSnoozeDialog } from "./MailSnoozeDialog";
+import { MobileEmailRow } from "./MobileEmailRow";
 
 interface MailInboxProps {
   messages: GmailMessage[];
   isLoading: boolean;
   selectedId: string | null;
   onSelect: (id: string) => void;
+  isMobile?: boolean;
 }
 
 function formatEmailDate(dateStr: string): string {
@@ -64,7 +66,7 @@ function groupByThread(messages: GmailMessage[]) {
 
 type ThreadedMessage = GmailMessage & { threadCount: number; threadMessages: GmailMessage[] };
 
-export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInboxProps) {
+export function MailInbox({ messages, isLoading, selectedId, onSelect, isMobile = false }: MailInboxProps) {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [snoozeMessageId, setSnoozeMessageId] = useState<string | null>(null);
@@ -423,45 +425,46 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
   return (
     <TooltipProvider delayDuration={200}>
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Gmail-style Toolbar */}
-        <div className="flex items-center gap-2 px-4 py-3 border-b border-border/30 bg-muted/5 shrink-0">
-          {/* Select Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-9 px-2 gap-1">
-                {selectedIds.size === 0 ? (
-                  <Square className="h-5 w-5" />
-                ) : selectedIds.size === threadedMessages.length ? (
-                  <CheckSquare className="h-5 w-5 text-gmail-red" />
-                ) : (
-                  <div className="h-5 w-5 border border-current rounded bg-gmail-red/30" />
-                )}
-                <ChevronDown className="h-3.5 w-3.5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuItem onClick={toggleSelectAll}>
-                {selectedIds.size === threadedMessages.length ? "None" : "All"}
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => {
-                setSelectedIds(new Set(unreadMessages.map(m => m.id)));
-              }}>
-                Unread
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => {
-                setSelectedIds(new Set(readMessages.map(m => m.id)));
-              }}>
-                Read
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => {
-                setSelectedIds(new Set(threadedMessages.filter(m => m.isStarred).map(m => m.id)));
-              }}>
-                Starred
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        {/* Gmail-style Toolbar - Hidden on mobile */}
+        {!isMobile && (
+          <div className="flex items-center gap-2 px-4 py-3 border-b border-border/30 bg-muted/5 shrink-0">
+            {/* Select Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-9 px-2 gap-1">
+                  {selectedIds.size === 0 ? (
+                    <Square className="h-5 w-5" />
+                  ) : selectedIds.size === threadedMessages.length ? (
+                    <CheckSquare className="h-5 w-5 text-gmail-red" />
+                  ) : (
+                    <div className="h-5 w-5 border border-current rounded bg-gmail-red/30" />
+                  )}
+                  <ChevronDown className="h-3.5 w-3.5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem onClick={toggleSelectAll}>
+                  {selectedIds.size === threadedMessages.length ? "None" : "All"}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => {
+                  setSelectedIds(new Set(unreadMessages.map(m => m.id)));
+                }}>
+                  Unread
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => {
+                  setSelectedIds(new Set(readMessages.map(m => m.id)));
+                }}>
+                  Read
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => {
+                  setSelectedIds(new Set(threadedMessages.filter(m => m.isStarred).map(m => m.id)));
+                }}>
+                  Starred
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-          <div className="w-px h-6 bg-border/50 mx-1" />
+            <div className="w-px h-6 bg-border/50 mx-1" />
 
           {/* Archive */}
           <Tooltip>
@@ -527,47 +530,66 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
             <TooltipContent>Star</TooltipContent>
           </Tooltip>
 
-          <div className="flex-1" />
+            <div className="flex-1" />
 
-          {/* Selection Count */}
-          {selectedIds.size > 0 && (
-            <span className="text-sm text-muted-foreground">
-              {selectedIds.size} selected
-            </span>
-          )}
-        </div>
+            {/* Selection Count */}
+            {selectedIds.size > 0 && (
+              <span className="text-sm text-muted-foreground">
+                {selectedIds.size} selected
+              </span>
+            )}
+          </div>
+        )}
 
         {/* Email List */}
         <ScrollArea className="flex-1">
-          <div className="py-2 pb-20 md:pb-4">
-            {/* Unread Section */}
-            {unreadMessages.length > 0 && (
-              <Collapsible open={unreadOpen} onOpenChange={setUnreadOpen}>
-                <CollapsibleTrigger className="flex items-center gap-2 px-6 py-2 text-sm font-medium text-muted-foreground hover:text-foreground w-full">
-                  {unreadOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                  Unread ({unreadMessages.length})
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <div className="space-y-0.5">
-                    {unreadMessages.map(renderMessageRow)}
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
-            )}
+          <div className={cn("py-2", isMobile ? "pb-24" : "pb-4")}>
+            {isMobile ? (
+              // Mobile: Simple flat list with optimized rows
+              <div>
+                {threadedMessages.map((message) => (
+                  <MobileEmailRow
+                    key={message.id}
+                    message={message}
+                    isSelected={selectedId === message.id}
+                    onSelect={() => onSelect(message.id)}
+                    onStar={() => handleQuickStar(message.id)}
+                  />
+                ))}
+              </div>
+            ) : (
+              // Desktop: Grouped sections
+              <>
+                {/* Unread Section */}
+                {unreadMessages.length > 0 && (
+                  <Collapsible open={unreadOpen} onOpenChange={setUnreadOpen}>
+                    <CollapsibleTrigger className="flex items-center gap-2 px-6 py-2 text-sm font-medium text-muted-foreground hover:text-foreground w-full">
+                      {unreadOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                      Unread ({unreadMessages.length})
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <div className="space-y-0.5">
+                        {unreadMessages.map(renderMessageRow)}
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                )}
 
-            {/* Everything Else Section */}
-            {readMessages.length > 0 && (
-              <Collapsible open={everythingElseOpen} onOpenChange={setEverythingElseOpen}>
-                <CollapsibleTrigger className="flex items-center gap-2 px-6 py-2 text-sm font-medium text-muted-foreground hover:text-foreground w-full mt-2">
-                  {everythingElseOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                  Everything else ({readMessages.length})
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <div className="space-y-0.5">
-                    {readMessages.map(renderMessageRow)}
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
+                {/* Everything Else Section */}
+                {readMessages.length > 0 && (
+                  <Collapsible open={everythingElseOpen} onOpenChange={setEverythingElseOpen}>
+                    <CollapsibleTrigger className="flex items-center gap-2 px-6 py-2 text-sm font-medium text-muted-foreground hover:text-foreground w-full mt-2">
+                      {everythingElseOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                      Everything else ({readMessages.length})
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <div className="space-y-0.5">
+                        {readMessages.map(renderMessageRow)}
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                )}
+              </>
             )}
           </div>
         </ScrollArea>
