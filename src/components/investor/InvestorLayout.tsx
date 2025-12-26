@@ -13,6 +13,9 @@ import {
   Users,
   DollarSign,
   FileText,
+  Building2,
+  FileQuestion,
+  Wallet,
 } from "lucide-react";
 
 const mobileNavItems = [
@@ -22,6 +25,9 @@ const mobileNavItems = [
   { name: "Team", path: "/investor/team", icon: Users },
   { name: "Commissions", path: "/investor/commissions", icon: DollarSign },
   { name: "Reports", path: "/investor/reports", icon: FileText },
+  { name: "Listings", path: "/investor/listings", icon: Building2 },
+  { name: "Agent Requests", path: "/investor/agent-requests", icon: FileQuestion },
+  { name: "Commission Requests", path: "/investor/commission-requests", icon: Wallet },
 ];
 
 export const InvestorLayout = () => {

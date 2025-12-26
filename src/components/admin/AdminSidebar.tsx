@@ -1,4 +1,4 @@
-import { Users, DollarSign, LogOut, Settings, MapPin, Link2, Layers, Wrench, FileText, Home, Building2, Bell, Mail, FolderOpen, Shield, KeyRound, Activity, Newspaper, ClipboardList, Building, PieChart, UserPlus } from "lucide-react";
+import { Users, DollarSign, LogOut, Settings, MapPin, Link2, Layers, Wrench, FileText, Home, Building2, Bell, Mail, FolderOpen, Shield, KeyRound, Activity, Newspaper, ClipboardList, Building, PieChart, UserPlus, Eye } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -119,6 +119,14 @@ export function AdminSidebar() {
         <SidebarGroup className="mt-auto">
           <SidebarGroupContent>
             <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <NavLink to="/investor/dashboard" className="flex items-center gap-3">
+                    <Eye className="h-4 w-4" />
+                    {open && <span>Investor Portal</span>}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <NavLink to="/portal" className="flex items-center gap-3">
