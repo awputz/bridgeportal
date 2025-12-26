@@ -21,7 +21,8 @@ import {
   RefreshCw,
   Check,
   Cloud,
-  CloudOff
+  CloudOff,
+  ExternalLink
 } from "lucide-react";
 import { useCRMContacts, useCreateContact, useDeleteContact } from "@/hooks/useCRM";
 import { useCRMRealtime } from "@/hooks/useCRMRealtime";
@@ -176,6 +177,15 @@ const GoogleSyncStatus = () => {
                 </>
               )}
             </Badge>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.open('https://contacts.google.com', '_blank')}
+              className="gap-1.5 h-7 border-blue-500/30 text-blue-400 hover:bg-blue-500/10"
+            >
+              <ExternalLink className="h-3 w-3" />
+              <span className="hidden sm:inline">Open Contacts</span>
+            </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-7 w-7">

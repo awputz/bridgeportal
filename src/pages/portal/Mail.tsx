@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { Mail as MailIcon, Inbox, Send, FileText, Star, Trash2, Plus, RefreshCw, Settings, AlertCircle, Loader2, Archive, ChevronDown, Search as SearchIcon } from "lucide-react";
+import { Mail as MailIcon, Inbox, Send, FileText, Star, Trash2, Plus, RefreshCw, Settings, AlertCircle, Loader2, Archive, ChevronDown, Search as SearchIcon, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -212,6 +212,15 @@ export default function Mail() {
             >
               <Plus className="h-4 w-4" />
               <span>Compose</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.open('https://mail.google.com', '_blank')}
+              className="gap-2 border-gmail-red/30 text-gmail-red hover:bg-gmail-red/10"
+            >
+              <ExternalLink className="h-4 w-4" />
+              <span className="hidden sm:inline">Open Gmail</span>
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
