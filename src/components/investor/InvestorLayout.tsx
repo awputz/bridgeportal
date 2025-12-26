@@ -88,10 +88,7 @@ export const InvestorLayout = () => {
                   alt="Bridge Advisory Group" 
                   className="h-8 w-auto"
                 />
-                <div className="hidden sm:block">
-                  <span className="text-sm font-medium text-foreground">Investor Portal</span>
-                  <span className="block text-xs text-amber-500">Hudson Point Group</span>
-                </div>
+                <span className="hidden sm:block text-sm font-medium text-foreground">Investor Portal</span>
               </Link>
             </div>
 
