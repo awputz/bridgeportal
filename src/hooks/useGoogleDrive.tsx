@@ -131,3 +131,63 @@ export function useDriveFiles(options?: { query?: string; folderId?: string; ena
     retry: 1,
   });
 }
+
+// Get file details
+export function useDriveFile(fileId: string | null) {
+  return useQuery({
+    queryKey: ["drive-file", fileId],
+    queryFn: async () => {
+      if (!fileId) return null;
+      
+      const { data, error } = await invokeWithAuthHandling("google-drive-files", {
+        body: {
+          action: "get",
+          fileId,
+        },
+      });
+
+      if (error) throw error;
+      return data as DriveFile;
+    },
+    enabled: !!fileId,
+    staleTime: 60000,
+  });
+}
+
+// Get folder path (for breadcrumbs)
+export function useDriveFolderPath(folderId: string | null) {
+  return useQuery({
+    queryKey: ["drive-folder-path", folderId],
+    queryFn: async () => {
+      if (!folderId) return [];
+      
+      const path: { id: string; name: string }[] = [];
+      let currentId: string | null = folderId;
+      
+      // Walk up the folder tree (max 10 levels to prevent infinite loops)
+      for (let i = 0; i < 10 && currentId; i++) {
+        const { data, error } = await invokeWithAuthHandling("google-drive-files", {
+          body: {
+            action: "get",
+            fileId: currentId,
+          },
+        });
+        
+        if (error || !data) break;
+        
+        const file = data as DriveFile;
+        path.unshift({ id: file.id, name: file.name });
+        
+        // Get parent folder
+        currentId = file.parents?.[0] || null;
+        
+        // Stop at root
+        if (!currentId || currentId === "root") break;
+      }
+      
+      return path;
+    },
+    enabled: !!folderId,
+    staleTime: 300000, // Cache path for 5 minutes
+  });
+}
