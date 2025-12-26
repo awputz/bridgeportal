@@ -5,9 +5,11 @@ import { AIAssistant } from "./AIAssistant";
 import { FloatingSearch } from "./FloatingSearch";
 import { CommandPalette, useCommandPalette } from "./CommandPalette";
 import { QuickActivityLogger } from "./QuickActivityLogger";
+import { SyncStatusIndicator } from "./SyncStatusIndicator";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Loader2 } from "lucide-react";
 import { useStoreGoogleTokensOnLogin } from "@/hooks/useGoogleServices";
+import { useAutoSyncContacts } from "@/hooks/useAutoSyncContacts";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
 
@@ -19,6 +21,9 @@ export const PortalLayout = () => {
   
   // Store Google tokens when user signs in with Google OAuth
   useStoreGoogleTokensOnLogin();
+
+  // Auto-sync contacts from Google when connected (runs globally on login)
+  const { isSyncing, googleContactsCount } = useAutoSyncContacts();
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -44,6 +49,9 @@ export const PortalLayout = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Global Sync Status Indicator */}
+      <SyncStatusIndicator isSyncing={isSyncing} syncedCount={googleContactsCount} />
+      
       <PortalNavigation />
       <main className="pt-16 md:pt-20">
         <ErrorBoundary>

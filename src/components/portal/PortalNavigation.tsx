@@ -16,7 +16,8 @@ import {
   Users,
   FolderOpen,
   ChevronDown,
-  Calendar
+  Calendar,
+  Settings
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -281,6 +282,12 @@ export const PortalNavigation = () => {
                     <Link to="/portal/profile" className="flex items-center gap-2 cursor-pointer">
                       <User className="h-4 w-4" />
                       Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/portal/settings/google" className="flex items-center gap-2 cursor-pointer">
+                      <Settings className="h-4 w-4" />
+                      Google Services
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />

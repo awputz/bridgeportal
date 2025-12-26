@@ -50,7 +50,7 @@ export function useGmailConnection() {
 
       const { data, error } = await supabase
         .from("user_google_tokens")
-        .select("gmail_enabled, gmail_access_token, google_email")
+        .select("gmail_enabled, gmail_access_token, access_token, google_email")
         .eq("user_id", user.id)
         .maybeSingle();
 
@@ -63,8 +63,10 @@ export function useGmailConnection() {
         return { isConnected: false, email: null };
       }
 
+      // Accept either service-specific or unified token
+      const hasToken = !!(data.gmail_access_token || data.access_token);
       return {
-        isConnected: !!data.gmail_enabled && !!data.gmail_access_token,
+        isConnected: !!data.gmail_enabled && hasToken,
         email: data.google_email,
       };
     },
