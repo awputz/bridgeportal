@@ -17,7 +17,8 @@ import {
   FolderOpen,
   ChevronDown,
   Calendar,
-  Settings
+  Settings,
+  Shield
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -54,7 +55,7 @@ export const PortalNavigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAdminOrAgent } = useIsAdminOrAgent();
+  const { isAdminOrAgent, role } = useIsAdminOrAgent();
   const { data: userProfile } = useUserProfile();
   const { signOut, hardLogout } = useAuth();
 
@@ -290,6 +291,17 @@ export const PortalNavigation = () => {
                       Google Services
                     </Link>
                   </DropdownMenuItem>
+                  {role === 'admin' && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin" className="flex items-center gap-2 cursor-pointer">
+                          <Shield className="h-4 w-4" />
+                          Admin Portal
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer">
                     <LogOut className="h-4 w-4 mr-2" />
@@ -448,6 +460,21 @@ export const PortalNavigation = () => {
                   <User className="h-5 w-5" />
                   Profile
                 </Link>
+                {role === 'admin' && (
+                  <Link
+                    to="/admin"
+                    className={cn(
+                      "flex items-center gap-4 text-lg font-light transition-all duration-300 py-4 min-h-[56px] active:bg-white/5 rounded-lg px-4 -mx-2",
+                      location.pathname.startsWith('/admin') ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
+                      isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                    )}
+                    style={{ transitionDelay: '550ms' }}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Shield className="h-5 w-5" />
+                    Admin Portal
+                  </Link>
+                )}
               </div>
             </div>
             

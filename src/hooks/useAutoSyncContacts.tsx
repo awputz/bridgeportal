@@ -25,9 +25,16 @@ export function useAutoSyncContacts() {
   );
 
   const performSync = useCallback(async (contacts: GoogleContact[]) => {
-    if (isSyncingRef.current || contacts.length === 0) return;
+    if (isSyncingRef.current || contacts.length === 0) {
+      console.log("[AutoSync] Skipping sync:", { 
+        alreadySyncing: isSyncingRef.current, 
+        contactsCount: contacts.length 
+      });
+      return;
+    }
     
     isSyncingRef.current = true;
+    console.log("[AutoSync] Starting sync for", contacts.length, "contacts in division:", division);
     
     try {
       const { data, error } = await invokeWithAuthHandling("google-contacts-import", {
@@ -35,11 +42,15 @@ export function useAutoSyncContacts() {
       });
 
       if (error) {
-        console.error("Auto-sync error:", error);
+        console.error("[AutoSync] Import error:", error);
+        toast.error("Failed to sync contacts", {
+          description: error.message || "Please check your connection and try again",
+        });
         return;
       }
 
       const result = data as { imported: number; skipped: number; message: string };
+      console.log("[AutoSync] Sync result:", result);
       
       // Only show toast if contacts were actually imported
       if (result.imported > 0) {
@@ -47,11 +58,16 @@ export function useAutoSyncContacts() {
           description: result.skipped > 0 ? `${result.skipped} already existed` : undefined,
         });
         queryClient.invalidateQueries({ queryKey: ["crm-contacts"] });
+      } else if (result.skipped > 0) {
+        console.log("[AutoSync] All contacts already exist:", result.skipped, "skipped");
       }
       
       hasSyncedRef.current = true;
     } catch (err) {
-      console.error("Auto-sync failed:", err);
+      console.error("[AutoSync] Sync failed:", err);
+      toast.error("Contact sync failed", {
+        description: err instanceof Error ? err.message : "Unknown error occurred",
+      });
     } finally {
       isSyncingRef.current = false;
     }
@@ -59,6 +75,14 @@ export function useAutoSyncContacts() {
 
   // Auto-sync when Google Contacts are loaded
   useEffect(() => {
+    console.log("[AutoSync] State check:", {
+      isCheckingConnection,
+      isLoadingContacts,
+      connected: connectionData?.connected,
+      contactsCount: googleContactsData?.contacts?.length ?? 0,
+      hasSynced: hasSyncedRef.current,
+    });
+    
     if (
       !isCheckingConnection && 
       !isLoadingContacts && 

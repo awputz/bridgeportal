@@ -53,8 +53,8 @@ export const PortalLayout = () => {
       <SyncStatusIndicator isSyncing={isSyncing} syncedCount={googleContactsCount} />
       
       <PortalNavigation />
-      {/* Main content area - precise padding: pt-14 (56px mobile), pt-20 (80px desktop), pb-16 (64px) for mobile bottom nav */}
-      <main className="flex-1 flex flex-col pt-14 md:pt-20 pb-16 md:pb-0 overflow-hidden min-h-0">
+      {/* Main content area - increased padding: pt-[72px] mobile (nav + buffer), pt-24 desktop, pb-16 for mobile bottom nav */}
+      <main className="flex-1 flex flex-col pt-[72px] md:pt-24 pb-16 md:pb-0 overflow-hidden min-h-0">
         <ErrorBoundary>
           <Outlet />
         </ErrorBoundary>
