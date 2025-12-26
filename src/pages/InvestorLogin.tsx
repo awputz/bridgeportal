@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
-import { Lock, Loader2, Mail, ArrowLeft, Briefcase } from "lucide-react";
+import { Lock, Loader2, Mail, ArrowLeft } from "lucide-react";
 
 const InvestorLogin = () => {
   const [email, setEmail] = useState("");
@@ -121,7 +121,7 @@ const InvestorLogin = () => {
           />
         </div>
 
-        <div className="glass-panel-strong p-8 md:p-10 border-sky-400/20">
+      <div className="glass-panel-strong p-8 md:p-10 border-sky-400/20">
           <button
             onClick={() => navigate("/login")}
             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
@@ -134,12 +134,9 @@ const InvestorLogin = () => {
             <div className="flex items-center justify-center mb-6">
               <img 
                 src="/lovable-uploads/hpg-logo-white.png" 
-                alt="HPG" 
-                className="h-16 w-auto"
+                alt="Hudson Point Group" 
+                className="h-40 w-auto max-w-[280px]"
               />
-            </div>
-            <div className="mx-auto w-14 h-14 rounded-full bg-sky-400/10 flex items-center justify-center mb-4">
-              <Briefcase className="h-6 w-6 text-sky-400" />
             </div>
             <h1 className="text-2xl font-extralight text-foreground mb-1">
               Investor Portal
