@@ -140,23 +140,34 @@ serve(async (req) => {
   try {
     const authHeader = req.headers.get('Authorization');
     console.log("[google-contacts-list] Auth header present:", !!authHeader);
-    
+
     if (!authHeader) {
       console.log("[google-contacts-list] Missing auth header");
       return new Response(
-        JSON.stringify({ error: 'Missing authorization header' }),
+        JSON.stringify({
+          error: 'Missing authorization header',
+          needsReauth: true,
+          errorCode: 'MISSING_AUTH',
+        }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
     const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
+
     if (authError || !user) {
       console.log("[google-contacts-list] Invalid user token:", authError?.message);
       return new Response(
-        JSON.stringify({ error: 'Invalid token' }),
+        JSON.stringify({
+          error: 'Invalid token',
+          needsReauth: true,
+          errorCode: 'INVALID_AUTH',
+        }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
