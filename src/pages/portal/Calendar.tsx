@@ -12,6 +12,7 @@ import {
   LayoutGrid,
   List,
   CalendarDays,
+  ExternalLink,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -231,6 +232,15 @@ export default function Calendar() {
             <Button variant="outline" size="sm" onClick={() => refetchEvents()} className="gap-2">
               <RefreshCw className="h-4 w-4" />
               <span className="hidden sm:inline">Refresh</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.open('https://calendar.google.com', '_blank')}
+              className="gap-2 border-gcal-blue/30 text-gcal-blue hover:bg-gcal-blue/10"
+            >
+              <ExternalLink className="h-4 w-4" />
+              <span className="hidden sm:inline">Open Calendar</span>
             </Button>
             <Button
               variant="ghost"

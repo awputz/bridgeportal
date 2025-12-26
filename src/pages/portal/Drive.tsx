@@ -199,6 +199,15 @@ export default function Drive() {
               <RefreshCw className="h-4 w-4" />
               <span className="hidden sm:inline">Refresh</span>
             </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.open('https://drive.google.com', '_blank')}
+              className="gap-2 border-gdrive-folder/30 text-gdrive-folder hover:bg-gdrive-folder/10"
+            >
+              <ExternalLink className="h-4 w-4" />
+              <span className="hidden sm:inline">Open Drive</span>
+            </Button>
             <div className="hidden sm:flex items-center border rounded-lg overflow-hidden">
               <Button
                 variant={viewMode === "grid" ? "default" : "ghost"}
