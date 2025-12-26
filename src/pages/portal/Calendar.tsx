@@ -7,18 +7,26 @@ import {
   MapPin,
   Loader2,
   AlertCircle,
-  Settings,
   RefreshCw,
   LayoutGrid,
   List,
   CalendarDays,
   ExternalLink,
   CalendarClock,
+  Plus,
+  Settings,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import {
   useGoogleCalendarConnection,
@@ -158,7 +166,6 @@ export default function Calendar() {
   };
 
   const handleSaveEvent = (eventData: Partial<CalendarEvent>) => {
-    // For now, show a toast - full save would require Google Calendar API write access
     toast({
       title: eventData.id ? "Event Updated" : "Event Created",
       description: `"${eventData.title}" - Note: Google Calendar write access required to sync.`,
@@ -181,12 +188,10 @@ export default function Calendar() {
 
   if (isLoadingConnection) {
     return (
-      <div className="min-h-screen pb-24 md:pb-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center justify-center gap-3 py-12">
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-            <span className="text-muted-foreground">Checking connection...</span>
-          </div>
+      <div className="h-[calc(100vh-4rem)] flex items-center justify-center">
+        <div className="flex items-center gap-3">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          <span className="text-muted-foreground">Checking connection...</span>
         </div>
       </div>
     );
@@ -194,152 +199,187 @@ export default function Calendar() {
 
   if (!isConnected) {
     return (
-      <div className="min-h-screen pb-24 md:pb-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-          <div className="mb-8">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-lg bg-gcal-blue flex items-center justify-center">
-                <CalendarIcon className="h-5 w-5 text-white" />
-              </div>
-              <h1 className="text-3xl md:text-4xl font-extralight text-foreground">Google Calendar</h1>
-            </div>
-            <p className="text-muted-foreground font-light">Connect your Google Calendar to view and manage events</p>
+      <div className="h-[calc(100vh-4rem)] flex items-center justify-center p-4">
+        <div className="glass-card p-8 md:p-12 max-w-xl text-center">
+          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-gcal-blue/20 to-gcal-green/20 flex items-center justify-center mx-auto mb-6">
+            <CalendarIcon className="h-10 w-10 text-gcal-blue" />
           </div>
-
-          <div className="glass-card p-8 md:p-12 max-w-xl mx-auto text-center">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-gcal-blue/20 to-gcal-green/20 flex items-center justify-center mx-auto mb-6">
-              <CalendarIcon className="h-10 w-10 text-gcal-blue" />
-            </div>
-            <h2 className="text-2xl font-light text-foreground mb-3">Connect Your Google Calendar</h2>
-            <p className="text-muted-foreground font-light mb-8 max-w-sm mx-auto">
-              View your events, schedule meetings, and stay organized with your Google Calendar.
-            </p>
-            <Button
-              size="lg"
-              onClick={() => connectCalendar.mutate()}
-              disabled={connectCalendar.isPending}
-              className="gap-2 bg-gcal-blue hover:bg-gcal-blue/90"
-            >
-              {connectCalendar.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <CalendarIcon className="h-4 w-4" />}
-              Connect Google Calendar
-            </Button>
-          </div>
+          <h2 className="text-2xl font-light text-foreground mb-3">Connect Your Google Calendar</h2>
+          <p className="text-muted-foreground font-light mb-8 max-w-sm mx-auto">
+            View your events, schedule meetings, and stay organized with your Google Calendar.
+          </p>
+          <Button
+            size="lg"
+            onClick={() => connectCalendar.mutate()}
+            disabled={connectCalendar.isPending}
+            className="gap-2 bg-gcal-blue hover:bg-gcal-blue/90"
+          >
+            {connectCalendar.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <CalendarIcon className="h-4 w-4" />}
+            Connect Google Calendar
+          </Button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pb-24 md:pb-16 bg-background">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon" onClick={navigatePrevious}>
+    <div className="h-[calc(100vh-4rem)] flex flex-col overflow-hidden bg-background">
+      {/* Header */}
+      <div className="px-4 lg:px-6 py-4 border-b border-border/30 bg-card shrink-0">
+        {/* Top Row: Title, Navigation, Today */}
+        <div className="flex items-center justify-between gap-4 mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-gcal-blue flex items-center justify-center shrink-0">
+              <CalendarIcon className="h-5 w-5 text-white" />
+            </div>
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" size="icon" onClick={navigatePrevious} className="h-9 w-9">
                 <ChevronLeft className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon" onClick={navigateNext}>
+              <Button variant="ghost" size="icon" onClick={navigateNext} className="h-9 w-9">
                 <ChevronRight className="h-5 w-5" />
               </Button>
+              <h1 className="text-lg md:text-xl font-medium text-foreground">{getHeaderTitle()}</h1>
             </div>
-            <h1 className="text-xl md:text-2xl font-light text-foreground">{getHeaderTitle()}</h1>
           </div>
           
-          <div className="flex items-center gap-2 flex-wrap">
-            <Button variant="outline" size="sm" onClick={goToToday} className="border-gcal-blue/30 text-gcal-blue hover:bg-gcal-blue/10">
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={goToToday} 
+              className="border-gcal-blue/30 text-gcal-blue hover:bg-gcal-blue/10 h-9"
+            >
               Today
             </Button>
-            
-            <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)}>
-              <TabsList className="bg-muted/30">
-                <TabsTrigger value="day" className="gap-1.5 data-[state=active]:bg-gcal-blue data-[state=active]:text-white">
-                  <CalendarClock className="h-3.5 w-3.5" />
-                  Day
-                </TabsTrigger>
-                <TabsTrigger value="week" className="gap-1.5 data-[state=active]:bg-gcal-blue data-[state=active]:text-white">
-                  <CalendarDays className="h-3.5 w-3.5" />
-                  Week
-                </TabsTrigger>
-                <TabsTrigger value="month" className="gap-1.5 data-[state=active]:bg-gcal-blue data-[state=active]:text-white">
-                  <LayoutGrid className="h-3.5 w-3.5" />
-                  Month
-                </TabsTrigger>
-                <TabsTrigger value="agenda" className="gap-1.5 data-[state=active]:bg-gcal-blue data-[state=active]:text-white">
-                  <List className="h-3.5 w-3.5" />
-                  Agenda
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-
-            <Button variant="outline" size="sm" onClick={() => refetchEvents()} className="gap-2">
-              <RefreshCw className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => window.open('https://calendar.google.com', '_blank')} className="gap-2 border-gcal-blue/30 text-gcal-blue hover:bg-gcal-blue/10">
-              <ExternalLink className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon" onClick={() => disconnectCalendar.mutate()} className="text-muted-foreground">
-              <Settings className="h-4 w-4" />
+            <Button 
+              size="sm" 
+              onClick={handleCreateEvent} 
+              className="gap-2 bg-gcal-blue hover:bg-gcal-blue/90 text-white h-9 hidden sm:flex"
+            >
+              <Plus className="h-4 w-4" />
+              <span className="hidden md:inline">Create</span>
             </Button>
           </div>
         </div>
 
-        {eventsError && (
-          <div className="mb-4 rounded-xl border border-border/50 bg-muted/20 p-4 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <AlertCircle className="h-4 w-4 text-muted-foreground" />
+        {/* Bottom Row: View Tabs, Actions */}
+        <div className="flex items-center justify-between gap-4">
+          <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)}>
+            <TabsList className="bg-muted/30 h-10">
+              <TabsTrigger value="day" className="gap-1.5 px-3 data-[state=active]:bg-gcal-blue data-[state=active]:text-white">
+                <CalendarClock className="h-4 w-4" />
+                <span className="hidden sm:inline">Day</span>
+              </TabsTrigger>
+              <TabsTrigger value="week" className="gap-1.5 px-3 data-[state=active]:bg-gcal-blue data-[state=active]:text-white">
+                <CalendarDays className="h-4 w-4" />
+                <span className="hidden sm:inline">Week</span>
+              </TabsTrigger>
+              <TabsTrigger value="month" className="gap-1.5 px-3 data-[state=active]:bg-gcal-blue data-[state=active]:text-white">
+                <LayoutGrid className="h-4 w-4" />
+                <span className="hidden sm:inline">Month</span>
+              </TabsTrigger>
+              <TabsTrigger value="agenda" className="gap-1.5 px-3 data-[state=active]:bg-gcal-blue data-[state=active]:text-white">
+                <List className="h-4 w-4" />
+                <span className="hidden sm:inline">Agenda</span>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="icon" onClick={() => refetchEvents()} className="h-9 w-9">
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => window.open('https://calendar.google.com', '_blank')} 
+              className="h-9 w-9"
+            >
+              <ExternalLink className="h-4 w-4" />
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-9 w-9">
+                  <Settings className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => window.open('https://calendar.google.com', '_blank')}>
+                  Open Google Calendar
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                  onClick={() => disconnectCalendar.mutate()}
+                  className="text-destructive"
+                >
+                  Disconnect Calendar
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      </div>
+
+      {eventsError && (
+        <div className="mx-4 lg:mx-6 mt-4 rounded-xl border border-border/50 bg-muted/20 p-4 shrink-0">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="h-5 w-5 text-muted-foreground" />
               <span className="text-sm">{(eventsError as Error).message}</span>
             </div>
             <Button variant="outline" size="sm" onClick={hardLogout}>Sign in again</Button>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Main Content with Sidebar */}
-        <div className="flex gap-6">
-          {/* Sidebar */}
-          <div className="hidden lg:block w-64 shrink-0">
-            <CalendarSidebar
-              currentDate={currentDate}
-              selectedDate={selectedDate}
-              onDateSelect={(date) => { setSelectedDate(date); setCurrentDate(date); }}
-              onCreateEvent={handleCreateEvent}
-              eventsByDate={eventsByDate}
-              isLoadingEvents={isLoadingEvents}
+      {/* Main Content with Sidebar */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Sidebar */}
+        <div className="hidden lg:block w-72 border-r border-border/30 overflow-y-auto shrink-0">
+          <CalendarSidebar
+            currentDate={currentDate}
+            selectedDate={selectedDate}
+            onDateSelect={(date) => { setSelectedDate(date); setCurrentDate(date); }}
+            onCreateEvent={handleCreateEvent}
+            eventsByDate={eventsByDate}
+            isLoadingEvents={isLoadingEvents}
+          />
+        </div>
+
+        {/* Calendar View */}
+        <div className="flex-1 min-w-0 overflow-hidden">
+          {viewMode === "day" && (
+            <CalendarDayView
+              currentDate={selectedDate || currentDate}
+              events={events}
+              isLoading={isLoadingEvents}
+              onEventClick={handleEventClick}
+              onTimeSlotClick={handleTimeSlotClick}
             />
-          </div>
+          )}
+          
+          {viewMode === "week" && (
+            <CalendarWeekView
+              currentDate={currentDate}
+              events={events}
+              isLoading={isLoadingEvents}
+              onEventClick={handleEventClick}
+              onTimeSlotClick={handleTimeSlotClick}
+            />
+          )}
 
-          {/* Calendar View */}
-          <div className="flex-1 min-w-0">
-            {viewMode === "day" && (
-              <CalendarDayView
-                currentDate={selectedDate || currentDate}
-                events={events}
-                isLoading={isLoadingEvents}
-                onEventClick={handleEventClick}
-                onTimeSlotClick={handleTimeSlotClick}
-              />
-            )}
-            
-            {viewMode === "week" && (
-              <CalendarWeekView
-                currentDate={currentDate}
-                events={events}
-                isLoading={isLoadingEvents}
-                onEventClick={handleEventClick}
-                onTimeSlotClick={handleTimeSlotClick}
-              />
-            )}
-
-            {viewMode === "month" && (
-              <div className="rounded-xl border border-border/50 bg-card p-4 shadow-sm">
-                <div className="grid grid-cols-7 gap-1 mb-2">
+          {viewMode === "month" && (
+            <div className="h-full p-4 lg:p-6 overflow-auto">
+              <div className="rounded-xl border border-border/50 bg-card p-4 lg:p-6 shadow-sm">
+                <div className="grid grid-cols-7 gap-1 mb-3">
                   {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-                    <div key={day} className="text-center text-xs font-medium text-muted-foreground py-2">{day}</div>
+                    <div key={day} className="text-center text-sm font-medium text-muted-foreground py-3">{day}</div>
                   ))}
                 </div>
                 {isLoadingEvents ? (
                   <div className="grid grid-cols-7 gap-1">
-                    {[...Array(35)].map((_, i) => <Skeleton key={i} className="aspect-square rounded-lg" />)}
+                    {[...Array(35)].map((_, i) => <Skeleton key={i} className="aspect-square rounded-xl" />)}
                   </div>
                 ) : (
                   <div className="grid grid-cols-7 gap-1">
@@ -354,20 +394,26 @@ export default function Calendar() {
                           key={dateKey}
                           onClick={() => setSelectedDate(day)}
                           className={cn(
-                            "aspect-square p-1 rounded-xl transition-all flex flex-col items-center relative",
+                            "aspect-square p-2 rounded-xl transition-all flex flex-col items-center relative",
                             !isCurrentMonth && "opacity-40",
                             isSelected && "bg-gcal-blue text-white shadow-lg",
                             !isSelected && isToday(day) && "bg-gcal-blue/10 ring-2 ring-gcal-blue ring-inset",
                             !isSelected && !isToday(day) && "hover:bg-muted/50"
                           )}
                         >
-                          <span className={cn("text-sm font-medium", isToday(day) && !isSelected && "text-gcal-blue font-semibold")}>
+                          <span className={cn(
+                            "text-sm font-medium", 
+                            isToday(day) && !isSelected && "text-gcal-blue font-semibold"
+                          )}>
                             {format(day, "d")}
                           </span>
                           {dayEvents.length > 0 && (
                             <div className="flex gap-0.5 mt-1">
                               {dayEvents.slice(0, 3).map((_, i) => (
-                                <div key={i} className={cn("w-1.5 h-1.5 rounded-full", isSelected ? "bg-white" : "bg-gcal-blue")} />
+                                <div key={i} className={cn(
+                                  "w-1.5 h-1.5 rounded-full", 
+                                  isSelected ? "bg-white" : "bg-gcal-blue"
+                                )} />
                               ))}
                             </div>
                           )}
@@ -377,18 +423,20 @@ export default function Calendar() {
                   </div>
                 )}
               </div>
-            )}
+            </div>
+          )}
 
-            {viewMode === "agenda" && (
-              <div className="rounded-xl border border-border/50 bg-card overflow-hidden shadow-sm">
-                <div className="p-4 border-b border-border/30 bg-muted/5">
+          {viewMode === "agenda" && (
+            <div className="h-full p-4 lg:p-6 overflow-auto">
+              <div className="max-w-3xl mx-auto rounded-xl border border-border/50 bg-card overflow-hidden shadow-sm">
+                <div className="p-4 lg:p-5 border-b border-border/30 bg-muted/5">
                   <h2 className="text-lg font-medium">Upcoming Events</h2>
                 </div>
                 <div className="divide-y divide-border/30">
                   {isLoadingEvents ? (
                     Array.from({ length: 5 }).map((_, i) => (
-                      <div key={i} className="p-4 flex gap-4">
-                        <Skeleton className="w-16 h-16 rounded-lg" />
+                      <div key={i} className="p-4 lg:p-5 flex gap-4">
+                        <Skeleton className="w-16 h-16 rounded-xl" />
                         <div className="flex-1 space-y-2">
                           <Skeleton className="h-5 w-48" />
                           <Skeleton className="h-4 w-32" />
@@ -396,29 +444,35 @@ export default function Calendar() {
                       </div>
                     ))
                   ) : agendaEvents.length === 0 ? (
-                    <div className="p-8 text-center">
-                      <CalendarIcon className="h-12 w-12 mx-auto text-muted-foreground/50 mb-3" />
-                      <p className="text-muted-foreground">No upcoming events</p>
+                    <div className="p-12 text-center">
+                      <CalendarIcon className="h-14 w-14 mx-auto text-muted-foreground/50 mb-4" />
+                      <p className="text-lg text-muted-foreground">No upcoming events</p>
                     </div>
                   ) : (
                     agendaEvents.map((event) => (
-                      <button key={event.id} onClick={() => handleEventClick(event)} className="w-full p-4 flex gap-4 hover:bg-muted/20 transition-colors text-left">
-                        <div className="w-16 h-16 rounded-lg bg-gcal-blue/10 flex flex-col items-center justify-center text-gcal-blue">
+                      <button 
+                        key={event.id} 
+                        onClick={() => handleEventClick(event)} 
+                        className="w-full p-4 lg:p-5 flex gap-4 hover:bg-muted/20 transition-colors text-left"
+                      >
+                        <div className="w-16 h-16 rounded-xl bg-gcal-blue/10 flex flex-col items-center justify-center text-gcal-blue shrink-0">
                           <span className="text-xs font-medium uppercase">{format(new Date(event.start_time), "MMM")}</span>
                           <span className="text-2xl font-light">{format(new Date(event.start_time), "d")}</span>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-medium text-foreground truncate">{event.title}</h4>
+                          <h4 className="font-medium text-foreground truncate text-base">{event.title}</h4>
                           {!event.all_day && (
-                            <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-1">
-                              <Clock className="h-3.5 w-3.5" />
-                              <span>{format(new Date(event.start_time), "h:mm a")}{event.end_time && ` - ${format(new Date(event.end_time), "h:mm a")}`}</span>
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1.5">
+                              <Clock className="h-4 w-4" />
+                              <span>
+                                {format(new Date(event.start_time), "h:mm a")}
+                                {event.end_time && ` – ${format(new Date(event.end_time), "h:mm a")}`}
+                              </span>
                             </div>
                           )}
-                          {event.all_day && <Badge variant="secondary" className="text-xs mt-1 bg-gcal-blue/10 text-gcal-blue">All day</Badge>}
                           {event.location && (
-                            <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-1">
-                              <MapPin className="h-3.5 w-3.5" />
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+                              <MapPin className="h-4 w-4" />
                               <span className="truncate">{event.location}</span>
                             </div>
                           )}
@@ -428,8 +482,8 @@ export default function Calendar() {
                   )}
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
 

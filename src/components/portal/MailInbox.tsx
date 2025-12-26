@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { format, parseISO, isToday, isYesterday, isThisWeek, isThisYear } from "date-fns";
-import { Star, Paperclip, Mail, Archive, Trash2, MailOpen, Clock, ChevronDown, ChevronUp, MoreHorizontal, CheckSquare, Square, Tag } from "lucide-react";
+import { Star, Paperclip, Mail, Archive, Trash2, MailOpen, Clock, ChevronDown, ChevronUp, MoreHorizontal, CheckSquare, Square } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -216,18 +216,20 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
 
   if (isLoading) {
     return (
-      <div className="flex-1 overflow-hidden p-2">
-        {Array.from({ length: 10 }).map((_, i) => (
-          <div key={i} className="flex items-center gap-3 px-3 py-2">
-            <Skeleton className="h-4 w-4 rounded" />
-            <Skeleton className="h-7 w-7 rounded-full" />
-            <div className="flex-1 space-y-1">
-              <Skeleton className="h-3 w-24" />
-              <Skeleton className="h-3 w-full" />
+      <div className="flex-1 overflow-hidden p-4">
+        <div className="space-y-1">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-4 px-4 py-3 rounded-lg">
+              <Skeleton className="h-5 w-5 rounded" />
+              <Skeleton className="h-8 w-8 rounded-full" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-4 w-full" />
+              </div>
+              <Skeleton className="h-4 w-14" />
             </div>
-            <Skeleton className="h-3 w-12" />
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     );
   }
@@ -236,10 +238,11 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
     return (
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="text-center">
-          <div className="w-14 h-14 rounded-full bg-muted/30 flex items-center justify-center mx-auto mb-3">
-            <Mail className="h-7 w-7 text-muted-foreground/50" />
+          <div className="w-20 h-20 rounded-full bg-muted/30 flex items-center justify-center mx-auto mb-4">
+            <Mail className="h-10 w-10 text-muted-foreground/50" />
           </div>
-          <p className="text-sm text-muted-foreground">No emails found</p>
+          <p className="text-lg font-medium text-muted-foreground">No emails found</p>
+          <p className="text-sm text-muted-foreground/70 mt-1">Your inbox is empty</p>
         </div>
       </div>
     );
@@ -266,10 +269,12 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
             }
           }}
           className={cn(
-            "w-full text-left px-2 py-1.5 flex items-center gap-2 transition-colors text-sm group",
-            isActive ? "bg-gmail-red/10" : isSelected ? "bg-gmail-red/5" : "hover:bg-muted/40",
-            message.isUnread && "bg-card"
+            "w-full text-left px-4 py-3 flex items-center gap-3 transition-all text-sm group rounded-lg mx-2",
+            "hover:shadow-sm",
+            isActive ? "bg-gmail-red/10 shadow-sm" : isSelected ? "bg-gmail-red/5" : "hover:bg-muted/50",
+            message.isUnread && "bg-card shadow-sm"
           )}
+          style={{ width: 'calc(100% - 16px)' }}
         >
           {/* Checkbox */}
           <div
@@ -284,31 +289,31 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
           >
             <Checkbox
               checked={isSelected}
-              className="h-4 w-4 data-[state=checked]:bg-gmail-red data-[state=checked]:border-gmail-red"
+              className="h-5 w-5 data-[state=checked]:bg-gmail-red data-[state=checked]:border-gmail-red"
             />
           </div>
 
           {/* Star */}
           <button
-            className="shrink-0 text-muted-foreground hover:text-gmail-yellow"
+            className="shrink-0 text-muted-foreground hover:text-gmail-yellow p-0.5"
             onClick={(e) => {
               e.stopPropagation();
               handleQuickStar(message.id);
             }}
           >
-            <Star className={cn("h-4 w-4", message.isStarred && "text-gmail-yellow fill-gmail-yellow")} />
+            <Star className={cn("h-5 w-5", message.isStarred && "text-gmail-yellow fill-gmail-yellow")} />
           </button>
 
           {/* Sender - fixed width */}
           <span className={cn(
-            "w-36 truncate shrink-0",
+            "w-40 truncate shrink-0",
             message.isUnread ? "font-semibold text-foreground" : "text-foreground/80"
           )}>
             {message.from?.name || message.from?.email || "Unknown"}
           </span>
 
           {/* Subject & Snippet */}
-          <div className="flex-1 min-w-0 flex items-center gap-1.5">
+          <div className="flex-1 min-w-0 flex items-center gap-2">
             <span className={cn(
               "truncate",
               message.isUnread ? "font-semibold text-foreground" : "text-foreground/80"
@@ -316,7 +321,7 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
               {message.subject || "(No subject)"}
             </span>
             {message.threadCount > 1 && (
-              <span className="shrink-0 text-xs text-muted-foreground">
+              <span className="shrink-0 text-xs text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded">
                 {message.threadCount}
               </span>
             )}
@@ -326,7 +331,7 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
           </div>
 
           {/* Right side: Actions on hover OR date */}
-          <div className="shrink-0 flex items-center gap-1 ml-2">
+          <div className="shrink-0 flex items-center gap-1.5 ml-3">
             {isHovered && !isSelectionMode ? (
               <div className="flex items-center gap-0.5">
                 <Tooltip>
@@ -334,13 +339,13 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-6 w-6"
+                      className="h-8 w-8"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleQuickArchive(message.id);
                       }}
                     >
-                      <Archive className="h-3.5 w-3.5" />
+                      <Archive className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent side="top">Archive</TooltipContent>
@@ -350,13 +355,13 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-6 w-6"
+                      className="h-8 w-8"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleQuickDelete(message.id);
                       }}
                     >
-                      <Trash2 className="h-3.5 w-3.5" />
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent side="top">Delete</TooltipContent>
@@ -367,13 +372,13 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-6 w-6"
+                        className="h-8 w-8"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleQuickMarkRead(message.id);
                         }}
                       >
-                        <MailOpen className="h-3.5 w-3.5" />
+                        <MailOpen className="h-4 w-4" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side="top">Mark read</TooltipContent>
@@ -384,13 +389,13 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-6 w-6"
+                      className="h-8 w-8"
                       onClick={(e) => {
                         e.stopPropagation();
                         setSnoozeMessageId(message.id);
                       }}
                     >
-                      <Clock className="h-3.5 w-3.5" />
+                      <Clock className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent side="top">Snooze</TooltipContent>
@@ -399,7 +404,7 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
             ) : (
               <>
                 {message.hasAttachments && (
-                  <Paperclip className="h-3.5 w-3.5 text-muted-foreground" />
+                  <Paperclip className="h-4 w-4 text-muted-foreground" />
                 )}
                 <span className={cn(
                   "text-xs w-16 text-right",
@@ -419,19 +424,19 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
     <TooltipProvider delayDuration={200}>
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Gmail-style Toolbar */}
-        <div className="flex items-center gap-1 px-2 py-1.5 border-b border-border/30 bg-muted/5 shrink-0">
+        <div className="flex items-center gap-2 px-4 py-3 border-b border-border/30 bg-muted/5 shrink-0">
           {/* Select Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-7 px-1.5 gap-0.5">
+              <Button variant="ghost" size="sm" className="h-9 px-2 gap-1">
                 {selectedIds.size === 0 ? (
-                  <Square className="h-4 w-4" />
+                  <Square className="h-5 w-5" />
                 ) : selectedIds.size === threadedMessages.length ? (
-                  <CheckSquare className="h-4 w-4 text-gmail-red" />
+                  <CheckSquare className="h-5 w-5 text-gmail-red" />
                 ) : (
-                  <div className="h-4 w-4 border border-current rounded-sm bg-gmail-red/30" />
+                  <div className="h-5 w-5 border border-current rounded bg-gmail-red/30" />
                 )}
-                <ChevronDown className="h-3 w-3" />
+                <ChevronDown className="h-3.5 w-3.5" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start">
@@ -456,7 +461,7 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <div className="w-px h-5 bg-border/50 mx-1" />
+          <div className="w-px h-6 bg-border/50 mx-1" />
 
           {/* Archive */}
           <Tooltip>
@@ -464,11 +469,11 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7"
+                className="h-9 w-9"
                 disabled={selectedIds.size === 0 || modifyMessage.isPending}
                 onClick={handleBulkArchive}
               >
-                <Archive className="h-4 w-4" />
+                <Archive className="h-5 w-5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Archive</TooltipContent>
@@ -480,11 +485,11 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7"
+                className="h-9 w-9"
                 disabled={selectedIds.size === 0 || trashMessage.isPending}
                 onClick={handleBulkDelete}
               >
-                <Trash2 className="h-4 w-4" />
+                <Trash2 className="h-5 w-5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Delete</TooltipContent>
@@ -496,11 +501,11 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7"
+                className="h-9 w-9"
                 disabled={selectedIds.size === 0 || modifyMessage.isPending}
                 onClick={handleBulkMarkRead}
               >
-                <MailOpen className="h-4 w-4" />
+                <MailOpen className="h-5 w-5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Mark as read</TooltipContent>
@@ -512,11 +517,11 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7"
+                className="h-9 w-9"
                 disabled={selectedIds.size === 0 || modifyMessage.isPending}
                 onClick={handleBulkStar}
               >
-                <Star className="h-4 w-4" />
+                <Star className="h-5 w-5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Star</TooltipContent>
@@ -524,107 +529,53 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect }: MailInb
 
           <div className="flex-1" />
 
-          {/* Count */}
-          <span className="text-xs text-muted-foreground pr-2">
-            {isSelectionMode ? `${selectedIds.size} selected` : `1–${threadedMessages.length} of ${threadedMessages.length}`}
-          </span>
+          {/* Selection Count */}
+          {selectedIds.size > 0 && (
+            <span className="text-sm text-muted-foreground">
+              {selectedIds.size} selected
+            </span>
+          )}
         </div>
 
-        {/* Scrollable Content */}
+        {/* Email List */}
         <ScrollArea className="flex-1">
-          {/* Unread Section */}
-          {unreadMessages.length > 0 && (
-            <Collapsible open={unreadOpen} onOpenChange={setUnreadOpen}>
-              <CollapsibleTrigger asChild>
-                <button className="w-full flex items-center justify-between px-3 py-1.5 bg-muted/20 hover:bg-muted/30 transition-colors border-b border-border/20">
-                  <div className="flex items-center gap-2">
-                    {unreadOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                    <span className="text-xs font-semibold text-foreground uppercase tracking-wide">Unread</span>
-                    <span className="text-xs text-muted-foreground">
-                      {unreadMessages.length}
-                    </span>
+          <div className="py-2">
+            {/* Unread Section */}
+            {unreadMessages.length > 0 && (
+              <Collapsible open={unreadOpen} onOpenChange={setUnreadOpen}>
+                <CollapsibleTrigger className="flex items-center gap-2 px-6 py-2 text-sm font-medium text-muted-foreground hover:text-foreground w-full">
+                  {unreadOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                  Unread ({unreadMessages.length})
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="space-y-0.5">
+                    {unreadMessages.map(renderMessageRow)}
                   </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                      <Button variant="ghost" size="icon" className="h-6 w-6">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => {
-                        setSelectedIds(new Set(unreadMessages.map(m => m.id)));
-                      }}>
-                        Select all unread
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={async () => {
-                        for (const msg of unreadMessages) {
-                          await modifyMessage.mutateAsync({ messageId: msg.id, removeLabelIds: ["UNREAD"] });
-                        }
-                        toast.success("All marked as read");
-                      }}>
-                        Mark all as read
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </button>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <div className="divide-y divide-border/10">
-                  {unreadMessages.map(renderMessageRow)}
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
-          )}
+                </CollapsibleContent>
+              </Collapsible>
+            )}
 
-          {/* Everything Else Section */}
-          {readMessages.length > 0 && (
-            <Collapsible open={everythingElseOpen} onOpenChange={setEverythingElseOpen}>
-              <CollapsibleTrigger asChild>
-                <button className="w-full flex items-center justify-between px-3 py-1.5 bg-muted/10 hover:bg-muted/20 transition-colors border-b border-border/20">
-                  <div className="flex items-center gap-2">
-                    {everythingElseOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                    <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Everything else</span>
-                    <span className="text-xs text-muted-foreground">
-                      {readMessages.length}
-                    </span>
+            {/* Everything Else Section */}
+            {readMessages.length > 0 && (
+              <Collapsible open={everythingElseOpen} onOpenChange={setEverythingElseOpen}>
+                <CollapsibleTrigger className="flex items-center gap-2 px-6 py-2 text-sm font-medium text-muted-foreground hover:text-foreground w-full mt-2">
+                  {everythingElseOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                  Everything else ({readMessages.length})
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <div className="space-y-0.5">
+                    {readMessages.map(renderMessageRow)}
                   </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                      <Button variant="ghost" size="icon" className="h-6 w-6">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => {
-                        setSelectedIds(new Set(readMessages.map(m => m.id)));
-                      }}>
-                        Select all read
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </button>
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <div className="divide-y divide-border/10">
-                  {readMessages.map(renderMessageRow)}
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
-          )}
+                </CollapsibleContent>
+              </Collapsible>
+            )}
+          </div>
         </ScrollArea>
 
-        {/* Keyboard Shortcuts */}
-        <div className="hidden md:flex items-center gap-3 px-3 py-1.5 border-t border-border/30 text-[10px] text-muted-foreground bg-muted/5 shrink-0">
-          <span><kbd className="px-1 py-0.5 bg-muted rounded font-mono">j/k</kbd> nav</span>
-          <span><kbd className="px-1 py-0.5 bg-muted rounded font-mono">x</kbd> select</span>
-          <span><kbd className="px-1 py-0.5 bg-muted rounded font-mono">e</kbd> archive</span>
-          <span><kbd className="px-1 py-0.5 bg-muted rounded font-mono">s</kbd> star</span>
-        </div>
-
+        {/* Snooze Dialog */}
         <MailSnoozeDialog
           open={!!snoozeMessageId}
           onOpenChange={(open) => !open && setSnoozeMessageId(null)}
-          messageId={snoozeMessageId || ""}
           onSnooze={handleSnooze}
         />
       </div>

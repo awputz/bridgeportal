@@ -87,10 +87,10 @@ export function MailMessage({ messageId, onBack, onReply }: MailMessageProps) {
     return (
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="text-center max-w-sm">
-          <div className="w-20 h-20 rounded-full bg-muted/30 flex items-center justify-center mx-auto mb-4">
-            <MailOpen className="h-10 w-10 text-muted-foreground/30" />
+          <div className="w-24 h-24 rounded-full bg-muted/30 flex items-center justify-center mx-auto mb-6">
+            <MailOpen className="h-12 w-12 text-muted-foreground/30" />
           </div>
-          <p className="text-lg font-medium text-muted-foreground mb-2">Select an email to read</p>
+          <p className="text-xl font-medium text-muted-foreground mb-2">Select an email to read</p>
           <p className="text-sm text-muted-foreground/70">Choose a message from the list to view its contents</p>
         </div>
       </div>
@@ -99,16 +99,16 @@ export function MailMessage({ messageId, onBack, onReply }: MailMessageProps) {
 
   if (isLoading) {
     return (
-      <div className="flex-1 p-6 space-y-4">
+      <div className="flex-1 p-8 space-y-6">
         <div className="flex items-center gap-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <div className="space-y-2">
-            <Skeleton className="h-5 w-48" />
-            <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-14 w-14 rounded-full" />
+          <div className="space-y-2 flex-1">
+            <Skeleton className="h-6 w-64" />
+            <Skeleton className="h-4 w-40" />
           </div>
         </div>
-        <Skeleton className="h-8 w-3/4" />
-        <Skeleton className="h-64 w-full" />
+        <Skeleton className="h-10 w-3/4" />
+        <Skeleton className="h-[400px] w-full rounded-xl" />
       </div>
     );
   }
@@ -117,8 +117,8 @@ export function MailMessage({ messageId, onBack, onReply }: MailMessageProps) {
     return (
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="text-center text-muted-foreground">
-          <p>Failed to load email</p>
-          <Button variant="outline" className="mt-4" onClick={onBack}>
+          <p className="text-lg mb-4">Failed to load email</p>
+          <Button variant="outline" onClick={onBack}>
             Go Back
           </Button>
         </div>
@@ -136,34 +136,34 @@ export function MailMessage({ messageId, onBack, onReply }: MailMessageProps) {
     : message.from.email[0].toUpperCase();
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex-1 flex flex-col overflow-hidden bg-background">
       {/* Header with Actions */}
-      <div className="flex items-center justify-between p-4 border-b bg-muted/5">
-        <div className="flex items-center gap-2 min-w-0">
-          <Button variant="ghost" size="icon" onClick={onBack} className="md:hidden shrink-0">
-            <ArrowLeft className="h-4 w-4" />
+      <div className="flex items-center justify-between gap-4 px-6 py-4 border-b border-border/30 bg-card shrink-0">
+        <div className="flex items-center gap-3 min-w-0">
+          <Button variant="ghost" size="icon" onClick={onBack} className="shrink-0 h-10 w-10">
+            <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h2 className="font-medium truncate text-lg">{message.subject || "(No subject)"}</h2>
+          <h2 className="font-medium truncate text-xl">{message.subject || "(No subject)"}</h2>
         </div>
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           <Button 
             variant="ghost" 
             size="icon" 
             onClick={handleArchive}
-            className="text-muted-foreground hover:text-foreground"
+            className="h-10 w-10 text-muted-foreground hover:text-foreground"
             disabled={modifyMessage.isPending}
           >
-            <Archive className="h-4 w-4" />
+            <Archive className="h-5 w-5" />
           </Button>
           <Button 
             variant="ghost" 
             size="icon" 
             onClick={handleToggleStar}
-            className="text-muted-foreground hover:text-foreground"
+            className="h-10 w-10 text-muted-foreground hover:text-foreground"
           >
             <Star
               className={cn(
-                "h-4 w-4",
+                "h-5 w-5",
                 message.isStarred && "text-gmail-yellow fill-gmail-yellow"
               )}
             />
@@ -172,15 +172,15 @@ export function MailMessage({ messageId, onBack, onReply }: MailMessageProps) {
             variant="ghost" 
             size="icon" 
             onClick={handleDelete}
-            className="text-muted-foreground hover:text-destructive"
+            className="h-10 w-10 text-muted-foreground hover:text-destructive"
             disabled={trashMessage.isPending}
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="h-5 w-5" />
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
-                <MoreHorizontal className="h-4 w-4" />
+              <Button variant="ghost" size="icon" className="h-10 w-10 text-muted-foreground hover:text-foreground">
+                <MoreHorizontal className="h-5 w-5" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -204,37 +204,37 @@ export function MailMessage({ messageId, onBack, onReply }: MailMessageProps) {
 
       {/* Message Content */}
       <ScrollArea className="flex-1">
-        <div className="p-6 space-y-6">
+        <div className="max-w-4xl mx-auto p-6 md:p-8 space-y-6">
           {/* Sender Info with Expandable Headers */}
-          <div className="space-y-3">
-            <div className="flex items-start justify-between">
-              <div className="flex items-center gap-4">
-                <Avatar className="h-12 w-12">
-                  <AvatarFallback className="bg-gmail-red/10 text-gmail-red text-lg font-semibold">
+          <div className="space-y-4">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start gap-4">
+                <Avatar className="h-14 w-14 shrink-0">
+                  <AvatarFallback className="bg-gmail-red/10 text-gmail-red text-xl font-semibold">
                     {senderInitials}
                   </AvatarFallback>
                 </Avatar>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <p className="font-semibold text-lg">{message.from.name || message.from.email}</p>
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="font-semibold text-xl">{message.from.name || message.from.email}</p>
                     {message.from.name && (
                       <span className="text-sm text-muted-foreground">&lt;{message.from.email}&gt;</span>
                     )}
                   </div>
                   <button 
                     onClick={() => setShowFullHeaders(!showFullHeaders)}
-                    className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+                    className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mt-1"
                   >
                     <span>to {message.to?.split(',')[0] || 'me'}</span>
-                    {showFullHeaders ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                    {showFullHeaders ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
                   </button>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="text-right shrink-0">
                 <span className="text-sm text-muted-foreground">
                   {format(new Date(message.date), "MMM d, yyyy")}
                 </span>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground mt-0.5">
                   {format(new Date(message.date), "h:mm a")}
                 </p>
               </div>
@@ -242,7 +242,7 @@ export function MailMessage({ messageId, onBack, onReply }: MailMessageProps) {
 
             {/* Expanded Headers */}
             {showFullHeaders && (
-              <div className="ml-16 p-3 rounded-lg bg-muted/30 text-sm space-y-1">
+              <div className="ml-[72px] p-4 rounded-xl bg-muted/30 text-sm space-y-1.5">
                 <p><span className="text-muted-foreground">From:</span> {message.from.name} &lt;{message.from.email}&gt;</p>
                 <p><span className="text-muted-foreground">To:</span> {message.to}</p>
                 {message.cc && <p><span className="text-muted-foreground">Cc:</span> {message.cc}</p>}
@@ -254,17 +254,17 @@ export function MailMessage({ messageId, onBack, onReply }: MailMessageProps) {
 
           {/* Attachments */}
           {message.attachments && message.attachments.length > 0 && (
-            <div className="flex flex-wrap gap-2 p-4 rounded-xl bg-muted/20 border border-border/30">
-              <p className="w-full text-sm font-medium text-muted-foreground mb-2">
+            <div className="flex flex-wrap gap-3 p-5 rounded-xl bg-muted/20 border border-border/30">
+              <p className="w-full text-sm font-medium text-muted-foreground mb-1">
                 {message.attachments.length} Attachment{message.attachments.length !== 1 ? 's' : ''}
               </p>
               {message.attachments.map((attachment) => (
                 <Badge 
                   key={attachment.id} 
                   variant="secondary" 
-                  className="gap-2 py-2 px-3 cursor-pointer hover:bg-muted/80"
+                  className="gap-2 py-2.5 px-4 cursor-pointer hover:bg-muted/80 text-sm"
                 >
-                  <Paperclip className="h-3.5 w-3.5" />
+                  <Paperclip className="h-4 w-4" />
                   <span className="max-w-[200px] truncate">{attachment.filename}</span>
                   <span className="text-muted-foreground text-xs">
                     {attachment.size < 1024 * 1024 
@@ -280,19 +280,19 @@ export function MailMessage({ messageId, onBack, onReply }: MailMessageProps) {
           <Separator />
 
           {/* Body */}
-          <div className="min-h-[200px]">
+          <div className="min-h-[300px] py-4">
             {message.bodyHtml ? (
               <div
-                className="prose prose-sm max-w-none dark:prose-invert 
+                className="prose prose-base max-w-none dark:prose-invert 
                   prose-headings:font-medium prose-headings:text-foreground
                   prose-p:text-foreground/90 prose-p:leading-relaxed
                   prose-a:text-gmail-red prose-a:no-underline hover:prose-a:underline
                   prose-blockquote:border-l-gmail-red/50 prose-blockquote:text-muted-foreground
-                  prose-code:text-gmail-red prose-code:bg-muted/50 prose-code:px-1 prose-code:rounded"
+                  prose-code:text-gmail-red prose-code:bg-muted/50 prose-code:px-1.5 prose-code:rounded"
                 dangerouslySetInnerHTML={{ __html: message.bodyHtml }}
               />
             ) : (
-              <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-foreground/90">
+              <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-foreground/90">
                 {message.bodyText || message.snippet}
               </pre>
             )}
@@ -301,15 +301,17 @@ export function MailMessage({ messageId, onBack, onReply }: MailMessageProps) {
       </ScrollArea>
 
       {/* Actions Footer */}
-      <div className="p-4 border-t bg-muted/5 flex gap-2">
-        <Button onClick={handleReply} className="gap-2 bg-gmail-red hover:bg-gmail-red/90 text-white">
-          <Reply className="h-4 w-4" />
-          Reply
-        </Button>
-        <Button variant="outline" onClick={handleForward} className="gap-2">
-          <Forward className="h-4 w-4" />
-          Forward
-        </Button>
+      <div className="px-6 py-4 border-t border-border/30 bg-card shrink-0">
+        <div className="max-w-4xl mx-auto flex gap-3">
+          <Button onClick={handleReply} size="lg" className="gap-2 bg-gmail-red hover:bg-gmail-red/90 text-white">
+            <Reply className="h-5 w-5" />
+            Reply
+          </Button>
+          <Button variant="outline" size="lg" onClick={handleForward} className="gap-2">
+            <Forward className="h-5 w-5" />
+            Forward
+          </Button>
+        </div>
       </div>
     </div>
   );

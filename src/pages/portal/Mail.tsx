@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { Mail as MailIcon, Inbox, Send, FileText, Star, Trash2, Plus, RefreshCw, Settings, AlertCircle, Loader2, ChevronDown, Search as SearchIcon, ExternalLink } from "lucide-react";
+import { Mail as MailIcon, Inbox, Send, FileText, Star, Trash2, Plus, RefreshCw, Settings, AlertCircle, Loader2, ChevronDown, Search as SearchIcon, ExternalLink, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
@@ -72,6 +72,10 @@ export default function Mail() {
   const handleReply = (to: string, subject: string, threadId?: string, messageId?: string) => {
     setReplyToData({ to, subject, threadId, messageId });
     setIsComposeOpen(true);
+  };
+
+  const handleBackToList = () => {
+    setSelectedMessageId(null);
   };
 
   const dataError = (labelsError as Error | null) || (messagesError as Error | null);
@@ -154,16 +158,30 @@ export default function Mail() {
     );
   }
 
+  // Determine view mode: list or message
+  const isViewingMessage = selectedMessageId !== null;
+
   return (
     <div className="h-[calc(100vh-4rem)] flex flex-col overflow-hidden bg-background">
       {/* Compact Header */}
-      <div className="flex items-center justify-between gap-4 px-4 py-2 border-b border-border/30 bg-card shrink-0">
+      <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-border/30 bg-card shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gmail-red flex items-center justify-center">
-            <MailIcon className="h-4 w-4 text-white" />
+          {/* Back button when viewing message on mobile */}
+          {isViewingMessage && (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={handleBackToList}
+              className="h-9 w-9 md:hidden"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          )}
+          <div className="w-9 h-9 rounded-lg bg-gmail-red flex items-center justify-center shrink-0">
+            <MailIcon className="h-5 w-5 text-white" />
           </div>
-          <div>
-            <h1 className="text-lg font-medium text-foreground">Gmail</h1>
+          <div className="hidden sm:block">
+            <h1 className="text-lg font-medium text-foreground leading-tight">Gmail</h1>
           </div>
         </div>
         
@@ -175,7 +193,7 @@ export default function Mail() {
               placeholder="Search mail..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-10 bg-muted/30 border-0 focus-visible:ring-1 focus-visible:ring-gmail-red/50 h-9"
+              className="pl-10 pr-10 bg-muted/30 border-0 focus-visible:ring-1 focus-visible:ring-gmail-red/50 h-10"
             />
             <DropdownMenu open={showAdvancedSearch} onOpenChange={setShowAdvancedSearch}>
               <DropdownMenuTrigger asChild>
@@ -212,7 +230,7 @@ export default function Mail() {
             variant="ghost" 
             size="icon"
             onClick={handleRefresh} 
-            className="h-8 w-8"
+            className="h-9 w-9"
           >
             <RefreshCw className="h-4 w-4" />
           </Button>
@@ -222,22 +240,22 @@ export default function Mail() {
               setReplyToData(undefined);
               setIsComposeOpen(true);
             }} 
-            className="gap-1.5 bg-gmail-red hover:bg-gmail-red/90 text-white h-8"
+            className="gap-2 bg-gmail-red hover:bg-gmail-red/90 text-white h-9 px-4"
           >
             <Plus className="h-4 w-4" />
-            Compose
+            <span className="hidden sm:inline">Compose</span>
           </Button>
           <Button
             variant="ghost"
             size="icon"
             onClick={() => window.open('https://mail.google.com', '_blank')}
-            className="h-8 w-8"
+            className="h-9 w-9 hidden sm:flex"
           >
             <ExternalLink className="h-4 w-4" />
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Button variant="ghost" size="icon" className="h-9 w-9">
                 <Settings className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -259,13 +277,13 @@ export default function Mail() {
       </div>
 
       {dataError && (
-        <div className="mx-4 mt-2 rounded-lg border border-border/50 bg-muted/20 p-3 shrink-0">
+        <div className="mx-4 mt-3 rounded-xl border border-border/50 bg-muted/20 p-4 shrink-0">
           <div className="flex items-center justify-between gap-3">
-            <div className="flex items-start gap-2">
-              <AlertCircle className="h-4 w-4 mt-0.5 text-muted-foreground" />
+            <div className="flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 mt-0.5 text-muted-foreground shrink-0" />
               <div>
                 <p className="text-sm font-medium">Couldn't load Gmail data</p>
-                <p className="text-xs text-muted-foreground">{dataError.message}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{dataError.message}</p>
               </div>
             </div>
             <Button variant="outline" size="sm" onClick={hardLogout}>
@@ -278,8 +296,11 @@ export default function Mail() {
       {/* Main Content - Full Height */}
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar - Labels */}
-        <div className="w-16 md:w-52 border-r border-border/30 py-2 overflow-y-auto bg-muted/5 shrink-0">
-          <div className="flex flex-col gap-0.5 px-2">
+        <div className={cn(
+          "w-16 lg:w-56 border-r border-border/30 py-3 overflow-y-auto bg-muted/5 shrink-0",
+          isViewingMessage && "hidden md:block"
+        )}>
+          <div className="flex flex-col gap-1 px-2">
             {Object.entries(LABEL_CONFIG).map(([id, config]) => {
               const Icon = config.icon;
               const unreadCount = getLabelUnreadCount(id);
@@ -292,19 +313,19 @@ export default function Mail() {
                     setSelectedMessageId(null);
                   }}
                   className={cn(
-                    "flex items-center justify-between px-3 py-2 rounded-full text-sm transition-all",
+                    "flex items-center justify-between px-3 py-2.5 rounded-full text-sm transition-all",
                     isActive
                       ? "bg-gmail-red/10 text-gmail-red font-medium"
                       : "text-foreground/70 hover:bg-muted/50 hover:text-foreground"
                   )}
                 >
                   <span className="flex items-center gap-3">
-                    <Icon className={cn("h-4 w-4", isActive && id === "STARRED" && "text-gmail-yellow fill-gmail-yellow")} />
-                    <span className="hidden md:inline">{config.label}</span>
+                    <Icon className={cn("h-5 w-5", isActive && id === "STARRED" && "text-gmail-yellow fill-gmail-yellow")} />
+                    <span className="hidden lg:inline">{config.label}</span>
                   </span>
                   {unreadCount > 0 && id !== "TRASH" && (
                     <span className={cn(
-                      "text-xs font-semibold hidden md:inline",
+                      "text-xs font-semibold hidden lg:inline",
                       isActive ? "text-gmail-red" : "text-muted-foreground"
                     )}>
                       {unreadCount}
@@ -316,28 +337,32 @@ export default function Mail() {
           </div>
         </div>
 
-        {/* Email List */}
-        <div
-          className={cn(
-            "flex-col border-r border-border/30 w-full md:w-[450px] lg:w-[500px] bg-background shrink-0",
-            selectedMessageId ? "hidden md:flex" : "flex"
-          )}
-        >
-          <MailInbox
-            messages={messagesData?.messages || []}
-            isLoading={isLoadingMessages}
-            selectedId={selectedMessageId}
-            onSelect={setSelectedMessageId}
-          />
-        </div>
+        {/* Full-Width Content Area - Shows EITHER list OR message */}
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+          {/* Email List View */}
+          <div className={cn(
+            "flex-1 flex flex-col overflow-hidden animate-fade-in",
+            isViewingMessage && "hidden md:hidden" // Hide on all screens when viewing message
+          )}>
+            <MailInbox
+              messages={messagesData?.messages || []}
+              isLoading={isLoadingMessages}
+              selectedId={selectedMessageId}
+              onSelect={setSelectedMessageId}
+            />
+          </div>
 
-        {/* Email View */}
-        <div className={cn("flex-1 flex-col bg-background min-w-0", selectedMessageId ? "flex" : "hidden md:flex")}>
-          <MailMessage
-            messageId={selectedMessageId}
-            onBack={() => setSelectedMessageId(null)}
-            onReply={handleReply}
-          />
+          {/* Email Message View - Full Page */}
+          <div className={cn(
+            "flex-1 flex flex-col overflow-hidden animate-fade-in",
+            !isViewingMessage && "hidden" // Hide when not viewing message
+          )}>
+            <MailMessage
+              messageId={selectedMessageId}
+              onBack={handleBackToList}
+              onReply={handleReply}
+            />
+          </div>
         </div>
       </div>
 
