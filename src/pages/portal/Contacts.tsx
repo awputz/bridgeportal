@@ -18,6 +18,9 @@ import {
   Loader2,
   Users,
   RefreshCw,
+  Filter,
+  ChevronDown,
+  Check,
   Cloud,
   CloudOff,
   ExternalLink,
@@ -688,145 +691,179 @@ const Contacts = () => {
           </div>
         </div>
 
-        {/* Search & Filters Bar */}
-        <div className="glass-card p-4 mb-6">
-          <div className="flex flex-col lg:flex-row gap-4">
+        {/* Search & Filters Bar - Single Row */}
+        <div className="glass-card px-4 py-3 mb-6">
+          <div className="flex items-center gap-3">
             {/* Search */}
-            <div className="relative flex-1">
+            <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search by name, email, phone, company, or notes..."
+                placeholder="Search contacts..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-10 bg-white/5 border-white/10"
+                className="pl-10 bg-white/5 border-white/10 h-9"
               />
             </div>
             
-            {/* Filters */}
-            <div className="flex flex-wrap gap-2">
-              {/* Type Filter */}
-              <Select value={contactTypeFilter} onValueChange={setContactTypeFilter}>
-                <SelectTrigger className="w-[130px] bg-white/5 border-white/10">
-                  <User className="h-4 w-4 mr-2" />
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  {contactTypes.map((type) => (
-                    <SelectItem key={type.value} value={type.value}>
-                      {type.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              {/* Source Filter */}
-              <Select value={sourceFilter} onValueChange={setSourceFilter}>
-                <SelectTrigger className="w-[130px] bg-white/5 border-white/10">
-                  <SelectValue placeholder="Source" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Sources</SelectItem>
-                  {sourceOptions.map((opt) => (
-                    <SelectItem key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              {/* Division Filter */}
-              <Select value={divisionFilter} onValueChange={setDivisionFilter}>
-                <SelectTrigger className="w-[160px] bg-white/5 border-white/10">
-                  <Building2 className="h-4 w-4 mr-2" />
-                  <SelectValue placeholder="Division" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Divisions</SelectItem>
-                  {divisionOptions.map((opt) => (
-                    <SelectItem key={opt.key} value={opt.key}>
-                      {opt.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              {/* Tag Filter */}
-              {allTags.length > 0 && (
-                <Select value={tagFilter} onValueChange={setTagFilter}>
-                  <SelectTrigger className="w-[130px] bg-white/5 border-white/10">
-                    <Tag className="h-4 w-4 mr-2" />
-                    <SelectValue placeholder="Tag" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Tags</SelectItem>
-                    {allTags.map((tag) => (
-                      <SelectItem key={tag} value={tag}>
-                        {tag}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-
-              {/* Sort */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="gap-2 bg-white/5 border-white/10">
-                    <ArrowUpDown className="h-4 w-4" />
-                    Sort
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => { setSortField("name"); setSortOrder("asc"); }}>
-                    Name (A-Z)
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => { setSortField("name"); setSortOrder("desc"); }}>
-                    Name (Z-A)
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => { setSortField("created_at"); setSortOrder("desc"); }}>
-                    Newest First
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => { setSortField("created_at"); setSortOrder("asc"); }}>
-                    Oldest First
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => { setSortField("updated_at"); setSortOrder("desc"); }}>
-                    Recently Updated
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* View Mode */}
-              <div className="flex border border-white/10 rounded-lg overflow-hidden">
-                <button
-                  onClick={() => setViewMode("grid")}
-                  className={cn(
-                    "p-2 transition-colors",
-                    viewMode === "grid" ? "bg-white/10 text-foreground" : "text-muted-foreground hover:bg-white/5"
+            {/* Unified Filters Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-2 h-9 bg-white/5 border-white/10">
+                  <Filter className="h-4 w-4" />
+                  <span>Filters</span>
+                  {hasActiveFilters && (
+                    <Badge variant="secondary" className="h-5 w-5 p-0 text-xs flex items-center justify-center bg-primary text-primary-foreground">
+                      {(contactTypeFilter !== "all" ? 1 : 0) + 
+                       (sourceFilter !== "all" ? 1 : 0) + 
+                       (divisionFilter !== "all" ? 1 : 0) + 
+                       (tagFilter !== "all" ? 1 : 0)}
+                    </Badge>
                   )}
-                >
-                  <Grid3X3 className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode("list")}
-                  className={cn(
-                    "p-2 transition-colors",
-                    viewMode === "list" ? "bg-white/10 text-foreground" : "text-muted-foreground hover:bg-white/5"
-                  )}
-                >
-                  <List className="h-4 w-4" />
-                </button>
-              </div>
-
-              {/* Clear Filters */}
-              {hasActiveFilters && (
-                <Button variant="ghost" size="sm" onClick={clearAllFilters} className="gap-1 text-muted-foreground">
-                  <X className="h-4 w-4" />
-                  Clear
+                  <ChevronDown className="h-3.5 w-3.5" />
                 </Button>
-              )}
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-64">
+                {/* Type Section */}
+                <div className="px-2 py-1.5">
+                  <p className="text-xs font-medium text-muted-foreground mb-1">Contact Type</p>
+                </div>
+                <DropdownMenuItem onClick={() => setContactTypeFilter("all")} className={cn(contactTypeFilter === "all" && "bg-muted")}>
+                  <Check className={cn("h-4 w-4 mr-2", contactTypeFilter !== "all" && "opacity-0")} />
+                  All Types
+                </DropdownMenuItem>
+                {contactTypes.slice(0, 5).map((type) => (
+                  <DropdownMenuItem 
+                    key={type.value} 
+                    onClick={() => setContactTypeFilter(type.value)}
+                    className={cn(contactTypeFilter === type.value && "bg-muted")}
+                  >
+                    <Check className={cn("h-4 w-4 mr-2", contactTypeFilter !== type.value && "opacity-0")} />
+                    {type.label}
+                  </DropdownMenuItem>
+                ))}
+                
+                <DropdownMenuSeparator />
+                
+                {/* Division Section */}
+                <div className="px-2 py-1.5">
+                  <p className="text-xs font-medium text-muted-foreground mb-1">Division</p>
+                </div>
+                <DropdownMenuItem onClick={() => setDivisionFilter("all")} className={cn(divisionFilter === "all" && "bg-muted")}>
+                  <Check className={cn("h-4 w-4 mr-2", divisionFilter !== "all" && "opacity-0")} />
+                  All Divisions
+                </DropdownMenuItem>
+                {divisionOptions.map((opt) => (
+                  <DropdownMenuItem 
+                    key={opt.key} 
+                    onClick={() => setDivisionFilter(opt.key)}
+                    className={cn(divisionFilter === opt.key && "bg-muted")}
+                  >
+                    <Check className={cn("h-4 w-4 mr-2", divisionFilter !== opt.key && "opacity-0")} />
+                    {opt.label}
+                  </DropdownMenuItem>
+                ))}
+                
+                <DropdownMenuSeparator />
+                
+                {/* Source Section */}
+                <div className="px-2 py-1.5">
+                  <p className="text-xs font-medium text-muted-foreground mb-1">Source</p>
+                </div>
+                <DropdownMenuItem onClick={() => setSourceFilter("all")} className={cn(sourceFilter === "all" && "bg-muted")}>
+                  <Check className={cn("h-4 w-4 mr-2", sourceFilter !== "all" && "opacity-0")} />
+                  All Sources
+                </DropdownMenuItem>
+                {sourceOptions.slice(0, 4).map((opt) => (
+                  <DropdownMenuItem 
+                    key={opt.value} 
+                    onClick={() => setSourceFilter(opt.value)}
+                    className={cn(sourceFilter === opt.value && "bg-muted")}
+                  >
+                    <Check className={cn("h-4 w-4 mr-2", sourceFilter !== opt.value && "opacity-0")} />
+                    {opt.label}
+                  </DropdownMenuItem>
+                ))}
+                
+                {allTags.length > 0 && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <div className="px-2 py-1.5">
+                      <p className="text-xs font-medium text-muted-foreground mb-1">Tags</p>
+                    </div>
+                    <DropdownMenuItem onClick={() => setTagFilter("all")} className={cn(tagFilter === "all" && "bg-muted")}>
+                      <Check className={cn("h-4 w-4 mr-2", tagFilter !== "all" && "opacity-0")} />
+                      All Tags
+                    </DropdownMenuItem>
+                    {allTags.slice(0, 5).map((tag) => (
+                      <DropdownMenuItem 
+                        key={tag} 
+                        onClick={() => setTagFilter(tag)}
+                        className={cn(tagFilter === tag && "bg-muted")}
+                      >
+                        <Check className={cn("h-4 w-4 mr-2", tagFilter !== tag && "opacity-0")} />
+                        {tag}
+                      </DropdownMenuItem>
+                    ))}
+                  </>
+                )}
+                
+                {hasActiveFilters && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={clearAllFilters} className="text-muted-foreground">
+                      <X className="h-4 w-4 mr-2" />
+                      Clear all filters
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Sort Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-2 h-9 bg-white/5 border-white/10">
+                  <ArrowUpDown className="h-4 w-4" />
+                  <span className="hidden sm:inline">Sort</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => { setSortField("name"); setSortOrder("asc"); }}>
+                  Name (A-Z)
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { setSortField("name"); setSortOrder("desc"); }}>
+                  Name (Z-A)
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => { setSortField("created_at"); setSortOrder("desc"); }}>
+                  Newest First
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { setSortField("created_at"); setSortOrder("asc"); }}>
+                  Oldest First
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* View Mode */}
+            <div className="flex border border-white/10 rounded-lg overflow-hidden">
+              <button
+                onClick={() => setViewMode("grid")}
+                className={cn(
+                  "p-2 transition-colors",
+                  viewMode === "grid" ? "bg-white/10 text-foreground" : "text-muted-foreground hover:bg-white/5"
+                )}
+              >
+                <Grid3X3 className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setViewMode("list")}
+                className={cn(
+                  "p-2 transition-colors",
+                  viewMode === "list" ? "bg-white/10 text-foreground" : "text-muted-foreground hover:bg-white/5"
+                )}
+              >
+                <List className="h-4 w-4" />
+              </button>
             </div>
           </div>
         </div>
