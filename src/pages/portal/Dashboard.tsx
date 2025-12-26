@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Mail, Users, Calendar, HardDrive, MessageSquare, Search, ArrowRight, TrendingUp, Building2, Home, FileText, Calculator, Sparkles, Palette, Database, FileSearch, MapPin, Send, UserPlus, FolderPlus, ListTodo, Wand2, Wrench, FolderOpen, DollarSign, Phone, Settings, Target, Heart, Globe, Headphones, Bell } from "lucide-react";
 import { useExternalTools, ExternalTool } from "@/hooks/useExternalTools";
@@ -15,6 +15,8 @@ import { WelcomeBanner } from "@/components/portal/WelcomeBanner";
 import { DashboardTasks } from "@/components/portal/DashboardTasks";
 import { AnnouncementsWidget } from "@/components/portal/AnnouncementsWidget";
 import { CalendarWidget } from "@/components/portal/CalendarWidget";
+import { OnboardingTooltip } from "@/components/portal/OnboardingTooltip";
+import { useOnboardingTooltips } from "@/hooks/useOnboardingTooltips";
 
 // Icon mapping for dynamic icons from database
 const iconMap: Record<string, typeof Mail> = {
@@ -148,6 +150,7 @@ const Dashboard = () => {
   } = useIsAdminOrAgent();
   const [aiPrompt, setAiPrompt] = useState("");
   const navigate = useNavigate();
+  const { isStepActive, dismissStep, dismissAll, currentStep, totalSteps } = useOnboardingTooltips();
   const groupedTools = tools ? groupToolsByCategory(tools) : {
     research: [],
     productivity: []
@@ -163,7 +166,18 @@ const Dashboard = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {/* Personalized Welcome Banner */}
         <div className="flex flex-col gap-6 mb-8 animate-fade-in">
-          <WelcomeBanner />
+          <OnboardingTooltip
+            id="dashboard-welcome"
+            title="Your Command Center"
+            description="This dashboard gives you quick access to all your tools, CRM, tasks, and more. Let's take a quick tour!"
+            position="bottom"
+            step={1}
+            totalSteps={5}
+            onNext={() => dismissStep("dashboard-welcome")}
+            onSkipAll={dismissAll}
+          >
+            <WelcomeBanner />
+          </OnboardingTooltip>
           <InlineDivisionSwitcher />
         </div>
 
