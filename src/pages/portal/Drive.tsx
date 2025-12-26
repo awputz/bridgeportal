@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   FolderOpen,
   File,
@@ -11,14 +11,11 @@ import {
   Archive,
   Folder,
   Search,
-  Grid3X3,
-  List,
   ExternalLink,
   RefreshCw,
   Settings,
   Loader2,
   AlertCircle,
-  ChevronRight,
   Home,
   Clock,
   Star,
@@ -27,10 +24,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { useDriveConnection, useConnectDrive, useDisconnectDrive, useDriveFiles } from "@/hooks/useGoogleDrive";
+import { useDriveConnection, useConnectDrive, useDisconnectDrive, useDriveFiles, useDriveFolderPath, DriveFile } from "@/hooks/useGoogleDrive";
 import { hardLogout } from "@/lib/auth";
+import { DriveContextMenu } from "@/components/portal/DriveContextMenu";
+import { DriveFilePreview } from "@/components/portal/DriveFilePreview";
+import { DriveActionBar, SortField, SortDirection, FileTypeFilter } from "@/components/portal/DriveActionBar";
+import { DriveBreadcrumbs, BreadcrumbItem } from "@/components/portal/DriveBreadcrumbs";
 
 // Google Drive-style file icons and colors
 const getFileIcon = (mimeType: string) => {
@@ -85,6 +85,11 @@ export default function Drive() {
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [quickFilter, setQuickFilter] = useState<QuickFilter>("all");
+  const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
+  const [sortField, setSortField] = useState<SortField>("name");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const [fileFilter, setFileFilter] = useState<FileTypeFilter>("all");
+  const [previewFile, setPreviewFile] = useState<DriveFile | null>(null);
 
   const { data: connection, isLoading: isLoadingConnection, error: connectionError } = useDriveConnection();
   const {
@@ -94,11 +99,81 @@ export default function Drive() {
     refetch: refetchFiles,
   } = useDriveFiles({
     query: searchQuery || undefined,
+    folderId: currentFolderId || undefined,
     enabled: connection?.isConnected,
   });
 
+  const { data: folderPath = [] } = useDriveFolderPath(currentFolderId);
+
   const connectDrive = useConnectDrive();
   const disconnectDrive = useDisconnectDrive();
+
+  // Sort and filter files
+  const processedFiles = useMemo(() => {
+    let files = filesData?.files || [];
+
+    // Apply file type filter
+    if (fileFilter !== "all") {
+      files = files.filter(file => {
+        const mime = file.mimeType.toLowerCase();
+        switch (fileFilter) {
+          case "documents": return mime.includes("document") && !mime.includes("pdf");
+          case "spreadsheets": return mime.includes("spreadsheet") || mime.includes("excel");
+          case "presentations": return mime.includes("presentation") || mime.includes("powerpoint");
+          case "pdfs": return mime.includes("pdf");
+          case "images": return mime.includes("image");
+          case "videos": return mime.includes("video");
+          case "audio": return mime.includes("audio");
+          default: return true;
+        }
+      });
+    }
+
+    // Sort files (folders first, then by selected field)
+    files = [...files].sort((a, b) => {
+      // Folders always first
+      const aIsFolder = a.mimeType.includes("folder");
+      const bIsFolder = b.mimeType.includes("folder");
+      if (aIsFolder && !bIsFolder) return -1;
+      if (!aIsFolder && bIsFolder) return 1;
+
+      // Sort by field
+      let comparison = 0;
+      switch (sortField) {
+        case "name":
+          comparison = a.name.localeCompare(b.name);
+          break;
+        case "modifiedTime":
+          comparison = new Date(a.modifiedTime || 0).getTime() - new Date(b.modifiedTime || 0).getTime();
+          break;
+        case "size":
+          comparison = (a.size || 0) - (b.size || 0);
+          break;
+      }
+
+      return sortDirection === "asc" ? comparison : -comparison;
+    });
+
+    return files;
+  }, [filesData?.files, fileFilter, sortField, sortDirection]);
+
+  const handleNavigateToFolder = (folderId: string | null) => {
+    setCurrentFolderId(folderId);
+    setSearchQuery("");
+  };
+
+  const handleFileClick = (file: DriveFile) => {
+    if (file.mimeType.includes("folder")) {
+      handleNavigateToFolder(file.id);
+    } else {
+      setPreviewFile(file);
+    }
+  };
+
+  const handleSortChange = (field: SortField, direction: SortDirection) => {
+    setSortField(field);
+    setSortDirection(direction);
+  };
 
   if (isLoadingConnection) {
     return (
@@ -178,7 +253,7 @@ export default function Drive() {
     );
   }
 
-  const files = filesData?.files || [];
+  const breadcrumbPath: BreadcrumbItem[] = folderPath.map(f => ({ id: f.id, name: f.name }));
 
   return (
     <div className="min-h-screen pb-24 md:pb-16 bg-background">
@@ -208,24 +283,6 @@ export default function Drive() {
               <ExternalLink className="h-4 w-4" />
               <span className="hidden sm:inline">Open Drive</span>
             </Button>
-            <div className="hidden sm:flex items-center border rounded-lg overflow-hidden">
-              <Button
-                variant={viewMode === "grid" ? "default" : "ghost"}
-                size="sm"
-                onClick={() => setViewMode("grid")}
-                className={cn("rounded-none", viewMode === "grid" && "bg-gdrive-folder hover:bg-gdrive-folder/90")}
-              >
-                <Grid3X3 className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={viewMode === "list" ? "default" : "ghost"}
-                size="sm"
-                onClick={() => setViewMode("list")}
-                className={cn("rounded-none", viewMode === "list" && "bg-gdrive-folder hover:bg-gdrive-folder/90")}
-              >
-                <List className="h-4 w-4" />
-              </Button>
-            </div>
             <Button
               variant="ghost"
               size="icon"
@@ -261,10 +318,13 @@ export default function Drive() {
             <div className="rounded-2xl border border-border/50 bg-card p-3 shadow-sm">
               <nav className="space-y-1">
                 <button
-                  onClick={() => setQuickFilter("all")}
+                  onClick={() => {
+                    setQuickFilter("all");
+                    setCurrentFolderId(null);
+                  }}
                   className={cn(
                     "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                    quickFilter === "all"
+                    quickFilter === "all" && !currentFolderId
                       ? "bg-gdrive-folder/10 text-gdrive-folder"
                       : "text-foreground/70 hover:bg-muted/50"
                   )}
@@ -303,15 +363,15 @@ export default function Drive() {
           {/* Main Content */}
           <div className="flex-1 min-w-0">
             {/* Breadcrumbs */}
-            <div className="flex items-center gap-1 mb-4 text-sm">
-              <button className="flex items-center gap-1 text-gdrive-folder hover:underline">
-                <Home className="h-4 w-4" />
-                <span>My Drive</span>
-              </button>
+            <div className="mb-4">
+              <DriveBreadcrumbs 
+                path={breadcrumbPath} 
+                onNavigate={handleNavigateToFolder} 
+              />
             </div>
 
             {/* Search */}
-            <div className="mb-6">
+            <div className="mb-4">
               <div className="relative max-w-md">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -323,6 +383,18 @@ export default function Drive() {
               </div>
             </div>
 
+            {/* Action Bar */}
+            <DriveActionBar
+              sortField={sortField}
+              sortDirection={sortDirection}
+              onSortChange={handleSortChange}
+              fileFilter={fileFilter}
+              onFilterChange={setFileFilter}
+              viewMode={viewMode}
+              onViewModeChange={setViewMode}
+              onRefresh={() => refetchFiles()}
+            />
+
             {/* Files */}
             <div className="rounded-2xl border border-border/50 bg-card p-4 md:p-6 shadow-sm">
               {isLoadingFiles ? (
@@ -331,51 +403,64 @@ export default function Drive() {
                     <Skeleton key={i} className="h-24 rounded-xl" />
                   ))}
                 </div>
-              ) : files.length === 0 ? (
+              ) : processedFiles.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="w-20 h-20 rounded-full bg-muted/30 flex items-center justify-center mx-auto mb-4">
                     <FolderOpen className="h-10 w-10 text-muted-foreground/50" />
                   </div>
                   <p className="text-muted-foreground font-medium">
-                    {searchQuery ? "No files match your search" : "No files found"}
+                    {searchQuery ? "No files match your search" : "This folder is empty"}
                   </p>
                   <p className="text-sm text-muted-foreground/70 mt-1">
-                    {searchQuery ? "Try a different search term" : "Your Drive appears to be empty"}
+                    {searchQuery ? "Try a different search term" : "Upload files or create a folder to get started"}
                   </p>
                 </div>
               ) : viewMode === "grid" ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {files.map((file) => {
+                  {processedFiles.map((file) => {
                     const Icon = getFileIcon(file.mimeType);
                     const colorClass = getFileColor(file.mimeType);
+                    const isFolder = file.mimeType.includes("folder");
+                    
                     return (
-                      <a
-                        key={file.id}
-                        href={file.webViewLink || "#"}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group p-4 rounded-xl bg-muted/20 hover:bg-muted/40 transition-all duration-200 border border-transparent hover:border-border/50 hover:shadow-md"
+                      <DriveContextMenu 
+                        key={file.id} 
+                        file={file}
+                        onPreview={!isFolder ? setPreviewFile : undefined}
+                        onNavigateToFolder={isFolder ? handleNavigateToFolder : undefined}
                       >
-                        <div className="flex items-start gap-3">
-                          <div className={cn("p-2.5 rounded-xl", colorClass)}>
-                            <Icon className="h-5 w-5" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-sm truncate group-hover:text-gdrive-folder transition-colors">
-                              {file.name}
-                            </p>
-                            <div className="flex items-center gap-2 mt-1.5">
-                              {file.size && (
-                                <span className="text-xs text-muted-foreground">{formatFileSize(file.size)}</span>
-                              )}
-                              {file.modifiedTime && (
-                                <span className="text-xs text-muted-foreground">{formatDate(file.modifiedTime)}</span>
-                              )}
+                        <button
+                          onClick={() => handleFileClick(file)}
+                          onDoubleClick={() => {
+                            if (!isFolder && file.webViewLink) {
+                              window.open(file.webViewLink, "_blank");
+                            }
+                          }}
+                          className="group w-full text-left p-4 rounded-xl bg-muted/20 hover:bg-muted/40 transition-all duration-200 border border-transparent hover:border-border/50 hover:shadow-md"
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className={cn("p-2.5 rounded-xl", colorClass)}>
+                              <Icon className="h-5 w-5" />
                             </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-sm truncate group-hover:text-gdrive-folder transition-colors">
+                                {file.name}
+                              </p>
+                              <div className="flex items-center gap-2 mt-1.5">
+                                {file.size && (
+                                  <span className="text-xs text-muted-foreground">{formatFileSize(file.size)}</span>
+                                )}
+                                {file.modifiedTime && (
+                                  <span className="text-xs text-muted-foreground">{formatDate(file.modifiedTime)}</span>
+                                )}
+                              </div>
+                            </div>
+                            {!isFolder && (
+                              <ExternalLink className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                            )}
                           </div>
-                          <ExternalLink className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </div>
-                      </a>
+                        </button>
+                      </DriveContextMenu>
                     );
                   })}
                 </div>
@@ -388,33 +473,46 @@ export default function Drive() {
                     <div className="w-32 text-right">Modified</div>
                     <div className="w-8" />
                   </div>
-                  {files.map((file) => {
+                  {processedFiles.map((file) => {
                     const Icon = getFileIcon(file.mimeType);
                     const colorClass = getFileColor(file.mimeType);
+                    const isFolder = file.mimeType.includes("folder");
+                    
                     return (
-                      <a
-                        key={file.id}
-                        href={file.webViewLink || "#"}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-muted/30 transition-colors"
+                      <DriveContextMenu 
+                        key={file.id} 
+                        file={file}
+                        onPreview={!isFolder ? setPreviewFile : undefined}
+                        onNavigateToFolder={isFolder ? handleNavigateToFolder : undefined}
                       >
-                        <div className={cn("p-1.5 rounded-lg", colorClass)}>
-                          <Icon className="h-4 w-4" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-sm truncate group-hover:text-gdrive-folder transition-colors">
-                            {file.name}
-                          </p>
-                        </div>
-                        <span className="text-xs text-muted-foreground hidden sm:block w-24 text-right">
-                          {formatFileSize(file.size)}
-                        </span>
-                        <span className="text-xs text-muted-foreground hidden md:block w-32 text-right">
-                          {formatDate(file.modifiedTime)}
-                        </span>
-                        <ExternalLink className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </a>
+                        <button
+                          onClick={() => handleFileClick(file)}
+                          onDoubleClick={() => {
+                            if (!isFolder && file.webViewLink) {
+                              window.open(file.webViewLink, "_blank");
+                            }
+                          }}
+                          className="group w-full flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-muted/30 transition-colors text-left"
+                        >
+                          <div className={cn("p-1.5 rounded-lg", colorClass)}>
+                            <Icon className="h-4 w-4" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm truncate group-hover:text-gdrive-folder transition-colors">
+                              {file.name}
+                            </p>
+                          </div>
+                          <span className="text-xs text-muted-foreground hidden sm:block w-24 text-right">
+                            {formatFileSize(file.size)}
+                          </span>
+                          <span className="text-xs text-muted-foreground hidden md:block w-32 text-right">
+                            {formatDate(file.modifiedTime)}
+                          </span>
+                          {!isFolder && (
+                            <ExternalLink className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                          )}
+                        </button>
+                      </DriveContextMenu>
                     );
                   })}
                 </div>
@@ -423,6 +521,15 @@ export default function Drive() {
           </div>
         </div>
       </div>
+
+      {/* File Preview Modal */}
+      <DriveFilePreview
+        file={previewFile}
+        files={processedFiles}
+        isOpen={!!previewFile}
+        onClose={() => setPreviewFile(null)}
+        onNavigate={setPreviewFile}
+      />
     </div>
   );
 }
