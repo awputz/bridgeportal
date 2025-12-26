@@ -87,71 +87,82 @@ export const useInvestorTransactions = (filters?: {
   });
 };
 
-// Fetch aggregate metrics
+// Fetch aggregate metrics using optimized database view (single query)
 export const useInvestorMetrics = () => {
   return useQuery({
     queryKey: ["investor-metrics"],
     queryFn: async () => {
-      const currentYear = new Date().getFullYear();
-      const prevYear = currentYear - 1;
+      // Use the optimized database view for a single-query fetch
+      const { data, error } = await supabase
+        .from("investor_dashboard_stats")
+        .select("*")
+        .single();
 
-      // Fetch all transactions
-      const { data: transactions } = await supabase
-        .from("transactions")
-        .select("sale_price, closing_date, commission");
-
-      // Fetch team members count
-      const { count: agentCount } = await supabase
-        .from("team_members")
-        .select("id", { count: "exact", head: true })
-        .eq("is_active", true);
-
-      // Fetch active listings
-      const { count: investmentListingsCount } = await supabase
-        .from("investment_listings")
-        .select("id", { count: "exact", head: true })
-        .eq("is_active", true);
-
-      const { count: commercialListingsCount } = await supabase
-        .from("commercial_listings")
-        .select("id", { count: "exact", head: true })
-        .eq("is_active", true);
-
-      // Calculate metrics
-      const totalVolume = transactions?.reduce((sum, t) => sum + (t.sale_price || 0), 0) || 0;
-      const totalTransactions = transactions?.length || 0;
-      const totalCommissions = transactions?.reduce((sum, t) => sum + (t.commission || 0), 0) || 0;
-      const avgDealSize = totalTransactions > 0 ? totalVolume / totalTransactions : 0;
-
-      // YTD metrics
-      const ytdTransactions = transactions?.filter(t => {
-        if (!t.closing_date) return false;
-        return new Date(t.closing_date).getFullYear() === currentYear;
-      }) || [];
-      const ytdVolume = ytdTransactions.reduce((sum, t) => sum + (t.sale_price || 0), 0);
-
-      // Previous year metrics
-      const prevYearTransactions = transactions?.filter(t => {
-        if (!t.closing_date) return false;
-        return new Date(t.closing_date).getFullYear() === prevYear;
-      }) || [];
-      const prevYearVolume = prevYearTransactions.reduce((sum, t) => sum + (t.sale_price || 0), 0);
+      if (error) {
+        console.error("[useInvestorMetrics] View query failed, falling back to manual calculation:", error);
+        // Fallback to manual calculation if view fails
+        return fallbackMetricsCalculation();
+      }
 
       return {
-        totalVolume,
-        totalTransactions,
-        totalCommissions,
-        avgDealSize,
-        activeAgents: agentCount || 0,
-        activeListings: (investmentListingsCount || 0) + (commercialListingsCount || 0),
-        ytdVolume,
-        ytdTransactions: ytdTransactions.length,
-        prevYearVolume,
-        prevYearTransactions: prevYearTransactions.length,
+        totalVolume: Number(data.total_volume) || 0,
+        totalTransactions: Number(data.total_transactions) || 0,
+        totalCommissions: Number(data.total_commissions) || 0,
+        avgDealSize: Number(data.avg_deal_size) || 0,
+        activeAgents: Number(data.active_agents) || 0,
+        activeListings: Number(data.active_listings) || 0,
+        ytdVolume: Number(data.ytd_volume) || 0,
+        ytdTransactions: Number(data.ytd_transactions) || 0,
+        prevYearVolume: Number(data.prev_year_volume) || 0,
+        prevYearTransactions: Number(data.prev_year_transactions) || 0,
       } as InvestorMetrics;
     },
+    staleTime: 30000, // Cache for 30 seconds
   });
 };
+
+// Fallback function for metrics if view is unavailable
+async function fallbackMetricsCalculation(): Promise<InvestorMetrics> {
+  const currentYear = new Date().getFullYear();
+  const prevYear = currentYear - 1;
+
+  const [transactionsResult, agentCountResult, investmentListingsResult, commercialListingsResult] = 
+    await Promise.all([
+      supabase.from("transactions").select("sale_price, closing_date, commission"),
+      supabase.from("team_members").select("id", { count: "exact", head: true }).eq("is_active", true),
+      supabase.from("investment_listings").select("id", { count: "exact", head: true }).eq("is_active", true),
+      supabase.from("commercial_listings").select("id", { count: "exact", head: true }).eq("is_active", true),
+    ]);
+
+  const transactions = transactionsResult.data || [];
+  const totalVolume = transactions.reduce((sum, t) => sum + (t.sale_price || 0), 0);
+  const totalTransactions = transactions.length;
+  const totalCommissions = transactions.reduce((sum, t) => sum + (t.commission || 0), 0);
+  const avgDealSize = totalTransactions > 0 ? totalVolume / totalTransactions : 0;
+
+  const ytdTransactions = transactions.filter(t => 
+    t.closing_date && new Date(t.closing_date).getFullYear() === currentYear
+  );
+  const ytdVolume = ytdTransactions.reduce((sum, t) => sum + (t.sale_price || 0), 0);
+
+  const prevYearTransactionsList = transactions.filter(t => 
+    t.closing_date && new Date(t.closing_date).getFullYear() === prevYear
+  );
+  const prevYearVolume = prevYearTransactionsList.reduce((sum, t) => sum + (t.sale_price || 0), 0);
+
+  return {
+    totalVolume,
+    totalTransactions,
+    totalCommissions,
+    avgDealSize,
+    activeAgents: agentCountResult.count || 0,
+    activeListings: (investmentListingsResult.count || 0) + (commercialListingsResult.count || 0),
+    ytdVolume,
+    ytdTransactions: ytdTransactions.length,
+    prevYearVolume,
+    prevYearTransactions: prevYearTransactionsList.length,
+  };
+}
 
 // Fetch team members
 export const useInvestorTeam = (divisionFilter?: string) => {
@@ -179,36 +190,29 @@ export const useInvestorTeam = (divisionFilter?: string) => {
   });
 };
 
-// Division breakdown analytics
+// Division breakdown analytics using optimized view
 export const useDivisionBreakdown = () => {
   return useQuery({
     queryKey: ["investor-division-breakdown"],
     queryFn: async () => {
-      const { data: transactions } = await supabase
-        .from("transactions")
-        .select("sale_price, division, commission");
+      // Use optimized database view
+      const { data, error } = await supabase
+        .from("division_breakdown_stats")
+        .select("*");
 
-      const divisionMap = new Map<string, { volume: number; count: number; commission: number }>();
+      if (error) {
+        console.error("[useDivisionBreakdown] View query failed:", error);
+        throw error;
+      }
 
-      transactions?.forEach(t => {
-        const division = t.division || "Other";
-        const existing = divisionMap.get(division) || { volume: 0, count: 0, commission: 0 };
-        divisionMap.set(division, {
-          volume: existing.volume + (t.sale_price || 0),
-          count: existing.count + 1,
-          commission: existing.commission + (t.commission || 0),
-        });
-      });
-
-      return Array.from(divisionMap.entries())
-        .map(([name, data]) => ({
-          name,
-          volume: data.volume,
-          count: data.count,
-          commission: data.commission,
-        }))
-        .sort((a, b) => b.volume - a.volume) as DivisionBreakdown[];
+      return (data || []).map(d => ({
+        name: d.division_name,
+        volume: Number(d.total_volume) || 0,
+        count: Number(d.transaction_count) || 0,
+        commission: Number(d.total_commission) || 0,
+      })) as DivisionBreakdown[];
     },
+    staleTime: 30000,
   });
 };
 
@@ -309,48 +313,31 @@ export const useCommissionInsights = () => {
   });
 };
 
-// Agent performance for investor view
+// Agent performance for investor view using optimized view
 export const useInvestorAgentPerformance = () => {
   return useQuery({
     queryKey: ["investor-agent-performance"],
     queryFn: async () => {
-      const { data: transactions } = await supabase
-        .from("transactions")
-        .select("agent_name, sale_price, commission, division, closing_date");
+      // Use optimized database view
+      const { data, error } = await supabase
+        .from("agent_performance_stats")
+        .select("*");
 
-      const agentMap = new Map<string, {
-        deals: number;
-        volume: number;
-        commission: number;
-        divisions: Set<string>;
-      }>();
+      if (error) {
+        console.error("[useInvestorAgentPerformance] View query failed:", error);
+        throw error;
+      }
 
-      transactions?.forEach(t => {
-        if (!t.agent_name) return;
-        const existing = agentMap.get(t.agent_name) || {
-          deals: 0,
-          volume: 0,
-          commission: 0,
-          divisions: new Set<string>(),
-        };
-        existing.deals += 1;
-        existing.volume += t.sale_price || 0;
-        existing.commission += t.commission || 0;
-        if (t.division) existing.divisions.add(t.division);
-        agentMap.set(t.agent_name, existing);
-      });
-
-      return Array.from(agentMap.entries())
-        .map(([name, data]) => ({
-          name,
-          deals: data.deals,
-          volume: data.volume,
-          commission: data.commission,
-          divisions: Array.from(data.divisions),
-          avgDealSize: data.deals > 0 ? data.volume / data.deals : 0,
-        }))
-        .sort((a, b) => b.volume - a.volume);
+      return (data || []).map(d => ({
+        name: d.agent_name || 'Unknown',
+        deals: Number(d.deal_count) || 0,
+        volume: Number(d.total_volume) || 0,
+        commission: Number(d.total_commission) || 0,
+        divisions: d.divisions || [],
+        avgDealSize: Number(d.avg_deal_size) || 0,
+      }));
     },
+    staleTime: 30000,
   });
 };
 

@@ -56,3 +56,6 @@ verify_jwt = false
 
 [functions.google-unified-auth]
 verify_jwt = true
+
+[functions.health-check]
+verify_jwt = false
