@@ -3,7 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Building2, DollarSign, Users, TrendingUp, BarChart3 } from "lucide-react";
+import { Tooltip as TooltipUI, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Building2, DollarSign, Users, TrendingUp, BarChart3, HelpCircle } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
 interface Metrics {
@@ -175,64 +176,106 @@ const InvestorDashboard = () => {
       </div>
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
-        <Card className="border-border/50">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 md:p-6 md:pb-2">
-            <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
-              Total Volume
-            </CardTitle>
-            <DollarSign className="h-3.5 w-3.5 md:h-4 md:w-4 text-sky-400" />
-          </CardHeader>
-          <CardContent className="p-3 pt-0 md:p-6 md:pt-0">
-            <div className="text-lg md:text-2xl font-bold">{formatCurrency(metrics?.totalVolume || 0)}</div>
-            <p className="text-[10px] md:text-xs text-muted-foreground">All-time volume</p>
-          </CardContent>
-        </Card>
+      <TooltipProvider>
+        <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
+          <Card className="bg-card/50 border-border/50">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 md:p-6 md:pb-2">
+              <div className="flex items-center gap-1">
+                <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
+                  Total Volume
+                </CardTitle>
+                <TooltipUI>
+                  <TooltipTrigger asChild>
+                    <HelpCircle className="h-3 w-3 text-muted-foreground/50 cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-[200px]">
+                    <p className="text-xs">Combined dollar value of all closed transactions across all divisions.</p>
+                  </TooltipContent>
+                </TooltipUI>
+              </div>
+              <DollarSign className="h-3.5 w-3.5 md:h-4 md:w-4 text-sky-400" />
+            </CardHeader>
+            <CardContent className="p-3 pt-0 md:p-6 md:pt-0">
+              <div className="text-lg md:text-2xl font-bold">{formatCurrency(metrics?.totalVolume || 0)}</div>
+              <p className="text-[10px] md:text-xs text-muted-foreground">All-time volume</p>
+            </CardContent>
+          </Card>
 
-        <Card className="border-border/50">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 md:p-6 md:pb-2">
-            <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
-              Transactions
-            </CardTitle>
-            <TrendingUp className="h-3.5 w-3.5 md:h-4 md:w-4 text-green-500" />
-          </CardHeader>
-          <CardContent className="p-3 pt-0 md:p-6 md:pt-0">
-            <div className="text-lg md:text-2xl font-bold">{metrics?.totalTransactions || 0}</div>
-            <p className="text-[10px] md:text-xs text-muted-foreground">Closed deals</p>
-          </CardContent>
-        </Card>
+          <Card className="bg-card/50 border-border/50">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 md:p-6 md:pb-2">
+              <div className="flex items-center gap-1">
+                <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
+                  Transactions
+                </CardTitle>
+                <TooltipUI>
+                  <TooltipTrigger asChild>
+                    <HelpCircle className="h-3 w-3 text-muted-foreground/50 cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-[200px]">
+                    <p className="text-xs">Total number of completed deals including sales, leases, and rentals.</p>
+                  </TooltipContent>
+                </TooltipUI>
+              </div>
+              <TrendingUp className="h-3.5 w-3.5 md:h-4 md:w-4 text-green-500" />
+            </CardHeader>
+            <CardContent className="p-3 pt-0 md:p-6 md:pt-0">
+              <div className="text-lg md:text-2xl font-bold">{metrics?.totalTransactions || 0}</div>
+              <p className="text-[10px] md:text-xs text-muted-foreground">Closed deals</p>
+            </CardContent>
+          </Card>
 
-        <Card className="border-border/50">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 md:p-6 md:pb-2">
-            <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
-              Active Agents
-            </CardTitle>
-            <Users className="h-3.5 w-3.5 md:h-4 md:w-4 text-blue-500" />
-          </CardHeader>
-          <CardContent className="p-3 pt-0 md:p-6 md:pt-0">
-            <div className="text-lg md:text-2xl font-bold">{metrics?.activeAgents || 0}</div>
-            <p className="text-[10px] md:text-xs text-muted-foreground">Team members</p>
-          </CardContent>
-        </Card>
+          <Card className="bg-card/50 border-border/50">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 md:p-6 md:pb-2">
+              <div className="flex items-center gap-1">
+                <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
+                  Active Agents
+                </CardTitle>
+                <TooltipUI>
+                  <TooltipTrigger asChild>
+                    <HelpCircle className="h-3 w-3 text-muted-foreground/50 cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-[200px]">
+                    <p className="text-xs">Number of licensed agents currently active on the team roster.</p>
+                  </TooltipContent>
+                </TooltipUI>
+              </div>
+              <Users className="h-3.5 w-3.5 md:h-4 md:w-4 text-blue-500" />
+            </CardHeader>
+            <CardContent className="p-3 pt-0 md:p-6 md:pt-0">
+              <div className="text-lg md:text-2xl font-bold">{metrics?.activeAgents || 0}</div>
+              <p className="text-[10px] md:text-xs text-muted-foreground">Team members</p>
+            </CardContent>
+          </Card>
 
-        <Card className="border-border/50">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 md:p-6 md:pb-2">
-            <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
-              Active Listings
-            </CardTitle>
-            <Building2 className="h-3.5 w-3.5 md:h-4 md:w-4 text-purple-500" />
-          </CardHeader>
-          <CardContent className="p-3 pt-0 md:p-6 md:pt-0">
-            <div className="text-lg md:text-2xl font-bold">{metrics?.activeListings || 0}</div>
-            <p className="text-[10px] md:text-xs text-muted-foreground">Current properties</p>
-          </CardContent>
-        </Card>
-      </div>
+          <Card className="bg-card/50 border-border/50">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 md:p-6 md:pb-2">
+              <div className="flex items-center gap-1">
+                <CardTitle className="text-xs md:text-sm font-medium text-muted-foreground">
+                  Active Listings
+                </CardTitle>
+                <TooltipUI>
+                  <TooltipTrigger asChild>
+                    <HelpCircle className="h-3 w-3 text-muted-foreground/50 cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="max-w-[200px]">
+                    <p className="text-xs">Properties currently listed for sale or lease across Investment Sales and Commercial Leasing.</p>
+                  </TooltipContent>
+                </TooltipUI>
+              </div>
+              <Building2 className="h-3.5 w-3.5 md:h-4 md:w-4 text-purple-500" />
+            </CardHeader>
+            <CardContent className="p-3 pt-0 md:p-6 md:pt-0">
+              <div className="text-lg md:text-2xl font-bold">{metrics?.activeListings || 0}</div>
+              <p className="text-[10px] md:text-xs text-muted-foreground">Current properties</p>
+            </CardContent>
+          </Card>
+        </div>
+      </TooltipProvider>
 
       {/* Charts */}
       <div className="grid gap-4 md:gap-6 lg:grid-cols-3">
         {/* Volume Chart */}
-        <Card className="lg:col-span-2 border-border/50">
+        <Card className="lg:col-span-2 bg-card/50 border-border/50">
           <CardHeader className="p-4 md:p-6">
             <div className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4 md:h-5 md:w-5 text-sky-400" />
@@ -274,7 +317,7 @@ const InvestorDashboard = () => {
         </Card>
 
         {/* Division Breakdown */}
-        <Card className="border-border/50">
+        <Card className="bg-card/50 border-border/50">
           <CardHeader className="p-4 md:p-6">
             <CardTitle className="text-base md:text-lg font-medium">Division Breakdown</CardTitle>
             <CardDescription className="text-xs md:text-sm">Volume by division</CardDescription>
