@@ -123,8 +123,8 @@ const divisionOptions = [
 type SortField = "name" | "created_at" | "updated_at";
 type SortOrder = "asc" | "desc";
 
-// Google Sync Status Badge Component
-const GoogleSyncStatus = () => {
+// Google Sync Status Badge Component - Compact on mobile
+const GoogleSyncStatus = ({ isMobile = false }: { isMobile?: boolean }) => {
   const { data: connectionData, isLoading: isCheckingConnection, refetch } = useContactsConnection();
   const connectContacts = useConnectContacts();
   const disconnectContacts = useDisconnectContacts();
@@ -134,12 +134,31 @@ const GoogleSyncStatus = () => {
     return (
       <div className="flex items-center gap-2 text-muted-foreground text-sm">
         <Loader2 className="h-4 w-4 animate-spin" />
-        <span>Checking sync...</span>
+        {!isMobile && <span>Checking sync...</span>}
       </div>
     );
   }
 
   if (!connectionData?.connected) {
+    // Mobile: Just a small icon button
+    if (isMobile) {
+      return (
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => connectContacts.mutate()}
+          disabled={connectContacts.isPending}
+          className="h-8 w-8"
+        >
+          {connectContacts.isPending ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <CloudOff className="h-4 w-4 text-muted-foreground" />
+          )}
+        </Button>
+      );
+    }
+    
     return (
       <TooltipProvider>
         <Tooltip>
@@ -167,6 +186,43 @@ const GoogleSyncStatus = () => {
     );
   }
 
+  // Mobile: Compact connected indicator
+  if (isMobile) {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="h-8 w-8 relative">
+            {isSyncing ? (
+              <Loader2 className="h-4 w-4 animate-spin text-green-400" />
+            ) : (
+              <Cloud className="h-4 w-4 text-green-400" />
+            )}
+            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-green-400 rounded-full" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={() => window.open('https://contacts.google.com', '_blank')}>
+            <ExternalLink className="h-4 w-4 mr-2" />
+            Open Google Contacts
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => refetch()}>
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Refresh Sync
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem 
+            onClick={() => disconnectContacts.mutate()}
+            className="text-destructive"
+          >
+            <CloudOff className="h-4 w-4 mr-2" />
+            Disconnect
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
+
+  // Desktop: Full connected UI
   return (
     <TooltipProvider>
       <Tooltip>
@@ -181,19 +237,10 @@ const GoogleSyncStatus = () => {
               ) : (
                 <>
                   <Cloud className="h-3 w-3" />
-                  <span>Google Connected</span>
+                  <span>Connected</span>
                 </>
               )}
             </Badge>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => window.open('https://contacts.google.com', '_blank')}
-              className="gap-1.5 h-7 border-blue-500/30 text-blue-400 hover:bg-blue-500/10"
-            >
-              <ExternalLink className="h-3 w-3" />
-              <span className="hidden sm:inline">Open Contacts</span>
-            </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-7 w-7">
@@ -201,6 +248,10 @@ const GoogleSyncStatus = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => window.open('https://contacts.google.com', '_blank')}>
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Open Google Contacts
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => refetch()}>
                   <RefreshCw className="h-4 w-4 mr-2" />
                   Refresh Sync
@@ -603,7 +654,7 @@ const Contacts = () => {
               )}
             </div>
             <div className="md:hidden">
-              <GoogleSyncStatus />
+              <GoogleSyncStatus isMobile />
             </div>
           </div>
 
@@ -1043,11 +1094,14 @@ const Contacts = () => {
         />
       )}
 
-      {/* Mobile FAB for Add Contact */}
+      {/* Mobile FAB for Add Contact - positioned above bottom nav */}
       {isMobile && (
-        <FAB onClick={() => setShowContactDialog(true)}>
+        <button
+          onClick={() => setShowContactDialog(true)}
+          className="fixed bottom-24 right-4 z-50 w-14 h-14 rounded-full bg-blue-500 text-white shadow-lg flex items-center justify-center active:scale-95 transition-transform"
+        >
           <Plus className="h-6 w-6" />
-        </FAB>
+        </button>
       )}
 
       {/* Contact Profile Slide-Over */}

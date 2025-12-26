@@ -267,7 +267,7 @@ export default function Drive() {
   const activeFilterCount = (fileFilter !== "all" ? 1 : 0) + (sortField !== "name" || sortDirection !== "asc" ? 1 : 0);
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden bg-background min-h-0">
+    <div className="flex-1 flex flex-col overflow-hidden bg-background min-h-0 pb-16 md:pb-0">
       {/* Mobile Header */}
       {isMobile ? (
         <div className="flex flex-col gap-2 px-4 py-3 border-b border-border/30 bg-card shrink-0">
@@ -748,14 +748,14 @@ export default function Drive() {
         </div>
       </div>
 
-      {/* Mobile FAB for upload */}
+      {/* Mobile FAB for upload - positioned above bottom nav */}
       {isMobile && (
-        <FAB 
+        <button
           onClick={() => window.open('https://drive.google.com', '_blank')}
-          className="bg-gdrive-folder hover:bg-gdrive-folder/90"
+          className="fixed bottom-24 right-4 z-50 w-14 h-14 rounded-full bg-gdrive-folder text-white shadow-lg flex items-center justify-center active:scale-95 transition-transform"
         >
           <Upload className="h-6 w-6" />
-        </FAB>
+        </button>
       )}
 
       {/* File Preview */}

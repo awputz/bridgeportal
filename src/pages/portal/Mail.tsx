@@ -404,46 +404,42 @@ export default function Mail() {
           </div>
         </div>
 
-        {/* Mobile Label Pills - Show when not viewing message */}
-        {isMobile && !isViewingMessage && (
-          <div className="absolute top-[52px] left-0 right-0 z-10 bg-card border-b border-border/30 px-3 py-2 flex gap-2 overflow-x-auto">
-            {Object.entries(LABEL_CONFIG).map(([id, config]) => {
-              const isActive = activeLabel === id;
-              const unreadCount = getLabelUnreadCount(id);
-              return (
-                <button
-                  key={id}
-                  onClick={() => {
-                    setActiveLabel(id);
-                    setSelectedMessageId(null);
-                  }}
-                  className={cn(
-                    "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all",
-                    isActive
-                      ? "bg-gmail-red text-white"
-                      : "bg-muted/50 text-foreground/70"
-                  )}
-                >
-                  {config.label}
-                  {unreadCount > 0 && id !== "TRASH" && (
-                    <span className={cn(
-                      "px-1.5 py-0.5 rounded-full text-[10px]",
-                      isActive ? "bg-white/20" : "bg-gmail-red/20 text-gmail-red"
-                    )}>
-                      {unreadCount}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        )}
-
-        {/* Full-Width Content Area - Shows EITHER list OR message */}
-        <div className={cn(
-          "flex-1 flex flex-col min-w-0 overflow-hidden",
-          isMobile && !isViewingMessage && "pt-10" // Account for mobile label pills
-        )}>
+        {/* Full-Width Content Area */}
+        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+          {/* Mobile Label Pills - In flow, not absolute */}
+          {isMobile && !isViewingMessage && (
+            <div className="bg-card border-b border-border/30 px-3 py-2 flex gap-2 overflow-x-auto shrink-0 scrollbar-hide">
+              {Object.entries(LABEL_CONFIG).map(([id, config]) => {
+                const isActive = activeLabel === id;
+                const unreadCount = getLabelUnreadCount(id);
+                return (
+                  <button
+                    key={id}
+                    onClick={() => {
+                      setActiveLabel(id);
+                      setSelectedMessageId(null);
+                    }}
+                    className={cn(
+                      "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all shrink-0",
+                      isActive
+                        ? "bg-gmail-red text-white"
+                        : "bg-muted/50 text-foreground/70"
+                    )}
+                  >
+                    {config.label}
+                    {unreadCount > 0 && id !== "TRASH" && (
+                      <span className={cn(
+                        "px-1.5 py-0.5 rounded-full text-[10px]",
+                        isActive ? "bg-white/20" : "bg-gmail-red/20 text-gmail-red"
+                      )}>
+                        {unreadCount}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          )}
           {/* Email List View */}
           {!isViewingMessage && (
             <div className="flex-1 flex flex-col overflow-hidden animate-fade-in">
@@ -470,14 +466,14 @@ export default function Mail() {
         </div>
       </div>
 
-      {/* Mobile FAB for Compose */}
+      {/* Mobile FAB for Compose - positioned above bottom nav */}
       {isMobile && !isViewingMessage && (
         <button
           onClick={() => {
             setReplyToData(undefined);
             setIsComposeOpen(true);
           }}
-          className="fixed bottom-20 right-4 z-50 w-14 h-14 rounded-full bg-gmail-red text-white shadow-lg flex items-center justify-center active:scale-95 transition-transform"
+          className="fixed bottom-24 right-4 z-50 w-14 h-14 rounded-full bg-gmail-red text-white shadow-lg flex items-center justify-center active:scale-95 transition-transform"
         >
           <Plus className="h-6 w-6" />
         </button>
