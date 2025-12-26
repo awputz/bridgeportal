@@ -340,29 +340,27 @@ export default function Mail() {
         {/* Full-Width Content Area - Shows EITHER list OR message */}
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
           {/* Email List View */}
-          <div className={cn(
-            "flex-1 flex flex-col overflow-hidden animate-fade-in",
-            isViewingMessage && "hidden md:hidden" // Hide on all screens when viewing message
-          )}>
-            <MailInbox
-              messages={messagesData?.messages || []}
-              isLoading={isLoadingMessages}
-              selectedId={selectedMessageId}
-              onSelect={setSelectedMessageId}
-            />
-          </div>
+          {!isViewingMessage && (
+            <div className="flex-1 flex flex-col overflow-hidden animate-fade-in">
+              <MailInbox
+                messages={messagesData?.messages || []}
+                isLoading={isLoadingMessages}
+                selectedId={selectedMessageId}
+                onSelect={setSelectedMessageId}
+              />
+            </div>
+          )}
 
-          {/* Email Message View - Full Page */}
-          <div className={cn(
-            "flex-1 flex flex-col overflow-hidden animate-fade-in",
-            !isViewingMessage && "hidden" // Hide when not viewing message
-          )}>
-            <MailMessage
-              messageId={selectedMessageId}
-              onBack={handleBackToList}
-              onReply={handleReply}
-            />
-          </div>
+          {/* Email Message View - Full Page with slide animation */}
+          {isViewingMessage && (
+            <div className="flex-1 flex flex-col overflow-hidden animate-slide-in-right">
+              <MailMessage
+                messageId={selectedMessageId}
+                onBack={handleBackToList}
+                onReply={handleReply}
+              />
+            </div>
+          )}
         </div>
       </div>
 

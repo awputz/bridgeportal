@@ -224,100 +224,106 @@ export default function Calendar() {
 
   return (
     <div className="h-[calc(100vh-4rem)] flex flex-col overflow-hidden bg-background">
-      {/* Header */}
-      <div className="px-4 lg:px-6 py-4 border-b border-border/30 bg-card shrink-0">
-        {/* Top Row: Title, Navigation, Today */}
-        <div className="flex items-center justify-between gap-4 mb-4">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-gcal-blue flex items-center justify-center shrink-0">
-              <CalendarIcon className="h-5 w-5 text-white" />
-            </div>
-            <div className="flex items-center gap-3">
-              <Button variant="ghost" size="icon" onClick={navigatePrevious} className="h-9 w-9">
-                <ChevronLeft className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="icon" onClick={navigateNext} className="h-9 w-9">
-                <ChevronRight className="h-5 w-5" />
-              </Button>
-              <h1 className="text-lg md:text-xl font-medium text-foreground">{getHeaderTitle()}</h1>
-            </div>
+      {/* Compact Single-Row Header */}
+      <div className="flex items-center justify-between gap-3 px-4 lg:px-6 py-3 border-b border-border/30 bg-card shrink-0">
+        {/* Left: Icon + Navigation + Title */}
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="w-9 h-9 rounded-lg bg-gcal-blue flex items-center justify-center shrink-0">
+            <CalendarIcon className="h-5 w-5 text-white" />
           </div>
-          
-          <div className="flex items-center gap-2">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={goToToday} 
-              className="border-gcal-blue/30 text-gcal-blue hover:bg-gcal-blue/10 h-9"
-            >
-              Today
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="icon" onClick={navigatePrevious} className="h-8 w-8">
+              <ChevronLeft className="h-4 w-4" />
             </Button>
-            <Button 
-              size="sm" 
-              onClick={handleCreateEvent} 
-              className="gap-2 bg-gcal-blue hover:bg-gcal-blue/90 text-white h-9 hidden sm:flex"
-            >
-              <Plus className="h-4 w-4" />
-              <span className="hidden md:inline">Create</span>
+            <Button variant="ghost" size="icon" onClick={navigateNext} className="h-8 w-8">
+              <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
+          <h1 className="text-base md:text-lg font-medium text-foreground truncate">{getHeaderTitle()}</h1>
         </div>
 
-        {/* Bottom Row: View Tabs, Actions */}
-        <div className="flex items-center justify-between gap-4">
-          <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)}>
-            <TabsList className="bg-muted/30 h-10">
-              <TabsTrigger value="day" className="gap-1.5 px-3 data-[state=active]:bg-gcal-blue data-[state=active]:text-white">
-                <CalendarClock className="h-4 w-4" />
-                <span className="hidden sm:inline">Day</span>
-              </TabsTrigger>
-              <TabsTrigger value="week" className="gap-1.5 px-3 data-[state=active]:bg-gcal-blue data-[state=active]:text-white">
-                <CalendarDays className="h-4 w-4" />
-                <span className="hidden sm:inline">Week</span>
-              </TabsTrigger>
-              <TabsTrigger value="month" className="gap-1.5 px-3 data-[state=active]:bg-gcal-blue data-[state=active]:text-white">
-                <LayoutGrid className="h-4 w-4" />
-                <span className="hidden sm:inline">Month</span>
-              </TabsTrigger>
-              <TabsTrigger value="agenda" className="gap-1.5 px-3 data-[state=active]:bg-gcal-blue data-[state=active]:text-white">
-                <List className="h-4 w-4" />
-                <span className="hidden sm:inline">Agenda</span>
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+        {/* Center: View Tabs */}
+        <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)} className="hidden sm:block">
+          <TabsList className="bg-muted/30 h-9">
+            <TabsTrigger value="day" className="h-7 px-2.5 text-xs data-[state=active]:bg-gcal-blue data-[state=active]:text-white">
+              <CalendarClock className="h-3.5 w-3.5 sm:mr-1.5" />
+              <span className="hidden md:inline">Day</span>
+            </TabsTrigger>
+            <TabsTrigger value="week" className="h-7 px-2.5 text-xs data-[state=active]:bg-gcal-blue data-[state=active]:text-white">
+              <CalendarDays className="h-3.5 w-3.5 sm:mr-1.5" />
+              <span className="hidden md:inline">Week</span>
+            </TabsTrigger>
+            <TabsTrigger value="month" className="h-7 px-2.5 text-xs data-[state=active]:bg-gcal-blue data-[state=active]:text-white">
+              <LayoutGrid className="h-3.5 w-3.5 sm:mr-1.5" />
+              <span className="hidden md:inline">Month</span>
+            </TabsTrigger>
+            <TabsTrigger value="agenda" className="h-7 px-2.5 text-xs data-[state=active]:bg-gcal-blue data-[state=active]:text-white">
+              <List className="h-3.5 w-3.5 sm:mr-1.5" />
+              <span className="hidden md:inline">Agenda</span>
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
 
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="icon" onClick={() => refetchEvents()} className="h-9 w-9">
-              <RefreshCw className="h-4 w-4" />
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => window.open('https://calendar.google.com', '_blank')} 
-              className="h-9 w-9"
-            >
-              <ExternalLink className="h-4 w-4" />
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-9 w-9">
-                  <Settings className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => window.open('https://calendar.google.com', '_blank')}>
-                  Open Google Calendar
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem 
-                  onClick={() => disconnectCalendar.mutate()}
-                  className="text-destructive"
-                >
-                  Disconnect Calendar
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+        {/* Right: Actions */}
+        <div className="flex items-center gap-1.5">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={goToToday} 
+            className="h-8 px-2.5 text-xs text-gcal-blue hover:bg-gcal-blue/10"
+          >
+            Today
+          </Button>
+          <Button 
+            size="sm" 
+            onClick={handleCreateEvent} 
+            className="gap-1.5 bg-gcal-blue hover:bg-gcal-blue/90 text-white h-8 px-3"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline text-xs">Create</span>
+          </Button>
+          <Button variant="ghost" size="icon" onClick={() => refetchEvents()} className="h-8 w-8">
+            <RefreshCw className="h-4 w-4" />
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Settings className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {/* Mobile view selector */}
+              <div className="sm:hidden px-2 py-1.5">
+                <p className="text-xs font-medium text-muted-foreground mb-2">View</p>
+                <div className="grid grid-cols-4 gap-1">
+                  {(["day", "week", "month", "agenda"] as ViewMode[]).map((v) => (
+                    <button
+                      key={v}
+                      onClick={() => setViewMode(v)}
+                      className={cn(
+                        "p-2 rounded text-xs capitalize",
+                        viewMode === v ? "bg-gcal-blue text-white" : "bg-muted/50"
+                      )}
+                    >
+                      {v}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <DropdownMenuSeparator className="sm:hidden" />
+              <DropdownMenuItem onClick={() => window.open('https://calendar.google.com', '_blank')}>
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Open Google Calendar
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem 
+                onClick={() => disconnectCalendar.mutate()}
+                className="text-destructive"
+              >
+                Disconnect Calendar
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
