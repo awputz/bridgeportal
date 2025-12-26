@@ -353,3 +353,204 @@ export const useInvestorAgentPerformance = () => {
     },
   });
 };
+
+// Agent requests for investor view
+export interface InvestorAgentRequest {
+  id: string;
+  agent_id: string;
+  agent_name?: string;
+  request_type: string;
+  client_name: string | null;
+  property_address: string | null;
+  status: string;
+  priority: string;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export const useInvestorAgentRequests = (filters?: {
+  status?: string;
+  search?: string;
+}) => {
+  return useQuery({
+    queryKey: ["investor-agent-requests", filters],
+    queryFn: async () => {
+      // Get agent requests
+      const { data: requests, error } = await supabase
+        .from("agent_requests")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      // Get team members to map agent names
+      const { data: teamMembers } = await supabase
+        .from("team_members")
+        .select("id, name, email");
+
+      // Get profiles to map agent IDs to emails
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, email");
+
+      // Build email to name map
+      const emailToName = new Map<string, string>();
+      teamMembers?.forEach(tm => {
+        if (tm.email) emailToName.set(tm.email, tm.name);
+      });
+
+      // Build agent_id to email map
+      const idToEmail = new Map<string, string>();
+      profiles?.forEach(p => {
+        if (p.email) idToEmail.set(p.id, p.email);
+      });
+
+      let enrichedRequests = (requests || []).map(req => ({
+        ...req,
+        agent_name: emailToName.get(idToEmail.get(req.agent_id) || "") || "Unknown Agent",
+      })) as InvestorAgentRequest[];
+
+      // Apply filters
+      if (filters?.status && filters.status !== "all") {
+        enrichedRequests = enrichedRequests.filter(r => r.status === filters.status);
+      }
+
+      if (filters?.search) {
+        const search = filters.search.toLowerCase();
+        enrichedRequests = enrichedRequests.filter(r =>
+          r.agent_name?.toLowerCase().includes(search) ||
+          r.client_name?.toLowerCase().includes(search) ||
+          r.property_address?.toLowerCase().includes(search) ||
+          r.request_type.toLowerCase().includes(search)
+        );
+      }
+
+      return enrichedRequests;
+    },
+  });
+};
+
+// Commission requests for investor view
+export interface InvestorCommissionRequest {
+  id: string;
+  agent_id: string;
+  agent_name?: string;
+  property_address: string;
+  commission_amount: number;
+  deal_type: string;
+  closing_date: string;
+  status: string;
+  notes: string | null;
+  admin_notes: string | null;
+  created_at: string;
+}
+
+export const useInvestorCommissionRequests = (filters?: {
+  status?: string;
+  search?: string;
+}) => {
+  return useQuery({
+    queryKey: ["investor-commission-requests", filters],
+    queryFn: async () => {
+      const { data: requests, error } = await supabase
+        .from("commission_requests")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      // Get team members and profiles for name mapping
+      const { data: teamMembers } = await supabase
+        .from("team_members")
+        .select("id, name, email");
+
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, email");
+
+      const emailToName = new Map<string, string>();
+      teamMembers?.forEach(tm => {
+        if (tm.email) emailToName.set(tm.email, tm.name);
+      });
+
+      const idToEmail = new Map<string, string>();
+      profiles?.forEach(p => {
+        if (p.email) idToEmail.set(p.id, p.email);
+      });
+
+      let enrichedRequests = (requests || []).map(req => ({
+        ...req,
+        agent_name: emailToName.get(idToEmail.get(req.agent_id) || "") || "Unknown Agent",
+      })) as InvestorCommissionRequest[];
+
+      if (filters?.status && filters.status !== "all") {
+        enrichedRequests = enrichedRequests.filter(r => r.status === filters.status);
+      }
+
+      if (filters?.search) {
+        const search = filters.search.toLowerCase();
+        enrichedRequests = enrichedRequests.filter(r =>
+          r.agent_name?.toLowerCase().includes(search) ||
+          r.property_address.toLowerCase().includes(search)
+        );
+      }
+
+      return enrichedRequests;
+    },
+  });
+};
+
+// Listings for investor view
+export interface InvestorInvestmentListing {
+  id: string;
+  property_address: string;
+  borough: string | null;
+  neighborhood: string | null;
+  asset_class: string;
+  asking_price: number | null;
+  units: number | null;
+  gross_sf: number | null;
+  cap_rate: number | null;
+  is_active: boolean | null;
+}
+
+export interface InvestorCommercialListing {
+  id: string;
+  property_address: string;
+  borough: string | null;
+  neighborhood: string | null;
+  listing_type: string;
+  square_footage: number;
+  asking_rent: number | null;
+  rent_per_sf: number | null;
+  is_active: boolean | null;
+}
+
+export const useInvestorListings = () => {
+  return useQuery({
+    queryKey: ["investor-listings"],
+    queryFn: async () => {
+      const [investmentResult, commercialResult] = await Promise.all([
+        supabase
+          .from("investment_listings")
+          .select("id, property_address, borough, neighborhood, asset_class, asking_price, units, gross_sf, cap_rate, is_active")
+          .eq("is_active", true)
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("commercial_listings")
+          .select("id, property_address, borough, neighborhood, listing_type, square_footage, asking_rent, rent_per_sf, is_active")
+          .eq("is_active", true)
+          .order("created_at", { ascending: false }),
+      ]);
+
+      if (investmentResult.error) throw investmentResult.error;
+      if (commercialResult.error) throw commercialResult.error;
+
+      return {
+        investment: (investmentResult.data || []) as InvestorInvestmentListing[],
+        commercial: (commercialResult.data || []) as InvestorCommercialListing[],
+      };
+    },
+  });
+};
