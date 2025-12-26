@@ -201,7 +201,14 @@ const InvestorLogin = () => {
             </Button>
           </form>
 
-          <p className="text-center text-xs text-muted-foreground/60 mt-6 font-light">
+          <button
+            onClick={() => navigate("/reset-password")}
+            className="block mx-auto text-sm text-amber-500/80 hover:text-amber-400 transition-colors mt-4"
+          >
+            Forgot your password?
+          </button>
+
+          <p className="text-center text-xs text-muted-foreground/60 mt-4 font-light">
             For authorized Hudson Point Group investors only
           </p>
         </div>

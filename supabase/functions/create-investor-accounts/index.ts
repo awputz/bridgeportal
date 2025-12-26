@@ -102,38 +102,22 @@ Deno.serve(async (req) => {
           console.log(`Investor role already exists for ${investor.email}`);
         }
 
-        // Ensure profile exists
-        const { data: existingProfile } = await supabase
+        // Ensure profile exists - use upsert to handle both create and update
+        const { error: profileError } = await supabase
           .from('profiles')
-          .select('id')
-          .eq('id', userId)
-          .maybeSingle();
+          .upsert({
+            id: userId,
+            email: investor.email,
+            full_name: investor.full_name,
+            user_type: 'investor'
+          }, {
+            onConflict: 'id'
+          });
 
-        if (!existingProfile) {
-          const { error: profileError } = await supabase
-            .from('profiles')
-            .insert({
-              id: userId,
-              email: investor.email,
-              full_name: investor.full_name,
-              user_type: 'investor'
-            });
-
-          if (profileError) {
-            console.error(`Error creating profile for ${investor.email}:`, profileError);
-          } else {
-            console.log(`Created profile for ${investor.email}`);
-          }
+        if (profileError) {
+          console.error(`Error upserting profile for ${investor.email}:`, profileError);
         } else {
-          // Update existing profile
-          await supabase
-            .from('profiles')
-            .update({
-              full_name: investor.full_name,
-              user_type: 'investor'
-            })
-            .eq('id', userId);
-          console.log(`Updated profile for ${investor.email}`);
+          console.log(`Upserted profile for ${investor.email}`);
         }
 
       } catch (error) {
