@@ -134,12 +134,9 @@ const InvestorLogin = () => {
             <div className="mx-auto w-14 h-14 rounded-full bg-amber-500/10 flex items-center justify-center mb-4">
               <Briefcase className="h-6 w-6 text-amber-500" />
             </div>
-            <h1 className="text-2xl font-extralight text-foreground mb-1">
+            <h1 className="text-2xl font-extralight text-foreground">
               Investor Portal
             </h1>
-            <p className="text-sm text-muted-foreground font-light">
-              Hudson Point Group
-            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
