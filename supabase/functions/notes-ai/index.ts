@@ -1,19 +1,37 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createLogger } from "../_shared/logger.ts";
+import { getCorrelationId, createResponseHeaders } from "../_shared/context.ts";
+import { checkRateLimit, getRateLimitConfig, getRateLimitIdentifier, rateLimitExceededResponse, rateLimitHeaders } from "../_shared/rateLimiter.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-correlation-id",
 };
 
 serve(async (req) => {
-  // Handle CORS preflight requests
+  const correlationId = getCorrelationId(req);
+  const logger = createLogger('notes-ai', correlationId);
+
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
+  const endpoint = 'notes-ai';
+  const identifier = getRateLimitIdentifier(req);
+
   try {
+    logger.requestStart(req.method, '/notes-ai');
+
+    // Check rate limit
+    const rateLimitResult = await checkRateLimit(identifier, endpoint);
+    if (!rateLimitResult.allowed) {
+      logger.warn('Rate limit exceeded', { identifier, endpoint });
+      return rateLimitExceededResponse(rateLimitResult, getRateLimitConfig(endpoint), correlationId);
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
+      logger.error("LOVABLE_API_KEY is not configured");
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
@@ -54,10 +72,11 @@ Content: ${content}
 
 Return only a JSON array like: ["Call landlord about lease terms", "Schedule property viewing"]`;
     } else {
+      logger.warn(`Unknown action: ${action}`);
       throw new Error(`Unknown action: ${action}`);
     }
 
-    console.log(`Processing ${action} request for note: ${title}`);
+    logger.info(`Processing ${action} request`, { title, contentLength: content?.length });
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -76,18 +95,18 @@ Return only a JSON array like: ["Call landlord about lease terms", "Schedule pro
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("AI gateway error:", response.status, errorText);
+      logger.error("AI gateway error", new Error(errorText), { status: response.status });
       
       if (response.status === 429) {
         return new Response(
           JSON.stringify({ error: "Rate limit exceeded. Please try again later." }),
-          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 429, headers: { ...createResponseHeaders(correlationId), ...rateLimitHeaders(rateLimitResult, getRateLimitConfig(endpoint)) } }
         );
       }
       if (response.status === 402) {
         return new Response(
           JSON.stringify({ error: "AI credits exhausted. Please add funds to continue." }),
-          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 402, headers: createResponseHeaders(correlationId) }
         );
       }
       
@@ -97,7 +116,7 @@ Return only a JSON array like: ["Call landlord about lease terms", "Schedule pro
     const data = await response.json();
     const aiResponse = data.choices?.[0]?.message?.content || "";
 
-    console.log(`AI response for ${action}:`, aiResponse);
+    logger.info(`AI response received for ${action}`, { responseLength: aiResponse.length });
 
     let result: Record<string, unknown> = {};
 
@@ -105,7 +124,6 @@ Return only a JSON array like: ["Call landlord about lease terms", "Schedule pro
       result = { summary: aiResponse.trim() };
     } else if (action === "suggest-tags" || action === "action-items") {
       try {
-        // Extract JSON array from response
         const jsonMatch = aiResponse.match(/\[[\s\S]*\]/);
         if (jsonMatch) {
           const parsed = JSON.parse(jsonMatch[0]);
@@ -114,19 +132,24 @@ Return only a JSON array like: ["Call landlord about lease terms", "Schedule pro
           result = action === "suggest-tags" ? { tags: [] } : { actionItems: [] };
         }
       } catch {
-        console.error("Failed to parse AI response as JSON:", aiResponse);
+        logger.warn("Failed to parse AI response as JSON", { aiResponse });
         result = action === "suggest-tags" ? { tags: [] } : { actionItems: [] };
       }
     }
 
+    logger.requestEnd(req.method, '/notes-ai', 200, { action });
+
     return new Response(JSON.stringify(result), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { 
+        ...createResponseHeaders(correlationId),
+        ...rateLimitHeaders(rateLimitResult, getRateLimitConfig(endpoint)),
+      },
     });
   } catch (error) {
-    console.error("Error in notes-ai function:", error);
+    logger.error("Error in notes-ai function", error instanceof Error ? error : new Error(String(error)));
     return new Response(
       JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: createResponseHeaders(correlationId) }
     );
   }
 });

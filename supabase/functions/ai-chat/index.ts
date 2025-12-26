@@ -1,8 +1,11 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createLogger } from "../_shared/logger.ts";
+import { getCorrelationId, createResponseHeaders, getIpAddress } from "../_shared/context.ts";
+import { checkRateLimit, getRateLimitConfig, getRateLimitIdentifier, rateLimitExceededResponse, rateLimitHeaders } from "../_shared/rateLimiter.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-correlation-id",
 };
 
 interface EnhancedAgentContext {
@@ -52,22 +55,18 @@ const generateSystemPrompt = (agentContext?: EnhancedAgentContext) => {
     "general": "all real estate transactions and client services"
   }[division] || "all real estate transactions";
 
-  // Build deals summary
   const dealsSummary = recentDeals.length > 0 
     ? recentDeals.map(d => `• ${d.property_address} - $${d.value?.toLocaleString() || 'TBD'} (Priority: ${d.priority || 'medium'})`).join('\n')
     : "No active deals in pipeline";
 
-  // Build transactions summary
   const transactionsSummary = recentTransactions.length > 0
     ? recentTransactions.map(t => `• ${t.property_address} - $${t.sale_price?.toLocaleString() || 'N/A'} (${t.division || 'N/A'})`).join('\n')
     : "No recent transactions";
 
-  // Build tasks summary
   const tasksSummary = upcomingTasks.length > 0
     ? upcomingTasks.map(t => `• ${t.title}${t.due_date ? ` - Due: ${new Date(t.due_date).toLocaleDateString()}` : ''}`).join('\n')
     : "No upcoming tasks";
 
-  // Check for missing commissions
   const dealsWithoutValue = recentDeals.filter(d => !d.value).length;
   const missingDataWarning = dealsWithoutValue > 0 
     ? `\n\n⚠️ ${dealsWithoutValue} deal(s) are missing value/commission data. Remind ${firstName} to update these.`
@@ -124,24 +123,41 @@ Remember: You're ${firstName}'s dedicated AI partner, not a generic assistant. U
 };
 
 serve(async (req) => {
+  const correlationId = getCorrelationId(req);
+  const logger = createLogger('ai-chat', correlationId);
+  
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
+  const endpoint = 'ai-chat';
+  const identifier = getRateLimitIdentifier(req);
+  
   try {
+    logger.requestStart(req.method, '/ai-chat');
+    
+    // Check rate limit
+    const rateLimitResult = await checkRateLimit(identifier, endpoint);
+    if (!rateLimitResult.allowed) {
+      logger.warn('Rate limit exceeded', { identifier, endpoint });
+      return rateLimitExceededResponse(rateLimitResult, getRateLimitConfig(endpoint), correlationId);
+    }
+
     const { messages, agent_context } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
     if (!LOVABLE_API_KEY) {
-      console.error("LOVABLE_API_KEY not configured");
+      logger.error("LOVABLE_API_KEY not configured");
       throw new Error("AI service not configured");
     }
 
-    // Generate personalized system prompt with deep context
     const systemPrompt = generateSystemPrompt(agent_context);
     
-    console.log("AI Chat request from:", agent_context?.name || "Unknown agent");
-    console.log("Agent stats:", agent_context?.stats);
+    logger.info("Processing AI chat request", {
+      agentName: agent_context?.name,
+      messageCount: messages?.length,
+      division: agent_context?.division,
+    });
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -161,32 +177,39 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("AI gateway error:", response.status, errorText);
+      logger.error("AI gateway error", new Error(errorText), { status: response.status });
       
       if (response.status === 429) {
         return new Response(
           JSON.stringify({ error: "Rate limit exceeded. Please try again later." }),
-          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 429, headers: { ...createResponseHeaders(correlationId), ...rateLimitHeaders(rateLimitResult, getRateLimitConfig(endpoint)) } }
         );
       }
       if (response.status === 402) {
         return new Response(
           JSON.stringify({ error: "Usage limit reached. Please contact support." }),
-          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          { status: 402, headers: createResponseHeaders(correlationId) }
         );
       }
       
       throw new Error("AI gateway error");
     }
 
+    logger.requestEnd(req.method, '/ai-chat', 200, { streaming: true });
+
     return new Response(response.body, {
-      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+      headers: { 
+        ...corsHeaders, 
+        "Content-Type": "text/event-stream",
+        "X-Correlation-Id": correlationId,
+        ...rateLimitHeaders(rateLimitResult, getRateLimitConfig(endpoint)),
+      },
     });
   } catch (error) {
-    console.error("AI Chat error:", error);
+    logger.error("AI Chat error", error instanceof Error ? error : new Error(String(error)));
     return new Response(
       JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: createResponseHeaders(correlationId) }
     );
   }
 });
