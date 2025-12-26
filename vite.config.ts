@@ -19,7 +19,41 @@ export default defineConfig(({ mode }) => ({
     include: [
       "react",
       "react-dom",
+      "react-router-dom",
       "@radix-ui/react-tooltip",
+      "@radix-ui/react-dialog",
+      "@radix-ui/react-dropdown-menu",
+      "@radix-ui/react-popover",
+      "@radix-ui/react-select",
+      "@tanstack/react-query",
+      "date-fns",
+      "lucide-react",
+      "framer-motion",
+      "sonner",
+      "clsx",
+      "tailwind-merge",
     ],
+  },
+  build: {
+    target: "esnext",
+    minify: "esbuild",
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "react-vendor": ["react", "react-dom", "react-router-dom"],
+          "ui-vendor": [
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-dropdown-menu",
+            "@radix-ui/react-tooltip",
+            "@radix-ui/react-popover",
+            "@radix-ui/react-select",
+          ],
+          "query": ["@tanstack/react-query"],
+          "charts": ["recharts"],
+          "motion": ["framer-motion"],
+          "dates": ["date-fns"],
+        },
+      },
+    },
   },
 }));

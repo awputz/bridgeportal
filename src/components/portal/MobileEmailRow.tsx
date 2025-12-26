@@ -1,3 +1,4 @@
+import { memo, useCallback } from "react";
 import { format, parseISO, isToday, isYesterday, isThisWeek, isThisYear } from "date-fns";
 import { Star, Paperclip } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -23,14 +24,24 @@ function formatEmailDate(dateStr: string): string {
   }
 }
 
-export function MobileEmailRow({ message, isSelected, onSelect, onStar }: MobileEmailRowProps) {
+export const MobileEmailRow = memo(function MobileEmailRow({ 
+  message, 
+  isSelected, 
+  onSelect, 
+  onStar 
+}: MobileEmailRowProps) {
   const senderName = message.from?.name || message.from?.email?.split('@')[0] || "Unknown";
+  
+  const handleStarClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    onStar();
+  }, [onStar]);
   
   return (
     <button
       onClick={onSelect}
       className={cn(
-        "w-full text-left px-4 py-3 flex items-start gap-3 transition-all active:bg-muted/70",
+        "w-full text-left px-4 py-3 flex items-start gap-3 transition-colors active:bg-muted/70",
         isSelected ? "bg-gmail-red/10" : message.isUnread ? "bg-card" : "bg-transparent",
         "border-b border-border/20"
       )}
@@ -87,10 +98,7 @@ export function MobileEmailRow({ message, isSelected, onSelect, onStar }: Mobile
       {/* Star button */}
       <button
         className="shrink-0 p-1 -mr-1 touch-manipulation"
-        onClick={(e) => {
-          e.stopPropagation();
-          onStar();
-        }}
+        onClick={handleStarClick}
       >
         <Star className={cn(
           "h-5 w-5",
@@ -99,4 +107,4 @@ export function MobileEmailRow({ message, isSelected, onSelect, onStar }: Mobile
       </button>
     </button>
   );
-}
+});
