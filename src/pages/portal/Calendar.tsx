@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Calendar as CalendarIcon,
   ChevronLeft,
@@ -55,19 +55,29 @@ import { hardLogout } from "@/lib/auth";
 import { CalendarEventDialog } from "@/components/portal/CalendarEventDialog";
 import { CalendarWeekView } from "@/components/portal/CalendarWeekView";
 import { CalendarDayView } from "@/components/portal/CalendarDayView";
+import { Calendar3DayView } from "@/components/portal/Calendar3DayView";
 import { CalendarSidebar } from "@/components/portal/CalendarSidebar";
 import { CalendarEvent } from "@/hooks/useCalendarEvents";
 import { toast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 
-type ViewMode = "day" | "week" | "month" | "agenda";
+type ViewMode = "day" | "3day" | "week" | "month" | "agenda";
 
 export default function Calendar() {
+  const isMobile = useIsMobile();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  const [viewMode, setViewMode] = useState<ViewMode>("week");
+  const [viewMode, setViewMode] = useState<ViewMode>(isMobile ? "3day" : "week");
   const [eventDialogOpen, setEventDialogOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [defaultEventTime, setDefaultEventTime] = useState<string | undefined>();
+  
+  // Update view mode when mobile state changes
+  React.useEffect(() => {
+    if (isMobile && viewMode === "week") {
+      setViewMode("3day");
+    }
+  }, [isMobile]);
 
   // Calculate date range for fetching events
   const dateRange = useMemo(() => {
@@ -137,12 +147,14 @@ export default function Calendar() {
 
   const navigatePrevious = () => {
     if (viewMode === "day") setCurrentDate(subDays(currentDate, 1));
+    else if (viewMode === "3day") setCurrentDate(subDays(currentDate, 3));
     else if (viewMode === "week") setCurrentDate(subWeeks(currentDate, 1));
     else setCurrentDate(subMonths(currentDate, 1));
   };
 
   const navigateNext = () => {
     if (viewMode === "day") setCurrentDate(addDays(currentDate, 1));
+    else if (viewMode === "3day") setCurrentDate(addDays(currentDate, 3));
     else if (viewMode === "week") setCurrentDate(addWeeks(currentDate, 1));
     else setCurrentDate(addMonths(currentDate, 1));
   };
@@ -175,6 +187,13 @@ export default function Calendar() {
 
   const getHeaderTitle = () => {
     if (viewMode === "day") return format(currentDate, "EEEE, MMMM d, yyyy");
+    if (viewMode === "3day") {
+      const endDate = addDays(currentDate, 2);
+      if (format(currentDate, "MMM") === format(endDate, "MMM")) {
+        return `${format(currentDate, "MMM d")} – ${format(endDate, "d")}`;
+      }
+      return `${format(currentDate, "MMM d")} – ${format(endDate, "MMM d")}`;
+    }
     if (viewMode === "week") {
       const weekStart = startOfWeek(currentDate);
       const weekEnd = endOfWeek(currentDate);
@@ -242,12 +261,15 @@ export default function Calendar() {
           <h1 className="text-base md:text-lg font-medium text-foreground truncate">{getHeaderTitle()}</h1>
         </div>
 
-        {/* Center: View Tabs */}
+        {/* Center: View Tabs - show 3day on mobile */}
         <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)} className="hidden sm:block">
           <TabsList className="bg-muted/30 h-9">
             <TabsTrigger value="day" className="h-7 px-2.5 text-xs data-[state=active]:bg-gcal-blue data-[state=active]:text-white">
               <CalendarClock className="h-3.5 w-3.5 sm:mr-1.5" />
               <span className="hidden md:inline">Day</span>
+            </TabsTrigger>
+            <TabsTrigger value="3day" className="h-7 px-2.5 text-xs data-[state=active]:bg-gcal-blue data-[state=active]:text-white">
+              <span>3</span>
             </TabsTrigger>
             <TabsTrigger value="week" className="h-7 px-2.5 text-xs data-[state=active]:bg-gcal-blue data-[state=active]:text-white">
               <CalendarDays className="h-3.5 w-3.5 sm:mr-1.5" />
@@ -295,8 +317,8 @@ export default function Calendar() {
               {/* Mobile view selector */}
               <div className="sm:hidden px-2 py-1.5">
                 <p className="text-xs font-medium text-muted-foreground mb-2">View</p>
-                <div className="grid grid-cols-4 gap-1">
-                  {(["day", "week", "month", "agenda"] as ViewMode[]).map((v) => (
+                <div className="grid grid-cols-5 gap-1">
+                  {(["day", "3day", "week", "month", "agenda"] as ViewMode[]).map((v) => (
                     <button
                       key={v}
                       onClick={() => setViewMode(v)}
@@ -305,7 +327,7 @@ export default function Calendar() {
                         viewMode === v ? "bg-gcal-blue text-white" : "bg-muted/50"
                       )}
                     >
-                      {v}
+                      {v === "3day" ? "3D" : v.slice(0, 3)}
                     </button>
                   ))}
                 </div>
@@ -362,6 +384,17 @@ export default function Calendar() {
               isLoading={isLoadingEvents}
               onEventClick={handleEventClick}
               onTimeSlotClick={handleTimeSlotClick}
+            />
+          )}
+          
+          {viewMode === "3day" && (
+            <Calendar3DayView
+              currentDate={currentDate}
+              events={events}
+              isLoading={isLoadingEvents}
+              onEventClick={handleEventClick}
+              onTimeSlotClick={handleTimeSlotClick}
+              onNavigate={setCurrentDate}
             />
           )}
           
