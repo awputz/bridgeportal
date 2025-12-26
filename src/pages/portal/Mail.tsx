@@ -1,7 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
-import { Mail as MailIcon, Inbox, Send, FileText, Star, Trash2, Plus, RefreshCw, Settings, AlertCircle, Loader2, Archive, ChevronDown, Search as SearchIcon, ExternalLink } from "lucide-react";
+import { Mail as MailIcon, Inbox, Send, FileText, Star, Trash2, Plus, RefreshCw, Settings, AlertCircle, Loader2, ChevronDown, Search as SearchIcon, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import {
@@ -102,17 +101,10 @@ export default function Mail() {
 
   if (isLoadingConnection) {
     return (
-      <div className="min-h-screen pb-24 md:pb-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-          <div className="space-y-6">
-            <Skeleton className="h-12 w-64" />
-            <div className="glass-card p-8">
-              <div className="flex items-center justify-center gap-3">
-                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                <span className="text-muted-foreground">Checking connection...</span>
-              </div>
-            </div>
-          </div>
+      <div className="h-[calc(100vh-4rem)] flex items-center justify-center">
+        <div className="flex items-center gap-3">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          <span className="text-muted-foreground">Checking connection...</span>
         </div>
       </div>
     );
@@ -120,259 +112,232 @@ export default function Mail() {
 
   if (!connection?.isConnected) {
     return (
-      <div className="min-h-screen pb-24 md:pb-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-          {/* Header */}
-          <div className="mb-8">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-lg bg-gmail-red flex items-center justify-center">
-                <MailIcon className="h-5 w-5 text-white" />
-              </div>
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground">
-                Gmail
-              </h1>
-            </div>
-            <p className="text-muted-foreground font-light">Connect your Gmail to send and receive emails</p>
+      <div className="h-[calc(100vh-4rem)] flex items-center justify-center p-4">
+        <div className="glass-card p-8 md:p-12 max-w-xl text-center">
+          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-gmail-red/20 to-gmail-orange/20 flex items-center justify-center mx-auto mb-6">
+            <MailIcon className="h-10 w-10 text-gmail-red" />
           </div>
+          <h2 className="text-2xl font-light text-foreground mb-3">Connect Your Gmail</h2>
+          <p className="text-muted-foreground font-light mb-8 max-w-sm mx-auto">
+            Access your emails directly from the portal. Send, receive, and link emails to deals and contacts.
+          </p>
 
-          {/* Connect Card */}
-          <div className="glass-card p-8 md:p-12 max-w-xl mx-auto text-center">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-gmail-red/20 to-gmail-orange/20 flex items-center justify-center mx-auto mb-6">
-              <MailIcon className="h-10 w-10 text-gmail-red" />
+          {connectionError && (
+            <div className="flex items-center gap-2 justify-center text-amber-400 mb-6 text-sm">
+              <AlertCircle className="h-4 w-4" />
+              <span>Connection check failed. Try connecting anyway.</span>
             </div>
-            <h2 className="text-2xl font-light text-foreground mb-3">Connect Your Gmail</h2>
-            <p className="text-muted-foreground font-light mb-8 max-w-sm mx-auto">
-              Access your emails directly from the portal. Send, receive, and link emails to deals and contacts.
-            </p>
+          )}
 
-            {connectionError && (
-              <div className="flex items-center gap-2 justify-center text-amber-400 mb-6 text-sm">
-                <AlertCircle className="h-4 w-4" />
-                <span>Connection check failed. Try connecting anyway.</span>
-              </div>
+          <Button 
+            size="lg" 
+            onClick={() => connectGmail.mutate()} 
+            disabled={connectGmail.isPending} 
+            className="gap-2 bg-gmail-red hover:bg-gmail-red/90"
+          >
+            {connectGmail.isPending ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Connecting...
+              </>
+            ) : (
+              <>
+                <MailIcon className="h-4 w-4" />
+                Connect Gmail
+              </>
             )}
+          </Button>
 
-            <Button 
-              size="lg" 
-              onClick={() => connectGmail.mutate()} 
-              disabled={connectGmail.isPending} 
-              className="gap-2 bg-gmail-red hover:bg-gmail-red/90"
-            >
-              {connectGmail.isPending ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Connecting...
-                </>
-              ) : (
-                <>
-                  <MailIcon className="h-4 w-4" />
-                  Connect Gmail
-                </>
-              )}
-            </Button>
-
-            <p className="text-xs text-muted-foreground mt-6">We'll only request read and send permissions</p>
-          </div>
+          <p className="text-xs text-muted-foreground mt-6">We'll only request read and send permissions</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pb-24 md:pb-16 bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
-        {/* Gmail-style Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-gmail-red flex items-center justify-center">
-              <MailIcon className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-light text-foreground">Gmail</h1>
-              {connection.email && <p className="text-sm text-muted-foreground">{connection.email}</p>}
-            </div>
+    <div className="h-[calc(100vh-4rem)] flex flex-col overflow-hidden bg-background">
+      {/* Compact Header */}
+      <div className="flex items-center justify-between gap-4 px-4 py-2 border-b border-border/30 bg-card shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-gmail-red flex items-center justify-center">
+            <MailIcon className="h-4 w-4 text-white" />
           </div>
-          <div className="flex items-center gap-2">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={handleRefresh} 
-              className="gap-2"
-            >
-              <RefreshCw className="h-4 w-4" />
-              <span className="hidden sm:inline">Refresh</span>
-            </Button>
-            <Button 
-              size="sm" 
-              onClick={() => {
-                setReplyToData(undefined);
-                setIsComposeOpen(true);
-              }} 
-              className="gap-2 bg-gmail-red hover:bg-gmail-red/90 text-white"
-            >
-              <Plus className="h-4 w-4" />
-              <span>Compose</span>
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => window.open('https://mail.google.com', '_blank')}
-              className="gap-2 border-gmail-red/30 text-gmail-red hover:bg-gmail-red/10"
-            >
-              <ExternalLink className="h-4 w-4" />
-              <span className="hidden sm:inline">Open Gmail</span>
-            </Button>
-            <DropdownMenu>
+          <div>
+            <h1 className="text-lg font-medium text-foreground">Gmail</h1>
+          </div>
+        </div>
+        
+        {/* Search Bar - Center */}
+        <div className="flex-1 max-w-xl">
+          <div className="relative">
+            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search mail..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 pr-10 bg-muted/30 border-0 focus-visible:ring-1 focus-visible:ring-gmail-red/50 h-9"
+            />
+            <DropdownMenu open={showAdvancedSearch} onOpenChange={setShowAdvancedSearch}>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <Settings className="h-4 w-4" />
-                </Button>
+                <button className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  <ChevronDown className="h-4 w-4" />
+                </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => window.open('https://mail.google.com', '_blank')}>
-                  Open Gmail
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem 
-                  onClick={() => disconnectGmail.mutate()}
-                  disabled={disconnectGmail.isPending}
-                  className="text-destructive"
-                >
-                  Disconnect Gmail
-                </DropdownMenuItem>
+              <DropdownMenuContent align="end" className="w-48">
+                <p className="px-2 py-1.5 text-xs font-medium text-muted-foreground">Quick filters</p>
+                {SEARCH_FILTERS.map((filter) => (
+                  <DropdownMenuItem 
+                    key={filter.value} 
+                    onClick={() => addSearchFilter(filter.value)}
+                  >
+                    {filter.label}
+                  </DropdownMenuItem>
+                ))}
+                {searchQuery && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => setSearchQuery("")}>
+                      Clear search
+                    </DropdownMenuItem>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </div>
 
-        {dataError && (
-          <div className="mb-6 rounded-xl border border-border/50 bg-muted/20 p-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <div className="flex items-start gap-2">
-                <AlertCircle className="h-4 w-4 mt-0.5 text-muted-foreground" />
-                <div>
-                  <p className="text-sm font-medium">Couldn't load Gmail data</p>
-                  <p className="text-sm text-muted-foreground break-words">{dataError.message}</p>
-                </div>
-              </div>
-              <Button variant="outline" size="sm" onClick={hardLogout} className="shrink-0">
-                Sign in again
+        {/* Actions */}
+        <div className="flex items-center gap-1">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={handleRefresh} 
+            className="h-8 w-8"
+          >
+            <RefreshCw className="h-4 w-4" />
+          </Button>
+          <Button 
+            size="sm" 
+            onClick={() => {
+              setReplyToData(undefined);
+              setIsComposeOpen(true);
+            }} 
+            className="gap-1.5 bg-gmail-red hover:bg-gmail-red/90 text-white h-8"
+          >
+            <Plus className="h-4 w-4" />
+            Compose
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => window.open('https://mail.google.com', '_blank')}
+            className="h-8 w-8"
+          >
+            <ExternalLink className="h-4 w-4" />
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Settings className="h-4 w-4" />
               </Button>
-            </div>
-          </div>
-        )}
-
-        {/* Gmail-style Main Content */}
-        <div className="rounded-2xl border border-border/50 bg-card overflow-hidden shadow-sm">
-          <div className="flex flex-col md:flex-row h-[calc(100vh-14rem)] md:h-[700px]">
-            {/* Gmail-style Sidebar - Labels */}
-            <div className="w-full md:w-56 border-b md:border-b-0 md:border-r border-border/30 py-2 overflow-x-auto md:overflow-y-auto bg-muted/5">
-              <div className="flex md:flex-col gap-1 px-2">
-                {Object.entries(LABEL_CONFIG).map(([id, config]) => {
-                  const Icon = config.icon;
-                  const unreadCount = getLabelUnreadCount(id);
-                  const isActive = activeLabel === id;
-                  return (
-                    <button
-                      key={id}
-                      onClick={() => {
-                        setActiveLabel(id);
-                        setSelectedMessageId(null);
-                      }}
-                      className={cn(
-                        "flex items-center justify-between px-4 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap",
-                        isActive
-                          ? "bg-gmail-red/10 text-gmail-red"
-                          : "text-foreground/70 hover:bg-muted/50 hover:text-foreground"
-                      )}
-                    >
-                      <span className="flex items-center gap-3">
-                        <Icon className={cn("h-4 w-4", isActive && id === "STARRED" && "text-gmail-yellow fill-gmail-yellow")} />
-                        <span className="hidden md:inline">{config.label}</span>
-                      </span>
-                      {unreadCount > 0 && id !== "TRASH" && (
-                        <span className={cn(
-                          "text-xs font-semibold hidden md:inline",
-                          isActive ? "text-gmail-red" : "text-muted-foreground"
-                        )}>
-                          {unreadCount}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Content Area */}
-            <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-              {/* Email List */}
-              <div
-                className={cn(
-                  "flex-col border-b md:border-b-0 md:border-r border-border/30 w-full md:w-[400px] bg-background",
-                  selectedMessageId ? "hidden md:flex" : "flex"
-                )}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => window.open('https://mail.google.com', '_blank')}>
+                Open Gmail
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem 
+                onClick={() => disconnectGmail.mutate()}
+                disabled={disconnectGmail.isPending}
+                className="text-destructive"
               >
-                {/* Search with Advanced Filters */}
-                <div className="p-3 border-b border-border/30">
-                  <div className="relative">
-                    <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Search mail..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10 pr-10 bg-muted/30 border-0 focus-visible:ring-1 focus-visible:ring-gmail-red/50"
-                    />
-                    <DropdownMenu open={showAdvancedSearch} onOpenChange={setShowAdvancedSearch}>
-                      <DropdownMenuTrigger asChild>
-                        <button className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
-                          <ChevronDown className="h-4 w-4" />
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-48">
-                        <p className="px-2 py-1.5 text-xs font-medium text-muted-foreground">Quick filters</p>
-                        {SEARCH_FILTERS.map((filter) => (
-                          <DropdownMenuItem 
-                            key={filter.value} 
-                            onClick={() => addSearchFilter(filter.value)}
-                          >
-                            {filter.label}
-                          </DropdownMenuItem>
-                        ))}
-                        {searchQuery && (
-                          <>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => setSearchQuery("")}>
-                              Clear search
-                            </DropdownMenuItem>
-                          </>
-                        )}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                </div>
-                <MailInbox
-                  messages={messagesData?.messages || []}
-                  isLoading={isLoadingMessages}
-                  selectedId={selectedMessageId}
-                  onSelect={setSelectedMessageId}
-                />
-              </div>
+                Disconnect Gmail
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
 
-              {/* Email View */}
-              <div className={cn("flex-1 flex-col bg-background", selectedMessageId ? "flex" : "hidden md:flex")}>
-                <MailMessage
-                  messageId={selectedMessageId}
-                  onBack={() => setSelectedMessageId(null)}
-                  onReply={handleReply}
-                />
+      {dataError && (
+        <div className="mx-4 mt-2 rounded-lg border border-border/50 bg-muted/20 p-3 shrink-0">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-start gap-2">
+              <AlertCircle className="h-4 w-4 mt-0.5 text-muted-foreground" />
+              <div>
+                <p className="text-sm font-medium">Couldn't load Gmail data</p>
+                <p className="text-xs text-muted-foreground">{dataError.message}</p>
               </div>
             </div>
+            <Button variant="outline" size="sm" onClick={hardLogout}>
+              Sign in again
+            </Button>
           </div>
+        </div>
+      )}
+
+      {/* Main Content - Full Height */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Sidebar - Labels */}
+        <div className="w-16 md:w-52 border-r border-border/30 py-2 overflow-y-auto bg-muted/5 shrink-0">
+          <div className="flex flex-col gap-0.5 px-2">
+            {Object.entries(LABEL_CONFIG).map(([id, config]) => {
+              const Icon = config.icon;
+              const unreadCount = getLabelUnreadCount(id);
+              const isActive = activeLabel === id;
+              return (
+                <button
+                  key={id}
+                  onClick={() => {
+                    setActiveLabel(id);
+                    setSelectedMessageId(null);
+                  }}
+                  className={cn(
+                    "flex items-center justify-between px-3 py-2 rounded-full text-sm transition-all",
+                    isActive
+                      ? "bg-gmail-red/10 text-gmail-red font-medium"
+                      : "text-foreground/70 hover:bg-muted/50 hover:text-foreground"
+                  )}
+                >
+                  <span className="flex items-center gap-3">
+                    <Icon className={cn("h-4 w-4", isActive && id === "STARRED" && "text-gmail-yellow fill-gmail-yellow")} />
+                    <span className="hidden md:inline">{config.label}</span>
+                  </span>
+                  {unreadCount > 0 && id !== "TRASH" && (
+                    <span className={cn(
+                      "text-xs font-semibold hidden md:inline",
+                      isActive ? "text-gmail-red" : "text-muted-foreground"
+                    )}>
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Email List */}
+        <div
+          className={cn(
+            "flex-col border-r border-border/30 w-full md:w-[450px] lg:w-[500px] bg-background shrink-0",
+            selectedMessageId ? "hidden md:flex" : "flex"
+          )}
+        >
+          <MailInbox
+            messages={messagesData?.messages || []}
+            isLoading={isLoadingMessages}
+            selectedId={selectedMessageId}
+            onSelect={setSelectedMessageId}
+          />
+        </div>
+
+        {/* Email View */}
+        <div className={cn("flex-1 flex-col bg-background min-w-0", selectedMessageId ? "flex" : "hidden md:flex")}>
+          <MailMessage
+            messageId={selectedMessageId}
+            onBack={() => setSelectedMessageId(null)}
+            onReply={handleReply}
+          />
         </div>
       </div>
 
