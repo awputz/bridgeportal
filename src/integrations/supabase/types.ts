@@ -17,32 +17,47 @@ export type Database = {
       activity_logs: {
         Row: {
           action: string
+          correlation_id: string | null
           created_at: string | null
           details: Json | null
+          duration_ms: number | null
           entity_id: string | null
           entity_type: string | null
+          function_name: string | null
           id: string
           ip_address: string | null
+          log_level: string | null
+          stack_trace: string | null
           user_agent: string | null
         }
         Insert: {
           action: string
+          correlation_id?: string | null
           created_at?: string | null
           details?: Json | null
+          duration_ms?: number | null
           entity_id?: string | null
           entity_type?: string | null
+          function_name?: string | null
           id?: string
           ip_address?: string | null
+          log_level?: string | null
+          stack_trace?: string | null
           user_agent?: string | null
         }
         Update: {
           action?: string
+          correlation_id?: string | null
           created_at?: string | null
           details?: Json | null
+          duration_ms?: number | null
           entity_id?: string | null
           entity_type?: string | null
+          function_name?: string | null
           id?: string
           ip_address?: string | null
+          log_level?: string | null
+          stack_trace?: string | null
           user_agent?: string | null
         }
         Relationships: []
@@ -668,6 +683,36 @@ export type Database = {
           created_at?: string | null
           id?: string
           key?: string
+          updated_at?: string | null
+          value?: Json
+        }
+        Relationships: []
+      }
+      cache_entries: {
+        Row: {
+          created_at: string | null
+          expires_at: string
+          hit_count: number | null
+          key: string
+          metadata: Json | null
+          updated_at: string | null
+          value: Json
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at: string
+          hit_count?: number | null
+          key: string
+          metadata?: Json | null
+          updated_at?: string | null
+          value: Json
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string
+          hit_count?: number | null
+          key?: string
+          metadata?: Json | null
           updated_at?: string | null
           value?: Json
         }
@@ -1890,6 +1935,33 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          created_at: string | null
+          endpoint: string
+          id: string
+          identifier: string
+          request_count: number | null
+          window_start: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          endpoint: string
+          id?: string
+          identifier: string
+          request_count?: number | null
+          window_start?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          endpoint?: string
+          id?: string
+          identifier?: string
+          request_count?: number | null
+          window_start?: string | null
+        }
+        Relationships: []
+      }
       team_members: {
         Row: {
           bio: string | null
@@ -2297,6 +2369,8 @@ export type Database = {
       }
     }
     Functions: {
+      cleanup_expired_cache: { Args: never; Returns: undefined }
+      cleanup_old_rate_limits: { Args: never; Returns: undefined }
       get_agent_transactions: {
         Args: { p_agent_email: string; p_agent_full_name: string }
         Returns: {

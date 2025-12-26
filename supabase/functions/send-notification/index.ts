@@ -1,23 +1,23 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@2.0.0";
+import { createLogger } from "../_shared/logger.ts";
+import { getCorrelationId, createResponseHeaders } from "../_shared/context.ts";
+import { checkRateLimit, getRateLimitConfig, getRateLimitIdentifier, rateLimitExceededResponse, rateLimitHeaders } from "../_shared/rateLimiter.ts";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-correlation-id",
 };
 
 interface NotificationRequest {
   type: string;
   data: {
-    // Common fields
     id?: string;
     name?: string;
     email?: string;
     phone?: string;
-    
-    // Inquiry fields
     inquiry_type?: string;
     user_type?: string;
     property_address?: string;
@@ -30,8 +30,6 @@ interface NotificationRequest {
     unit_count?: string;
     notes?: string;
     created_at?: string;
-    
-    // Commission request fields
     agent_name?: string;
     agent_email?: string;
     status?: string;
@@ -39,22 +37,15 @@ interface NotificationRequest {
     closing_date?: string;
     deal_type?: string;
     admin_notes?: string;
-    
-    // Agent request fields
     request_type?: string;
     client_name?: string;
-    
-    // Announcement fields
     title?: string;
     content?: string;
     announcement_type?: string;
-    
-    // Recipients for bulk email
     recipients?: string[];
   };
 }
 
-// Email template styles
 const emailStyles = `
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333; background: #f9f9f9; }
   .container { background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -81,7 +72,6 @@ const formatDate = (dateStr: string): string => {
   return new Date(dateStr).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 };
 
-// Commission Status Change Email
 const formatCommissionStatusEmail = (data: NotificationRequest['data']): { html: string; subject: string } => {
   const status = data.status || 'updated';
   const statusBadge = {
@@ -101,282 +91,133 @@ const formatCommissionStatusEmail = (data: NotificationRequest['data']): { html:
   }[status] || 'Your commission request status has been updated.';
 
   const html = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>${emailStyles}</style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <div class="logo">Bridge Advisory Group</div>
-          </div>
-          
-          <div style="text-align: center; margin-bottom: 30px;">
-            ${statusBadge}
-            <h1 style="margin: 20px 0 10px; font-size: 24px; font-weight: 500;">Commission Request ${status === 'paid' ? 'Paid!' : status.charAt(0).toUpperCase() + status.slice(1)}</h1>
-            <p style="color: #666; margin: 0;">${message}</p>
-          </div>
-          
-          <div class="section">
-            <h3>Request Details</h3>
-            <p><strong>Property:</strong> ${data.property_address || 'N/A'}</p>
-            <p><strong>Deal Type:</strong> ${data.deal_type || 'N/A'}</p>
-            <p><strong>Closing Date:</strong> ${data.closing_date ? formatDate(data.closing_date) : 'N/A'}</p>
-            <p style="margin-top: 15px;"><strong>Commission Amount:</strong></p>
-            <p class="highlight">${data.commission_amount ? formatCurrency(data.commission_amount) : 'N/A'}</p>
-          </div>
-          
-          ${data.admin_notes ? `
-          <div class="section" style="background: #fff3cd; border: 1px solid #ffc107;">
-            <h3>Admin Notes</h3>
-            <p style="white-space: pre-wrap;">${data.admin_notes}</p>
-          </div>
-          ` : ''}
-          
-          <div style="text-align: center;">
-            <a href="https://bridgenyre.com/portal/my-commission-requests" class="cta">View My Commission Requests</a>
-          </div>
-        </div>
-        <div class="footer">
-          <p>This is an automated message from Bridge Advisory Group.</p>
-          <p>If you have questions, please contact the office.</p>
-        </div>
-      </body>
-    </html>
+    <!DOCTYPE html><html><head><meta charset="utf-8"><style>${emailStyles}</style></head>
+    <body><div class="container">
+      <div class="header"><div class="logo">Bridge Advisory Group</div></div>
+      <div style="text-align: center; margin-bottom: 30px;">
+        ${statusBadge}
+        <h1 style="margin: 20px 0 10px; font-size: 24px;">${status === 'paid' ? 'Paid!' : status.charAt(0).toUpperCase() + status.slice(1)}</h1>
+        <p style="color: #666;">${message}</p>
+      </div>
+      <div class="section">
+        <h3>Request Details</h3>
+        <p><strong>Property:</strong> ${data.property_address || 'N/A'}</p>
+        <p><strong>Deal Type:</strong> ${data.deal_type || 'N/A'}</p>
+        <p><strong>Closing Date:</strong> ${data.closing_date ? formatDate(data.closing_date) : 'N/A'}</p>
+        <p class="highlight">${data.commission_amount ? formatCurrency(data.commission_amount) : 'N/A'}</p>
+      </div>
+      ${data.admin_notes ? `<div class="section" style="background: #fff3cd;"><h3>Admin Notes</h3><p>${data.admin_notes}</p></div>` : ''}
+      <div style="text-align: center;"><a href="https://bridgenyre.com/portal/my-commission-requests" class="cta">View Requests</a></div>
+    </div><div class="footer"><p>Bridge Advisory Group</p></div></body></html>
   `;
 
   const subject = {
     approved: `✅ Commission Approved - ${data.property_address}`,
     paid: `💰 Commission Paid - ${data.property_address}`,
-    rejected: `⚠️ Commission Request Needs Revision - ${data.property_address}`,
-    under_review: `📋 Commission Under Review - ${data.property_address}`,
-    pending: `📩 Commission Request Received - ${data.property_address}`,
+    rejected: `⚠️ Commission Needs Revision - ${data.property_address}`,
+    under_review: `📋 Under Review - ${data.property_address}`,
+    pending: `📩 Request Received - ${data.property_address}`,
   }[status] || `Commission Update - ${data.property_address}`;
 
   return { html, subject };
 };
 
-// Agent Request Completion Email
 const formatRequestCompletedEmail = (data: NotificationRequest['data']): { html: string; subject: string } => {
   const html = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>${emailStyles}</style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <div class="logo">Bridge Advisory Group</div>
-          </div>
-          
-          <div style="text-align: center; margin-bottom: 30px;">
-            <span class="badge badge-approved">COMPLETED</span>
-            <h1 style="margin: 20px 0 10px; font-size: 24px; font-weight: 500;">Your Request is Complete!</h1>
-            <p style="color: #666; margin: 0;">Your ${data.request_type} request has been completed.</p>
-          </div>
-          
-          <div class="section">
-            <h3>Request Details</h3>
-            <p><strong>Request Type:</strong> ${data.request_type || 'N/A'}</p>
-            ${data.property_address ? `<p><strong>Property:</strong> ${data.property_address}</p>` : ''}
-            ${data.client_name ? `<p><strong>Client:</strong> ${data.client_name}</p>` : ''}
-          </div>
-          
-          ${data.notes ? `
-          <div class="section">
-            <h3>Notes</h3>
-            <p style="white-space: pre-wrap;">${data.notes}</p>
-          </div>
-          ` : ''}
-          
-          <div style="text-align: center;">
-            <a href="https://bridgenyre.com/portal/requests" class="cta">View My Requests</a>
-          </div>
-        </div>
-        <div class="footer">
-          <p>This is an automated message from Bridge Advisory Group.</p>
-        </div>
-      </body>
-    </html>
+    <!DOCTYPE html><html><head><meta charset="utf-8"><style>${emailStyles}</style></head>
+    <body><div class="container">
+      <div class="header"><div class="logo">Bridge Advisory Group</div></div>
+      <div style="text-align: center; margin-bottom: 30px;">
+        <span class="badge badge-approved">COMPLETED</span>
+        <h1 style="margin: 20px 0 10px;">Your Request is Complete!</h1>
+      </div>
+      <div class="section">
+        <h3>Request Details</h3>
+        <p><strong>Type:</strong> ${data.request_type || 'N/A'}</p>
+        ${data.property_address ? `<p><strong>Property:</strong> ${data.property_address}</p>` : ''}
+        ${data.notes ? `<p><strong>Notes:</strong> ${data.notes}</p>` : ''}
+      </div>
+      <div style="text-align: center;"><a href="https://bridgenyre.com/portal/requests" class="cta">View Requests</a></div>
+    </div></body></html>
   `;
-
-  const subject = `✅ Request Completed: ${data.request_type}`;
-
-  return { html, subject };
+  return { html, subject: `✅ Request Completed: ${data.request_type}` };
 };
 
-// Company Announcement Email
 const formatAnnouncementEmail = (data: NotificationRequest['data']): { html: string; subject: string } => {
   const html = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>${emailStyles}</style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <div class="logo">Bridge Advisory Group</div>
-          </div>
-          
-          <div style="text-align: center; margin-bottom: 30px;">
-            <span class="badge" style="background: #e0e7ff; color: #3730a3;">${(data.announcement_type || 'General').toUpperCase()}</span>
-            <h1 style="margin: 20px 0 10px; font-size: 24px; font-weight: 500;">${data.title || 'Company Announcement'}</h1>
-          </div>
-          
-          <div class="section" style="background: white; border: 1px solid #e5e7eb;">
-            <div style="white-space: pre-wrap; line-height: 1.6;">${data.content || ''}</div>
-          </div>
-          
-          <div style="text-align: center;">
-            <a href="https://bridgenyre.com/portal/announcements" class="cta">View All Announcements</a>
-          </div>
-        </div>
-        <div class="footer">
-          <p>This is an automated message from Bridge Advisory Group.</p>
-        </div>
-      </body>
-    </html>
+    <!DOCTYPE html><html><head><meta charset="utf-8"><style>${emailStyles}</style></head>
+    <body><div class="container">
+      <div class="header"><div class="logo">Bridge Advisory Group</div></div>
+      <h1 style="text-align: center;">${data.title || 'Announcement'}</h1>
+      <div class="section" style="background: white; border: 1px solid #e5e7eb;">
+        <div style="white-space: pre-wrap;">${data.content || ''}</div>
+      </div>
+      <div style="text-align: center;"><a href="https://bridgenyre.com/portal/announcements" class="cta">View All</a></div>
+    </div></body></html>
   `;
-
-  const subject = `📢 ${data.title || 'Company Announcement'}`;
-
-  return { html, subject };
+  return { html, subject: `📢 ${data.title || 'Announcement'}` };
 };
 
-// Welcome Email for New Agents
 const formatWelcomeEmail = (data: NotificationRequest['data']): { html: string; subject: string } => {
   const html = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>${emailStyles}</style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <div class="logo">Bridge Advisory Group</div>
-          </div>
-          
-          <div style="text-align: center; margin-bottom: 30px;">
-            <h1 style="margin: 20px 0 10px; font-size: 28px; font-weight: 500;">Welcome to Bridge! 🎉</h1>
-            <p style="color: #666; margin: 0; font-size: 16px;">Hi ${data.name}, we're excited to have you on the team.</p>
-          </div>
-          
-          <div class="section">
-            <h3>Getting Started</h3>
-            <p>Your account is ready! Here's what you can do:</p>
-            <ul style="margin: 15px 0; padding-left: 20px;">
-              <li style="margin: 8px 0;">Complete your profile with photo and contact info</li>
-              <li style="margin: 8px 0;">Connect your Google Workspace for email, calendar & contacts</li>
-              <li style="margin: 8px 0;">Explore the CRM to manage your deals and contacts</li>
-              <li style="margin: 8px 0;">Check out the templates and calculators</li>
-            </ul>
-          </div>
-          
-          <div style="text-align: center;">
-            <a href="https://bridgenyre.com/portal" class="cta">Go to Agent Portal</a>
-          </div>
-        </div>
-        <div class="footer">
-          <p>Need help? Contact the office or check the Resources section in your portal.</p>
-        </div>
-      </body>
-    </html>
+    <!DOCTYPE html><html><head><meta charset="utf-8"><style>${emailStyles}</style></head>
+    <body><div class="container">
+      <div class="header"><div class="logo">Bridge Advisory Group</div></div>
+      <h1 style="text-align: center;">Welcome to Bridge! 🎉</h1>
+      <p style="text-align: center;">Hi ${data.name}, we're excited to have you on the team.</p>
+      <div class="section">
+        <h3>Getting Started</h3>
+        <ul><li>Complete your profile</li><li>Connect Google Workspace</li><li>Explore the CRM</li></ul>
+      </div>
+      <div style="text-align: center;"><a href="https://bridgenyre.com/portal" class="cta">Go to Portal</a></div>
+    </div></body></html>
   `;
-
-  const subject = `Welcome to Bridge Advisory Group, ${data.name}! 🎉`;
-
-  return { html, subject };
+  return { html, subject: `Welcome to Bridge, ${data.name}! 🎉` };
 };
 
-// Original Inquiry Email
 const formatInquiryEmail = (data: NotificationRequest['data']): { html: string; subject: string } => {
-  const sections: string[] = [];
-  
-  sections.push(`<h2 style="color: #1a1a1a; margin-bottom: 20px;">New Inquiry from ${data.name}</h2>`);
-  
-  sections.push(`
-    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-      <h3 style="margin: 0 0 10px 0; color: #333;">Contact Information</h3>
-      <p style="margin: 5px 0;"><strong>Name:</strong> ${data.name}</p>
-      <p style="margin: 5px 0;"><strong>Email:</strong> <a href="mailto:${data.email}">${data.email}</a></p>
-      ${data.phone ? `<p style="margin: 5px 0;"><strong>Phone:</strong> <a href="tel:${data.phone}">${data.phone}</a></p>` : ''}
-    </div>
-  `);
-  
-  const details: string[] = [];
-  if (data.inquiry_type) details.push(`<p style="margin: 5px 0;"><strong>Division:</strong> ${data.inquiry_type}</p>`);
-  if (data.user_type) details.push(`<p style="margin: 5px 0;"><strong>User Type:</strong> ${data.user_type}</p>`);
-  if (data.property_address) details.push(`<p style="margin: 5px 0;"><strong>Property Address:</strong> ${data.property_address}</p>`);
-  if (data.neighborhoods) details.push(`<p style="margin: 5px 0;"><strong>Neighborhoods:</strong> ${data.neighborhoods}</p>`);
-  if (data.budget) details.push(`<p style="margin: 5px 0;"><strong>Budget:</strong> ${data.budget}</p>`);
-  if (data.timeline) details.push(`<p style="margin: 5px 0;"><strong>Timeline:</strong> ${data.timeline}</p>`);
-  if (data.timing) details.push(`<p style="margin: 5px 0;"><strong>Timing:</strong> ${data.timing}</p>`);
-  if (data.assignment_type) details.push(`<p style="margin: 5px 0;"><strong>Assignment Type:</strong> ${data.assignment_type}</p>`);
-  if (data.unit_count) details.push(`<p style="margin: 5px 0;"><strong>Unit Count:</strong> ${data.unit_count}</p>`);
-  if (data.requirements) details.push(`<p style="margin: 5px 0;"><strong>Requirements:</strong> ${data.requirements}</p>`);
-  
-  if (details.length > 0) {
-    sections.push(`
-      <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-        <h3 style="margin: 0 0 10px 0; color: #333;">Inquiry Details</h3>
-        ${details.join('')}
-      </div>
-    `);
-  }
-  
-  if (data.notes) {
-    sections.push(`
-      <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-        <h3 style="margin: 0 0 10px 0; color: #333;">Message</h3>
-        <p style="margin: 0; white-space: pre-wrap;">${data.notes}</p>
-      </div>
-    `);
-  }
-  
   const html = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      </head>
-      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
-        ${sections.join('')}
-        <p style="color: #666; font-size: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
-          This inquiry was submitted via the Bridge Advisory Group website on ${new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })} EST.
-        </p>
-      </body>
-    </html>
+    <!DOCTYPE html><html><head><meta charset="utf-8"></head>
+    <body style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+      <h2>New Inquiry from ${data.name}</h2>
+      <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        ${data.phone ? `<p><strong>Phone:</strong> ${data.phone}</p>` : ''}
+        ${data.inquiry_type ? `<p><strong>Division:</strong> ${data.inquiry_type}</p>` : ''}
+        ${data.user_type ? `<p><strong>Type:</strong> ${data.user_type}</p>` : ''}
+        ${data.property_address ? `<p><strong>Property:</strong> ${data.property_address}</p>` : ''}
+        ${data.budget ? `<p><strong>Budget:</strong> ${data.budget}</p>` : ''}
+        ${data.notes ? `<p><strong>Message:</strong> ${data.notes}</p>` : ''}
+      </div>
+    </body></html>
   `;
-
-  const division = data.inquiry_type || 'General';
-  const subject = `New ${division} Inquiry from ${data.name}`;
-
-  return { html, subject };
+  return { html, subject: `New ${data.inquiry_type || 'General'} Inquiry from ${data.name}` };
 };
 
 serve(async (req) => {
+  const correlationId = getCorrelationId(req);
+  const logger = createLogger('send-notification', correlationId);
+
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
+  const endpoint = 'send-notification';
+  const identifier = getRateLimitIdentifier(req);
+
   try {
+    logger.requestStart(req.method, '/send-notification');
+
+    const rateLimitResult = await checkRateLimit(identifier, endpoint);
+    if (!rateLimitResult.allowed) {
+      logger.warn('Rate limit exceeded', { identifier, endpoint });
+      return rateLimitExceededResponse(rateLimitResult, getRateLimitConfig(endpoint), correlationId);
+    }
+
     const { type, data }: NotificationRequest = await req.json();
     
-    console.log(`Processing notification type: ${type}`);
-    console.log(`Data:`, JSON.stringify(data, null, 2));
+    logger.info(`Processing notification`, { type, recipientEmail: data.email });
 
     let html: string;
     let subject: string;
@@ -387,44 +228,39 @@ serve(async (req) => {
         ({ html, subject } = formatInquiryEmail(data));
         recipients = ['office@bridgenyre.com'];
         break;
-        
       case 'commission_status_change':
         ({ html, subject } = formatCommissionStatusEmail(data));
         recipients = data.agent_email ? [data.agent_email] : [];
         break;
-        
       case 'request_completed':
         ({ html, subject } = formatRequestCompletedEmail(data));
         recipients = data.email ? [data.email] : [];
         break;
-        
       case 'new_announcement':
         ({ html, subject } = formatAnnouncementEmail(data));
         recipients = data.recipients || [];
         break;
-        
       case 'welcome_agent':
         ({ html, subject } = formatWelcomeEmail(data));
         recipients = data.email ? [data.email] : [];
         break;
-        
       default:
-        console.log(`Unknown notification type: ${type}, skipping`);
+        logger.info(`Unknown notification type: ${type}`);
         return new Response(
-          JSON.stringify({ success: true, message: 'Notification type not handled' }),
-          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          JSON.stringify({ success: true, message: 'Type not handled' }),
+          { headers: createResponseHeaders(correlationId) }
         );
     }
 
     if (recipients.length === 0) {
-      console.log('No recipients specified, skipping email');
+      logger.info('No recipients specified');
       return new Response(
         JSON.stringify({ success: true, message: 'No recipients' }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { headers: createResponseHeaders(correlationId) }
       );
     }
 
-    console.log(`Sending email to ${recipients.join(', ')} with subject: ${subject}`);
+    logger.info(`Sending email`, { recipients, subject });
 
     const emailResponse = await resend.emails.send({
       from: "Bridge Advisory Group <noreply@bridgenyre.com>",
@@ -434,23 +270,22 @@ serve(async (req) => {
       reply_to: data.email || undefined,
     });
 
-    console.log("Email sent successfully:", emailResponse);
+    logger.requestEnd(req.method, '/send-notification', 200, { emailId: emailResponse.data?.id });
 
     return new Response(
-      JSON.stringify({ success: true, emailResponse }),
+      JSON.stringify({ success: true, emailResponse, correlationId }),
       { 
-        status: 200, 
-        headers: { ...corsHeaders, "Content-Type": "application/json" } 
+        headers: { 
+          ...createResponseHeaders(correlationId),
+          ...rateLimitHeaders(rateLimitResult, getRateLimitConfig(endpoint)),
+        } 
       }
     );
-  } catch (error: any) {
-    console.error("Error sending notification:", error);
+  } catch (error) {
+    logger.error("Send notification error", error instanceof Error ? error : new Error(String(error)));
     return new Response(
-      JSON.stringify({ error: error.message }),
-      { 
-        status: 500, 
-        headers: { ...corsHeaders, "Content-Type": "application/json" } 
-      }
+      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
+      { status: 500, headers: createResponseHeaders(correlationId) }
     );
   }
 });
