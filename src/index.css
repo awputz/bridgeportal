@@ -8,8 +8,11 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Navigation height - updated dynamically by JS */
-    --app-nav-h: 72px;
+    /* Portal layout spacing */
+    --portal-nav-height: 64px;
+    --portal-nav-height-md: 80px;
+    --portal-bottom-nav-height: 64px;
+    --portal-safe-bottom: env(safe-area-inset-bottom, 0px);
     
     /* BRIDGE Investment Sales - Dark Mode with Warm Off-White Tones */
     

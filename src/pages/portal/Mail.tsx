@@ -105,7 +105,7 @@ export default function Mail() {
 
   if (isLoadingConnection) {
     return (
-      <div className="h-[calc(100vh-4rem)] flex items-center justify-center">
+      <div className="flex-1 flex items-center justify-center">
         <div className="flex items-center gap-3">
           <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
           <span className="text-muted-foreground">Checking connection...</span>
@@ -116,7 +116,7 @@ export default function Mail() {
 
   if (!connection?.isConnected) {
     return (
-      <div className="h-[calc(100vh-4rem)] flex items-center justify-center p-4">
+      <div className="flex-1 flex items-center justify-center p-4">
         <div className="glass-card p-8 md:p-12 max-w-xl text-center">
           <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-gmail-red/20 to-gmail-orange/20 flex items-center justify-center mx-auto mb-6">
             <MailIcon className="h-10 w-10 text-gmail-red" />
@@ -162,7 +162,7 @@ export default function Mail() {
   const isViewingMessage = selectedMessageId !== null;
 
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col overflow-hidden bg-background">
+    <div className="flex-1 flex flex-col overflow-hidden bg-background min-h-0">
       {/* Compact Header */}
       <div className="flex items-center justify-between gap-3 px-4 py-3 border-b border-border/30 bg-card shrink-0">
         <div className="flex items-center gap-3">

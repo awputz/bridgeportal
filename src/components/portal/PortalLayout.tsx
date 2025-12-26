@@ -48,12 +48,13 @@ export const PortalLayout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-[100dvh] h-[100dvh] bg-background flex flex-col overflow-hidden">
       {/* Global Sync Status Indicator */}
       <SyncStatusIndicator isSyncing={isSyncing} syncedCount={googleContactsCount} />
       
       <PortalNavigation />
-      <main className="pt-16 md:pt-20">
+      {/* Main content area - fills remaining space after nav, with bottom padding for mobile nav */}
+      <main className="flex-1 flex flex-col pt-16 md:pt-20 pb-16 md:pb-0 overflow-hidden min-h-0">
         <ErrorBoundary>
           <Outlet />
         </ErrorBoundary>
