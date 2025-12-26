@@ -28,6 +28,9 @@ const InvestorTransactions = lazy(() => import("./pages/investor/Transactions"))
 const InvestorTeam = lazy(() => import("./pages/investor/Team"));
 const InvestorCommissions = lazy(() => import("./pages/investor/Commissions"));
 const InvestorReports = lazy(() => import("./pages/investor/Reports"));
+const InvestorAgentRequests = lazy(() => import("./pages/investor/AgentRequests"));
+const InvestorCommissionRequests = lazy(() => import("./pages/investor/CommissionRequests"));
+const InvestorListings = lazy(() => import("./pages/investor/Listings"));
 
 // Auth callback - lazy loaded
 const AuthCallback = lazy(() => import("./pages/AuthCallback"));
@@ -168,7 +171,10 @@ const App = () => {
                     <Route path="dashboard" element={<Suspense fallback={<PageLoader />}><InvestorDashboard /></Suspense>} />
                     <Route path="performance" element={<Suspense fallback={<PageLoader />}><InvestorPerformance /></Suspense>} />
                     <Route path="transactions" element={<Suspense fallback={<PageLoader />}><InvestorTransactions /></Suspense>} />
+                    <Route path="listings" element={<Suspense fallback={<PageLoader />}><InvestorListings /></Suspense>} />
                     <Route path="team" element={<Suspense fallback={<PageLoader />}><InvestorTeam /></Suspense>} />
+                    <Route path="agent-requests" element={<Suspense fallback={<PageLoader />}><InvestorAgentRequests /></Suspense>} />
+                    <Route path="commission-requests" element={<Suspense fallback={<PageLoader />}><InvestorCommissionRequests /></Suspense>} />
                     <Route path="commissions" element={<Suspense fallback={<PageLoader />}><InvestorCommissions /></Suspense>} />
                     <Route path="reports" element={<Suspense fallback={<PageLoader />}><InvestorReports /></Suspense>} />
                   </Route>

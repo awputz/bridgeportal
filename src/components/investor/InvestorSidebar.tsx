@@ -8,13 +8,18 @@ import {
   DollarSign,
   FileText,
   Building2,
+  FileQuestion,
+  Wallet,
 } from "lucide-react";
 
 const navItems = [
   { name: "Dashboard", path: "/investor/dashboard", icon: LayoutDashboard },
   { name: "Performance", path: "/investor/performance", icon: BarChart3 },
   { name: "Transactions", path: "/investor/transactions", icon: Receipt },
+  { name: "Listings", path: "/investor/listings", icon: Building2 },
   { name: "Team", path: "/investor/team", icon: Users },
+  { name: "Agent Requests", path: "/investor/agent-requests", icon: FileQuestion },
+  { name: "Commission Requests", path: "/investor/commission-requests", icon: Wallet },
   { name: "Commissions", path: "/investor/commissions", icon: DollarSign },
   { name: "Reports", path: "/investor/reports", icon: FileText },
 ];
