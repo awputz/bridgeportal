@@ -19,9 +19,9 @@ export interface TeamMember {
   title: string | null;
   email: string | null;
   phone: string | null;
-  photo_url: string | null;
-  divisions: string[] | null;
-  is_active: boolean;
+  image_url: string | null;
+  category: string | null;
+  is_active: boolean | null;
 }
 
 export interface InvestorMetrics {
@@ -158,27 +158,19 @@ export const useInvestorTeam = (divisionFilter?: string) => {
   return useQuery({
     queryKey: ["investor-team", divisionFilter],
     queryFn: async () => {
-      let query = supabase
+      const { data, error } = await supabase
         .from("team_members")
-        .select("id, name, title, email, phone, image_url, divisions, is_active")
+        .select("id, name, title, email, phone, image_url, category, is_active")
         .eq("is_active", true)
         .order("name");
 
-      const { data, error } = await query;
-
       if (error) throw error;
 
-      // Map image_url to photo_url for consistency
-      let filtered = (data || []).map(m => ({
-        ...m,
-        photo_url: m.image_url,
-      })) as TeamMember[];
+      let filtered = (data || []) as TeamMember[];
       
       if (divisionFilter && divisionFilter !== "all") {
         filtered = filtered.filter(member =>
-          member.divisions?.some(d => 
-            d.toLowerCase().includes(divisionFilter.toLowerCase())
-          )
+          member.category?.toLowerCase().includes(divisionFilter.toLowerCase())
         );
       }
 
