@@ -336,8 +336,8 @@ const AI = () => {
   const firstName = agentContext?.name?.split(" ")[0] || "there";
 
   return (
-    <div className="min-h-screen pb-24 md:pb-16 flex flex-col">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 flex-1 flex flex-col w-full">
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 flex flex-col w-full min-h-0">
         {/* Header */}
         <div className="mb-6 flex items-start justify-between">
           <div>

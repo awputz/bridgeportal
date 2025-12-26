@@ -86,8 +86,8 @@ const CRM = () => {
   const currentDivisionTab = divisionTabs.find(d => d.key === division) || divisionTabs[0];
 
   return (
-    <div className="min-h-screen pb-24 md:pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <div className="flex-1 overflow-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
           <div>
