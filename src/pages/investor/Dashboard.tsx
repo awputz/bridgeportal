@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Tooltip as TooltipUI, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Building2, DollarSign, Users, TrendingUp, BarChart3, HelpCircle } from "lucide-react";
+import { Building2, DollarSign, Users, TrendingUp, BarChart3, HelpCircle, FileQuestion, Wallet, ArrowUp, ArrowDown, Clock } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { useInvestorMetrics } from "@/hooks/useInvestorData";
+import { usePendingCounts } from "@/hooks/usePendingCounts";
+import { DataFreshnessIndicator } from "@/components/investor/DataFreshnessIndicator";
 
 interface Metrics {
   totalVolume: number;
@@ -23,6 +28,10 @@ const InvestorDashboard = () => {
   const [userAvatar, setUserAvatar] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<Metrics | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Fetch investor metrics with YoY data and pending counts
+  const { data: investorMetrics, dataUpdatedAt, isRefetching } = useInvestorMetrics();
+  const { data: pendingCounts } = usePendingCounts();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -130,6 +139,21 @@ const InvestorDashboard = () => {
     return `$${value.toFixed(0)}`;
   };
 
+  // Calculate YoY change percentage
+  const calculateYoYChange = (current: number, previous: number): { percent: number; isPositive: boolean } => {
+    if (previous === 0) return { percent: 0, isPositive: true };
+    const change = ((current - previous) / previous) * 100;
+    return { percent: Math.abs(change), isPositive: change >= 0 };
+  };
+
+  const volumeYoY = investorMetrics 
+    ? calculateYoYChange(investorMetrics.ytdVolume, investorMetrics.prevYearVolume)
+    : { percent: 0, isPositive: true };
+
+  const transactionsYoY = investorMetrics
+    ? calculateYoYChange(investorMetrics.ytdTransactions, investorMetrics.prevYearTransactions)
+    : { percent: 0, isPositive: true };
+
   if (isLoading) {
     return (
       <div className="space-y-8">
@@ -160,9 +184,12 @@ const InvestorDashboard = () => {
               <h1 className="text-xl sm:text-2xl md:text-3xl font-light text-foreground">
                 Welcome back, <span className="text-sky-400 font-normal">{userName}</span>
               </h1>
-              <p className="text-sm md:text-base text-muted-foreground mt-1">
-                Bridge Advisory Group performance overview
-              </p>
+              <div className="flex items-center gap-3 mt-1">
+                <p className="text-sm md:text-base text-muted-foreground">
+                  Bridge Advisory Group performance overview
+                </p>
+                <DataFreshnessIndicator dataUpdatedAt={dataUpdatedAt} isRefetching={isRefetching} />
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
@@ -173,6 +200,51 @@ const InvestorDashboard = () => {
             />
           </div>
         </div>
+      </div>
+
+      {/* Quick Insights Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <Link to="/investor/agent-requests">
+          <Card className="bg-amber-500/10 border-amber-500/30 hover:border-amber-500/50 transition-colors cursor-pointer">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-amber-500/20">
+                <FileQuestion className="h-5 w-5 text-amber-500" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-amber-500">{pendingCounts?.agentRequests || 0}</p>
+                <p className="text-xs text-muted-foreground">Agent Requests Pending</p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link to="/investor/commission-requests">
+          <Card className="bg-purple-500/10 border-purple-500/30 hover:border-purple-500/50 transition-colors cursor-pointer">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-purple-500/20">
+                <Wallet className="h-5 w-5 text-purple-500" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-purple-500">{pendingCounts?.commissionRequests || 0}</p>
+                <p className="text-xs text-muted-foreground">Commission Reviews</p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link to="/investor/listings">
+          <Card className="bg-sky-400/10 border-sky-400/30 hover:border-sky-400/50 transition-colors cursor-pointer">
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-sky-400/20">
+                <Building2 className="h-5 w-5 text-sky-400" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-sky-400">{formatCurrency(pendingCounts?.pipelineValue || 0)}</p>
+                <p className="text-xs text-muted-foreground">Active Pipeline Value</p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
 
       {/* Key Metrics */}
@@ -197,7 +269,15 @@ const InvestorDashboard = () => {
             </CardHeader>
             <CardContent className="p-3 pt-0 md:p-6 md:pt-0">
               <div className="text-lg md:text-2xl font-bold">{formatCurrency(metrics?.totalVolume || 0)}</div>
-              <p className="text-[10px] md:text-xs text-muted-foreground">All-time volume</p>
+              <div className="flex items-center gap-2 mt-1">
+                <p className="text-[10px] md:text-xs text-muted-foreground">YTD: {formatCurrency(investorMetrics?.ytdVolume || 0)}</p>
+                {volumeYoY.percent > 0 && (
+                  <Badge variant="outline" className={`text-[10px] px-1 py-0 ${volumeYoY.isPositive ? 'text-green-500 border-green-500/30' : 'text-red-500 border-red-500/30'}`}>
+                    {volumeYoY.isPositive ? <ArrowUp className="h-2.5 w-2.5 mr-0.5" /> : <ArrowDown className="h-2.5 w-2.5 mr-0.5" />}
+                    {volumeYoY.percent.toFixed(0)}%
+                  </Badge>
+                )}
+              </div>
             </CardContent>
           </Card>
 
@@ -220,7 +300,15 @@ const InvestorDashboard = () => {
             </CardHeader>
             <CardContent className="p-3 pt-0 md:p-6 md:pt-0">
               <div className="text-lg md:text-2xl font-bold">{metrics?.totalTransactions || 0}</div>
-              <p className="text-[10px] md:text-xs text-muted-foreground">Closed deals</p>
+              <div className="flex items-center gap-2 mt-1">
+                <p className="text-[10px] md:text-xs text-muted-foreground">YTD: {investorMetrics?.ytdTransactions || 0}</p>
+                {transactionsYoY.percent > 0 && (
+                  <Badge variant="outline" className={`text-[10px] px-1 py-0 ${transactionsYoY.isPositive ? 'text-green-500 border-green-500/30' : 'text-red-500 border-red-500/30'}`}>
+                    {transactionsYoY.isPositive ? <ArrowUp className="h-2.5 w-2.5 mr-0.5" /> : <ArrowDown className="h-2.5 w-2.5 mr-0.5" />}
+                    {transactionsYoY.percent.toFixed(0)}%
+                  </Badge>
+                )}
+              </div>
             </CardContent>
           </Card>
 
