@@ -2126,6 +2126,49 @@ export type Database = {
       }
     }
     Views: {
+      agent_performance_stats: {
+        Row: {
+          agent_name: string | null
+          avg_deal_size: number | null
+          deal_count: number | null
+          divisions: string[] | null
+          total_commission: number | null
+          total_volume: number | null
+        }
+        Relationships: []
+      }
+      division_breakdown_stats: {
+        Row: {
+          division_name: string | null
+          total_commission: number | null
+          total_volume: number | null
+          transaction_count: number | null
+        }
+        Relationships: []
+      }
+      investor_dashboard_stats: {
+        Row: {
+          active_agents: number | null
+          active_listings: number | null
+          avg_deal_size: number | null
+          prev_year_transactions: number | null
+          prev_year_volume: number | null
+          total_commissions: number | null
+          total_transactions: number | null
+          total_volume: number | null
+          ytd_transactions: number | null
+          ytd_volume: number | null
+        }
+        Relationships: []
+      }
+      pending_counts_stats: {
+        Row: {
+          high_priority_requests: number | null
+          pending_agent_requests: number | null
+          pending_commission_requests: number | null
+        }
+        Relationships: []
+      }
       public_investment_listings: {
         Row: {
           asking_price: number | null
@@ -2254,6 +2297,44 @@ export type Database = {
       }
     }
     Functions: {
+      get_agent_transactions: {
+        Args: { p_agent_email: string; p_agent_full_name: string }
+        Returns: {
+          agent_name: string
+          asset_type: string | null
+          borough: string | null
+          building_id: string | null
+          closing_date: string | null
+          commission: number | null
+          created_at: string
+          deal_type: string
+          division: string | null
+          gross_square_feet: number | null
+          id: string
+          image_url: string | null
+          is_profile_only: boolean
+          lease_term_months: number | null
+          monthly_rent: number | null
+          neighborhood: string | null
+          notes: string | null
+          price_per_sf: number | null
+          price_per_unit: number | null
+          property_address: string
+          property_type: string | null
+          role: string | null
+          sale_price: number | null
+          total_lease_value: number | null
+          units: number | null
+          updated_at: string
+          year: number | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "transactions"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
