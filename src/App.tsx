@@ -53,6 +53,7 @@ const CommissionRequest = lazy(() => import("./pages/portal/CommissionRequest"))
 const MyCommissionRequests = lazy(() => import("./pages/portal/MyCommissionRequests"));
 const MyCommissions = lazy(() => import("./pages/portal/MyCommissions"));
 const Tools = lazy(() => import("./pages/portal/Tools"));
+const Onboarding = lazy(() => import("./pages/portal/Onboarding"));
 
 // Company Pages - lazy loaded
 const AboutCompany = lazy(() => import("./pages/portal/company/About"));
@@ -333,6 +334,11 @@ const App = () => {
                     <Route path="company" element={
                       <Suspense fallback={<PageLoader />}>
                         <CompanyHub />
+                      </Suspense>
+                    } />
+                    <Route path="onboarding" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <Onboarding />
                       </Suspense>
                     } />
                   </Route>

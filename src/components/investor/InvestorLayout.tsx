@@ -88,13 +88,13 @@ export const InvestorLayout = () => {
                   alt="Bridge Advisory Group" 
                   className="h-8 w-auto"
                 />
-                <div className="hidden sm:flex items-center gap-2">
+                <div className="hidden sm:flex items-center gap-3">
                   <span className="text-sm font-medium text-foreground">Investor Portal</span>
                   <span className="text-muted-foreground/50">|</span>
                   <img 
                     src="/lovable-uploads/hpg-logo-white.png" 
                     alt="HPG" 
-                    className="h-5 w-auto"
+                    className="h-10 w-auto"
                   />
                 </div>
               </Link>
@@ -145,11 +145,10 @@ export const InvestorLayout = () => {
           <span>Bridge Advisory Group © {new Date().getFullYear()}</span>
           <span className="hidden sm:inline">•</span>
           <div className="flex items-center gap-2">
-            <span>Investor Portal</span>
             <img 
               src="/lovable-uploads/hpg-logo-white.png" 
               alt="HPG" 
-              className="h-4 w-auto"
+              className="h-8 w-auto"
             />
           </div>
         </div>

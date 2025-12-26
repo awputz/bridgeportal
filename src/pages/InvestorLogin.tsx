@@ -131,19 +131,19 @@ const InvestorLogin = () => {
           </button>
 
           <div className="text-center mb-8">
+            <div className="flex items-center justify-center mb-6">
+              <img 
+                src="/lovable-uploads/hpg-logo-white.png" 
+                alt="HPG" 
+                className="h-16 w-auto"
+              />
+            </div>
             <div className="mx-auto w-14 h-14 rounded-full bg-sky-400/10 flex items-center justify-center mb-4">
               <Briefcase className="h-6 w-6 text-sky-400" />
             </div>
             <h1 className="text-2xl font-extralight text-foreground mb-1">
               Investor Portal
             </h1>
-            <div className="flex items-center justify-center gap-2 mt-3">
-              <img 
-                src="/lovable-uploads/hpg-logo-white.png" 
-                alt="HPG" 
-                className="h-6 w-auto"
-              />
-            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">

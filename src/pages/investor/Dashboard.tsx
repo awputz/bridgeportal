@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Building2, DollarSign, Users, TrendingUp, BarChart3 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
@@ -18,6 +19,7 @@ const COLORS = ['hsl(var(--primary))', 'hsl(199, 89%, 48%)', 'hsl(173, 58%, 39%)
 
 const InvestorDashboard = () => {
   const [userName, setUserName] = useState("");
+  const [userAvatar, setUserAvatar] = useState<string | null>(null);
   const [metrics, setMetrics] = useState<Metrics | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -28,11 +30,12 @@ const InvestorDashboard = () => {
       if (session?.user) {
         const { data: profile } = await supabase
           .from("profiles")
-          .select("full_name")
+          .select("full_name, avatar_url")
           .eq("id", session.user.id)
           .maybeSingle();
         
         setUserName(profile?.full_name?.split(" ")[0] || "");
+        setUserAvatar(profile?.avatar_url || null);
       }
 
       // Fetch transactions
@@ -144,20 +147,28 @@ const InvestorDashboard = () => {
     <div className="space-y-6 md:space-y-8">
       {/* Welcome Header */}
       <div className="rounded-xl bg-gradient-to-r from-sky-400/10 via-sky-400/5 to-transparent p-4 md:p-6 border border-sky-400/20">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div className="min-w-0">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-light text-foreground truncate">
-              Welcome back, <span className="text-sky-400 font-normal">{userName}</span>
-            </h1>
-            <p className="text-sm md:text-base text-muted-foreground mt-1">
-              Bridge Advisory Group performance overview
-            </p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex items-center gap-4 min-w-0">
+            <Avatar className="h-14 w-14 md:h-16 md:w-16 border-2 border-sky-400/30">
+              <AvatarImage src={userAvatar || undefined} alt={userName} />
+              <AvatarFallback className="bg-sky-400/20 text-sky-400 text-lg md:text-xl font-medium">
+                {userName?.charAt(0)?.toUpperCase() || "I"}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-light text-foreground">
+                Welcome back, <span className="text-sky-400 font-normal">{userName}</span>
+              </h1>
+              <p className="text-sm md:text-base text-muted-foreground mt-1">
+                Bridge Advisory Group performance overview
+              </p>
+            </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <img 
               src="/lovable-uploads/hpg-logo-white.png" 
               alt="HPG" 
-              className="h-6 md:h-7 w-auto"
+              className="h-10 md:h-12 w-auto"
             />
           </div>
         </div>
