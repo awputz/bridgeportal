@@ -88,7 +88,15 @@ export const InvestorLayout = () => {
                   alt="Bridge Advisory Group" 
                   className="h-8 w-auto"
                 />
-                <span className="hidden sm:block text-sm font-medium text-foreground">Investor Portal</span>
+                <div className="hidden sm:flex items-center gap-2">
+                  <span className="text-sm font-medium text-foreground">Investor Portal</span>
+                  <span className="text-muted-foreground/50">|</span>
+                  <img 
+                    src="/lovable-uploads/hpg-logo.jpeg" 
+                    alt="HPG" 
+                    className="h-4 w-auto"
+                  />
+                </div>
               </Link>
             </div>
 
@@ -132,9 +140,19 @@ export const InvestorLayout = () => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border/50 py-6 mt-auto">
-        <div className="container mx-auto px-4 text-center text-xs text-muted-foreground">
-          Bridge Advisory Group © {new Date().getFullYear()} • Investor Portal
+      <footer className="border-t border-border/50 py-6 mt-auto pb-safe">
+        <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-2 text-xs text-muted-foreground">
+          <span>Bridge Advisory Group © {new Date().getFullYear()}</span>
+          <span className="hidden sm:inline">•</span>
+          <div className="flex items-center gap-2">
+            <span>Investor Portal for</span>
+            <img 
+              src="/lovable-uploads/hpg-logo.jpeg" 
+              alt="Hudson Point Group" 
+              className="h-3 w-auto"
+            />
+            <span>Hudson Point Group</span>
+          </div>
         </div>
       </footer>
     </div>

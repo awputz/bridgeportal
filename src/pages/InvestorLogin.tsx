@@ -134,9 +134,17 @@ const InvestorLogin = () => {
             <div className="mx-auto w-14 h-14 rounded-full bg-amber-500/10 flex items-center justify-center mb-4">
               <Briefcase className="h-6 w-6 text-amber-500" />
             </div>
-            <h1 className="text-2xl font-extralight text-foreground">
+            <h1 className="text-2xl font-extralight text-foreground mb-1">
               Investor Portal
             </h1>
+            <div className="flex items-center justify-center gap-2 mt-3">
+              <img 
+                src="/lovable-uploads/hpg-logo.jpeg" 
+                alt="Hudson Point Group" 
+                className="h-5 w-auto"
+              />
+              <span className="text-xs text-muted-foreground">Hudson Point Group</span>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
