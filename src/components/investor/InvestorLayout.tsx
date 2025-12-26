@@ -69,7 +69,7 @@ export const InvestorLayout = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-amber-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-sky-400" />
       </div>
     );
   }
@@ -92,9 +92,9 @@ export const InvestorLayout = () => {
                   <span className="text-sm font-medium text-foreground">Investor Portal</span>
                   <span className="text-muted-foreground/50">|</span>
                   <img 
-                    src="/lovable-uploads/hpg-logo.jpeg" 
+                    src="/lovable-uploads/hpg-logo-white.png" 
                     alt="HPG" 
-                    className="h-4 w-auto"
+                    className="h-5 w-auto"
                   />
                 </div>
               </Link>
@@ -117,7 +117,7 @@ export const InvestorLayout = () => {
             {/* User Menu */}
             <div className="flex items-center gap-3">
               <div className="hidden md:flex items-center gap-2 text-sm">
-                <Briefcase className="h-4 w-4 text-amber-500" />
+                <Briefcase className="h-4 w-4 text-sky-400" />
                 <span className="text-muted-foreground">{userName}</span>
               </div>
               <Button 
@@ -145,13 +145,12 @@ export const InvestorLayout = () => {
           <span>Bridge Advisory Group © {new Date().getFullYear()}</span>
           <span className="hidden sm:inline">•</span>
           <div className="flex items-center gap-2">
-            <span>Investor Portal for</span>
+            <span>Investor Portal</span>
             <img 
-              src="/lovable-uploads/hpg-logo.jpeg" 
-              alt="Hudson Point Group" 
-              className="h-3 w-auto"
+              src="/lovable-uploads/hpg-logo-white.png" 
+              alt="HPG" 
+              className="h-4 w-auto"
             />
-            <span>Hudson Point Group</span>
           </div>
         </div>
       </footer>
