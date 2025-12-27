@@ -33,6 +33,9 @@ import {
   useConnectGoogleCalendar,
   useDisconnectGoogleCalendar,
   useGoogleCalendarEvents,
+  useCreateGoogleEvent,
+  useUpdateGoogleEvent,
+  useDeleteGoogleEvent,
 } from "@/hooks/useGoogleCalendar";
 import {
   format,
@@ -102,6 +105,9 @@ export default function Calendar() {
 
   const connectCalendar = useConnectGoogleCalendar();
   const disconnectCalendar = useDisconnectGoogleCalendar();
+  const createEvent = useCreateGoogleEvent();
+  const updateEvent = useUpdateGoogleEvent();
+  const deleteEvent = useDeleteGoogleEvent();
 
   const isConnected = connection?.calendar_enabled && !!connection?.access_token;
 
@@ -178,10 +184,29 @@ export default function Calendar() {
   };
 
   const handleSaveEvent = (eventData: Partial<CalendarEvent>) => {
-    toast({
-      title: eventData.id ? "Event Updated" : "Event Created",
-      description: `"${eventData.title}" - Note: Google Calendar write access required to sync.`,
-    });
+    if (!eventData.title || !eventData.start_time) return;
+    
+    const eventPayload = {
+      title: eventData.title,
+      description: eventData.description || undefined,
+      start_time: eventData.start_time,
+      end_time: eventData.end_time || undefined,
+      all_day: eventData.all_day,
+      location: eventData.location || undefined,
+    };
+
+    if (eventData.id && selectedEvent?.source === "google") {
+      // Update existing Google event
+      updateEvent.mutate({ eventId: eventData.id, event: eventPayload });
+    } else {
+      // Create new event
+      createEvent.mutate(eventPayload);
+    }
+    setEventDialogOpen(false);
+  };
+
+  const handleDeleteEvent = (eventId: string) => {
+    deleteEvent.mutate(eventId);
     setEventDialogOpen(false);
   };
 
@@ -596,6 +621,7 @@ export default function Calendar() {
         defaultDate={selectedDate || undefined}
         defaultTime={defaultEventTime}
         onSave={handleSaveEvent}
+        onDelete={handleDeleteEvent}
       />
     </div>
   );

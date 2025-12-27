@@ -14,6 +14,21 @@ interface GoogleToken {
   updated_at: string;
 }
 
+interface GoogleEventInput {
+  title: string;
+  description?: string;
+  start_time: string;
+  end_time?: string;
+  all_day?: boolean;
+  location?: string;
+  colorId?: string;
+  color?: string;
+  attendees?: string[];
+  reminders?: { method: string; minutes: number }[];
+  recurrence?: string[];
+  addGoogleMeet?: boolean;
+}
+
 export const useGoogleCalendarConnection = () => {
   return useQuery({
     queryKey: ["google-calendar-connection"],
@@ -77,6 +92,9 @@ export const useGoogleCalendarEvents = (startDate?: Date, endDate?: Date) => {
         updated_at: event.updated,
         source: "google" as const,
         calendar_id: event.calendarId,
+        colorId: event.colorId,
+        htmlLink: event.htmlLink,
+        hangoutLink: event.hangoutLink,
       }));
     },
     enabled: !!connection?.access_token && connection.calendar_enabled,
@@ -117,6 +135,12 @@ export const useConnectGoogleCalendar = () => {
           clearInterval(checkClosed);
           resolve({ success: true });
         }, 300000);
+      });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Calendar Connected",
+        description: "Google Calendar has been connected with full access.",
       });
     },
     onError: (error) => {
@@ -206,3 +230,117 @@ export const useToggleGoogleCalendar = () => {
   });
 };
 
+// Create a new event in Google Calendar
+export const useCreateGoogleEvent = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (event: GoogleEventInput) => {
+      const { data, error } = await invokeWithAuthHandling<{ success: boolean; event: any }>(
+        "google-calendar-events",
+        {
+          body: {
+            action: "create",
+            event,
+          },
+        }
+      );
+
+      if (error) throw error;
+      if (!data?.success) throw new Error("Failed to create event");
+
+      return data.event;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["google-calendar-events"] });
+      toast({
+        title: "Event Created",
+        description: "Your event has been added to Google Calendar.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to Create Event",
+        description: error.message || "Could not create event in Google Calendar",
+        variant: "destructive",
+      });
+    },
+  });
+};
+
+// Update an existing event in Google Calendar
+export const useUpdateGoogleEvent = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ eventId, event }: { eventId: string; event: GoogleEventInput }) => {
+      const { data, error } = await invokeWithAuthHandling<{ success: boolean; event: any }>(
+        "google-calendar-events",
+        {
+          body: {
+            action: "update",
+            eventId,
+            event,
+          },
+        }
+      );
+
+      if (error) throw error;
+      if (!data?.success) throw new Error("Failed to update event");
+
+      return data.event;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["google-calendar-events"] });
+      toast({
+        title: "Event Updated",
+        description: "Your event has been updated in Google Calendar.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to Update Event",
+        description: error.message || "Could not update event in Google Calendar",
+        variant: "destructive",
+      });
+    },
+  });
+};
+
+// Delete an event from Google Calendar
+export const useDeleteGoogleEvent = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (eventId: string) => {
+      const { data, error } = await invokeWithAuthHandling<{ success: boolean }>(
+        "google-calendar-events",
+        {
+          body: {
+            action: "delete",
+            eventId,
+          },
+        }
+      );
+
+      if (error) throw error;
+      if (!data?.success) throw new Error("Failed to delete event");
+
+      return true;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["google-calendar-events"] });
+      toast({
+        title: "Event Deleted",
+        description: "Your event has been removed from Google Calendar.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Failed to Delete Event",
+        description: error.message || "Could not delete event from Google Calendar",
+        variant: "destructive",
+      });
+    },
+  });
+};
