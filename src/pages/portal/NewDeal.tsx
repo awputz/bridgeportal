@@ -4,13 +4,16 @@ import { ArrowLeft } from "lucide-react";
 import { useCreateDeal, useDealStages, useCRMContacts } from "@/hooks/useCRM";
 import { useDivision } from "@/contexts/DivisionContext";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { AddressAutocomplete, AddressComponents } from "@/components/ui/AddressAutocomplete";
+import { InvestmentSalesDealFields, InvestmentSalesData } from "@/components/portal/deal-forms/InvestmentSalesDealFields";
+import { CommercialLeasingDealFields, CommercialLeasingData } from "@/components/portal/deal-forms/CommercialLeasingDealFields";
+import { ResidentialDealFields, ResidentialData } from "@/components/portal/deal-forms/ResidentialDealFields";
 
 const dealTypes = [
   { value: "sale", label: "Sale" },
@@ -42,13 +45,29 @@ const NewDeal = () => {
     deal_type: "sale",
     stage_id: "",
     contact_id: preselectedContactId || "",
-    value: "",
-    commission: "",
-    expected_close: "",
-    probability: "50",
     priority: "medium",
     notes: "",
+    neighborhood: "",
+    borough: "",
+    latitude: null as number | null,
+    longitude: null as number | null,
   });
+
+  // Division-specific data
+  const [investmentData, setInvestmentData] = useState<InvestmentSalesData>({});
+  const [commercialData, setCommercialData] = useState<CommercialLeasingData>({});
+  const [residentialData, setResidentialData] = useState<ResidentialData>({});
+
+  const handleAddressSelect = (components: AddressComponents) => {
+    setFormData({
+      ...formData,
+      property_address: components.fullAddress,
+      neighborhood: components.neighborhood || "",
+      borough: components.borough || "",
+      latitude: components.latitude || null,
+      longitude: components.longitude || null,
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,32 +86,100 @@ const NewDeal = () => {
     // Get the first stage as default if none selected
     const stageId = formData.stage_id || (stages && stages.length > 0 ? stages[0].id : null);
 
-    createDeal.mutate(
-      {
-        agent_id: user.id,
-        property_address: formData.property_address,
-        deal_type: formData.deal_type,
-        stage_id: stageId,
-        contact_id: formData.contact_id || null,
-        value: formData.value ? parseFloat(formData.value) : null,
-        commission: formData.commission ? parseFloat(formData.commission) : null,
-        expected_close: formData.expected_close || null,
-        probability: parseInt(formData.probability) || 50,
-        priority: formData.priority,
-        notes: formData.notes || null,
-        division,
+    // Build deal payload based on division
+    let dealPayload: any = {
+      agent_id: user.id,
+      property_address: formData.property_address,
+      deal_type: formData.deal_type,
+      stage_id: stageId,
+      contact_id: formData.contact_id || null,
+      priority: formData.priority,
+      notes: formData.notes || null,
+      division,
+      neighborhood: formData.neighborhood || null,
+      borough: formData.borough || null,
+      latitude: formData.latitude,
+      longitude: formData.longitude,
+      probability: 50,
+    };
+
+    // Add division-specific fields
+    if (division === "investment-sales") {
+      dealPayload = {
+        ...dealPayload,
+        value: investmentData.asking_price || null,
+        commission: null,
+        expected_close: investmentData.due_diligence_deadline || null,
+        cap_rate: investmentData.cap_rate || null,
+        noi: investmentData.noi || null,
+        building_class: investmentData.building_class || null,
+        unit_count: investmentData.unit_count || null,
+        year_built: investmentData.year_built || null,
+        gross_sf: investmentData.gross_sf || null,
+        asking_price: investmentData.asking_price || null,
+        offer_price: investmentData.offer_price || null,
+        property_type: investmentData.property_type || null,
+        zoning: investmentData.zoning || null,
+        is_1031_exchange: investmentData.is_1031_exchange || false,
+        financing_type: investmentData.financing_type || null,
+        lender_name: investmentData.lender_name || null,
+        loan_amount: investmentData.loan_amount || null,
+        due_diligence_deadline: investmentData.due_diligence_deadline || null,
+      };
+    } else if (division === "commercial-leasing") {
+      const leaseValue = (commercialData.asking_rent_psf || 0) * (commercialData.square_footage || 0) * ((commercialData.lease_term_months || 0) / 12);
+      dealPayload = {
+        ...dealPayload,
+        value: leaseValue || null,
+        commission: null,
+        expected_close: commercialData.commencement_date || null,
+        tenant_legal_name: commercialData.tenant_legal_name || null,
+        asking_rent_psf: commercialData.asking_rent_psf || null,
+        negotiated_rent_psf: commercialData.negotiated_rent_psf || null,
+        lease_type: commercialData.lease_type || null,
+        lease_term_months: commercialData.lease_term_months || null,
+        commencement_date: commercialData.commencement_date || null,
+        expiration_date: commercialData.expiration_date || null,
+        free_rent_months: commercialData.free_rent_months || null,
+        escalation_rate: commercialData.escalation_rate || null,
+        ti_allowance_psf: commercialData.ti_allowance_psf || null,
+        security_deposit_months: commercialData.security_deposit_months || null,
+        use_clause: commercialData.use_clause || null,
+        space_type: commercialData.space_type || null,
+        gross_sf: commercialData.square_footage || null,
+      };
+    } else if (division === "residential") {
+      const isRental = residentialData.is_rental || false;
+      dealPayload = {
+        ...dealPayload,
+        value: isRental ? residentialData.monthly_rent : residentialData.listing_price,
+        commission: null,
+        expected_close: residentialData.move_in_date || null,
+        bedrooms: residentialData.bedrooms || null,
+        bathrooms: residentialData.bathrooms || null,
+        is_rental: isRental,
+        listing_price: residentialData.listing_price || null,
+        monthly_rent: residentialData.monthly_rent || null,
+        lease_length_months: residentialData.lease_length_months || null,
+        move_in_date: residentialData.move_in_date || null,
+        pets_allowed: residentialData.pets_allowed ?? true,
+        guarantor_required: residentialData.guarantor_required || false,
+        co_broke_percent: residentialData.co_broke_percent || null,
+        property_type: residentialData.property_type || null,
+        gross_sf: residentialData.gross_sf || null,
+      };
+    }
+
+    createDeal.mutate(dealPayload, {
+      onSuccess: (data) => {
+        navigate(`/portal/crm/deals/${data.id}`);
       },
-      {
-        onSuccess: (data) => {
-          navigate(`/portal/crm/deals/${data.id}`);
-        },
-      }
-    );
+    });
   };
 
   return (
     <div className="min-h-screen pb-24 md:pb-16">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <Link to="/portal/crm">
@@ -104,25 +191,25 @@ const NewDeal = () => {
             <h1 className="text-2xl md:text-3xl font-light text-foreground">
               New Deal
             </h1>
-            <p className="text-muted-foreground">Create a new deal in your pipeline</p>
+            <p className="text-muted-foreground">Create a new {division.replace("-", " ")} deal</p>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Basic Info Card */}
           <Card className="glass-card border-white/10">
             <CardHeader>
-              <CardTitle className="font-light">Deal Information</CardTitle>
+              <CardTitle className="font-light">Basic Information</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Property Address */}
               <div className="space-y-2">
                 <Label htmlFor="property_address">Property Address *</Label>
-                <Input
-                  id="property_address"
+                <AddressAutocomplete
                   value={formData.property_address}
-                  onChange={(e) => setFormData({ ...formData, property_address: e.target.value })}
-                  placeholder="123 Main Street, New York, NY"
-                  required
+                  onChange={(v) => setFormData({ ...formData, property_address: v })}
+                  onAddressSelect={handleAddressSelect}
+                  placeholder="Start typing an address..."
                 />
               </div>
 
@@ -170,75 +257,26 @@ const NewDeal = () => {
                 </div>
               </div>
 
-              {/* Contact */}
-              <div className="space-y-2">
-                <Label>Associated Contact</Label>
-                <Select
-                  value={formData.contact_id}
-                  onValueChange={(v) => setFormData({ ...formData, contact_id: v })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a contact (optional)" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {contacts?.map((contact) => (
-                      <SelectItem key={contact.id} value={contact.id}>
-                        {contact.full_name}
-                        {contact.company && ` (${contact.company})`}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Value & Commission */}
+              {/* Contact & Priority */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="value">Deal Value ($)</Label>
-                  <Input
-                    id="value"
-                    type="number"
-                    value={formData.value}
-                    onChange={(e) => setFormData({ ...formData, value: e.target.value })}
-                    placeholder="0"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="commission">Your Commission ($)</Label>
-                  <Input
-                    id="commission"
-                    type="number"
-                    value={formData.commission}
-                    onChange={(e) => setFormData({ ...formData, commission: e.target.value })}
-                    placeholder="Actual amount earned"
-                  />
-                  <p className="text-xs text-muted-foreground">Enter your actual commission</p>
-                </div>
-              </div>
-
-              {/* Expected Close */}
-              <div className="space-y-2">
-                <Label htmlFor="expected_close">Expected Close Date</Label>
-                <Input
-                  id="expected_close"
-                  type="date"
-                  value={formData.expected_close}
-                  onChange={(e) => setFormData({ ...formData, expected_close: e.target.value })}
-                />
-              </div>
-
-              {/* Probability & Priority */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="probability">Probability (%)</Label>
-                  <Input
-                    id="probability"
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={formData.probability}
-                    onChange={(e) => setFormData({ ...formData, probability: e.target.value })}
-                  />
+                  <Label>Associated Contact</Label>
+                  <Select
+                    value={formData.contact_id}
+                    onValueChange={(v) => setFormData({ ...formData, contact_id: v })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a contact (optional)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {contacts?.map((contact) => (
+                        <SelectItem key={contact.id} value={contact.id}>
+                          {contact.full_name}
+                          {contact.company && ` (${contact.company})`}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label>Priority</Label>
@@ -265,22 +303,44 @@ const NewDeal = () => {
                   id="notes"
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  rows={4}
+                  rows={3}
                   placeholder="Add any notes about this deal..."
                 />
               </div>
-
-              {/* Actions */}
-              <div className="flex justify-end gap-3 pt-4">
-                <Link to="/portal/crm">
-                  <Button type="button" variant="ghost">Cancel</Button>
-                </Link>
-                <Button type="submit" disabled={createDeal.isPending}>
-                  {createDeal.isPending ? "Creating..." : "Create Deal"}
-                </Button>
-              </div>
             </CardContent>
           </Card>
+
+          {/* Division-Specific Fields */}
+          {division === "investment-sales" && (
+            <InvestmentSalesDealFields
+              data={investmentData}
+              onChange={setInvestmentData}
+            />
+          )}
+
+          {division === "commercial-leasing" && (
+            <CommercialLeasingDealFields
+              data={commercialData}
+              onChange={setCommercialData}
+            />
+          )}
+
+          {division === "residential" && (
+            <ResidentialDealFields
+              data={residentialData}
+              onChange={setResidentialData}
+            />
+          )}
+
+          {/* Actions */}
+          <div className="flex justify-end gap-3">
+            <Link to="/portal/crm">
+              <Button type="button" variant="ghost">Cancel</Button>
+            </Link>
+            <Button type="submit" disabled={createDeal.isPending}>
+              {createDeal.isPending ? "Creating..." : "Create Deal"}
+            </Button>
+          </div>
         </form>
       </div>
     </div>

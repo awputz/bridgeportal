@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { format, formatDistanceToNow } from "date-fns";
+import { format } from "date-fns";
 import {
   X,
   Mail,
@@ -12,23 +12,26 @@ import {
   Trash2,
   ExternalLink,
   Linkedin,
-  MessageSquare,
   Clock,
-  Star,
   MoreHorizontal,
-  Plus,
   Download,
+  Globe,
+  User2,
+  Briefcase,
+  Star,
+  Ban,
 } from "lucide-react";
 import { CRMContact, useUpdateContact, useDeleteContact } from "@/hooks/useCRM";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -71,6 +74,12 @@ const contactTypes = [
   { value: "other", label: "Other" },
 ];
 
+const preferredContactMethods = [
+  { value: "email", label: "Email" },
+  { value: "phone", label: "Phone" },
+  { value: "text", label: "Text" },
+];
+
 const getTypeColor = (type: string) => {
   const colors: Record<string, string> = {
     owner: "bg-blue-500/20 text-blue-400 border-blue-500/30",
@@ -106,10 +115,11 @@ export function ContactProfileSlideOver({
   };
 
   const getLastContactedStatus = () => {
-    if (!contact.updated_at) return { color: "text-muted-foreground", label: "Never contacted" };
+    const dateToCheck = contact.last_contact_date || contact.updated_at;
+    if (!dateToCheck) return { color: "text-muted-foreground", label: "Never contacted" };
     
     const daysSince = Math.floor(
-      (Date.now() - new Date(contact.updated_at).getTime()) / (1000 * 60 * 60 * 24)
+      (Date.now() - new Date(dateToCheck).getTime()) / (1000 * 60 * 60 * 24)
     );
     
     if (daysSince < 7) {
@@ -133,6 +143,25 @@ export function ContactProfileSlideOver({
       address: contact.address,
       notes: contact.notes,
       tags: contact.tags,
+      title: contact.title,
+      linkedin_url: contact.linkedin_url,
+      secondary_email: contact.secondary_email,
+      secondary_phone: contact.secondary_phone,
+      assistant_name: contact.assistant_name,
+      assistant_email: contact.assistant_email,
+      assistant_phone: contact.assistant_phone,
+      birthday: contact.birthday,
+      preferred_contact_method: contact.preferred_contact_method,
+      do_not_contact: contact.do_not_contact,
+      relationship_score: contact.relationship_score,
+      company_website: contact.company_website,
+      portfolio_size: contact.portfolio_size,
+      investor_profile: contact.investor_profile,
+      street_address: contact.street_address,
+      city: contact.city,
+      state: contact.state,
+      zip_code: contact.zip_code,
+      country: contact.country,
     });
     setIsEditing(true);
   };
@@ -184,10 +213,32 @@ export function ContactProfileSlideOver({
           name: contact.full_name,
           email: contact.email || undefined,
           phone: contact.phone || undefined,
-          title: contact.contact_type,
+          title: contact.title || contact.contact_type,
+          company: contact.company || undefined,
         });
         break;
+      case "linkedin":
+        if (contact.linkedin_url) {
+          window.open(contact.linkedin_url, "_blank");
+        }
+        break;
     }
+  };
+
+  const renderRelationshipScore = (score: number) => {
+    const stars = [];
+    for (let i = 0; i < 5; i++) {
+      stars.push(
+        <Star
+          key={i}
+          className={cn(
+            "h-4 w-4",
+            i < score / 2 ? "text-yellow-400 fill-yellow-400" : "text-muted-foreground/30"
+          )}
+        />
+      );
+    }
+    return <div className="flex gap-0.5">{stars}</div>;
   };
 
   return (
@@ -197,7 +248,7 @@ export function ContactProfileSlideOver({
           {/* Header with gradient */}
           <div className="relative bg-gradient-to-br from-primary/20 via-primary/10 to-transparent p-6 pb-16">
             <div className="flex items-start justify-between">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <Badge variant="outline" className={cn("text-xs", getTypeColor(contact.contact_type))}>
                   {contact.contact_type}
                 </Badge>
@@ -205,6 +256,12 @@ export function ContactProfileSlideOver({
                   <Clock className="h-3 w-3 mr-1" />
                   {lastContacted.label}
                 </Badge>
+                {contact.do_not_contact && (
+                  <Badge variant="outline" className="text-xs bg-red-500/20 text-red-400 border-red-500/30">
+                    <Ban className="h-3 w-3 mr-1" />
+                    DNC
+                  </Badge>
+                )}
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -221,6 +278,12 @@ export function ContactProfileSlideOver({
                     <Download className="h-4 w-4 mr-2" />
                     Download vCard
                   </DropdownMenuItem>
+                  {contact.linkedin_url && (
+                    <DropdownMenuItem onClick={() => handleQuickAction("linkedin")}>
+                      <Linkedin className="h-4 w-4 mr-2" />
+                      View LinkedIn
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="text-destructive focus:text-destructive"
@@ -233,7 +296,7 @@ export function ContactProfileSlideOver({
               </DropdownMenu>
             </div>
 
-            {/* Avatar - positioned to overlap */}
+            {/* Avatar */}
             <div className="absolute -bottom-10 left-6">
               <Avatar className="h-20 w-20 border-4 border-background">
                 <AvatarFallback className="bg-primary text-primary-foreground text-xl font-medium">
@@ -245,51 +308,74 @@ export function ContactProfileSlideOver({
 
           {/* Content */}
           <div className="pt-14 px-6 pb-6 space-y-6">
-            {/* Name and company */}
+            {/* Name, Title, Company */}
             <div>
               {isEditing ? (
                 <div className="space-y-3">
-                  <div>
-                    <Label>Full Name</Label>
-                    <Input
-                      value={editedContact.full_name || ""}
-                      onChange={(e) => setEditedContact({ ...editedContact, full_name: e.target.value })}
-                    />
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label>Full Name</Label>
+                      <Input
+                        value={editedContact.full_name || ""}
+                        onChange={(e) => setEditedContact({ ...editedContact, full_name: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <Label>Title</Label>
+                      <Input
+                        value={editedContact.title || ""}
+                        onChange={(e) => setEditedContact({ ...editedContact, title: e.target.value })}
+                        placeholder="e.g., Principal, Director"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <Label>Company</Label>
-                    <Input
-                      value={editedContact.company || ""}
-                      onChange={(e) => setEditedContact({ ...editedContact, company: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <Label>Type</Label>
-                    <Select
-                      value={editedContact.contact_type}
-                      onValueChange={(v) => setEditedContact({ ...editedContact, contact_type: v })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {contactTypes.map((t) => (
-                          <SelectItem key={t.value} value={t.value}>
-                            {t.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label>Company</Label>
+                      <Input
+                        value={editedContact.company || ""}
+                        onChange={(e) => setEditedContact({ ...editedContact, company: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <Label>Type</Label>
+                      <Select
+                        value={editedContact.contact_type}
+                        onValueChange={(v) => setEditedContact({ ...editedContact, contact_type: v })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {contactTypes.map((t) => (
+                            <SelectItem key={t.value} value={t.value}>
+                              {t.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                 </div>
               ) : (
                 <>
                   <h2 className="text-2xl font-semibold">{contact.full_name}</h2>
+                  {contact.title && (
+                    <p className="text-muted-foreground flex items-center gap-1 mt-0.5">
+                      <Briefcase className="h-4 w-4" />
+                      {contact.title}
+                    </p>
+                  )}
                   {contact.company && (
-                    <p className="text-muted-foreground flex items-center gap-1 mt-1">
+                    <p className="text-muted-foreground flex items-center gap-1 mt-0.5">
                       <Building2 className="h-4 w-4" />
                       {contact.company}
                     </p>
+                  )}
+                  {contact.relationship_score > 0 && (
+                    <div className="mt-2">
+                      {renderRelationshipScore(contact.relationship_score)}
+                    </div>
                   )}
                 </>
               )}
@@ -318,15 +404,17 @@ export function ContactProfileSlideOver({
                   <Phone className="h-4 w-4" />
                   Call
                 </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1 gap-2"
-                  onClick={() => toast.info("Schedule meeting feature coming soon")}
-                >
-                  <Calendar className="h-4 w-4" />
-                  Meet
-                </Button>
+                {contact.linkedin_url && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 gap-2"
+                    onClick={() => handleQuickAction("linkedin")}
+                  >
+                    <Linkedin className="h-4 w-4" />
+                    LinkedIn
+                  </Button>
+                )}
               </div>
             )}
 
@@ -340,28 +428,93 @@ export function ContactProfileSlideOver({
               
               {isEditing ? (
                 <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label>Email</Label>
+                      <Input
+                        type="email"
+                        value={editedContact.email || ""}
+                        onChange={(e) => setEditedContact({ ...editedContact, email: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <Label>Secondary Email</Label>
+                      <Input
+                        type="email"
+                        value={editedContact.secondary_email || ""}
+                        onChange={(e) => setEditedContact({ ...editedContact, secondary_email: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label>Phone</Label>
+                      <Input
+                        type="tel"
+                        value={editedContact.phone || ""}
+                        onChange={(e) => setEditedContact({ ...editedContact, phone: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <Label>Secondary Phone</Label>
+                      <Input
+                        type="tel"
+                        value={editedContact.secondary_phone || ""}
+                        onChange={(e) => setEditedContact({ ...editedContact, secondary_phone: e.target.value })}
+                      />
+                    </div>
+                  </div>
                   <div>
-                    <Label>Email</Label>
+                    <Label>LinkedIn URL</Label>
                     <Input
-                      type="email"
-                      value={editedContact.email || ""}
-                      onChange={(e) => setEditedContact({ ...editedContact, email: e.target.value })}
+                      value={editedContact.linkedin_url || ""}
+                      onChange={(e) => setEditedContact({ ...editedContact, linkedin_url: e.target.value })}
+                      placeholder="https://linkedin.com/in/..."
                     />
                   </div>
                   <div>
-                    <Label>Phone</Label>
+                    <Label>Company Website</Label>
                     <Input
-                      type="tel"
-                      value={editedContact.phone || ""}
-                      onChange={(e) => setEditedContact({ ...editedContact, phone: e.target.value })}
+                      value={editedContact.company_website || ""}
+                      onChange={(e) => setEditedContact({ ...editedContact, company_website: e.target.value })}
+                      placeholder="https://..."
                     />
                   </div>
-                  <div>
-                    <Label>Address</Label>
-                    <Input
-                      value={editedContact.address || ""}
-                      onChange={(e) => setEditedContact({ ...editedContact, address: e.target.value })}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label>Birthday</Label>
+                      <Input
+                        type="date"
+                        value={editedContact.birthday || ""}
+                        onChange={(e) => setEditedContact({ ...editedContact, birthday: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <Label>Preferred Contact</Label>
+                      <Select
+                        value={editedContact.preferred_contact_method || "email"}
+                        onValueChange={(v) => setEditedContact({ ...editedContact, preferred_contact_method: v })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {preferredContactMethods.map((m) => (
+                            <SelectItem key={m.value} value={m.value}>
+                              {m.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id="do_not_contact"
+                      checked={editedContact.do_not_contact || false}
+                      onCheckedChange={(checked) => setEditedContact({ ...editedContact, do_not_contact: !!checked })}
                     />
+                    <Label htmlFor="do_not_contact" className="text-sm">Do Not Contact</Label>
                   </div>
                 </div>
               ) : (
@@ -380,6 +533,20 @@ export function ContactProfileSlideOver({
                       </div>
                     </a>
                   )}
+                  {contact.secondary_email && (
+                    <a
+                      href={`mailto:${contact.secondary_email}`}
+                      className="flex items-center gap-3 text-sm hover:text-primary transition-colors"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                        <Mail className="h-4 w-4 text-blue-400" />
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground text-xs">Secondary Email</p>
+                        <p>{contact.secondary_email}</p>
+                      </div>
+                    </a>
+                  )}
                   {contact.phone && (
                     <a
                       href={`tel:${contact.phone}`}
@@ -394,23 +561,206 @@ export function ContactProfileSlideOver({
                       </div>
                     </a>
                   )}
-                  {contact.address && (
+                  {contact.secondary_phone && (
+                    <a
+                      href={`tel:${contact.secondary_phone}`}
+                      className="flex items-center gap-3 text-sm hover:text-primary transition-colors"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center">
+                        <Phone className="h-4 w-4 text-green-400" />
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground text-xs">Secondary Phone</p>
+                        <p>{contact.secondary_phone}</p>
+                      </div>
+                    </a>
+                  )}
+                  {contact.linkedin_url && (
+                    <a
+                      href={contact.linkedin_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 text-sm hover:text-primary transition-colors"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-blue-600/10 flex items-center justify-center">
+                        <Linkedin className="h-4 w-4 text-blue-500" />
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground text-xs">LinkedIn</p>
+                        <p>View Profile</p>
+                      </div>
+                    </a>
+                  )}
+                  {contact.company_website && (
+                    <a
+                      href={contact.company_website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 text-sm hover:text-primary transition-colors"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                        <Globe className="h-4 w-4 text-purple-400" />
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground text-xs">Website</p>
+                        <p className="truncate max-w-[200px]">{contact.company_website}</p>
+                      </div>
+                    </a>
+                  )}
+                  {contact.birthday && (
+                    <div className="flex items-center gap-3 text-sm">
+                      <div className="w-8 h-8 rounded-lg bg-pink-500/10 flex items-center justify-center">
+                        <Calendar className="h-4 w-4 text-pink-400" />
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground text-xs">Birthday</p>
+                        <p>{format(new Date(contact.birthday), "MMMM d")}</p>
+                      </div>
+                    </div>
+                  )}
+                  {(contact.street_address || contact.city || contact.address) && (
                     <div className="flex items-center gap-3 text-sm">
                       <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center">
                         <MapPin className="h-4 w-4 text-orange-400" />
                       </div>
                       <div>
                         <p className="text-muted-foreground text-xs">Address</p>
-                        <p>{contact.address}</p>
+                        <p>
+                          {contact.street_address || contact.address}
+                          {contact.city && `, ${contact.city}`}
+                          {contact.state && `, ${contact.state}`}
+                          {contact.zip_code && ` ${contact.zip_code}`}
+                        </p>
                       </div>
                     </div>
-                  )}
-                  {!contact.email && !contact.phone && !contact.address && (
-                    <p className="text-muted-foreground text-sm">No contact information available</p>
                   )}
                 </div>
               )}
             </div>
+
+            {/* Assistant Info */}
+            {(contact.assistant_name || (isEditing)) && (
+              <>
+                <Separator />
+                <div className="space-y-4">
+                  <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+                    Assistant
+                  </h3>
+                  {isEditing ? (
+                    <div className="space-y-3">
+                      <div>
+                        <Label>Assistant Name</Label>
+                        <Input
+                          value={editedContact.assistant_name || ""}
+                          onChange={(e) => setEditedContact({ ...editedContact, assistant_name: e.target.value })}
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <Label>Assistant Email</Label>
+                          <Input
+                            type="email"
+                            value={editedContact.assistant_email || ""}
+                            onChange={(e) => setEditedContact({ ...editedContact, assistant_email: e.target.value })}
+                          />
+                        </div>
+                        <div>
+                          <Label>Assistant Phone</Label>
+                          <Input
+                            type="tel"
+                            value={editedContact.assistant_phone || ""}
+                            onChange={(e) => setEditedContact({ ...editedContact, assistant_phone: e.target.value })}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <User2 className="h-4 w-4 text-muted-foreground" />
+                        <span>{contact.assistant_name}</span>
+                      </div>
+                      {contact.assistant_email && (
+                        <a href={`mailto:${contact.assistant_email}`} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+                          <Mail className="h-3 w-3" />
+                          {contact.assistant_email}
+                        </a>
+                      )}
+                      {contact.assistant_phone && (
+                        <a href={`tel:${contact.assistant_phone}`} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+                          <Phone className="h-3 w-3" />
+                          {contact.assistant_phone}
+                        </a>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+
+            {/* Investor Profile (for investor contacts) */}
+            {(contact.contact_type === "investor" || contact.portfolio_size || contact.investor_profile) && (
+              <>
+                <Separator />
+                <div className="space-y-4">
+                  <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+                    Investor Profile
+                  </h3>
+                  {isEditing ? (
+                    <div className="space-y-3">
+                      <div>
+                        <Label>Portfolio Size ($)</Label>
+                        <Input
+                          type="number"
+                          value={editedContact.portfolio_size || ""}
+                          onChange={(e) => setEditedContact({ ...editedContact, portfolio_size: parseFloat(e.target.value) || null })}
+                          placeholder="Total portfolio value"
+                        />
+                      </div>
+                      <div>
+                        <Label>Investor Profile</Label>
+                        <Textarea
+                          value={editedContact.investor_profile || ""}
+                          onChange={(e) => setEditedContact({ ...editedContact, investor_profile: e.target.value })}
+                          rows={3}
+                          placeholder="Investment preferences, criteria, etc."
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {contact.portfolio_size && (
+                        <p className="text-sm">
+                          <span className="text-muted-foreground">Portfolio Size:</span>{" "}
+                          ${contact.portfolio_size.toLocaleString()}
+                        </p>
+                      )}
+                      {contact.investor_profile && (
+                        <p className="text-sm whitespace-pre-wrap">{contact.investor_profile}</p>
+                      )}
+                      {contact.preferred_asset_types && contact.preferred_asset_types.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {contact.preferred_asset_types.map((type) => (
+                            <Badge key={type} variant="secondary" className="text-xs">
+                              {type}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                      {contact.target_markets && contact.target_markets.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {contact.target_markets.map((market) => (
+                            <Badge key={market} variant="outline" className="text-xs">
+                              {market}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
 
             {/* Tags */}
             {(contact.tags?.length > 0 || isEditing) && (
@@ -483,8 +833,8 @@ export function ContactProfileSlideOver({
             {!isEditing && (
               <div className="pt-4 text-xs text-muted-foreground">
                 <p>Created {format(new Date(contact.created_at), "MMM d, yyyy")}</p>
-                {contact.updated_at !== contact.created_at && (
-                  <p>Updated {formatDistanceToNow(new Date(contact.updated_at))} ago</p>
+                {contact.updated_at && (
+                  <p>Updated {format(new Date(contact.updated_at), "MMM d, yyyy")}</p>
                 )}
               </div>
             )}
@@ -492,7 +842,7 @@ export function ContactProfileSlideOver({
         </SheetContent>
       </Sheet>
 
-      {/* Delete confirmation */}
+      {/* Delete Confirmation */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>

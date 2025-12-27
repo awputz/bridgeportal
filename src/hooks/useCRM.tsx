@@ -19,6 +19,34 @@ export interface CRMContact {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  // New fields
+  title: string | null;
+  linkedin_url: string | null;
+  secondary_email: string | null;
+  secondary_phone: string | null;
+  assistant_name: string | null;
+  assistant_email: string | null;
+  assistant_phone: string | null;
+  birthday: string | null;
+  last_contact_date: string | null;
+  preferred_contact_method: string | null;
+  do_not_contact: boolean;
+  relationship_score: number;
+  company_website: string | null;
+  portfolio_size: number | null;
+  investor_profile: string | null;
+  ownership_entities: string[] | null;
+  preferred_asset_types: string[] | null;
+  target_markets: string[] | null;
+  investment_criteria: Record<string, any> | null;
+  // Address fields
+  street_address: string | null;
+  city: string | null;
+  state: string | null;
+  zip_code: string | null;
+  country: string | null;
+  latitude: number | null;
+  longitude: number | null;
 }
 
 export interface CRMDealStage {
@@ -48,6 +76,61 @@ export interface CRMDeal {
   won: boolean | null;
   created_at: string;
   updated_at: string;
+  // Common new fields
+  property_type: string | null;
+  neighborhood: string | null;
+  borough: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  zoning: string | null;
+  lot_size: number | null;
+  gross_sf: number | null;
+  last_activity_date: string | null;
+  referral_source: string | null;
+  // Investment Sales fields
+  cap_rate: number | null;
+  noi: number | null;
+  building_class: string | null;
+  unit_count: number | null;
+  year_built: number | null;
+  asking_price: number | null;
+  offer_price: number | null;
+  price_per_unit: number | null;
+  price_per_sf: number | null;
+  is_1031_exchange: boolean;
+  financing_type: string | null;
+  lender_name: string | null;
+  loan_amount: number | null;
+  co_broker_id: string | null;
+  co_broker_name: string | null;
+  co_broker_split: number | null;
+  due_diligence_deadline: string | null;
+  // Commercial Leasing fields
+  tenant_legal_name: string | null;
+  asking_rent_psf: number | null;
+  negotiated_rent_psf: number | null;
+  lease_type: string | null;
+  lease_term_months: number | null;
+  commencement_date: string | null;
+  expiration_date: string | null;
+  free_rent_months: number | null;
+  escalation_rate: number | null;
+  ti_allowance_psf: number | null;
+  security_deposit_months: number | null;
+  landlord_broker: string | null;
+  use_clause: string | null;
+  space_type: string | null;
+  // Residential fields
+  bedrooms: number | null;
+  bathrooms: number | null;
+  is_rental: boolean;
+  listing_price: number | null;
+  monthly_rent: number | null;
+  lease_length_months: number | null;
+  move_in_date: string | null;
+  pets_allowed: boolean;
+  guarantor_required: boolean;
+  co_broke_percent: number | null;
   // Joined data
   contact?: CRMContact | null;
   stage?: CRMDealStage | null;
