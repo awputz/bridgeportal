@@ -127,62 +127,62 @@ export default function IntakeForm() {
   }
 
   return (
-    <div className="min-h-screen bg-background py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-12 px-4 sm:px-6">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-10">
           <img 
             src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" 
             alt="Bridge" 
-            className="h-12 mx-auto mb-4"
+            className="h-14 mx-auto mb-6"
           />
-          <h1 className="text-2xl font-semibold">{link.name}</h1>
-          <p className="text-muted-foreground mt-1">Tell us what you're looking for</p>
+          <h1 className="text-3xl font-semibold tracking-tight">{link.name}</h1>
+          <p className="text-muted-foreground mt-2 text-base">Tell us what you're looking for</p>
         </div>
 
         {/* Progress */}
-        <div className="flex items-center justify-center gap-2 mb-8">
-        {["division", "info", "criteria"].map((s, i) => (
-            <div key={s} className="flex items-center gap-2">
+        <div className="flex items-center justify-center gap-3 mb-10">
+          {["division", "info", "criteria"].map((s, i) => (
+            <div key={s} className="flex items-center gap-3">
               <div className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors",
+                "w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 shadow-sm",
                 step === s
-                  ? "bg-primary text-primary-foreground"
+                  ? "bg-primary text-primary-foreground ring-4 ring-primary/20"
                   : ["info", "criteria"].indexOf(step) > i || (link.division && i === 0)
                     ? "bg-primary/20 text-primary"
                     : "bg-muted text-muted-foreground"
               )}>
                 {i + 1}
               </div>
-              {i < 2 && <div className="w-8 h-0.5 bg-muted" />}
+              {i < 2 && <div className="w-12 h-0.5 bg-border rounded-full" />}
             </div>
           ))}
         </div>
 
         {/* Division Selection */}
         {step === "division" && !link.division && (
-          <Card>
-            <CardHeader>
-              <CardTitle>What are you interested in?</CardTitle>
-              <CardDescription>Select the type of service you're looking for</CardDescription>
+          <Card className="shadow-lg border-border/50">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl">What are you interested in?</CardTitle>
+              <CardDescription className="text-base">Select the type of service you're looking for</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-4">
               {divisions.map((div) => {
                 const Icon = div.icon;
                 return (
                   <button
                     key={div.id}
                     onClick={() => handleDivisionSelect(div.id)}
-                    className="w-full p-4 rounded-lg border border-border hover:border-primary hover:bg-accent/50 transition-all flex items-center gap-4 text-left group"
+                    className="w-full p-5 rounded-xl border border-border hover:border-primary hover:bg-accent/50 hover:shadow-md transition-all duration-200 flex items-center gap-5 text-left group"
                   >
-                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                      <Icon className="h-6 w-6 text-primary" />
+                    <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 group-hover:scale-105 transition-all duration-200">
+                      <Icon className="h-7 w-7 text-primary" />
                     </div>
                     <div className="flex-1">
-                      <p className="font-medium">{div.name}</p>
-                      <p className="text-sm text-muted-foreground">{div.description}</p>
+                      <p className="font-semibold text-base">{div.name}</p>
+                      <p className="text-sm text-muted-foreground mt-0.5">{div.description}</p>
                     </div>
-                    <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                    <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-200" />
                   </button>
                 );
               })}
@@ -202,62 +202,66 @@ export default function IntakeForm() {
 
         {/* Client Info */}
         {step === "info" && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Your Information</CardTitle>
-              <CardDescription>How can we reach you?</CardDescription>
+          <Card className="shadow-lg border-border/50">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl">Your Information</CardTitle>
+              <CardDescription className="text-base">How can we reach you?</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="client_name">Full Name *</Label>
+            <CardContent className="space-y-6">
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div className="space-y-2.5">
+                  <Label htmlFor="client_name" className="text-sm font-medium">Full Name *</Label>
                   <Input 
                     id="client_name" 
                     {...form.register("client_name")} 
                     placeholder="John Smith"
+                    className="h-11"
                   />
                   {form.formState.errors.client_name && (
                     <p className="text-sm text-destructive">{form.formState.errors.client_name.message}</p>
                   )}
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="client_email">Email *</Label>
+                <div className="space-y-2.5">
+                  <Label htmlFor="client_email" className="text-sm font-medium">Email *</Label>
                   <Input 
                     id="client_email" 
                     type="email"
                     {...form.register("client_email")} 
                     placeholder="john@example.com"
+                    className="h-11"
                   />
                   {form.formState.errors.client_email && (
                     <p className="text-sm text-destructive">{form.formState.errors.client_email.message}</p>
                   )}
                 </div>
               </div>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="client_phone">Phone</Label>
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div className="space-y-2.5">
+                  <Label htmlFor="client_phone" className="text-sm font-medium">Phone</Label>
                   <Input 
                     id="client_phone" 
                     {...form.register("client_phone")} 
                     placeholder="(555) 123-4567"
+                    className="h-11"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="client_company">Company</Label>
+                <div className="space-y-2.5">
+                  <Label htmlFor="client_company" className="text-sm font-medium">Company</Label>
                   <Input 
                     id="client_company" 
                     {...form.register("client_company")} 
                     placeholder="Company name"
+                    className="h-11"
                   />
                 </div>
               </div>
-              <div className="flex justify-between pt-4">
+              <div className="flex justify-between pt-6 border-t border-border/50">
                 {!link.division && (
-                  <Button variant="outline" onClick={() => setStep("division")}>
+                  <Button variant="outline" onClick={() => setStep("division")} size="lg">
                     Back
                   </Button>
                 )}
-                <Button onClick={handleInfoSubmit} className="ml-auto">
+                <Button onClick={handleInfoSubmit} className="ml-auto" size="lg">
                   Continue
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -268,16 +272,16 @@ export default function IntakeForm() {
 
         {/* Criteria Form */}
         {step === "criteria" && (
-          <Card>
-            <CardHeader>
-              <CardTitle>
+          <Card className="shadow-lg border-border/50">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-xl">
                 {effectiveDivision === "investment-sales" && "Investment Criteria"}
                 {effectiveDivision === "commercial-leasing" && "Space Requirements"}
                 {effectiveDivision === "residential" && "Home Search Criteria"}
               </CardTitle>
-              <CardDescription>Help us understand what you're looking for</CardDescription>
+              <CardDescription className="text-base">Help us understand what you're looking for</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-8">
               {effectiveDivision === "investment-sales" && (
                 <InvestmentSalesCriteria criteria={criteria} setCriteria={setCriteria} />
               )}
@@ -288,23 +292,25 @@ export default function IntakeForm() {
                 <ResidentialCriteria criteria={criteria} setCriteria={setCriteria} />
               )}
 
-              <div className="space-y-2">
-                <Label htmlFor="notes">Additional Notes</Label>
+              <div className="space-y-2.5">
+                <Label htmlFor="notes" className="text-sm font-medium">Additional Notes</Label>
                 <Textarea 
                   id="notes" 
                   {...form.register("notes")} 
                   placeholder="Any other details or preferences..."
-                  rows={3}
+                  rows={4}
+                  className="resize-none"
                 />
               </div>
 
-              <div className="flex justify-between pt-4">
-                <Button variant="outline" onClick={() => setStep("info")}>
+              <div className="flex justify-between pt-6 border-t border-border/50">
+                <Button variant="outline" onClick={() => setStep("info")} size="lg">
                   Back
                 </Button>
                 <Button 
                   onClick={handleFinalSubmit} 
                   disabled={createSubmission.isPending}
+                  size="lg"
                 >
                   {createSubmission.isPending ? (
                     <>

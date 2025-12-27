@@ -185,18 +185,6 @@ const Dashboard = () => {
           <InlineDivisionSwitcher />
         </div>
 
-        {/* Market Clocks + Weather */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.02s' }}>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div className="lg:col-span-2">
-              <MarketClocksWidget />
-            </div>
-            <div>
-              <WeatherWidget compact />
-            </div>
-          </div>
-        </section>
-
         {/* Quick Actions Row: Call Office + Request */}
         <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.05s' }}>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-grid">
