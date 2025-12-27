@@ -52,15 +52,17 @@ export const AdminLayout = () => {
             <Outlet />
           </main>
           
-          {/* Subtle BOSS watermark */}
-          <div className="hidden md:flex fixed bottom-4 right-4 items-center gap-1.5 opacity-30 hover:opacity-50 transition-opacity z-10 pointer-events-none">
-            <span className="text-[10px] text-muted-foreground font-light">Powered by</span>
-            <img 
-              src="/assets/boss-logo-white.png" 
-              alt="Brokerage Operating System" 
-              className="h-4 w-auto"
-            />
-          </div>
+          {/* Footer with BOSS branding */}
+          <footer className="hidden md:flex items-center justify-center py-3 border-t border-border/30 bg-background/50">
+            <div className="flex items-center gap-2 opacity-40 hover:opacity-60 transition-opacity">
+              <span className="text-xs text-muted-foreground font-light">Powered by</span>
+              <img 
+                src="/assets/boss-logo-white.png" 
+                alt="Brokerage Operating System" 
+                className="h-5 w-auto"
+              />
+            </div>
+          </footer>
         </div>
       </div>
     </SidebarProvider>
