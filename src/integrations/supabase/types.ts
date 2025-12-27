@@ -1250,53 +1250,131 @@ export type Database = {
         Row: {
           address: string | null
           agent_id: string
+          assistant_email: string | null
+          assistant_name: string | null
+          assistant_phone: string | null
+          birthday: string | null
+          city: string | null
           company: string | null
+          company_website: string | null
           contact_type: string
+          country: string | null
           created_at: string | null
           division: string
+          do_not_contact: boolean | null
           email: string | null
           full_name: string
           id: string
+          investment_criteria: Json | null
+          investor_profile: string | null
           is_active: boolean | null
+          last_contact_date: string | null
+          latitude: number | null
+          linkedin_url: string | null
+          longitude: number | null
           notes: string | null
+          ownership_entities: string[] | null
           phone: string | null
+          portfolio_size: number | null
+          preferred_asset_types: string[] | null
+          preferred_contact_method: string | null
+          relationship_score: number | null
+          secondary_email: string | null
+          secondary_phone: string | null
           source: string | null
+          state: string | null
+          street_address: string | null
           tags: string[] | null
+          target_markets: string[] | null
+          title: string | null
           updated_at: string | null
+          zip_code: string | null
         }
         Insert: {
           address?: string | null
           agent_id: string
+          assistant_email?: string | null
+          assistant_name?: string | null
+          assistant_phone?: string | null
+          birthday?: string | null
+          city?: string | null
           company?: string | null
+          company_website?: string | null
           contact_type?: string
+          country?: string | null
           created_at?: string | null
           division: string
+          do_not_contact?: boolean | null
           email?: string | null
           full_name: string
           id?: string
+          investment_criteria?: Json | null
+          investor_profile?: string | null
           is_active?: boolean | null
+          last_contact_date?: string | null
+          latitude?: number | null
+          linkedin_url?: string | null
+          longitude?: number | null
           notes?: string | null
+          ownership_entities?: string[] | null
           phone?: string | null
+          portfolio_size?: number | null
+          preferred_asset_types?: string[] | null
+          preferred_contact_method?: string | null
+          relationship_score?: number | null
+          secondary_email?: string | null
+          secondary_phone?: string | null
           source?: string | null
+          state?: string | null
+          street_address?: string | null
           tags?: string[] | null
+          target_markets?: string[] | null
+          title?: string | null
           updated_at?: string | null
+          zip_code?: string | null
         }
         Update: {
           address?: string | null
           agent_id?: string
+          assistant_email?: string | null
+          assistant_name?: string | null
+          assistant_phone?: string | null
+          birthday?: string | null
+          city?: string | null
           company?: string | null
+          company_website?: string | null
           contact_type?: string
+          country?: string | null
           created_at?: string | null
           division?: string
+          do_not_contact?: boolean | null
           email?: string | null
           full_name?: string
           id?: string
+          investment_criteria?: Json | null
+          investor_profile?: string | null
           is_active?: boolean | null
+          last_contact_date?: string | null
+          latitude?: number | null
+          linkedin_url?: string | null
+          longitude?: number | null
           notes?: string | null
+          ownership_entities?: string[] | null
           phone?: string | null
+          portfolio_size?: number | null
+          preferred_asset_types?: string[] | null
+          preferred_contact_method?: string | null
+          relationship_score?: number | null
+          secondary_email?: string | null
+          secondary_phone?: string | null
           source?: string | null
+          state?: string | null
+          street_address?: string | null
           tags?: string[] | null
+          target_markets?: string[] | null
+          title?: string | null
           updated_at?: string | null
+          zip_code?: string | null
         }
         Relationships: []
       }
@@ -1336,60 +1414,213 @@ export type Database = {
       crm_deals: {
         Row: {
           agent_id: string
+          asking_price: number | null
+          asking_rent_psf: number | null
+          bathrooms: number | null
+          bedrooms: number | null
+          borough: string | null
+          building_class: string | null
+          cap_rate: number | null
+          co_broke_percent: number | null
+          co_broker_id: string | null
+          co_broker_name: string | null
+          co_broker_split: number | null
+          commencement_date: string | null
           commission: number | null
           contact_id: string | null
           created_at: string | null
           deal_type: string
           division: string
+          due_diligence_deadline: string | null
+          escalation_rate: number | null
           expected_close: string | null
+          expiration_date: string | null
+          financing_type: string | null
+          free_rent_months: number | null
+          gross_sf: number | null
+          guarantor_required: boolean | null
           id: string
+          is_1031_exchange: boolean | null
           is_active: boolean | null
+          is_rental: boolean | null
+          landlord_broker: string | null
+          last_activity_date: string | null
+          latitude: number | null
+          lease_length_months: number | null
+          lease_term_months: number | null
+          lease_type: string | null
+          lender_name: string | null
+          listing_price: number | null
+          loan_amount: number | null
+          longitude: number | null
+          lot_size: number | null
+          monthly_rent: number | null
+          move_in_date: string | null
+          negotiated_rent_psf: number | null
+          neighborhood: string | null
+          noi: number | null
           notes: string | null
+          offer_price: number | null
+          pets_allowed: boolean | null
+          price_per_sf: number | null
+          price_per_unit: number | null
           priority: string | null
           probability: number | null
           property_address: string
+          property_type: string | null
+          referral_source: string | null
+          security_deposit_months: number | null
+          space_type: string | null
           stage_id: string | null
+          tenant_legal_name: string | null
+          ti_allowance_psf: number | null
+          unit_count: number | null
           updated_at: string | null
+          use_clause: string | null
           value: number | null
           won: boolean | null
+          year_built: number | null
+          zoning: string | null
         }
         Insert: {
           agent_id: string
+          asking_price?: number | null
+          asking_rent_psf?: number | null
+          bathrooms?: number | null
+          bedrooms?: number | null
+          borough?: string | null
+          building_class?: string | null
+          cap_rate?: number | null
+          co_broke_percent?: number | null
+          co_broker_id?: string | null
+          co_broker_name?: string | null
+          co_broker_split?: number | null
+          commencement_date?: string | null
           commission?: number | null
           contact_id?: string | null
           created_at?: string | null
           deal_type: string
           division: string
+          due_diligence_deadline?: string | null
+          escalation_rate?: number | null
           expected_close?: string | null
+          expiration_date?: string | null
+          financing_type?: string | null
+          free_rent_months?: number | null
+          gross_sf?: number | null
+          guarantor_required?: boolean | null
           id?: string
+          is_1031_exchange?: boolean | null
           is_active?: boolean | null
+          is_rental?: boolean | null
+          landlord_broker?: string | null
+          last_activity_date?: string | null
+          latitude?: number | null
+          lease_length_months?: number | null
+          lease_term_months?: number | null
+          lease_type?: string | null
+          lender_name?: string | null
+          listing_price?: number | null
+          loan_amount?: number | null
+          longitude?: number | null
+          lot_size?: number | null
+          monthly_rent?: number | null
+          move_in_date?: string | null
+          negotiated_rent_psf?: number | null
+          neighborhood?: string | null
+          noi?: number | null
           notes?: string | null
+          offer_price?: number | null
+          pets_allowed?: boolean | null
+          price_per_sf?: number | null
+          price_per_unit?: number | null
           priority?: string | null
           probability?: number | null
           property_address: string
+          property_type?: string | null
+          referral_source?: string | null
+          security_deposit_months?: number | null
+          space_type?: string | null
           stage_id?: string | null
+          tenant_legal_name?: string | null
+          ti_allowance_psf?: number | null
+          unit_count?: number | null
           updated_at?: string | null
+          use_clause?: string | null
           value?: number | null
           won?: boolean | null
+          year_built?: number | null
+          zoning?: string | null
         }
         Update: {
           agent_id?: string
+          asking_price?: number | null
+          asking_rent_psf?: number | null
+          bathrooms?: number | null
+          bedrooms?: number | null
+          borough?: string | null
+          building_class?: string | null
+          cap_rate?: number | null
+          co_broke_percent?: number | null
+          co_broker_id?: string | null
+          co_broker_name?: string | null
+          co_broker_split?: number | null
+          commencement_date?: string | null
           commission?: number | null
           contact_id?: string | null
           created_at?: string | null
           deal_type?: string
           division?: string
+          due_diligence_deadline?: string | null
+          escalation_rate?: number | null
           expected_close?: string | null
+          expiration_date?: string | null
+          financing_type?: string | null
+          free_rent_months?: number | null
+          gross_sf?: number | null
+          guarantor_required?: boolean | null
           id?: string
+          is_1031_exchange?: boolean | null
           is_active?: boolean | null
+          is_rental?: boolean | null
+          landlord_broker?: string | null
+          last_activity_date?: string | null
+          latitude?: number | null
+          lease_length_months?: number | null
+          lease_term_months?: number | null
+          lease_type?: string | null
+          lender_name?: string | null
+          listing_price?: number | null
+          loan_amount?: number | null
+          longitude?: number | null
+          lot_size?: number | null
+          monthly_rent?: number | null
+          move_in_date?: string | null
+          negotiated_rent_psf?: number | null
+          neighborhood?: string | null
+          noi?: number | null
           notes?: string | null
+          offer_price?: number | null
+          pets_allowed?: boolean | null
+          price_per_sf?: number | null
+          price_per_unit?: number | null
           priority?: string | null
           probability?: number | null
           property_address?: string
+          property_type?: string | null
+          referral_source?: string | null
+          security_deposit_months?: number | null
+          space_type?: string | null
           stage_id?: string | null
+          tenant_legal_name?: string | null
+          ti_allowance_psf?: number | null
+          unit_count?: number | null
           updated_at?: string | null
+          use_clause?: string | null
           value?: number | null
           won?: boolean | null
+          year_built?: number | null
+          zoning?: string | null
         }
         Relationships: [
           {
@@ -1407,6 +1638,108 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      crm_referrals: {
+        Row: {
+          accepted_at: string | null
+          completed_at: string | null
+          contact_id: string | null
+          created_at: string | null
+          deal_id: string | null
+          from_division: string
+          id: string
+          notes: string | null
+          receiving_agent_id: string | null
+          referral_fee_amount: number | null
+          referral_fee_percent: number | null
+          referring_agent_id: string
+          status: string | null
+          to_division: string
+          updated_at: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          completed_at?: string | null
+          contact_id?: string | null
+          created_at?: string | null
+          deal_id?: string | null
+          from_division: string
+          id?: string
+          notes?: string | null
+          receiving_agent_id?: string | null
+          referral_fee_amount?: number | null
+          referral_fee_percent?: number | null
+          referring_agent_id: string
+          status?: string | null
+          to_division: string
+          updated_at?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          completed_at?: string | null
+          contact_id?: string | null
+          created_at?: string | null
+          deal_id?: string | null
+          from_division?: string
+          id?: string
+          notes?: string | null
+          receiving_agent_id?: string | null
+          referral_fee_amount?: number | null
+          referral_fee_percent?: number | null
+          referring_agent_id?: string
+          status?: string | null
+          to_division?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_referrals_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crm_referrals_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crm_saved_filters: {
+        Row: {
+          agent_id: string
+          created_at: string | null
+          division: string
+          filter_config: Json
+          id: string
+          is_default: boolean | null
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string | null
+          division: string
+          filter_config?: Json
+          id?: string
+          is_default?: boolean | null
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string | null
+          division?: string
+          filter_config?: Json
+          id?: string
+          is_default?: boolean | null
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       deal_room_documents: {
         Row: {
