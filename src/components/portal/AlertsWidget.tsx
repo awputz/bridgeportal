@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,12 +10,15 @@ import {
   DollarSign,
   Bell,
   CalendarClock,
-  ArrowRight
+  ArrowRight,
+  RefreshCw
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTaskStats } from "@/hooks/useTasks";
 import { useMyCommissions } from "@/hooks/useMyCommissions";
 import { usePinnedAnnouncements } from "@/hooks/useAnnouncements";
+import { supabase } from "@/integrations/supabase/client";
+import { useQueryClient } from "@tanstack/react-query";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface AlertItem {
@@ -28,11 +32,49 @@ interface AlertItem {
 }
 
 export const AlertsWidget = () => {
-  const { data: taskStats, isLoading: isLoadingTasks } = useTaskStats();
+  const queryClient = useQueryClient();
+  const { data: taskStats, isLoading: isLoadingTasks, isFetching: isFetchingTasks } = useTaskStats();
   const { stats: commissionStats, isLoading: isLoadingCommissions } = useMyCommissions();
   const { data: announcements, isLoading: isLoadingAnnouncements } = usePinnedAnnouncements(3);
 
   const isLoading = isLoadingTasks || isLoadingCommissions || isLoadingAnnouncements;
+  const isRefreshing = isFetchingTasks && !isLoadingTasks;
+
+  // Subscribe to realtime updates for tasks, commissions, and announcements
+  useEffect(() => {
+    const channel = supabase
+      .channel('alerts-widget-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'crm_activities' },
+        () => {
+          console.log('Tasks updated - refreshing alerts');
+          queryClient.invalidateQueries({ queryKey: ['task-stats'] });
+          queryClient.invalidateQueries({ queryKey: ['tasks'] });
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'commission_requests' },
+        () => {
+          console.log('Commission requests updated - refreshing alerts');
+          queryClient.invalidateQueries({ queryKey: ['my-commission-requests'] });
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'company_announcements' },
+        () => {
+          console.log('Announcements updated - refreshing alerts');
+          queryClient.invalidateQueries({ queryKey: ['announcements'] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
 
   // Build alerts list
   const alerts: AlertItem[] = [];
@@ -100,7 +142,10 @@ export const AlertsWidget = () => {
           <CardTitle className="flex items-center gap-2 text-lg">
             <CalendarClock className="h-5 w-5 text-primary" />
             Priorities
-            {totalAlerts > 0 && (
+            {isRefreshing && (
+              <RefreshCw className="h-3 w-3 text-muted-foreground animate-spin" />
+            )}
+            {totalAlerts > 0 && !isRefreshing && (
               <Badge variant="secondary" className="bg-amber-500/20 text-amber-400 text-xs">
                 {totalAlerts}
               </Badge>
