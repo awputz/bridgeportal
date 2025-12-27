@@ -6,11 +6,13 @@ import {
   Calendar,
   User,
   ArrowUpDown,
-  ExternalLink
+  ExternalLink,
+  Check
 } from "lucide-react";
 import { CRMDeal, CRMDealStage } from "@/hooks/useCRM";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -37,7 +39,6 @@ import {
   formatFullCurrency, 
   formatResidentialRent, 
   formatInvestmentSalesPrice,
-  DIVISION_DISPLAY_NAMES
 } from "@/lib/formatters";
 
 interface CRMTableProps {
@@ -46,6 +47,8 @@ interface CRMTableProps {
   onStageChange: (dealId: string, newStageId: string) => void;
   onDeleteDeal?: (dealId: string) => void;
   division: string;
+  selectedDeals?: Set<string>;
+  onSelectionChange?: (dealId: string, selected: boolean) => void;
 }
 
 const priorityConfig: Record<string, { label: string; className: string }> = {
@@ -54,35 +57,37 @@ const priorityConfig: Record<string, { label: string; className: string }> = {
   low: { label: "Low", className: "bg-green-500/20 text-green-400 border-green-500/30" },
 };
 
-/**
- * Format deal value based on division type
- * - Investment Sales: Full purchase price (e.g., $12,500,000)
- * - Commercial Leasing: Full lease value (e.g., $450,000)
- * - Residential: Full monthly rent or sale price (e.g., $4,500/month or $1,200,000)
- */
-const formatDealValueByDivision = (value: number | null | undefined, division: string): string => {
-  if (!value) return "—";
-  
-  switch (division) {
-    case "investment-sales":
-      // Always show full price, no abbreviations
-      return formatInvestmentSalesPrice(value);
-    
-    case "commercial-leasing":
-      // Show full lease value
-      return formatFullCurrency(value);
-    
-    case "residential":
-      // For residential, if value < 10000, assume it's monthly rent
-      // Otherwise, assume it's a sale price
-      if (value < 50000) {
-        return formatResidentialRent(value);
-      }
-      return formatFullCurrency(value);
-    
-    default:
-      return formatFullCurrency(value);
+const formatDealValueByDivision = (deal: CRMDeal, division: string): string => {
+  if (division === "investment-sales") {
+    const price = deal.asking_price || deal.offer_price || deal.value;
+    if (!price) return "—";
+    return formatInvestmentSalesPrice(price);
   }
+  
+  if (division === "commercial-leasing") {
+    if (deal.asking_rent_psf) {
+      return `$${deal.asking_rent_psf.toFixed(2)}/SF`;
+    }
+    if (deal.value) return formatFullCurrency(deal.value);
+    return "—";
+  }
+  
+  if (division === "residential") {
+    if (deal.is_rental && deal.monthly_rent) {
+      return formatResidentialRent(deal.monthly_rent);
+    }
+    if (deal.listing_price) {
+      return formatFullCurrency(deal.listing_price);
+    }
+    if (deal.value) {
+      return deal.value < 50000 
+        ? formatResidentialRent(deal.value)
+        : formatFullCurrency(deal.value);
+    }
+    return "—";
+  }
+  
+  return deal.value ? formatFullCurrency(deal.value) : "—";
 };
 
 const formatDate = (dateString: string | null | undefined): string => {
@@ -99,7 +104,9 @@ export const CRMTable = ({
   stages, 
   onStageChange, 
   onDeleteDeal,
-  division 
+  division,
+  selectedDeals = new Set(),
+  onSelectionChange,
 }: CRMTableProps) => {
   const [sortField, setSortField] = useState<string>("updated_at");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
@@ -124,6 +131,10 @@ export const CRMTable = ({
         const priorityOrder = { high: 3, medium: 2, low: 1 };
         aVal = priorityOrder[a.priority as keyof typeof priorityOrder] || 0;
         bVal = priorityOrder[b.priority as keyof typeof priorityOrder] || 0;
+        break;
+      case "cap_rate":
+        aVal = a.cap_rate || 0;
+        bVal = b.cap_rate || 0;
         break;
       default:
         aVal = a.updated_at ? new Date(a.updated_at).getTime() : 0;
@@ -158,37 +169,37 @@ export const CRMTable = ({
     </button>
   );
 
-  // Division-specific column labels
-  const getDivisionColumns = () => {
+  // Division-specific column labels and extra columns
+  const getDivisionConfig = () => {
     switch (division) {
       case "investment-sales":
         return { 
-          valueLabel: "Sale Price", 
-          typeLabel: "Asset Type",
-          valueHint: "Full purchase price"
+          valueLabel: "Price", 
+          showCapRate: true,
+          showUnits: true,
         };
       case "commercial-leasing":
         return { 
-          valueLabel: "Lease Value", 
-          typeLabel: "Space Type",
-          valueHint: "Total lease value"
+          valueLabel: "Rent/SF", 
+          showCapRate: false,
+          showUnits: false,
         };
       case "residential":
         return { 
           valueLabel: "Price/Rent", 
-          typeLabel: "Deal Type",
-          valueHint: "Monthly rent or sale price"
+          showCapRate: false,
+          showUnits: false,
         };
       default:
         return { 
           valueLabel: "Value", 
-          typeLabel: "Type",
-          valueHint: ""
+          showCapRate: false,
+          showUnits: false,
         };
     }
   };
 
-  const { valueLabel, typeLabel, valueHint } = getDivisionColumns();
+  const config = getDivisionConfig();
 
   return (
     <div className="glass-card overflow-hidden">
@@ -196,16 +207,29 @@ export const CRMTable = ({
         <Table>
           <TableHeader>
             <TableRow className="border-white/10 hover:bg-transparent">
+              {onSelectionChange && (
+                <TableHead className="w-[50px]">
+                  <span className="sr-only">Select</span>
+                </TableHead>
+              )}
               <TableHead className="text-muted-foreground font-light">
                 <SortHeader field="property_address">Property</SortHeader>
               </TableHead>
               <TableHead className="text-muted-foreground font-light">Contact</TableHead>
               <TableHead className="text-muted-foreground font-light">Status</TableHead>
               <TableHead className="text-muted-foreground font-light">
-                <SortHeader field="value">{valueLabel}</SortHeader>
+                <SortHeader field="value">{config.valueLabel}</SortHeader>
               </TableHead>
+              {config.showCapRate && (
+                <TableHead className="text-muted-foreground font-light">
+                  <SortHeader field="cap_rate">Cap Rate</SortHeader>
+                </TableHead>
+              )}
+              {config.showUnits && (
+                <TableHead className="text-muted-foreground font-light">Units</TableHead>
+              )}
               <TableHead className="text-muted-foreground font-light">
-                <SortHeader field="expected_close">Expected Close</SortHeader>
+                <SortHeader field="expected_close">Close Date</SortHeader>
               </TableHead>
               <TableHead className="text-muted-foreground font-light">
                 <SortHeader field="priority">Priority</SortHeader>
@@ -217,19 +241,37 @@ export const CRMTable = ({
             {sortedDeals.map((deal) => {
               const currentStage = stages.find(s => s.id === deal.stage_id);
               const priority = priorityConfig[deal.priority || "medium"];
+              const isSelected = selectedDeals.has(deal.id);
 
               return (
                 <TableRow 
                   key={deal.id} 
-                  className="border-white/5 hover:bg-white/5 transition-colors"
+                  className={cn(
+                    "border-white/5 hover:bg-white/5 transition-colors",
+                    isSelected && "bg-primary/10"
+                  )}
                 >
+                  {onSelectionChange && (
+                    <TableCell>
+                      <Checkbox
+                        checked={isSelected}
+                        onCheckedChange={(checked) => onSelectionChange(deal.id, !!checked)}
+                        aria-label={`Select ${deal.property_address}`}
+                      />
+                    </TableCell>
+                  )}
                   <TableCell className="font-light">
                     <Link 
                       to={`/portal/crm/deals/${deal.id}`}
                       className="flex items-center gap-2 hover:text-foreground text-foreground/90 transition-colors"
                     >
                       <Building2 className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                      <span className="truncate max-w-[200px]">{deal.property_address}</span>
+                      <div className="min-w-0">
+                        <span className="truncate block max-w-[200px]">{deal.property_address}</span>
+                        {deal.property_type && (
+                          <span className="text-xs text-muted-foreground">{deal.property_type}</span>
+                        )}
+                      </div>
                     </Link>
                   </TableCell>
                   <TableCell>
@@ -278,9 +320,27 @@ export const CRMTable = ({
                   </TableCell>
                   <TableCell>
                     <div className="text-foreground/90 font-medium">
-                      {formatDealValueByDivision(deal.value, division)}
+                      {formatDealValueByDivision(deal, division)}
                     </div>
                   </TableCell>
+                  {config.showCapRate && (
+                    <TableCell>
+                      {deal.cap_rate ? (
+                        <span className="text-foreground/90">{deal.cap_rate.toFixed(2)}%</span>
+                      ) : (
+                        <span className="text-muted-foreground/50">—</span>
+                      )}
+                    </TableCell>
+                  )}
+                  {config.showUnits && (
+                    <TableCell>
+                      {deal.unit_count ? (
+                        <span className="text-foreground/90">{deal.unit_count}</span>
+                      ) : (
+                        <span className="text-muted-foreground/50">—</span>
+                      )}
+                    </TableCell>
+                  )}
                   <TableCell>
                     <div className="flex items-center gap-1 text-muted-foreground">
                       <Calendar className="h-3 w-3" />
