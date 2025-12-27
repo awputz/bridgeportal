@@ -54,20 +54,23 @@ export const PortalLayout = () => {
           <Outlet />
         </ErrorBoundary>
       </main>
+      
+      {/* Desktop Footer with BOSS branding */}
+      <footer className="hidden md:flex items-center justify-center py-3 border-t border-border/30 bg-background/50 backdrop-blur-sm">
+        <div className="flex items-center gap-2 opacity-50 hover:opacity-70 transition-opacity">
+          <span className="text-xs text-muted-foreground font-light">Powered by</span>
+          <img 
+            src="/assets/boss-logo-white.png" 
+            alt="Brokerage Operating System" 
+            className="h-5 w-auto"
+          />
+        </div>
+      </footer>
+      
       <MobileBottomNav />
       <QuickActivityLogger />
       <AIAssistant />
       <CommandPalette open={commandOpen} onOpenChange={setCommandOpen} />
-      
-      {/* Subtle BOSS watermark - desktop only */}
-      <div className="hidden md:flex fixed bottom-4 right-4 items-center gap-1.5 opacity-30 hover:opacity-50 transition-opacity z-10 pointer-events-none">
-        <span className="text-[10px] text-muted-foreground font-light">Powered by</span>
-        <img 
-          src="/assets/boss-logo-white.png" 
-          alt="Brokerage Operating System" 
-          className="h-4 w-auto"
-        />
-      </div>
     </div>
   );
 };
