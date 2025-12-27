@@ -96,6 +96,8 @@ const NewsletterAdmin = lazy(() => import("./pages/admin/NewsletterAdmin"));
 const ActivityLogsAdmin = lazy(() => import("./pages/admin/ActivityLogsAdmin"));
 const CRMConfigAdmin = lazy(() => import("./pages/admin/CRMConfigAdmin"));
 const MyExclusives = lazy(() => import("./pages/portal/MyExclusives"));
+const Intake = lazy(() => import("./pages/portal/Intake"));
+const IntakeForm = lazy(() => import("./pages/intake/IntakeForm"));
 const CommissionRequestsAdmin = lazy(() => import("./pages/admin/CommissionRequestsAdmin"));
 const CRMOverviewAdmin = lazy(() => import("./pages/admin/CRMOverviewAdmin"));
 const AgentPerformanceAdmin = lazy(() => import("./pages/admin/AgentPerformanceAdmin"));
@@ -157,6 +159,13 @@ const App = () => {
                     </Suspense>
                   } />
                   <Route path="/auth" element={<Navigate to="/login" replace />} />
+                  
+                  {/* Public Intake Form */}
+                  <Route path="/intake/:linkCode" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <IntakeForm />
+                    </Suspense>
+                  } />
                   
                   {/* Investor Login */}
                   <Route path="/investor-login" element={
@@ -305,6 +314,11 @@ const App = () => {
                     <Route path="my-commissions" element={
                       <Suspense fallback={<PageLoader />}>
                         <MyCommissions />
+                      </Suspense>
+                    } />
+                    <Route path="intake" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <Intake />
                       </Suspense>
                     } />
                     

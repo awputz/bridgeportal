@@ -19,7 +19,8 @@ import {
   Calendar,
   Settings,
   Shield,
-  Search
+  Search,
+  ClipboardList
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -48,6 +49,7 @@ const googleItems = [
 const essentialsItems = [
   { name: "CRM", path: "/portal/crm", icon: Briefcase },
   { name: "Contacts", path: "/portal/contacts", icon: Users },
+  { name: "Intake", path: "/portal/intake", icon: ClipboardList },
   { name: "Tasks", path: "/portal/tasks", icon: ListTodo },
   { name: "Notes", path: "/portal/notes", icon: StickyNote },
 ];
