@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/hooks/use-toast";
 import { Lock, Loader2, Mail, ArrowLeft, LogOut, ArrowRight, ChevronDown, ChevronUp } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -25,6 +26,7 @@ const Login = () => {
   const [isResetLoading, setIsResetLoading] = useState(false);
   const [existingUser, setExistingUser] = useState<User | null>(null);
   const [showEmailLogin, setShowEmailLogin] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
     const {
@@ -215,16 +217,16 @@ const Login = () => {
             </div>
           </div>
 
-          <div className="text-center mt-8 space-y-2">
+          <div className="text-center mt-8 space-y-3">
             <p className="text-xs text-muted-foreground/50 font-light">
               Bridge Advisory Group © {new Date().getFullYear()}
             </p>
-            <div className="flex items-center justify-center gap-2.5 opacity-60">
-              <span className="text-sm text-muted-foreground/60 font-light">Powered by</span>
+            <div className="flex items-center justify-center gap-3 opacity-70">
+              <span className="text-base text-muted-foreground/60 font-light">Powered by</span>
               <img 
                 src="/assets/boss-logo-white.png" 
                 alt="Brokerage Operating System" 
-                className="h-8 w-auto"
+                className="h-14 w-auto"
               />
             </div>
           </div>
@@ -363,6 +365,35 @@ const Login = () => {
                 </CollapsibleContent>
               </Collapsible>
 
+              {/* Terms & Privacy Checkbox */}
+              <div className="mt-6 pt-6 border-t border-white/10">
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <Checkbox
+                    checked={agreedToTerms}
+                    onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
+                    className="mt-0.5 border-muted-foreground/50 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                  />
+                  <span className="text-sm text-muted-foreground font-light leading-relaxed">
+                    I agree to the{" "}
+                    <Link 
+                      to="/terms" 
+                      className="text-foreground hover:text-primary transition-colors underline underline-offset-2"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Terms of Service
+                    </Link>{" "}
+                    and{" "}
+                    <Link 
+                      to="/privacy" 
+                      className="text-foreground hover:text-primary transition-colors underline underline-offset-2"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Privacy Policy
+                    </Link>
+                  </span>
+                </label>
+              </div>
+
               {/* Apply Link */}
               <div className="mt-6 pt-6 border-t border-white/10 text-center">
                 <p className="text-sm text-muted-foreground mb-2">New to Bridge?</p>
@@ -380,16 +411,16 @@ const Login = () => {
             </>}
         </div>
 
-        <div className="text-center mt-8 space-y-2">
+        <div className="text-center mt-8 space-y-3">
           <p className="text-xs text-muted-foreground/50 font-light">
             Bridge Advisory Group © {new Date().getFullYear()}
           </p>
-          <div className="flex items-center justify-center gap-2.5 opacity-60">
-            <span className="text-sm text-muted-foreground/60 font-light">Powered by</span>
+          <div className="flex items-center justify-center gap-3 opacity-70">
+            <span className="text-base text-muted-foreground/60 font-light">Powered by</span>
             <img 
               src="/assets/boss-logo-white.png" 
               alt="Brokerage Operating System" 
-              className="h-8 w-auto"
+              className="h-14 w-auto"
             />
           </div>
         </div>
