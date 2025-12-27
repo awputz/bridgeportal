@@ -1,0 +1,337 @@
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
+
+export interface IntakeLink {
+  id: string;
+  agent_id: string;
+  link_code: string;
+  name: string;
+  division: string | null;
+  is_active: boolean;
+  expires_at: string | null;
+  view_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface IntakeSubmission {
+  id: string;
+  link_id: string | null;
+  agent_id: string;
+  division: string;
+  client_name: string;
+  client_email: string;
+  client_phone: string | null;
+  client_company: string | null;
+  criteria: Record<string, unknown>;
+  notes: string | null;
+  status: string;
+  contacted_at: string | null;
+  converted_contact_id: string | null;
+  converted_deal_id: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+// Generate a unique link code
+const generateLinkCode = () => {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let code = '';
+  for (let i = 0; i < 8; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
+};
+
+// Fetch agent's intake links
+export const useIntakeLinks = () => {
+  const { user } = useAuth();
+  
+  return useQuery({
+    queryKey: ["intake-links", user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("client_intake_links")
+        .select("*")
+        .eq("agent_id", user!.id)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      return data as IntakeLink[];
+    },
+    enabled: !!user,
+  });
+};
+
+// Fetch a single intake link by code (for public form)
+export const useIntakeLinkByCode = (linkCode: string) => {
+  return useQuery({
+    queryKey: ["intake-link", linkCode],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("client_intake_links")
+        .select("*")
+        .eq("link_code", linkCode)
+        .eq("is_active", true)
+        .maybeSingle();
+
+      if (error) throw error;
+      if (!data) throw new Error("Link not found or expired");
+      
+      // Check expiration
+      if (data.expires_at && new Date(data.expires_at) < new Date()) {
+        throw new Error("This link has expired");
+      }
+      
+      return data as IntakeLink;
+    },
+    enabled: !!linkCode,
+    retry: false,
+  });
+};
+
+// Create a new intake link
+export const useCreateIntakeLink = () => {
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
+
+  return useMutation({
+    mutationFn: async (data: { name: string; division?: string; expires_at?: string }) => {
+      const linkCode = generateLinkCode();
+      
+      const { data: newLink, error } = await supabase
+        .from("client_intake_links")
+        .insert({
+          agent_id: user!.id,
+          link_code: linkCode,
+          name: data.name,
+          division: data.division || null,
+          expires_at: data.expires_at || null,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return newLink as IntakeLink;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["intake-links"] });
+      toast.success("Intake link created!");
+    },
+    onError: (error) => {
+      toast.error("Failed to create link: " + error.message);
+    },
+  });
+};
+
+// Update intake link
+export const useUpdateIntakeLink = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, ...updates }: Partial<IntakeLink> & { id: string }) => {
+      const { data, error } = await supabase
+        .from("client_intake_links")
+        .update(updates)
+        .eq("id", id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as IntakeLink;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["intake-links"] });
+    },
+  });
+};
+
+// Delete intake link
+export const useDeleteIntakeLink = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from("client_intake_links")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["intake-links"] });
+      toast.success("Link deleted");
+    },
+  });
+};
+
+// Fetch agent's intake submissions
+export const useIntakeSubmissions = (filters?: { division?: string; status?: string }) => {
+  const { user } = useAuth();
+  
+  return useQuery({
+    queryKey: ["intake-submissions", user?.id, filters],
+    queryFn: async () => {
+      let query = supabase
+        .from("client_intake_submissions")
+        .select("*")
+        .eq("agent_id", user!.id)
+        .order("created_at", { ascending: false });
+
+      if (filters?.division) {
+        query = query.eq("division", filters.division);
+      }
+      if (filters?.status) {
+        query = query.eq("status", filters.status);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return data as IntakeSubmission[];
+    },
+    enabled: !!user,
+  });
+};
+
+// Fetch intake stats
+export const useIntakeStats = () => {
+  const { user } = useAuth();
+  
+  return useQuery({
+    queryKey: ["intake-stats", user?.id],
+    queryFn: async () => {
+      const today = new Date();
+      const weekAgo = new Date(today);
+      weekAgo.setDate(weekAgo.getDate() - 7);
+
+      const { data, error } = await supabase
+        .from("client_intake_submissions")
+        .select("id, status, created_at")
+        .eq("agent_id", user!.id);
+
+      if (error) throw error;
+
+      const total = data.length;
+      const thisWeek = data.filter(s => new Date(s.created_at) >= weekAgo).length;
+      const newSubmissions = data.filter(s => s.status === 'new').length;
+
+      return { total, thisWeek, newSubmissions };
+    },
+    enabled: !!user,
+  });
+};
+
+// Create a submission (for public form)
+export const useCreateIntakeSubmission = () => {
+  return useMutation({
+    mutationFn: async (data: {
+      link_id?: string;
+      agent_id: string;
+      division: string;
+      client_name: string;
+      client_email: string;
+      client_phone?: string;
+      client_company?: string;
+      criteria: Record<string, unknown>;
+      notes?: string;
+    }) => {
+      const { data: submission, error } = await supabase
+        .from("client_intake_submissions")
+        .insert({
+          link_id: data.link_id || null,
+          agent_id: data.agent_id,
+          division: data.division,
+          client_name: data.client_name,
+          client_email: data.client_email,
+          client_phone: data.client_phone || null,
+          client_company: data.client_company || null,
+          criteria: data.criteria as unknown as Record<string, never>,
+          notes: data.notes || null,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return submission as IntakeSubmission;
+    },
+  });
+};
+
+// Update submission status
+export const useUpdateSubmission = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, status, contacted_at }: { id: string; status?: string; contacted_at?: string }) => {
+      const updateData: Record<string, unknown> = {};
+      if (status) updateData.status = status;
+      if (contacted_at) updateData.contacted_at = contacted_at;
+      
+      const { data, error } = await supabase
+        .from("client_intake_submissions")
+        .update(updateData)
+        .eq("id", id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as IntakeSubmission;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["intake-submissions"] });
+      queryClient.invalidateQueries({ queryKey: ["intake-stats"] });
+    },
+  });
+};
+
+// Convert submission to CRM contact
+export const useConvertToContact = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ submission, division }: { submission: IntakeSubmission; division: string }) => {
+      // Create CRM contact
+      const { data: contact, error: contactError } = await supabase
+        .from("crm_contacts")
+        .insert({
+          agent_id: submission.agent_id,
+          full_name: submission.client_name,
+          email: submission.client_email,
+          phone: submission.client_phone,
+          company: submission.client_company,
+          division,
+          contact_type: "prospect",
+          source: "intake_form",
+          notes: `Criteria from intake form:\n${JSON.stringify(submission.criteria, null, 2)}`,
+        })
+        .select()
+        .single();
+
+      if (contactError) throw contactError;
+
+      // Update submission with converted contact id
+      const { error: updateError } = await supabase
+        .from("client_intake_submissions")
+        .update({ 
+          converted_contact_id: contact.id,
+          status: 'converted'
+        })
+        .eq("id", submission.id);
+
+      if (updateError) throw updateError;
+
+      return contact;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["intake-submissions"] });
+      queryClient.invalidateQueries({ queryKey: ["crm-contacts"] });
+      toast.success("Contact created from submission!");
+    },
+    onError: (error) => {
+      toast.error("Failed to convert: " + error.message);
+    },
+  });
+};
