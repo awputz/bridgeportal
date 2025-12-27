@@ -12,6 +12,7 @@ import { PortalLayout } from "@/components/portal/PortalLayout";
 import { InvestorLayout } from "@/components/investor/InvestorLayout";
 import { DivisionProvider } from "@/contexts/DivisionContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ContactSheetProvider } from "@/contexts/ContactSheetContext";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 // Pages - eager loaded for fast initial load
@@ -103,6 +104,15 @@ const CRMOverviewAdmin = lazy(() => import("./pages/admin/CRMOverviewAdmin"));
 const AgentPerformanceAdmin = lazy(() => import("./pages/admin/AgentPerformanceAdmin"));
 const ApplicationsAdmin = lazy(() => import("./pages/admin/ApplicationsAdmin"));
 
+// Service Pages - lazy loaded
+const InvestmentSales = lazy(() => import("./pages/services/InvestmentSales"));
+const Residential = lazy(() => import("./pages/services/Residential"));
+const CommercialLeasing = lazy(() => import("./pages/services/CommercialLeasing"));
+const CapitalAdvisory = lazy(() => import("./pages/services/CapitalAdvisory"));
+const PropertyManagement = lazy(() => import("./pages/services/PropertyManagement"));
+const Billboard = lazy(() => import("./pages/services/Billboard"));
+const Marketing = lazy(() => import("./pages/services/Marketing"));
+
 // Optimized QueryClient with better caching
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -132,10 +142,11 @@ const App = () => {
         <AuthProvider>
           <TooltipProvider>
             <DivisionProvider>
-              <ErrorBoundary>
-                <Toaster />
-                <Sonner />
-                <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+              <ContactSheetProvider>
+                <ErrorBoundary>
+                  <Toaster />
+                  <Sonner />
+                  <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                 <Routes>
                   {/* Root redirects to portal */}
                   <Route path="/" element={<Navigate to="/portal" replace />} />
@@ -176,6 +187,43 @@ const App = () => {
                   <Route path="/intake/:linkCode" element={
                     <Suspense fallback={<PageLoader />}>
                       <IntakeForm />
+                    </Suspense>
+                  } />
+                  
+                  {/* Service Pages (Public) */}
+                  <Route path="/services/investment-sales" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <InvestmentSales />
+                    </Suspense>
+                  } />
+                  <Route path="/services/residential" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <Residential />
+                    </Suspense>
+                  } />
+                  <Route path="/services/commercial-leasing" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <CommercialLeasing />
+                    </Suspense>
+                  } />
+                  <Route path="/services/capital-advisory" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <CapitalAdvisory />
+                    </Suspense>
+                  } />
+                  <Route path="/services/property-management" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <PropertyManagement />
+                    </Suspense>
+                  } />
+                  <Route path="/services/billboard" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <Billboard />
+                    </Suspense>
+                  } />
+                  <Route path="/services/marketing" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <Marketing />
                     </Suspense>
                   } />
                   
@@ -515,7 +563,8 @@ const App = () => {
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>
-            </ErrorBoundary>
+              </ErrorBoundary>
+            </ContactSheetProvider>
           </DivisionProvider>
         </TooltipProvider>
       </AuthProvider>
