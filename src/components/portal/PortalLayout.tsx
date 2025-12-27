@@ -1,4 +1,4 @@
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
 import { PortalNavigation } from "./PortalNavigation";
 import { MobileBottomNav } from "./MobileBottomNav";
 import { AIAssistant } from "./AIAssistant";
@@ -55,15 +55,31 @@ export const PortalLayout = () => {
         </ErrorBoundary>
       </main>
       
-      {/* Desktop Footer with BOSS branding */}
+      {/* Desktop Footer with BOSS branding + Legal Links */}
       <footer className="hidden md:flex items-center justify-center py-3 border-t border-border/30 bg-background/50 backdrop-blur-sm">
-        <div className="flex items-center gap-2 opacity-50 hover:opacity-70 transition-opacity">
-          <span className="text-xs text-muted-foreground font-light">Powered by</span>
-          <img 
-            src="/assets/boss-logo-white.png" 
-            alt="Brokerage Operating System" 
-            className="h-5 w-auto"
-          />
+        <div className="flex items-center gap-4">
+          <Link 
+            to="/terms" 
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors font-light"
+          >
+            Terms of Service
+          </Link>
+          <span className="text-muted-foreground/30">|</span>
+          <Link 
+            to="/privacy" 
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors font-light"
+          >
+            Privacy Policy
+          </Link>
+          <span className="text-muted-foreground/30">|</span>
+          <div className="flex items-center gap-2 opacity-50 hover:opacity-70 transition-opacity">
+            <span className="text-xs text-muted-foreground font-light">Powered by</span>
+            <img 
+              src="/assets/boss-logo-white.png" 
+              alt="Brokerage Operating System" 
+              className="h-5 w-auto"
+            />
+          </div>
         </div>
       </footer>
       

@@ -16,6 +16,9 @@ import { format } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
+import { AerialViewButton } from "@/components/AerialViewButton";
+import { Immersive3DMap } from "@/components/Immersive3DMap";
+import { WeatherWidget } from "@/components/WeatherWidget";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -1113,6 +1116,43 @@ const DealDetail = () => {
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Property Location & Weather */}
+            <Card className="glass-card border-white/10">
+              <CardHeader>
+                <CardTitle className="font-light text-sm flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  Location & Weather
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Weather for property location */}
+                <WeatherWidget 
+                  address={deal.property_address} 
+                  latitude={deal.latitude || undefined}
+                  longitude={deal.longitude || undefined}
+                  compact 
+                />
+                
+                {/* Aerial View Button */}
+                <AerialViewButton 
+                  address={deal.property_address}
+                  latitude={deal.latitude || undefined}
+                  longitude={deal.longitude || undefined}
+                  className="w-full"
+                />
+                
+                {/* 3D Map */}
+                {(deal.latitude && deal.longitude) && (
+                  <Immersive3DMap
+                    latitude={deal.latitude}
+                    longitude={deal.longitude}
+                    address={deal.property_address}
+                    className="mt-2"
+                  />
+                )}
+              </CardContent>
+            </Card>
+
             {/* Stage */}
             <Card className="glass-card border-white/10">
               <CardHeader>
