@@ -259,19 +259,18 @@ const Dashboard = () => {
               View Our Exclusive Listings
             </h2>
           </div>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-3 auto-rows-fr">
             {exclusiveListings.map(listing => {
             const Icon = listing.icon;
-            const content = <div className="glass-card p-4 flex flex-col items-center justify-center text-center hover:border-white/20 transition-all duration-300 min-h-[100px]">
-                  <div className={`w-10 h-10 rounded-full ${listing.color.split(' ')[0]} flex items-center justify-center mb-2`}>
+            const content = <div className="glass-card p-3 sm:p-4 flex flex-col items-center justify-center text-center hover:border-white/20 transition-all duration-300 h-full">
+                  <div className={`w-10 h-10 rounded-full ${listing.color.split(' ')[0]} flex items-center justify-center mb-2 flex-shrink-0`}>
                     <Icon className={`h-5 w-5 ${listing.color.split(' ')[1]}`} />
                   </div>
-                  <span className="text-sm font-light text-foreground">{listing.name}</span>
-                  {listing.external}
+                  <span className="text-xs sm:text-sm font-light text-foreground line-clamp-1">{listing.name}</span>
                 </div>;
-            return listing.external ? <a key={listing.name} href={listing.url} target="_blank" rel="noopener noreferrer">
+            return listing.external ? <a key={listing.name} href={listing.url} target="_blank" rel="noopener noreferrer" className="h-full">
                   {content}
-                </a> : <Link key={listing.name} to={listing.url}>
+                </a> : <Link key={listing.name} to={listing.url} className="h-full">
                   {content}
                 </Link>;
           })}
@@ -355,14 +354,14 @@ const Dashboard = () => {
             </Link>
           </div>
           
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-3 auto-rows-fr">
             {calculatorQuickAccess.map(calc => {
             const Icon = calc.icon;
-            return <Link key={calc.name} to={calc.path} className="glass-card p-4 flex flex-col items-center justify-center text-center hover:border-white/20 transition-all duration-300 min-h-[100px]">
-                  <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center mb-2">
+            return <Link key={calc.name} to={calc.path} className="glass-card p-3 sm:p-4 flex flex-col items-center justify-center text-center hover:border-white/20 transition-all duration-300 h-full">
+                  <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center mb-2 flex-shrink-0">
                     <Icon className="h-5 w-5 text-foreground/70" />
                   </div>
-                  <span className="text-sm font-light text-foreground">{calc.name}</span>
+                  <span className="text-xs sm:text-sm font-light text-foreground line-clamp-1">{calc.name}</span>
                 </Link>;
           })}
           </div>
@@ -381,33 +380,33 @@ const Dashboard = () => {
             </Link>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Link to="/portal/templates/investment-sales" className="glass-card p-4 flex flex-col items-center gap-2 hover:border-white/20 transition-all duration-300">
-              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 auto-rows-fr">
+            <Link to="/portal/templates/investment-sales" className="glass-card p-3 sm:p-4 flex flex-col items-center justify-center gap-2 hover:border-white/20 transition-all duration-300 h-full">
+              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0">
                 <TrendingUp className="h-5 w-5 text-foreground/60" />
               </div>
-              <span className="text-sm font-light text-foreground text-center">Investment Sales</span>
+              <span className="text-xs sm:text-sm font-light text-foreground text-center line-clamp-1">Inv. Sales</span>
             </Link>
             
-            <Link to="/portal/templates/commercial-leasing" className="glass-card p-4 flex flex-col items-center gap-2 hover:border-white/20 transition-all duration-300">
-              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+            <Link to="/portal/templates/commercial-leasing" className="glass-card p-3 sm:p-4 flex flex-col items-center justify-center gap-2 hover:border-white/20 transition-all duration-300 h-full">
+              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0">
                 <Building2 className="h-5 w-5 text-foreground/60" />
               </div>
-              <span className="text-sm font-light text-foreground text-center">Commercial</span>
+              <span className="text-xs sm:text-sm font-light text-foreground text-center line-clamp-1">Commercial</span>
             </Link>
             
-            <Link to="/portal/templates/residential" className="glass-card p-4 flex flex-col items-center gap-2 hover:border-white/20 transition-all duration-300">
-              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+            <Link to="/portal/templates/residential" className="glass-card p-3 sm:p-4 flex flex-col items-center justify-center gap-2 hover:border-white/20 transition-all duration-300 h-full">
+              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0">
                 <Home className="h-5 w-5 text-foreground/60" />
               </div>
-              <span className="text-sm font-light text-foreground text-center">Residential</span>
+              <span className="text-xs sm:text-sm font-light text-foreground text-center line-clamp-1">Residential</span>
             </Link>
             
-            <Link to="/portal/templates/marketing" className="glass-card p-4 flex flex-col items-center gap-2 hover:border-white/20 transition-all duration-300">
-              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+            <Link to="/portal/templates/marketing" className="glass-card p-3 sm:p-4 flex flex-col items-center justify-center gap-2 hover:border-white/20 transition-all duration-300 h-full">
+              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0">
                 <Palette className="h-5 w-5 text-foreground/60" />
               </div>
-              <span className="text-sm font-light text-foreground text-center">Marketing</span>
+              <span className="text-xs sm:text-sm font-light text-foreground text-center line-clamp-1">Marketing</span>
             </Link>
           </div>
         </section>
