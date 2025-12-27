@@ -1,371 +1,316 @@
 import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Calendar, 
-  ChevronLeft, 
-  ChevronRight, 
   Clock, 
   MapPin,
-  Link as LinkIcon,
-  ExternalLink
+  Plus,
+  ExternalLink,
+  Video,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isToday, isSameDay, addMonths, subMonths } from "date-fns";
+import { format, isSameDay, addHours, setHours, setMinutes } from "date-fns";
 import { useUpcomingEvents, CalendarEvent } from "@/hooks/useCalendarEvents";
-import { useGoogleCalendarConnection, useGoogleCalendarEvents, useConnectGoogleCalendar, useDisconnectGoogleCalendar } from "@/hooks/useGoogleCalendar";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { 
+  useGoogleCalendarConnection, 
+  useGoogleCalendarEvents, 
+  useConnectGoogleCalendar,
+  useCreateGoogleEvent,
+} from "@/hooks/useGoogleCalendar";
+import { CalendarEventDialog } from "./CalendarEventDialog";
 
-const eventTypeColors: Record<string, string> = {
-  company: "bg-emerald-500",
-  training: "bg-blue-500",
-  deadline: "bg-red-500",
-  meeting: "bg-purple-500",
-  personal: "bg-violet-500",
+// Google Calendar color mapping
+const googleColors: Record<string, string> = {
+  "1": "#7986cb", // Lavender
+  "2": "#33b679", // Sage
+  "3": "#8e24aa", // Grape
+  "4": "#e67c73", // Flamingo
+  "5": "#f6bf26", // Banana
+  "6": "#f4511e", // Tangerine
+  "7": "#039be5", // Peacock (default)
+  "8": "#616161", // Graphite
+  "9": "#3f51b5", // Blueberry
+  "10": "#0b8043", // Basil
+  "11": "#d50000", // Tomato
 };
 
-const eventSourceBadge: Record<string, { label: string; className: string }> = {
-  company: { label: "Company", className: "bg-emerald-500/20 text-emerald-400" },
-  google: { label: "Personal", className: "bg-violet-500/20 text-violet-400" },
-};
+const HOURS = Array.from({ length: 13 }, (_, i) => i + 7); // 7am to 7pm
 
 export const CalendarWidget = () => {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const today = new Date();
+  const [eventDialogOpen, setEventDialogOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [defaultTime, setDefaultTime] = useState<string | undefined>();
 
   // Fetch company events
-  const { data: companyEvents = [], isLoading: isLoadingCompany } = useUpcomingEvents(30);
+  const { data: companyEvents = [], isLoading: isLoadingCompany } = useUpcomingEvents(1);
 
   // Fetch Google Calendar connection status
   const { data: googleConnection, isLoading: isLoadingConnection } = useGoogleCalendarConnection();
   
-  // Fetch Google Calendar events if connected
-  const monthStart = startOfMonth(currentMonth);
-  const monthEnd = endOfMonth(currentMonth);
-  const { data: googleEvents = [] } = useGoogleCalendarEvents(monthStart, monthEnd);
+  // Fetch today's Google Calendar events
+  const startOfDay = new Date(today);
+  startOfDay.setHours(0, 0, 0, 0);
+  const endOfDay = new Date(today);
+  endOfDay.setHours(23, 59, 59, 999);
+  
+  const { data: googleEvents = [], isLoading: isLoadingGoogle } = useGoogleCalendarEvents(startOfDay, endOfDay);
 
-  // Combine events
-  const allEvents = useMemo(() => {
-    const combined = [...companyEvents, ...googleEvents];
-    return combined.sort((a, b) => 
-      new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
-    );
-  }, [companyEvents, googleEvents]);
-
-  // Connect/disconnect mutations
+  // Mutations
   const { mutate: connectGoogle, isPending: isConnecting } = useConnectGoogleCalendar();
-  const { mutate: disconnectGoogle, isPending: isDisconnecting } = useDisconnectGoogleCalendar();
+  const createEvent = useCreateGoogleEvent();
 
-  // Get days in current month view
-  const days = useMemo(() => {
-    const start = startOfMonth(currentMonth);
-    const end = endOfMonth(currentMonth);
-    return eachDayOfInterval({ start, end });
-  }, [currentMonth]);
-
-  // Get events for a specific day
-  const getEventsForDay = (date: Date) => {
-    return allEvents.filter(event => 
-      isSameDay(new Date(event.start_time), date)
-    );
-  };
-
-  // Get upcoming events (next 7 days)
-  const upcomingEvents = useMemo(() => {
-    const now = new Date();
-    const weekFromNow = new Date();
-    weekFromNow.setDate(weekFromNow.getDate() + 7);
-    
-    return allEvents.filter(event => {
-      const eventDate = new Date(event.start_time);
-      return eventDate >= now && eventDate <= weekFromNow;
-    }).slice(0, 5);
-  }, [allEvents]);
-
-  const selectedDayEvents = selectedDate ? getEventsForDay(selectedDate) : [];
-
-  const isLoading = isLoadingCompany || isLoadingConnection;
-
-  // Jump to today
-  const goToToday = () => {
-    setCurrentMonth(new Date());
-    setSelectedDate(new Date());
-  };
-
-  // Get today's events
+  // Filter to today's events only
   const todaysEvents = useMemo(() => {
-    const today = new Date();
-    return allEvents.filter(event => 
-      isSameDay(new Date(event.start_time), today)
-    );
-  }, [allEvents]);
+    const allEvents = [...companyEvents, ...googleEvents];
+    return allEvents
+      .filter(event => isSameDay(new Date(event.start_time), today))
+      .sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime());
+  }, [companyEvents, googleEvents, today]);
 
-  return (
-    <Card className="glass-card">
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
+  const isLoading = isLoadingCompany || isLoadingConnection || isLoadingGoogle;
+  const isConnected = googleConnection?.calendar_enabled && !!googleConnection?.access_token;
+
+  // Get event position and height for day view
+  const getEventStyle = (event: CalendarEvent) => {
+    if (event.all_day) return null;
+    
+    const startTime = new Date(event.start_time);
+    const endTime = event.end_time ? new Date(event.end_time) : addHours(startTime, 1);
+    
+    const startHour = startTime.getHours() + startTime.getMinutes() / 60;
+    const endHour = endTime.getHours() + endTime.getMinutes() / 60;
+    
+    // Calculate position relative to 7am
+    const top = Math.max(0, (startHour - 7) * 48); // 48px per hour
+    const height = Math.max(24, (endHour - startHour) * 48);
+    
+    return { top, height };
+  };
+
+  const getEventColor = (event: CalendarEvent) => {
+    if (event.source === "company") return "#10b981"; // Emerald for company
+    const colorId = (event as any).colorId;
+    return googleColors[colorId] || "#039be5"; // Default to Peacock
+  };
+
+  const handleTimeSlotClick = (hour: number) => {
+    const time = `${hour.toString().padStart(2, "0")}:00`;
+    setDefaultTime(time);
+    setSelectedEvent(null);
+    setEventDialogOpen(true);
+  };
+
+  const handleEventClick = (event: CalendarEvent) => {
+    setSelectedEvent(event);
+    setEventDialogOpen(true);
+  };
+
+  const handleQuickAdd = () => {
+    // Default to next hour
+    const now = new Date();
+    const nextHour = now.getHours() + 1;
+    const time = `${nextHour.toString().padStart(2, "0")}:00`;
+    setDefaultTime(time);
+    setSelectedEvent(null);
+    setEventDialogOpen(true);
+  };
+
+  const handleSaveEvent = (eventData: Partial<CalendarEvent>) => {
+    if (isConnected && eventData.title && eventData.start_time) {
+      createEvent.mutate({
+        title: eventData.title,
+        description: eventData.description || undefined,
+        start_time: eventData.start_time,
+        end_time: eventData.end_time || undefined,
+        all_day: eventData.all_day,
+        location: eventData.location || undefined,
+      });
+    }
+    setEventDialogOpen(false);
+  };
+
+  // All-day events
+  const allDayEvents = todaysEvents.filter(e => e.all_day);
+  const timedEvents = todaysEvents.filter(e => !e.all_day);
+
+  if (!isConnected && !isLoading) {
+    return (
+      <Card className="glass-card">
+        <CardHeader className="pb-2">
           <CardTitle className="flex items-center gap-2 text-lg">
             <Calendar className="h-5 w-5 text-primary" />
-            Calendar
+            Today
           </CardTitle>
-          <div className="flex items-center gap-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={goToToday}
-              className="text-xs text-muted-foreground hover:text-foreground h-7 px-2"
-            >
-              Today
-            </Button>
-            {googleConnection?.access_token ? (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => disconnectGoogle()}
-                disabled={isDisconnecting}
-                className="h-7 w-7 text-muted-foreground hover:text-destructive"
-                title="Disconnect Google Calendar"
-              >
-                <LinkIcon className="h-3.5 w-3.5" />
-              </Button>
-            ) : (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => connectGoogle()}
-                disabled={isConnecting}
-                className="h-7 w-7"
-                title="Connect Google Calendar"
-              >
-                <ExternalLink className="h-3.5 w-3.5" />
-              </Button>
-            )}
-          </div>
-        </div>
-      </CardHeader>
+        </CardHeader>
+        <CardContent className="py-6 text-center">
+          <p className="text-sm text-muted-foreground mb-4">
+            Connect Google Calendar to see your events
+          </p>
+          <Button
+            size="sm"
+            onClick={() => connectGoogle()}
+            disabled={isConnecting}
+            className="gap-2"
+          >
+            <ExternalLink className="h-4 w-4" />
+            Connect Calendar
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
 
-      <CardContent className="space-y-3">
-        {/* Today's Events Highlight */}
-        {todaysEvents.length > 0 && (
-          <div className="p-2.5 rounded-lg bg-primary/5 border border-primary/20">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              <span className="text-xs font-medium text-primary">
-                Today · {format(new Date(), "MMM d")}
-              </span>
-            </div>
-            <div className="space-y-1.5">
-              {todaysEvents.slice(0, 2).map((event) => (
-                <div key={event.id} className="flex items-center gap-2 text-sm">
-                  <Clock className="h-3 w-3 text-muted-foreground" />
-                  <span className="truncate text-foreground">{event.title}</span>
-                  <span className="text-xs text-muted-foreground flex-shrink-0">
-                    {event.all_day ? "All day" : format(new Date(event.start_time), "h:mm a")}
-                  </span>
-                </div>
-              ))}
-              {todaysEvents.length > 2 && (
-                <p className="text-xs text-muted-foreground">
-                  +{todaysEvents.length - 2} more
-                </p>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Mini Calendar */}
-        <div className="space-y-2">
-          {/* Month Navigation */}
+  return (
+    <>
+      <Card className="glass-card">
+        <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Calendar className="h-5 w-5 text-primary" />
+              <span>{format(today, "EEEE, MMM d")}</span>
+            </CardTitle>
             <Button
               variant="ghost"
               size="icon"
-              className="h-6 w-6"
-              onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+              onClick={handleQuickAdd}
+              className="h-7 w-7"
+              title="Add Event"
             >
-              <ChevronLeft className="h-3.5 w-3.5" />
-            </Button>
-            <span className="text-xs font-medium text-muted-foreground">
-              {format(currentMonth, "MMMM yyyy")}
-            </span>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6"
-              onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-            >
-              <ChevronRight className="h-3.5 w-3.5" />
+              <Plus className="h-4 w-4" />
             </Button>
           </div>
+        </CardHeader>
 
-          {/* Weekday Headers */}
-          <div className="grid grid-cols-7 gap-0.5 text-center">
-            {["S", "M", "T", "W", "T", "F", "S"].map((day, i) => (
-              <div key={i} className="text-[10px] text-muted-foreground font-medium py-0.5">
-                {day}
-              </div>
-            ))}
-          </div>
-
-          {/* Calendar Grid - Compact */}
+        <CardContent className="p-0">
           {isLoading ? (
-            <div className="grid grid-cols-7 gap-0.5">
-              {Array.from({ length: 35 }).map((_, i) => (
-                <Skeleton key={i} className="h-7 w-full rounded" />
+            <div className="p-4 space-y-2">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="h-12 w-full rounded" />
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-7 gap-0.5">
-              {/* Empty cells for days before month starts */}
-              {Array.from({ length: days[0].getDay() }).map((_, i) => (
-                <div key={`empty-${i}`} className="h-7" />
-              ))}
-              
-              {days.map((day) => {
-                const dayEvents = getEventsForDay(day);
-                const hasEvents = dayEvents.length > 0;
-                const hasCompanyEvent = dayEvents.some(e => e.source === "company");
-                const hasGoogleEvent = dayEvents.some(e => e.source === "google");
-                const isSelected = selectedDate && isSameDay(day, selectedDate);
+            <>
+              {/* All-day events */}
+              {allDayEvents.length > 0 && (
+                <div className="px-4 py-2 border-b border-border/30 space-y-1">
+                  {allDayEvents.map((event) => (
+                    <button
+                      key={event.id}
+                      onClick={() => handleEventClick(event)}
+                      className="w-full text-left px-2 py-1 rounded text-xs font-medium text-white truncate"
+                      style={{ backgroundColor: getEventColor(event) }}
+                    >
+                      {event.title}
+                    </button>
+                  ))}
+                </div>
+              )}
 
-                return (
-                  <button
-                    key={day.toISOString()}
-                    onClick={() => setSelectedDate(isSelected ? null : day)}
-                    className={cn(
-                      "h-7 w-full rounded text-xs relative transition-colors",
-                      "hover:bg-muted",
-                      isToday(day) && "bg-primary/10 text-primary font-semibold ring-1 ring-primary/30",
-                      isSelected && "bg-primary text-primary-foreground",
-                      !isSameMonth(day, currentMonth) && "text-muted-foreground opacity-50"
-                    )}
-                  >
-                    {format(day, "d")}
-                    {hasEvents && (
-                      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-0.5">
-                        {hasCompanyEvent && (
-                          <div className="h-1 w-1 rounded-full bg-emerald-500" />
-                        )}
-                        {hasGoogleEvent && (
-                          <div className="h-1 w-1 rounded-full bg-violet-500" />
-                        )}
+              {/* Day timeline */}
+              <ScrollArea className="h-[280px]">
+                <div className="relative px-4 py-2">
+                  {/* Hour grid */}
+                  {HOURS.map((hour) => (
+                    <div
+                      key={hour}
+                      className="flex h-12 border-t border-border/20 cursor-pointer hover:bg-muted/30 transition-colors"
+                      onClick={() => handleTimeSlotClick(hour)}
+                    >
+                      <div className="w-12 text-[10px] text-muted-foreground pr-2 pt-0.5 text-right shrink-0">
+                        {format(setHours(setMinutes(new Date(), 0), hour), "h a")}
                       </div>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+                      <div className="flex-1 relative" />
+                    </div>
+                  ))}
+
+                  {/* Events overlay */}
+                  <div className="absolute inset-0 pointer-events-none" style={{ left: "60px", right: "16px" }}>
+                    {timedEvents.map((event) => {
+                      const style = getEventStyle(event);
+                      if (!style) return null;
+
+                      const hasLocation = !!event.location;
+                      const hasGoogleMeet = !!(event as any).hangoutLink;
+
+                      return (
+                        <button
+                          key={event.id}
+                          onClick={() => handleEventClick(event)}
+                          className={cn(
+                            "absolute left-0 right-2 rounded-md px-2 py-1 text-left pointer-events-auto",
+                            "text-white text-xs overflow-hidden shadow-sm",
+                            "hover:ring-2 hover:ring-white/30 transition-all"
+                          )}
+                          style={{
+                            top: `${style.top + 8}px`, // Offset for padding
+                            height: `${style.height - 4}px`,
+                            backgroundColor: getEventColor(event),
+                          }}
+                        >
+                          <div className="font-medium truncate">{event.title}</div>
+                          {style.height > 36 && (
+                            <div className="flex items-center gap-2 text-[10px] opacity-90 mt-0.5">
+                              <span>
+                                {format(new Date(event.start_time), "h:mm a")}
+                                {event.end_time && ` - ${format(new Date(event.end_time), "h:mm a")}`}
+                              </span>
+                              {hasGoogleMeet && <Video className="h-3 w-3" />}
+                            </div>
+                          )}
+                          {style.height > 52 && hasLocation && (
+                            <div className="flex items-center gap-1 text-[10px] opacity-80 mt-0.5 truncate">
+                              <MapPin className="h-2.5 w-2.5 shrink-0" />
+                              <span className="truncate">{event.location}</span>
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </ScrollArea>
+
+              {/* Current time indicator */}
+              {(() => {
+                const now = new Date();
+                const currentHour = now.getHours();
+                if (currentHour >= 7 && currentHour <= 19) {
+                  const position = (currentHour - 7 + now.getMinutes() / 60) * 48 + 8;
+                  return (
+                    <div
+                      className="absolute left-14 right-4 h-0.5 bg-red-500 pointer-events-none z-10"
+                      style={{ top: `${position}px` }}
+                    >
+                      <div className="absolute -left-1.5 -top-1 w-3 h-3 rounded-full bg-red-500" />
+                    </div>
+                  );
+                }
+                return null;
+              })()}
+
+              {/* Empty state */}
+              {todaysEvents.length === 0 && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <p className="text-sm text-muted-foreground">No events today</p>
+                </div>
+              )}
+            </>
           )}
-        </div>
+        </CardContent>
+      </Card>
 
-        {/* Selected Day Events */}
-        {selectedDate && selectedDayEvents.length > 0 && (
-          <div className="space-y-2 border-t border-border/50 pt-3">
-            <h4 className="text-sm font-medium">
-              {format(selectedDate, "EEEE, MMMM d")}
-            </h4>
-            <div className="space-y-2">
-              {selectedDayEvents.map((event) => (
-                <EventCard key={event.id} event={event} compact />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Upcoming Events */}
-        <div className="space-y-2 border-t border-border/50 pt-2">
-          <h4 className="text-xs font-medium text-muted-foreground">Upcoming</h4>
-          <ScrollArea className="h-[120px]">
-            {isLoading ? (
-              <div className="space-y-2">
-                {Array.from({ length: 2 }).map((_, i) => (
-                  <Skeleton key={i} className="h-12 w-full rounded" />
-                ))}
-              </div>
-            ) : upcomingEvents.length === 0 ? (
-              <p className="text-xs text-muted-foreground text-center py-3">
-                No upcoming events
-              </p>
-            ) : (
-              <div className="space-y-1.5 pr-2">
-                {upcomingEvents.slice(0, 3).map((event) => (
-                  <EventCard key={event.id} event={event} compact />
-                ))}
-              </div>
-            )}
-          </ScrollArea>
-        </div>
-
-        {/* Legend - Compact */}
-        <div className="flex items-center gap-3 text-[10px] text-muted-foreground border-t border-border/50 pt-2">
-          <div className="flex items-center gap-1">
-            <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-            <span>Company</span>
-          </div>
-          {googleConnection?.access_token && (
-            <div className="flex items-center gap-1">
-              <div className="h-1.5 w-1.5 rounded-full bg-violet-500" />
-              <span>Personal</span>
-            </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
-
-interface EventCardProps {
-  event: CalendarEvent;
-  compact?: boolean;
-}
-
-const EventCard = ({ event, compact = false }: EventCardProps) => {
-  const sourceInfo = eventSourceBadge[event.source || "company"];
-  const typeColor = eventTypeColors[event.event_type] || eventTypeColors.company;
-
-  return (
-    <div
-      className={cn(
-        "p-3 rounded-lg bg-muted/50 border border-border/50",
-        "hover:bg-muted/80 transition-colors"
-      )}
-    >
-      <div className="flex items-start gap-2">
-        <div className={cn("h-2 w-2 rounded-full mt-1.5 flex-shrink-0", typeColor)} />
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h5 className="font-medium text-sm truncate">{event.title}</h5>
-            <Badge variant="secondary" className={cn("text-[10px] px-1.5 py-0", sourceInfo.className)}>
-              {sourceInfo.label}
-            </Badge>
-          </div>
-          
-          <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <Clock className="h-3 w-3" />
-              <span>
-                {event.all_day
-                  ? "All day"
-                  : format(new Date(event.start_time), "h:mm a")}
-              </span>
-            </div>
-            {event.location && !compact && (
-              <div className="flex items-center gap-1 truncate">
-                <MapPin className="h-3 w-3 flex-shrink-0" />
-                <span className="truncate">{event.location}</span>
-              </div>
-            )}
-          </div>
-
-          {event.description && !compact && (
-            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-              {event.description}
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
+      <CalendarEventDialog
+        open={eventDialogOpen}
+        onOpenChange={setEventDialogOpen}
+        event={selectedEvent}
+        defaultDate={today}
+        defaultTime={defaultTime}
+        onSave={handleSaveEvent}
+      />
+    </>
   );
 };

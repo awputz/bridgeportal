@@ -10,6 +10,9 @@ const GOOGLE_CLIENT_SECRET = Deno.env.get("GOOGLE_CLIENT_SECRET");
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
+// Full calendar scope for read/write access
+const CALENDAR_SCOPE = "https://www.googleapis.com/auth/calendar";
+
 Deno.serve(async (req) => {
   console.log("[google-calendar-auth] Request received:", req.method);
   
@@ -76,7 +79,8 @@ Deno.serve(async (req) => {
       authUrl.searchParams.set("client_id", GOOGLE_CLIENT_ID);
       authUrl.searchParams.set("redirect_uri", redirectUri);
       authUrl.searchParams.set("response_type", "code");
-      authUrl.searchParams.set("scope", "https://www.googleapis.com/auth/calendar.readonly");
+      // Use full calendar scope for read/write access
+      authUrl.searchParams.set("scope", CALENDAR_SCOPE);
       authUrl.searchParams.set("access_type", "offline");
       authUrl.searchParams.set("prompt", "consent");
       authUrl.searchParams.set("state", user.id); // Pass user ID in state
@@ -153,7 +157,7 @@ async function handleOAuthCallback(code: string, userId: string) {
       return createHtmlResponse("error", "Failed to save connection");
     }
 
-    return createHtmlResponse("success", "Google Calendar connected successfully!");
+    return createHtmlResponse("success", "Google Calendar connected with full access!");
   } catch (error: unknown) {
     console.error("Callback error:", error);
     const message = error instanceof Error ? error.message : "Unknown error";
