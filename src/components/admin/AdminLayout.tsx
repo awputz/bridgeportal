@@ -53,12 +53,12 @@ export const AdminLayout = () => {
           </main>
           
           {/* Subtle BOSS watermark */}
-          <div className="hidden md:flex fixed bottom-4 right-4 items-center gap-1.5 opacity-20 hover:opacity-40 transition-opacity z-10 pointer-events-none">
-            <span className="text-[9px] text-muted-foreground font-light">Powered by</span>
+          <div className="hidden md:flex fixed bottom-4 right-4 items-center gap-1.5 opacity-30 hover:opacity-50 transition-opacity z-10 pointer-events-none">
+            <span className="text-[10px] text-muted-foreground font-light">Powered by</span>
             <img 
               src="/assets/boss-logo-white.png" 
               alt="Brokerage Operating System" 
-              className="h-3 w-auto"
+              className="h-4 w-auto"
             />
           </div>
         </div>

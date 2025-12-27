@@ -205,12 +205,12 @@ export const InvestorLayout = () => {
           <div className="flex items-center justify-center gap-3 text-xs text-muted-foreground">
             <span>Bridge Advisory Group © {new Date().getFullYear()}</span>
             <span>•</span>
-            <div className="flex items-center gap-1.5 opacity-50">
-              <span className="text-[10px]">Powered by</span>
+            <div className="flex items-center gap-1.5 opacity-60">
+              <span className="text-xs">Powered by</span>
               <img 
                 src="/assets/boss-logo-white.png" 
                 alt="Brokerage Operating System" 
-                className="h-3 w-auto"
+                className="h-5 w-auto"
               />
             </div>
           </div>

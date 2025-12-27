@@ -219,12 +219,12 @@ const Login = () => {
             <p className="text-xs text-muted-foreground/50 font-light">
               Bridge Advisory Group © {new Date().getFullYear()}
             </p>
-            <div className="flex items-center justify-center gap-2 opacity-40">
-              <span className="text-[10px] text-muted-foreground/50 font-light">Powered by</span>
+          <div className="flex items-center justify-center gap-2 opacity-50">
+              <span className="text-xs text-muted-foreground/50 font-light">Powered by</span>
               <img 
                 src="/assets/boss-logo-white.png" 
                 alt="Brokerage Operating System" 
-                className="h-4 w-auto"
+                className="h-6 w-auto"
               />
             </div>
           </div>
@@ -384,12 +384,12 @@ const Login = () => {
           <p className="text-xs text-muted-foreground/50 font-light">
             Bridge Advisory Group © {new Date().getFullYear()}
           </p>
-          <div className="flex items-center justify-center gap-2 opacity-40">
-            <span className="text-[10px] text-muted-foreground/50 font-light">Powered by</span>
+        <div className="flex items-center justify-center gap-2 opacity-50">
+            <span className="text-xs text-muted-foreground/50 font-light">Powered by</span>
             <img 
               src="/assets/boss-logo-white.png" 
               alt="Brokerage Operating System" 
-              className="h-4 w-auto"
+              className="h-6 w-auto"
             />
           </div>
         </div>
