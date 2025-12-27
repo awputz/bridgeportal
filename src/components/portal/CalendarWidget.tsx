@@ -88,6 +88,20 @@ export const CalendarWidget = () => {
 
   const isLoading = isLoadingCompany || isLoadingConnection;
 
+  // Jump to today
+  const goToToday = () => {
+    setCurrentMonth(new Date());
+    setSelectedDate(new Date());
+  };
+
+  // Get today's events
+  const todaysEvents = useMemo(() => {
+    const today = new Date();
+    return allEvents.filter(event => 
+      isSameDay(new Date(event.start_time), today)
+    );
+  }, [allEvents]);
+
   return (
     <Card className="glass-card">
       <CardHeader className="pb-2">
@@ -96,33 +110,71 @@ export const CalendarWidget = () => {
             <Calendar className="h-5 w-5 text-primary" />
             Calendar
           </CardTitle>
-          {googleConnection?.access_token ? (
+          <div className="flex items-center gap-1">
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => disconnectGoogle()}
-              disabled={isDisconnecting}
-              className="text-xs text-muted-foreground hover:text-destructive"
+              onClick={goToToday}
+              className="text-xs text-muted-foreground hover:text-foreground h-7 px-2"
             >
-              <LinkIcon className="h-3 w-3 mr-1" />
-              {isDisconnecting ? "..." : "Disconnect Google"}
+              Today
             </Button>
-          ) : (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => connectGoogle()}
-              disabled={isConnecting}
-              className="text-xs"
-            >
-              <ExternalLink className="h-3 w-3 mr-1" />
-              {isConnecting ? "Connecting..." : "Connect Google"}
-            </Button>
-          )}
+            {googleConnection?.access_token ? (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => disconnectGoogle()}
+                disabled={isDisconnecting}
+                className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                title="Disconnect Google Calendar"
+              >
+                <LinkIcon className="h-3.5 w-3.5" />
+              </Button>
+            ) : (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => connectGoogle()}
+                disabled={isConnecting}
+                className="h-7 w-7"
+                title="Connect Google Calendar"
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+              </Button>
+            )}
+          </div>
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3">
+        {/* Today's Events Highlight */}
+        {todaysEvents.length > 0 && (
+          <div className="p-2.5 rounded-lg bg-primary/5 border border-primary/20">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              <span className="text-xs font-medium text-primary">
+                Today · {format(new Date(), "MMM d")}
+              </span>
+            </div>
+            <div className="space-y-1.5">
+              {todaysEvents.slice(0, 2).map((event) => (
+                <div key={event.id} className="flex items-center gap-2 text-sm">
+                  <Clock className="h-3 w-3 text-muted-foreground" />
+                  <span className="truncate text-foreground">{event.title}</span>
+                  <span className="text-xs text-muted-foreground flex-shrink-0">
+                    {event.all_day ? "All day" : format(new Date(event.start_time), "h:mm a")}
+                  </span>
+                </div>
+              ))}
+              {todaysEvents.length > 2 && (
+                <p className="text-xs text-muted-foreground">
+                  +{todaysEvents.length - 2} more
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Mini Calendar */}
         <div className="space-y-2">
           {/* Month Navigation */}
@@ -130,45 +182,45 @@ export const CalendarWidget = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7"
+              className="h-6 w-6"
               onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-3.5 w-3.5" />
             </Button>
-            <span className="text-sm font-medium">
+            <span className="text-xs font-medium text-muted-foreground">
               {format(currentMonth, "MMMM yyyy")}
             </span>
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7"
+              className="h-6 w-6"
               onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-3.5 w-3.5" />
             </Button>
           </div>
 
           {/* Weekday Headers */}
-          <div className="grid grid-cols-7 gap-1 text-center">
+          <div className="grid grid-cols-7 gap-0.5 text-center">
             {["S", "M", "T", "W", "T", "F", "S"].map((day, i) => (
-              <div key={i} className="text-xs text-muted-foreground font-medium py-1">
+              <div key={i} className="text-[10px] text-muted-foreground font-medium py-0.5">
                 {day}
               </div>
             ))}
           </div>
 
-          {/* Calendar Grid */}
+          {/* Calendar Grid - Compact */}
           {isLoading ? (
-            <div className="grid grid-cols-7 gap-1">
+            <div className="grid grid-cols-7 gap-0.5">
               {Array.from({ length: 35 }).map((_, i) => (
-                <Skeleton key={i} className="h-8 w-full rounded" />
+                <Skeleton key={i} className="h-7 w-full rounded" />
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-7 gap-1">
+            <div className="grid grid-cols-7 gap-0.5">
               {/* Empty cells for days before month starts */}
               {Array.from({ length: days[0].getDay() }).map((_, i) => (
-                <div key={`empty-${i}`} className="h-8" />
+                <div key={`empty-${i}`} className="h-7" />
               ))}
               
               {days.map((day) => {
@@ -183,16 +235,16 @@ export const CalendarWidget = () => {
                     key={day.toISOString()}
                     onClick={() => setSelectedDate(isSelected ? null : day)}
                     className={cn(
-                      "h-8 w-full rounded text-sm relative transition-colors",
+                      "h-7 w-full rounded text-xs relative transition-colors",
                       "hover:bg-muted",
-                      isToday(day) && "bg-primary/10 text-primary font-semibold",
+                      isToday(day) && "bg-primary/10 text-primary font-semibold ring-1 ring-primary/30",
                       isSelected && "bg-primary text-primary-foreground",
                       !isSameMonth(day, currentMonth) && "text-muted-foreground opacity-50"
                     )}
                   >
                     {format(day, "d")}
                     {hasEvents && (
-                      <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 flex gap-0.5">
+                      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-0.5">
                         {hasCompanyEvent && (
                           <div className="h-1 w-1 rounded-full bg-emerald-500" />
                         )}
@@ -223,38 +275,38 @@ export const CalendarWidget = () => {
         )}
 
         {/* Upcoming Events */}
-        <div className="space-y-2 border-t border-border/50 pt-3">
-          <h4 className="text-sm font-medium text-muted-foreground">Upcoming</h4>
-          <ScrollArea className="h-[180px]">
+        <div className="space-y-2 border-t border-border/50 pt-2">
+          <h4 className="text-xs font-medium text-muted-foreground">Upcoming</h4>
+          <ScrollArea className="h-[120px]">
             {isLoading ? (
               <div className="space-y-2">
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <Skeleton key={i} className="h-16 w-full rounded" />
+                {Array.from({ length: 2 }).map((_, i) => (
+                  <Skeleton key={i} className="h-12 w-full rounded" />
                 ))}
               </div>
             ) : upcomingEvents.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-4">
+              <p className="text-xs text-muted-foreground text-center py-3">
                 No upcoming events
               </p>
             ) : (
-              <div className="space-y-2 pr-2">
-                {upcomingEvents.map((event) => (
-                  <EventCard key={event.id} event={event} />
+              <div className="space-y-1.5 pr-2">
+                {upcomingEvents.slice(0, 3).map((event) => (
+                  <EventCard key={event.id} event={event} compact />
                 ))}
               </div>
             )}
           </ScrollArea>
         </div>
 
-        {/* Legend */}
-        <div className="flex items-center gap-4 text-xs text-muted-foreground border-t border-border/50 pt-3">
+        {/* Legend - Compact */}
+        <div className="flex items-center gap-3 text-[10px] text-muted-foreground border-t border-border/50 pt-2">
           <div className="flex items-center gap-1">
-            <div className="h-2 w-2 rounded-full bg-emerald-500" />
+            <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
             <span>Company</span>
           </div>
           {googleConnection?.access_token && (
             <div className="flex items-center gap-1">
-              <div className="h-2 w-2 rounded-full bg-violet-500" />
+              <div className="h-1.5 w-1.5 rounded-full bg-violet-500" />
               <span>Personal</span>
             </div>
           )}

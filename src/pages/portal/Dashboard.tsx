@@ -15,6 +15,8 @@ import { WelcomeBanner } from "@/components/portal/WelcomeBanner";
 import { DashboardTasks } from "@/components/portal/DashboardTasks";
 import { AnnouncementsWidget } from "@/components/portal/AnnouncementsWidget";
 import { CalendarWidget } from "@/components/portal/CalendarWidget";
+import { MailWidget } from "@/components/portal/MailWidget";
+import { AlertsWidget } from "@/components/portal/AlertsWidget";
 import { OnboardingTooltip } from "@/components/portal/OnboardingTooltip";
 import { useOnboardingTooltips } from "@/hooks/useOnboardingTooltips";
 
@@ -238,6 +240,14 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <AnnouncementsWidget />
             <CalendarWidget />
+          </div>
+        </section>
+
+        {/* Mail + Alerts Widget Row */}
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <MailWidget />
+            <AlertsWidget />
           </div>
         </section>
 
