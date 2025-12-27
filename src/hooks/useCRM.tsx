@@ -222,7 +222,7 @@ export const useCreateContact = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (contact: Omit<CRMContact, "id" | "created_at" | "updated_at" | "is_active">) => {
+    mutationFn: async (contact: Partial<CRMContact> & { agent_id: string; full_name: string; division: string }) => {
       const { data, error } = await supabase
         .from("crm_contacts")
         .insert(contact)

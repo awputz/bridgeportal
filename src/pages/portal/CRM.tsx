@@ -63,16 +63,16 @@ const CRM = () => {
   const [selectedDeals, setSelectedDeals] = useState<Set<string>>(new Set());
   const [filters, setFilters] = useState<DealFilters>({
     search: "",
-    stages: [],
-    priorities: [],
+    stageIds: [],
+    priority: [],
     dealTypes: [],
     propertyTypes: [],
-    minValue: undefined,
-    maxValue: undefined,
-    expectedCloseStart: undefined,
-    expectedCloseEnd: undefined,
-    minCapRate: undefined,
-    maxCapRate: undefined,
+    minValue: null,
+    maxValue: null,
+    expectedCloseStart: null,
+    expectedCloseEnd: null,
+    minCapRate: null,
+    maxCapRate: null,
   });
 
   const { data: deals, isLoading: dealsLoading } = useCRMDeals(division);
@@ -101,13 +101,13 @@ const CRM = () => {
       }
 
       // Stage filter
-      if (filters.stages.length > 0 && deal.stage_id) {
-        if (!filters.stages.includes(deal.stage_id)) return false;
+      if (filters.stageIds.length > 0 && deal.stage_id) {
+        if (!filters.stageIds.includes(deal.stage_id)) return false;
       }
 
       // Priority filter
-      if (filters.priorities.length > 0) {
-        if (!filters.priorities.includes(deal.priority)) return false;
+      if (filters.priority.length > 0) {
+        if (!filters.priority.includes(deal.priority || '')) return false;
       }
 
       // Deal type filter
@@ -166,16 +166,16 @@ const CRM = () => {
     setSelectedDeals(new Set());
     setFilters({
       search: "",
-      stages: [],
-      priorities: [],
+      stageIds: [],
+      priority: [],
       dealTypes: [],
       propertyTypes: [],
-      minValue: undefined,
-      maxValue: undefined,
-      expectedCloseStart: undefined,
-      expectedCloseEnd: undefined,
-      minCapRate: undefined,
-      maxCapRate: undefined,
+      minValue: null,
+      maxValue: null,
+      expectedCloseStart: null,
+      expectedCloseEnd: null,
+      minCapRate: null,
+      maxCapRate: null,
     });
   };
 
@@ -325,6 +325,19 @@ const CRM = () => {
           <DealFiltersPanel
             filters={filters}
             onChange={setFilters}
+            onClear={() => setFilters({
+              search: "",
+              stageIds: [],
+              priority: [],
+              dealTypes: [],
+              propertyTypes: [],
+              minValue: null,
+              maxValue: null,
+              expectedCloseStart: null,
+              expectedCloseEnd: null,
+              minCapRate: null,
+              maxCapRate: null,
+            })}
             stages={stages}
             division={division}
           />
@@ -339,9 +352,9 @@ const CRM = () => {
             onDeselectAll={handleDeselectAll}
             onBulkStageChange={handleBulkStageChange}
             onBulkDelete={handleBulkDelete}
-            onBulkExport={handleBulkExport}
+            onExport={handleBulkExport}
             stages={stages}
-            allSelected={selectedDeals.size === filteredDeals.length}
+            isAllSelected={selectedDeals.size === filteredDeals.length}
           />
         )}
 
