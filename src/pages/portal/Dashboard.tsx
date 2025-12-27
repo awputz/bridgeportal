@@ -19,6 +19,8 @@ import { MailWidget } from "@/components/portal/MailWidget";
 import { AlertsWidget } from "@/components/portal/AlertsWidget";
 import { OnboardingTooltip } from "@/components/portal/OnboardingTooltip";
 import { useOnboardingTooltips } from "@/hooks/useOnboardingTooltips";
+import { MarketClocksWidget } from "@/components/portal/MarketClocksWidget";
+import { WeatherWidget } from "@/components/WeatherWidget";
 
 // Icon mapping for dynamic icons from database
 const iconMap: Record<string, typeof Mail> = {
@@ -182,6 +184,18 @@ const Dashboard = () => {
           </OnboardingTooltip>
           <InlineDivisionSwitcher />
         </div>
+
+        {/* Market Clocks + Weather */}
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.02s' }}>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="lg:col-span-2">
+              <MarketClocksWidget />
+            </div>
+            <div>
+              <WeatherWidget compact />
+            </div>
+          </div>
+        </section>
 
         {/* Quick Actions Row: Call Office + Request */}
         <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.05s' }}>
