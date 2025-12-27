@@ -202,10 +202,17 @@ export const InvestorLayout = () => {
 
         {/* Footer */}
         <footer className="border-t border-border/50 py-3 px-6 pb-safe">
-          <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+          <div className="flex items-center justify-center gap-3 text-xs text-muted-foreground">
             <span>Bridge Advisory Group © {new Date().getFullYear()}</span>
             <span>•</span>
-            <img src="/lovable-uploads/hpg-logo-white.png" alt="HPG" className="h-6 w-auto opacity-60" />
+            <div className="flex items-center gap-1.5 opacity-50">
+              <span className="text-[10px]">Powered by</span>
+              <img 
+                src="/assets/boss-logo-white.png" 
+                alt="Brokerage Operating System" 
+                className="h-3 w-auto"
+              />
+            </div>
           </div>
         </footer>
       </div>
