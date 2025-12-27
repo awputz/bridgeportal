@@ -115,23 +115,23 @@ export default function InvestmentSales() {
   }>(marketsSection)?.boroughs || [];
   return <div className="min-h-screen">
       {/* Hero with Image */}
-      <section className="relative min-h-[45vh] sm:min-h-[50vh] md:min-h-[50vh] lg:min-h-[55vh] flex items-center justify-center pt-24 sm:pt-28 md:pt-32 lg:pt-36 xl:pt-40 pb-8 sm:pb-10 md:pb-12 lg:pb-16 xl:pb-20" ref={heroReveal.elementRef}>
+      <section className="relative min-h-[45vh] sm:min-h-[50vh] md:min-h-[55vh] flex items-center justify-center hero-section" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img src={investmentSalesHeroImg} alt="Aerial view of SoHo New York City skyline" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
         </div>
-        <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-4 md:mb-6">
+        <div className={`container mx-auto px-4 sm:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-3 sm:mb-4 md:mb-6">
             {heroSection?.title || "Bridge Investment Sales"}
           </h1>
-          <p className="text-base md:text-lg lg:text-xl text-muted-foreground font-light mb-4 md:mb-6 lg:mb-8">
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground font-light mb-4 sm:mb-6 lg:mb-8 max-w-2xl mx-auto">
             {heroSection?.content || DIVISIONS.investmentSales.tagline}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button size="lg" className="font-light" onClick={openContactSheet}>
+            <Button size="lg" className="font-light h-11 sm:h-12" onClick={openContactSheet}>
               Submit a Deal
             </Button>
-            <Button size="lg" variant="outline" className="font-light border-white/30 hover:bg-white/10" asChild>
+            <Button size="lg" variant="outline" className="font-light border-white/30 hover:bg-white/10 h-11 sm:h-12" asChild>
               <Link to="/services/investment-sales/listings">
                 View Our Listings
               </Link>
@@ -147,19 +147,19 @@ export default function InvestmentSales() {
       
 
       {/* Full-Service Capabilities Card Grid */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={capabilitiesReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-          <div className={`text-center mb-8 md:mb-12 lg:mb-16 transition-all duration-700 ${capabilitiesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4">Full-Service Capabilities</h2>
-            <p className="text-muted-foreground font-light max-w-2xl mx-auto">
+      <section className="service-section border-b border-white/5" ref={capabilitiesReveal.elementRef}>
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
+          <div className={`text-center mb-8 md:mb-12 transition-all duration-700 ${capabilitiesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light mb-3 sm:mb-4">Full-Service Capabilities</h2>
+            <p className="text-sm sm:text-base text-muted-foreground font-light max-w-2xl mx-auto">
               End-to-end advisory for acquisitions and dispositions.
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {capabilities.map((item, index) => <div key={index} className={`p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-accent/30 transition-all duration-300 ${capabilitiesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+            {capabilities.map((item, index) => <div key={index} className={`p-4 sm:p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-accent/30 transition-all duration-300 ${capabilitiesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
             transitionDelay: `${index * 50}ms`
           }}>
-                <h3 className="text-lg font-light mb-2">{item.title}</h3>
+                <h3 className="text-base sm:text-lg font-light mb-2">{item.title}</h3>
                 <p className="text-sm text-muted-foreground font-light">{item.description}</p>
               </div>)}
           </div>
@@ -279,17 +279,17 @@ export default function InvestmentSales() {
       <TeamHighlight category="Investment Sales" title="Meet the Investment Sales Team" subtitle="Experienced advisors dedicated to maximizing value for our clients." className="bg-muted/20" />
 
       {/* CTA */}
-      <section className="py-12 md:py-20 lg:py-28">
-        <div className="container mx-auto px-4 md:px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-light mb-6">Ready To Get Started?</h2>
-          <p className="text-muted-foreground font-light mb-8 max-w-2xl mx-auto">
+      <section className="service-section">
+        <div className="container mx-auto px-4 sm:px-6 text-center">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light mb-4 sm:mb-6">Ready To Get Started?</h2>
+          <p className="text-sm sm:text-base text-muted-foreground font-light mb-6 sm:mb-8 max-w-2xl mx-auto">
             Whether you're looking to buy, sell, or evaluate your options, we're ready to help.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="font-light" onClick={openContactSheet}>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+            <Button size="lg" className="font-light h-11 sm:h-12" onClick={openContactSheet}>
               Submit a Deal
             </Button>
-            <Button size="lg" variant="outline" className="font-light" asChild>
+            <Button size="lg" variant="outline" className="font-light h-11 sm:h-12" asChild>
               <Link to="/services/investment-sales/listings">
                 View Our Listings
               </Link>

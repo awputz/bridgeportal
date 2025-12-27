@@ -179,9 +179,9 @@ const Profile = () => {
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
+      <div className="max-w-6xl mx-auto page-content">
         {/* Agent Header with Photo */}
-        <Card className="glass-card border-white/10 mb-8">
+        <Card className="glass-card border-white/10 section-gap">
           <CardContent className="pt-8 pb-6">
             <div className="flex flex-col md:flex-row items-center gap-6">
               {/* Agent Photo */}
@@ -241,16 +241,16 @@ const Profile = () => {
         </Card>
 
         {/* Commission Summary Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="stat-grid section-gap">
           <Card className="glass-card border-white/10">
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                  <DollarSign className="h-5 w-5 text-emerald-400" />
+            <CardContent className="p-4 sm:pt-6">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                  <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-400" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <p className="text-xs text-muted-foreground">Total Earnings</p>
-                  <p className="text-xl font-light text-foreground">
+                  <p className="text-lg sm:text-xl font-light text-foreground truncate">
                     {formatFullCurrency(commissions.totalEarnings)}
                   </p>
                 </div>
@@ -259,14 +259,14 @@ const Profile = () => {
           </Card>
 
           <Card className="glass-card border-white/10">
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
-                  <TrendingUp className="h-5 w-5 text-blue-400" />
+            <CardContent className="p-4 sm:pt-6">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                  <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <p className="text-xs text-muted-foreground">YTD Earnings</p>
-                  <p className="text-xl font-light text-foreground">
+                  <p className="text-lg sm:text-xl font-light text-foreground truncate">
                     {formatFullCurrency(commissions.ytdEarnings)}
                   </p>
                 </div>
@@ -275,14 +275,14 @@ const Profile = () => {
           </Card>
 
           <Card className="glass-card border-white/10">
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center">
-                  <Building2 className="h-5 w-5 text-purple-400" />
+            <CardContent className="p-4 sm:pt-6">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+                  <Building2 className="h-4 w-4 sm:h-5 sm:w-5 text-purple-400" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <p className="text-xs text-muted-foreground">Total Deals</p>
-                  <p className="text-xl font-light text-foreground">
+                  <p className="text-lg sm:text-xl font-light text-foreground">
                     {commissions.totalDeals}
                   </p>
                 </div>
@@ -291,14 +291,14 @@ const Profile = () => {
           </Card>
 
           <Card className="glass-card border-white/10">
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
-                  <Calendar className="h-5 w-5 text-amber-400" />
+            <CardContent className="p-4 sm:pt-6">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-amber-500/20 flex items-center justify-center flex-shrink-0">
+                  <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-amber-400" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <p className="text-xs text-muted-foreground">YTD Deals</p>
-                  <p className="text-xl font-light text-foreground">
+                  <p className="text-lg sm:text-xl font-light text-foreground">
                     {commissions.ytdDeals}
                   </p>
                 </div>

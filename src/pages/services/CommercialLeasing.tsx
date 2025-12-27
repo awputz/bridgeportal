@@ -139,23 +139,23 @@ export default function CommercialLeasing() {
   const lookingReveal = useScrollReveal(0.1);
   return <div className="min-h-screen">
       {/* Hero with Image */}
-      <section className="relative min-h-[45vh] sm:min-h-[50vh] md:min-h-[50vh] lg:min-h-[55vh] flex items-center justify-center pt-24 sm:pt-28 md:pt-32 lg:pt-36 xl:pt-40 pb-8 sm:pb-10 md:pb-12 lg:pb-16 xl:pb-20" ref={heroReveal.elementRef}>
+      <section className="relative min-h-[45vh] sm:min-h-[50vh] md:min-h-[55vh] flex items-center justify-center hero-section" ref={heroReveal.elementRef}>
         <div className="absolute inset-0 z-0">
           <img src={commercialLeasingHeroImg} alt="NYC retail and commercial streets" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
         </div>
-        <div className={`container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-4 md:mb-6">
+        <div className={`container mx-auto px-4 sm:px-6 max-w-4xl text-center relative z-10 transition-all duration-700 ${heroReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-3 sm:mb-4 md:mb-6">
             Bridge Commercial
           </h1>
-          <p className="text-base md:text-lg lg:text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-6 md:mb-10">
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-4 sm:mb-6 md:mb-8">
             NYC Retail & Office Leasing Specialists
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button size="lg" className="font-light" onClick={openContactSheet}>
+            <Button size="lg" className="font-light h-11 sm:h-12" onClick={openContactSheet}>
               List Your Space
             </Button>
-            <Button size="lg" variant="outline" className="font-light border-white/30 hover:bg-white/10" asChild>
+            <Button size="lg" variant="outline" className="font-light border-white/30 hover:bg-white/10 h-11 sm:h-12" asChild>
               <Link to="/commercial-listings">
                 View Our Listings
               </Link>
@@ -171,19 +171,19 @@ export default function CommercialLeasing() {
       
 
       {/* Our Services */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={servicesReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+      <section className="service-section border-b border-white/5" ref={servicesReveal.elementRef}>
+        <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
           <div className={`transition-all duration-700 ${servicesReveal.isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">Our Services</h2>
-            <p className="text-muted-foreground font-light mb-8 md:mb-12 text-center max-w-2xl mx-auto">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light mb-3 sm:mb-4 text-center">Our Services</h2>
+            <p className="text-sm sm:text-base text-muted-foreground font-light mb-6 sm:mb-8 md:mb-12 text-center max-w-2xl mx-auto">
               Comprehensive commercial leasing services.
             </p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-              {services.map((service, index) => <div key={service.title} className="px-6 pt-6 pb-4 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-300 hover:bg-white/[0.04]" style={{
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+              {services.map((service, index) => <div key={service.title} className="p-4 sm:px-6 sm:pt-6 sm:pb-4 rounded-lg border border-white/10 bg-white/[0.02] transition-all duration-300 hover:bg-white/[0.04]" style={{
               transitionDelay: `${index * 50}ms`
             }}>
-                  <service.icon className="h-8 w-8 text-accent mb-4" />
-                  <h3 className="text-lg font-light mb-2">{service.title}</h3>
+                  <service.icon className="h-6 w-6 sm:h-8 sm:w-8 text-accent mb-3 sm:mb-4" />
+                  <h3 className="text-base sm:text-lg font-light mb-2">{service.title}</h3>
                   <p className="text-muted-foreground font-light text-sm">{service.description}</p>
                 </div>)}
             </div>
@@ -292,17 +292,17 @@ export default function CommercialLeasing() {
       </section>
 
       {/* CTA */}
-      <section className="py-12 md:py-20 lg:py-28">
-        <div className="container mx-auto px-4 md:px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-light mb-6">Ready To Get Started?</h2>
-          <p className="text-muted-foreground font-light mb-8 max-w-2xl mx-auto">
+      <section className="service-section">
+        <div className="container mx-auto px-4 sm:px-6 text-center">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light mb-4 sm:mb-6">Ready To Get Started?</h2>
+          <p className="text-sm sm:text-base text-muted-foreground font-light mb-6 sm:mb-8 max-w-2xl mx-auto">
             Whether you're leasing space or looking for your next location, we're ready to help.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="font-light" onClick={openContactSheet}>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+            <Button size="lg" className="font-light h-11 sm:h-12" onClick={openContactSheet}>
               List Your Space
             </Button>
-            <Button size="lg" variant="outline" className="font-light gap-2" asChild>
+            <Button size="lg" variant="outline" className="font-light gap-2 h-11 sm:h-12" asChild>
               <a href={GOOGLE_FORM_URL} target="_blank" rel="noopener noreferrer">
                 Find Your Space
                 <ExternalLink className="h-4 w-4" />

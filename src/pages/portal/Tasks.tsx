@@ -256,14 +256,14 @@ const Tasks = () => {
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
+      <div className="max-w-7xl mx-auto page-content">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 section-gap">
           <div>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-1 md:mb-2">
               Tasks
             </h1>
-            <p className="text-muted-foreground font-light">
+            <p className="text-sm md:text-base text-muted-foreground font-light">
               Manage your activities and stay on track
             </p>
           </div>
@@ -381,66 +381,66 @@ const Tasks = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="stat-grid section-gap">
           <button
             onClick={() => setFilter("today")}
             className={cn(
-              "glass-card p-4 text-left transition-all hover:bg-white/5",
+              "glass-card p-3 sm:p-4 text-left transition-all hover:bg-white/5 touch-target",
               filter === "today" && "ring-1 ring-foreground/20"
             )}
           >
-            <div className="flex items-center gap-2 text-muted-foreground mb-2">
+            <div className="flex items-center gap-2 text-muted-foreground mb-1 sm:mb-2">
               <Calendar className="h-4 w-4" />
-              <span className="text-sm font-light">Today</span>
+              <span className="text-xs sm:text-sm font-light">Today</span>
             </div>
-            <p className="text-2xl font-light text-foreground">{stats?.today || 0}</p>
+            <p className="text-xl sm:text-2xl font-light text-foreground">{stats?.today || 0}</p>
           </button>
 
           <button
             onClick={() => setFilter("week")}
             className={cn(
-              "glass-card p-4 text-left transition-all hover:bg-white/5",
+              "glass-card p-3 sm:p-4 text-left transition-all hover:bg-white/5 touch-target",
               filter === "week" && "ring-1 ring-foreground/20"
             )}
           >
-            <div className="flex items-center gap-2 text-muted-foreground mb-2">
+            <div className="flex items-center gap-2 text-muted-foreground mb-1 sm:mb-2">
               <Clock className="h-4 w-4" />
-              <span className="text-sm font-light">This Week</span>
+              <span className="text-xs sm:text-sm font-light">This Week</span>
             </div>
-            <p className="text-2xl font-light text-foreground">{stats?.thisWeek || 0}</p>
+            <p className="text-xl sm:text-2xl font-light text-foreground">{stats?.thisWeek || 0}</p>
           </button>
 
           <button
             onClick={() => setFilter("overdue")}
             className={cn(
-              "glass-card p-4 text-left transition-all hover:bg-white/5",
+              "glass-card p-3 sm:p-4 text-left transition-all hover:bg-white/5 touch-target",
               filter === "overdue" && "ring-1 ring-foreground/20"
             )}
           >
-            <div className="flex items-center gap-2 text-red-400 mb-2">
+            <div className="flex items-center gap-2 text-red-400 mb-1 sm:mb-2">
               <AlertCircle className="h-4 w-4" />
-              <span className="text-sm font-light">Overdue</span>
+              <span className="text-xs sm:text-sm font-light">Overdue</span>
             </div>
-            <p className="text-2xl font-light text-red-400">{stats?.overdue || 0}</p>
+            <p className="text-xl sm:text-2xl font-light text-red-400">{stats?.overdue || 0}</p>
           </button>
 
           <button
             onClick={() => setFilter("completed")}
             className={cn(
-              "glass-card p-4 text-left transition-all hover:bg-white/5",
+              "glass-card p-3 sm:p-4 text-left transition-all hover:bg-white/5 touch-target",
               filter === "completed" && "ring-1 ring-foreground/20"
             )}
           >
-            <div className="flex items-center gap-2 text-green-400 mb-2">
+            <div className="flex items-center gap-2 text-green-400 mb-1 sm:mb-2">
               <CheckCircle2 className="h-4 w-4" />
-              <span className="text-sm font-light">Completed</span>
+              <span className="text-xs sm:text-sm font-light">Completed</span>
             </div>
-            <p className="text-2xl font-light text-green-400">{stats?.completed || 0}</p>
+            <p className="text-xl sm:text-2xl font-light text-green-400">{stats?.completed || 0}</p>
           </button>
         </div>
 
         {/* Enhanced Filters */}
-        <div className="flex flex-col md:flex-row gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 section-gap">
           {/* Search */}
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -448,7 +448,7 @@ const Tasks = () => {
               placeholder="Search tasks..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-white/5 border-white/10"
+              className="pl-10 h-10 bg-white/5 border-white/10"
             />
           </div>
           

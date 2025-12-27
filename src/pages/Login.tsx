@@ -233,15 +233,15 @@ const Login = () => {
         </div>
       </div>;
   }
-  return <div className="min-h-screen flex items-center justify-center bg-background px-4">
+  return <div className="min-h-screen flex items-center justify-center bg-background px-4 py-8 sm:py-12">
       <div className="fixed inset-0 bg-gradient-to-b from-background via-background to-black/50 pointer-events-none" />
       
       <div className="relative z-10 w-full max-w-md">
-        <div className="flex justify-center mb-10">
-          <img src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" alt="Bridge Advisory Group" className="h-20 w-auto" />
+        <div className="flex justify-center mb-8 sm:mb-10">
+          <img src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" alt="Bridge Advisory Group" className="h-16 sm:h-20 w-auto" />
         </div>
 
-        <div className="glass-panel-strong p-8 md:p-10">
+        <div className="glass-panel-strong p-6 sm:p-8 md:p-10">
           {showForgotPassword ? <>
               <button onClick={() => setShowForgotPassword(false)} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6">
                 <ArrowLeft className="h-4 w-4" />
