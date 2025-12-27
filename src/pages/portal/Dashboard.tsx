@@ -116,15 +116,15 @@ const exclusiveListings = [{
   color: "bg-emerald-500/20 text-emerald-400"
 }, {
   name: "Commercial",
-  url: "/commercial-listings",
+  url: "https://bridgenyre.com/commercial-listings",
   icon: Building2,
-  external: false,
+  external: true,
   color: "bg-blue-500/20 text-blue-400"
 }, {
   name: "Investment Sales",
-  url: "/services/investment-sales/listings",
+  url: "https://bridgenyre.com/services/investment-sales/listings",
   icon: TrendingUp,
-  external: false,
+  external: true,
   color: "bg-purple-500/20 text-purple-400"
 }];
 
