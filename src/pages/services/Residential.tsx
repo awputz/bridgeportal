@@ -83,17 +83,17 @@ export default function ResidentialServices() {
   const portfolioReveal = useScrollReveal(0.1);
   return <div className="min-h-screen">
       {/* Hero */}
-      <section className="relative min-h-[45vh] sm:min-h-[50vh] md:min-h-[50vh] lg:min-h-[55vh] flex items-center justify-center pt-24 sm:pt-28 md:pt-32 lg:pt-36 xl:pt-40 pb-8 sm:pb-10 md:pb-12 lg:pb-16 xl:pb-20">
+      <section className="relative min-h-[45vh] sm:min-h-[50vh] md:min-h-[55vh] flex items-center justify-center hero-section">
         <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
         backgroundImage: `url(${residentialHeroImg})`
       }} />
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/70 to-background" />
 
-        <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 max-w-4xl text-center relative z-10">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-light mb-2 sm:mb-3 md:mb-4 animate-fade-in">
             Bridge Residential
           </h1>
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground font-light animate-fade-in max-w-2xl mx-auto mb-4 sm:mb-5 md:mb-6" style={{
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground font-light animate-fade-in max-w-2xl mx-auto mb-4 sm:mb-6" style={{
           animationDelay: "100ms"
         }}>
             New York residential advisory for renters, buyers, landlords, and sellers
@@ -103,14 +103,14 @@ export default function ResidentialServices() {
           animationDelay: "200ms"
         }}>
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center">
-              <Button variant="outline" className="font-light border-white/30 hover:bg-white/10 flex-1" onClick={openContactSheet}>
+              <Button variant="outline" className="font-light border-white/30 hover:bg-white/10 flex-1 h-11 sm:h-12" onClick={openContactSheet}>
                 Looking to Rent
               </Button>
-              <Button variant="outline" className="font-light border-white/30 hover:bg-white/10 flex-1" onClick={openContactSheet}>
+              <Button variant="outline" className="font-light border-white/30 hover:bg-white/10 flex-1 h-11 sm:h-12" onClick={openContactSheet}>
                 Looking to Buy
               </Button>
             </div>
-            <Button className="font-light w-full" onClick={openContactSheet}>
+            <Button className="font-light w-full h-11 sm:h-12" onClick={openContactSheet}>
               I'm a Landlord or Seller
             </Button>
           </div>
@@ -127,22 +127,22 @@ export default function ResidentialServices() {
       <ServicePageNav serviceKey="residential" />
 
       {/* Our Services */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-white/5" ref={servicesReveal.elementRef}>
-        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+      <section className="service-section border-b border-white/5" ref={servicesReveal.elementRef}>
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
           <div className={`transition-all duration-700 ${servicesReveal.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-4 text-center">Our Services</h2>
-            <p className="text-muted-foreground font-light mb-8 md:mb-12 text-center max-w-2xl mx-auto">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light mb-3 sm:mb-4 text-center">Our Services</h2>
+            <p className="text-sm sm:text-base text-muted-foreground font-light mb-6 sm:mb-8 md:mb-12 text-center max-w-2xl mx-auto">
               Full-service residential advisory for every stage of your real estate journey
             </p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-              {services.map((service, index) => <Link key={service.title} to={service.link} className="group p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all" style={{
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+              {services.map((service, index) => <Link key={service.title} to={service.link} className="group p-4 sm:p-6 rounded-lg border border-white/10 bg-white/[0.02] hover:bg-white/[0.04] transition-all" style={{
               transitionDelay: `${index * 100}ms`
             }}>
-                  <service.icon className="h-8 w-8 text-accent mb-4" />
-                  <h3 className="text-lg font-light mb-2 group-hover:text-accent transition-colors">
+                  <service.icon className="h-6 w-6 sm:h-8 sm:w-8 text-accent mb-3 sm:mb-4" />
+                  <h3 className="text-base sm:text-lg font-light mb-2 group-hover:text-accent transition-colors">
                     {service.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground font-light mb-4">{service.description}</p>
+                  <p className="text-sm text-muted-foreground font-light mb-3 sm:mb-4">{service.description}</p>
                   <ul className="space-y-1">
                     {service.features.map(feature => <li key={feature} className="text-xs text-muted-foreground/80 flex items-center gap-2">
                         <ArrowRight className="h-3 w-3 text-accent" />
@@ -248,15 +248,15 @@ export default function ResidentialServices() {
       <TeamHighlight category="Residential" title="Meet the Residential Team" subtitle="Dedicated agents helping you find your next home in NYC." className="bg-muted/20" />
 
       {/* CTA */}
-      <section className="py-12 md:py-20 lg:py-28 bg-white/[0.02]">
-        <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-light mb-6">
+      <section className="service-section bg-white/[0.02]">
+        <div className="container mx-auto px-4 sm:px-6 max-w-4xl text-center">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light mb-4 sm:mb-6">
             Ready to Get Started?
           </h2>
-          <p className="text-muted-foreground font-light mb-8 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base text-muted-foreground font-light mb-6 sm:mb-8 max-w-2xl mx-auto">
             Whether you're searching for your next home or looking to list your property, our team is here to help.
           </p>
-          <Button size="lg" className="font-light" onClick={openContactSheet}>
+          <Button size="lg" className="font-light h-11 sm:h-12" onClick={openContactSheet}>
             Contact Us
           </Button>
         </div>

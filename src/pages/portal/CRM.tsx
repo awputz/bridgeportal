@@ -245,14 +245,14 @@ const CRM = () => {
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
+      <div className="max-w-7xl mx-auto page-content">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 section-gap">
           <div>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-1 md:mb-2">
               Deal Pipeline
             </h1>
-            <p className="text-muted-foreground font-light">
+            <p className="text-sm md:text-base text-muted-foreground font-light">
               Track your deals from lead to close
             </p>
           </div>
@@ -282,8 +282,8 @@ const CRM = () => {
         </div>
 
         {/* Division Switcher */}
-        <div className="mb-6">
-          <div className="flex flex-wrap gap-2">
+        <div className="section-gap">
+          <div className="filter-scroll">
             {divisionTabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = division === tab.key;
@@ -292,19 +292,20 @@ const CRM = () => {
                   key={tab.key}
                   onClick={() => handleDivisionChange(tab.key)}
                   className={cn(
-                    "flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-light transition-all duration-200 cursor-pointer",
+                    "flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg text-sm font-light transition-all duration-200 cursor-pointer whitespace-nowrap flex-shrink-0 touch-target",
                     isActive 
                       ? "bg-foreground text-background" 
                       : "bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-foreground border border-white/10"
                   )}
                 >
                   <Icon className="h-4 w-4" />
-                  {tab.label}
+                  <span className="hidden sm:inline">{tab.label}</span>
+                  <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
                 </button>
               );
             })}
           </div>
-          <p className="text-xs text-muted-foreground mt-2 ml-1">
+          <p className="text-xs text-muted-foreground mt-2 ml-1 hidden sm:block">
             {currentDivisionTab.description}
           </p>
         </div>

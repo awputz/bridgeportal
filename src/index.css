@@ -616,9 +616,60 @@ All colors MUST be HSL.
   }
   
   /* ========================================
-     SPACING UTILITIES
+     SPACING UTILITIES - 8px Grid System
      ======================================== */
   
+  /* Page wrapper - for portal pages */
+  .page-content {
+    @apply px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8;
+  }
+  
+  /* Section gaps - standard spacing between major sections */
+  .section-gap {
+    @apply mb-6 md:mb-8;
+  }
+  
+  /* Card internal padding */
+  .card-content {
+    @apply p-4 sm:p-5 md:p-6;
+  }
+  
+  /* Page header spacing */
+  .page-header {
+    @apply mb-6 md:mb-8;
+  }
+  
+  /* Touch-friendly button heights */
+  .btn-touch {
+    @apply h-10 md:h-10 min-w-[44px];
+  }
+  
+  /* Filter row with horizontal scroll on mobile */
+  .filter-scroll {
+    @apply flex gap-2 overflow-x-auto scrollbar-hide pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap;
+  }
+  
+  /* Stat card grid */
+  .stat-grid {
+    @apply grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4;
+  }
+  
+  /* Standard grid gaps */
+  .grid-gap {
+    @apply gap-3 sm:gap-4 md:gap-6;
+  }
+  
+  /* Service page hero */
+  .hero-section {
+    @apply pt-28 sm:pt-32 md:pt-36 lg:pt-40 pb-8 sm:pb-10 md:pb-12 lg:pb-16;
+  }
+  
+  /* Service page sections */
+  .service-section {
+    @apply py-12 md:py-16 lg:py-20 xl:py-24;
+  }
+  
+  /* Legacy spacing utilities */
   .page-container {
     @apply pt-20 md:pt-24 lg:pt-28;
   }

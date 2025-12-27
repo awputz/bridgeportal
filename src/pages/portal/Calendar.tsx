@@ -428,7 +428,7 @@ export default function Calendar() {
         </div>
 
         {/* Calendar View */}
-        <div className={cn("flex-1 min-w-0 flex flex-col overflow-hidden", isMobile ? "p-2" : "p-4 lg:p-6")}>
+        <div className={cn("flex-1 min-w-0 flex flex-col overflow-hidden", isMobile ? "p-3" : "p-4 lg:p-6")}>
           {viewMode === "day" && (
             <CalendarDayView
               currentDate={selectedDate || currentDate}

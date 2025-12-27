@@ -202,12 +202,12 @@ const Apply = () => {
     switch (step.id) {
       case "personal":
         return (
-          <div className="space-y-4">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-light text-foreground mb-2">Personal Information</h2>
+          <div className="space-y-5">
+            <div className="text-center mb-6 sm:mb-8">
+              <h2 className="text-xl sm:text-2xl font-light text-foreground mb-2">Personal Information</h2>
               <p className="text-muted-foreground text-sm">Tell us about yourself</p>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
                 <Label htmlFor="full_name">Full Name *</Label>
                 <Input
@@ -272,12 +272,12 @@ const Apply = () => {
 
       case "professional":
         return (
-          <div className="space-y-4">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-light text-foreground mb-2">Professional Details</h2>
+          <div className="space-y-5">
+            <div className="text-center mb-6 sm:mb-8">
+              <h2 className="text-xl sm:text-2xl font-light text-foreground mb-2">Professional Details</h2>
               <p className="text-muted-foreground text-sm">Your credentials and social presence</p>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
                 <Label htmlFor="license_number">NY Real Estate License Number</Label>
                 <Input
@@ -315,9 +315,9 @@ const Apply = () => {
 
       case "divisions":
         return (
-          <div className="space-y-4">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-light text-foreground mb-2">Select Your Division(s)</h2>
+          <div className="space-y-5">
+            <div className="text-center mb-6 sm:mb-8">
+              <h2 className="text-xl sm:text-2xl font-light text-foreground mb-2">Select Your Division(s)</h2>
               <p className="text-muted-foreground text-sm">Choose at least one area of focus</p>
             </div>
             <div className="space-y-3">
@@ -354,14 +354,14 @@ const Apply = () => {
 
       case "culture":
         return (
-          <div className="space-y-4">
-            <div className="text-center mb-4">
-              <h2 className="text-2xl font-light text-foreground mb-2">Our Cultural Values</h2>
+          <div className="space-y-5">
+            <div className="text-center mb-4 sm:mb-6">
+              <h2 className="text-xl sm:text-2xl font-light text-foreground mb-2">Our Cultural Values</h2>
               <p className="text-muted-foreground text-sm">The principles that guide everything we do at Bridge</p>
             </div>
-            <div className="grid grid-cols-1 gap-3 max-h-[300px] overflow-y-auto pr-2">
+            <div className="grid grid-cols-1 gap-3 max-h-[280px] sm:max-h-[300px] overflow-y-auto pr-2">
               {culturalValues.map(({ icon: Icon, title, description }) => (
-                <div key={title} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30">
+                <div key={title} className="flex items-start gap-3 p-3 sm:p-4 rounded-lg bg-muted/30">
                   <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <Icon className="h-4 w-4 text-primary" />
                   </div>
@@ -386,12 +386,12 @@ const Apply = () => {
 
       case "bio":
         return (
-          <div className="space-y-4">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-light text-foreground mb-2">Bio & Photos</h2>
+          <div className="space-y-5">
+            <div className="text-center mb-6 sm:mb-8">
+              <h2 className="text-xl sm:text-2xl font-light text-foreground mb-2">Bio & Photos</h2>
               <p className="text-muted-foreground text-sm">Help us get to know you better</p>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
                 <Label htmlFor="bio">Professional Bio (3+ sentences) *</Label>
                 <Textarea
