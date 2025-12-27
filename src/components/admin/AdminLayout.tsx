@@ -51,6 +51,16 @@ export const AdminLayout = () => {
           <main className="flex-1 p-4 md:p-6 bg-muted/30 overflow-auto">
             <Outlet />
           </main>
+          
+          {/* Subtle BOSS watermark */}
+          <div className="hidden md:flex fixed bottom-4 right-4 items-center gap-1.5 opacity-20 hover:opacity-40 transition-opacity z-10 pointer-events-none">
+            <span className="text-[9px] text-muted-foreground font-light">Powered by</span>
+            <img 
+              src="/assets/boss-logo-white.png" 
+              alt="Brokerage Operating System" 
+              className="h-3 w-auto"
+            />
+          </div>
         </div>
       </div>
     </SidebarProvider>

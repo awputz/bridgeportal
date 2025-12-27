@@ -215,9 +215,19 @@ const Login = () => {
             </div>
           </div>
 
-          <p className="text-center text-xs text-muted-foreground/50 mt-8 font-light">
-            Bridge Advisory Group © {new Date().getFullYear()}
-          </p>
+          <div className="text-center mt-8 space-y-2">
+            <p className="text-xs text-muted-foreground/50 font-light">
+              Bridge Advisory Group © {new Date().getFullYear()}
+            </p>
+            <div className="flex items-center justify-center gap-2 opacity-40">
+              <span className="text-[10px] text-muted-foreground/50 font-light">Powered by</span>
+              <img 
+                src="/assets/boss-logo-white.png" 
+                alt="Brokerage Operating System" 
+                className="h-4 w-auto"
+              />
+            </div>
+          </div>
         </div>
       </div>;
   }
@@ -370,9 +380,19 @@ const Login = () => {
             </>}
         </div>
 
-        <p className="text-center text-xs text-muted-foreground/50 mt-8 font-light">
-          Bridge Advisory Group © {new Date().getFullYear()}
-        </p>
+        <div className="text-center mt-8 space-y-2">
+          <p className="text-xs text-muted-foreground/50 font-light">
+            Bridge Advisory Group © {new Date().getFullYear()}
+          </p>
+          <div className="flex items-center justify-center gap-2 opacity-40">
+            <span className="text-[10px] text-muted-foreground/50 font-light">Powered by</span>
+            <img 
+              src="/assets/boss-logo-white.png" 
+              alt="Brokerage Operating System" 
+              className="h-4 w-auto"
+            />
+          </div>
+        </div>
       </div>
     </div>;
 };
