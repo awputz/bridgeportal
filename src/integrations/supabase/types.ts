@@ -763,6 +763,124 @@ export type Database = {
         }
         Relationships: []
       }
+      client_intake_links: {
+        Row: {
+          agent_id: string
+          created_at: string | null
+          division: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          link_code: string
+          name: string
+          updated_at: string | null
+          view_count: number | null
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string | null
+          division?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          link_code: string
+          name: string
+          updated_at?: string | null
+          view_count?: number | null
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string | null
+          division?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          link_code?: string
+          name?: string
+          updated_at?: string | null
+          view_count?: number | null
+        }
+        Relationships: []
+      }
+      client_intake_submissions: {
+        Row: {
+          agent_id: string
+          client_company: string | null
+          client_email: string
+          client_name: string
+          client_phone: string | null
+          contacted_at: string | null
+          converted_contact_id: string | null
+          converted_deal_id: string | null
+          created_at: string | null
+          criteria: Json
+          division: string
+          id: string
+          link_id: string | null
+          notes: string | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          agent_id: string
+          client_company?: string | null
+          client_email: string
+          client_name: string
+          client_phone?: string | null
+          contacted_at?: string | null
+          converted_contact_id?: string | null
+          converted_deal_id?: string | null
+          created_at?: string | null
+          criteria?: Json
+          division: string
+          id?: string
+          link_id?: string | null
+          notes?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          agent_id?: string
+          client_company?: string | null
+          client_email?: string
+          client_name?: string
+          client_phone?: string | null
+          contacted_at?: string | null
+          converted_contact_id?: string | null
+          converted_deal_id?: string | null
+          created_at?: string | null
+          criteria?: Json
+          division?: string
+          id?: string
+          link_id?: string | null
+          notes?: string | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_intake_submissions_converted_contact_id_fkey"
+            columns: ["converted_contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_intake_submissions_converted_deal_id_fkey"
+            columns: ["converted_deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "client_intake_submissions_link_id_fkey"
+            columns: ["link_id"]
+            isOneToOne: false
+            referencedRelation: "client_intake_links"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       commercial_listing_agents: {
         Row: {
           agent_id: string
