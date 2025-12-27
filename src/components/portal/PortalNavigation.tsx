@@ -38,11 +38,11 @@ import { NotificationCenter } from "./NotificationCenter";
 import { useUserProfile } from "@/hooks/useGoogleServices";
 import { useAuth } from "@/contexts/AuthContext";
 
-// Google items
+// Google items - Mail opens Gmail externally
 const googleItems = [
-  { name: "Mail", path: "/portal/mail", icon: Mail },
-  { name: "Calendar", path: "/portal/calendar", icon: Calendar },
-  { name: "Drive", path: "/portal/drive", icon: FolderOpen },
+  { name: "Mail", path: "https://mail.google.com", icon: Mail, external: true },
+  { name: "Calendar", path: "/portal/calendar", icon: Calendar, external: false },
+  { name: "Drive", path: "/portal/drive", icon: FolderOpen, external: false },
 ];
 
 // Essentials items
@@ -169,7 +169,24 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                 <DropdownMenuContent align="center" className="w-44 bg-background/95 backdrop-blur-xl border-border">
                   {googleItems.map((item) => {
                     const Icon = item.icon;
-                    const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
+                    const isActive = !item.external && (location.pathname === item.path || location.pathname.startsWith(item.path + '/'));
+                    
+                    if (item.external) {
+                      return (
+                        <DropdownMenuItem key={item.name} asChild>
+                          <a 
+                            href={item.path}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 cursor-pointer"
+                          >
+                            <Icon className="h-4 w-4" />
+                            {item.name}
+                          </a>
+                        </DropdownMenuItem>
+                      );
+                    }
+                    
                     return (
                       <DropdownMenuItem key={item.name} asChild>
                         <Link 
@@ -376,7 +393,29 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                 <div className="text-xs text-muted-foreground uppercase tracking-wider px-4 mb-2 mt-6">Google</div>
                 {googleItems.map((item, index) => {
                   const Icon = item.icon;
-                  const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
+                  const isActive = !item.external && (location.pathname === item.path || location.pathname.startsWith(item.path + '/'));
+                  
+                  if (item.external) {
+                    return (
+                      <a
+                        key={item.name}
+                        href={item.path}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={cn(
+                          "flex items-center gap-4 text-lg font-light transition-all duration-300 py-4 min-h-[56px] active:bg-white/5 rounded-lg px-4 -mx-2",
+                          "text-foreground/70 hover:text-foreground",
+                          isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                        )}
+                        style={{ transitionDelay: `${(index + 1) * 50}ms` }}
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <Icon className="h-5 w-5" />
+                        {item.name}
+                      </a>
+                    );
+                  }
+                  
                   return (
                     <Link
                       key={item.name}

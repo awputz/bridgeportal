@@ -160,6 +160,18 @@ const App = () => {
                   } />
                   <Route path="/auth" element={<Navigate to="/login" replace />} />
                   
+                  {/* Legal Pages */}
+                  <Route path="/terms" element={
+                    <Suspense fallback={<PageLoader />}>
+                      {(() => { const TermsOfService = lazy(() => import("./pages/TermsOfService")); return <TermsOfService />; })()}
+                    </Suspense>
+                  } />
+                  <Route path="/privacy" element={
+                    <Suspense fallback={<PageLoader />}>
+                      {(() => { const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy")); return <PrivacyPolicy />; })()}
+                    </Suspense>
+                  } />
+                  
                   {/* Public Intake Form */}
                   <Route path="/intake/:linkCode" element={
                     <Suspense fallback={<PageLoader />}>
