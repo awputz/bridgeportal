@@ -214,7 +214,7 @@ export function ContactProfileSlideOver({
           email: contact.email || undefined,
           phone: contact.phone || undefined,
           title: contact.title || contact.contact_type,
-          company: contact.company || undefined,
+          linkedin: contact.linkedin_url || undefined,
         });
         break;
       case "linkedin":

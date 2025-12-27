@@ -11,9 +11,61 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { AddressAutocomplete, AddressComponents } from "@/components/ui/AddressAutocomplete";
-import { InvestmentSalesDealFields, InvestmentSalesData } from "@/components/portal/deal-forms/InvestmentSalesDealFields";
-import { CommercialLeasingDealFields, CommercialLeasingData } from "@/components/portal/deal-forms/CommercialLeasingDealFields";
-import { ResidentialDealFields, ResidentialData } from "@/components/portal/deal-forms/ResidentialDealFields";
+import { InvestmentSalesDealFields } from "@/components/portal/deal-forms/InvestmentSalesDealFields";
+import { CommercialLeasingDealFields } from "@/components/portal/deal-forms/CommercialLeasingDealFields";
+import { ResidentialDealFields } from "@/components/portal/deal-forms/ResidentialDealFields";
+
+// Division-specific data types
+interface InvestmentSalesData {
+  cap_rate?: string;
+  noi?: string;
+  building_class?: string;
+  unit_count?: string;
+  year_built?: string;
+  gross_sf?: string;
+  asking_price?: string;
+  offer_price?: string;
+  is_1031_exchange?: boolean;
+  financing_type?: string;
+  lender_name?: string;
+  loan_amount?: string;
+  due_diligence_deadline?: string;
+  property_type?: string;
+  zoning?: string;
+}
+
+interface CommercialLeasingData {
+  tenant_legal_name?: string;
+  asking_rent_psf?: string;
+  negotiated_rent_psf?: string;
+  lease_type?: string;
+  lease_term_months?: string;
+  commencement_date?: string;
+  expiration_date?: string;
+  free_rent_months?: string;
+  escalation_rate?: string;
+  ti_allowance_psf?: string;
+  security_deposit_months?: string;
+  landlord_broker?: string;
+  use_clause?: string;
+  space_type?: string;
+  gross_sf?: string;
+}
+
+interface ResidentialData {
+  bedrooms?: string;
+  bathrooms?: string;
+  is_rental?: boolean;
+  listing_price?: string;
+  monthly_rent?: string;
+  lease_length_months?: string;
+  move_in_date?: string;
+  pets_allowed?: boolean;
+  guarantor_required?: boolean;
+  co_broke_percent?: string;
+  gross_sf?: string;
+  property_type?: string;
+}
 
 const dealTypes = [
   { value: "sale", label: "Sale" },
@@ -127,7 +179,10 @@ const NewDeal = () => {
         due_diligence_deadline: investmentData.due_diligence_deadline || null,
       };
     } else if (division === "commercial-leasing") {
-      const leaseValue = (commercialData.asking_rent_psf || 0) * (commercialData.square_footage || 0) * ((commercialData.lease_term_months || 0) / 12);
+      const rentPsf = parseFloat(String(commercialData.asking_rent_psf || 0));
+      const sqFt = parseFloat(String(commercialData.gross_sf || 0));
+      const termMonths = parseFloat(String(commercialData.lease_term_months || 0));
+      const leaseValue = rentPsf * sqFt * (termMonths / 12);
       dealPayload = {
         ...dealPayload,
         value: leaseValue || null,
@@ -146,7 +201,7 @@ const NewDeal = () => {
         security_deposit_months: commercialData.security_deposit_months || null,
         use_clause: commercialData.use_clause || null,
         space_type: commercialData.space_type || null,
-        gross_sf: commercialData.square_footage || null,
+        gross_sf: commercialData.gross_sf || null,
       };
     } else if (division === "residential") {
       const isRental = residentialData.is_rental || false;
