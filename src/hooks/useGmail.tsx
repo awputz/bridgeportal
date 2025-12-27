@@ -153,14 +153,15 @@ export function useDisconnectGmail() {
   });
 }
 
-// List Gmail messages
+// List Gmail messages with auto-refresh for realtime updates
 export function useGmailMessages(options: {
   labelIds?: string[];
   query?: string;
   maxResults?: number;
   enabled?: boolean;
+  refetchInterval?: number;
 }) {
-  const { labelIds, query, maxResults = 20, enabled = true } = options;
+  const { labelIds, query, maxResults = 20, enabled = true, refetchInterval = 60000 } = options;
 
   return useQuery({
     queryKey: ["gmail-messages", { labelIds, query, maxResults }],
@@ -179,6 +180,8 @@ export function useGmailMessages(options: {
     },
     enabled,
     staleTime: 30 * 1000,
+    refetchInterval: enabled ? refetchInterval : false, // Auto-refresh every minute when enabled
+    refetchIntervalInBackground: false, // Don't refresh when tab is not visible
   });
 }
 

@@ -18,13 +18,16 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const MailWidget = () => {
   const { data: connection, isLoading: isLoadingConnection } = useGmailConnection();
-  const { data: messagesData, isLoading: isLoadingMessages } = useGmailMessages({
+  const { data: messagesData, isLoading: isLoadingMessages, dataUpdatedAt } = useGmailMessages({
     labelIds: ["INBOX"],
     maxResults: 5,
     enabled: connection?.isConnected ?? false,
   });
   const { mutate: connectGmail, isPending: isConnecting } = useConnectGmail();
   const { mutate: modifyMessage } = useModifyMessage();
+
+  // Calculate time since last update for freshness indicator
+  const lastUpdated = dataUpdatedAt ? formatDistanceToNow(new Date(dataUpdatedAt), { addSuffix: true }) : null;
 
   const unreadCount = messagesData?.messages?.filter(m => m.isUnread).length || 0;
   const messages = messagesData?.messages || [];
@@ -88,17 +91,24 @@ export const MailWidget = () => {
             <Mail className="h-5 w-5 text-primary" />
             Mail
             {unreadCount > 0 && (
-              <Badge variant="secondary" className="bg-primary/20 text-primary text-xs">
+              <Badge variant="secondary" className="bg-primary/20 text-primary text-xs animate-pulse">
                 {unreadCount}
               </Badge>
             )}
           </CardTitle>
-          <Link 
-            to="/portal/mail" 
-            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-          >
-            View All
-          </Link>
+          <div className="flex items-center gap-2">
+            {lastUpdated && (
+              <span className="text-[10px] text-muted-foreground">
+                {lastUpdated}
+              </span>
+            )}
+            <Link 
+              to="/portal/mail" 
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              View All
+            </Link>
+          </div>
         </div>
       </CardHeader>
 
