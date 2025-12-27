@@ -26,6 +26,9 @@ import {
   ExternalLink,
   GitMerge,
   AlertTriangle,
+  Linkedin,
+  Calendar,
+  Globe,
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FAB } from "@/components/ui/fab";
@@ -72,6 +75,7 @@ import { CSVContactUploader } from "@/components/portal/CSVContactUploader";
 import { ContactProfileSlideOver } from "@/components/portal/ContactProfileSlideOver";
 import { ContactAlphaScroll, groupContactsByLetter } from "@/components/portal/ContactAlphaScroll";
 import { ContactMergeWizard, findDuplicateContacts } from "@/components/portal/ContactMergeWizard";
+import { AddressAutocomplete, AddressComponents } from "@/components/ui/AddressAutocomplete";
 import { cn } from "@/lib/utils";
 import {
   Table,
@@ -436,6 +440,10 @@ const Contacts = () => {
     setShowMergeWizard(true);
   };
 
+// State for new contact form
+  const [newContactAddress, setNewContactAddress] = useState("");
+  const [newContactAddressData, setNewContactAddressData] = useState<AddressComponents | null>(null);
+
   const handleCreateContact = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -453,15 +461,31 @@ const Contacts = () => {
       email: formData.get("email") as string || null,
       phone: formData.get("phone") as string || null,
       company: formData.get("company") as string || null,
+      title: formData.get("title") as string || null,
       contact_type: formData.get("contact_type") as string || "prospect",
       source: formData.get("source") as string || null,
       division: formData.get("division") as Division || division,
       tags: [],
       notes: formData.get("notes") as string || null,
-      address: formData.get("address") as string || null,
+      address: newContactAddressData?.fullAddress || newContactAddress || null,
+      street_address: newContactAddressData?.streetAddress || null,
+      city: newContactAddressData?.city || null,
+      state: newContactAddressData?.state || null,
+      zip_code: newContactAddressData?.zipCode || null,
+      country: newContactAddressData?.country || "USA",
+      linkedin_url: formData.get("linkedin_url") as string || null,
+      secondary_email: formData.get("secondary_email") as string || null,
+      secondary_phone: formData.get("secondary_phone") as string || null,
+      company_website: formData.get("company_website") as string || null,
+      preferred_contact_method: formData.get("preferred_contact_method") as string || "email",
+      birthday: formData.get("birthday") as string || null,
+      portfolio_size: formData.get("portfolio_size") ? parseFloat(formData.get("portfolio_size") as string) : null,
+      investor_profile: formData.get("investor_profile") as string || null,
     }, {
       onSuccess: () => {
         setShowContactDialog(false);
+        setNewContactAddress("");
+        setNewContactAddressData(null);
         form.reset();
       },
     });
