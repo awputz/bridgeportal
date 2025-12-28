@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, LogOut, Menu, X, Bell } from "lucide-react";
+import { PoweredByBoss } from "@/components/PoweredByBoss";
 import { toast } from "@/hooks/use-toast";
 import { InvestorSidebar } from "./InvestorSidebar";
 import { cn } from "@/lib/utils";
@@ -205,14 +206,7 @@ export const InvestorLayout = () => {
           <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
             <span>Bridge Advisory Group © {new Date().getFullYear()}</span>
             <span>•</span>
-            <div className="flex items-center gap-2 opacity-70">
-              <span className="text-xs font-light">Powered by</span>
-              <img 
-                src="/assets/boss-logo-white.png" 
-                alt="Brokerage Operating System" 
-                className="h-6 w-auto"
-              />
-            </div>
+            <PoweredByBoss size="sm" />
           </div>
         </footer>
       </div>

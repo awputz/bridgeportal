@@ -4,6 +4,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "./AdminSidebar";
 import { AdminNotificationCenter } from "./AdminNotificationCenter";
 import { Button } from "@/components/ui/button";
+import { PoweredByBoss } from "@/components/PoweredByBoss";
 import { Building2 } from "lucide-react";
 
 export const AdminLayout = () => {
@@ -54,14 +55,7 @@ export const AdminLayout = () => {
           
           {/* Footer with BOSS branding */}
           <footer className="hidden md:flex items-center justify-center py-3 border-t border-border/30 bg-background/50">
-            <div className="flex items-center gap-2 opacity-40 hover:opacity-60 transition-opacity">
-              <span className="text-xs text-muted-foreground font-light">Powered by</span>
-              <img 
-                src="/assets/boss-logo-white.png" 
-                alt="Brokerage Operating System" 
-                className="h-5 w-auto"
-              />
-            </div>
+            <PoweredByBoss size="sm" />
           </footer>
         </div>
       </div>
