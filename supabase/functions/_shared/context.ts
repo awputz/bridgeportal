@@ -87,6 +87,20 @@ export async function buildRequestContext(req: Request): Promise<RequestContext>
 }
 
 /**
+ * Security headers for all responses
+ */
+export function createSecurityHeaders(): HeadersInit {
+  return {
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'DENY',
+    'X-XSS-Protection': '1; mode=block',
+    'Referrer-Policy': 'strict-origin-when-cross-origin',
+    'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
+    'Cache-Control': 'no-store, no-cache, must-revalidate',
+  };
+}
+
+/**
  * Create CORS headers with correlation ID
  */
 export function createCorsHeaders(correlationId: string): HeadersInit {
@@ -95,6 +109,7 @@ export function createCorsHeaders(correlationId: string): HeadersInit {
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-correlation-id',
     'Access-Control-Expose-Headers': 'x-correlation-id',
     'X-Correlation-Id': correlationId,
+    ...createSecurityHeaders(),
   };
 }
 
