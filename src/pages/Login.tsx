@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/hooks/use-toast";
 import { Lock, Loader2, Mail, ArrowLeft, LogOut, ArrowRight, ChevronDown, ChevronUp } from "lucide-react";
+import { PoweredByBoss } from "@/components/PoweredByBoss";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { User } from "@supabase/supabase-js";
 const GoogleIcon = () => <svg className="h-5 w-5" viewBox="0 0 24 24">
@@ -221,14 +222,7 @@ const Login = () => {
             <p className="text-xs text-muted-foreground/50 font-light">
               Bridge Advisory Group © {new Date().getFullYear()}
             </p>
-            <div className="flex items-center justify-center gap-3 opacity-70">
-              <span className="text-base text-muted-foreground/60 font-light">Powered by</span>
-              <img 
-                src="/assets/boss-logo-white.png" 
-                alt="Brokerage Operating System" 
-                className="h-14 w-auto"
-              />
-            </div>
+            <PoweredByBoss />
           </div>
         </div>
       </div>;
@@ -415,14 +409,7 @@ const Login = () => {
           <p className="text-xs text-muted-foreground/50 font-light">
             Bridge Advisory Group © {new Date().getFullYear()}
           </p>
-          <div className="flex items-center justify-center gap-3 opacity-70">
-            <span className="text-base text-muted-foreground/60 font-light">Powered by</span>
-            <img 
-              src="/assets/boss-logo-white.png" 
-              alt="Brokerage Operating System" 
-              className="h-14 w-auto"
-            />
-          </div>
+          <PoweredByBoss />
         </div>
       </div>
     </div>;

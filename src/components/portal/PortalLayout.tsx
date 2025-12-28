@@ -5,6 +5,7 @@ import { AIAssistant } from "./AIAssistant";
 import { CommandPalette, useCommandPalette } from "./CommandPalette";
 import { QuickActivityLogger } from "./QuickActivityLogger";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { PoweredByBoss } from "@/components/PoweredByBoss";
 import { Loader2 } from "lucide-react";
 import { useStoreGoogleTokensOnLogin } from "@/hooks/useGoogleServices";
 import { useAutoSyncContacts } from "@/hooks/useAutoSyncContacts";
@@ -72,14 +73,7 @@ export const PortalLayout = () => {
             Privacy Policy
           </Link>
           <span className="text-muted-foreground/30">|</span>
-          <div className="flex items-center gap-2 opacity-50 hover:opacity-70 transition-opacity">
-            <span className="text-xs text-muted-foreground font-light">Powered by</span>
-            <img 
-              src="/assets/boss-logo-white.png" 
-              alt="Brokerage Operating System" 
-              className="h-5 w-auto"
-            />
-          </div>
+          <PoweredByBoss size="sm" />
         </div>
       </footer>
       
