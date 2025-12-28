@@ -77,6 +77,7 @@ export const FeaturedDeals = () => {
                 <img 
                   src={deal.image_url || getPlaceholderImage(deal.asset_type)} 
                   alt={deal.property_address}
+                  loading="lazy"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>

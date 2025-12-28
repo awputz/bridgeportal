@@ -231,6 +231,7 @@ export default function TeamAdmin() {
                       <img
                         src={member.image_url}
                         alt={member.name}
+                        loading="lazy"
                         className="h-10 w-10 rounded-full object-cover"
                       />
                     ) : (

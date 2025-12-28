@@ -513,7 +513,7 @@ const ListingsAdmin = () => {
               <TableCell>
                 <div className="flex items-center gap-3">
                   {listing.image_url ? (
-                    <img src={listing.image_url} alt={listing.property_address} className="w-12 h-12 object-cover rounded" />
+                    <img src={listing.image_url} alt={listing.property_address} loading="lazy" className="w-12 h-12 object-cover rounded" />
                   ) : (
                     <div className="w-12 h-12 bg-muted rounded flex items-center justify-center">
                       <Building2 className="h-6 w-6 text-muted-foreground" />
@@ -603,7 +603,7 @@ const ListingsAdmin = () => {
               <TableCell>
                 <div className="flex items-center gap-3">
                   {listing.image_url ? (
-                    <img src={listing.image_url} alt={listing.property_address} className="w-12 h-12 object-cover rounded" />
+                    <img src={listing.image_url} alt={listing.property_address} loading="lazy" className="w-12 h-12 object-cover rounded" />
                   ) : (
                     <div className="w-12 h-12 bg-muted rounded flex items-center justify-center">
                       <Building2 className="h-6 w-6 text-muted-foreground" />
