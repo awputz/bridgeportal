@@ -14,8 +14,6 @@ serve(async (req) => {
   try {
     const { latitude, longitude, location } = await req.json();
 
-    console.log(`Fetching weather for: ${latitude}, ${longitude} (${location})`);
-
     // Use Open-Meteo API (free, no API key required)
     const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&temperature_unit=fahrenheit&wind_speed_unit=mph`;
 
@@ -69,8 +67,6 @@ serve(async (req) => {
       humidity: data.current?.relative_humidity_2m,
       windSpeed: Math.round(data.current?.wind_speed_10m || 0),
     };
-
-    console.log('Weather data:', weather);
 
     return new Response(
       JSON.stringify({ weather }),

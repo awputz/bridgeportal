@@ -13,8 +13,6 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
 // Helper to refresh token
 async function refreshAccessToken(refreshToken: string) {
-  console.log('[google-contacts-list] Refreshing access token...');
-  
   const response = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -33,7 +31,6 @@ async function refreshAccessToken(refreshToken: string) {
     return { error: data.error_description || data.error };
   }
   
-  console.log('[google-contacts-list] Token refresh successful');
   return {
     access_token: data.access_token,
     expires_in: data.expires_in,
@@ -61,8 +58,6 @@ async function ensureValidToken(
   const isExpired = tokenExpiry && (tokenExpiry.getTime() - now.getTime()) < bufferMs;
   
   if (isExpired && refreshToken) {
-    console.log('[google-contacts-list] Token expired or expiring soon, refreshing...');
-    
     const refreshResult = await refreshAccessToken(refreshToken);
     
     if (refreshResult.error) {
@@ -91,8 +86,6 @@ async function ensureValidToken(
       .from('user_google_tokens')
       .update(updateData)
       .eq('user_id', userId);
-    
-    console.log('[google-contacts-list] Token updated in database');
   }
   
   // If we still don't have an access token but have refresh, try immediate refresh
@@ -131,18 +124,14 @@ async function ensureValidToken(
 }
 
 serve(async (req) => {
-  console.log("[google-contacts-list] Request received:", req.method);
-  
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
     const authHeader = req.headers.get('Authorization');
-    console.log("[google-contacts-list] Auth header present:", !!authHeader);
 
     if (!authHeader) {
-      console.log("[google-contacts-list] Missing auth header");
       return new Response(
         JSON.stringify({
           error: 'Missing authorization header',
@@ -161,7 +150,6 @@ serve(async (req) => {
     } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
-      console.log("[google-contacts-list] Invalid user token:", authError?.message);
       return new Response(
         JSON.stringify({
           error: 'Invalid token',
@@ -172,11 +160,8 @@ serve(async (req) => {
       );
     }
 
-    console.log("[google-contacts-list] User authenticated:", user.id);
-
     const body = await req.json();
     const { action, pageToken, query } = body;
-    console.log("[google-contacts-list] Action:", action);
 
     // Get user's tokens
     const { data: tokenData, error: tokenError } = await supabase
@@ -188,8 +173,6 @@ serve(async (req) => {
     if (tokenError) {
       console.error("[google-contacts-list] Token query error:", tokenError);
     }
-
-    console.log("[google-contacts-list] Token data found:", !!tokenData, "contacts_enabled:", tokenData?.contacts_enabled);
 
     // Handle check-connection action
     if (action === 'check-connection') {
@@ -235,7 +218,6 @@ serve(async (req) => {
       });
       
       if (response.status === 401) {
-        console.log('[google-contacts-list] Got 401, attempting token refresh...');
         const refreshToken = tokenData?.contacts_refresh_token || tokenData?.refresh_token;
         
         if (refreshToken) {
@@ -312,8 +294,6 @@ serve(async (req) => {
         address: person.addresses?.[0]?.formattedValue || '',
       }));
 
-      console.log(`[google-contacts-list] Listed ${contacts.length} contacts`);
-
       return new Response(
         JSON.stringify({ 
           contacts, 
@@ -348,8 +328,6 @@ serve(async (req) => {
         company: result.person.organizations?.[0]?.name || '',
         photoUrl: result.person.photos?.[0]?.url || '',
       }));
-
-      console.log(`[google-contacts-list] Search returned ${contacts.length} contacts`);
 
       return new Response(
         JSON.stringify({ contacts }),
