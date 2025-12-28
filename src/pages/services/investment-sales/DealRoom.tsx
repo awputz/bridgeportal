@@ -195,6 +195,7 @@ const DealRoom = () => {
                   <img
                     src={listing.image_url || PLACEHOLDER_IMAGES.building.exterior}
                     alt={listing.property_address}
+                    loading="lazy"
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />

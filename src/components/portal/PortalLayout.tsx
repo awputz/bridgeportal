@@ -11,6 +11,7 @@ import { useStoreGoogleTokensOnLogin } from "@/hooks/useGoogleServices";
 import { useAutoSyncContacts } from "@/hooks/useAutoSyncContacts";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 
 export const PortalLayout = () => {
   const { isLoading, isAuthenticated } = useAuth();
@@ -23,6 +24,9 @@ export const PortalLayout = () => {
 
   // Auto-sync contacts from Google when connected (runs globally on login)
   const { isSyncing, googleContactsCount } = useAutoSyncContacts();
+  
+  // Monitor online status and show toast notifications
+  useOnlineStatus();
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -50,7 +54,7 @@ export const PortalLayout = () => {
     <div className="min-h-[100dvh] h-[100dvh] bg-background flex flex-col overflow-hidden">
       <PortalNavigation onSearchClick={() => setCommandOpen(true)} />
       {/* Main content area - increased padding: pt-[72px] mobile (nav + buffer), pt-24 desktop, pb-16 for mobile bottom nav */}
-      <main className="flex-1 flex flex-col pt-[72px] md:pt-24 pb-16 md:pb-0 overflow-hidden min-h-0">
+      <main id="main-content" className="flex-1 flex flex-col pt-[72px] md:pt-24 pb-16 md:pb-0 overflow-hidden min-h-0">
         <ErrorBoundary>
           <Outlet />
         </ErrorBoundary>

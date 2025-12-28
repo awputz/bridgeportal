@@ -286,7 +286,7 @@ const Login = () => {
               </div>
 
               {/* Google Sign-In Button */}
-              <Button type="button" variant="outline" onClick={handleGoogleSignIn} disabled={isGoogleLoading || isLoading} className="w-full h-12 font-normal text-base bg-white hover:bg-gray-50 text-gray-700 border-gray-300 hover:border-gray-400 transition-all">
+              <Button type="button" variant="outline" onClick={handleGoogleSignIn} disabled={isGoogleLoading || isLoading || !agreedToTerms} className="w-full h-12 font-normal text-base bg-white hover:bg-gray-50 text-gray-700 border-gray-300 hover:border-gray-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                 {isGoogleLoading ? <>
                     <Loader2 className="h-5 w-5 mr-3 animate-spin" />
                     Signing in...
@@ -348,7 +348,7 @@ const Login = () => {
                         </button>
                       </div>
                       
-                      <Button type="submit" className="w-full h-12 font-light text-base" disabled={isLoading}>
+                      <Button type="submit" className="w-full h-12 font-light text-base" disabled={isLoading || !agreedToTerms}>
                         {isLoading ? <>
                             <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                             Signing in...
@@ -386,6 +386,11 @@ const Login = () => {
                     </Link>
                   </span>
                 </label>
+                {!agreedToTerms && (
+                  <p className="text-xs text-muted-foreground/70 mt-2 ml-7">
+                    Please accept terms to sign in
+                  </p>
+                )}
               </div>
 
               {/* Apply Link */}
