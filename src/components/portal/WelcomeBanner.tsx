@@ -196,8 +196,8 @@ export const WelcomeBanner = () => {
           </div>
         </div>
 
-        {/* Right: Market Bubbles 2x2 Grid */}
-        <div className="grid grid-cols-2 gap-2 lg:gap-2.5 flex-shrink-0">
+        {/* Right: Market Bubbles Row */}
+        <div className="flex gap-2 flex-shrink-0">
           {markets.map((market) => (
             <MarketBubble key={market.id} market={market} />
           ))}
