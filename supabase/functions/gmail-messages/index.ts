@@ -13,8 +13,6 @@ const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
 // Helper to refresh token
 async function refreshAccessToken(refreshToken: string) {
-  console.log('[gmail-messages] Refreshing access token...');
-  
   const response = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -33,7 +31,6 @@ async function refreshAccessToken(refreshToken: string) {
     return { error: tokens.error_description || tokens.error };
   }
 
-  console.log('[gmail-messages] Token refresh successful');
   return {
     access_token: tokens.access_token,
     expires_in: tokens.expires_in,
@@ -61,8 +58,6 @@ async function ensureValidToken(
   const isExpired = tokenExpiry && (tokenExpiry.getTime() - now.getTime()) < bufferMs;
   
   if (isExpired && refreshToken) {
-    console.log('[gmail-messages] Token expired or expiring soon, refreshing...');
-    
     const refreshResult = await refreshAccessToken(refreshToken);
     
     if (refreshResult.error) {
@@ -91,8 +86,6 @@ async function ensureValidToken(
       .from('user_google_tokens')
       .update(updateData)
       .eq('user_id', userId);
-    
-    console.log('[gmail-messages] Token updated in database');
   }
   
   // If we still don't have an access token but have refresh, try immediate refresh
@@ -169,8 +162,6 @@ function extractBody(payload: any): { html: string; text: string } {
 }
 
 serve(async (req) => {
-  console.log("[gmail-messages] Request received:", req.method);
-  
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -179,10 +170,8 @@ serve(async (req) => {
     const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
     
     const authHeader = req.headers.get('Authorization');
-    console.log("[gmail-messages] Auth header present:", !!authHeader);
 
     if (!authHeader) {
-      console.log("[gmail-messages] Missing auth header");
       return new Response(
         JSON.stringify({
           error: 'No authorization header',
@@ -203,7 +192,6 @@ serve(async (req) => {
     } = await supabase.auth.getUser(token);
 
     if (userError || !user) {
-      console.log("[gmail-messages] Invalid user token:", userError?.message);
       return new Response(
         JSON.stringify({
           error: 'Invalid token',
@@ -216,12 +204,9 @@ serve(async (req) => {
         }
       );
     }
-    
-    console.log("[gmail-messages] User authenticated:", user.id);
 
     const body = await req.json();
     const { action, messageId, query, pageToken, labelIds, maxResults = 20 } = body;
-    console.log("[gmail-messages] Action:", action);
 
     // Get user's tokens
     const { data: tokenData, error: tokenError } = await supabase
@@ -233,8 +218,6 @@ serve(async (req) => {
     if (tokenError) {
       console.error("[gmail-messages] Token query error:", tokenError);
     }
-
-    console.log("[gmail-messages] Token data found:", !!tokenData, "gmail_enabled:", tokenData?.gmail_enabled);
 
     // Handle check-connection action
     if (action === 'check-connection') {
@@ -278,7 +261,6 @@ serve(async (req) => {
       let response = await fetch(url, options);
       
       if (response.status === 401) {
-        console.log('[gmail-messages] Got 401, attempting token refresh...');
         const refreshToken = tokenData?.gmail_refresh_token || tokenData?.refresh_token;
         
         if (refreshToken) {
@@ -381,8 +363,6 @@ serve(async (req) => {
         })
       );
 
-      console.log(`[gmail-messages] Listed ${messages.length} messages`);
-
       return new Response(JSON.stringify({
         messages,
         nextPageToken: listData.nextPageToken,
@@ -431,8 +411,6 @@ serve(async (req) => {
       };
       extractAttachments(msgData.payload?.parts);
 
-      console.log('[gmail-messages] Fetched message:', messageId);
-
       return new Response(JSON.stringify({
         id: msgData.id,
         threadId: msgData.threadId,
@@ -480,8 +458,6 @@ serve(async (req) => {
         });
       }
 
-      console.log('[gmail-messages] Modified message:', messageId);
-
       return new Response(JSON.stringify({ success: true, message: modifyData }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -506,8 +482,6 @@ serve(async (req) => {
         });
       }
 
-      console.log('[gmail-messages] Trashed message:', messageId);
-
       return new Response(JSON.stringify({ success: true }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -518,12 +492,14 @@ serve(async (req) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('[gmail-messages] Error:', error);
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return new Response(JSON.stringify({ error: message }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return new Response(
+      JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
   }
 });

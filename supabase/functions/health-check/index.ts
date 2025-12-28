@@ -27,8 +27,6 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  console.log('[Health Check] Starting health check...');
-
   const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
   const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
   
@@ -48,7 +46,7 @@ Deno.serve(async (req) => {
   try {
     // Check database connectivity and measure latency
     const dbStart = performance.now();
-    const { data: dbCheck, error: dbError } = await supabase
+    const { error: dbError } = await supabase
       .from('transactions')
       .select('id', { count: 'exact', head: true });
     
@@ -63,7 +61,6 @@ Deno.serve(async (req) => {
         status: dbLatency > 1000 ? 'slow' : 'healthy', 
         latencyMs: dbLatency 
       };
-      console.log(`[Health Check] Database healthy, latency: ${dbLatency}ms`);
     }
 
     // Check storage connectivity
@@ -77,7 +74,6 @@ Deno.serve(async (req) => {
       console.error('[Health Check] Storage check failed:', storageError.message);
     } else {
       result.checks.storage = { status: 'healthy' };
-      console.log(`[Health Check] Storage healthy, ${buckets?.length || 0} buckets`);
     }
 
     // Check auth service
@@ -89,7 +85,6 @@ Deno.serve(async (req) => {
       console.error('[Health Check] Auth check failed:', authError.message);
     } else {
       result.checks.auth = { status: 'healthy' };
-      console.log('[Health Check] Auth service healthy');
     }
 
     // Collect basic metrics (optional, only if all checks pass)
@@ -105,7 +100,6 @@ Deno.serve(async (req) => {
         activeAgents: agentCount.count || 0,
         activeListings: listingCount.count || 0,
       };
-      console.log('[Health Check] Metrics collected:', result.metrics);
     }
 
     // Determine final status
@@ -115,8 +109,6 @@ Deno.serve(async (req) => {
     } else if (checkStatuses.some(s => s === 'slow')) {
       result.status = 'degraded';
     }
-
-    console.log(`[Health Check] Complete - Status: ${result.status}`);
 
     return new Response(JSON.stringify(result), {
       status: result.status === 'unhealthy' ? 503 : 200,

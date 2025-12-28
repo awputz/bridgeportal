@@ -14,8 +14,6 @@ const CALENDAR_API_BASE = "https://www.googleapis.com/calendar/v3";
 
 // Helper to refresh token
 async function refreshAccessToken(refreshToken: string) {
-  console.log("[google-calendar-events] Refreshing access token...");
-  
   const response = await fetch("https://oauth2.googleapis.com/token", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -34,7 +32,6 @@ async function refreshAccessToken(refreshToken: string) {
     return { error: data.error_description || data.error };
   }
 
-  console.log("[google-calendar-events] Token refresh successful");
   return {
     access_token: data.access_token,
     expires_in: data.expires_in,
@@ -61,8 +58,6 @@ async function ensureValidToken(
   const isExpired = tokenExpiry && (tokenExpiry.getTime() - now.getTime()) < bufferMs;
   
   if (isExpired && refreshToken) {
-    console.log("[google-calendar-events] Token expired or expiring soon, refreshing...");
-    
     const refreshResult = await refreshAccessToken(refreshToken);
     
     if (refreshResult.error) {
@@ -83,8 +78,6 @@ async function ensureValidToken(
         updated_at: new Date().toISOString(),
       })
       .eq("user_id", userId);
-    
-    console.log("[google-calendar-events] Token updated in database");
   }
   
   if (!accessToken) {
@@ -113,8 +106,6 @@ async function makeCalendarRequest(
 
   // Handle 401 with retry
   if (response.status === 401 && tokenData.refresh_token) {
-    console.log("[google-calendar-events] Got 401, attempting token refresh...");
-    
     const refreshResult = await refreshAccessToken(tokenData.refresh_token);
     
     if (refreshResult.access_token) {
@@ -145,18 +136,14 @@ async function makeCalendarRequest(
 }
 
 Deno.serve(async (req) => {
-  console.log("[google-calendar-events] Request received:", req.method);
-  
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
     const authHeader = req.headers.get("Authorization");
-    console.log("[google-calendar-events] Auth header present:", !!authHeader);
 
     if (!authHeader) {
-      console.log("[google-calendar-events] Missing auth header");
       return new Response(
         JSON.stringify({
           error: "Missing authorization header",
@@ -175,7 +162,6 @@ Deno.serve(async (req) => {
     } = await supabase.auth.getUser(token);
 
     if (userError || !user) {
-      console.log("[google-calendar-events] Invalid user token:", userError?.message);
       return new Response(
         JSON.stringify({
           error: "Invalid token",
@@ -185,8 +171,6 @@ Deno.serve(async (req) => {
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
-    
-    console.log("[google-calendar-events] User authenticated:", user.id);
 
     // Get user's Google tokens
     const { data: tokenData, error: tokenError } = await supabase
@@ -196,16 +180,12 @@ Deno.serve(async (req) => {
       .maybeSingle();
 
     if (tokenError) {
-      console.log("[google-calendar-events] Token query error:", tokenError.message);
+      console.error("[google-calendar-events] Token query error:", tokenError.message);
     }
-
-    console.log("[google-calendar-events] Token data found:", !!tokenData, "calendar_enabled:", tokenData?.calendar_enabled);
 
     // Parse request body
     const body = await req.json().catch(() => ({}));
     const { action, startDate, endDate, event, eventId } = body;
-
-    console.log("[google-calendar-events] Action:", action || "list");
 
     // Handle check-connection action
     if (action === "check-connection") {
@@ -233,7 +213,6 @@ Deno.serve(async (req) => {
     }
 
     if (!tokenData) {
-      console.log("[google-calendar-events] No token data found for user");
       return new Response(
         JSON.stringify({ error: "Google Calendar not connected", needsConnection: true }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -254,8 +233,6 @@ Deno.serve(async (req) => {
 
     // Handle CREATE event
     if (action === "create") {
-      console.log("[google-calendar-events] Creating event:", event?.summary);
-      
       const googleEvent = formatEventForGoogle(event);
       
       const response = await makeCalendarRequest(
@@ -281,7 +258,6 @@ Deno.serve(async (req) => {
       }
 
       const createdEvent = await response.json();
-      console.log("[google-calendar-events] Event created:", createdEvent.id);
       
       return new Response(
         JSON.stringify({ success: true, event: createdEvent }),
@@ -291,8 +267,6 @@ Deno.serve(async (req) => {
 
     // Handle UPDATE event
     if (action === "update") {
-      console.log("[google-calendar-events] Updating event:", eventId);
-      
       if (!eventId) {
         return new Response(
           JSON.stringify({ error: "Event ID required for update" }),
@@ -325,7 +299,6 @@ Deno.serve(async (req) => {
       }
 
       const updatedEvent = await response.json();
-      console.log("[google-calendar-events] Event updated:", updatedEvent.id);
       
       return new Response(
         JSON.stringify({ success: true, event: updatedEvent }),
@@ -335,8 +308,6 @@ Deno.serve(async (req) => {
 
     // Handle DELETE event
     if (action === "delete") {
-      console.log("[google-calendar-events] Deleting event:", eventId);
-      
       if (!eventId) {
         return new Response(
           JSON.stringify({ error: "Event ID required for delete" }),
@@ -362,8 +333,6 @@ Deno.serve(async (req) => {
           { status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
-
-      console.log("[google-calendar-events] Event deleted:", eventId);
       
       return new Response(
         JSON.stringify({ success: true }),
@@ -386,8 +355,6 @@ Deno.serve(async (req) => {
     if (endDate) {
       calendarUrl.searchParams.set("timeMax", new Date(endDate).toISOString());
     }
-
-    console.log("[google-calendar-events] Fetching events from:", calendarUrl.toString());
 
     const calendarResponse = await makeCalendarRequest(
       calendarUrl.toString(),
@@ -421,7 +388,6 @@ Deno.serve(async (req) => {
     }
 
     const calendarData = await calendarResponse.json();
-    console.log(`[google-calendar-events] Fetched ${calendarData.items?.length || 0} events`);
 
     return new Response(
       JSON.stringify({ events: calendarData.items || [] }),
@@ -507,33 +473,29 @@ function formatEventForGoogle(event: any) {
   return googleEvent;
 }
 
-// Helper to format date as YYYY-MM-DD
 function formatDate(date: Date): string {
   return date.toISOString().split("T")[0];
 }
 
-// Helper to add one hour to a date
 function addHour(dateStr: string): string {
   const date = new Date(dateStr);
   date.setHours(date.getHours() + 1);
   return date.toISOString();
 }
 
-// Helper to convert hex color to Google Calendar color ID
-function getGoogleColorId(hexColor: string): string {
+function getGoogleColorId(color: string): string {
   const colorMap: Record<string, string> = {
-    "#7986cb": "1",  // Lavender
-    "#33b679": "2",  // Sage
-    "#8e24aa": "3",  // Grape
-    "#e67c73": "4",  // Flamingo
-    "#f6bf26": "5",  // Banana
-    "#f4511e": "6",  // Tangerine
-    "#039be5": "7",  // Peacock
-    "#616161": "8",  // Graphite
-    "#3f51b5": "9",  // Blueberry
-    "#0b8043": "10", // Basil
-    "#d50000": "11", // Tomato
+    blue: "1",
+    green: "2",
+    purple: "3",
+    red: "4",
+    yellow: "5",
+    orange: "6",
+    turquoise: "7",
+    gray: "8",
+    bold_blue: "9",
+    bold_green: "10",
+    bold_red: "11",
   };
-  
-  return colorMap[hexColor?.toLowerCase()] || "7"; // Default to Peacock
+  return colorMap[color] || "1";
 }
