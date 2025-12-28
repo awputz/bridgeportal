@@ -20,8 +20,7 @@ export const useInvestorRealtime = () => {
           schema: "public",
           table: "transactions",
         },
-        (payload) => {
-          console.log("Transaction change:", payload);
+        () => {
           // Invalidate all investor-related queries
           queryClient.invalidateQueries({ queryKey: ["investor-transactions"] });
           queryClient.invalidateQueries({ queryKey: ["investor-metrics"] });
@@ -43,8 +42,7 @@ export const useInvestorRealtime = () => {
           schema: "public",
           table: "agent_requests",
         },
-        (payload) => {
-          console.log("Agent request change:", payload);
+        () => {
           queryClient.invalidateQueries({ queryKey: ["investor-agent-requests"] });
           queryClient.invalidateQueries({ queryKey: ["pending-counts"] });
         }
@@ -61,8 +59,7 @@ export const useInvestorRealtime = () => {
           schema: "public",
           table: "commission_requests",
         },
-        (payload) => {
-          console.log("Commission request change:", payload);
+        () => {
           queryClient.invalidateQueries({ queryKey: ["investor-commission-requests"] });
           queryClient.invalidateQueries({ queryKey: ["pending-counts"] });
         }
@@ -79,8 +76,7 @@ export const useInvestorRealtime = () => {
           schema: "public",
           table: "investment_listings",
         },
-        (payload) => {
-          console.log("Investment listing change:", payload);
+        () => {
           queryClient.invalidateQueries({ queryKey: ["investor-listings"] });
           queryClient.invalidateQueries({ queryKey: ["investor-metrics"] });
           queryClient.invalidateQueries({ queryKey: ["pending-counts"] });
@@ -98,8 +94,7 @@ export const useInvestorRealtime = () => {
           schema: "public",
           table: "commercial_listings",
         },
-        (payload) => {
-          console.log("Commercial listing change:", payload);
+        () => {
           queryClient.invalidateQueries({ queryKey: ["investor-listings"] });
           queryClient.invalidateQueries({ queryKey: ["investor-metrics"] });
         }
@@ -116,8 +111,7 @@ export const useInvestorRealtime = () => {
           schema: "public",
           table: "team_members",
         },
-        (payload) => {
-          console.log("Team member change:", payload);
+        () => {
           queryClient.invalidateQueries({ queryKey: ["investor-team"] });
           queryClient.invalidateQueries({ queryKey: ["investor-metrics"] });
         }

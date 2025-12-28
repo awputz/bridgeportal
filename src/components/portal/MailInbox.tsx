@@ -176,8 +176,9 @@ export function MailInbox({ messages, isLoading, selectedId, onSelect, isMobile 
     toast.success("Marked as read");
   }, [modifyMessage]);
 
-  const handleSnooze = useCallback((until: Date) => {
-    console.log("Snoozing until", until);
+  const handleSnooze = useCallback((_until: Date) => {
+    // Snooze functionality not yet implemented
+    toast.info("Snooze feature coming soon");
   }, []);
 
   const handleBulkArchive = useCallback(async () => {

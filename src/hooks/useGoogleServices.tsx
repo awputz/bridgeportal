@@ -96,9 +96,10 @@ export function useStoreGoogleTokensOnLogin() {
               });
 
             if (error) {
-              console.error('Failed to store Google tokens:', error);
+              if (process.env.NODE_ENV === 'development') {
+                console.error('Failed to store Google tokens:', error);
+              }
             } else {
-              console.log('Google tokens stored successfully');
               // Invalidate queries to refresh connection status
               queryClient.invalidateQueries({ queryKey: ['google-services-status'] });
               queryClient.invalidateQueries({ queryKey: ['gmail-connection'] });

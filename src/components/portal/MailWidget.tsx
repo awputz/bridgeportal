@@ -132,7 +132,7 @@ export const MailWidget = () => {
                   key={message.id}
                   to={`/portal/mail?message=${message.id}`}
                   className={cn(
-                    "block p-3 rounded-lg transition-colors",
+                    "relative block p-3 rounded-lg transition-colors group",
                     "hover:bg-muted/50",
                     message.isUnread && "bg-primary/5"
                   )}

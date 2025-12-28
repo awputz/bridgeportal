@@ -48,7 +48,6 @@ export const AlertsWidget = () => {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'crm_activities' },
         () => {
-          console.log('Tasks updated - refreshing alerts');
           queryClient.invalidateQueries({ queryKey: ['task-stats'] });
           queryClient.invalidateQueries({ queryKey: ['tasks'] });
         }
@@ -57,7 +56,6 @@ export const AlertsWidget = () => {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'commission_requests' },
         () => {
-          console.log('Commission requests updated - refreshing alerts');
           queryClient.invalidateQueries({ queryKey: ['my-commission-requests'] });
         }
       )
@@ -65,7 +63,6 @@ export const AlertsWidget = () => {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'company_announcements' },
         () => {
-          console.log('Announcements updated - refreshing alerts');
           queryClient.invalidateQueries({ queryKey: ['announcements'] });
         }
       )

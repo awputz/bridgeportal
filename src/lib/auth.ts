@@ -53,7 +53,11 @@ const maybeShowReauthToast = () => {
  */
 export const invokeWithAuthHandling = async <T = unknown>(
   functionName: string,
-  options?: { body?: Record<string, unknown>; headers?: Record<string, string> }
+  options?: { 
+    body?: Record<string, unknown>; 
+    headers?: Record<string, string>;
+    suppressAuthErrors?: boolean;
+  }
 ): Promise<{ data: T | null; error: Error | null }> => {
   try {
     const {
@@ -85,9 +89,20 @@ export const invokeWithAuthHandling = async <T = unknown>(
         errorMessage.includes("401") ||
         errorMessage.includes("403");
 
-      if (isAuthError) {
-        console.error(`Auth error calling ${functionName}:`, error);
-        maybeShowReauthToast();
+      // Only show reauth toast for real auth errors, not for expected "not connected" states
+      // Google services return 401 when user hasn't connected - this is expected behavior
+      if (isAuthError && !options?.suppressAuthErrors) {
+        // Check if this is a Google services function - these 401s are expected when not connected
+        const isGoogleService = 
+          functionName.includes('gmail') || 
+          functionName.includes('google-') || 
+          functionName.includes('calendar') || 
+          functionName.includes('drive') ||
+          functionName.includes('contacts');
+        
+        if (!isGoogleService) {
+          maybeShowReauthToast();
+        }
       }
 
       return { data: null, error };
@@ -95,7 +110,6 @@ export const invokeWithAuthHandling = async <T = unknown>(
 
     return { data, error: null };
   } catch (err) {
-    console.error(`Exception invoking ${functionName}:`, err);
     return { data: null, error: err instanceof Error ? err : new Error(String(err)) };
   }
 };
