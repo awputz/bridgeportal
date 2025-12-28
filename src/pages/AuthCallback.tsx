@@ -14,7 +14,6 @@ const AuthCallback = () => {
         const { data: { session }, error } = await supabase.auth.getSession();
 
         if (error) {
-          console.error("Auth callback error:", error);
           setStatus("Sign-in failed. Redirecting...");
           setTimeout(() => navigate("/login", { replace: true }), 2000);
           return;
@@ -27,7 +26,6 @@ const AuthCallback = () => {
           const googleIdentity = session.user.identities?.find(i => i.provider === 'google');
           
           if (googleIdentity && session.provider_token) {
-            console.log("Storing Google tokens from OAuth callback...");
             
             // Calculate token expiry
             const expiryDate = new Date();
@@ -73,10 +71,8 @@ const AuthCallback = () => {
                 onConflict: 'user_id',
               });
 
-            if (tokenError) {
+            if (tokenError && process.env.NODE_ENV === 'development') {
               console.error("Failed to store Google tokens:", tokenError);
-            } else {
-              console.log("Google tokens stored successfully");
             }
           }
 
@@ -86,8 +82,7 @@ const AuthCallback = () => {
           setStatus("No session found. Redirecting...");
           setTimeout(() => navigate("/login", { replace: true }), 2000);
         }
-      } catch (err) {
-        console.error("Auth callback exception:", err);
+      } catch {
         setStatus("An error occurred. Redirecting...");
         setTimeout(() => navigate("/login", { replace: true }), 2000);
       }

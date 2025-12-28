@@ -71,13 +71,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const { data: { user: validatedUser }, error } = await supabase.auth.getUser();
       
       if (error) {
-        console.error("Session validation failed:", error.message);
         // Session is invalid - clear it
         if (error.message.includes('session_not_found') || 
             error.message.includes('invalid') ||
             error.status === 401 ||
             error.status === 403) {
-          console.log("Invalid session detected, forcing logout...");
           hardLogout();
           return false;
         }
@@ -92,8 +90,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setSession(null);
         return false;
       }
-    } catch (err) {
-      console.error("Session validation exception:", err);
+    } catch {
       setUser(null);
       setSession(null);
       return false;
@@ -107,8 +104,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, newSession) => {
         if (!mounted) return;
-
-        console.log("Auth state change:", event);
 
         if (event === 'SIGNED_OUT') {
           setUser(null);
@@ -137,7 +132,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         const { data: { session: existingSession }, error } = await supabase.auth.getSession();
         
         if (error) {
-          console.error("Error getting session:", error);
           setIsLoading(false);
           return;
         }
@@ -145,8 +139,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         if (existingSession) {
           await validateSession(existingSession);
         }
-      } catch (err) {
-        console.error("Auth initialization error:", err);
+      } catch {
       } finally {
         if (mounted) {
           setIsLoading(false);
@@ -167,14 +160,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       queryClient.clear();
       const { error } = await supabase.auth.signOut();
       if (error) {
-        console.error("Sign out error:", error);
-        // Even if signOut fails, do a hard logout
         hardLogout();
       }
       setUser(null);
       setSession(null);
-    } catch (err) {
-      console.error("Sign out exception:", err);
+    } catch {
       // Always fall back to hard logout
       hardLogout();
     }

@@ -55,7 +55,6 @@ export function useGmailConnection() {
         .maybeSingle();
 
       if (error) {
-        console.error("Error checking Gmail connection:", error);
         return { isConnected: false, email: null };
       }
 

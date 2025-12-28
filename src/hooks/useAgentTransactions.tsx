@@ -52,12 +52,10 @@ export const useAgentTransactions = () => {
         });
 
       if (!functionError && functionData) {
-        console.log(`[useAgentTransactions] Found ${functionData.length} transactions via DB function`);
         return functionData as AgentTransaction[];
       }
 
       // Fallback to manual pattern matching if function fails
-      console.warn('[useAgentTransactions] DB function failed, using fallback:', functionError?.message);
       return fallbackAgentTransactionSearch(profile);
     },
     staleTime: 60000, // Cache for 1 minute
@@ -99,7 +97,6 @@ async function fallbackAgentTransactionSearch(profile: { full_name: string | nul
     .order('closing_date', { ascending: false });
   
   if (error) {
-    console.error('[useAgentTransactions] Fallback query failed:', error);
     return [];
   }
 

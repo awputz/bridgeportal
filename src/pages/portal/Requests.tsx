@@ -74,8 +74,8 @@ const Requests = () => {
             notes: `Request Type: ${formData.requestType}\nProperty: ${formData.propertyAddress || 'N/A'}\nClient: ${formData.clientName || 'N/A'}\nPriority: ${formData.priority}\n\nDetails: ${formData.notes || 'No additional details'}`,
           },
         });
-      } catch (emailError) {
-        console.log("Email notification skipped:", emailError);
+      } catch {
+        // Email notification is optional, continue silently
       }
 
       toast.success("Request submitted successfully! Our team will be in touch.");

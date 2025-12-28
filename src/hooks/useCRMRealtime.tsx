@@ -22,7 +22,6 @@ export const useCRMRealtime = (division?: string) => {
           table: "crm_deals",
         },
         (payload) => {
-          console.log("CRM Deal change:", payload);
           
           // Invalidate deals queries
           queryClient.invalidateQueries({ queryKey: ["crm-deals"] });
@@ -54,7 +53,6 @@ export const useCRMRealtime = (division?: string) => {
           table: "crm_contacts",
         },
         (payload) => {
-          console.log("CRM Contact change:", payload);
           
           // Invalidate contacts queries
           queryClient.invalidateQueries({ queryKey: ["crm-contacts"] });
@@ -77,8 +75,7 @@ export const useCRMRealtime = (division?: string) => {
           schema: "public",
           table: "crm_activities",
         },
-        (payload) => {
-          console.log("CRM Activity change:", payload);
+        () => {
           
           // Invalidate activities queries
           queryClient.invalidateQueries({ queryKey: ["crm-activities"] });
