@@ -4,27 +4,23 @@ import {
   Plus, 
   Link as LinkIcon, 
   Copy, 
-  ExternalLink, 
   Users, 
   Calendar,
-  Trash2,
-  Eye,
   Building2,
   Home,
   Briefcase,
   UserPlus,
   CheckCircle2,
   Clock,
-  Filter,
-  Search,
-  MoreVertical
+  Mail,
+  Phone,
+  ExternalLink,
+  FileText
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -35,22 +31,18 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { format, formatDistanceToNow } from "date-fns";
+import { format } from "date-fns";
 import { 
   useIntakeLinks, 
   useIntakeSubmissions, 
@@ -61,8 +53,16 @@ import {
   useConvertToContact,
   IntakeSubmission 
 } from "@/hooks/useIntake";
-import { useDivision } from "@/contexts/DivisionContext";
 import { cn } from "@/lib/utils";
+import {
+  IntakeStatsCard,
+  IntakeLinkCard,
+  IntakeLinkCardSkeleton,
+  IntakeFilters,
+  IntakeSubmissionRow,
+  IntakeSubmissionRowSkeleton,
+  IntakeEmptyState,
+} from "@/components/portal/intake";
 
 const divisionInfo: Record<string, { label: string; icon: typeof Building2; color: string }> = {
   "investment-sales": { label: "Investment Sales", icon: Building2, color: "text-emerald-500" },
@@ -71,10 +71,10 @@ const divisionInfo: Record<string, { label: string; icon: typeof Building2; colo
 };
 
 const statusColors: Record<string, string> = {
-  new: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-  contacted: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20",
-  converted: "bg-green-500/10 text-green-500 border-green-500/20",
-  closed: "bg-muted text-muted-foreground",
+  new: "bg-blue-500/10 text-blue-600 border-blue-500/20",
+  contacted: "bg-amber-500/10 text-amber-600 border-amber-500/20",
+  converted: "bg-green-500/10 text-green-600 border-green-500/20",
+  closed: "bg-muted text-muted-foreground border-border",
 };
 
 export default function Intake() {
@@ -90,8 +90,10 @@ export default function Intake() {
     division: selectedDivision !== "all" ? selectedDivision : undefined,
     status: selectedStatus !== "all" ? selectedStatus : undefined,
   });
-  const { data: stats } = useIntakeStats();
-  const { division } = useDivision();
+  const { data: stats, isLoading: statsLoading } = useIntakeStats();
+  const deleteLink = useDeleteIntakeLink();
+  const updateSubmission = useUpdateSubmission();
+  const convertToContact = useConvertToContact();
 
   // Filter submissions by search
   const filteredSubmissions = submissions.filter(s => 
@@ -100,16 +102,25 @@ export default function Intake() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Client Intake</h1>
-          <p className="text-muted-foreground">Collect and manage client criteria submissions</p>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+              <FileText className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight">Client Intake</h1>
+              <p className="text-sm text-muted-foreground">
+                Collect and manage client criteria submissions
+              </p>
+            </div>
+          </div>
         </div>
         <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button>
+            <Button size="lg" className="shadow-sm">
               <Plus className="h-4 w-4 mr-2" />
               Create Link
             </Button>
@@ -118,145 +129,123 @@ export default function Intake() {
         </Dialog>
       </div>
 
-      {/* Stats */}
-      <div className="grid gap-4 sm:grid-cols-3">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Total Submissions</p>
-                <p className="text-2xl font-semibold">{stats?.total || 0}</p>
-              </div>
-              <Users className="h-8 w-8 text-muted-foreground/30" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">This Week</p>
-                <p className="text-2xl font-semibold">{stats?.thisWeek || 0}</p>
-              </div>
-              <Calendar className="h-8 w-8 text-muted-foreground/30" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">New (Uncontacted)</p>
-                <p className="text-2xl font-semibold text-blue-500">{stats?.newSubmissions || 0}</p>
-              </div>
-              <Clock className="h-8 w-8 text-blue-500/30" />
-            </div>
-          </CardContent>
-        </Card>
+      {/* Stats Grid */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <IntakeStatsCard
+          title="Total Submissions"
+          value={stats?.total || 0}
+          icon={Users}
+          variant="default"
+          isLoading={statsLoading}
+        />
+        <IntakeStatsCard
+          title="This Week"
+          value={stats?.thisWeek || 0}
+          icon={Calendar}
+          trend={{ value: stats?.thisWeek || 0, label: "this week" }}
+          variant="primary"
+          isLoading={statsLoading}
+        />
+        <IntakeStatsCard
+          title="New (Uncontacted)"
+          value={stats?.newSubmissions || 0}
+          icon={Clock}
+          variant="warning"
+          isLoading={statsLoading}
+        />
       </div>
 
       {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="submissions">Submissions</TabsTrigger>
-          <TabsTrigger value="links">My Links</TabsTrigger>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="bg-muted/50 p-1">
+          <TabsTrigger 
+            value="submissions" 
+            className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+          >
+            <Users className="h-4 w-4 mr-2" />
+            Submissions
+            {submissions.length > 0 && (
+              <Badge variant="secondary" className="ml-2 h-5 px-1.5 text-xs">
+                {submissions.length}
+              </Badge>
+            )}
+          </TabsTrigger>
+          <TabsTrigger 
+            value="links"
+            className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
+          >
+            <LinkIcon className="h-4 w-4 mr-2" />
+            My Links
+            {links.length > 0 && (
+              <Badge variant="secondary" className="ml-2 h-5 px-1.5 text-xs">
+                {links.length}
+              </Badge>
+            )}
+          </TabsTrigger>
         </TabsList>
 
         {/* Submissions Tab */}
-        <TabsContent value="submissions" className="space-y-4">
+        <TabsContent value="submissions" className="space-y-6 mt-0">
           {/* Filters */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input 
-                placeholder="Search by name or email..." 
-                className="pl-9"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <Select value={selectedDivision} onValueChange={setSelectedDivision}>
-              <SelectTrigger className="w-full sm:w-[180px]">
-                <SelectValue placeholder="All Divisions" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Divisions</SelectItem>
-                <SelectItem value="investment-sales">Investment Sales</SelectItem>
-                <SelectItem value="commercial-leasing">Commercial Leasing</SelectItem>
-                <SelectItem value="residential">Residential</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-              <SelectTrigger className="w-full sm:w-[150px]">
-                <SelectValue placeholder="All Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="new">New</SelectItem>
-                <SelectItem value="contacted">Contacted</SelectItem>
-                <SelectItem value="converted">Converted</SelectItem>
-                <SelectItem value="closed">Closed</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <IntakeFilters
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            selectedDivision={selectedDivision}
+            onDivisionChange={setSelectedDivision}
+            selectedStatus={selectedStatus}
+            onStatusChange={setSelectedStatus}
+          />
 
           {/* Submissions Table */}
-          <Card>
+          <Card className="overflow-hidden">
             <CardContent className="p-0">
               {submissionsLoading ? (
-                <div className="p-8 text-center text-muted-foreground">Loading...</div>
-              ) : filteredSubmissions.length === 0 ? (
-                <div className="p-8 text-center text-muted-foreground">
-                  <Users className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                  <p>No submissions yet</p>
-                  <p className="text-sm">Share your intake links to start collecting client criteria</p>
-                </div>
-              ) : (
                 <Table>
                   <TableHeader>
-                    <TableRow>
-                      <TableHead>Client</TableHead>
-                      <TableHead>Division</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Submitted</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                    <TableRow className="bg-muted/30">
+                      <TableHead className="w-[280px]">Client</TableHead>
+                      <TableHead className="w-[180px]">Division</TableHead>
+                      <TableHead className="w-[120px]">Status</TableHead>
+                      <TableHead className="w-[140px] hidden md:table-cell">Submitted</TableHead>
+                      <TableHead className="w-[100px] text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredSubmissions.map((submission) => {
-                      const divInfo = divisionInfo[submission.division];
-                      const DivIcon = divInfo?.icon || Building2;
-                      return (
-                        <TableRow key={submission.id}>
-                          <TableCell>
-                            <div>
-                              <p className="font-medium">{submission.client_name}</p>
-                              <p className="text-sm text-muted-foreground">{submission.client_email}</p>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              <DivIcon className={cn("h-4 w-4", divInfo?.color)} />
-                              <span className="text-sm">{divInfo?.label || submission.division}</span>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="outline" className={statusColors[submission.status]}>
-                              {submission.status}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-muted-foreground text-sm">
-                            {formatDistanceToNow(new Date(submission.created_at), { addSuffix: true })}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <SubmissionActions 
-                              submission={submission} 
-                              onView={() => setSelectedSubmission(submission)}
-                            />
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
+                    {[...Array(5)].map((_, i) => (
+                      <IntakeSubmissionRowSkeleton key={i} />
+                    ))}
+                  </TableBody>
+                </Table>
+              ) : filteredSubmissions.length === 0 ? (
+                <IntakeEmptyState type="submissions" />
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-muted/30 hover:bg-muted/30">
+                      <TableHead className="w-[280px] font-semibold">Client</TableHead>
+                      <TableHead className="w-[180px] font-semibold">Division</TableHead>
+                      <TableHead className="w-[120px] font-semibold">Status</TableHead>
+                      <TableHead className="w-[140px] font-semibold hidden md:table-cell">Submitted</TableHead>
+                      <TableHead className="w-[100px] text-right font-semibold">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredSubmissions.map((submission) => (
+                      <IntakeSubmissionRow
+                        key={submission.id}
+                        submission={submission}
+                        onView={() => setSelectedSubmission(submission)}
+                        onMarkContacted={() => updateSubmission.mutate({
+                          id: submission.id,
+                          status: "contacted",
+                          contacted_at: new Date().toISOString()
+                        })}
+                        onConvertToContact={() => convertToContact.mutate({
+                          submission,
+                          division: submission.division
+                        })}
+                      />
+                    ))}
                   </TableBody>
                 </Table>
               )}
@@ -265,25 +254,31 @@ export default function Intake() {
         </TabsContent>
 
         {/* Links Tab */}
-        <TabsContent value="links" className="space-y-4">
+        <TabsContent value="links" className="space-y-6 mt-0">
           {linksLoading ? (
-            <div className="p-8 text-center text-muted-foreground">Loading...</div>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {[...Array(3)].map((_, i) => (
+                <IntakeLinkCardSkeleton key={i} />
+              ))}
+            </div>
           ) : links.length === 0 ? (
             <Card>
-              <CardContent className="p-8 text-center">
-                <LinkIcon className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                <p className="text-muted-foreground">No intake links yet</p>
-                <p className="text-sm text-muted-foreground mb-4">Create a link to share with clients</p>
-                <Button onClick={() => setCreateDialogOpen(true)}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create Link
-                </Button>
+              <CardContent className="p-0">
+                <IntakeEmptyState 
+                  type="links" 
+                  onAction={() => setCreateDialogOpen(true)} 
+                />
               </CardContent>
             </Card>
           ) : (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {links.map((link) => (
-                <LinkCard key={link.id} link={link} />
+                <IntakeLinkCard 
+                  key={link.id} 
+                  link={link}
+                  onDelete={(id) => deleteLink.mutate(id)}
+                  divisionLabel={link.division ? divisionInfo[link.division]?.label : undefined}
+                />
               ))}
             </div>
           )}
@@ -306,6 +301,9 @@ function CreateLinkDialog({ onClose }: { onClose: () => void }) {
   const [name, setName] = useState("");
   const [division, setDivision] = useState<string>("");
   const createLink = useCreateIntakeLink();
+  
+  const baseUrl = window.location.origin;
+  const previewCode = "preview-code";
 
   const handleCreate = async () => {
     if (!name.trim()) {
@@ -320,14 +318,14 @@ function CreateLinkDialog({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <DialogContent>
+    <DialogContent className="sm:max-w-md">
       <DialogHeader>
         <DialogTitle>Create Intake Link</DialogTitle>
         <DialogDescription>
           Create a shareable link for clients to submit their criteria
         </DialogDescription>
       </DialogHeader>
-      <div className="space-y-4 py-4">
+      <div className="space-y-6 py-4">
         <div className="space-y-2">
           <Label htmlFor="name">Link Name</Label>
           <Input 
@@ -335,15 +333,20 @@ function CreateLinkDialog({ onClose }: { onClose: () => void }) {
             placeholder="e.g., Q1 Buyer Leads"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            className="bg-background"
           />
+          <p className="text-xs text-muted-foreground">
+            Give this link a descriptive name to track its purpose
+          </p>
         </div>
+        
         <div className="space-y-2">
           <Label>Lock to Division (optional)</Label>
           <Select value={division} onValueChange={setDivision}>
-            <SelectTrigger>
+            <SelectTrigger className="bg-background">
               <SelectValue placeholder="All divisions" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-popover">
               <SelectItem value="">All divisions</SelectItem>
               <SelectItem value="investment-sales">Investment Sales</SelectItem>
               <SelectItem value="commercial-leasing">Commercial Leasing</SelectItem>
@@ -354,128 +357,27 @@ function CreateLinkDialog({ onClose }: { onClose: () => void }) {
             If locked, clients won't be able to choose a different division
           </p>
         </div>
+
+        {/* Preview */}
+        {name && (
+          <div className="space-y-2">
+            <Label className="text-muted-foreground">Link Preview</Label>
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border">
+              <LinkIcon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+              <span className="text-sm font-mono text-muted-foreground truncate">
+                {baseUrl}/intake/{previewCode}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
-      <DialogFooter>
+      <DialogFooter className="gap-2 sm:gap-0">
         <Button variant="outline" onClick={onClose}>Cancel</Button>
         <Button onClick={handleCreate} disabled={createLink.isPending}>
           {createLink.isPending ? "Creating..." : "Create Link"}
         </Button>
       </DialogFooter>
     </DialogContent>
-  );
-}
-
-// Link Card
-function LinkCard({ link }: { link: ReturnType<typeof useIntakeLinks>["data"][number] }) {
-  const deleteLink = useDeleteIntakeLink();
-  const baseUrl = window.location.origin;
-  const fullUrl = `${baseUrl}/intake/${link.link_code}`;
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(fullUrl);
-    toast.success("Link copied to clipboard!");
-  };
-
-  return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <div>
-            <CardTitle className="text-base">{link.name}</CardTitle>
-            <CardDescription className="text-xs mt-1">
-              {link.division ? divisionInfo[link.division]?.label : "All divisions"}
-            </CardDescription>
-          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handleCopy}>
-                <Copy className="h-4 w-4 mr-2" />
-                Copy Link
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <a href={fullUrl} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  Open Link
-                </a>
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                className="text-destructive"
-                onClick={() => deleteLink.mutate(link.id)}
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Eye className="h-4 w-4" />
-          <span>{link.view_count} views</span>
-        </div>
-        <div className="flex items-center gap-2 p-2 rounded bg-muted/50 text-xs font-mono truncate">
-          <LinkIcon className="h-3 w-3 flex-shrink-0" />
-          <span className="truncate">{fullUrl}</span>
-        </div>
-        <Button variant="outline" size="sm" className="w-full" onClick={handleCopy}>
-          <Copy className="h-4 w-4 mr-2" />
-          Copy Link
-        </Button>
-      </CardContent>
-    </Card>
-  );
-}
-
-// Submission Actions
-function SubmissionActions({ 
-  submission, 
-  onView 
-}: { 
-  submission: IntakeSubmission; 
-  onView: () => void;
-}) {
-  const updateSubmission = useUpdateSubmission();
-  const convertToContact = useConvertToContact();
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <MoreVertical className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={onView}>
-          <Eye className="h-4 w-4 mr-2" />
-          View Details
-        </DropdownMenuItem>
-        {submission.status === "new" && (
-          <DropdownMenuItem onClick={() => updateSubmission.mutate({ 
-            id: submission.id, 
-            status: "contacted",
-            contacted_at: new Date().toISOString()
-          })}>
-            <CheckCircle2 className="h-4 w-4 mr-2" />
-            Mark Contacted
-          </DropdownMenuItem>
-        )}
-        {!submission.converted_contact_id && (
-          <DropdownMenuItem onClick={() => convertToContact.mutate({ 
-            submission, 
-            division: submission.division 
-          })}>
-            <UserPlus className="h-4 w-4 mr-2" />
-            Convert to Contact
-          </DropdownMenuItem>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
   );
 }
 
@@ -494,48 +396,102 @@ function SubmissionDetailDialog({
 
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <DivIcon className={cn("h-5 w-5", divInfo?.color)} />
-            {submission.client_name}
-          </DialogTitle>
-          <DialogDescription>
-            Submitted {format(new Date(submission.created_at), "PPP 'at' p")}
-          </DialogDescription>
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+        <DialogHeader className="space-y-4">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className={cn(
+                "flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary text-xl font-semibold"
+              )}>
+                {submission.client_name.charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <DialogTitle className="text-xl">{submission.client_name}</DialogTitle>
+                <DialogDescription className="flex items-center gap-2 mt-1">
+                  <DivIcon className={cn("h-4 w-4", divInfo?.color)} />
+                  {divInfo?.label || submission.division}
+                </DialogDescription>
+              </div>
+            </div>
+            <Badge 
+              variant="outline" 
+              className={cn("capitalize text-sm", statusColors[submission.status])}
+            >
+              {submission.status}
+            </Badge>
+          </div>
+          
+          {/* Quick Actions */}
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" size="sm" asChild>
+              <a href={`mailto:${submission.client_email}`}>
+                <Mail className="h-4 w-4 mr-2" />
+                Email
+              </a>
+            </Button>
+            {submission.client_phone && (
+              <Button variant="outline" size="sm" asChild>
+                <a href={`tel:${submission.client_phone}`}>
+                  <Phone className="h-4 w-4 mr-2" />
+                  Call
+                </a>
+              </Button>
+            )}
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => {
+                navigator.clipboard.writeText(submission.client_email);
+                toast.success("Email copied!");
+              }}
+            >
+              <Copy className="h-4 w-4 mr-2" />
+              Copy Email
+            </Button>
+          </div>
         </DialogHeader>
 
-        <div className="space-y-6">
-          {/* Client Info */}
-          <div className="space-y-2">
-            <h3 className="text-sm font-medium text-muted-foreground">Contact Information</h3>
-            <div className="grid grid-cols-2 gap-4 p-4 rounded-lg bg-muted/50">
-              <div>
-                <p className="text-xs text-muted-foreground">Email</p>
+        <Separator />
+
+        <div className="space-y-6 py-2">
+          {/* Contact Info */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+              Contact Information
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="p-4 rounded-lg bg-muted/50 border border-border/50">
+                <p className="text-xs text-muted-foreground mb-1">Email</p>
                 <p className="font-medium">{submission.client_email}</p>
               </div>
               {submission.client_phone && (
-                <div>
-                  <p className="text-xs text-muted-foreground">Phone</p>
+                <div className="p-4 rounded-lg bg-muted/50 border border-border/50">
+                  <p className="text-xs text-muted-foreground mb-1">Phone</p>
                   <p className="font-medium">{submission.client_phone}</p>
                 </div>
               )}
               {submission.client_company && (
-                <div>
-                  <p className="text-xs text-muted-foreground">Company</p>
+                <div className="p-4 rounded-lg bg-muted/50 border border-border/50">
+                  <p className="text-xs text-muted-foreground mb-1">Company</p>
                   <p className="font-medium">{submission.client_company}</p>
                 </div>
               )}
+              <div className="p-4 rounded-lg bg-muted/50 border border-border/50">
+                <p className="text-xs text-muted-foreground mb-1">Submitted</p>
+                <p className="font-medium">{format(new Date(submission.created_at), "PPP 'at' p")}</p>
+              </div>
             </div>
           </div>
 
           {/* Criteria */}
-          <div className="space-y-2">
-            <h3 className="text-sm font-medium text-muted-foreground">Criteria</h3>
-            <div className="p-4 rounded-lg bg-muted/50 space-y-3">
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+              Criteria & Requirements
+            </h3>
+            <div className="grid gap-3">
               {Object.entries(submission.criteria).map(([key, value]) => (
-                <div key={key}>
-                  <p className="text-xs text-muted-foreground capitalize">
+                <div key={key} className="p-4 rounded-lg bg-muted/50 border border-border/50">
+                  <p className="text-xs text-muted-foreground mb-1 capitalize">
                     {key.replace(/_/g, " ")}
                   </p>
                   <p className="font-medium">
@@ -548,32 +504,39 @@ function SubmissionDetailDialog({
 
           {/* Notes */}
           {submission.notes && (
-            <div className="space-y-2">
-              <h3 className="text-sm font-medium text-muted-foreground">Additional Notes</h3>
-              <p className="p-4 rounded-lg bg-muted/50">{submission.notes}</p>
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                Additional Notes
+              </h3>
+              <div className="p-4 rounded-lg bg-muted/50 border border-border/50">
+                <p className="whitespace-pre-wrap">{submission.notes}</p>
+              </div>
             </div>
           )}
 
-          {/* Status */}
-          <div className="flex items-center gap-4">
-            <Badge variant="outline" className={statusColors[submission.status]}>
-              {submission.status}
-            </Badge>
-            {submission.converted_contact_id && (
+          {/* Converted Contact Link */}
+          {submission.converted_contact_id && (
+            <div className="flex items-center gap-2 p-4 rounded-lg bg-green-500/10 border border-green-500/20">
+              <CheckCircle2 className="h-5 w-5 text-green-600" />
+              <span className="text-sm font-medium text-green-700">Converted to contact</span>
               <Link 
                 to={`/portal/crm/contacts/${submission.converted_contact_id}`}
-                className="text-sm text-primary hover:underline"
+                className="text-sm text-primary hover:underline ml-auto flex items-center gap-1"
               >
-                View Contact →
+                View Contact
+                <ExternalLink className="h-3.5 w-3.5" />
               </Link>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
-        <DialogFooter className="gap-2">
+        <Separator />
+
+        <DialogFooter className="gap-2 sm:gap-2">
+          <Button variant="outline" onClick={onClose}>Close</Button>
           {submission.status === "new" && (
             <Button 
-              variant="outline"
+              variant="secondary"
               onClick={() => {
                 updateSubmission.mutate({ 
                   id: submission.id, 
