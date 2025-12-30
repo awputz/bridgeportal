@@ -1961,6 +1961,94 @@ export type Database = {
           },
         ]
       }
+      email_contact_links: {
+        Row: {
+          agent_id: string
+          contact_id: string
+          created_at: string
+          email_from: string | null
+          email_id: string
+          email_subject: string | null
+          id: string
+          linked_at: string
+          thread_id: string
+        }
+        Insert: {
+          agent_id: string
+          contact_id: string
+          created_at?: string
+          email_from?: string | null
+          email_id: string
+          email_subject?: string | null
+          id?: string
+          linked_at?: string
+          thread_id: string
+        }
+        Update: {
+          agent_id?: string
+          contact_id?: string
+          created_at?: string
+          email_from?: string | null
+          email_id?: string
+          email_subject?: string | null
+          id?: string
+          linked_at?: string
+          thread_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_contact_links_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_deal_links: {
+        Row: {
+          agent_id: string
+          created_at: string
+          deal_id: string
+          email_from: string | null
+          email_id: string
+          email_subject: string | null
+          id: string
+          linked_at: string
+          thread_id: string
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string
+          deal_id: string
+          email_from?: string | null
+          email_id: string
+          email_subject?: string | null
+          id?: string
+          linked_at?: string
+          thread_id: string
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string
+          deal_id?: string
+          email_from?: string | null
+          email_id?: string
+          email_subject?: string | null
+          id?: string
+          linked_at?: string
+          thread_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_deal_links_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_threads: {
         Row: {
           agent_id: string
@@ -2410,6 +2498,42 @@ export type Database = {
           identifier?: string
           request_count?: number | null
           window_start?: string | null
+        }
+        Relationships: []
+      }
+      snoozed_emails: {
+        Row: {
+          agent_id: string
+          created_at: string
+          email_from: string | null
+          email_id: string
+          email_subject: string | null
+          id: string
+          snooze_until: string
+          snoozed_at: string
+          thread_id: string
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string
+          email_from?: string | null
+          email_id: string
+          email_subject?: string | null
+          id?: string
+          snooze_until: string
+          snoozed_at?: string
+          thread_id: string
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string
+          email_from?: string | null
+          email_id?: string
+          email_subject?: string | null
+          id?: string
+          snooze_until?: string
+          snoozed_at?: string
+          thread_id?: string
         }
         Relationships: []
       }

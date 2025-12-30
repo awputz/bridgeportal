@@ -161,10 +161,19 @@ export function useGmailMessages(options: {
   refetchInterval?: number;
 }) {
   const { labelIds, query, maxResults = 20, enabled = true, refetchInterval = 60000 } = options;
+  const { data: connection } = useGmailConnection();
+  
+  // Pre-check: don't enable if not connected
+  const isConnected = connection?.isConnected ?? false;
 
   return useQuery({
     queryKey: ["gmail-messages", { labelIds, query, maxResults }],
     queryFn: async () => {
+      // Early return if not connected - avoid edge function call
+      if (!isConnected) {
+        return { messages: [], nextPageToken: undefined, resultSizeEstimate: 0 };
+      }
+
       const { data, error } = await invokeWithAuthHandling("gmail-messages", {
         body: { action: "list", labelIds, query, maxResults },
       });
@@ -177,10 +186,10 @@ export function useGmailMessages(options: {
         resultSizeEstimate: number;
       };
     },
-    enabled,
+    enabled: enabled && isConnected,
     staleTime: 30 * 1000,
-    refetchInterval: enabled ? refetchInterval : false, // Auto-refresh every minute when enabled
-    refetchIntervalInBackground: false, // Don't refresh when tab is not visible
+    refetchInterval: enabled && isConnected ? refetchInterval : false,
+    refetchIntervalInBackground: false,
   });
 }
 
@@ -204,15 +213,22 @@ export function useGmailMessage(messageId: string | null) {
 
 // Get Gmail labels
 export function useGmailLabels(enabled = true) {
+  const { data: connection } = useGmailConnection();
+  const isConnected = connection?.isConnected ?? false;
+
   return useQuery({
     queryKey: ["gmail-labels"],
     queryFn: async () => {
+      if (!isConnected) {
+        return [];
+      }
+      
       const { data, error } = await invokeWithAuthHandling("gmail-labels", { body: {} });
 
       if (error) throw error;
       return (data as { labels: GmailLabel[] }).labels;
     },
-    enabled,
+    enabled: enabled && isConnected,
     staleTime: 60 * 1000,
   });
 }
