@@ -112,9 +112,17 @@ export function useDisconnectDrive() {
 }
 
 export function useDriveFiles(options?: { query?: string; folderId?: string; enabled?: boolean }) {
+  const { data: connection } = useDriveConnection();
+  const isConnected = connection?.isConnected ?? false;
+
   return useQuery({
     queryKey: ["drive-files", options?.query, options?.folderId],
     queryFn: async () => {
+      // Pre-check: don't call edge function if not connected
+      if (!isConnected) {
+        return { files: [], nextPageToken: undefined };
+      }
+
       const { data, error } = await invokeWithAuthHandling("google-drive-files", {
         body: {
           action: "list",
@@ -126,7 +134,7 @@ export function useDriveFiles(options?: { query?: string; folderId?: string; ena
       if (error) throw error;
       return data as { files: DriveFile[]; nextPageToken?: string };
     },
-    enabled: options?.enabled !== false,
+    enabled: (options?.enabled !== false) && isConnected,
     staleTime: 60000,
     retry: 1,
   });
@@ -134,10 +142,13 @@ export function useDriveFiles(options?: { query?: string; folderId?: string; ena
 
 // Get file details
 export function useDriveFile(fileId: string | null) {
+  const { data: connection } = useDriveConnection();
+  const isConnected = connection?.isConnected ?? false;
+
   return useQuery({
     queryKey: ["drive-file", fileId],
     queryFn: async () => {
-      if (!fileId) return null;
+      if (!fileId || !isConnected) return null;
       
       const { data, error } = await invokeWithAuthHandling("google-drive-files", {
         body: {
@@ -149,17 +160,20 @@ export function useDriveFile(fileId: string | null) {
       if (error) throw error;
       return data as DriveFile;
     },
-    enabled: !!fileId,
+    enabled: !!fileId && isConnected,
     staleTime: 60000,
   });
 }
 
 // Get folder path (for breadcrumbs)
 export function useDriveFolderPath(folderId: string | null) {
+  const { data: connection } = useDriveConnection();
+  const isConnected = connection?.isConnected ?? false;
+
   return useQuery({
     queryKey: ["drive-folder-path", folderId],
     queryFn: async () => {
-      if (!folderId) return [];
+      if (!folderId || !isConnected) return [];
       
       const path: { id: string; name: string }[] = [];
       let currentId: string | null = folderId;
@@ -187,7 +201,7 @@ export function useDriveFolderPath(folderId: string | null) {
       
       return path;
     },
-    enabled: !!folderId,
+    enabled: !!folderId && isConnected,
     staleTime: 300000, // Cache path for 5 minutes
   });
 }

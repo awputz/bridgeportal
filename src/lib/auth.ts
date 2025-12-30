@@ -47,9 +47,19 @@ const maybeShowReauthToast = () => {
   });
 };
 
+// List of Google service function names - 401s are expected when not connected
+const GOOGLE_SERVICE_FUNCTIONS = [
+  'gmail-auth', 'gmail-messages', 'gmail-send', 'gmail-labels',
+  'google-calendar-auth', 'google-calendar-events',
+  'google-drive-auth', 'google-drive-files', 'google-drive-upload',
+  'google-contacts-auth', 'google-contacts-list', 'google-contacts-import',
+  'google-unified-auth'
+];
+
 /**
  * Wrapper for supabase.functions.invoke that handles auth errors gracefully.
  * If we get a 401/403, it means the session is invalid and we should force logout.
+ * Google service 401s are silently suppressed as they're expected when not connected.
  */
 export const invokeWithAuthHandling = async <T = unknown>(
   functionName: string,
@@ -87,22 +97,25 @@ export const invokeWithAuthHandling = async <T = unknown>(
         errorMessage.includes("session") ||
         errorMessage.includes("jwt") ||
         errorMessage.includes("401") ||
-        errorMessage.includes("403");
+        errorMessage.includes("403") ||
+        errorMessage.includes("invalid") ||
+        errorMessage.includes("token");
 
-      // Only show reauth toast for real auth errors, not for expected "not connected" states
-      // Google services return 401 when user hasn't connected - this is expected behavior
-      if (isAuthError && !options?.suppressAuthErrors) {
-        // Check if this is a Google services function - these 401s are expected when not connected
-        const isGoogleService = 
-          functionName.includes('gmail') || 
-          functionName.includes('google-') || 
-          functionName.includes('calendar') || 
-          functionName.includes('drive') ||
-          functionName.includes('contacts');
-        
-        if (!isGoogleService) {
-          maybeShowReauthToast();
-        }
+      // Check if this is a Google services function - these 401s are expected when not connected
+      const isGoogleService = GOOGLE_SERVICE_FUNCTIONS.some(fn => 
+        functionName === fn || functionName.startsWith(fn)
+      );
+
+      // For Google services, silently return the error without showing toast
+      // These errors are expected when user hasn't connected the service
+      if (isGoogleService && isAuthError) {
+        // Silent fail for expected disconnected state
+        return { data: null, error };
+      }
+
+      // Only show reauth toast for real auth errors on non-Google functions
+      if (isAuthError && !options?.suppressAuthErrors && !isGoogleService) {
+        maybeShowReauthToast();
       }
 
       return { data: null, error };

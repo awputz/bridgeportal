@@ -19,24 +19,22 @@ export function useContactsConnection() {
   return useQuery({
     queryKey: ["contacts-connection"],
     queryFn: async () => {
-      try {
-        const { data, error } = await invokeWithAuthHandling<{ connected: boolean }>(
-          "google-contacts-list",
-          {
-            body: { action: "check-connection" },
-          }
-        );
+      // Check directly from database instead of making edge function call
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return { connected: false };
 
-        if (error) {
-          console.error("Connection check error:", error);
-          return { connected: false };
-        }
+      const { data, error } = await supabase
+        .from("user_google_tokens")
+        .select("contacts_enabled, contacts_access_token, access_token")
+        .eq("user_id", user.id)
+        .maybeSingle();
 
-        return data ?? { connected: false };
-      } catch (err) {
-        console.error("Connection check failed:", err);
+      if (error || !data) {
         return { connected: false };
       }
+
+      const hasToken = !!(data.contacts_access_token || data.access_token);
+      return { connected: !!data.contacts_enabled && hasToken };
     },
     retry: false,
     staleTime: 30000,
@@ -107,9 +105,16 @@ export function useDisconnectContacts() {
 }
 
 export function useGoogleContactsList(enabled = true) {
+  const { data: connection } = useContactsConnection();
+  
   return useQuery({
     queryKey: ["google-contacts"],
     queryFn: async () => {
+      // Pre-check: don't call edge function if not connected
+      if (!connection?.connected) {
+        return { contacts: [], nextPageToken: undefined, totalItems: 0 };
+      }
+
       const { data, error } = await invokeWithAuthHandling("google-contacts-list", {
         body: { action: "list" },
       });
@@ -117,7 +122,7 @@ export function useGoogleContactsList(enabled = true) {
       if (error) throw error;
       return data as { contacts: GoogleContact[]; nextPageToken?: string; totalItems?: number };
     },
-    enabled,
+    enabled: enabled && !!connection?.connected,
     staleTime: 60000, // Cache for 1 minute
     retry: 1,
   });
