@@ -2136,6 +2136,110 @@ export type Database = {
           },
         ]
       }
+      exclusive_submissions: {
+        Row: {
+          additional_documents: Json | null
+          admin_notes: string | null
+          agent_id: string
+          borough: string | null
+          city: string | null
+          converted_deal_id: string | null
+          created_at: string
+          division: string
+          exclusive_contract_url: string | null
+          google_calendar_event_id: string | null
+          id: string
+          is_off_market: boolean | null
+          is_pocket_listing: boolean | null
+          latitude: number | null
+          listing_data: Json
+          longitude: number | null
+          neighborhood: string | null
+          owner_company: string | null
+          owner_email: string | null
+          owner_name: string
+          owner_phone: string | null
+          property_address: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          state: string | null
+          status: string
+          unit_number: string | null
+          updated_at: string
+          zip_code: string | null
+        }
+        Insert: {
+          additional_documents?: Json | null
+          admin_notes?: string | null
+          agent_id: string
+          borough?: string | null
+          city?: string | null
+          converted_deal_id?: string | null
+          created_at?: string
+          division: string
+          exclusive_contract_url?: string | null
+          google_calendar_event_id?: string | null
+          id?: string
+          is_off_market?: boolean | null
+          is_pocket_listing?: boolean | null
+          latitude?: number | null
+          listing_data?: Json
+          longitude?: number | null
+          neighborhood?: string | null
+          owner_company?: string | null
+          owner_email?: string | null
+          owner_name: string
+          owner_phone?: string | null
+          property_address: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          state?: string | null
+          status?: string
+          unit_number?: string | null
+          updated_at?: string
+          zip_code?: string | null
+        }
+        Update: {
+          additional_documents?: Json | null
+          admin_notes?: string | null
+          agent_id?: string
+          borough?: string | null
+          city?: string | null
+          converted_deal_id?: string | null
+          created_at?: string
+          division?: string
+          exclusive_contract_url?: string | null
+          google_calendar_event_id?: string | null
+          id?: string
+          is_off_market?: boolean | null
+          is_pocket_listing?: boolean | null
+          latitude?: number | null
+          listing_data?: Json
+          longitude?: number | null
+          neighborhood?: string | null
+          owner_company?: string | null
+          owner_email?: string | null
+          owner_name?: string
+          owner_phone?: string | null
+          property_address?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          state?: string | null
+          status?: string
+          unit_number?: string | null
+          updated_at?: string
+          zip_code?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exclusive_submissions_converted_deal_id_fkey"
+            columns: ["converted_deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       external_tools: {
         Row: {
           category: string | null
