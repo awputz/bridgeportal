@@ -430,7 +430,3 @@ export default function ExclusiveSubmissionsAdmin() {
   );
 }
 
-      </Sheet>
-    </AdminLayout>
-  );
-}
