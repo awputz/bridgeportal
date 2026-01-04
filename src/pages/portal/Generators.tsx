@@ -72,26 +72,26 @@ import { CAMSummaryGenerator } from "@/components/generators/commercial-leasing/
 import { SpaceProgrammingGenerator } from "@/components/generators/commercial-leasing/SpaceProgrammingGenerator";
 
 // Residential
-import { BuyerNeedsAnalysisGenerator } from "@/components/generators/residential/BuyerNeedsAnalysisGenerator";
-import { NeighborhoodGuideGenerator } from "@/components/generators/residential/NeighborhoodGuideGenerator";
-import { OpenHouseFollowUpGenerator } from "@/components/generators/residential/OpenHouseFollowUpGenerator";
-import { RentalApplicationSummaryGenerator } from "@/components/generators/residential/RentalApplicationSummaryGenerator";
-import { SellerNetSheetGenerator } from "@/components/generators/residential/SellerNetSheetGenerator";
-import { BuyerOfferLetterGenerator } from "@/components/generators/residential/BuyerOfferLetterGenerator";
-import { RentalListingGenerator } from "@/components/generators/residential/RentalListingGenerator";
-import { TenantWelcomeLetterGenerator } from "@/components/generators/residential/TenantWelcomeLetterGenerator";
-import { LeaseViolationNoticeGenerator } from "@/components/generators/residential/LeaseViolationNoticeGenerator";
-import { ShowingFeedbackSummaryGenerator } from "@/components/generators/residential/ShowingFeedbackSummaryGenerator";
-import { PriceReductionMemoGenerator } from "@/components/generators/residential/PriceReductionMemoGenerator";
-import { BuildingAmenityGuideGenerator } from "@/components/generators/residential/BuildingAmenityGuideGenerator";
+import BuyerNeedsAnalysisGenerator from "@/components/generators/residential/BuyerNeedsAnalysisGenerator";
+import NeighborhoodGuideGenerator from "@/components/generators/residential/NeighborhoodGuideGenerator";
+import OpenHouseFollowUpGenerator from "@/components/generators/residential/OpenHouseFollowUpGenerator";
+import RentalApplicationSummaryGenerator from "@/components/generators/residential/RentalApplicationSummaryGenerator";
+import SellerNetSheetGenerator from "@/components/generators/residential/SellerNetSheetGenerator";
+import BuyerOfferLetterGenerator from "@/components/generators/residential/BuyerOfferLetterGenerator";
+import RentalListingGenerator from "@/components/generators/residential/RentalListingGenerator";
+import TenantWelcomeLetterGenerator from "@/components/generators/residential/TenantWelcomeLetterGenerator";
+import LeaseViolationNoticeGenerator from "@/components/generators/residential/LeaseViolationNoticeGenerator";
+import ShowingFeedbackSummaryGenerator from "@/components/generators/residential/ShowingFeedbackSummaryGenerator";
+import PriceReductionMemoGenerator from "@/components/generators/residential/PriceReductionMemoGenerator";
+import BuildingAmenityGuideGenerator from "@/components/generators/residential/BuildingAmenityGuideGenerator";
 
 // Analytics
-import { PipelineHealthGenerator } from "@/components/generators/analytics/PipelineHealthGenerator";
-import { LeadScoringGenerator } from "@/components/generators/analytics/LeadScoringGenerator";
-import { CommissionForecastGenerator } from "@/components/generators/analytics/CommissionForecastGenerator";
-import { WeeklyActivityDigestGenerator } from "@/components/generators/analytics/WeeklyActivityDigestGenerator";
-import { PerformanceInsightsGenerator } from "@/components/generators/analytics/PerformanceInsightsGenerator";
-import { DealRiskAssessmentGenerator } from "@/components/generators/analytics/DealRiskAssessmentGenerator";
+import PipelineHealthGenerator from "@/components/generators/analytics/PipelineHealthGenerator";
+import LeadScoringGenerator from "@/components/generators/analytics/LeadScoringGenerator";
+import CommissionForecastGenerator from "@/components/generators/analytics/CommissionForecastGenerator";
+import WeeklyActivityDigestGenerator from "@/components/generators/analytics/WeeklyActivityDigestGenerator";
+import PerformanceInsightsGenerator from "@/components/generators/analytics/PerformanceInsightsGenerator";
+import DealRiskAssessmentGenerator from "@/components/generators/analytics/DealRiskAssessmentGenerator";
 
 type DivisionFilter = Division | "all";
 
