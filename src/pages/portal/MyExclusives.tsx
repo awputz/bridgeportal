@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Building2, Filter, ArrowLeft, ExternalLink } from "lucide-react";
+import { Building2, Filter, ArrowLeft, ExternalLink, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -114,12 +114,22 @@ const MyExclusives = () => {
             <span>/</span>
             <span className="text-foreground">My Exclusives</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-extralight text-foreground mb-2">
-            My Exclusives
-          </h1>
-          <p className="text-muted-foreground">
-            Your assigned listings and document center
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl md:text-4xl font-extralight text-foreground mb-2">
+                My Exclusives
+              </h1>
+              <p className="text-muted-foreground">
+                Your assigned listings and document center
+              </p>
+            </div>
+            <Link to="/portal/exclusives/new">
+              <Button className="gap-2">
+                <Plus className="h-4 w-4" />
+                Submit Exclusive
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Stats Cards */}

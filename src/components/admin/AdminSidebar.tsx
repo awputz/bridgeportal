@@ -32,6 +32,7 @@ const peopleItems = [
 
 const dealsItems = [
   { title: "Listings", url: "/admin/listings", icon: Building2 },
+  { title: "Exclusive Submissions", url: "/admin/exclusive-submissions", icon: ClipboardList },
   { title: "Deal Room", url: "/admin/deal-room", icon: KeyRound },
   { title: "Closed Deals", url: "/admin/transactions", icon: DollarSign },
 ];

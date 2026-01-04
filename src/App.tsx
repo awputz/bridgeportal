@@ -97,12 +97,15 @@ const NewsletterAdmin = lazy(() => import("./pages/admin/NewsletterAdmin"));
 const ActivityLogsAdmin = lazy(() => import("./pages/admin/ActivityLogsAdmin"));
 const CRMConfigAdmin = lazy(() => import("./pages/admin/CRMConfigAdmin"));
 const MyExclusives = lazy(() => import("./pages/portal/MyExclusives"));
+const NewExclusive = lazy(() => import("./pages/portal/NewExclusive"));
+const ExclusiveWizard = lazy(() => import("./pages/portal/exclusives/ExclusiveWizard"));
 const Intake = lazy(() => import("./pages/portal/Intake"));
 const IntakeForm = lazy(() => import("./pages/intake/IntakeForm"));
 const CommissionRequestsAdmin = lazy(() => import("./pages/admin/CommissionRequestsAdmin"));
 const CRMOverviewAdmin = lazy(() => import("./pages/admin/CRMOverviewAdmin"));
 const AgentPerformanceAdmin = lazy(() => import("./pages/admin/AgentPerformanceAdmin"));
 const ApplicationsAdmin = lazy(() => import("./pages/admin/ApplicationsAdmin"));
+const ExclusiveSubmissionsAdmin = lazy(() => import("./pages/admin/ExclusiveSubmissionsAdmin"));
 
 // Service Pages - lazy loaded
 const InvestmentSales = lazy(() => import("./pages/services/InvestmentSales"));
@@ -361,6 +364,16 @@ const App = () => {
                         <MyExclusives />
                       </Suspense>
                     } />
+                    <Route path="exclusives/new" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <NewExclusive />
+                      </Suspense>
+                    } />
+                    <Route path="exclusives/new/:division" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <ExclusiveWizard />
+                      </Suspense>
+                    } />
                     <Route path="commission-request" element={
                       <Suspense fallback={<PageLoader />}>
                         <CommissionRequest />
@@ -555,6 +568,11 @@ const App = () => {
                     <Route path="applications" element={
                       <Suspense fallback={<PageLoader />}>
                         <ApplicationsAdmin />
+                      </Suspense>
+                    } />
+                    <Route path="exclusive-submissions" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <ExclusiveSubmissionsAdmin />
                       </Suspense>
                     } />
                   </Route>
