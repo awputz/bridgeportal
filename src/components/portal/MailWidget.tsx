@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,7 +7,6 @@ import {
   ExternalLink, 
   Inbox,
   Star,
-  Archive,
   Check
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -102,12 +100,14 @@ export const MailWidget = () => {
                 {lastUpdated}
               </span>
             )}
-            <Link 
-              to="/portal/mail" 
+            <a 
+              href="https://mail.google.com" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-xs text-muted-foreground hover:text-foreground transition-colors"
             >
               View All
-            </Link>
+            </a>
           </div>
         </div>
       </CardHeader>
@@ -128,9 +128,11 @@ export const MailWidget = () => {
           ) : (
             <div className="space-y-1 pr-2">
               {messages.map((message) => (
-                <Link
+                <a
                   key={message.id}
-                  to={`/portal/mail?message=${message.id}`}
+                  href={`https://mail.google.com/mail/u/0/#inbox/${message.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={cn(
                     "relative block p-3 rounded-lg transition-colors group",
                     "hover:bg-muted/50",
@@ -200,7 +202,7 @@ export const MailWidget = () => {
                   {message.isUnread && (
                     <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-r" />
                   )}
-                </Link>
+                </a>
               ))}
             </div>
           )}

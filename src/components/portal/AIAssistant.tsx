@@ -207,8 +207,11 @@ export const AIAssistant = () => {
         <SheetHeader className="mb-6">
           <SheetTitle className="flex items-center gap-2 text-foreground">
             <Sparkles className="h-5 w-5 text-primary" />
-            AI Suggestions
+            Action Items
           </SheetTitle>
+          <p className="text-xs text-muted-foreground mt-1">
+            Smart insights based on your pipeline activity
+          </p>
         </SheetHeader>
 
         {isLoading ? (
