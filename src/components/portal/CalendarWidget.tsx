@@ -173,15 +173,25 @@ export const CalendarWidget = () => {
               <Calendar className="h-5 w-5 text-primary" />
               <span>{format(today, "EEEE, MMM d")}</span>
             </CardTitle>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleQuickAdd}
-              className="h-7 w-7"
-              title="Add Event"
-            >
-              <Plus className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleQuickAdd}
+                className="h-7 w-7"
+                title="Add Event"
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+              <a
+                href="https://calendar.google.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Open
+              </a>
+            </div>
           </div>
         </CardHeader>
 
