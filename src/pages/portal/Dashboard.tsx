@@ -324,12 +324,12 @@ const Dashboard = () => {
             </div>}
         </section>
 
-        {/* Productivity Tools */}
+        {/* Team Tools */}
         <section className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
-              <HardDrive className="h-5 w-5 text-muted-foreground" />
-              Productivity
+              <Wrench className="h-5 w-5 text-muted-foreground" />
+              Team Tools
             </h2>
           </div>
           
