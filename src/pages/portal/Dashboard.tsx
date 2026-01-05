@@ -223,16 +223,45 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {/* Quick Tools - Combined Research & Team Tools */}
+        {/* Exclusive Listings */}
         <section className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
-              <Wrench className="h-5 w-5 text-muted-foreground" />
-              Quick Tools
+              <Building2 className="h-5 w-5 text-muted-foreground" />
+              View Our Exclusive Listings
             </h2>
-            <Link to="/portal/tools" className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1">
-              View all <ArrowRight className="h-3 w-3" />
-            </Link>
+          </div>
+          <div className="grid grid-cols-3 gap-3 auto-rows-fr">
+            {exclusiveListings.map(listing => {
+              const Icon = listing.icon;
+              const content = (
+                <div className="glass-card p-3 sm:p-4 flex flex-col items-center justify-center text-center hover:border-white/20 transition-all duration-300 h-full">
+                  <div className={`w-10 h-10 rounded-full ${listing.color.split(' ')[0]} flex items-center justify-center mb-2 flex-shrink-0`}>
+                    <Icon className={`h-5 w-5 ${listing.color.split(' ')[1]}`} />
+                  </div>
+                  <span className="text-xs sm:text-sm font-light text-foreground line-clamp-1">{listing.name}</span>
+                </div>
+              );
+              return listing.external ? (
+                <a key={listing.name} href={listing.url} target="_blank" rel="noopener noreferrer" className="h-full">
+                  {content}
+                </a>
+              ) : (
+                <Link key={listing.name} to={listing.url} className="h-full">
+                  {content}
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Research Tools */}
+        <section className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
+              <Database className="h-5 w-5 text-muted-foreground" />
+              Research Tools
+            </h2>
           </div>
           {isLoading ? (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -240,12 +269,80 @@ const Dashboard = () => {
             </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {[...groupedTools.research || [], ...groupedTools.productivity || []].slice(0, 6).map(tool => {
+              {groupedTools.research?.map(tool => {
                 const Icon = iconMap[tool.icon] || Database;
                 return <QuickActionCard key={tool.id} name={tool.name} description={tool.description || undefined} icon={Icon} url={tool.url} />;
               })}
             </div>
           )}
+        </section>
+
+        {/* Team Tools */}
+        <section className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
+              <Wrench className="h-5 w-5 text-muted-foreground" />
+              Team Tools
+            </h2>
+          </div>
+          {isLoading ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-[120px] rounded-xl" />)}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {groupedTools.productivity?.map(tool => {
+                const Icon = iconMap[tool.icon] || Mail;
+                return <QuickActionCard key={tool.id} name={tool.name} description={tool.description || undefined} icon={Icon} url={tool.url} />;
+              })}
+            </div>
+          )}
+        </section>
+
+        {/* Company Quick Links */}
+        <section className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
+              <Building2 className="h-5 w-5 text-muted-foreground" />
+              Company
+            </h2>
+          </div>
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
+            {companyQuickLinks.map(link => {
+              const Icon = link.icon;
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className="glass-card p-3 flex flex-col items-center justify-center text-center hover:border-white/20 transition-all duration-300 min-h-[80px]"
+                >
+                  <Icon className="h-5 w-5 text-foreground/60 mb-1.5" />
+                  <span className="text-xs font-light text-foreground">{link.name}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* All Portal Pages */}
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
+              <ArrowRight className="h-5 w-5 text-muted-foreground" />
+              All Pages
+            </h2>
+          </div>
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
+            {quickLinks.map(link => {
+              const Icon = link.icon;
+              return (
+                <Link key={link.path} to={link.path} className="glass-card p-3 flex flex-col items-center justify-center text-center hover:border-white/20 transition-all duration-300 min-h-[80px]">
+                  <Icon className="h-5 w-5 text-foreground/60 mb-1.5" />
+                  <span className="text-xs font-light text-foreground">{link.name}</span>
+                </Link>
+              );
+            })}
+          </div>
         </section>
       </div>
     </div>
