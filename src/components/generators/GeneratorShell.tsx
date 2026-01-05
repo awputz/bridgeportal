@@ -3,7 +3,6 @@ import { ArrowLeft, Copy, Check, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 import type { LucideIcon } from "lucide-react";
 
 export interface GeneratorShellProps {
@@ -49,54 +48,79 @@ export const GeneratorShell = ({
     try {
       const prompt = promptBuilder(formData);
 
-      const { data, error } = await supabase.functions.invoke("ai-chat", {
-        body: {
-          messages: [{ role: "user", content: prompt }],
-        },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({
+            messages: [{ role: "user", content: prompt }],
+          }),
+        }
+      );
 
-      if (error) throw error;
+      // Handle rate limit and payment errors
+      if (response.status === 429) {
+        toast.error("Rate limit exceeded. Please wait a moment and try again.");
+        return;
+      }
+      if (response.status === 402) {
+        toast.error("AI credits exhausted. Please add credits to continue.");
+        return;
+      }
+      if (!response.ok) {
+        throw new Error(`Request failed: ${response.status}`);
+      }
 
       // Handle streaming response
-      if (data) {
-        const reader = data.body?.getReader();
-        if (reader) {
-          const decoder = new TextDecoder();
-          let content = "";
+      const reader = response.body?.getReader();
+      if (reader) {
+        const decoder = new TextDecoder();
+        let content = "";
+        let buffer = "";
 
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
 
-            const chunk = decoder.decode(value, { stream: true });
-            const lines = chunk.split("\n");
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop() || ""; // Keep incomplete line in buffer
 
-            for (const line of lines) {
-              if (line.startsWith("data: ")) {
-                const jsonStr = line.slice(6).trim();
-                if (jsonStr === "[DONE]") continue;
-                try {
-                  const parsed = JSON.parse(jsonStr);
-                  const delta = parsed.choices?.[0]?.delta?.content;
-                  if (delta) {
-                    content += delta;
-                    setGeneratedContent(content);
-                  }
-                } catch {
-                  // Ignore parsing errors for incomplete chunks
+          for (const line of lines) {
+            if (line.startsWith("data: ")) {
+              const jsonStr = line.slice(6).trim();
+              if (jsonStr === "[DONE]") continue;
+              try {
+                const parsed = JSON.parse(jsonStr);
+                const delta = parsed.choices?.[0]?.delta?.content;
+                if (delta) {
+                  content += delta;
+                  setGeneratedContent(content);
                 }
+              } catch {
+                // Ignore parsing errors for incomplete chunks
               }
             }
           }
+        }
+        
+        if (content) {
           toast.success("Content generated successfully!");
-        } else if (typeof data === "string") {
-          setGeneratedContent(data);
-          toast.success("Content generated successfully!");
+        } else {
+          toast.error("No content received from AI");
         }
       }
     } catch (error: any) {
       console.error("Generation error:", error);
-      toast.error(error.message || "Failed to generate content");
+      if (error.message?.includes("Failed to fetch") || error.name === "TypeError") {
+        toast.error("Network error. Please check your connection and try again.");
+      } else {
+        toast.error(error.message || "Failed to generate content");
+      }
     } finally {
       setIsGenerating(false);
     }

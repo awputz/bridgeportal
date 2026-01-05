@@ -389,9 +389,16 @@ Make sure each section is substantive and uses the specific data provided.`;
 
     console.log(`[generate-om] Generating ${section || "full OM"} for: ${formData.propertyBasics?.address}`);
 
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (!LOVABLE_API_KEY) {
+      console.error("[generate-om] LOVABLE_API_KEY is not configured");
+      throw new Error("AI service is not configured");
+    }
+
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -401,14 +408,26 @@ Make sure each section is substantive and uses the specific data provided.`;
           { role: "user", content: userPrompt },
         ],
         max_tokens: section ? 1000 : 4000,
-        temperature: 0.7,
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`[generate-om] API error: ${errorText}`);
-      throw new Error(`AI API error: ${response.status}`);
+      console.error(`[generate-om] API error: ${response.status} - ${errorText}`);
+      
+      if (response.status === 429) {
+        return new Response(
+          JSON.stringify({ error: "Rate limit exceeded. Please try again in a moment." }),
+          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      if (response.status === 402) {
+        return new Response(
+          JSON.stringify({ error: "AI credits exhausted. Please add credits to continue." }),
+          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      throw new Error(`AI service error: ${response.status}`);
     }
 
     const data = await response.json();
