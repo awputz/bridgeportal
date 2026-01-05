@@ -17,8 +17,6 @@ import { WelcomeBanner } from "@/components/portal/WelcomeBanner";
 import { AnnouncementsWidget } from "@/components/portal/AnnouncementsWidget";
 import { GoogleWorkspaceWidget } from "@/components/portal/GoogleWorkspaceWidget";
 import { AlertsWidget } from "@/components/portal/AlertsWidget";
-import { OnboardingTooltip } from "@/components/portal/OnboardingTooltip";
-import { useOnboardingTooltips } from "@/hooks/useOnboardingTooltips";
 
 // Icon mapping for dynamic icons from database
 const iconMap: Record<string, typeof Mail> = {
@@ -74,7 +72,7 @@ const Dashboard = () => {
   const { role } = useIsAdminOrAgent();
   const [aiPrompt, setAiPrompt] = useState("");
   const navigate = useNavigate();
-  const { dismissStep, dismissAll } = useOnboardingTooltips();
+  
 
   const groupedTools = tools ? groupToolsByCategory(tools) : { research: [], productivity: [] };
 
@@ -90,18 +88,7 @@ const Dashboard = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
         {/* 1. Welcome Banner */}
         <div className="mb-6 animate-fade-in">
-          <OnboardingTooltip
-            id="dashboard-welcome"
-            title="Your Command Center"
-            description="This dashboard gives you quick access to all your tools, CRM, tasks, and more. Let's take a quick tour!"
-            position="bottom"
-            step={1}
-            totalSteps={5}
-            onNext={() => dismissStep("dashboard-welcome")}
-            onSkipAll={dismissAll}
-          >
-            <WelcomeBanner />
-          </OnboardingTooltip>
+          <WelcomeBanner />
         </div>
 
         {/* 2. Quick Actions Hub - Primary Actions */}
