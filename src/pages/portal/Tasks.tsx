@@ -91,7 +91,7 @@ const TaskCard = ({
 
   return (
     <div className={cn(
-      "glass-card p-4 transition-all duration-200 hover:bg-white/5",
+      "glass-card p-4 transition-all duration-200 hover:bg-white/5 h-full",
       task.is_completed && "opacity-60"
     )}>
       <div className="flex items-start gap-3">

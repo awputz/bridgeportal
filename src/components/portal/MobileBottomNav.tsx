@@ -21,7 +21,8 @@ import {
   Globe, 
   Headphones, 
   Bell, 
-  Mail 
+  Mail,
+  ExternalLink 
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -119,7 +120,10 @@ export const MobileBottomNav = () => {
                 rel="noopener noreferrer"
                 className="flex flex-col items-center justify-center gap-0.5 py-2 px-3 rounded-xl transition-all duration-300 min-w-[60px] active:scale-95 text-muted-foreground hover:text-foreground hover:bg-white/5"
               >
-                <Icon className="h-5 w-5" />
+                <div className="relative">
+                  <Icon className="h-5 w-5" />
+                  <ExternalLink className="h-2 w-2 absolute -top-0.5 -right-1 text-muted-foreground/70" />
+                </div>
                 <span className="text-[10px] font-medium">{item.label}</span>
               </a>
             );
@@ -174,8 +178,9 @@ export const MobileBottomNav = () => {
                               rel="noopener noreferrer"
                               className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-xl transition-all duration-300 active:scale-95 hover:bg-white/5 text-muted-foreground hover:text-foreground"
                             >
-                              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/5">
+                              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/5 relative">
                                 <Icon className="h-5 w-5 text-foreground/60" />
+                                <ExternalLink className="h-2.5 w-2.5 absolute -top-0.5 -right-0.5 text-muted-foreground/70" />
                               </div>
                               <span className="text-[10px] font-medium text-center">{item.label}</span>
                             </a>

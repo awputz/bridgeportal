@@ -439,14 +439,35 @@ const CRM = () => {
                   : `Create your first ${DIVISION_DISPLAY_NAMES[division as keyof typeof DIVISION_DISPLAY_NAMES] || division} deal to start tracking from lead to close.`
                 }
               </p>
-              {(!deals || deals.length === 0) && (
-                <Link to="/portal/crm/deals/new">
-                  <Button>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Create Your First Deal
+              <div className="flex items-center justify-center gap-3">
+                {deals && deals.length > 0 ? (
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setFilters({
+                      search: "",
+                      stageIds: [],
+                      priority: [],
+                      dealTypes: [],
+                      propertyTypes: [],
+                      minValue: null,
+                      maxValue: null,
+                      expectedCloseStart: null,
+                      expectedCloseEnd: null,
+                      minCapRate: null,
+                      maxCapRate: null,
+                    })}
+                  >
+                    Clear All Filters
                   </Button>
-                </Link>
-              )}
+                ) : (
+                  <Link to="/portal/crm/deals/new">
+                    <Button>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Create Your First Deal
+                    </Button>
+                  </Link>
+                )}
+              </div>
             </div>
           )}
         </div>

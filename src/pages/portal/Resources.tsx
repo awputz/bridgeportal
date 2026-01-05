@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { FileText, Download, ExternalLink, FileCheck, Building2, Users, Palette } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface ResourceItem {
   name: string;
@@ -80,8 +81,9 @@ const Resources = () => {
     if (item.url) {
       window.open(item.url, '_blank');
     } else {
-      // Placeholder for internal resources
-      alert(`Download for "${item.name}" coming soon. Contact office@bridgenyre.com for assistance.`);
+      toast.info(`${item.name} coming soon`, {
+        description: "Contact office@bridgenyre.com for assistance",
+      });
     }
   };
 
