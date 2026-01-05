@@ -34,10 +34,10 @@ import {
 } from "@/components/ui/sheet";
 
 const navItems = [
-  { path: "/portal", icon: Home, label: "Home" },
-  { path: "/portal/mail", icon: Mail, label: "Mail" },
-  { path: "/portal/crm", icon: Briefcase, label: "CRM" },
-  { path: "/portal/tasks", icon: ListTodo, label: "Tasks" },
+  { path: "/portal", icon: Home, label: "Home", external: false },
+  { path: "https://mail.google.com", icon: Mail, label: "Mail", external: true },
+  { path: "/portal/crm", icon: Briefcase, label: "CRM", external: false },
+  { path: "/portal/tasks", icon: ListTodo, label: "Tasks", external: false },
 ];
 
 const moreItemsGrouped = [
@@ -108,7 +108,23 @@ export const MobileBottomNav = () => {
       <div className="flex items-center justify-around px-2 py-2 pb-safe">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const active = isActive(item.path);
+          const active = !item.external && isActive(item.path);
+          
+          if (item.external) {
+            return (
+              <a
+                key={item.path}
+                href={item.path}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center justify-center gap-0.5 py-2 px-3 rounded-xl transition-all duration-300 min-w-[60px] active:scale-95 text-muted-foreground hover:text-foreground hover:bg-white/5"
+              >
+                <Icon className="h-5 w-5" />
+                <span className="text-[10px] font-medium">{item.label}</span>
+              </a>
+            );
+          }
+          
           return (
             <Link
               key={item.path}
