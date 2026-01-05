@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { User, Mail, Phone, Lock, Save, TrendingUp, DollarSign, Building2, Calendar, FileText, ExternalLink, Home, FolderOpen, Users, Check, Loader2, Bell, Settings, LayoutGrid, CreditCard, ChevronRight } from "lucide-react";
+import { User, Mail, Phone, Lock, Save, TrendingUp, DollarSign, Building2, Calendar, FileText, ExternalLink, Home, FolderOpen, Users, Check, Loader2, Bell, Settings, LayoutGrid, CreditCard, ChevronRight, ClipboardList, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,10 @@ import { useDriveConnection, useConnectDrive, useDisconnectDrive } from "@/hooks
 import { useContactsConnection, useConnectContacts, useDisconnectContacts } from "@/hooks/useGoogleContacts";
 import { useGoogleCalendarConnection, useConnectGoogleCalendar, useDisconnectGoogleCalendar } from "@/hooks/useGoogleCalendar";
 import ProfileNotificationsCard from "@/components/portal/ProfileNotificationsCard";
+import { useMyAgentRequests } from "@/hooks/useMyAgentRequests";
+import { useMyCommissions } from "@/hooks/useMyCommissions";
+import { Badge } from "@/components/ui/badge";
+import { format } from "date-fns";
 import {
   Table,
   TableBody,
@@ -81,8 +85,10 @@ const Profile = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordLoading, setPasswordLoading] = useState(false);
 
-  // Fetch agent transactions
+  // Fetch agent transactions and requests
   const { data: transactions, isLoading: transactionsLoading } = useAgentTransactions();
+  const { data: agentRequests, isLoading: requestsLoading } = useMyAgentRequests();
+  const { stats: commissionStats, isLoading: commissionStatsLoading } = useMyCommissions();
   const commissions = useAgentCommissions(transactions);
 
   useEffect(() => {
@@ -365,6 +371,142 @@ const Profile = () => {
                 <h3 className="text-sm font-medium text-foreground mb-1">Transaction History</h3>
                 <p className="text-xs text-muted-foreground">View your complete deal history</p>
               </Link>
+            </div>
+
+            {/* Pending Payments & My Requests */}
+            <div className="grid gap-6 lg:grid-cols-2">
+              {/* Pending Payments Widget */}
+              <Card className="glass-card border-border/50">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="font-light text-base flex items-center gap-2">
+                      <DollarSign className="h-4 w-4 text-emerald-400" />
+                      Pending Payments
+                    </CardTitle>
+                    <Link to="/portal/my-commission-requests">
+                      <Button variant="ghost" size="sm" className="text-xs">
+                        View All →
+                      </Button>
+                    </Link>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {commissionStatsLoading ? (
+                    <div className="space-y-2">
+                      {[...Array(2)].map((_, i) => (
+                        <Skeleton key={i} className="h-14 w-full" />
+                      ))}
+                    </div>
+                  ) : commissionStats.pendingRequests.length > 0 ? (
+                    <div className="space-y-2">
+                      {commissionStats.pendingRequests.slice(0, 3).map((req) => (
+                        <div key={req.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-foreground truncate">{req.property_address}</p>
+                            <p className="text-xs text-muted-foreground">
+                              Submitted {format(new Date(req.created_at), "MMM d, yyyy")}
+                            </p>
+                          </div>
+                          <div className="flex flex-col items-end gap-1 ml-2">
+                            <span className="text-sm font-medium text-emerald-400">
+                              {formatFullCurrency(req.commission_amount)}
+                            </span>
+                            <Badge 
+                              variant="outline" 
+                              className={`text-[10px] px-1.5 py-0 ${
+                                req.status === "approved" 
+                                  ? "border-green-500/50 text-green-400" 
+                                  : req.status === "under_review" 
+                                    ? "border-blue-500/50 text-blue-400" 
+                                    : "border-amber-500/50 text-amber-400"
+                              }`}
+                            >
+                              {req.status === "under_review" ? "Under Review" : req.status === "approved" ? "Approved" : "Pending"}
+                            </Badge>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-6">
+                      <Check className="h-8 w-8 text-emerald-400/50 mx-auto mb-2" />
+                      <p className="text-sm text-muted-foreground">No pending payments</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* My Requests Widget */}
+              <Card className="glass-card border-border/50">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="font-light text-base flex items-center gap-2">
+                      <ClipboardList className="h-4 w-4 text-blue-400" />
+                      My Requests
+                    </CardTitle>
+                    <Link to="/portal/requests">
+                      <Button variant="ghost" size="sm" className="text-xs">
+                        View All →
+                      </Button>
+                    </Link>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {requestsLoading ? (
+                    <div className="space-y-2">
+                      {[...Array(3)].map((_, i) => (
+                        <Skeleton key={i} className="h-14 w-full" />
+                      ))}
+                    </div>
+                  ) : agentRequests && agentRequests.length > 0 ? (
+                    <div className="space-y-2">
+                      {agentRequests.slice(0, 3).map((req) => (
+                        <div key={req.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-foreground">{req.request_type}</p>
+                            <p className="text-xs text-muted-foreground flex items-center gap-1">
+                              <Clock className="h-3 w-3" />
+                              {format(new Date(req.created_at), "MMM d, yyyy")}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2 ml-2">
+                            <Badge 
+                              variant="outline" 
+                              className={`text-[10px] px-1.5 py-0 ${
+                                req.priority === "urgent" 
+                                  ? "border-red-500/50 text-red-400" 
+                                  : "border-muted-foreground/30 text-muted-foreground"
+                              }`}
+                            >
+                              {req.priority}
+                            </Badge>
+                            <Badge 
+                              variant="outline" 
+                              className={`text-[10px] px-1.5 py-0 ${
+                                req.status === "completed" 
+                                  ? "border-green-500/50 text-green-400" 
+                                  : req.status === "in_progress" 
+                                    ? "border-blue-500/50 text-blue-400" 
+                                    : "border-amber-500/50 text-amber-400"
+                              }`}
+                            >
+                              {req.status === "in_progress" ? "In Progress" : req.status.charAt(0).toUpperCase() + req.status.slice(1)}
+                            </Badge>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-6">
+                      <ClipboardList className="h-8 w-8 text-muted-foreground/50 mx-auto mb-2" />
+                      <p className="text-sm text-muted-foreground">No requests submitted</p>
+                      <Link to="/portal/requests" className="text-xs text-primary hover:underline mt-1 inline-block">
+                        Submit a request →
+                      </Link>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </div>
 
             {/* Recent Activity & Earnings Breakdown */}
