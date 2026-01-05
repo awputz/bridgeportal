@@ -1,92 +1,190 @@
-import { useState } from "react";
-import { ArrowLeft, Sparkles, Copy, Check, Loader2 } from "lucide-react";
+import { useState, useMemo } from "react";
+import { ArrowLeft, Sparkles, Loader2, ChevronDown, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+
+import { OMFormData, initialOMFormData, calculateMetrics } from "@/types/om-generator";
+import { OMPropertySection } from "./om/OMPropertySection";
+import { OMPricingSection } from "./om/OMPricingSection";
+import { OMIncomeSection } from "./om/OMIncomeSection";
+import { OMExpensesSection } from "./om/OMExpensesSection";
+import { OMUnitMixSection } from "./om/OMUnitMixSection";
+import { OMRentRegulationSection } from "./om/OMRentRegulationSection";
+import { OMLocationSection } from "./om/OMLocationSection";
+import { OMMarketDataSection } from "./om/OMMarketDataSection";
+import { OMValueAddSection } from "./om/OMValueAddSection";
+import { OMThesisSection } from "./om/OMThesisSection";
+import { OMOutputDisplay } from "./om/OMOutputDisplay";
 
 interface OMGeneratorProps {
   onBack: () => void;
 }
 
+type SectionKey = 
+  | "property"
+  | "pricing"
+  | "income"
+  | "expenses"
+  | "unitMix"
+  | "rentRegulation"
+  | "location"
+  | "market"
+  | "valueAdd"
+  | "thesis";
+
+interface Section {
+  key: SectionKey;
+  title: string;
+  required?: boolean;
+}
+
+const sections: Section[] = [
+  { key: "property", title: "Property Basics", required: true },
+  { key: "pricing", title: "Pricing & Returns", required: true },
+  { key: "income", title: "Income Details" },
+  { key: "expenses", title: "Operating Expenses" },
+  { key: "unitMix", title: "Unit Mix" },
+  { key: "rentRegulation", title: "Rent Regulation (NYC)" },
+  { key: "location", title: "Location & Demographics" },
+  { key: "market", title: "Market Data & Comps" },
+  { key: "valueAdd", title: "Value-Add Opportunities" },
+  { key: "thesis", title: "Investment Thesis" },
+];
+
 export const OMGenerator = ({ onBack }: OMGeneratorProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedContent, setGeneratedContent] = useState("");
-  const [copied, setCopied] = useState(false);
+  const [formData, setFormData] = useState<OMFormData>(initialOMFormData);
+  const [openSections, setOpenSections] = useState<Set<SectionKey>>(new Set(["property", "pricing"]));
 
-  const [formData, setFormData] = useState({
-    propertyAddress: "",
-    propertyType: "multifamily",
-    askingPrice: "",
-    units: "",
-    grossSF: "",
-    yearBuilt: "",
-    noi: "",
-    neighborhood: "",
-    highlights: "",
-  });
+  const calculatedMetrics = useMemo(() => calculateMetrics(formData), [formData]);
+
+  const toggleSection = (key: SectionKey) => {
+    const newOpen = new Set(openSections);
+    if (newOpen.has(key)) {
+      newOpen.delete(key);
+    } else {
+      newOpen.add(key);
+    }
+    setOpenSections(newOpen);
+  };
+
+  const isFormValid = formData.propertyBasics.address.trim().length > 0;
 
   const handleGenerate = async () => {
-    if (!formData.propertyAddress) {
+    if (!isFormValid) {
       toast.error("Property address is required");
       return;
     }
 
     setIsGenerating(true);
+    setGeneratedContent("");
 
     try {
-      const { data, error } = await supabase.functions.invoke("ai-chat", {
-        body: {
-          messages: [
-            {
-              role: "user",
-              content: `Generate a professional Offering Memorandum executive summary for this investment property:
-
-Property Address: ${formData.propertyAddress}
-Property Type: ${formData.propertyType}
-Asking Price: ${formData.askingPrice ? `$${formData.askingPrice}` : "Not specified"}
-Units: ${formData.units || "N/A"}
-Gross SF: ${formData.grossSF || "N/A"}
-Year Built: ${formData.yearBuilt || "N/A"}
-NOI: ${formData.noi ? `$${formData.noi}` : "Not specified"}
-Neighborhood: ${formData.neighborhood || "Not specified"}
-Key Highlights: ${formData.highlights || "None provided"}
-
-Please generate:
-1. An executive summary (2-3 paragraphs) highlighting the investment opportunity
-2. Key investment highlights (4-5 bullet points)
-3. Property description (1-2 paragraphs)
-4. Location overview (1 paragraph)
-
-Format the response in a professional, compelling way suitable for an institutional investor.`
-            }
-          ]
-        }
+      const { data, error } = await supabase.functions.invoke("generate-om", {
+        body: { formData },
       });
 
       if (error) throw error;
-      setGeneratedContent(data.message || data.content || "");
-    } catch (error: any) {
-      toast.error("Failed to generate: " + (error.message || "Unknown error"));
+      
+      if (data?.content) {
+        setGeneratedContent(data.content);
+        toast.success("OM generated successfully!");
+      } else {
+        throw new Error("No content returned");
+      }
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Unknown error";
+      toast.error("Failed to generate: " + message);
     } finally {
       setIsGenerating(false);
     }
   };
 
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(generatedContent);
-    setCopied(true);
-    toast.success("Copied to clipboard");
-    setTimeout(() => setCopied(false), 2000);
+  const renderSectionContent = (key: SectionKey) => {
+    switch (key) {
+      case "property":
+        return (
+          <OMPropertySection
+            data={formData.propertyBasics}
+            onChange={(data) => setFormData({ ...formData, propertyBasics: data })}
+          />
+        );
+      case "pricing":
+        return (
+          <OMPricingSection
+            data={formData.pricingReturns}
+            onChange={(data) => setFormData({ ...formData, pricingReturns: data })}
+            calculatedMetrics={calculatedMetrics}
+          />
+        );
+      case "income":
+        return (
+          <OMIncomeSection
+            data={formData.incomeDetails}
+            onChange={(data) => setFormData({ ...formData, incomeDetails: data })}
+          />
+        );
+      case "expenses":
+        return (
+          <OMExpensesSection
+            data={formData.expenses}
+            onChange={(data) => setFormData({ ...formData, expenses: data })}
+          />
+        );
+      case "unitMix":
+        return (
+          <OMUnitMixSection
+            data={formData.unitMix}
+            onChange={(data) => setFormData({ ...formData, unitMix: data })}
+          />
+        );
+      case "rentRegulation":
+        return (
+          <OMRentRegulationSection
+            data={formData.rentRegulation}
+            onChange={(data) => setFormData({ ...formData, rentRegulation: data })}
+          />
+        );
+      case "location":
+        return (
+          <OMLocationSection
+            data={formData.location}
+            onChange={(data) => setFormData({ ...formData, location: data })}
+          />
+        );
+      case "market":
+        return (
+          <OMMarketDataSection
+            data={formData.marketData}
+            onChange={(data) => setFormData({ ...formData, marketData: data })}
+          />
+        );
+      case "valueAdd":
+        return (
+          <OMValueAddSection
+            data={formData.valueAdd}
+            onChange={(data) => setFormData({ ...formData, valueAdd: data })}
+          />
+        );
+      case "thesis":
+        return (
+          <OMThesisSection
+            data={formData.investmentThesis}
+            onChange={(data) => setFormData({ ...formData, investmentThesis: data })}
+          />
+        );
+      default:
+        return null;
+    }
   };
 
   return (
     <div className="min-h-screen pb-24 md:pb-16">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <Button variant="ghost" size="icon" onClick={onBack}>
@@ -95,170 +193,77 @@ Format the response in a professional, compelling way suitable for an institutio
           <div>
             <h1 className="text-2xl md:text-3xl font-light text-foreground flex items-center gap-2">
               <Sparkles className="h-6 w-6 text-primary" />
-              OM Generator
+              Offering Memorandum Generator
             </h1>
-            <p className="text-muted-foreground">Create professional Offering Memorandum content</p>
+            <p className="text-muted-foreground">Create institutional-quality OM content for investment properties</p>
           </div>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Input Form */}
-          <Card className="glass-card border-white/10">
-            <CardHeader>
-              <CardTitle className="font-light">Property Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="address">Property Address *</Label>
-                <Input
-                  id="address"
-                  value={formData.propertyAddress}
-                  onChange={(e) => setFormData({ ...formData, propertyAddress: e.target.value })}
-                  placeholder="123 Main Street, New York, NY"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Property Type</Label>
-                  <Select
-                    value={formData.propertyType}
-                    onValueChange={(v) => setFormData({ ...formData, propertyType: v })}
+          <div className="space-y-3">
+            <Card className="glass-card border-white/10">
+              <CardHeader className="pb-2">
+                <CardTitle className="font-light text-lg">Property Details</CardTitle>
+                <p className="text-xs text-muted-foreground">Fill in as much as you can — more details = better output</p>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {sections.map((section) => (
+                  <Collapsible
+                    key={section.key}
+                    open={openSections.has(section.key)}
+                    onOpenChange={() => toggleSection(section.key)}
                   >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="multifamily">Multifamily</SelectItem>
-                      <SelectItem value="mixed-use">Mixed Use</SelectItem>
-                      <SelectItem value="retail">Retail</SelectItem>
-                      <SelectItem value="office">Office</SelectItem>
-                      <SelectItem value="industrial">Industrial</SelectItem>
-                      <SelectItem value="development">Development Site</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="price">Asking Price ($)</Label>
-                  <Input
-                    id="price"
-                    type="number"
-                    value={formData.askingPrice}
-                    onChange={(e) => setFormData({ ...formData, askingPrice: e.target.value })}
-                    placeholder="5,000,000"
-                  />
-                </div>
-              </div>
+                    <CollapsibleTrigger asChild>
+                      <button className="flex items-center justify-between w-full p-3 text-left hover:bg-muted/30 rounded-lg transition-colors border border-border/50">
+                        <span className="text-sm font-medium flex items-center gap-2">
+                          {section.title}
+                          {section.required && (
+                            <span className="text-[10px] text-primary/70 bg-primary/10 px-1.5 py-0.5 rounded">Required</span>
+                          )}
+                        </span>
+                        {openSections.has(section.key) ? (
+                          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                        ) : (
+                          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        )}
+                      </button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="pt-3 pb-4 px-3">
+                      {renderSectionContent(section.key)}
+                    </CollapsibleContent>
+                  </Collapsible>
+                ))}
+              </CardContent>
+            </Card>
 
-              <div className="grid grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="units">Units</Label>
-                  <Input
-                    id="units"
-                    type="number"
-                    value={formData.units}
-                    onChange={(e) => setFormData({ ...formData, units: e.target.value })}
-                    placeholder="20"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="sf">Gross SF</Label>
-                  <Input
-                    id="sf"
-                    type="number"
-                    value={formData.grossSF}
-                    onChange={(e) => setFormData({ ...formData, grossSF: e.target.value })}
-                    placeholder="15,000"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="year">Year Built</Label>
-                  <Input
-                    id="year"
-                    type="number"
-                    value={formData.yearBuilt}
-                    onChange={(e) => setFormData({ ...formData, yearBuilt: e.target.value })}
-                    placeholder="1920"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="noi">NOI ($)</Label>
-                  <Input
-                    id="noi"
-                    type="number"
-                    value={formData.noi}
-                    onChange={(e) => setFormData({ ...formData, noi: e.target.value })}
-                    placeholder="300,000"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="neighborhood">Neighborhood</Label>
-                  <Input
-                    id="neighborhood"
-                    value={formData.neighborhood}
-                    onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
-                    placeholder="Williamsburg"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="highlights">Key Highlights</Label>
-                <Textarea
-                  id="highlights"
-                  value={formData.highlights}
-                  onChange={(e) => setFormData({ ...formData, highlights: e.target.value })}
-                  placeholder="Recently renovated, below market rents, prime location..."
-                  rows={3}
-                />
-              </div>
-
-              <Button 
-                className="w-full" 
-                onClick={handleGenerate}
-                disabled={isGenerating}
-              >
-                {isGenerating ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Generating...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="h-4 w-4 mr-2" />
-                    Generate OM Content
-                  </>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
+            <Button
+              className="w-full"
+              size="lg"
+              onClick={handleGenerate}
+              disabled={isGenerating || !isFormValid}
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Generating OM...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Generate Full OM
+                </>
+              )}
+            </Button>
+          </div>
 
           {/* Output */}
-          <Card className="glass-card border-white/10">
-            <CardHeader className="flex flex-row items-center justify-between">
+          <Card className="glass-card border-white/10 h-fit lg:sticky lg:top-6">
+            <CardHeader>
               <CardTitle className="font-light">Generated Content</CardTitle>
-              {generatedContent && (
-                <Button size="sm" variant="outline" onClick={handleCopy}>
-                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                </Button>
-              )}
             </CardHeader>
             <CardContent>
-              {generatedContent ? (
-                <div className="prose prose-invert prose-sm max-w-none">
-                  <div className="whitespace-pre-wrap text-sm text-foreground/90 leading-relaxed">
-                    {generatedContent}
-                  </div>
-                </div>
-              ) : (
-                <div className="text-center py-16 text-muted-foreground">
-                  <Sparkles className="h-12 w-12 mx-auto mb-4 opacity-30" />
-                  <p>Fill in the property details and click generate</p>
-                </div>
-              )}
+              <OMOutputDisplay content={generatedContent} isGenerating={isGenerating} />
             </CardContent>
           </Card>
         </div>
