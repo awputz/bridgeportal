@@ -217,7 +217,7 @@ const Reports = () => {
       {/* Header */}
       <div>
         <h1 className="text-2xl md:text-3xl font-light text-foreground">Reports & Exports</h1>
-        <p className="text-muted-foreground mt-1">Download detailed reports in CSV format</p>
+        <p className="text-muted-foreground mt-1">Download detailed reports in CSV or Excel format</p>
       </div>
 
       {/* Year Filter & Format Toggle */}
