@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Send, CreditCard, Megaphone, BarChart3, HelpCircle, Loader2 } from "lucide-react";
+import { Send, CreditCard, Megaphone, BarChart3, HelpCircle, Loader2, DollarSign } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,7 @@ const requestTypes = [
   { value: "business-cards", label: "Business Cards", icon: CreditCard, description: "Order new business cards" },
   { value: "marketing-materials", label: "Marketing Materials", icon: Megaphone, description: "Flyers, digital ads, social content for exclusives" },
   { value: "bov-request", label: "BOV / Valuation", icon: BarChart3, description: "Request BOV from analytical research team" },
+  { value: "commission-request", label: "Commission Request", icon: DollarSign, description: "Request commission payment for closed deals" },
   { value: "marketing-support", label: "Marketing Support", icon: Megaphone, description: "Campaign support, email marketing, social strategy" },
   { value: "other", label: "Other Request", icon: HelpCircle, description: "Any other support needed" },
 ];
@@ -162,8 +163,8 @@ const Requests = () => {
 
               {formData.requestType && (
                 <>
-                  {/* Property Address - for marketing/BOV */}
-                  {["marketing-materials", "bov-request"].includes(formData.requestType) && (
+                  {/* Property Address - for marketing/BOV/commission */}
+                  {["marketing-materials", "bov-request", "commission-request"].includes(formData.requestType) && (
                     <div className="space-y-2">
                       <Label htmlFor="propertyAddress">Property Address</Label>
                       <Input
@@ -176,7 +177,7 @@ const Requests = () => {
                   )}
 
                   {/* Client Name */}
-                  {["bov-request", "marketing-materials"].includes(formData.requestType) && (
+                  {["bov-request", "marketing-materials", "commission-request"].includes(formData.requestType) && (
                     <div className="space-y-2">
                       <Label htmlFor="clientName">Client Name (optional)</Label>
                       <Input
@@ -217,6 +218,8 @@ const Requests = () => {
                           ? "Name, title, phone, email as you want it printed. Quantity needed."
                           : formData.requestType === "bov-request"
                           ? "Property details, client needs, timeline, any specific requirements..."
+                          : formData.requestType === "commission-request"
+                          ? "Deal type, closing date, commission amount, any supporting documents..."
                           : "Describe what you need..."
                       }
                       rows={4}
