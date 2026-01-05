@@ -15,8 +15,6 @@ import {
   MapPin,
   Video,
   Phone,
-  AlertCircle,
-  CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow, format, isSameDay, differenceInMinutes, isToday } from "date-fns";
@@ -104,45 +102,45 @@ export const GoogleWorkspaceWidget = () => {
   const isConnected = isGmailConnected || isCalConnected;
 
   return (
-    <Card className="glass-card overflow-hidden">
-      <CardHeader className="pb-2 pt-3 px-4">
+    <Card className="overflow-hidden border-border/50 bg-card">
+      <CardHeader className="pb-3 pt-4 px-5">
         <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-blue-500/20 via-red-500/20 to-yellow-500/20 flex items-center justify-center">
-              <img src="/google-brandmark.png" alt="Google" className="h-4 w-4" />
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-blue-500/20 via-red-500/20 to-yellow-500/20 flex items-center justify-center">
+              <img src="/google-brandmark.png" alt="Google" className="h-5 w-5" />
             </div>
-            <span className="text-sm font-semibold">Google</span>
+            <span className="text-base font-semibold">Google Workspace</span>
           </div>
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             {isConnected && (
               <>
-                <span className="text-[10px] text-muted-foreground hidden sm:inline">
+                <span className="text-xs text-muted-foreground hidden sm:inline">
                   {getSyncStatusText()}
                 </span>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-6 w-6"
+                  className="h-8 w-8"
                   onClick={handleRefresh}
                   disabled={isSyncing}
                 >
-                  <RefreshCw className={cn("h-3.5 w-3.5 text-muted-foreground", isSyncing && "animate-spin")} />
+                  <RefreshCw className={cn("h-4 w-4 text-muted-foreground", isSyncing && "animate-spin")} />
                 </Button>
               </>
             )}
             <Link 
               to="/portal/settings/google-services" 
-              className="p-1 rounded-md hover:bg-muted/50 transition-colors"
+              className="p-1.5 rounded-lg hover:bg-muted/50 transition-colors"
               title="Google Services Settings"
             >
-              <Settings className="h-3.5 w-3.5 text-muted-foreground" />
+              <Settings className="h-4 w-4 text-muted-foreground" />
             </Link>
           </div>
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="pt-0 pb-3 px-4">
-        <ScrollArea className="max-h-[380px]">
+      <CardContent className="pt-0 pb-4 px-5">
+        <ScrollArea className="max-h-[420px]">
           {/* Gmail Section */}
           <GmailSection 
             messages={messages}
@@ -152,7 +150,7 @@ export const GoogleWorkspaceWidget = () => {
           />
           
           {/* Divider */}
-          <div className="h-px bg-border/50 my-3" />
+          <div className="h-px bg-border my-4" />
           
           {/* Calendar Section */}
           <CalendarSection 
@@ -178,12 +176,6 @@ const GmailSection = ({ messages, unreadCount, isConnected, isLoading }: GmailSe
   const { mutate: connectGmail, isPending: isConnecting } = useConnectGmail();
   const { mutate: modifyMessage } = useModifyMessage();
 
-  const handleMarkRead = (messageId: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    modifyMessage({ messageId, removeLabelIds: ["UNREAD"] });
-  };
-
   const handleStar = (messageId: string, isStarred: boolean, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -196,12 +188,12 @@ const GmailSection = ({ messages, unreadCount, isConnected, isLoading }: GmailSe
 
   // Section Header
   const SectionHeader = () => (
-    <div className="flex items-center justify-between mb-2">
-      <div className="flex items-center gap-2">
-        <Mail className="h-4 w-4 text-red-400" />
-        <span className="text-xs font-medium">Gmail</span>
+    <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center gap-2.5">
+        <Mail className="h-5 w-5 text-red-400" />
+        <span className="text-sm font-semibold">Gmail</span>
         {unreadCount > 0 && (
-          <span className="text-[10px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded-full font-medium">
+          <span className="text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full font-medium">
             {unreadCount} unread
           </span>
         )}
@@ -211,10 +203,10 @@ const GmailSection = ({ messages, unreadCount, isConnected, isLoading }: GmailSe
           href="https://mail.google.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
+          className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors"
         >
           View all
-          <ExternalLink className="h-2.5 w-2.5" />
+          <ExternalLink className="h-3 w-3" />
         </a>
       )}
     </div>
@@ -225,18 +217,18 @@ const GmailSection = ({ messages, unreadCount, isConnected, isLoading }: GmailSe
     return (
       <div>
         <SectionHeader />
-        <div className="flex flex-col items-center justify-center py-4 bg-red-500/5 rounded-lg border border-red-500/10">
-          <div className="h-8 w-8 rounded-full bg-red-500/10 flex items-center justify-center mb-2">
-            <Mail className="h-4 w-4 text-red-400" />
+        <div className="flex flex-col items-center justify-center py-6 bg-red-500/5 rounded-xl border border-red-500/10">
+          <div className="h-10 w-10 rounded-full bg-red-500/10 flex items-center justify-center mb-3">
+            <Mail className="h-5 w-5 text-red-400" />
           </div>
-          <p className="text-xs text-muted-foreground text-center mb-2">
+          <p className="text-sm text-muted-foreground text-center mb-3">
             Connect Gmail to see your inbox
           </p>
           <Button 
             size="sm" 
             onClick={() => connectGmail()} 
             disabled={isConnecting}
-            className="bg-red-500 hover:bg-red-600 text-white h-7 text-xs"
+            className="bg-red-500 hover:bg-red-600 text-white h-9 text-sm px-4"
           >
             {isConnecting ? "Connecting..." : "Connect Gmail"}
           </Button>
@@ -252,11 +244,11 @@ const GmailSection = ({ messages, unreadCount, isConnected, isLoading }: GmailSe
         <SectionHeader />
         <div className="space-y-2">
           {[1, 2, 3].map(i => (
-            <div key={i} className="flex gap-2.5 p-2 bg-muted/30 rounded-lg">
-              <Skeleton className="h-8 w-8 rounded-full flex-shrink-0" />
-              <div className="flex-1 space-y-1.5">
-                <Skeleton className="h-3 w-24" />
-                <Skeleton className="h-3 w-full" />
+            <div key={i} className="flex gap-3 p-3 bg-muted/30 rounded-xl">
+              <Skeleton className="h-10 w-10 rounded-full flex-shrink-0" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-4 w-28" />
+                <Skeleton className="h-4 w-full" />
               </div>
             </div>
           ))}
@@ -270,9 +262,9 @@ const GmailSection = ({ messages, unreadCount, isConnected, isLoading }: GmailSe
     return (
       <div>
         <SectionHeader />
-        <div className="flex flex-col items-center justify-center py-4 bg-muted/20 rounded-lg">
-          <Inbox className="h-6 w-6 text-muted-foreground mb-1" />
-          <p className="text-xs text-muted-foreground">No new emails</p>
+        <div className="flex flex-col items-center justify-center py-6 bg-muted/20 rounded-xl">
+          <Inbox className="h-8 w-8 text-muted-foreground mb-2" />
+          <p className="text-sm text-muted-foreground">No new emails</p>
         </div>
       </div>
     );
@@ -282,7 +274,7 @@ const GmailSection = ({ messages, unreadCount, isConnected, isLoading }: GmailSe
   return (
     <div>
       <SectionHeader />
-      <div className="space-y-1">
+      <div className="space-y-2">
         {messages.map((message) => (
           <a
             key={message.id}
@@ -290,19 +282,19 @@ const GmailSection = ({ messages, unreadCount, isConnected, isLoading }: GmailSe
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              "relative flex items-start gap-2 p-2 rounded-lg transition-all group",
+              "relative flex items-start gap-3 p-3 rounded-xl transition-all group",
               "hover:bg-muted/50 border border-transparent hover:border-border/50",
               message.isUnread && "bg-red-500/5 border-red-500/10"
             )}
           >
             {/* Unread indicator */}
             {message.isUnread && (
-              <div className="absolute left-0.5 top-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-red-500" />
+              <div className="absolute left-1 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-red-500" />
             )}
             
             {/* Avatar */}
             <div className={cn(
-              "w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-semibold",
+              "w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-semibold",
               message.isUnread 
                 ? "bg-red-500/20 text-red-400" 
                 : "bg-muted text-muted-foreground"
@@ -314,17 +306,17 @@ const GmailSection = ({ messages, unreadCount, isConnected, isLoading }: GmailSe
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between gap-2">
                 <span className={cn(
-                  "text-xs truncate",
+                  "text-sm truncate",
                   message.isUnread ? "font-semibold text-foreground" : "text-muted-foreground"
                 )}>
                   {message.from.name || message.from.email}
                 </span>
-                <span className="text-[10px] text-muted-foreground flex-shrink-0">
+                <span className="text-xs text-muted-foreground flex-shrink-0">
                   {formatRelativeTime(new Date(message.date))}
                 </span>
               </div>
               <p className={cn(
-                "text-[11px] truncate mt-0.5",
+                "text-sm truncate mt-0.5",
                 message.isUnread ? "text-foreground/80" : "text-muted-foreground"
               )}>
                 {message.subject || "(No subject)"}
@@ -332,14 +324,14 @@ const GmailSection = ({ messages, unreadCount, isConnected, isLoading }: GmailSe
             </div>
             
             {/* Actions */}
-            <div className="flex items-center gap-0.5 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
               <button 
                 onClick={(e) => handleStar(message.id, message.isStarred, e)} 
-                className="p-1 hover:bg-muted rounded transition-colors"
+                className="p-1.5 hover:bg-muted rounded-lg transition-colors"
                 title={message.isStarred ? "Unstar" : "Star"}
               >
                 <Star className={cn(
-                  "h-3 w-3 transition-colors",
+                  "h-4 w-4 transition-colors",
                   message.isStarred ? "fill-amber-400 text-amber-400" : "text-muted-foreground hover:text-amber-400"
                 )} />
               </button>
@@ -365,13 +357,13 @@ const CalendarSection = ({ events, isConnected, isLoading }: CalendarSectionProp
   // Get meeting type icon
   const getMeetingIcon = (event: any) => {
     if (event.hangoutLink || event.location?.toLowerCase().includes('zoom') || event.location?.toLowerCase().includes('meet')) {
-      return <Video className="h-3 w-3 text-blue-400" />;
+      return <Video className="h-3.5 w-3.5 text-blue-400" />;
     }
     if (event.location?.toLowerCase().includes('call') || event.location?.toLowerCase().includes('phone')) {
-      return <Phone className="h-3 w-3 text-green-400" />;
+      return <Phone className="h-3.5 w-3.5 text-green-400" />;
     }
     if (event.location) {
-      return <MapPin className="h-3 w-3 text-orange-400" />;
+      return <MapPin className="h-3.5 w-3.5 text-orange-400" />;
     }
     return null;
   };
@@ -397,12 +389,12 @@ const CalendarSection = ({ events, isConnected, isLoading }: CalendarSectionProp
 
   // Section Header
   const SectionHeader = () => (
-    <div className="flex items-center justify-between mb-2">
-      <div className="flex items-center gap-2">
-        <Calendar className="h-4 w-4 text-blue-400" />
-        <span className="text-xs font-medium">Today's Calendar</span>
+    <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center gap-2.5">
+        <Calendar className="h-5 w-5 text-blue-400" />
+        <span className="text-sm font-semibold">Today's Calendar</span>
         {events.length > 0 && (
-          <span className="text-[10px] bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded-full font-medium">
+          <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full font-medium">
             {events.length}
           </span>
         )}
@@ -412,10 +404,10 @@ const CalendarSection = ({ events, isConnected, isLoading }: CalendarSectionProp
           href="https://calendar.google.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[10px] text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
+          className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors"
         >
           View all
-          <ExternalLink className="h-2.5 w-2.5" />
+          <ExternalLink className="h-3 w-3" />
         </a>
       )}
     </div>
@@ -426,18 +418,18 @@ const CalendarSection = ({ events, isConnected, isLoading }: CalendarSectionProp
     return (
       <div>
         <SectionHeader />
-        <div className="flex flex-col items-center justify-center py-4 bg-blue-500/5 rounded-lg border border-blue-500/10">
-          <div className="h-8 w-8 rounded-full bg-blue-500/10 flex items-center justify-center mb-2">
-            <Calendar className="h-4 w-4 text-blue-400" />
+        <div className="flex flex-col items-center justify-center py-6 bg-blue-500/5 rounded-xl border border-blue-500/10">
+          <div className="h-10 w-10 rounded-full bg-blue-500/10 flex items-center justify-center mb-3">
+            <Calendar className="h-5 w-5 text-blue-400" />
           </div>
-          <p className="text-xs text-muted-foreground text-center mb-2">
+          <p className="text-sm text-muted-foreground text-center mb-3">
             Connect Calendar to see events
           </p>
           <Button 
             size="sm" 
             onClick={() => connectGoogle()} 
             disabled={isConnecting}
-            className="bg-blue-500 hover:bg-blue-600 text-white h-7 text-xs"
+            className="bg-blue-500 hover:bg-blue-600 text-white h-9 text-sm px-4"
           >
             {isConnecting ? "Connecting..." : "Connect Calendar"}
           </Button>
@@ -453,7 +445,7 @@ const CalendarSection = ({ events, isConnected, isLoading }: CalendarSectionProp
         <SectionHeader />
         <div className="space-y-2">
           {[1, 2, 3].map(i => (
-            <Skeleton key={i} className="h-14 w-full rounded-lg" />
+            <Skeleton key={i} className="h-16 w-full rounded-xl" />
           ))}
         </div>
       </div>
@@ -465,10 +457,10 @@ const CalendarSection = ({ events, isConnected, isLoading }: CalendarSectionProp
     return (
       <div>
         <SectionHeader />
-        <div className="flex flex-col items-center justify-center py-4 bg-muted/20 rounded-lg">
-          <Clock className="h-6 w-6 text-muted-foreground mb-1" />
-          <p className="text-xs text-muted-foreground">No events today</p>
-          <p className="text-[10px] text-muted-foreground/70 mt-0.5">
+        <div className="flex flex-col items-center justify-center py-6 bg-muted/20 rounded-xl">
+          <Clock className="h-8 w-8 text-muted-foreground mb-2" />
+          <p className="text-sm text-muted-foreground">No events today</p>
+          <p className="text-xs text-muted-foreground/70 mt-1">
             {format(today, "EEEE, MMMM d")}
           </p>
         </div>
@@ -480,7 +472,7 @@ const CalendarSection = ({ events, isConnected, isLoading }: CalendarSectionProp
   return (
     <div>
       <SectionHeader />
-      <div className="space-y-1.5">
+      <div className="space-y-2">
         {events.map((event) => {
           const eventUrl = event.htmlLink || `https://calendar.google.com/calendar/u/0/r/eventedit/${event.id}`;
           const startTime = new Date(event.start_time);
@@ -494,27 +486,27 @@ const CalendarSection = ({ events, isConnected, isLoading }: CalendarSectionProp
               target="_blank"
               rel="noopener noreferrer"
               className={cn(
-                "block p-2.5 rounded-lg border transition-all hover:shadow-sm",
+                "block p-3 rounded-xl border transition-all hover:shadow-sm",
                 isPast 
                   ? "bg-muted/30 border-border/30 opacity-60" 
                   : "bg-blue-500/5 border-blue-500/10 hover:bg-blue-500/10"
               )}
             >
-              <div className="flex items-start gap-2">
+              <div className="flex items-start gap-3">
                 {/* Color bar */}
-                <div className={cn("w-1 h-full min-h-[2rem] rounded-full flex-shrink-0", getEventColor(event))} />
+                <div className={cn("w-1 h-full min-h-[2.5rem] rounded-full flex-shrink-0", getEventColor(event))} />
                 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   <p className={cn(
-                    "text-xs font-medium truncate",
+                    "text-sm font-medium truncate",
                     isPast ? "text-muted-foreground" : "text-foreground"
                   )}>
                     {event.title}
                   </p>
-                  <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                  <div className="flex items-center gap-3 mt-1 flex-wrap">
                     <span className={cn(
-                      "text-[10px] font-medium",
+                      "text-xs font-medium",
                       isPast ? "text-muted-foreground" : "text-blue-400"
                     )}>
                       {event.all_day 
@@ -525,14 +517,14 @@ const CalendarSection = ({ events, isConnected, isLoading }: CalendarSectionProp
                       }
                     </span>
                     {event.location && (
-                      <div className="flex items-center gap-1 text-[10px] text-muted-foreground truncate max-w-[120px]">
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground truncate max-w-[140px]">
                         {getMeetingIcon(event)}
                         <span className="truncate">{event.location}</span>
                       </div>
                     )}
                     {!event.location && event.hangoutLink && (
-                      <div className="flex items-center gap-1 text-[10px] text-blue-400">
-                        <Video className="h-3 w-3" />
+                      <div className="flex items-center gap-1.5 text-xs text-blue-400">
+                        <Video className="h-3.5 w-3.5" />
                         <span>Google Meet</span>
                       </div>
                     )}
