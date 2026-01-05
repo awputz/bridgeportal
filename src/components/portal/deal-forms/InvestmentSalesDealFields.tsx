@@ -21,6 +21,9 @@ interface InvestmentSalesData {
   due_diligence_deadline?: string;
   property_type?: string;
   zoning?: string;
+  property_condition?: string;
+  ideal_close_date?: string;
+  referral_source?: string;
 }
 
 interface InvestmentSalesDealFieldsProps {
@@ -44,6 +47,14 @@ const propertyTypes = [
   { value: "land", label: "Land" },
   { value: "hotel", label: "Hotel" },
   { value: "special-purpose", label: "Special Purpose" },
+];
+
+const propertyConditions = [
+  { value: "distressed", label: "Distressed" },
+  { value: "value-add", label: "Value Add" },
+  { value: "core", label: "Core" },
+  { value: "core-plus", label: "Core+" },
+  { value: "opportunistic", label: "Opportunistic" },
 ];
 
 const financingTypes = [
@@ -118,6 +129,24 @@ export const InvestmentSalesDealFields = ({ data, onChange }: InvestmentSalesDea
                   {buildingClasses.map((cls) => (
                     <SelectItem key={cls.value} value={cls.value}>
                       {cls.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Property Condition</Label>
+              <Select
+                value={data.property_condition || ""}
+                onValueChange={(v) => onChange({ property_condition: v })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select condition" />
+                </SelectTrigger>
+                <SelectContent>
+                  {propertyConditions.map((cond) => (
+                    <SelectItem key={cond.value} value={cond.value}>
+                      {cond.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -298,12 +327,33 @@ export const InvestmentSalesDealFields = ({ data, onChange }: InvestmentSalesDea
               />
             </div>
             <div className="space-y-2">
+              <Label htmlFor="ideal_close_date">Ideal Close Date</Label>
+              <Input
+                id="ideal_close_date"
+                type="date"
+                value={data.ideal_close_date || ""}
+                onChange={(e) => onChange({ ideal_close_date: e.target.value })}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
               <Label htmlFor="due_diligence_deadline">Due Diligence Deadline</Label>
               <Input
                 id="due_diligence_deadline"
                 type="date"
                 value={data.due_diligence_deadline || ""}
                 onChange={(e) => onChange({ due_diligence_deadline: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="referral_source">Referral Source</Label>
+              <Input
+                id="referral_source"
+                value={data.referral_source || ""}
+                onChange={(e) => onChange({ referral_source: e.target.value })}
+                placeholder="Who referred this deal?"
               />
             </div>
           </div>

@@ -4,6 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Home, DollarSign, Calendar, Users } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ResidentialData {
   bedrooms?: string;
@@ -18,6 +19,8 @@ interface ResidentialData {
   co_broke_percent?: string;
   gross_sf?: string;
   property_type?: string;
+  deal_category?: string;
+  referral_source?: string;
 }
 
 interface ResidentialDealFieldsProps {
@@ -65,7 +68,14 @@ const leaseLengths = [
 ];
 
 export const ResidentialDealFields = ({ data, onChange }: ResidentialDealFieldsProps) => {
-  const isRental = data.is_rental ?? false;
+  const isRental = data.is_rental ?? (data.deal_category === "rental");
+
+  const handleTransactionChange = (rental: boolean) => {
+    onChange({ 
+      is_rental: rental, 
+      deal_category: rental ? "rental" : "sale" 
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -79,22 +89,30 @@ export const ResidentialDealFields = ({ data, onChange }: ResidentialDealFieldsP
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex gap-4">
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="is_sale"
-                checked={!isRental}
-                onCheckedChange={() => onChange({ is_rental: false })}
-              />
-              <Label htmlFor="is_sale" className="font-normal">Sale</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="is_rental"
-                checked={isRental}
-                onCheckedChange={() => onChange({ is_rental: true })}
-              />
-              <Label htmlFor="is_rental" className="font-normal">Rental</Label>
-            </div>
+            <button
+              type="button"
+              onClick={() => handleTransactionChange(false)}
+              className={cn(
+                "flex-1 py-3 px-4 rounded-lg border-2 transition-all text-center font-medium",
+                !isRental 
+                  ? "border-pink-500 bg-pink-500/10 text-pink-400" 
+                  : "border-white/10 bg-white/5 text-muted-foreground hover:border-white/20"
+              )}
+            >
+              Sale
+            </button>
+            <button
+              type="button"
+              onClick={() => handleTransactionChange(true)}
+              className={cn(
+                "flex-1 py-3 px-4 rounded-lg border-2 transition-all text-center font-medium",
+                isRental 
+                  ? "border-green-500 bg-green-500/10 text-green-400" 
+                  : "border-white/10 bg-white/5 text-muted-foreground hover:border-white/20"
+              )}
+            >
+              Rental
+            </button>
           </div>
         </CardContent>
       </Card>
@@ -279,26 +297,37 @@ export const ResidentialDealFields = ({ data, onChange }: ResidentialDealFieldsP
         </Card>
       )}
 
-      {/* Co-Broke */}
+      {/* Co-Broke & Referral */}
       <Card className="glass-card border-white/10">
         <CardHeader className="pb-4">
           <CardTitle className="flex items-center gap-2 text-base font-light">
             <Calendar className="h-4 w-4" />
-            Commission
+            Commission & Referral
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="co_broke_percent">Co-Broke Split (%)</Label>
-            <Input
-              id="co_broke_percent"
-              type="number"
-              step="0.1"
-              value={data.co_broke_percent || ""}
-              onChange={(e) => onChange({ co_broke_percent: e.target.value })}
-              placeholder="50"
-            />
-            <p className="text-xs text-muted-foreground">Percentage of commission shared with co-broker</p>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="co_broke_percent">Co-Broke Split (%)</Label>
+              <Input
+                id="co_broke_percent"
+                type="number"
+                step="0.1"
+                value={data.co_broke_percent || ""}
+                onChange={(e) => onChange({ co_broke_percent: e.target.value })}
+                placeholder="50"
+              />
+              <p className="text-xs text-muted-foreground">Percentage of commission shared with co-broker</p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="referral_source">Referral Source</Label>
+              <Input
+                id="referral_source"
+                value={data.referral_source || ""}
+                onChange={(e) => onChange({ referral_source: e.target.value })}
+                placeholder="Who referred this deal?"
+              />
+            </div>
           </div>
         </CardContent>
       </Card>
