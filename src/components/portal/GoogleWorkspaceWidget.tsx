@@ -30,7 +30,7 @@ export const GoogleWorkspaceWidget = () => {
   const { data: gmailConnection } = useGmailConnection();
   const { data: messagesData } = useGmailMessages({
     labelIds: ["INBOX"],
-    maxResults: 4,
+    maxResults: 3,
     enabled: gmailConnection?.isConnected ?? false,
   });
   
@@ -52,27 +52,27 @@ export const GoogleWorkspaceWidget = () => {
 
   return (
     <Card className="glass-card overflow-hidden">
-      <CardHeader className="pb-3 pt-4">
+      <CardHeader className="pb-2 pt-3">
         <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500/20 via-red-500/20 to-yellow-500/20 flex items-center justify-center">
-              <img src="/google-brandmark.png" alt="Google" className="h-5 w-5" />
+          <div className="flex items-center gap-2">
+            <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-blue-500/20 via-red-500/20 to-yellow-500/20 flex items-center justify-center">
+              <img src="/google-brandmark.png" alt="Google" className="h-4 w-4" />
             </div>
-            <span className="text-base font-semibold">Google Workspace</span>
+            <span className="text-sm font-semibold">Google Workspace</span>
           </div>
           <Link 
             to="/portal/settings/google-services" 
-            className="p-1.5 rounded-md hover:bg-muted/50 transition-colors"
+            className="p-1 rounded-md hover:bg-muted/50 transition-colors"
             title="Google Services Settings"
           >
-            <Settings className="h-4 w-4 text-muted-foreground" />
+            <Settings className="h-3.5 w-3.5 text-muted-foreground" />
           </Link>
         </CardTitle>
       </CardHeader>
 
       <CardContent className="pt-0 pb-0">
         <Tabs defaultValue="gmail" className="w-full">
-          <TabsList className="w-full grid grid-cols-2 bg-muted/30 mb-3">
+          <TabsList className="w-full grid grid-cols-2 bg-muted/30 mb-2 h-8">
             <TabsTrigger 
               value="gmail" 
               className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm"
@@ -117,7 +117,7 @@ const GmailSection = () => {
   const { data: connection, isLoading: isLoadingConnection } = useGmailConnection();
   const { data: messagesData, isLoading: isLoadingMessages } = useGmailMessages({
     labelIds: ["INBOX"],
-    maxResults: 4,
+    maxResults: 3,
     enabled: connection?.isConnected ?? false,
   });
   const { mutate: connectGmail, isPending: isConnecting } = useConnectGmail();
@@ -145,18 +145,18 @@ const GmailSection = () => {
   // Not connected state
   if (!connection?.isConnected && !isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center py-8 px-4">
-        <div className="h-14 w-14 rounded-full bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center mb-4">
-          <Mail className="h-7 w-7 text-red-400" />
+      <div className="flex flex-col items-center justify-center py-5 px-4">
+        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center mb-3">
+          <Mail className="h-5 w-5 text-red-400" />
         </div>
-        <p className="text-sm text-muted-foreground text-center mb-4">
+        <p className="text-xs text-muted-foreground text-center mb-3">
           Connect Gmail to preview your inbox
         </p>
         <Button 
           size="sm" 
           onClick={() => connectGmail()} 
           disabled={isConnecting}
-          className="bg-red-500 hover:bg-red-600 text-white"
+          className="bg-red-500 hover:bg-red-600 text-white h-7 text-xs"
         >
           {isConnecting ? "Connecting..." : "Connect Gmail"}
         </Button>
@@ -188,11 +188,11 @@ const GmailSection = () => {
   // Empty state
   if (messages.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-8">
-        <div className="h-12 w-12 rounded-full bg-muted/50 flex items-center justify-center mb-3">
-          <Inbox className="h-6 w-6 text-muted-foreground" />
+      <div className="flex flex-col items-center justify-center py-5">
+        <div className="h-8 w-8 rounded-full bg-muted/50 flex items-center justify-center mb-2">
+          <Inbox className="h-4 w-4 text-muted-foreground" />
         </div>
-        <p className="text-sm text-muted-foreground">Your inbox is empty</p>
+        <p className="text-xs text-muted-foreground">Your inbox is empty</p>
         <FooterLink href="https://mail.google.com" label="Open Gmail" />
       </div>
     );
@@ -201,7 +201,7 @@ const GmailSection = () => {
   // Messages list
   return (
     <div>
-      <ScrollArea className="h-[180px]">
+      <ScrollArea className="h-[130px]">
         <div className="space-y-1 pr-2">
           {messages.map((message) => (
             <a
@@ -292,23 +292,23 @@ const CalendarSection = () => {
   const todaysEvents = [...companyEvents, ...googleEvents]
     .filter(event => isSameDay(new Date(event.start_time), today))
     .sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
-    .slice(0, 4);
+    .slice(0, 3);
 
   // Not connected state
   if (!isConnected && !isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center py-8 px-4">
-        <div className="h-14 w-14 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center mb-4">
-          <Calendar className="h-7 w-7 text-blue-400" />
+      <div className="flex flex-col items-center justify-center py-5 px-4">
+        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center mb-3">
+          <Calendar className="h-5 w-5 text-blue-400" />
         </div>
-        <p className="text-sm text-muted-foreground text-center mb-4">
+        <p className="text-xs text-muted-foreground text-center mb-3">
           Connect Calendar to see today's events
         </p>
         <Button 
           size="sm" 
           onClick={() => connectGoogle()} 
           disabled={isConnecting}
-          className="bg-blue-500 hover:bg-blue-600 text-white"
+          className="bg-blue-500 hover:bg-blue-600 text-white h-7 text-xs"
         >
           {isConnecting ? "Connecting..." : "Connect Calendar"}
         </Button>
@@ -334,12 +334,12 @@ const CalendarSection = () => {
   // Empty state
   if (todaysEvents.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-8">
-        <div className="h-12 w-12 rounded-full bg-muted/50 flex items-center justify-center mb-3">
-          <Clock className="h-6 w-6 text-muted-foreground" />
+      <div className="flex flex-col items-center justify-center py-5">
+        <div className="h-8 w-8 rounded-full bg-muted/50 flex items-center justify-center mb-2">
+          <Clock className="h-4 w-4 text-muted-foreground" />
         </div>
-        <p className="text-sm text-muted-foreground">No events today</p>
-        <p className="text-xs text-muted-foreground/70 mt-1">
+        <p className="text-xs text-muted-foreground">No events today</p>
+        <p className="text-[10px] text-muted-foreground/70 mt-0.5">
           {format(today, "EEEE, MMMM d")}
         </p>
         <FooterLink href="https://calendar.google.com" label="Open Calendar" />
@@ -394,9 +394,9 @@ const FooterLink = ({ href, label }: { href: string; label: string }) => (
     href={href}
     target="_blank"
     rel="noopener noreferrer"
-    className="flex items-center justify-center gap-2 text-xs text-muted-foreground hover:text-foreground py-3 mt-3 border-t border-border/30 hover:bg-muted/30 transition-colors rounded-b-lg -mx-1"
+    className="flex items-center justify-center gap-1.5 text-[10px] text-muted-foreground hover:text-foreground py-2 mt-2 border-t border-border/30 hover:bg-muted/30 transition-colors rounded-b-lg -mx-1"
   >
     {label}
-    <ExternalLink className="h-3 w-3" />
+    <ExternalLink className="h-2.5 w-2.5" />
   </a>
 );
