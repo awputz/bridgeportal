@@ -24,7 +24,7 @@ export const useCurrentAgent = () => {
         .from('profiles')
         .select('full_name, email, phone')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
 
       const email = profile?.email || user.email || '';
       const fullName = profile?.full_name || '';
@@ -38,7 +38,7 @@ export const useCurrentAgent = () => {
         .select('name, title, category, image_url, phone')
         .eq('email', email)
         .eq('is_active', true)
-        .single();
+        .maybeSingle();
 
       return {
         id: user.id,

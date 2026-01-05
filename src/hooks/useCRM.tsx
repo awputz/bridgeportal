@@ -208,7 +208,7 @@ const checkIsAdmin = async (userId: string): Promise<boolean> => {
     .from("user_roles")
     .select("role")
     .eq("user_id", userId)
-    .single();
+    .maybeSingle();
   return data?.role === "admin";
 };
 
@@ -252,10 +252,10 @@ export const useCRMContact = (id: string) => {
         .from("crm_contacts")
         .select("*")
         .eq("id", id)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
-      return data as CRMContact;
+      return data as CRMContact | null;
     },
     enabled: !!id,
   });
@@ -381,10 +381,10 @@ export const useCRMDeal = (id: string) => {
           stage:crm_deal_stages(*)
         `)
         .eq("id", id)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
-      return data as CRMDeal;
+      return data as CRMDeal | null;
     },
     enabled: !!id,
   });
