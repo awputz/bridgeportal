@@ -516,10 +516,9 @@ const Contacts = () => {
   };
 
   // Render contact card (used in both grid and grouped views)
+  // Ultra-compact single-row design for efficient scanning
   const renderContactCard = (contact: CRMContact) => {
-    const DivIcon = getDivisionIcon(contact.division);
-    
-    // Mobile-optimized card - compact
+    // Mobile: compact single-row card
     if (isMobile) {
       return (
         <div
@@ -528,59 +527,55 @@ const Contacts = () => {
           tabIndex={0}
           onClick={() => handleContactClick(contact)}
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleContactClick(contact); }}
-          className="glass-card p-4 hover:bg-white/5 transition-colors group text-left w-full cursor-pointer hover:!translate-y-0 hover:!scale-100"
+          className="glass-card px-3 py-2 hover:bg-white/5 transition-colors group text-left w-full cursor-pointer flex items-center gap-2.5"
         >
-          <div className="flex items-center gap-3">
-            <Avatar className="h-11 w-11 shrink-0">
-              <AvatarFallback className="bg-primary/20 text-primary text-sm font-medium">
-                {getInitials(contact.full_name)}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <h3 className="font-medium text-foreground truncate text-sm">{contact.full_name}</h3>
-              {contact.company && (
-                <p className="text-xs text-muted-foreground truncate">{contact.company}</p>
-              )}
-              <div className="flex items-center gap-1.5 mt-1">
-                <Badge variant="outline" className={cn("text-[10px] px-1.5 py-0", getTypeColor(contact.contact_type))}>
-                  {contact.contact_type}
-                </Badge>
-                {contact.source === "google-contacts" && (
-                  <Cloud className="h-3 w-3 text-blue-400" />
-                )}
-              </div>
-            </div>
-            {/* Quick action buttons */}
-            <div className="flex flex-col gap-1 shrink-0">
-              {contact.phone && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    window.location.href = `tel:${contact.phone}`;
-                  }}
-                  className="p-1.5 rounded-lg bg-green-500/10 text-green-400 hover:bg-green-500/20"
-                >
-                  <Phone className="h-3.5 w-3.5" />
-                </button>
-              )}
-              {contact.email && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    window.location.href = `mailto:${contact.email}`;
-                  }}
-                  className="p-1.5 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20"
-                >
-                  <Mail className="h-3.5 w-3.5" />
-                </button>
-              )}
-            </div>
+          <Avatar className="h-8 w-8 shrink-0">
+            <AvatarFallback className="bg-primary/20 text-primary text-xs font-medium">
+              {getInitials(contact.full_name)}
+            </AvatarFallback>
+          </Avatar>
+          
+          <div className="flex-1 min-w-0 flex items-center gap-1.5">
+            <span className="font-medium text-sm truncate">{contact.full_name}</span>
+            {contact.company && (
+              <span className="text-xs text-muted-foreground truncate hidden xs:inline">· {contact.company}</span>
+            )}
+          </div>
+          
+          <Badge variant="outline" className={cn("text-[10px] px-1.5 py-0 shrink-0", getTypeColor(contact.contact_type))}>
+            {contact.contact_type}
+          </Badge>
+          
+          {/* Quick actions - inline */}
+          <div className="flex items-center gap-0.5 shrink-0">
+            {contact.phone && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.location.href = `tel:${contact.phone}`;
+                }}
+                className="p-1.5 rounded-md text-muted-foreground hover:text-green-400 hover:bg-green-500/10"
+              >
+                <Phone className="h-3.5 w-3.5" />
+              </button>
+            )}
+            {contact.email && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.location.href = `mailto:${contact.email}`;
+                }}
+                className="p-1.5 rounded-md text-muted-foreground hover:text-blue-400 hover:bg-blue-500/10"
+              >
+                <Mail className="h-3.5 w-3.5" />
+              </button>
+            )}
           </div>
         </div>
       );
     }
     
-    // Desktop card - compact density
+    // Desktop: ultra-compact single-row card
     return (
       <div
         key={contact.id}
@@ -588,64 +583,64 @@ const Contacts = () => {
         tabIndex={0}
         onClick={() => handleContactClick(contact)}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleContactClick(contact); }}
-        className="glass-card p-4 hover:bg-white/5 transition-colors group text-left w-full cursor-pointer hover:!translate-y-0 hover:!scale-100"
+        className="glass-card px-3 py-2 hover:bg-white/5 transition-colors group text-left w-full cursor-pointer flex items-center gap-3"
       >
-        <div className="flex items-start justify-between mb-3">
-          <Avatar className="h-11 w-11">
-            <AvatarFallback className="bg-primary/20 text-primary text-sm font-medium">
-              {getInitials(contact.full_name)}
-            </AvatarFallback>
-          </Avatar>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button 
-                className="p-1 rounded-lg hover:bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleContactClick(contact); }}>
-                View Details
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem 
-                className="text-destructive"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteContact(contact.id);
-                }}
-              >
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <Avatar className="h-8 w-8 shrink-0">
+          <AvatarFallback className="bg-primary/20 text-primary text-xs font-medium">
+            {getInitials(contact.full_name)}
+          </AvatarFallback>
+        </Avatar>
+        
+        <div className="flex-1 min-w-0 flex items-center gap-2">
+          <span className="font-medium text-sm truncate">{contact.full_name}</span>
+          {contact.company && (
+            <>
+              <span className="text-muted-foreground hidden lg:inline">·</span>
+              <span className="text-sm text-muted-foreground truncate hidden lg:inline">{contact.company}</span>
+            </>
+          )}
         </div>
-
-        <h3 className="font-medium text-foreground mb-0.5 truncate">{contact.full_name}</h3>
-        {contact.company && (
-          <p className="text-sm text-muted-foreground mb-2 truncate">{contact.company}</p>
+        
+        <Badge variant="outline" className={cn("text-[10px] px-1.5 py-0 shrink-0", getTypeColor(contact.contact_type))}>
+          {contact.contact_type}
+        </Badge>
+        
+        {contact.source === "google-contacts" && (
+          <Cloud className="h-3.5 w-3.5 text-blue-400 shrink-0" />
         )}
-
-        <div className="flex items-center gap-2 mb-3">
-          <Badge variant="outline" className={cn("text-xs", getTypeColor(contact.contact_type))}>
-            {contact.contact_type}
-          </Badge>
-          {contact.source === "google-contacts" && (
-            <Cloud className="h-3.5 w-3.5 text-blue-400" />
-          )}
+        
+        {/* Contact indicators - always visible */}
+        <div className="flex items-center gap-1 shrink-0">
+          {contact.email && <Mail className="h-3.5 w-3.5 text-muted-foreground" />}
+          {contact.phone && <Phone className="h-3.5 w-3.5 text-muted-foreground" />}
         </div>
-
-        {/* Quick contact icons - subtle, appear on hover */}
-        <div className="flex items-center gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
-          {contact.email && (
-            <Mail className="h-3.5 w-3.5 text-muted-foreground" />
-          )}
-          {contact.phone && (
-            <Phone className="h-3.5 w-3.5 text-muted-foreground" />
-          )}
-        </div>
+        
+        {/* Actions dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button 
+              className="p-1 rounded-md hover:bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); handleContactClick(contact); }}>
+              View Details
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem 
+              className="text-destructive"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteContact(contact.id);
+              }}
+            >
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     );
   };
@@ -959,9 +954,9 @@ const Contacts = () => {
 
         {/* Contacts Grid/List */}
         {isLoading ? (
-          <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" : "space-y-2"}>
-            {[...Array(6)].map((_, i) => (
-              <Skeleton key={i} className={viewMode === "grid" ? "h-36" : "h-14"} />
+          <div className="flex flex-col gap-1.5">
+            {[...Array(12)].map((_, i) => (
+              <Skeleton key={i} className="h-11" />
             ))}
           </div>
         ) : filteredContacts.length === 0 ? (
@@ -981,30 +976,24 @@ const Contacts = () => {
             )}
           </div>
         ) : viewMode === "grid" && sortField === "name" && groupedContacts ? (
-          // Grouped alphabetical view - compact
-          <div className="space-y-6">
+          // Grouped alphabetical view - ultra-compact
+          <div className="space-y-4">
             {Array.from(groupedContacts.entries()).map(([letter, contacts]) => (
               <div 
                 key={letter} 
                 ref={(el) => { if (el) letterRefs.current.set(letter, el); }}
               >
-                <div className="sticky top-0 bg-background/90 backdrop-blur-sm z-10 py-2 mb-2 border-b border-border/30">
-                  <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{letter}</span>
+                <div className="sticky top-0 bg-background/90 backdrop-blur-sm z-10 py-1.5 mb-1.5 border-b border-border/30">
+                  <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">{letter}</span>
                 </div>
-                <div className={cn(
-                  "grid gap-3",
-                  isMobile ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-3"
-                )}>
+                <div className="flex flex-col gap-1.5">
                   {contacts.map(renderContactCard)}
                 </div>
               </div>
             ))}
           </div>
         ) : viewMode === "grid" ? (
-          <div className={cn(
-            "grid gap-3",
-            isMobile ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-          )}>
+          <div className="flex flex-col gap-1.5">
             {filteredContacts.map(renderContactCard)}
           </div>
         ) : (
@@ -1028,10 +1017,10 @@ const Contacts = () => {
                     className="group cursor-pointer"
                     onClick={() => handleContactClick(contact)}
                   >
-                    <TableCell className="py-3">
-                      <div className="flex items-center gap-2.5 hover:text-primary">
-                        <Avatar className="h-8 w-8">
-                          <AvatarFallback className="bg-primary/20 text-primary text-xs">
+                    <TableCell className="py-2">
+                      <div className="flex items-center gap-2 hover:text-primary">
+                        <Avatar className="h-7 w-7">
+                          <AvatarFallback className="bg-primary/20 text-primary text-[10px]">
                             {getInitials(contact.full_name)}
                           </AvatarFallback>
                         </Avatar>
