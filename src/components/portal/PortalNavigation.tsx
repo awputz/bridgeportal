@@ -20,7 +20,9 @@ import {
   Settings,
   Shield,
   Search,
-  ClipboardList
+  ClipboardList,
+  FileText,
+  Table
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -38,11 +40,14 @@ import { NotificationCenter } from "./NotificationCenter";
 import { useUserProfile } from "@/hooks/useGoogleServices";
 import { useAuth } from "@/contexts/AuthContext";
 
-// Google items - All open externally
+// Google items - All open externally (expanded list for grid)
 const googleItems = [
-  { name: "Mail", path: "https://mail.google.com", icon: Mail, external: true },
-  { name: "Calendar", path: "https://calendar.google.com", icon: Calendar, external: true },
-  { name: "Drive", path: "https://drive.google.com", icon: FolderOpen, external: true },
+  { name: "Gmail", path: "https://mail.google.com", icon: Mail },
+  { name: "Calendar", path: "https://calendar.google.com", icon: Calendar },
+  { name: "Drive", path: "https://drive.google.com", icon: FolderOpen },
+  { name: "Docs", path: "https://docs.google.com", icon: FileText },
+  { name: "Sheets", path: "https://sheets.google.com", icon: Table },
+  { name: "Contacts", path: "https://contacts.google.com", icon: Users },
 ];
 
 // Essentials items
@@ -154,57 +159,6 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                 Dashboard
               </Link>
 
-              {/* Google Dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className={cn(
-                    "flex items-center gap-1.5 text-[15px] font-light transition-all duration-200 hover:scale-105",
-                    isGoogleActive ? "text-foreground" : "text-foreground/70 hover:text-foreground"
-                  )}>
-                    <Mail className="h-4 w-4" />
-                    Google
-                    <ChevronDown className="h-3 w-3 opacity-60" />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="center" className="w-44 bg-background/95 backdrop-blur-xl border-border">
-                  {googleItems.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = !item.external && (location.pathname === item.path || location.pathname.startsWith(item.path + '/'));
-                    
-                    if (item.external) {
-                      return (
-                        <DropdownMenuItem key={item.name} asChild>
-                          <a 
-                            href={item.path}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 cursor-pointer"
-                          >
-                            <Icon className="h-4 w-4" />
-                            {item.name}
-                          </a>
-                        </DropdownMenuItem>
-                      );
-                    }
-                    
-                    return (
-                      <DropdownMenuItem key={item.name} asChild>
-                        <Link 
-                          to={item.path} 
-                          className={cn(
-                            "flex items-center gap-2 cursor-pointer",
-                            isActive && "bg-accent"
-                          )}
-                        >
-                          <Icon className="h-4 w-4" />
-                          {item.name}
-                        </Link>
-                      </DropdownMenuItem>
-                    );
-                  })}
-                </DropdownMenuContent>
-              </DropdownMenu>
-
               {/* Essentials Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -286,6 +240,38 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                 <span className="hidden xl:inline">Search...</span>
                 <kbd className="hidden xl:inline ml-1 px-1.5 py-0.5 rounded text-xs bg-background border border-border">⌘K</kbd>
               </button>
+              {/* Google Apps Launcher */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="p-2 rounded-full hover:bg-muted/50 transition-colors">
+                    <img 
+                      src="/google-brandmark.png" 
+                      alt="Google Apps" 
+                      className="h-6 w-6"
+                    />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-[220px] p-3 bg-background/95 backdrop-blur-xl border-border">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider mb-3 px-1">Google Apps</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {googleItems.map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <a
+                          key={item.name}
+                          href={item.path}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex flex-col items-center gap-1.5 p-2 rounded-lg hover:bg-muted/50 transition-colors group"
+                        >
+                          <Icon className="h-5 w-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                          <span className="text-[10px] text-muted-foreground group-hover:text-foreground transition-colors">{item.name}</span>
+                        </a>
+                      );
+                    })}
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <NotificationCenter />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -389,13 +375,11 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                   Dashboard
                 </Link>
 
-                {/* Google Section */}
-                <div className="text-xs text-muted-foreground uppercase tracking-wider px-4 mb-2 mt-6">Google</div>
-                {googleItems.map((item, index) => {
-                  const Icon = item.icon;
-                  const isActive = !item.external && (location.pathname === item.path || location.pathname.startsWith(item.path + '/'));
-                  
-                  if (item.external) {
+                {/* Google Section - Touch-friendly Grid */}
+                <div className="text-xs text-muted-foreground uppercase tracking-wider px-4 mb-3 mt-6">Google Apps</div>
+                <div className="grid grid-cols-3 gap-2 px-2 -mx-2">
+                  {googleItems.map((item, index) => {
+                    const Icon = item.icon;
                     return (
                       <a
                         key={item.name}
@@ -403,36 +387,19 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                         target="_blank"
                         rel="noopener noreferrer"
                         className={cn(
-                          "flex items-center gap-4 text-lg font-light transition-all duration-300 py-4 min-h-[56px] active:bg-white/5 rounded-lg px-4 -mx-2",
+                          "flex flex-col items-center justify-center gap-2 py-4 min-h-[72px] rounded-xl active:bg-white/10 transition-all duration-300",
                           "text-foreground/70 hover:text-foreground",
-                          isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                          isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
                         )}
                         style={{ transitionDelay: `${(index + 1) * 50}ms` }}
                         onClick={() => setIsOpen(false)}
                       >
-                        <Icon className="h-5 w-5" />
-                        {item.name}
+                        <Icon className="h-6 w-6" />
+                        <span className="text-xs">{item.name}</span>
                       </a>
                     );
-                  }
-                  
-                  return (
-                    <Link
-                      key={item.name}
-                      to={item.path}
-                      className={cn(
-                        "flex items-center gap-4 text-lg font-light transition-all duration-300 py-4 min-h-[56px] active:bg-white/5 rounded-lg px-4 -mx-2",
-                        isActive ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
-                        isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
-                      )}
-                      style={{ transitionDelay: `${(index + 1) * 50}ms` }}
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <Icon className="h-5 w-5" />
-                      {item.name}
-                    </Link>
-                  );
-                })}
+                  })}
+                </div>
 
                 {/* Essentials Section */}
                 <div className="text-xs text-muted-foreground uppercase tracking-wider px-4 mb-2 mt-6">Essentials</div>
