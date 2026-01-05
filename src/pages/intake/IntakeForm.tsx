@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -10,7 +10,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useIntakeLinkByCode, useCreateIntakeSubmission } from "@/hooks/useIntake";
 import { cn } from "@/lib/utils";
@@ -31,7 +30,6 @@ const divisions = [
 
 export default function IntakeForm() {
   const { linkCode } = useParams<{ linkCode: string }>();
-  const navigate = useNavigate();
   const [selectedDivision, setSelectedDivision] = useState<string | null>(null);
   const [step, setStep] = useState<"division" | "info" | "criteria" | "success">("division");
   const [criteria, setCriteria] = useState<Record<string, unknown>>({});
@@ -136,7 +134,7 @@ export default function IntakeForm() {
             alt="Bridge" 
             className="h-14 mx-auto mb-6"
           />
-          <h1 className="text-3xl font-semibold tracking-tight">{link.name}</h1>
+          <h1 className="text-3xl font-semibold tracking-tight">Client Intake Form</h1>
           <p className="text-muted-foreground mt-2 text-base">Tell us what you're looking for</p>
         </div>
 
@@ -343,12 +341,12 @@ function InvestmentSalesCriteria({
   };
 
   return (
-    <div className="space-y-4">
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          <Label>Budget Range</Label>
+    <div className="space-y-6">
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div className="space-y-2.5">
+          <Label className="text-sm font-medium">Budget Range</Label>
           <Select onValueChange={(v) => update("budget_range", v)}>
-            <SelectTrigger>
+            <SelectTrigger className="h-11">
               <SelectValue placeholder="Select range" />
             </SelectTrigger>
             <SelectContent>
@@ -361,10 +359,10 @@ function InvestmentSalesCriteria({
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-2">
-          <Label>Target Cap Rate</Label>
+        <div className="space-y-2.5">
+          <Label className="text-sm font-medium">Target Cap Rate</Label>
           <Select onValueChange={(v) => update("target_cap_rate", v)}>
-            <SelectTrigger>
+            <SelectTrigger className="h-11">
               <SelectValue placeholder="Select cap rate" />
             </SelectTrigger>
             <SelectContent>
@@ -378,11 +376,11 @@ function InvestmentSalesCriteria({
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label>Property Types (select all that apply)</Label>
-        <div className="grid grid-cols-2 gap-2">
+      <div className="space-y-2.5">
+        <Label className="text-sm font-medium">Property Types (select all that apply)</Label>
+        <div className="grid grid-cols-2 gap-3">
           {["Multifamily", "Mixed-Use", "Office", "Retail", "Industrial", "Development Site"].map((type) => (
-            <label key={type} className="flex items-center gap-2 p-2 rounded border border-border hover:bg-accent/50 cursor-pointer">
+            <label key={type} className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-accent/50 cursor-pointer transition-colors">
               <Checkbox 
                 onCheckedChange={(checked) => {
                   const types = (criteria.property_types as string[]) || [];
@@ -393,17 +391,17 @@ function InvestmentSalesCriteria({
                   }
                 }}
               />
-              <span className="text-sm">{type}</span>
+              <span className="text-sm font-medium">{type}</span>
             </label>
           ))}
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label>Target Boroughs/Areas</Label>
-        <div className="grid grid-cols-3 gap-2">
+      <div className="space-y-2.5">
+        <Label className="text-sm font-medium">Target Boroughs/Areas</Label>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {["Manhattan", "Brooklyn", "Queens", "Bronx", "Staten Island", "Westchester"].map((area) => (
-            <label key={area} className="flex items-center gap-2 p-2 rounded border border-border hover:bg-accent/50 cursor-pointer">
+            <label key={area} className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-accent/50 cursor-pointer transition-colors">
               <Checkbox 
                 onCheckedChange={(checked) => {
                   const areas = (criteria.target_areas as string[]) || [];
@@ -414,56 +412,36 @@ function InvestmentSalesCriteria({
                   }
                 }}
               />
-              <span className="text-sm">{area}</span>
+              <span className="text-sm font-medium">{area}</span>
             </label>
           ))}
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          <Label>Minimum Units</Label>
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div className="space-y-2.5">
+          <Label className="text-sm font-medium">Minimum Units</Label>
           <Input 
             type="number" 
             placeholder="e.g., 10"
+            className="h-11"
             onChange={(e) => update("min_units", e.target.value)}
           />
         </div>
-        <div className="space-y-2">
-          <Label>Timeline</Label>
+        <div className="space-y-2.5">
+          <Label className="text-sm font-medium">Timeline</Label>
           <Select onValueChange={(v) => update("timeline", v)}>
-            <SelectTrigger>
-              <SelectValue placeholder="When looking to close?" />
+            <SelectTrigger className="h-11">
+              <SelectValue placeholder="Select timeline" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="asap">ASAP</SelectItem>
-              <SelectItem value="1-3-months">1-3 Months</SelectItem>
-              <SelectItem value="3-6-months">3-6 Months</SelectItem>
-              <SelectItem value="6-12-months">6-12 Months</SelectItem>
-              <SelectItem value="exploring">Just Exploring</SelectItem>
+              <SelectItem value="immediate">Immediate (0-3 months)</SelectItem>
+              <SelectItem value="near-term">Near-term (3-6 months)</SelectItem>
+              <SelectItem value="mid-term">Mid-term (6-12 months)</SelectItem>
+              <SelectItem value="long-term">Long-term (12+ months)</SelectItem>
             </SelectContent>
           </Select>
         </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label>1031 Exchange?</Label>
-        <RadioGroup onValueChange={(v) => update("is_1031", v)}>
-          <div className="flex gap-4">
-            <label className="flex items-center gap-2">
-              <RadioGroupItem value="yes" />
-              <span>Yes</span>
-            </label>
-            <label className="flex items-center gap-2">
-              <RadioGroupItem value="no" />
-              <span>No</span>
-            </label>
-            <label className="flex items-center gap-2">
-              <RadioGroupItem value="maybe" />
-              <span>Maybe</span>
-            </label>
-          </div>
-        </RadioGroup>
       </div>
     </div>
   );
@@ -482,119 +460,108 @@ function CommercialLeasingCriteria({
   };
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <Label>Space Type</Label>
-        <Select onValueChange={(v) => update("space_type", v)}>
-          <SelectTrigger>
-            <SelectValue placeholder="What type of space?" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="office">Office</SelectItem>
-            <SelectItem value="retail">Retail</SelectItem>
-            <SelectItem value="flex">Flex/Creative</SelectItem>
-            <SelectItem value="medical">Medical</SelectItem>
-            <SelectItem value="restaurant">Restaurant</SelectItem>
-            <SelectItem value="industrial">Industrial/Warehouse</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          <Label>Minimum SF</Label>
-          <Input 
-            type="number" 
-            placeholder="e.g., 1000"
-            onChange={(e) => update("min_sf", e.target.value)}
-          />
+    <div className="space-y-6">
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div className="space-y-2.5">
+          <Label className="text-sm font-medium">Space Type</Label>
+          <Select onValueChange={(v) => update("space_type", v)}>
+            <SelectTrigger className="h-11">
+              <SelectValue placeholder="Select type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="office">Office</SelectItem>
+              <SelectItem value="retail">Retail</SelectItem>
+              <SelectItem value="industrial">Industrial/Warehouse</SelectItem>
+              <SelectItem value="flex">Flex Space</SelectItem>
+              <SelectItem value="medical">Medical/Healthcare</SelectItem>
+              <SelectItem value="restaurant">Restaurant</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-        <div className="space-y-2">
-          <Label>Maximum SF</Label>
-          <Input 
-            type="number" 
-            placeholder="e.g., 5000"
-            onChange={(e) => update("max_sf", e.target.value)}
-          />
-        </div>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          <Label>Budget (per SF/year)</Label>
-          <Select onValueChange={(v) => update("budget_psf", v)}>
-            <SelectTrigger>
+        <div className="space-y-2.5">
+          <Label className="text-sm font-medium">Square Footage Needed</Label>
+          <Select onValueChange={(v) => update("sf_range", v)}>
+            <SelectTrigger className="h-11">
               <SelectValue placeholder="Select range" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="under-50">Under $50 PSF</SelectItem>
-              <SelectItem value="50-75">$50 - $75 PSF</SelectItem>
-              <SelectItem value="75-100">$75 - $100 PSF</SelectItem>
-              <SelectItem value="100-150">$100 - $150 PSF</SelectItem>
-              <SelectItem value="150-plus">$150+ PSF</SelectItem>
+              <SelectItem value="under-1000">Under 1,000 SF</SelectItem>
+              <SelectItem value="1000-2500">1,000 - 2,500 SF</SelectItem>
+              <SelectItem value="2500-5000">2,500 - 5,000 SF</SelectItem>
+              <SelectItem value="5000-10000">5,000 - 10,000 SF</SelectItem>
+              <SelectItem value="10000-25000">10,000 - 25,000 SF</SelectItem>
+              <SelectItem value="over-25000">25,000+ SF</SelectItem>
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-2">
-          <Label>Lease Term</Label>
-          <Select onValueChange={(v) => update("lease_term", v)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Preferred term" />
+      </div>
+
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div className="space-y-2.5">
+          <Label className="text-sm font-medium">Budget ($/SF/Year)</Label>
+          <Select onValueChange={(v) => update("budget_psf", v)}>
+            <SelectTrigger className="h-11">
+              <SelectValue placeholder="Select budget" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="1-3">1-3 Years</SelectItem>
-              <SelectItem value="3-5">3-5 Years</SelectItem>
-              <SelectItem value="5-10">5-10 Years</SelectItem>
-              <SelectItem value="10-plus">10+ Years</SelectItem>
-              <SelectItem value="flexible">Flexible</SelectItem>
+              <SelectItem value="under-30">Under $30/SF</SelectItem>
+              <SelectItem value="30-50">$30 - $50/SF</SelectItem>
+              <SelectItem value="50-75">$50 - $75/SF</SelectItem>
+              <SelectItem value="75-100">$75 - $100/SF</SelectItem>
+              <SelectItem value="over-100">$100+/SF</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-2.5">
+          <Label className="text-sm font-medium">Lease Term</Label>
+          <Select onValueChange={(v) => update("lease_term", v)}>
+            <SelectTrigger className="h-11">
+              <SelectValue placeholder="Select term" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1-2">1-2 years</SelectItem>
+              <SelectItem value="3-5">3-5 years</SelectItem>
+              <SelectItem value="5-10">5-10 years</SelectItem>
+              <SelectItem value="10-plus">10+ years</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label>Preferred Neighborhoods</Label>
-        <Textarea 
-          placeholder="e.g., Midtown, FiDi, Tribeca..."
-          onChange={(e) => update("neighborhoods", e.target.value)}
-          rows={2}
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label>Timeline</Label>
-        <Select onValueChange={(v) => update("timeline", v)}>
-          <SelectTrigger>
-            <SelectValue placeholder="When do you need space?" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="immediate">Immediately</SelectItem>
-            <SelectItem value="1-3-months">1-3 Months</SelectItem>
-            <SelectItem value="3-6-months">3-6 Months</SelectItem>
-            <SelectItem value="6-plus-months">6+ Months</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="space-y-2">
-        <Label>Special Requirements</Label>
-        <div className="grid grid-cols-2 gap-2">
-          {["Ground Floor", "Outdoor Space", "High Ceilings", "Signage", "Venting/Exhaust", "Loading Dock"].map((req) => (
-            <label key={req} className="flex items-center gap-2 p-2 rounded border border-border hover:bg-accent/50 cursor-pointer">
+      <div className="space-y-2.5">
+        <Label className="text-sm font-medium">Preferred Neighborhoods</Label>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {["Midtown", "FiDi", "SoHo", "Chelsea", "Williamsburg", "DUMBO", "LIC", "Other"].map((area) => (
+            <label key={area} className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-accent/50 cursor-pointer transition-colors">
               <Checkbox 
                 onCheckedChange={(checked) => {
-                  const reqs = (criteria.special_requirements as string[]) || [];
+                  const areas = (criteria.neighborhoods as string[]) || [];
                   if (checked) {
-                    update("special_requirements", [...reqs, req]);
+                    update("neighborhoods", [...areas, area]);
                   } else {
-                    update("special_requirements", reqs.filter((r) => r !== req));
+                    update("neighborhoods", areas.filter((a) => a !== area));
                   }
                 }}
               />
-              <span className="text-sm">{req}</span>
+              <span className="text-sm font-medium">{area}</span>
             </label>
           ))}
         </div>
+      </div>
+
+      <div className="space-y-2.5">
+        <Label className="text-sm font-medium">Timeline</Label>
+        <Select onValueChange={(v) => update("timeline", v)}>
+          <SelectTrigger className="h-11">
+            <SelectValue placeholder="Select timeline" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="immediate">Immediate (0-3 months)</SelectItem>
+            <SelectItem value="near-term">Near-term (3-6 months)</SelectItem>
+            <SelectItem value="mid-term">Mid-term (6-12 months)</SelectItem>
+            <SelectItem value="flexible">Flexible</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
@@ -613,77 +580,44 @@ function ResidentialCriteria({
   };
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <Label>Are you looking to...</Label>
-        <RadioGroup onValueChange={(v) => update("intent", v)}>
-          <div className="flex gap-4">
-            <label className="flex items-center gap-2">
-              <RadioGroupItem value="rent" />
-              <span>Rent</span>
-            </label>
-            <label className="flex items-center gap-2">
-              <RadioGroupItem value="buy" />
-              <span>Buy</span>
-            </label>
-            <label className="flex items-center gap-2">
-              <RadioGroupItem value="both" />
-              <span>Either</span>
-            </label>
-          </div>
-        </RadioGroup>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          <Label>Budget</Label>
-          <Select onValueChange={(v) => update("budget", v)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select range" />
+    <div className="space-y-6">
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div className="space-y-2.5">
+          <Label className="text-sm font-medium">Looking to</Label>
+          <Select onValueChange={(v) => update("transaction_type", v)}>
+            <SelectTrigger className="h-11">
+              <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
-              {criteria.intent === "buy" ? (
-                <>
-                  <SelectItem value="under-500k">Under $500K</SelectItem>
-                  <SelectItem value="500k-1m">$500K - $1M</SelectItem>
-                  <SelectItem value="1m-2m">$1M - $2M</SelectItem>
-                  <SelectItem value="2m-5m">$2M - $5M</SelectItem>
-                  <SelectItem value="5m-plus">$5M+</SelectItem>
-                </>
-              ) : (
-                <>
-                  <SelectItem value="under-2500">Under $2,500/mo</SelectItem>
-                  <SelectItem value="2500-4000">$2,500 - $4,000/mo</SelectItem>
-                  <SelectItem value="4000-6000">$4,000 - $6,000/mo</SelectItem>
-                  <SelectItem value="6000-10000">$6,000 - $10,000/mo</SelectItem>
-                  <SelectItem value="10000-plus">$10,000+/mo</SelectItem>
-                </>
-              )}
+              <SelectItem value="rent">Rent</SelectItem>
+              <SelectItem value="buy">Buy</SelectItem>
+              <SelectItem value="both">Both</SelectItem>
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-2">
-          <Label>Move-in Date</Label>
-          <Select onValueChange={(v) => update("move_in", v)}>
-            <SelectTrigger>
-              <SelectValue placeholder="When?" />
+        <div className="space-y-2.5">
+          <Label className="text-sm font-medium">Property Type</Label>
+          <Select onValueChange={(v) => update("property_type", v)}>
+            <SelectTrigger className="h-11">
+              <SelectValue placeholder="Select type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="asap">ASAP</SelectItem>
-              <SelectItem value="1-month">Within 1 Month</SelectItem>
-              <SelectItem value="1-3-months">1-3 Months</SelectItem>
-              <SelectItem value="3-plus-months">3+ Months</SelectItem>
-              <SelectItem value="flexible">Flexible</SelectItem>
+              <SelectItem value="apartment">Apartment</SelectItem>
+              <SelectItem value="condo">Condo</SelectItem>
+              <SelectItem value="coop">Co-op</SelectItem>
+              <SelectItem value="townhouse">Townhouse</SelectItem>
+              <SelectItem value="house">House</SelectItem>
+              <SelectItem value="loft">Loft</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          <Label>Bedrooms</Label>
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div className="space-y-2.5">
+          <Label className="text-sm font-medium">Bedrooms</Label>
           <Select onValueChange={(v) => update("bedrooms", v)}>
-            <SelectTrigger>
+            <SelectTrigger className="h-11">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
@@ -695,10 +629,10 @@ function ResidentialCriteria({
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-2">
-          <Label>Bathrooms</Label>
+        <div className="space-y-2.5">
+          <Label className="text-sm font-medium">Bathrooms</Label>
           <Select onValueChange={(v) => update("bathrooms", v)}>
-            <SelectTrigger>
+            <SelectTrigger className="h-11">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
@@ -711,58 +645,80 @@ function ResidentialCriteria({
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label>Preferred Neighborhoods</Label>
-        <Textarea 
-          placeholder="e.g., Upper East Side, Williamsburg, Park Slope..."
-          onChange={(e) => update("neighborhoods", e.target.value)}
-          rows={2}
-        />
+      <div className="space-y-2.5">
+        <Label className="text-sm font-medium">Budget</Label>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Input 
+            type="text" 
+            placeholder="Min (e.g., $3,000 or $500,000)"
+            className="h-11"
+            onChange={(e) => update("budget_min", e.target.value)}
+          />
+          <Input 
+            type="text" 
+            placeholder="Max (e.g., $5,000 or $1,000,000)"
+            className="h-11"
+            onChange={(e) => update("budget_max", e.target.value)}
+          />
+        </div>
       </div>
 
-      <div className="space-y-2">
-        <Label>Must-Have Amenities</Label>
-        <div className="grid grid-cols-2 gap-2">
-          {["Doorman", "Laundry In-Unit", "Dishwasher", "Outdoor Space", "Gym", "Pet Friendly", "Parking", "Central AC"].map((amenity) => (
-            <label key={amenity} className="flex items-center gap-2 p-2 rounded border border-border hover:bg-accent/50 cursor-pointer">
+      <div className="space-y-2.5">
+        <Label className="text-sm font-medium">Preferred Neighborhoods</Label>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {["Manhattan", "Brooklyn", "Queens", "Hoboken", "Jersey City", "Other"].map((area) => (
+            <label key={area} className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-accent/50 cursor-pointer transition-colors">
               <Checkbox 
                 onCheckedChange={(checked) => {
-                  const amenities = (criteria.amenities as string[]) || [];
+                  const areas = (criteria.neighborhoods as string[]) || [];
                   if (checked) {
-                    update("amenities", [...amenities, amenity]);
+                    update("neighborhoods", [...areas, area]);
                   } else {
-                    update("amenities", amenities.filter((a) => a !== amenity));
+                    update("neighborhoods", areas.filter((a) => a !== area));
                   }
                 }}
               />
-              <span className="text-sm">{amenity}</span>
+              <span className="text-sm font-medium">{area}</span>
             </label>
           ))}
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label>Do you have pets?</Label>
-        <RadioGroup onValueChange={(v) => update("has_pets", v)}>
-          <div className="flex gap-4">
-            <label className="flex items-center gap-2">
-              <RadioGroupItem value="no" />
-              <span>No</span>
+      <div className="space-y-2.5">
+        <Label className="text-sm font-medium">Move-in Timeline</Label>
+        <Select onValueChange={(v) => update("timeline", v)}>
+          <SelectTrigger className="h-11">
+            <SelectValue placeholder="Select timeline" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="asap">ASAP</SelectItem>
+            <SelectItem value="1-month">Within 1 month</SelectItem>
+            <SelectItem value="1-3-months">1-3 months</SelectItem>
+            <SelectItem value="3-6-months">3-6 months</SelectItem>
+            <SelectItem value="flexible">Flexible</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2.5">
+        <Label className="text-sm font-medium">Must-Haves (select all that apply)</Label>
+        <div className="grid grid-cols-2 gap-3">
+          {["In-unit laundry", "Doorman", "Gym", "Outdoor space", "Pet-friendly", "Parking", "Dishwasher", "Central AC"].map((feature) => (
+            <label key={feature} className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-accent/50 cursor-pointer transition-colors">
+              <Checkbox 
+                onCheckedChange={(checked) => {
+                  const features = (criteria.must_haves as string[]) || [];
+                  if (checked) {
+                    update("must_haves", [...features, feature]);
+                  } else {
+                    update("must_haves", features.filter((f) => f !== feature));
+                  }
+                }}
+              />
+              <span className="text-sm font-medium">{feature}</span>
             </label>
-            <label className="flex items-center gap-2">
-              <RadioGroupItem value="dog" />
-              <span>Dog</span>
-            </label>
-            <label className="flex items-center gap-2">
-              <RadioGroupItem value="cat" />
-              <span>Cat</span>
-            </label>
-            <label className="flex items-center gap-2">
-              <RadioGroupItem value="both" />
-              <span>Both</span>
-            </label>
-          </div>
-        </RadioGroup>
+          ))}
+        </div>
       </div>
     </div>
   );

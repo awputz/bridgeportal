@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { 
-  Plus, 
-  Link as LinkIcon, 
   Copy, 
   Users, 
   Calendar,
@@ -15,12 +13,13 @@ import {
   Mail,
   Phone,
   ExternalLink,
-  FileText
+  FileText,
+  Link as LinkIcon,
+  Check
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -28,7 +27,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Table,
@@ -37,18 +35,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { 
-  useIntakeLinks, 
+  useMyIntakeLink,
   useIntakeSubmissions, 
   useIntakeStats,
-  useCreateIntakeLink,
-  useDeleteIntakeLink,
   useUpdateSubmission,
   useConvertToContact,
   IntakeSubmission 
@@ -56,8 +50,6 @@ import {
 import { cn } from "@/lib/utils";
 import {
   IntakeStatsCard,
-  IntakeLinkCard,
-  IntakeLinkCardSkeleton,
   IntakeFilters,
   IntakeSubmissionRow,
   IntakeSubmissionRowSkeleton,
@@ -78,22 +70,33 @@ const statusColors: Record<string, string> = {
 };
 
 export default function Intake() {
-  const [activeTab, setActiveTab] = useState("submissions");
   const [selectedDivision, setSelectedDivision] = useState<string>("all");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSubmission, setSelectedSubmission] = useState<IntakeSubmission | null>(null);
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-  const { data: links = [], isLoading: linksLoading } = useIntakeLinks();
+  const { data: intakeLink, isLoading: linkLoading } = useMyIntakeLink();
   const { data: submissions = [], isLoading: submissionsLoading } = useIntakeSubmissions({
     division: selectedDivision !== "all" ? selectedDivision : undefined,
     status: selectedStatus !== "all" ? selectedStatus : undefined,
   });
   const { data: stats, isLoading: statsLoading } = useIntakeStats();
-  const deleteLink = useDeleteIntakeLink();
   const updateSubmission = useUpdateSubmission();
   const convertToContact = useConvertToContact();
+
+  // Generate the full intake URL
+  const baseUrl = window.location.origin;
+  const intakeUrl = intakeLink ? `${baseUrl}/intake/${intakeLink.link_code}` : "";
+
+  // Handle copy link
+  const handleCopyLink = async () => {
+    if (!intakeUrl) return;
+    await navigator.clipboard.writeText(intakeUrl);
+    setCopied(true);
+    toast.success("Link copied to clipboard!");
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   // Filter submissions by search
   const filteredSubmissions = submissions.filter(s => 
@@ -104,30 +107,79 @@ export default function Intake() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-        <div className="space-y-1">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
-              <FileText className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight">Client Intake</h1>
-              <p className="text-sm text-muted-foreground">
-                Collect and manage client criteria submissions
-              </p>
-            </div>
+      <div className="space-y-1">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+            <FileText className="h-5 w-5 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Client Intake</h1>
+            <p className="text-sm text-muted-foreground">
+              Collect and manage client criteria submissions
+            </p>
           </div>
         </div>
-        <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-          <DialogTrigger asChild>
-            <Button size="lg" className="shadow-sm">
-              <Plus className="h-4 w-4 mr-2" />
-              Create Link
-            </Button>
-          </DialogTrigger>
-          <CreateLinkDialog onClose={() => setCreateDialogOpen(false)} />
-        </Dialog>
       </div>
+
+      {/* Intake Link Card */}
+      <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+        <CardHeader className="pb-4">
+          <div className="flex items-center gap-2">
+            <LinkIcon className="h-5 w-5 text-primary" />
+            <CardTitle className="text-lg">Your Intake Link</CardTitle>
+          </div>
+          <CardDescription>
+            Share this link with any client. They'll select their sector and submit their requirements directly to your portal.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {linkLoading ? (
+            <div className="space-y-3">
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-10 w-32" />
+            </div>
+          ) : intakeLink ? (
+            <>
+              <div className="flex items-center gap-3 p-4 rounded-lg bg-background border border-border">
+                <div className="flex-1 overflow-hidden">
+                  <p className="font-mono text-sm truncate text-foreground">
+                    {intakeUrl}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <Button 
+                  onClick={handleCopyLink}
+                  size="lg"
+                  className="shadow-sm"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="h-4 w-4 mr-2" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-4 w-4 mr-2" />
+                      Copy Link
+                    </>
+                  )}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  onClick={() => window.open(intakeUrl, '_blank')}
+                >
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Preview Form
+                </Button>
+              </div>
+            </>
+          ) : (
+            <p className="text-sm text-muted-foreground">Unable to load your intake link. Please refresh the page.</p>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Stats Grid */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -155,135 +207,83 @@ export default function Intake() {
         />
       </div>
 
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="bg-muted/50 p-1">
-          <TabsTrigger 
-            value="submissions" 
-            className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
-          >
-            <Users className="h-4 w-4 mr-2" />
-            Submissions
-            {submissions.length > 0 && (
-              <Badge variant="secondary" className="ml-2 h-5 px-1.5 text-xs">
-                {submissions.length}
-              </Badge>
-            )}
-          </TabsTrigger>
-          <TabsTrigger 
-            value="links"
-            className="data-[state=active]:bg-background data-[state=active]:shadow-sm"
-          >
-            <LinkIcon className="h-4 w-4 mr-2" />
-            My Links
-            {links.length > 0 && (
-              <Badge variant="secondary" className="ml-2 h-5 px-1.5 text-xs">
-                {links.length}
-              </Badge>
-            )}
-          </TabsTrigger>
-        </TabsList>
-
-        {/* Submissions Tab */}
-        <TabsContent value="submissions" className="space-y-6 mt-0">
-          {/* Filters */}
-          <IntakeFilters
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            selectedDivision={selectedDivision}
-            onDivisionChange={setSelectedDivision}
-            selectedStatus={selectedStatus}
-            onStatusChange={setSelectedStatus}
-          />
-
-          {/* Submissions Table */}
-          <Card className="overflow-hidden">
-            <CardContent className="p-0">
-              {submissionsLoading ? (
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-muted/30">
-                      <TableHead className="w-[280px]">Client</TableHead>
-                      <TableHead className="w-[180px]">Division</TableHead>
-                      <TableHead className="w-[120px]">Status</TableHead>
-                      <TableHead className="w-[140px] hidden md:table-cell">Submitted</TableHead>
-                      <TableHead className="w-[100px] text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {[...Array(5)].map((_, i) => (
-                      <IntakeSubmissionRowSkeleton key={i} />
-                    ))}
-                  </TableBody>
-                </Table>
-              ) : filteredSubmissions.length === 0 ? (
-                <IntakeEmptyState type="submissions" />
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-muted/30 hover:bg-muted/30">
-                      <TableHead className="w-[280px] font-semibold">Client</TableHead>
-                      <TableHead className="w-[180px] font-semibold">Division</TableHead>
-                      <TableHead className="w-[120px] font-semibold">Status</TableHead>
-                      <TableHead className="w-[140px] font-semibold hidden md:table-cell">Submitted</TableHead>
-                      <TableHead className="w-[100px] text-right font-semibold">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredSubmissions.map((submission) => (
-                      <IntakeSubmissionRow
-                        key={submission.id}
-                        submission={submission}
-                        onView={() => setSelectedSubmission(submission)}
-                        onMarkContacted={() => updateSubmission.mutate({
-                          id: submission.id,
-                          status: "contacted",
-                          contacted_at: new Date().toISOString()
-                        })}
-                        onConvertToContact={() => convertToContact.mutate({
-                          submission,
-                          division: submission.division
-                        })}
-                      />
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Links Tab */}
-        <TabsContent value="links" className="space-y-6 mt-0">
-          {linksLoading ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {[...Array(3)].map((_, i) => (
-                <IntakeLinkCardSkeleton key={i} />
-              ))}
-            </div>
-          ) : links.length === 0 ? (
-            <Card>
-              <CardContent className="p-0">
-                <IntakeEmptyState 
-                  type="links" 
-                  onAction={() => setCreateDialogOpen(true)} 
-                />
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {links.map((link) => (
-                <IntakeLinkCard 
-                  key={link.id} 
-                  link={link}
-                  onDelete={(id) => deleteLink.mutate(id)}
-                  divisionLabel={link.division ? divisionInfo[link.division]?.label : undefined}
-                />
-              ))}
-            </div>
+      {/* Submissions Section */}
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold">Submissions</h2>
+          {submissions.length > 0 && (
+            <Badge variant="secondary" className="text-xs">
+              {submissions.length} total
+            </Badge>
           )}
-        </TabsContent>
-      </Tabs>
+        </div>
+
+        {/* Filters */}
+        <IntakeFilters
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          selectedDivision={selectedDivision}
+          onDivisionChange={setSelectedDivision}
+          selectedStatus={selectedStatus}
+          onStatusChange={setSelectedStatus}
+        />
+
+        {/* Submissions Table */}
+        <Card className="overflow-hidden">
+          <CardContent className="p-0">
+            {submissionsLoading ? (
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted/30">
+                    <TableHead className="w-[280px]">Client</TableHead>
+                    <TableHead className="w-[180px]">Division</TableHead>
+                    <TableHead className="w-[120px]">Status</TableHead>
+                    <TableHead className="w-[140px] hidden md:table-cell">Submitted</TableHead>
+                    <TableHead className="w-[100px] text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {[...Array(5)].map((_, i) => (
+                    <IntakeSubmissionRowSkeleton key={i} />
+                  ))}
+                </TableBody>
+              </Table>
+            ) : filteredSubmissions.length === 0 ? (
+              <IntakeEmptyState type="submissions" />
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted/30 hover:bg-muted/30">
+                    <TableHead className="w-[280px] font-semibold">Client</TableHead>
+                    <TableHead className="w-[180px] font-semibold">Division</TableHead>
+                    <TableHead className="w-[120px] font-semibold">Status</TableHead>
+                    <TableHead className="w-[140px] font-semibold hidden md:table-cell">Submitted</TableHead>
+                    <TableHead className="w-[100px] text-right font-semibold">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredSubmissions.map((submission) => (
+                    <IntakeSubmissionRow
+                      key={submission.id}
+                      submission={submission}
+                      onView={() => setSelectedSubmission(submission)}
+                      onMarkContacted={() => updateSubmission.mutate({
+                        id: submission.id,
+                        status: "contacted",
+                        contacted_at: new Date().toISOString()
+                      })}
+                      onConvertToContact={() => convertToContact.mutate({
+                        submission,
+                        division: submission.division
+                      })}
+                    />
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Submission Detail Dialog */}
       {selectedSubmission && (
@@ -293,91 +293,6 @@ export default function Intake() {
         />
       )}
     </div>
-  );
-}
-
-// Create Link Dialog
-function CreateLinkDialog({ onClose }: { onClose: () => void }) {
-  const [name, setName] = useState("");
-  const [division, setDivision] = useState<string>("");
-  const createLink = useCreateIntakeLink();
-  
-  const baseUrl = window.location.origin;
-  const previewCode = "preview-code";
-
-  const handleCreate = async () => {
-    if (!name.trim()) {
-      toast.error("Please enter a link name");
-      return;
-    }
-    await createLink.mutateAsync({ 
-      name: name.trim(), 
-      division: division || undefined 
-    });
-    onClose();
-  };
-
-  return (
-    <DialogContent className="sm:max-w-md">
-      <DialogHeader>
-        <DialogTitle>Create Intake Link</DialogTitle>
-        <DialogDescription>
-          Create a shareable link for clients to submit their criteria
-        </DialogDescription>
-      </DialogHeader>
-      <div className="space-y-6 py-4">
-        <div className="space-y-2">
-          <Label htmlFor="name">Link Name</Label>
-          <Input 
-            id="name"
-            placeholder="e.g., Q1 Buyer Leads"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="bg-background"
-          />
-          <p className="text-xs text-muted-foreground">
-            Give this link a descriptive name to track its purpose
-          </p>
-        </div>
-        
-        <div className="space-y-2">
-          <Label>Lock to Division (optional)</Label>
-          <Select value={division} onValueChange={setDivision}>
-            <SelectTrigger className="bg-background">
-              <SelectValue placeholder="All divisions" />
-            </SelectTrigger>
-            <SelectContent className="bg-popover">
-              <SelectItem value="">All divisions</SelectItem>
-              <SelectItem value="investment-sales">Investment Sales</SelectItem>
-              <SelectItem value="commercial-leasing">Commercial Leasing</SelectItem>
-              <SelectItem value="residential">Residential</SelectItem>
-            </SelectContent>
-          </Select>
-          <p className="text-xs text-muted-foreground">
-            If locked, clients won't be able to choose a different division
-          </p>
-        </div>
-
-        {/* Preview */}
-        {name && (
-          <div className="space-y-2">
-            <Label className="text-muted-foreground">Link Preview</Label>
-            <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border">
-              <LinkIcon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-              <span className="text-sm font-mono text-muted-foreground truncate">
-                {baseUrl}/intake/{previewCode}
-              </span>
-            </div>
-          </div>
-        )}
-      </div>
-      <DialogFooter className="gap-2 sm:gap-0">
-        <Button variant="outline" onClick={onClose}>Cancel</Button>
-        <Button onClick={handleCreate} disabled={createLink.isPending}>
-          {createLink.isPending ? "Creating..." : "Create Link"}
-        </Button>
-      </DialogFooter>
-    </DialogContent>
   );
 }
 

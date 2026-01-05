@@ -45,23 +45,51 @@ const generateLinkCode = () => {
   return code;
 };
 
-// Fetch agent's intake links
-export const useIntakeLinks = () => {
+// Fetch or auto-create the agent's single intake link
+export const useMyIntakeLink = () => {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   
   return useQuery({
-    queryKey: ["intake-links", user?.id],
+    queryKey: ["my-intake-link", user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      // First, try to fetch existing link
+      const { data: existingLink, error: fetchError } = await supabase
         .from("client_intake_links")
         .select("*")
         .eq("agent_id", user!.id)
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: true })
+        .limit(1)
+        .maybeSingle();
 
-      if (error) throw error;
-      return data as IntakeLink[];
+      if (fetchError) throw fetchError;
+
+      // If link exists, return it
+      if (existingLink) {
+        return existingLink as IntakeLink;
+      }
+
+      // Otherwise, create a new one
+      const linkCode = generateLinkCode();
+      const { data: newLink, error: createError } = await supabase
+        .from("client_intake_links")
+        .insert({
+          agent_id: user!.id,
+          link_code: linkCode,
+          name: "Client Intake",
+          division: null,
+          is_active: true,
+          expires_at: null,
+        })
+        .select()
+        .single();
+
+      if (createError) throw createError;
+      
+      return newLink as IntakeLink;
     },
     enabled: !!user,
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
   });
 };
 
@@ -89,82 +117,6 @@ export const useIntakeLinkByCode = (linkCode: string) => {
     },
     enabled: !!linkCode,
     retry: false,
-  });
-};
-
-// Create a new intake link
-export const useCreateIntakeLink = () => {
-  const queryClient = useQueryClient();
-  const { user } = useAuth();
-
-  return useMutation({
-    mutationFn: async (data: { name: string; division?: string; expires_at?: string }) => {
-      const linkCode = generateLinkCode();
-      
-      const { data: newLink, error } = await supabase
-        .from("client_intake_links")
-        .insert({
-          agent_id: user!.id,
-          link_code: linkCode,
-          name: data.name,
-          division: data.division || null,
-          expires_at: data.expires_at || null,
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-      return newLink as IntakeLink;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["intake-links"] });
-      toast.success("Intake link created!");
-    },
-    onError: (error) => {
-      toast.error("Failed to create link: " + error.message);
-    },
-  });
-};
-
-// Update intake link
-export const useUpdateIntakeLink = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ id, ...updates }: Partial<IntakeLink> & { id: string }) => {
-      const { data, error } = await supabase
-        .from("client_intake_links")
-        .update(updates)
-        .eq("id", id)
-        .select()
-        .single();
-
-      if (error) throw error;
-      return data as IntakeLink;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["intake-links"] });
-    },
-  });
-};
-
-// Delete intake link
-export const useDeleteIntakeLink = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase
-        .from("client_intake_links")
-        .delete()
-        .eq("id", id);
-
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["intake-links"] });
-      toast.success("Link deleted");
-    },
   });
 };
 
