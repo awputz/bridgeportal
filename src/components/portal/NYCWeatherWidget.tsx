@@ -180,56 +180,53 @@ export const NYCWeatherWidget = () => {
   );
 
   return (
-    <>
-      {/* Desktop Version */}
-      <Popover open={isOpen} onOpenChange={setIsOpen}>
-        <PopoverTrigger asChild>
-          <button className="hidden md:flex items-center gap-3 px-3 py-2 rounded-lg bg-muted/30 border border-border/30 flex-shrink-0 hover:bg-muted/50 transition-colors cursor-pointer">
-            <span className="text-xs font-medium text-muted-foreground">NYC</span>
-            <div className="flex items-center gap-1.5">
-              {getWeatherIcon(weather.current.condition)}
-              <span className="text-sm font-medium">{weather.current.temperature}°</span>
-            </div>
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <span>H:{weather.today.high}°</span>
-              <span>L:{weather.today.low}°</span>
-            </div>
-            <div className="w-px h-4 bg-border/50" />
-            <span className="text-xs text-muted-foreground tabular-nums">{formattedTime}</span>
-            <div className="flex items-center gap-1.5">
-              <div className={`w-1.5 h-1.5 rounded-full ${isMarketOpen ? 'bg-green-500' : 'bg-muted-foreground/50'}`} />
-              <span className="text-xs text-muted-foreground">
-                {isMarketOpen ? 'Open' : 'Closed'}
-              </span>
-            </div>
-            {isOpen ? <ChevronUp className="h-3 w-3 text-muted-foreground" /> : <ChevronDown className="h-3 w-3 text-muted-foreground" />}
-          </button>
-        </PopoverTrigger>
-        <PopoverContent align="end" className="p-0 bg-popover border border-border shadow-lg z-50">
-          {popoverContent}
-        </PopoverContent>
-      </Popover>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      {/* Desktop Trigger */}
+      <PopoverTrigger asChild>
+        <button className="hidden md:flex items-center gap-3 px-3 py-2 rounded-lg bg-muted/30 border border-border/30 flex-shrink-0 hover:bg-muted/50 transition-colors cursor-pointer">
+          <span className="text-xs font-medium text-muted-foreground">NYC</span>
+          <div className="flex items-center gap-1.5">
+            {getWeatherIcon(weather.current.condition)}
+            <span className="text-sm font-medium">{weather.current.temperature}°</span>
+          </div>
+          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <span>H:{weather.today.high}°</span>
+            <span>L:{weather.today.low}°</span>
+          </div>
+          <div className="w-px h-4 bg-border/50" />
+          <span className="text-xs text-muted-foreground tabular-nums">{formattedTime}</span>
+          <div className="flex items-center gap-1.5">
+            <div className={`w-1.5 h-1.5 rounded-full ${isMarketOpen ? 'bg-green-500' : 'bg-muted-foreground/50'}`} />
+            <span className="text-xs text-muted-foreground">
+              {isMarketOpen ? 'Open' : 'Closed'}
+            </span>
+          </div>
+          {isOpen ? <ChevronUp className="h-3 w-3 text-muted-foreground" /> : <ChevronDown className="h-3 w-3 text-muted-foreground" />}
+        </button>
+      </PopoverTrigger>
 
-      {/* Mobile Version */}
-      <Popover open={isOpen} onOpenChange={setIsOpen}>
-        <PopoverTrigger asChild>
-          <button className="flex md:hidden items-center justify-center gap-3 w-full px-4 py-2.5 rounded-lg bg-muted/30 border border-border/30 hover:bg-muted/50 transition-colors cursor-pointer">
-            <span className="text-xs font-medium text-muted-foreground">NYC</span>
-            <div className="flex items-center gap-1.5">
-              {getWeatherIcon(weather.current.condition)}
-              <span className="text-sm font-medium">{weather.current.temperature}°</span>
-            </div>
-            <span className="text-xs text-muted-foreground">•</span>
-            <span className="text-xs text-muted-foreground">H:{weather.today.high}° L:{weather.today.low}°</span>
-            <span className="text-xs text-muted-foreground">•</span>
-            <span className="text-xs text-muted-foreground tabular-nums">{formattedTime}</span>
-            {isOpen ? <ChevronUp className="h-3.5 w-3.5 text-muted-foreground ml-auto" /> : <ChevronDown className="h-3.5 w-3.5 text-muted-foreground ml-auto" />}
-          </button>
-        </PopoverTrigger>
-        <PopoverContent align="center" className="p-0 w-[calc(100vw-2rem)] max-w-sm bg-popover border border-border shadow-lg z-50">
-          {popoverContent}
-        </PopoverContent>
-      </Popover>
-    </>
+      {/* Mobile Trigger */}
+      <PopoverTrigger asChild>
+        <button className="flex md:hidden items-center justify-center gap-3 w-full px-4 py-2.5 rounded-lg bg-muted/30 border border-border/30 hover:bg-muted/50 transition-colors cursor-pointer">
+          <span className="text-xs font-medium text-muted-foreground">NYC</span>
+          <div className="flex items-center gap-1.5">
+            {getWeatherIcon(weather.current.condition)}
+            <span className="text-sm font-medium">{weather.current.temperature}°</span>
+          </div>
+          <span className="text-xs text-muted-foreground">•</span>
+          <span className="text-xs text-muted-foreground">H:{weather.today.high}° L:{weather.today.low}°</span>
+          <span className="text-xs text-muted-foreground">•</span>
+          <span className="text-xs text-muted-foreground tabular-nums">{formattedTime}</span>
+          {isOpen ? <ChevronUp className="h-3.5 w-3.5 text-muted-foreground ml-auto" /> : <ChevronDown className="h-3.5 w-3.5 text-muted-foreground ml-auto" />}
+        </button>
+      </PopoverTrigger>
+
+      <PopoverContent 
+        align="end" 
+        className="p-0 bg-popover border border-border shadow-lg z-50 w-72"
+      >
+        {popoverContent}
+      </PopoverContent>
+    </Popover>
   );
 };
