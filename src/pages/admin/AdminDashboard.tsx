@@ -95,7 +95,7 @@ const AdminDashboard = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-light text-foreground mb-2">Admin Dashboard</h1>
+          <h1 className="text-3xl font-extralight text-foreground mb-2">Admin Dashboard</h1>
           <p className="text-muted-foreground">Command center for operations management</p>
         </div>
         <Link to="/portal">

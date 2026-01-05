@@ -120,7 +120,7 @@ export default function CRMOverviewAdmin() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">CRM Overview</h1>
+          <h1 className="text-3xl font-extralight text-foreground">CRM Overview</h1>
           <p className="text-muted-foreground mt-1">
             View all agent contacts, deals, and activities
           </p>
@@ -254,7 +254,11 @@ export default function CRMOverviewAdmin() {
                 />
               </div>
               {loadingContacts ? (
-                <div className="text-center py-8 text-muted-foreground">Loading...</div>
+                <div className="space-y-2 py-4">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="h-12 bg-muted/50 rounded animate-pulse" />
+                  ))}
+                </div>
               ) : !filteredContacts?.length ? (
                 <div className="text-center py-8 text-muted-foreground">No contacts found</div>
               ) : (
@@ -325,7 +329,11 @@ export default function CRMOverviewAdmin() {
                 />
               </div>
               {loadingDeals ? (
-                <div className="text-center py-8 text-muted-foreground">Loading...</div>
+                <div className="space-y-2 py-4">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="h-12 bg-muted/50 rounded animate-pulse" />
+                  ))}
+                </div>
               ) : !filteredDeals?.length ? (
                 <div className="text-center py-8 text-muted-foreground">No deals found</div>
               ) : (
@@ -414,7 +422,11 @@ export default function CRMOverviewAdmin() {
                 />
               </div>
               {loadingActivities ? (
-                <div className="text-center py-8 text-muted-foreground">Loading...</div>
+                <div className="space-y-2 py-4">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="h-12 bg-muted/50 rounded animate-pulse" />
+                  ))}
+                </div>
               ) : !filteredActivities?.length ? (
                 <div className="text-center py-8 text-muted-foreground">No activities found</div>
               ) : (
