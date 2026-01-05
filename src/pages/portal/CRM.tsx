@@ -9,7 +9,8 @@ import {
   Store,
   Users,
   BarChart3,
-  Filter,
+  List,
+  Layers,
 } from "lucide-react";
 import { useCRMDeals, useDealStages, useUpdateDeal, useDeleteDeal } from "@/hooks/useCRM";
 import { useCRMRealtime } from "@/hooks/useCRMRealtime";
@@ -27,6 +28,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { CRMTable } from "@/components/portal/CRMTable";
+import { CRMGroupedView } from "@/components/portal/CRMGroupedView";
 import { DealFiltersPanel, DealFilters } from "@/components/portal/DealFiltersPanel";
 import { BulkActionsBar } from "@/components/portal/BulkActionsBar";
 import { PipelineAnalytics } from "@/components/portal/PipelineAnalytics";
@@ -56,10 +58,13 @@ const divisionTabs = [
   },
 ];
 
+type ViewMode = "table" | "grouped";
+
 const CRM = () => {
   const { division, setDivision } = useDivision();
   const [deleteDealId, setDeleteDealId] = useState<string | null>(null);
   const [showAnalytics, setShowAnalytics] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>("table");
   const [selectedDeals, setSelectedDeals] = useState<Set<string>>(new Set());
   const [filters, setFilters] = useState<DealFilters>({
     search: "",
@@ -257,25 +262,45 @@ const CRM = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            {/* View Toggle */}
+            <div className="flex items-center border border-white/10 rounded-lg overflow-hidden">
+              <Button
+                variant={viewMode === "table" ? "default" : "ghost"}
+                size="sm"
+                className="rounded-none h-9 px-3"
+                onClick={() => setViewMode("table")}
+              >
+                <List className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === "grouped" ? "default" : "ghost"}
+                size="sm"
+                className="rounded-none h-9 px-3"
+                onClick={() => setViewMode("grouped")}
+              >
+                <Layers className="h-4 w-4" />
+              </Button>
+            </div>
             <Button 
               variant={showAnalytics ? "default" : "outline"} 
+              size="sm"
               className="gap-2"
               onClick={() => setShowAnalytics(!showAnalytics)}
             >
               <BarChart3 className="h-4 w-4" />
-              Analytics
+              <span className="hidden sm:inline">Analytics</span>
             </Button>
             <Link to="/portal/contacts">
-              <Button variant="outline" className="gap-2">
+              <Button variant="outline" size="sm" className="gap-2">
                 <Users className="h-4 w-4" />
-                Contacts
+                <span className="hidden sm:inline">Contacts</span>
               </Button>
             </Link>
             <Link to="/portal/crm/deals/new">
-              <Button className="gap-2">
+              <Button size="sm" className="gap-2">
                 <Plus className="h-4 w-4" />
-                New Deal
+                <span className="hidden sm:inline">New Deal</span>
               </Button>
             </Link>
           </div>
@@ -376,15 +401,25 @@ const CRM = () => {
           {isLoading ? (
             <Skeleton className="h-96 w-full rounded-xl" />
           ) : stages && filteredDeals && filteredDeals.length > 0 ? (
-            <CRMTable
-              deals={filteredDeals}
-              stages={stages}
-              onStageChange={handleStageChange}
-              onDeleteDeal={handleDeleteDeal}
-              division={division}
-              selectedDeals={selectedDeals}
-              onSelectionChange={handleSelectionChange}
-            />
+            viewMode === "grouped" ? (
+              <CRMGroupedView
+                deals={filteredDeals}
+                stages={stages}
+                onStageChange={handleStageChange}
+                onDeleteDeal={handleDeleteDeal}
+                division={division}
+              />
+            ) : (
+              <CRMTable
+                deals={filteredDeals}
+                stages={stages}
+                onStageChange={handleStageChange}
+                onDeleteDeal={handleDeleteDeal}
+                division={division}
+                selectedDeals={selectedDeals}
+                onSelectionChange={handleSelectionChange}
+              />
+            )
           ) : (
             <div className="text-center py-16 glass-card">
               <Briefcase className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />

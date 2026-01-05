@@ -21,6 +21,9 @@ interface CommercialLeasingData {
   use_clause?: string;
   space_type?: string;
   gross_sf?: string;
+  tenant_business_type?: string;
+  move_in_urgency?: string;
+  referral_source?: string;
 }
 
 interface CommercialLeasingDealFieldsProps {
@@ -45,6 +48,14 @@ const spaceTypes = [
   { value: "medical", label: "Medical" },
   { value: "restaurant", label: "Restaurant" },
   { value: "showroom", label: "Showroom" },
+];
+
+const moveInUrgencyOptions = [
+  { value: "asap", label: "ASAP" },
+  { value: "flexible", label: "Flexible" },
+  { value: "30-days", label: "30 Days" },
+  { value: "60-days", label: "60 Days" },
+  { value: "90-plus", label: "90+ Days" },
 ];
 
 export const CommercialLeasingDealFields = ({ data, onChange }: CommercialLeasingDealFieldsProps) => {
@@ -108,6 +119,36 @@ export const CommercialLeasingDealFields = ({ data, onChange }: CommercialLeasin
                 onChange={(e) => onChange({ gross_sf: e.target.value })}
                 placeholder="0"
               />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="tenant_business_type">Tenant Business Type</Label>
+              <Input
+                id="tenant_business_type"
+                value={data.tenant_business_type || ""}
+                onChange={(e) => onChange({ tenant_business_type: e.target.value })}
+                placeholder="e.g., Pizza Shop, Martial Arts, Sound Studio"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Move-In Urgency</Label>
+              <Select
+                value={data.move_in_urgency || ""}
+                onValueChange={(v) => onChange({ move_in_urgency: v })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select urgency" />
+                </SelectTrigger>
+                <SelectContent>
+                  {moveInUrgencyOptions.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </CardContent>
@@ -278,14 +319,25 @@ export const CommercialLeasingDealFields = ({ data, onChange }: CommercialLeasin
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="landlord_broker">Landlord Broker</Label>
-            <Input
-              id="landlord_broker"
-              value={data.landlord_broker || ""}
-              onChange={(e) => onChange({ landlord_broker: e.target.value })}
-              placeholder="Broker name / company"
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="landlord_broker">Landlord Broker</Label>
+              <Input
+                id="landlord_broker"
+                value={data.landlord_broker || ""}
+                onChange={(e) => onChange({ landlord_broker: e.target.value })}
+                placeholder="Broker name / company"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="referral_source">Referral Source</Label>
+              <Input
+                id="referral_source"
+                value={data.referral_source || ""}
+                onChange={(e) => onChange({ referral_source: e.target.value })}
+                placeholder="Who referred this deal?"
+              />
+            </div>
           </div>
 
           <div className="space-y-2">

@@ -32,6 +32,9 @@ interface InvestmentSalesData {
   due_diligence_deadline?: string;
   property_type?: string;
   zoning?: string;
+  property_condition?: string;
+  ideal_close_date?: string;
+  referral_source?: string;
 }
 
 interface CommercialLeasingData {
@@ -50,6 +53,9 @@ interface CommercialLeasingData {
   use_clause?: string;
   space_type?: string;
   gross_sf?: string;
+  tenant_business_type?: string;
+  move_in_urgency?: string;
+  referral_source?: string;
 }
 
 interface ResidentialData {
@@ -65,6 +71,8 @@ interface ResidentialData {
   co_broke_percent?: string;
   gross_sf?: string;
   property_type?: string;
+  deal_category?: string;
+  referral_source?: string;
 }
 
 const dealTypes = [
@@ -161,7 +169,7 @@ const NewDeal = () => {
         ...dealPayload,
         value: investmentData.asking_price || null,
         commission: null,
-        expected_close: investmentData.due_diligence_deadline || null,
+        expected_close: investmentData.ideal_close_date || investmentData.due_diligence_deadline || null,
         cap_rate: investmentData.cap_rate || null,
         noi: investmentData.noi || null,
         building_class: investmentData.building_class || null,
@@ -177,6 +185,9 @@ const NewDeal = () => {
         lender_name: investmentData.lender_name || null,
         loan_amount: investmentData.loan_amount || null,
         due_diligence_deadline: investmentData.due_diligence_deadline || null,
+        property_condition: investmentData.property_condition || null,
+        ideal_close_date: investmentData.ideal_close_date || null,
+        referral_source: investmentData.referral_source || null,
       };
     } else if (division === "commercial-leasing") {
       const rentPsf = parseFloat(String(commercialData.asking_rent_psf || 0));
@@ -202,9 +213,12 @@ const NewDeal = () => {
         use_clause: commercialData.use_clause || null,
         space_type: commercialData.space_type || null,
         gross_sf: commercialData.gross_sf || null,
+        tenant_business_type: commercialData.tenant_business_type || null,
+        move_in_urgency: commercialData.move_in_urgency || null,
+        referral_source: commercialData.referral_source || null,
       };
     } else if (division === "residential") {
-      const isRental = residentialData.is_rental || false;
+      const isRental = residentialData.is_rental || residentialData.deal_category === "rental" || false;
       dealPayload = {
         ...dealPayload,
         value: isRental ? residentialData.monthly_rent : residentialData.listing_price,
@@ -222,6 +236,8 @@ const NewDeal = () => {
         co_broke_percent: residentialData.co_broke_percent || null,
         property_type: residentialData.property_type || null,
         gross_sf: residentialData.gross_sf || null,
+        deal_category: isRental ? "rental" : "sale",
+        referral_source: residentialData.referral_source || null,
       };
     }
 

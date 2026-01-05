@@ -1429,8 +1429,10 @@ export type Database = {
           commission: number | null
           contact_id: string | null
           created_at: string | null
+          deal_category: string | null
           deal_type: string
           division: string
+          due_date: string | null
           due_diligence_deadline: string | null
           escalation_rate: number | null
           expected_close: string | null
@@ -1440,8 +1442,10 @@ export type Database = {
           gross_sf: number | null
           guarantor_required: boolean | null
           id: string
+          ideal_close_date: string | null
           is_1031_exchange: boolean | null
           is_active: boolean | null
+          is_lost: boolean | null
           is_rental: boolean | null
           landlord_broker: string | null
           last_activity_date: string | null
@@ -1453,9 +1457,11 @@ export type Database = {
           listing_price: number | null
           loan_amount: number | null
           longitude: number | null
+          lost_reason: string | null
           lot_size: number | null
           monthly_rent: number | null
           move_in_date: string | null
+          move_in_urgency: string | null
           negotiated_rent_psf: number | null
           neighborhood: string | null
           noi: number | null
@@ -1467,11 +1473,13 @@ export type Database = {
           priority: string | null
           probability: number | null
           property_address: string
+          property_condition: string | null
           property_type: string | null
           referral_source: string | null
           security_deposit_months: number | null
           space_type: string | null
           stage_id: string | null
+          tenant_business_type: string | null
           tenant_legal_name: string | null
           ti_allowance_psf: number | null
           unit_count: number | null
@@ -1499,8 +1507,10 @@ export type Database = {
           commission?: number | null
           contact_id?: string | null
           created_at?: string | null
+          deal_category?: string | null
           deal_type: string
           division: string
+          due_date?: string | null
           due_diligence_deadline?: string | null
           escalation_rate?: number | null
           expected_close?: string | null
@@ -1510,8 +1520,10 @@ export type Database = {
           gross_sf?: number | null
           guarantor_required?: boolean | null
           id?: string
+          ideal_close_date?: string | null
           is_1031_exchange?: boolean | null
           is_active?: boolean | null
+          is_lost?: boolean | null
           is_rental?: boolean | null
           landlord_broker?: string | null
           last_activity_date?: string | null
@@ -1523,9 +1535,11 @@ export type Database = {
           listing_price?: number | null
           loan_amount?: number | null
           longitude?: number | null
+          lost_reason?: string | null
           lot_size?: number | null
           monthly_rent?: number | null
           move_in_date?: string | null
+          move_in_urgency?: string | null
           negotiated_rent_psf?: number | null
           neighborhood?: string | null
           noi?: number | null
@@ -1537,11 +1551,13 @@ export type Database = {
           priority?: string | null
           probability?: number | null
           property_address: string
+          property_condition?: string | null
           property_type?: string | null
           referral_source?: string | null
           security_deposit_months?: number | null
           space_type?: string | null
           stage_id?: string | null
+          tenant_business_type?: string | null
           tenant_legal_name?: string | null
           ti_allowance_psf?: number | null
           unit_count?: number | null
@@ -1569,8 +1585,10 @@ export type Database = {
           commission?: number | null
           contact_id?: string | null
           created_at?: string | null
+          deal_category?: string | null
           deal_type?: string
           division?: string
+          due_date?: string | null
           due_diligence_deadline?: string | null
           escalation_rate?: number | null
           expected_close?: string | null
@@ -1580,8 +1598,10 @@ export type Database = {
           gross_sf?: number | null
           guarantor_required?: boolean | null
           id?: string
+          ideal_close_date?: string | null
           is_1031_exchange?: boolean | null
           is_active?: boolean | null
+          is_lost?: boolean | null
           is_rental?: boolean | null
           landlord_broker?: string | null
           last_activity_date?: string | null
@@ -1593,9 +1613,11 @@ export type Database = {
           listing_price?: number | null
           loan_amount?: number | null
           longitude?: number | null
+          lost_reason?: string | null
           lot_size?: number | null
           monthly_rent?: number | null
           move_in_date?: string | null
+          move_in_urgency?: string | null
           negotiated_rent_psf?: number | null
           neighborhood?: string | null
           noi?: number | null
@@ -1607,11 +1629,13 @@ export type Database = {
           priority?: string | null
           probability?: number | null
           property_address?: string
+          property_condition?: string | null
           property_type?: string | null
           referral_source?: string | null
           security_deposit_months?: number | null
           space_type?: string | null
           stage_id?: string | null
+          tenant_business_type?: string | null
           tenant_legal_name?: string | null
           ti_allowance_psf?: number | null
           unit_count?: number | null

@@ -76,7 +76,7 @@ export interface CRMDeal {
   won: boolean | null;
   created_at: string;
   updated_at: string;
-  // Common new fields
+  // Common fields
   property_type: string | null;
   neighborhood: string | null;
   borough: string | null;
@@ -87,6 +87,10 @@ export interface CRMDeal {
   gross_sf: number | null;
   last_activity_date: string | null;
   referral_source: string | null;
+  // New universal fields
+  due_date: string | null;
+  is_lost: boolean;
+  lost_reason: string | null;
   // Investment Sales fields
   cap_rate: number | null;
   noi: number | null;
@@ -105,6 +109,8 @@ export interface CRMDeal {
   co_broker_name: string | null;
   co_broker_split: number | null;
   due_diligence_deadline: string | null;
+  property_condition: string | null;
+  ideal_close_date: string | null;
   // Commercial Leasing fields
   tenant_legal_name: string | null;
   asking_rent_psf: number | null;
@@ -120,6 +126,8 @@ export interface CRMDeal {
   landlord_broker: string | null;
   use_clause: string | null;
   space_type: string | null;
+  tenant_business_type: string | null;
+  move_in_urgency: string | null;
   // Residential fields
   bedrooms: number | null;
   bathrooms: number | null;
@@ -131,6 +139,7 @@ export interface CRMDeal {
   pets_allowed: boolean;
   guarantor_required: boolean;
   co_broke_percent: number | null;
+  deal_category: string | null;
   // Joined data
   contact?: CRMContact | null;
   stage?: CRMDealStage | null;
