@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Loader2, CheckCircle2, Building2, Home, Briefcase, ArrowRight } from "lucide-react";
+import { Loader2, CheckCircle2, Building2, Home, Briefcase, ArrowRight, ArrowLeft, Clock, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,11 +15,11 @@ import { useIntakeLinkByCode, useCreateIntakeSubmission } from "@/hooks/useIntak
 import { cn } from "@/lib/utils";
 
 const baseSchema = z.object({
-  client_name: z.string().min(2, "Name is required"),
-  client_email: z.string().email("Valid email required"),
-  client_phone: z.string().optional(),
-  client_company: z.string().optional(),
-  notes: z.string().optional(),
+  client_name: z.string().min(2, "Name is required").max(100, "Name is too long"),
+  client_email: z.string().email("Valid email required").max(255, "Email is too long"),
+  client_phone: z.string().max(30, "Phone is too long").optional(),
+  client_company: z.string().max(100, "Company name is too long").optional(),
+  notes: z.string().max(1000, "Notes must be under 1000 characters").optional(),
 });
 
 const divisions = [
@@ -27,6 +27,8 @@ const divisions = [
   { id: "commercial-leasing", name: "Commercial Leasing", icon: Briefcase, description: "Office, retail, and industrial spaces" },
   { id: "residential", name: "Residential", icon: Home, description: "Rentals and home purchases" },
 ];
+
+const stepLabels = ["Sector", "Contact", "Criteria"];
 
 export default function IntakeForm() {
   const { linkCode } = useParams<{ linkCode: string }>();
@@ -70,23 +72,32 @@ export default function IntakeForm() {
         link_id: link?.id,
         agent_id: link!.agent_id,
         division: effectiveDivision!,
-        client_name: values.client_name,
-        client_email: values.client_email,
-        client_phone: values.client_phone || undefined,
-        client_company: values.client_company || undefined,
+        client_name: values.client_name.trim(),
+        client_email: values.client_email.trim().toLowerCase(),
+        client_phone: values.client_phone?.trim() || undefined,
+        client_company: values.client_company?.trim() || undefined,
         criteria,
-        notes: values.notes || undefined,
+        notes: values.notes?.trim() || undefined,
       });
       setStep("success");
-    } catch (error) {
+    } catch {
       // Error handled by mutation
     }
+  };
+
+  const getCurrentStepIndex = () => {
+    if (step === "division") return 0;
+    if (step === "info") return 1;
+    return 2;
   };
 
   if (linkLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-sm text-muted-foreground">Loading form...</p>
+        </div>
       </div>
     );
   }
@@ -95,9 +106,12 @@ export default function IntakeForm() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <Card className="max-w-md w-full">
-          <CardHeader className="text-center">
+          <CardHeader className="text-center space-y-4">
+            <div className="mx-auto w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center">
+              <span className="text-2xl">⚠️</span>
+            </div>
             <CardTitle className="text-destructive">Link Not Found</CardTitle>
-            <CardDescription>
+            <CardDescription className="text-base">
               This intake link is invalid, expired, or no longer active.
             </CardDescription>
           </CardHeader>
@@ -108,17 +122,55 @@ export default function IntakeForm() {
 
   if (step === "success") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background p-4">
-        <Card className="max-w-md w-full">
-          <CardHeader className="text-center">
-            <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center">
-              <CheckCircle2 className="h-8 w-8 text-green-500" />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-muted/20 p-4">
+        <Card className="max-w-md w-full shadow-lg">
+          <CardHeader className="text-center space-y-6 pb-8">
+            <div className="mx-auto w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center">
+              <CheckCircle2 className="h-10 w-10 text-green-500" />
             </div>
-            <CardTitle>Thank You!</CardTitle>
-            <CardDescription>
-              Your information has been submitted successfully. An agent will be in touch with you shortly.
-            </CardDescription>
+            <div className="space-y-2">
+              <CardTitle className="text-2xl">Thank You!</CardTitle>
+              <CardDescription className="text-base">
+                Your information has been submitted successfully.
+              </CardDescription>
+            </div>
           </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex items-center gap-4 p-4 rounded-xl bg-muted/50 border border-border">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                <Clock className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="font-medium text-sm">Expected Response Time</p>
+                <p className="text-sm text-muted-foreground">We'll be in touch within 24-48 hours</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4 p-4 rounded-xl bg-muted/50 border border-border">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                <Mail className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="font-medium text-sm">Check Your Email</p>
+                <p className="text-sm text-muted-foreground">You may receive a confirmation email shortly</p>
+              </div>
+            </div>
+
+            <div className="pt-4">
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => {
+                  setStep("division");
+                  setSelectedDivision(null);
+                  setCriteria({});
+                  form.reset();
+                }}
+              >
+                Submit Another Request
+              </Button>
+            </div>
+          </CardContent>
         </Card>
       </div>
     );
@@ -128,39 +180,57 @@ export default function IntakeForm() {
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-12 px-4 sm:px-6">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-10">
+        <div className="text-center mb-8">
           <img 
             src="/lovable-uploads/20d12fb8-7a61-4b15-bf8f-cdd401ddb12d.png" 
             alt="Bridge" 
-            className="h-14 mx-auto mb-6"
+            className="h-12 mx-auto mb-6"
           />
-          <h1 className="text-3xl font-semibold tracking-tight">Client Intake Form</h1>
-          <p className="text-muted-foreground mt-2 text-base">Tell us what you're looking for</p>
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Client Intake Form</h1>
+          <p className="text-muted-foreground mt-2">Tell us what you're looking for</p>
         </div>
 
         {/* Progress */}
-        <div className="flex items-center justify-center gap-3 mb-10">
-          {["division", "info", "criteria"].map((s, i) => (
-            <div key={s} className="flex items-center gap-3">
-              <div className={cn(
-                "w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 shadow-sm",
-                step === s
-                  ? "bg-primary text-primary-foreground ring-4 ring-primary/20"
-                  : ["info", "criteria"].indexOf(step) > i || (link.division && i === 0)
-                    ? "bg-primary/20 text-primary"
-                    : "bg-muted text-muted-foreground"
-              )}>
-                {i + 1}
+        <div className="flex items-center justify-center gap-2 sm:gap-4 mb-8">
+          {stepLabels.map((label, i) => {
+            const currentIndex = getCurrentStepIndex();
+            const isActive = i === currentIndex;
+            const isCompleted = i < currentIndex || (link.division && i === 0);
+            
+            return (
+              <div key={label} className="flex items-center gap-2 sm:gap-4">
+                <div className="flex flex-col items-center gap-1.5">
+                  <div className={cn(
+                    "w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 shadow-sm",
+                    isActive
+                      ? "bg-primary text-primary-foreground ring-4 ring-primary/20"
+                      : isCompleted
+                        ? "bg-primary/20 text-primary"
+                        : "bg-muted text-muted-foreground"
+                  )}>
+                    {isCompleted && !isActive ? (
+                      <CheckCircle2 className="h-5 w-5" />
+                    ) : (
+                      i + 1
+                    )}
+                  </div>
+                  <span className={cn(
+                    "text-xs font-medium",
+                    isActive ? "text-primary" : "text-muted-foreground"
+                  )}>
+                    {label}
+                  </span>
+                </div>
+                {i < 2 && <div className="w-8 sm:w-12 h-0.5 bg-border rounded-full mt-[-20px]" />}
               </div>
-              {i < 2 && <div className="w-12 h-0.5 bg-border rounded-full" />}
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Division Selection */}
         {step === "division" && !link.division && (
           <Card className="shadow-lg border-border/50">
-            <CardHeader className="pb-4">
+            <CardHeader className="pb-6">
               <CardTitle className="text-xl">What are you interested in?</CardTitle>
               <CardDescription className="text-base">Select the type of service you're looking for</CardDescription>
             </CardHeader>
@@ -176,11 +246,11 @@ export default function IntakeForm() {
                     <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 group-hover:scale-105 transition-all duration-200">
                       <Icon className="h-7 w-7 text-primary" />
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <p className="font-semibold text-base">{div.name}</p>
                       <p className="text-sm text-muted-foreground mt-0.5">{div.description}</p>
                     </div>
-                    <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-200" />
+                    <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-200 shrink-0" />
                   </button>
                 );
               })}
@@ -191,7 +261,7 @@ export default function IntakeForm() {
         {/* If division is locked, skip to info */}
         {step === "division" && link.division && (
           <div className="text-center">
-            <Button onClick={() => setStep("info")} size="lg">
+            <Button onClick={() => setStep("info")} size="lg" className="min-w-48">
               Get Started
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -201,65 +271,70 @@ export default function IntakeForm() {
         {/* Client Info */}
         {step === "info" && (
           <Card className="shadow-lg border-border/50">
-            <CardHeader className="pb-4">
+            <CardHeader className="pb-6">
               <CardTitle className="text-xl">Your Information</CardTitle>
               <CardDescription className="text-base">How can we reach you?</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div className="space-y-2.5">
-                  <Label htmlFor="client_name" className="text-sm font-medium">Full Name *</Label>
+              <div className="grid gap-6 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="client_name" className="text-sm font-medium">
+                    Full Name <span className="text-destructive">*</span>
+                  </Label>
                   <Input 
                     id="client_name" 
                     {...form.register("client_name")} 
                     placeholder="John Smith"
-                    className="h-11"
+                    className="h-12"
                   />
                   {form.formState.errors.client_name && (
                     <p className="text-sm text-destructive">{form.formState.errors.client_name.message}</p>
                   )}
                 </div>
-                <div className="space-y-2.5">
-                  <Label htmlFor="client_email" className="text-sm font-medium">Email *</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="client_email" className="text-sm font-medium">
+                    Email <span className="text-destructive">*</span>
+                  </Label>
                   <Input 
                     id="client_email" 
                     type="email"
                     {...form.register("client_email")} 
                     placeholder="john@example.com"
-                    className="h-11"
+                    className="h-12"
                   />
                   {form.formState.errors.client_email && (
                     <p className="text-sm text-destructive">{form.formState.errors.client_email.message}</p>
                   )}
                 </div>
               </div>
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div className="space-y-2.5">
+              <div className="grid gap-6 sm:grid-cols-2">
+                <div className="space-y-2">
                   <Label htmlFor="client_phone" className="text-sm font-medium">Phone</Label>
                   <Input 
                     id="client_phone" 
                     {...form.register("client_phone")} 
                     placeholder="(555) 123-4567"
-                    className="h-11"
+                    className="h-12"
                   />
                 </div>
-                <div className="space-y-2.5">
+                <div className="space-y-2">
                   <Label htmlFor="client_company" className="text-sm font-medium">Company</Label>
                   <Input 
                     id="client_company" 
                     {...form.register("client_company")} 
                     placeholder="Company name"
-                    className="h-11"
+                    className="h-12"
                   />
                 </div>
               </div>
               <div className="flex justify-between pt-6 border-t border-border/50">
                 {!link.division && (
                   <Button variant="outline" onClick={() => setStep("division")} size="lg">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
                     Back
                   </Button>
                 )}
-                <Button onClick={handleInfoSubmit} className="ml-auto" size="lg">
+                <Button onClick={handleInfoSubmit} className={cn(!link.division ? "" : "ml-auto")} size="lg">
                   Continue
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -271,7 +346,7 @@ export default function IntakeForm() {
         {/* Criteria Form */}
         {step === "criteria" && (
           <Card className="shadow-lg border-border/50">
-            <CardHeader className="pb-4">
+            <CardHeader className="pb-6">
               <CardTitle className="text-xl">
                 {effectiveDivision === "investment-sales" && "Investment Criteria"}
                 {effectiveDivision === "commercial-leasing" && "Space Requirements"}
@@ -290,7 +365,7 @@ export default function IntakeForm() {
                 <ResidentialCriteria criteria={criteria} setCriteria={setCriteria} />
               )}
 
-              <div className="space-y-2.5">
+              <div className="space-y-2">
                 <Label htmlFor="notes" className="text-sm font-medium">Additional Notes</Label>
                 <Textarea 
                   id="notes" 
@@ -299,16 +374,21 @@ export default function IntakeForm() {
                   rows={4}
                   className="resize-none"
                 />
+                {form.formState.errors.notes && (
+                  <p className="text-sm text-destructive">{form.formState.errors.notes.message}</p>
+                )}
               </div>
 
               <div className="flex justify-between pt-6 border-t border-border/50">
                 <Button variant="outline" onClick={() => setStep("info")} size="lg">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
                   Back
                 </Button>
                 <Button 
                   onClick={handleFinalSubmit} 
                   disabled={createSubmission.isPending}
                   size="lg"
+                  className="min-w-32"
                 >
                   {createSubmission.isPending ? (
                     <>
@@ -342,11 +422,13 @@ function InvestmentSalesCriteria({
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-5 sm:grid-cols-2">
-        <div className="space-y-2.5">
-          <Label className="text-sm font-medium">Budget Range</Label>
+      <div className="grid gap-6 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label className="text-sm font-medium">
+            Budget Range <span className="text-destructive">*</span>
+          </Label>
           <Select onValueChange={(v) => update("budget_range", v)}>
-            <SelectTrigger className="h-11">
+            <SelectTrigger className="h-12">
               <SelectValue placeholder="Select range" />
             </SelectTrigger>
             <SelectContent>
@@ -359,10 +441,10 @@ function InvestmentSalesCriteria({
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-2.5">
+        <div className="space-y-2">
           <Label className="text-sm font-medium">Target Cap Rate</Label>
           <Select onValueChange={(v) => update("target_cap_rate", v)}>
-            <SelectTrigger className="h-11">
+            <SelectTrigger className="h-12">
               <SelectValue placeholder="Select cap rate" />
             </SelectTrigger>
             <SelectContent>
@@ -376,11 +458,13 @@ function InvestmentSalesCriteria({
         </div>
       </div>
 
-      <div className="space-y-2.5">
-        <Label className="text-sm font-medium">Property Types (select all that apply)</Label>
+      <div className="space-y-2">
+        <Label className="text-sm font-medium">
+          Property Types <span className="text-destructive">*</span>
+        </Label>
         <div className="grid grid-cols-2 gap-3">
           {["Multifamily", "Mixed-Use", "Office", "Retail", "Industrial", "Development Site"].map((type) => (
-            <label key={type} className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-accent/50 cursor-pointer transition-colors">
+            <label key={type} className="flex items-center gap-3 p-4 rounded-xl border border-border hover:bg-accent/50 cursor-pointer transition-colors min-h-[52px]">
               <Checkbox 
                 onCheckedChange={(checked) => {
                   const types = (criteria.property_types as string[]) || [];
@@ -397,11 +481,11 @@ function InvestmentSalesCriteria({
         </div>
       </div>
 
-      <div className="space-y-2.5">
+      <div className="space-y-2">
         <Label className="text-sm font-medium">Target Boroughs/Areas</Label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {["Manhattan", "Brooklyn", "Queens", "Bronx", "Staten Island", "Westchester"].map((area) => (
-            <label key={area} className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-accent/50 cursor-pointer transition-colors">
+            <label key={area} className="flex items-center gap-3 p-4 rounded-xl border border-border hover:bg-accent/50 cursor-pointer transition-colors min-h-[52px]">
               <Checkbox 
                 onCheckedChange={(checked) => {
                   const areas = (criteria.target_areas as string[]) || [];
@@ -418,20 +502,20 @@ function InvestmentSalesCriteria({
         </div>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <div className="space-y-2.5">
+      <div className="grid gap-6 sm:grid-cols-2">
+        <div className="space-y-2">
           <Label className="text-sm font-medium">Minimum Units</Label>
           <Input 
             type="number" 
             placeholder="e.g., 10"
-            className="h-11"
+            className="h-12"
             onChange={(e) => update("min_units", e.target.value)}
           />
         </div>
-        <div className="space-y-2.5">
+        <div className="space-y-2">
           <Label className="text-sm font-medium">Timeline</Label>
           <Select onValueChange={(v) => update("timeline", v)}>
-            <SelectTrigger className="h-11">
+            <SelectTrigger className="h-12">
               <SelectValue placeholder="Select timeline" />
             </SelectTrigger>
             <SelectContent>
@@ -461,11 +545,13 @@ function CommercialLeasingCriteria({
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-5 sm:grid-cols-2">
-        <div className="space-y-2.5">
-          <Label className="text-sm font-medium">Space Type</Label>
+      <div className="grid gap-6 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label className="text-sm font-medium">
+            Space Type <span className="text-destructive">*</span>
+          </Label>
           <Select onValueChange={(v) => update("space_type", v)}>
-            <SelectTrigger className="h-11">
+            <SelectTrigger className="h-12">
               <SelectValue placeholder="Select type" />
             </SelectTrigger>
             <SelectContent>
@@ -478,10 +564,12 @@ function CommercialLeasingCriteria({
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-2.5">
-          <Label className="text-sm font-medium">Square Footage Needed</Label>
+        <div className="space-y-2">
+          <Label className="text-sm font-medium">
+            Square Footage Needed <span className="text-destructive">*</span>
+          </Label>
           <Select onValueChange={(v) => update("sf_range", v)}>
-            <SelectTrigger className="h-11">
+            <SelectTrigger className="h-12">
               <SelectValue placeholder="Select range" />
             </SelectTrigger>
             <SelectContent>
@@ -496,11 +584,11 @@ function CommercialLeasingCriteria({
         </div>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <div className="space-y-2.5">
+      <div className="grid gap-6 sm:grid-cols-2">
+        <div className="space-y-2">
           <Label className="text-sm font-medium">Budget ($/SF/Year)</Label>
           <Select onValueChange={(v) => update("budget_psf", v)}>
-            <SelectTrigger className="h-11">
+            <SelectTrigger className="h-12">
               <SelectValue placeholder="Select budget" />
             </SelectTrigger>
             <SelectContent>
@@ -512,10 +600,10 @@ function CommercialLeasingCriteria({
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-2.5">
+        <div className="space-y-2">
           <Label className="text-sm font-medium">Lease Term</Label>
           <Select onValueChange={(v) => update("lease_term", v)}>
-            <SelectTrigger className="h-11">
+            <SelectTrigger className="h-12">
               <SelectValue placeholder="Select term" />
             </SelectTrigger>
             <SelectContent>
@@ -528,11 +616,11 @@ function CommercialLeasingCriteria({
         </div>
       </div>
 
-      <div className="space-y-2.5">
+      <div className="space-y-2">
         <Label className="text-sm font-medium">Preferred Neighborhoods</Label>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {["Midtown", "FiDi", "SoHo", "Chelsea", "Williamsburg", "DUMBO", "LIC", "Other"].map((area) => (
-            <label key={area} className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-accent/50 cursor-pointer transition-colors">
+            <label key={area} className="flex items-center gap-3 p-4 rounded-xl border border-border hover:bg-accent/50 cursor-pointer transition-colors min-h-[52px]">
               <Checkbox 
                 onCheckedChange={(checked) => {
                   const areas = (criteria.neighborhoods as string[]) || [];
@@ -549,10 +637,10 @@ function CommercialLeasingCriteria({
         </div>
       </div>
 
-      <div className="space-y-2.5">
+      <div className="space-y-2">
         <Label className="text-sm font-medium">Timeline</Label>
         <Select onValueChange={(v) => update("timeline", v)}>
-          <SelectTrigger className="h-11">
+          <SelectTrigger className="h-12">
             <SelectValue placeholder="Select timeline" />
           </SelectTrigger>
           <SelectContent>
@@ -581,11 +669,13 @@ function ResidentialCriteria({
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-5 sm:grid-cols-2">
-        <div className="space-y-2.5">
-          <Label className="text-sm font-medium">Looking to</Label>
+      <div className="grid gap-6 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label className="text-sm font-medium">
+            Looking to <span className="text-destructive">*</span>
+          </Label>
           <Select onValueChange={(v) => update("transaction_type", v)}>
-            <SelectTrigger className="h-11">
+            <SelectTrigger className="h-12">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
@@ -595,10 +685,12 @@ function ResidentialCriteria({
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-2.5">
-          <Label className="text-sm font-medium">Property Type</Label>
+        <div className="space-y-2">
+          <Label className="text-sm font-medium">
+            Property Type <span className="text-destructive">*</span>
+          </Label>
           <Select onValueChange={(v) => update("property_type", v)}>
-            <SelectTrigger className="h-11">
+            <SelectTrigger className="h-12">
               <SelectValue placeholder="Select type" />
             </SelectTrigger>
             <SelectContent>
@@ -613,11 +705,13 @@ function ResidentialCriteria({
         </div>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <div className="space-y-2.5">
-          <Label className="text-sm font-medium">Bedrooms</Label>
+      <div className="grid gap-6 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label className="text-sm font-medium">
+            Bedrooms <span className="text-destructive">*</span>
+          </Label>
           <Select onValueChange={(v) => update("bedrooms", v)}>
-            <SelectTrigger className="h-11">
+            <SelectTrigger className="h-12">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
@@ -629,10 +723,10 @@ function ResidentialCriteria({
             </SelectContent>
           </Select>
         </div>
-        <div className="space-y-2.5">
+        <div className="space-y-2">
           <Label className="text-sm font-medium">Bathrooms</Label>
           <Select onValueChange={(v) => update("bathrooms", v)}>
-            <SelectTrigger className="h-11">
+            <SelectTrigger className="h-12">
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
@@ -645,29 +739,29 @@ function ResidentialCriteria({
         </div>
       </div>
 
-      <div className="space-y-2.5">
+      <div className="space-y-2">
         <Label className="text-sm font-medium">Budget</Label>
         <div className="grid gap-4 sm:grid-cols-2">
           <Input 
             type="text" 
             placeholder="Min (e.g., $3,000 or $500,000)"
-            className="h-11"
+            className="h-12"
             onChange={(e) => update("budget_min", e.target.value)}
           />
           <Input 
             type="text" 
             placeholder="Max (e.g., $5,000 or $1,000,000)"
-            className="h-11"
+            className="h-12"
             onChange={(e) => update("budget_max", e.target.value)}
           />
         </div>
       </div>
 
-      <div className="space-y-2.5">
+      <div className="space-y-2">
         <Label className="text-sm font-medium">Preferred Neighborhoods</Label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {["Manhattan", "Brooklyn", "Queens", "Hoboken", "Jersey City", "Other"].map((area) => (
-            <label key={area} className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-accent/50 cursor-pointer transition-colors">
+            <label key={area} className="flex items-center gap-3 p-4 rounded-xl border border-border hover:bg-accent/50 cursor-pointer transition-colors min-h-[52px]">
               <Checkbox 
                 onCheckedChange={(checked) => {
                   const areas = (criteria.neighborhoods as string[]) || [];
@@ -684,10 +778,10 @@ function ResidentialCriteria({
         </div>
       </div>
 
-      <div className="space-y-2.5">
+      <div className="space-y-2">
         <Label className="text-sm font-medium">Move-in Timeline</Label>
         <Select onValueChange={(v) => update("timeline", v)}>
-          <SelectTrigger className="h-11">
+          <SelectTrigger className="h-12">
             <SelectValue placeholder="Select timeline" />
           </SelectTrigger>
           <SelectContent>
@@ -700,11 +794,11 @@ function ResidentialCriteria({
         </Select>
       </div>
 
-      <div className="space-y-2.5">
+      <div className="space-y-2">
         <Label className="text-sm font-medium">Must-Haves (select all that apply)</Label>
         <div className="grid grid-cols-2 gap-3">
           {["In-unit laundry", "Doorman", "Gym", "Outdoor space", "Pet-friendly", "Parking", "Dishwasher", "Central AC"].map((feature) => (
-            <label key={feature} className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-accent/50 cursor-pointer transition-colors">
+            <label key={feature} className="flex items-center gap-3 p-4 rounded-xl border border-border hover:bg-accent/50 cursor-pointer transition-colors min-h-[52px]">
               <Checkbox 
                 onCheckedChange={(checked) => {
                   const features = (criteria.must_haves as string[]) || [];

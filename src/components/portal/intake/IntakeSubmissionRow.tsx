@@ -70,10 +70,10 @@ export function IntakeSubmissionRow({
 
   return (
     <TableRow className="group hover:bg-muted/50 transition-colors">
-      <TableCell>
-        <div className="flex items-center gap-3">
+      <TableCell className="py-4">
+        <div className="flex items-center gap-4">
           <div className={cn(
-            "flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary font-medium"
+            "flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold text-base shrink-0"
           )}>
             {submission.client_name.charAt(0).toUpperCase()}
           </div>
@@ -83,32 +83,32 @@ export function IntakeSubmissionRow({
           </div>
         </div>
       </TableCell>
-      <TableCell>
+      <TableCell className="py-4">
         <div className="flex items-center gap-2">
           <DivIcon className={cn("h-4 w-4 flex-shrink-0", divInfo?.color)} />
           <span className="text-sm hidden sm:inline">{divInfo?.label || submission.division}</span>
         </div>
       </TableCell>
-      <TableCell>
+      <TableCell className="py-4">
         <Badge 
           variant="outline" 
-          className={cn("capitalize gap-1", status.bg, status.text)}
+          className={cn("capitalize gap-1.5 font-medium", status.bg, status.text)}
         >
           {StatusIcon && <StatusIcon className="h-3 w-3" />}
           {submission.status}
         </Badge>
       </TableCell>
-      <TableCell className="text-muted-foreground text-sm hidden md:table-cell">
+      <TableCell className="text-muted-foreground text-sm hidden md:table-cell py-4">
         {formatDistanceToNow(new Date(submission.created_at), { addSuffix: true })}
       </TableCell>
-      <TableCell className="text-right">
+      <TableCell className="text-right py-4">
         <div className="flex items-center justify-end gap-1">
           {/* Quick Actions - visible on hover */}
           <div className="hidden sm:flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className="h-9 w-9"
               onClick={() => window.location.href = `mailto:${submission.client_email}`}
               title="Send email"
             >
@@ -118,7 +118,7 @@ export function IntakeSubmissionRow({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8"
+                className="h-9 w-9"
                 onClick={() => window.location.href = `tel:${submission.client_phone}`}
                 title="Call"
               >
@@ -129,7 +129,7 @@ export function IntakeSubmissionRow({
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Button variant="ghost" size="icon" className="h-9 w-9">
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -173,29 +173,29 @@ export function IntakeSubmissionRow({
 export function IntakeSubmissionRowSkeleton() {
   return (
     <TableRow>
-      <TableCell>
-        <div className="flex items-center gap-3">
-          <Skeleton className="h-10 w-10 rounded-full" />
+      <TableCell className="py-4">
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-11 w-11 rounded-full" />
           <div className="space-y-2">
             <Skeleton className="h-4 w-32" />
             <Skeleton className="h-3 w-40" />
           </div>
         </div>
       </TableCell>
-      <TableCell>
+      <TableCell className="py-4">
         <div className="flex items-center gap-2">
           <Skeleton className="h-4 w-4 rounded" />
           <Skeleton className="h-4 w-24" />
         </div>
       </TableCell>
-      <TableCell>
-        <Skeleton className="h-5 w-20 rounded-full" />
+      <TableCell className="py-4">
+        <Skeleton className="h-6 w-20 rounded-full" />
       </TableCell>
-      <TableCell className="hidden md:table-cell">
+      <TableCell className="hidden md:table-cell py-4">
         <Skeleton className="h-4 w-24" />
       </TableCell>
-      <TableCell className="text-right">
-        <Skeleton className="h-8 w-8 rounded ml-auto" />
+      <TableCell className="text-right py-4">
+        <Skeleton className="h-9 w-9 rounded ml-auto" />
       </TableCell>
     </TableRow>
   );
