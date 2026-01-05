@@ -41,7 +41,14 @@ export const NotificationCenter = () => {
   };
   return <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        
+        <button className="relative p-2 rounded-full hover:bg-muted/50 transition-colors">
+          <Bell className="h-5 w-5 text-muted-foreground" />
+          {(unreadCount || 0) > 0 && (
+            <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-primary flex items-center justify-center text-[10px] font-medium text-primary-foreground">
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </span>
+          )}
+        </button>
       </PopoverTrigger>
       <PopoverContent className="w-80 p-0 bg-background/95 backdrop-blur-xl border-border" align="end" sideOffset={8}>
         <div className="flex items-center justify-between p-4 border-b border-border">
