@@ -38,11 +38,11 @@ import { NotificationCenter } from "./NotificationCenter";
 import { useUserProfile } from "@/hooks/useGoogleServices";
 import { useAuth } from "@/contexts/AuthContext";
 
-// Google items - Mail and Calendar open externally
+// Google items - All open externally
 const googleItems = [
   { name: "Mail", path: "https://mail.google.com", icon: Mail, external: true },
   { name: "Calendar", path: "https://calendar.google.com", icon: Calendar, external: true },
-  { name: "Drive", path: "/portal/drive", icon: FolderOpen, external: false },
+  { name: "Drive", path: "https://drive.google.com", icon: FolderOpen, external: true },
 ];
 
 // Essentials items
