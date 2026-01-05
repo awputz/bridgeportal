@@ -205,7 +205,7 @@ export const NYCWeatherWidget = () => {
             {isOpen ? <ChevronUp className="h-3 w-3 text-muted-foreground" /> : <ChevronDown className="h-3 w-3 text-muted-foreground" />}
           </button>
         </PopoverTrigger>
-        <PopoverContent align="end" className="p-0">
+        <PopoverContent align="end" className="p-0 bg-popover border border-border shadow-lg z-50">
           {popoverContent}
         </PopoverContent>
       </Popover>
@@ -226,7 +226,7 @@ export const NYCWeatherWidget = () => {
             {isOpen ? <ChevronUp className="h-3.5 w-3.5 text-muted-foreground ml-auto" /> : <ChevronDown className="h-3.5 w-3.5 text-muted-foreground ml-auto" />}
           </button>
         </PopoverTrigger>
-        <PopoverContent align="center" className="p-0 w-[calc(100vw-2rem)] max-w-sm">
+        <PopoverContent align="center" className="p-0 w-[calc(100vw-2rem)] max-w-sm bg-popover border border-border shadow-lg z-50">
           {popoverContent}
         </PopoverContent>
       </Popover>
