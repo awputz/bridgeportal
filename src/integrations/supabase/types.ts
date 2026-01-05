@@ -216,13 +216,17 @@ export type Database = {
         Row: {
           agent_id: string
           ai_summary: string | null
+          category: string | null
           color: string | null
           contact_id: string | null
           content: string | null
           created_at: string | null
           deal_id: string | null
+          folder_id: string | null
           id: string
           is_pinned: boolean | null
+          priority: string | null
+          starred: boolean | null
           tags: string[] | null
           title: string
           updated_at: string | null
@@ -230,13 +234,17 @@ export type Database = {
         Insert: {
           agent_id: string
           ai_summary?: string | null
+          category?: string | null
           color?: string | null
           contact_id?: string | null
           content?: string | null
           created_at?: string | null
           deal_id?: string | null
+          folder_id?: string | null
           id?: string
           is_pinned?: boolean | null
+          priority?: string | null
+          starred?: boolean | null
           tags?: string[] | null
           title: string
           updated_at?: string | null
@@ -244,13 +252,17 @@ export type Database = {
         Update: {
           agent_id?: string
           ai_summary?: string | null
+          category?: string | null
           color?: string | null
           contact_id?: string | null
           content?: string | null
           created_at?: string | null
           deal_id?: string | null
+          folder_id?: string | null
           id?: string
           is_pinned?: boolean | null
+          priority?: string | null
+          starred?: boolean | null
           tags?: string[] | null
           title?: string
           updated_at?: string | null
@@ -268,6 +280,13 @@ export type Database = {
             columns: ["deal_id"]
             isOneToOne: false
             referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_notes_folder_id_fkey"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "note_folders"
             referencedColumns: ["id"]
           },
         ]
@@ -2547,6 +2566,86 @@ export type Database = {
           subscribed_at?: string
         }
         Relationships: []
+      }
+      note_folders: {
+        Row: {
+          agent_id: string
+          color: string | null
+          created_at: string | null
+          icon: string | null
+          id: string
+          name: string
+          parent_folder_id: string | null
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          agent_id: string
+          color?: string | null
+          created_at?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          parent_folder_id?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          agent_id?: string
+          color?: string | null
+          created_at?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          parent_folder_id?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "note_folders_parent_folder_id_fkey"
+            columns: ["parent_folder_id"]
+            isOneToOne: false
+            referencedRelation: "note_folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      note_participants: {
+        Row: {
+          contact_id: string
+          created_at: string | null
+          id: string
+          note_id: string
+        }
+        Insert: {
+          contact_id: string
+          created_at?: string | null
+          id?: string
+          note_id: string
+        }
+        Update: {
+          contact_id?: string
+          created_at?: string | null
+          id?: string
+          note_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "note_participants_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "note_participants_note_id_fkey"
+            columns: ["note_id"]
+            isOneToOne: false
+            referencedRelation: "agent_notes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       notifications: {
         Row: {
