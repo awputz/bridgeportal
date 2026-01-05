@@ -14,6 +14,7 @@ import { AddressAutocomplete, AddressComponents } from "@/components/ui/AddressA
 import { InvestmentSalesDealFields } from "@/components/portal/deal-forms/InvestmentSalesDealFields";
 import { CommercialLeasingDealFields } from "@/components/portal/deal-forms/CommercialLeasingDealFields";
 import { ResidentialDealFields } from "@/components/portal/deal-forms/ResidentialDealFields";
+import { useQueryClient } from "@tanstack/react-query";
 
 // Division-specific data types
 interface InvestmentSalesData {
@@ -93,10 +94,11 @@ const NewDeal = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { division } = useDivision();
+  const queryClient = useQueryClient();
 
   const preselectedContactId = searchParams.get("contact");
 
-  const { data: stages } = useDealStages(division);
+  const { data: stages, isLoading: stagesLoading } = useDealStages(division);
   const { data: contacts } = useCRMContacts(division);
   const createDeal = useCreateDeal();
 
@@ -242,8 +244,14 @@ const NewDeal = () => {
     }
 
     createDeal.mutate(dealPayload, {
-      onSuccess: (data) => {
+      onSuccess: async (data) => {
+        // Force refetch before navigation to ensure deal appears in list
+        await queryClient.refetchQueries({ queryKey: ["crm-deals"] });
+        await queryClient.refetchQueries({ queryKey: ["crm-deals", division] });
         navigate(`/portal/crm/deals/${data.id}`);
+      },
+      onError: (error) => {
+        console.error("Deal creation failed:", error);
       },
     });
   };
