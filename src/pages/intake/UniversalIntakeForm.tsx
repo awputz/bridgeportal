@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Loader2, CheckCircle2, Building2, Home, Briefcase, ArrowRight, ArrowLeft, Clock, Mail, User, HelpCircle } from "lucide-react";
+import { Loader2, CheckCircle2, Building2, Home, Briefcase, ArrowRight, ArrowLeft, Clock, Mail, User, HelpCircle, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -38,9 +38,21 @@ export default function UniversalIntakeForm() {
   const [selectedDivision, setSelectedDivision] = useState<string | null>(null);
   const [step, setStep] = useState<Step>("agent");
   const [criteria, setCriteria] = useState<Record<string, unknown>>({});
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { data: agents, isLoading: agentsLoading, error: agentsError, refetch: refetchAgents } = useAgentsList();
   const createSubmission = useCreateIntakeSubmission();
+
+  // Filter agents by search query
+  const filteredAgents = useMemo(() => {
+    if (!agents) return [];
+    if (!searchQuery.trim()) return agents;
+    const query = searchQuery.toLowerCase();
+    return agents.filter(agent => 
+      agent.full_name?.toLowerCase().includes(query) ||
+      agent.email?.toLowerCase().includes(query)
+    );
+  }, [agents, searchQuery]);
 
   const form = useForm({
     resolver: zodResolver(baseSchema),
@@ -246,25 +258,45 @@ export default function UniversalIntakeForm() {
                 </div>
               ) : (
                 <>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    {agents.map((agent) => (
-                      <button
-                        key={agent.id}
-                        onClick={() => handleAgentSelect(agent.id, agent.full_name || agent.email || "Agent")}
-                        className="p-4 rounded-xl border border-border hover:border-primary hover:bg-accent/50 hover:shadow-md transition-all duration-200 flex flex-col items-center gap-3 text-center group"
-                      >
-                        <Avatar className="h-16 w-16 group-hover:scale-105 transition-transform duration-200">
-                          <AvatarImage src={agent.avatar_url || undefined} alt={agent.full_name || ""} />
-                          <AvatarFallback className="bg-primary/10 text-primary text-lg font-medium">
-                            {(agent.full_name || agent.email || "A").charAt(0).toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-                        <p className="font-medium text-sm leading-tight">
-                          {agent.full_name || agent.email}
-                        </p>
-                      </button>
-                    ))}
+                  {/* Search input */}
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search agents by name..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-10 h-11"
+                    />
                   </div>
+
+                  {filteredAgents.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-8 space-y-2">
+                      <p className="text-muted-foreground">No agents found matching "{searchQuery}"</p>
+                      <Button variant="ghost" size="sm" onClick={() => setSearchQuery("")}>
+                        Clear search
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-h-[400px] overflow-y-auto">
+                      {filteredAgents.map((agent) => (
+                        <button
+                          key={agent.id}
+                          onClick={() => handleAgentSelect(agent.id, agent.full_name || agent.email || "Agent")}
+                          className="p-4 rounded-xl border border-border hover:border-primary hover:bg-accent/50 hover:shadow-md transition-all duration-200 flex flex-col items-center gap-3 text-center group"
+                        >
+                          <Avatar className="h-16 w-16 group-hover:scale-105 transition-transform duration-200">
+                            <AvatarImage src={agent.avatar_url || undefined} alt={agent.full_name || ""} />
+                            <AvatarFallback className="bg-primary/10 text-primary text-lg font-medium">
+                              {(agent.full_name || agent.email || "A").charAt(0).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <p className="font-medium text-sm leading-tight">
+                            {agent.full_name || agent.email}
+                          </p>
+                        </button>
+                      ))}
+                    </div>
+                  )}
 
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center">
