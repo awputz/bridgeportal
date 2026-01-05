@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { User, Mail, Phone, Lock, Save, TrendingUp, DollarSign, Building2, Calendar, FileText, ExternalLink, Home, FolderOpen, Users, Check, X, Loader2 } from "lucide-react";
+import { User, Mail, Phone, Lock, Save, TrendingUp, DollarSign, Building2, Calendar, FileText, ExternalLink, Home, FolderOpen, Users, Check, Loader2, Bell, Settings, LayoutGrid, CreditCard } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { useAgentTransactions } from "@/hooks/useAgentTransactions";
 import { useAgentCommissions } from "@/hooks/useAgentCommissions";
@@ -73,6 +73,7 @@ const Profile = () => {
   const [profile, setProfile] = useState<any>(null);
   const [teamMember, setTeamMember] = useState<TeamMember | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("overview");
 
   // Password change state
   const [isChangingPassword, setIsChangingPassword] = useState(false);
@@ -166,12 +167,10 @@ const Profile = () => {
   if (isLoading) {
     return (
       <div className="flex-1 overflow-auto">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
           <Skeleton className="h-10 w-48 mb-8" />
-          <div className="grid gap-6 lg:grid-cols-3">
-            <Skeleton className="h-64 lg:col-span-2" />
-            <Skeleton className="h-64" />
-          </div>
+          <Skeleton className="h-48 w-full mb-6" />
+          <Skeleton className="h-96 w-full" />
         </div>
       </div>
     );
@@ -179,151 +178,269 @@ const Profile = () => {
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="max-w-6xl mx-auto page-content">
-        {/* Agent Header with Photo */}
-        <Card className="glass-card border-white/10 section-gap">
-          <CardContent className="pt-8 pb-6">
-            <div className="flex flex-col md:flex-row items-center gap-6">
+      <div className="max-w-5xl mx-auto page-content">
+        {/* Compact Header Card */}
+        <Card className="glass-card border-border/50 mb-6">
+          <CardContent className="py-6">
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
               {/* Agent Photo */}
-              <Avatar className="h-28 w-28 md:h-32 md:w-32 border-4 border-primary/20">
+              <Avatar className="h-20 w-20 sm:h-24 sm:w-24 border-2 border-primary/20 flex-shrink-0">
                 <AvatarImage 
                   src={teamMember?.image_url || undefined} 
                   alt={displayName}
                   className="object-cover"
                 />
-                <AvatarFallback className="text-3xl md:text-4xl bg-primary/20 text-primary">
+                <AvatarFallback className="text-2xl bg-primary/20 text-primary">
                   {getInitials(displayName)}
                 </AvatarFallback>
               </Avatar>
 
               {/* Agent Info */}
-              <div className="flex-1 text-center md:text-left">
-                <h1 className="text-3xl md:text-4xl font-extralight text-foreground mb-1">
+              <div className="flex-1 text-center sm:text-left min-w-0">
+                <h1 className="text-2xl sm:text-3xl font-extralight text-foreground mb-1 truncate">
                   {displayName}
                 </h1>
-                <p className="text-lg text-primary mb-3">{displayTitle}</p>
-                <div className="flex flex-wrap justify-center md:justify-start gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4" />
-                    {user?.email}
+                <p className="text-sm text-primary mb-2">{displayTitle}</p>
+                <div className="flex flex-wrap justify-center sm:justify-start gap-3 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-1.5">
+                    <Mail className="h-3 w-3" />
+                    <span className="truncate max-w-[180px]">{user?.email}</span>
                   </div>
                   {(teamMember?.phone || profile?.phone) && (
-                    <div className="flex items-center gap-2">
-                      <Phone className="h-4 w-4" />
+                    <div className="flex items-center gap-1.5">
+                      <Phone className="h-3 w-3" />
                       {teamMember?.phone || profile?.phone}
-                    </div>
-                  )}
-                  {teamMember?.category && (
-                    <div className="flex items-center gap-2 px-2 py-0.5 bg-white/10 rounded-full text-xs">
-                      {teamMember.category}
                     </div>
                   )}
                 </div>
               </div>
 
               {/* Quick Stats */}
-              <div className="grid grid-cols-2 gap-4 text-center">
-                <div className="p-4 bg-white/5 rounded-lg">
-                  <p className="text-2xl md:text-3xl font-light text-foreground">
-                    {commissions.totalDeals}
-                  </p>
-                  <p className="text-xs text-muted-foreground">Total Deals</p>
+              <div className="flex gap-4 sm:gap-6">
+                <div className="text-center">
+                  <p className="text-2xl font-light text-foreground">{commissions.totalDeals}</p>
+                  <p className="text-xs text-muted-foreground">Deals</p>
                 </div>
-                <div className="p-4 bg-white/5 rounded-lg">
-                  <p className="text-2xl md:text-3xl font-light text-emerald-400">
+                <div className="text-center">
+                  <p className="text-2xl font-light text-emerald-400">
                     {formatFullCurrency(commissions.totalEarnings)}
                   </p>
-                  <p className="text-xs text-muted-foreground">Total Earnings</p>
+                  <p className="text-xs text-muted-foreground">Earnings</p>
                 </div>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Commission Summary Cards */}
-        <div className="stat-grid section-gap">
-          <Card className="glass-card border-white/10">
-            <CardContent className="p-4 sm:pt-6">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-                  <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-400" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-xs text-muted-foreground">Total Earnings</p>
-                  <p className="text-lg sm:text-xl font-light text-foreground truncate">
-                    {formatFullCurrency(commissions.totalEarnings)}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Tabs Navigation */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-4 mb-6">
+            <TabsTrigger value="overview" className="gap-2 text-xs sm:text-sm">
+              <LayoutGrid className="h-4 w-4 hidden sm:block" />
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="transactions" className="gap-2 text-xs sm:text-sm">
+              <CreditCard className="h-4 w-4 hidden sm:block" />
+              Transactions
+            </TabsTrigger>
+            <TabsTrigger value="connections" className="gap-2 text-xs sm:text-sm">
+              <Users className="h-4 w-4 hidden sm:block" />
+              Connections
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="gap-2 text-xs sm:text-sm">
+              <Settings className="h-4 w-4 hidden sm:block" />
+              Settings
+            </TabsTrigger>
+          </TabsList>
 
-          <Card className="glass-card border-white/10">
-            <CardContent className="p-4 sm:pt-6">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
-                  <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-xs text-muted-foreground">YTD Earnings</p>
-                  <p className="text-lg sm:text-xl font-light text-foreground truncate">
-                    {formatFullCurrency(commissions.ytdEarnings)}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="space-y-6">
+            {/* Commission Summary Cards */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <Card className="glass-card border-border/50">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                      <DollarSign className="h-5 w-5 text-emerald-400" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs text-muted-foreground">Total Earnings</p>
+                      <p className="text-lg font-light text-foreground truncate">
+                        {formatFullCurrency(commissions.totalEarnings)}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card className="glass-card border-white/10">
-            <CardContent className="p-4 sm:pt-6">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
-                  <Building2 className="h-4 w-4 sm:h-5 sm:w-5 text-purple-400" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-xs text-muted-foreground">Total Deals</p>
-                  <p className="text-lg sm:text-xl font-light text-foreground">
-                    {commissions.totalDeals}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              <Card className="glass-card border-border/50">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                      <TrendingUp className="h-5 w-5 text-blue-400" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs text-muted-foreground">YTD Earnings</p>
+                      <p className="text-lg font-light text-foreground truncate">
+                        {formatFullCurrency(commissions.ytdEarnings)}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card className="glass-card border-white/10">
-            <CardContent className="p-4 sm:pt-6">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-amber-500/20 flex items-center justify-center flex-shrink-0">
-                  <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-amber-400" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-xs text-muted-foreground">YTD Deals</p>
-                  <p className="text-lg sm:text-xl font-light text-foreground">
-                    {commissions.ytdDeals}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              <Card className="glass-card border-border/50">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+                      <Building2 className="h-5 w-5 text-purple-400" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs text-muted-foreground">Total Deals</p>
+                      <p className="text-lg font-light text-foreground">
+                        {commissions.totalDeals}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-        <div className="grid gap-6 lg:grid-cols-3">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Transactions Table */}
-            <Card className="glass-card border-white/10">
+              <Card className="glass-card border-border/50">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center flex-shrink-0">
+                      <Calendar className="h-5 w-5 text-amber-400" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs text-muted-foreground">YTD Deals</p>
+                      <p className="text-lg font-light text-foreground">
+                        {commissions.ytdDeals}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Recent Activity & Earnings Breakdown */}
+            <div className="grid gap-6 lg:grid-cols-2">
+              {/* Recent Transactions Preview */}
+              <Card className="glass-card border-border/50">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="font-light text-base flex items-center gap-2">
+                      <FileText className="h-4 w-4" />
+                      Recent Transactions
+                    </CardTitle>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-xs"
+                      onClick={() => setActiveTab("transactions")}
+                    >
+                      View All →
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {transactionsLoading ? (
+                    <div className="space-y-2">
+                      {[...Array(3)].map((_, i) => (
+                        <Skeleton key={i} className="h-12 w-full" />
+                      ))}
+                    </div>
+                  ) : transactions && transactions.length > 0 ? (
+                    <div className="space-y-2">
+                      {transactions.slice(0, 3).map((tx) => (
+                        <div key={tx.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-foreground truncate">{tx.property_address}</p>
+                            <p className="text-xs text-muted-foreground">{tx.division}</p>
+                          </div>
+                          <span className="text-sm font-medium text-emerald-400 ml-2">
+                            {tx.commission ? formatFullCurrency(tx.commission) : "—"}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-6">
+                      <Building2 className="h-8 w-8 text-muted-foreground/50 mx-auto mb-2" />
+                      <p className="text-sm text-muted-foreground">No transactions yet</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Earnings by Division */}
+              <Card className="glass-card border-border/50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="font-light text-base">Earnings by Division</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {commissions.byDivision.length > 0 ? (
+                    <div className="space-y-2">
+                      {commissions.byDivision.map((div) => (
+                        <div key={div.division} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                          <div>
+                            <span className="text-sm text-foreground">{div.division}</span>
+                            <p className="text-xs text-muted-foreground">{div.dealCount} deals</p>
+                          </div>
+                          <span className="text-sm font-medium text-emerald-400">
+                            {formatFullCurrency(div.earnings)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-6">
+                      <TrendingUp className="h-8 w-8 text-muted-foreground/50 mx-auto mb-2" />
+                      <p className="text-sm text-muted-foreground">No earnings data yet</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* My Exclusives Quick Link */}
+            <Card className="glass-card border-border/50">
+              <CardContent className="py-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                      <Building2 className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-foreground">My Exclusives</p>
+                      <p className="text-xs text-muted-foreground">View your listings & documents</p>
+                    </div>
+                  </div>
+                  <Link to="/portal/my-exclusives">
+                    <Button variant="outline" size="sm" className="gap-2">
+                      View All
+                      <ExternalLink className="h-3 w-3" />
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Transactions Tab */}
+          <TabsContent value="transactions" className="space-y-6">
+            <Card className="glass-card border-border/50">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="font-light flex items-center gap-2">
                       <FileText className="h-5 w-5" />
-                      Recent Transactions
+                      All Transactions
                     </CardTitle>
-                    <CardDescription>Your closed deals and commission history</CardDescription>
+                    <CardDescription>Your complete deal history</CardDescription>
                   </div>
                   <Link to="/portal/my-transactions">
                     <Button variant="outline" size="sm" className="gap-2">
-                      View All
+                      Full View
                       <ExternalLink className="h-4 w-4" />
                     </Button>
                   </Link>
@@ -348,7 +465,7 @@ const Profile = () => {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {transactions.slice(0, 5).map((tx) => {
+                        {transactions.map((tx) => {
                           const hasActualCommission = tx.commission !== null && tx.commission !== undefined && tx.commission > 0;
                           const commissionDisplay = hasActualCommission 
                             ? formatFullCurrency(tx.commission as number)
@@ -365,7 +482,7 @@ const Profile = () => {
                                 </div>
                               </TableCell>
                               <TableCell>
-                                <span className="text-xs px-2 py-1 rounded-full bg-white/10 text-muted-foreground">
+                                <span className="text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">
                                   {tx.division || 'Other'}
                                 </span>
                               </TableCell>
@@ -380,19 +497,10 @@ const Profile = () => {
                         })}
                       </TableBody>
                     </Table>
-                    {transactions.length > 5 && (
-                      <div className="text-center mt-4">
-                        <Link to="/portal/my-transactions">
-                          <Button variant="ghost" size="sm">
-                            View all {transactions.length} transactions →
-                          </Button>
-                        </Link>
-                      </div>
-                    )}
                   </div>
                 ) : (
-                  <div className="text-center py-8">
-                    <Building2 className="h-10 w-10 text-muted-foreground/50 mx-auto mb-3" />
+                  <div className="text-center py-12">
+                    <Building2 className="h-12 w-12 text-muted-foreground/50 mx-auto mb-3" />
                     <p className="text-muted-foreground">No transactions found</p>
                     <p className="text-sm text-muted-foreground/70">
                       Transactions will appear here once they're closed
@@ -402,8 +510,40 @@ const Profile = () => {
               </CardContent>
             </Card>
 
+            {/* Earnings by Year */}
+            {commissions.byYear.length > 0 && (
+              <Card className="glass-card border-border/50">
+                <CardHeader>
+                  <CardTitle className="font-light text-base">Earnings by Year</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {commissions.byYear.map((year) => (
+                      <div key={year.year} className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
+                        <div>
+                          <span className="text-lg font-light text-foreground">{year.year}</span>
+                          <p className="text-xs text-muted-foreground">{year.dealCount} deals</p>
+                        </div>
+                        <span className="text-lg font-medium text-emerald-400">
+                          {formatFullCurrency(year.earnings)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
+          {/* Connections Tab */}
+          <TabsContent value="connections" className="space-y-6">
+            <ConnectedServicesCard />
+          </TabsContent>
+
+          {/* Settings Tab */}
+          <TabsContent value="settings" className="space-y-6">
             {/* Account Info */}
-            <Card className="glass-card border-white/10">
+            <Card className="glass-card border-border/50">
               <CardHeader>
                 <CardTitle className="font-light flex items-center gap-2">
                   <User className="h-5 w-5" />
@@ -414,24 +554,39 @@ const Profile = () => {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label className="text-muted-foreground">Email</Label>
-                    <div className="flex items-center gap-2 p-3 bg-white/5 rounded-lg">
+                    <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg">
                       <Mail className="h-4 w-4 text-muted-foreground" />
                       <span className="text-foreground">{user?.email}</span>
                     </div>
                   </div>
                   <div className="space-y-2">
                     <Label className="text-muted-foreground">Phone</Label>
-                    <div className="flex items-center gap-2 p-3 bg-white/5 rounded-lg">
+                    <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg">
                       <Phone className="h-4 w-4 text-muted-foreground" />
                       <span className="text-foreground">{teamMember?.phone || profile?.phone || "Not set"}</span>
                     </div>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-muted-foreground">Member Since</Label>
+                  <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg">
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-foreground">
+                      {user?.created_at
+                        ? new Date(user.created_at).toLocaleDateString('en-US', { 
+                            month: 'long', 
+                            day: 'numeric',
+                            year: 'numeric' 
+                          })
+                        : 'Unknown'}
+                    </span>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             {/* Password Change */}
-            <Card className="glass-card border-white/10">
+            <Card className="glass-card border-border/50">
               <CardHeader>
                 <CardTitle className="font-light flex items-center gap-2">
                   <Lock className="h-5 w-5" />
@@ -497,130 +652,16 @@ const Profile = () => {
               </CardContent>
             </Card>
 
-            {/* Connected Services */}
-            <ConnectedServicesCard />
-          </div>
-
-          {/* Sidebar - Notifications, Exclusives, Earnings */}
-          <div className="space-y-6">
-            {/* Notifications Section - NEW */}
+            {/* Notifications */}
             <ProfileNotificationsCard />
-            {/* My Exclusives Section */}
-            <Card className="glass-card border-white/10">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="font-light text-sm flex items-center gap-2">
-                      <Building2 className="h-4 w-4" />
-                      My Exclusives
-                    </CardTitle>
-                    <CardDescription className="text-xs">
-                      View your assigned listings & documents
-                    </CardDescription>
-                  </div>
-                  <Link to="/portal/my-exclusives">
-                    <Button variant="ghost" size="sm" className="text-xs">
-                      View All →
-                    </Button>
-                  </Link>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Link
-                  to="/portal/my-exclusives"
-                  className="flex items-center justify-between p-3 bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <FileText className="h-4 w-4 text-primary" />
-                    <span className="text-sm text-foreground">Document Center</span>
-                  </div>
-                  <ExternalLink className="h-3 w-3 text-muted-foreground" />
-                </Link>
-                <a
-                  href="https://streeteasy.com/profile/957575-bridge-advisory-group?tab_profile=active_listings"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-between p-3 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-lg transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <Home className="h-4 w-4 text-emerald-400" />
-                    <span className="text-sm text-foreground">Residential (StreetEasy)</span>
-                  </div>
-                  <ExternalLink className="h-3 w-3 text-muted-foreground" />
-                </a>
-              </CardContent>
-            </Card>
-
-            {commissions.byDivision.length > 0 && (
-              <Card className="glass-card border-white/10">
-                <CardHeader>
-                  <CardTitle className="font-light text-sm">Earnings by Division</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {commissions.byDivision.map((div) => (
-                    <div key={div.division} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                      <div>
-                        <span className="text-sm text-foreground">{div.division}</span>
-                        <p className="text-xs text-muted-foreground">{div.dealCount} deals</p>
-                      </div>
-                      <span className="text-sm font-medium text-emerald-400">
-                        {formatFullCurrency(div.earnings)}
-                      </span>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            )}
-
-            {commissions.byYear.length > 0 && (
-              <Card className="glass-card border-white/10">
-                <CardHeader>
-                  <CardTitle className="font-light text-sm">Earnings by Year</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {commissions.byYear.map((year) => (
-                    <div key={year.year} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                      <div>
-                        <span className="text-sm text-foreground">{year.year}</span>
-                        <p className="text-xs text-muted-foreground">{year.dealCount} deals</p>
-                      </div>
-                      <span className="text-sm font-medium text-emerald-400">
-                        {formatFullCurrency(year.earnings)}
-                      </span>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            )}
-
-            <Card className="glass-card border-white/10 border-dashed">
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-                    <Calendar className="h-5 w-5 text-muted-foreground" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Active since</p>
-                    <p className="text-sm font-light text-foreground">
-                      {user?.created_at
-                        ? new Date(user.created_at).toLocaleDateString('en-US', { 
-                            month: 'long', 
-                            year: 'numeric' 
-                          })
-                        : 'Unknown'}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
 };
 
-// Connected Services Component
+// Connected Services Component - Now Full Width
 const ConnectedServicesCard = () => {
   const { data: calendarConnection } = useGoogleCalendarConnection();
   const { data: gmailConnection } = useGmailConnection();
@@ -638,86 +679,104 @@ const ConnectedServicesCard = () => {
 
   const services = [
     { 
-      name: 'Calendar', 
+      name: 'Google Calendar', 
+      description: 'Sync your calendar events',
       icon: Calendar, 
       connected: !!calendarConnection?.calendar_enabled,
       onConnect: () => connectCalendar.mutate(),
       onDisconnect: () => disconnectCalendar.mutate(),
-      color: 'text-blue-400'
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/20'
     },
     { 
       name: 'Gmail', 
+      description: 'Access your email inbox',
       icon: Mail, 
       connected: gmailConnection?.isConnected,
       onConnect: () => connectGmail.mutate(),
       onDisconnect: () => disconnectGmail.mutate(),
-      color: 'text-red-400'
+      color: 'text-red-400',
+      bgColor: 'bg-red-500/20'
     },
     { 
-      name: 'Drive', 
+      name: 'Google Drive', 
+      description: 'Access your files and documents',
       icon: FolderOpen, 
       connected: driveConnection?.isConnected,
       onConnect: () => connectDrive.mutate(),
       onDisconnect: () => disconnectDrive.mutate(),
-      color: 'text-yellow-400'
+      color: 'text-yellow-400',
+      bgColor: 'bg-yellow-500/20'
     },
     { 
-      name: 'Contacts', 
+      name: 'Google Contacts', 
+      description: 'Sync your contacts with CRM',
       icon: Users, 
       connected: contactsConnection?.connected || false,
       onConnect: () => connectContacts.mutate(),
       onDisconnect: () => disconnectContacts.mutate(),
-      color: 'text-green-400'
+      color: 'text-green-400',
+      bgColor: 'bg-green-500/20'
     },
   ];
 
   return (
-    <Card className="glass-card border-white/10">
+    <Card className="glass-card border-border/50">
       <CardHeader>
-        <CardTitle className="font-light text-sm flex items-center gap-2">
-          <Building2 className="h-4 w-4" />
-          Connected Services
+        <CardTitle className="font-light flex items-center gap-2">
+          <Users className="h-5 w-5" />
+          Google Workspace Connections
         </CardTitle>
-        <CardDescription className="text-xs">
+        <CardDescription>
           Connect Google services to enhance your workflow
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-3">
-        {services.map((service) => {
-          const Icon = service.icon;
-          return (
-            <div key={service.name} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-              <div className="flex items-center gap-3">
-                <Icon className={`h-4 w-4 ${service.color}`} />
-                <span className="text-sm text-foreground">{service.name}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                {service.connected ? (
-                  <>
-                    <Check className="h-4 w-4 text-emerald-400" />
+      <CardContent>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {services.map((service) => {
+            const Icon = service.icon;
+            return (
+              <div key={service.name} className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-full ${service.bgColor} flex items-center justify-center`}>
+                    <Icon className={`h-5 w-5 ${service.color}`} />
+                  </div>
+                  <div>
+                    <span className="text-sm font-medium text-foreground">{service.name}</span>
+                    <p className="text-xs text-muted-foreground">{service.description}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {service.connected ? (
+                    <>
+                      <div className="flex items-center gap-1 text-emerald-400">
+                        <Check className="h-4 w-4" />
+                        <span className="text-xs">Connected</span>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-xs text-muted-foreground hover:text-destructive"
+                        onClick={service.onDisconnect}
+                      >
+                        Disconnect
+                      </Button>
+                    </>
+                  ) : (
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
-                      className="text-xs text-muted-foreground hover:text-destructive"
-                      onClick={service.onDisconnect}
+                      className="text-xs"
+                      onClick={service.onConnect}
                     >
-                      Disconnect
+                      Connect
                     </Button>
-                  </>
-                ) : (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="text-xs"
-                    onClick={service.onConnect}
-                  >
-                    Connect
-                  </Button>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </CardContent>
     </Card>
   );
