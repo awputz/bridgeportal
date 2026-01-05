@@ -1,20 +1,21 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Plus, Search, Pin, Filter, Grid3X3, List, Sparkles, Building, User } from "lucide-react";
+import { Plus, Search, Grid3X3, List, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { NoteCard } from "@/components/portal/NoteCard";
-import { NoteEditor } from "@/components/portal/NoteEditor";
-import { useNotes, useCreateNote, useUpdateNote, useDeleteNote, type Note, type NoteFilters } from "@/hooks/useNotes";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuCheckboxItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-  DropdownMenuLabel,
-} from "@/components/ui/dropdown-menu";
+import { NoteFoldersSidebar } from "@/components/portal/notes/NoteFoldersSidebar";
+import { NoteListItem } from "@/components/portal/notes/NoteListItem";
+import { NoteDialog } from "@/components/portal/notes/NoteDialog";
+import { NoteFilters } from "@/components/portal/notes/NoteFilters";
+import { 
+  useNotes, 
+  useNoteFolders,
+  useCreateNote, 
+  useUpdateNote, 
+  useDeleteNote, 
+  type Note, 
+  type NoteFilters as NoteFiltersType 
+} from "@/hooks/useNotes";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,23 +28,21 @@ import {
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
 
-const colorOptions = [
-  { value: "yellow", label: "Yellow", class: "bg-yellow-400" },
-  { value: "pink", label: "Pink", class: "bg-pink-400" },
-  { value: "blue", label: "Blue", class: "bg-blue-400" },
-  { value: "green", label: "Green", class: "bg-green-400" },
-  { value: "purple", label: "Purple", class: "bg-purple-400" },
-];
-
 const Notes = () => {
-  const [filters, setFilters] = useState<NoteFilters>({});
+  const [selectedFolder, setSelectedFolder] = useState<string>("all");
+  const [filters, setFilters] = useState<NoteFiltersType>({});
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [editorOpen, setEditorOpen] = useState(false);
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const { data: notes, isLoading } = useNotes({ ...filters, search: searchTerm });
+  const { data: notes, isLoading } = useNotes({ 
+    ...filters, 
+    search: searchTerm,
+    folderId: selectedFolder,
+  });
+  const { data: folders = [] } = useNoteFolders();
   const createNote = useCreateNote();
   const updateNote = useUpdateNote();
   const deleteNote = useDeleteNote();
@@ -62,18 +61,20 @@ const Notes = () => {
     if (noteData.id) {
       updateNote.mutate({ id: noteData.id, ...noteData });
     } else {
+      // If we're viewing a specific folder, add the note to that folder
+      if (selectedFolder && selectedFolder !== "all" && selectedFolder !== "starred" && selectedFolder !== "inbox") {
+        noteData.folder_id = selectedFolder;
+      }
       createNote.mutate(noteData);
     }
   };
 
-  const handleTogglePin = (id: string, isPinned: boolean) => {
-    updateNote.mutate({ id, is_pinned: isPinned });
+  const handleToggleStar = (id: string, starred: boolean) => {
+    updateNote.mutate({ id, starred, is_pinned: starred });
   };
 
-  const handleAiSummarize = async (note: Note) => {
-    // Open editor with the note to use AI there
-    setSelectedNote(note);
-    setEditorOpen(true);
+  const handleMoveToFolder = (noteId: string, folderId: string | null) => {
+    updateNote.mutate({ id: noteId, folder_id: folderId });
   };
 
   const handleUpdateAiSummary = (id: string, summary: string) => {
@@ -87,18 +88,23 @@ const Notes = () => {
     }
   };
 
-  const pinnedNotes = notes?.filter((n) => n.is_pinned) || [];
-  const unpinnedNotes = notes?.filter((n) => !n.is_pinned) || [];
+  const getFolderLabel = () => {
+    if (selectedFolder === "all") return "All Notes";
+    if (selectedFolder === "starred") return "Starred";
+    if (selectedFolder === "inbox") return "Inbox";
+    const folder = folders.find((f) => f.id === selectedFolder);
+    return folder?.name || "Notes";
+  };
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8 space-y-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
         {/* Header */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
           <div>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">Notes</h1>
             <p className="text-muted-foreground font-light">
-              Keep track of ideas, action items, and deal notes with AI assistance
+              Organize and manage your notes with folders, tags, and AI assistance
             </p>
           </div>
           <Button onClick={handleNewNote} className="gap-2 w-full sm:w-auto">
@@ -107,200 +113,116 @@ const Notes = () => {
           </Button>
         </div>
 
-        {/* Filters & Search */}
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          {/* Search */}
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search notes..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 w-full"
-            />
-          </div>
+        {/* Main layout */}
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Sidebar */}
+          <NoteFoldersSidebar 
+            selectedFolder={selectedFolder} 
+            onSelectFolder={setSelectedFolder} 
+          />
 
-          {/* Filter dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="gap-2 w-full sm:w-auto">
-                <Filter className="h-4 w-4" />
-                Filters
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              
-              <DropdownMenuCheckboxItem
-                checked={filters.isPinned === true}
-                onCheckedChange={(checked) =>
-                  setFilters((f) => ({ ...f, isPinned: checked ? true : undefined }))
-                }
-              >
-                <Pin className="h-4 w-4 mr-2" />
-                Pinned only
-              </DropdownMenuCheckboxItem>
-              
-              <DropdownMenuCheckboxItem
-                checked={filters.hasDeal === true}
-                onCheckedChange={(checked) =>
-                  setFilters((f) => ({ ...f, hasDeal: checked ? true : undefined }))
-                }
-              >
-                <Building className="h-4 w-4 mr-2" />
-                Linked to deal
-              </DropdownMenuCheckboxItem>
-              
-              <DropdownMenuCheckboxItem
-                checked={filters.hasContact === true}
-                onCheckedChange={(checked) =>
-                  setFilters((f) => ({ ...f, hasContact: checked ? true : undefined }))
-                }
-              >
-                <User className="h-4 w-4 mr-2" />
-                Linked to contact
-              </DropdownMenuCheckboxItem>
+          {/* Main content */}
+          <div className="flex-1 space-y-4">
+            {/* Search and filters bar */}
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              {/* Search */}
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search notes..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-9 w-full"
+                />
+              </div>
 
-              <DropdownMenuSeparator />
-              <DropdownMenuLabel>Color</DropdownMenuLabel>
-              
-              {colorOptions.map((color) => (
-                <DropdownMenuCheckboxItem
-                  key={color.value}
-                  checked={filters.color === color.value}
-                  onCheckedChange={(checked) =>
-                    setFilters((f) => ({ ...f, color: checked ? color.value : undefined }))
-                  }
+              {/* View toggle */}
+              <div className="flex border rounded-lg overflow-hidden flex-shrink-0">
+                <Button
+                  variant={viewMode === "grid" ? "default" : "ghost"}
+                  size="icon"
+                  className="rounded-none"
+                  onClick={() => setViewMode("grid")}
                 >
-                  <div className={cn("h-3 w-3 rounded-full mr-2", color.class)} />
-                  {color.label}
-                </DropdownMenuCheckboxItem>
-              ))}
+                  <Grid3X3 className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant={viewMode === "list" ? "default" : "ghost"}
+                  size="icon"
+                  className="rounded-none"
+                  onClick={() => setViewMode("list")}
+                >
+                  <List className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
 
-              {(filters.color || filters.isPinned || filters.hasDeal || filters.hasContact) && (
-                <>
-                  <DropdownMenuSeparator />
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full justify-start text-muted-foreground"
-                    onClick={() => setFilters({})}
-                  >
-                    Clear filters
+            {/* Filters */}
+            <NoteFilters filters={filters} onFiltersChange={setFilters} />
+
+            {/* Folder header */}
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-medium">{getFolderLabel()}</h2>
+              <span className="text-sm text-muted-foreground">
+                {notes?.length || 0} {notes?.length === 1 ? "note" : "notes"}
+              </span>
+            </div>
+
+            {/* Notes Grid/List */}
+            {isLoading ? (
+              <div className={cn(
+                "gap-4",
+                viewMode === "grid" 
+                  ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3" 
+                  : "flex flex-col"
+              )}>
+                {[...Array(6)].map((_, i) => (
+                  <Skeleton key={i} className="h-48 rounded-lg" />
+                ))}
+              </div>
+            ) : notes?.length === 0 ? (
+              <div className="text-center py-16 bg-card border rounded-lg">
+                <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-lg font-medium mb-2">No notes found</h3>
+                <p className="text-muted-foreground mb-4">
+                  {searchTerm 
+                    ? "Try adjusting your search or filters"
+                    : "Create your first note to get started"}
+                </p>
+                {!searchTerm && (
+                  <Button onClick={handleNewNote}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Create Note
                   </Button>
-                </>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* View toggle */}
-          <div className="flex border rounded-lg overflow-hidden">
-            <Button
-              variant={viewMode === "grid" ? "default" : "ghost"}
-              size="icon"
-              className="rounded-none"
-              onClick={() => setViewMode("grid")}
-            >
-              <Grid3X3 className="h-4 w-4" />
-            </Button>
-            <Button
-              variant={viewMode === "list" ? "default" : "ghost"}
-              size="icon"
-              className="rounded-none"
-              onClick={() => setViewMode("list")}
-            >
-              <List className="h-4 w-4" />
-            </Button>
+                )}
+              </div>
+            ) : (
+              <div className={cn(
+                "gap-4",
+                viewMode === "grid" 
+                  ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3" 
+                  : "flex flex-col"
+              )}>
+                {notes?.map((note) => (
+                  <NoteListItem
+                    key={note.id}
+                    note={note}
+                    viewMode={viewMode}
+                    folders={folders}
+                    onEdit={handleEditNote}
+                    onDelete={(id) => setDeleteId(id)}
+                    onToggleStar={handleToggleStar}
+                    onMoveToFolder={handleMoveToFolder}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
-
-        {/* Notes Grid */}
-        {isLoading ? (
-          <div className={cn(
-            "gap-4",
-            viewMode === "grid" 
-              ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
-              : "flex flex-col"
-          )}>
-            {[...Array(6)].map((_, i) => (
-              <Skeleton key={i} className="h-48 rounded-lg" />
-            ))}
-          </div>
-        ) : notes?.length === 0 ? (
-          <div className="text-center py-16">
-            <Sparkles className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-medium mb-2">No notes yet</h3>
-            <p className="text-muted-foreground mb-4">
-              Create your first sticky note to get started
-            </p>
-            <Button onClick={handleNewNote}>
-              <Plus className="h-4 w-4 mr-2" />
-              Create Note
-            </Button>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {/* Pinned notes */}
-            {pinnedNotes.length > 0 && (
-              <div>
-                <h2 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
-                  <Pin className="h-4 w-4" />
-                  Pinned ({pinnedNotes.length})
-                </h2>
-                <div className={cn(
-                  "gap-4",
-                  viewMode === "grid" 
-                    ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
-                    : "flex flex-col"
-                )}>
-                  {pinnedNotes.map((note) => (
-                    <NoteCard
-                      key={note.id}
-                      note={note}
-                      onEdit={handleEditNote}
-                      onDelete={(id) => setDeleteId(id)}
-                      onTogglePin={handleTogglePin}
-                      onAiSummarize={handleAiSummarize}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Other notes */}
-            {unpinnedNotes.length > 0 && (
-              <div>
-                {pinnedNotes.length > 0 && (
-                  <h2 className="text-sm font-medium text-muted-foreground mb-3">
-                    Other Notes ({unpinnedNotes.length})
-                  </h2>
-                )}
-                <div className={cn(
-                  "gap-4",
-                  viewMode === "grid" 
-                    ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
-                    : "flex flex-col"
-                )}>
-                  {unpinnedNotes.map((note) => (
-                    <NoteCard
-                      key={note.id}
-                      note={note}
-                      onEdit={handleEditNote}
-                      onDelete={(id) => setDeleteId(id)}
-                      onTogglePin={handleTogglePin}
-                      onAiSummarize={handleAiSummarize}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
       </div>
 
-      {/* Note Editor */}
-      <NoteEditor
+      {/* Note Dialog */}
+      <NoteDialog
         note={selectedNote}
         isOpen={editorOpen}
         onClose={() => setEditorOpen(false)}
