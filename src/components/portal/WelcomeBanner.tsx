@@ -46,7 +46,7 @@ export const WelcomeBanner = () => {
   const dayMessage = getDayMessage();
 
   return (
-    <div className="flex items-center justify-between gap-4 mb-4">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4 mb-4">
       {/* Left: Agent Photo + Greeting */}
       <div className="flex items-center gap-4 min-w-0">
         {/* Agent Photo */}
