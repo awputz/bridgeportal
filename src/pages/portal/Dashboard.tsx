@@ -108,40 +108,40 @@ const Dashboard = () => {
         <section className="mb-4 animate-fade-in-up" style={{ animationDelay: '0.05s' }}>
           <h2 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Quick Actions</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <a href="tel:2125319295" className="glass-card p-4 flex items-center gap-3 hover:border-primary/50 group">
-              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-                <Phone className="h-5 w-5 text-primary" />
+            <a href="tel:2125319295" className="glass-card px-4 py-3 flex items-center gap-3 h-[60px] hover:border-primary/50 group">
+              <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110">
+                <Phone className="h-4 w-4 text-primary" />
               </div>
-              <div>
-                <span className="text-sm font-medium text-foreground">Call Office</span>
-                <p className="text-xs text-muted-foreground">(212) 531-9295</p>
+              <div className="min-w-0">
+                <span className="text-sm font-medium text-foreground block truncate">Call Office</span>
+                <p className="text-xs text-muted-foreground truncate">(212) 531-9295</p>
               </div>
             </a>
-            <Link to="/portal/requests" className="glass-card p-4 flex items-center gap-3 hover:border-amber-500/50 group">
-              <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-                <Send className="h-5 w-5 text-amber-400" />
+            <Link to="/portal/requests" className="glass-card px-4 py-3 flex items-center gap-3 h-[60px] hover:border-amber-500/50 group">
+              <div className="w-9 h-9 rounded-full bg-amber-500/20 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110">
+                <Send className="h-4 w-4 text-amber-400" />
               </div>
-              <div>
-                <span className="text-sm font-medium text-foreground">Submit Request</span>
-                <p className="text-xs text-muted-foreground">Cards, BOV, etc.</p>
-              </div>
-            </Link>
-            <Link to="/portal/commission-request" className="glass-card p-4 flex items-center gap-3 hover:border-emerald-500/50 group">
-              <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-                <DollarSign className="h-5 w-5 text-emerald-400" />
-              </div>
-              <div>
-                <span className="text-sm font-medium text-foreground">Commission Request</span>
-                <p className="text-xs text-muted-foreground">Request payment</p>
+              <div className="min-w-0">
+                <span className="text-sm font-medium text-foreground block truncate">Submit Request</span>
+                <p className="text-xs text-muted-foreground truncate">Cards, BOV, etc.</p>
               </div>
             </Link>
-            <Link to="/portal/exclusives/new" className="glass-card p-4 flex items-center gap-3 hover:border-purple-500/50 group">
-              <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-                <ClipboardCheck className="h-5 w-5 text-purple-400" />
+            <Link to="/portal/commission-request" className="glass-card px-4 py-3 flex items-center gap-3 h-[60px] hover:border-emerald-500/50 group">
+              <div className="w-9 h-9 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110">
+                <DollarSign className="h-4 w-4 text-emerald-400" />
               </div>
-              <div>
-                <span className="text-sm font-medium text-foreground">Submit Exclusive</span>
-                <p className="text-xs text-muted-foreground">New listing</p>
+              <div className="min-w-0">
+                <span className="text-sm font-medium text-foreground block truncate">Commission Request</span>
+                <p className="text-xs text-muted-foreground truncate">Request payment</p>
+              </div>
+            </Link>
+            <Link to="/portal/exclusives/new" className="glass-card px-4 py-3 flex items-center gap-3 h-[60px] hover:border-purple-500/50 group">
+              <div className="w-9 h-9 rounded-full bg-purple-500/20 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110">
+                <ClipboardCheck className="h-4 w-4 text-purple-400" />
+              </div>
+              <div className="min-w-0">
+                <span className="text-sm font-medium text-foreground block truncate">Submit Exclusive</span>
+                <p className="text-xs text-muted-foreground truncate">New listing</p>
               </div>
             </Link>
           </div>
