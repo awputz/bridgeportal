@@ -45,7 +45,7 @@ const moreItemsGrouped = [
     category: "Google",
     items: [
       { path: "/portal/contacts", icon: Users, label: "Contacts" },
-      { path: "/portal/drive", icon: FolderOpen, label: "Drive" },
+      { path: "https://drive.google.com", icon: FolderOpen, label: "Drive", external: true },
     ],
   },
   {
@@ -162,7 +162,27 @@ export const MobileBottomNav = () => {
                   <div className="grid grid-cols-4 gap-2">
                     {group.items.map((item) => {
                       const Icon = item.icon;
-                      const active = isActive(item.path);
+                      const isExternal = 'external' in item && item.external;
+                      const active = !isExternal && isActive(item.path);
+                      
+                      if (isExternal) {
+                        return (
+                          <SheetClose asChild key={item.path}>
+                            <a
+                              href={item.path}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-xl transition-all duration-300 active:scale-95 hover:bg-white/5 text-muted-foreground hover:text-foreground"
+                            >
+                              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/5">
+                                <Icon className="h-5 w-5 text-foreground/60" />
+                              </div>
+                              <span className="text-[10px] font-medium text-center">{item.label}</span>
+                            </a>
+                          </SheetClose>
+                        );
+                      }
+                      
                       return (
                         <SheetClose asChild key={item.path}>
                           <Link
