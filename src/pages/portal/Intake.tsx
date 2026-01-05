@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { 
   Copy, 
@@ -15,7 +15,10 @@ import {
   ExternalLink,
   FileText,
   Link as LinkIcon,
-  Check
+  Check,
+  TrendingUp,
+  QrCode,
+  Download
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,6 +38,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
@@ -56,6 +67,8 @@ import {
   IntakeEmptyState,
 } from "@/components/portal/intake";
 
+const ITEMS_PER_PAGE = 10;
+
 const divisionInfo: Record<string, { label: string; icon: typeof Building2; color: string }> = {
   "investment-sales": { label: "Investment Sales", icon: Building2, color: "text-emerald-500" },
   "commercial-leasing": { label: "Commercial Leasing", icon: Briefcase, color: "text-blue-500" },
@@ -75,6 +88,8 @@ export default function Intake() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSubmission, setSelectedSubmission] = useState<IntakeSubmission | null>(null);
   const [copied, setCopied] = useState(false);
+  const [showQR, setShowQR] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { data: intakeLink, isLoading: linkLoading } = useMyIntakeLink();
   const { data: submissions = [], isLoading: submissionsLoading } = useIntakeSubmissions({
@@ -99,22 +114,44 @@ export default function Intake() {
   };
 
   // Filter submissions by search
-  const filteredSubmissions = submissions.filter(s => 
-    s.client_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    s.client_email.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredSubmissions = useMemo(() => {
+    return submissions.filter(s => 
+      s.client_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      s.client_email.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [submissions, searchQuery]);
+
+  // Pagination
+  const totalPages = Math.ceil(filteredSubmissions.length / ITEMS_PER_PAGE);
+  const paginatedSubmissions = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredSubmissions.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredSubmissions, currentPage]);
+
+  // Reset page when filters change
+  const handleFilterChange = (type: 'division' | 'status' | 'search', value: string) => {
+    setCurrentPage(1);
+    if (type === 'division') setSelectedDivision(value);
+    else if (type === 'status') setSelectedStatus(value);
+    else setSearchQuery(value);
+  };
+
+  // Calculate conversion rate
+  const conversionRate = stats && stats.total > 0 
+    ? Math.round((submissions.filter(s => s.status === 'converted').length / stats.total) * 100) 
+    : 0;
 
   return (
-    <div className="space-y-8">
+    <div className="py-8 space-y-8 max-w-7xl mx-auto px-4 md:px-6">
       {/* Header */}
-      <div className="space-y-1">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
-            <FileText className="h-5 w-5 text-primary" />
+      <div className="space-y-2">
+        <div className="flex items-center gap-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
+            <FileText className="h-6 w-6 text-primary" />
           </div>
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Client Intake</h1>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground">
               Collect and manage client criteria submissions
             </p>
           </div>
@@ -123,7 +160,7 @@ export default function Intake() {
 
       {/* Intake Link Card */}
       <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
-        <CardHeader className="pb-4">
+        <CardHeader className="pb-6">
           <div className="flex items-center gap-2">
             <LinkIcon className="h-5 w-5 text-primary" />
             <CardTitle className="text-lg">Your Intake Link</CardTitle>
@@ -132,22 +169,37 @@ export default function Intake() {
             Share this link with any client. They'll select their sector and submit their requirements directly to your portal.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-5">
           {linkLoading ? (
-            <div className="space-y-3">
-              <Skeleton className="h-12 w-full" />
-              <Skeleton className="h-10 w-32" />
+            <div className="space-y-4">
+              <Skeleton className="h-14 w-full" />
+              <div className="flex gap-3">
+                <Skeleton className="h-11 w-32" />
+                <Skeleton className="h-11 w-36" />
+              </div>
             </div>
           ) : intakeLink ? (
             <>
-              <div className="flex items-center gap-3 p-4 rounded-lg bg-background border border-border">
-                <div className="flex-1 overflow-hidden">
-                  <p className="font-mono text-sm truncate text-foreground">
+              <div className="flex items-center gap-4 p-4 rounded-xl bg-background border border-border">
+                <div className="flex-1 min-w-0">
+                  <p className="font-mono text-sm truncate text-foreground select-all">
                     {intakeUrl}
                   </p>
                 </div>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  onClick={handleCopyLink}
+                  className="shrink-0"
+                >
+                  {copied ? (
+                    <Check className="h-4 w-4 text-green-500" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </Button>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 <Button 
                   onClick={handleCopyLink}
                   size="lg"
@@ -173,7 +225,20 @@ export default function Intake() {
                   <ExternalLink className="h-4 w-4 mr-2" />
                   Preview Form
                 </Button>
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  onClick={() => setShowQR(true)}
+                >
+                  <QrCode className="h-4 w-4 mr-2" />
+                  QR Code
+                </Button>
               </div>
+              {intakeLink.view_count > 0 && (
+                <p className="text-sm text-muted-foreground">
+                  Link viewed {intakeLink.view_count} time{intakeLink.view_count !== 1 ? 's' : ''}
+                </p>
+              )}
             </>
           ) : (
             <p className="text-sm text-muted-foreground">Unable to load your intake link. Please refresh the page.</p>
@@ -182,7 +247,7 @@ export default function Intake() {
       </Card>
 
       {/* Stats Grid */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <IntakeStatsCard
           title="Total Submissions"
           value={stats?.total || 0}
@@ -199,21 +264,29 @@ export default function Intake() {
           isLoading={statsLoading}
         />
         <IntakeStatsCard
-          title="New (Uncontacted)"
+          title="Awaiting Contact"
           value={stats?.newSubmissions || 0}
           icon={Clock}
           variant="warning"
           isLoading={statsLoading}
+        />
+        <IntakeStatsCard
+          title="Conversion Rate"
+          value={conversionRate}
+          icon={TrendingUp}
+          variant="success"
+          isLoading={statsLoading}
+          suffix="%"
         />
       </div>
 
       {/* Submissions Section */}
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Submissions</h2>
-          {submissions.length > 0 && (
-            <Badge variant="secondary" className="text-xs">
-              {submissions.length} total
+          <h2 className="text-xl font-semibold">Submissions</h2>
+          {filteredSubmissions.length > 0 && (
+            <Badge variant="secondary" className="text-sm px-3 py-1">
+              {filteredSubmissions.length} total
             </Badge>
           )}
         </div>
@@ -221,11 +294,11 @@ export default function Intake() {
         {/* Filters */}
         <IntakeFilters
           searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
+          onSearchChange={(v) => handleFilterChange('search', v)}
           selectedDivision={selectedDivision}
-          onDivisionChange={setSelectedDivision}
+          onDivisionChange={(v) => handleFilterChange('division', v)}
           selectedStatus={selectedStatus}
-          onStatusChange={setSelectedStatus}
+          onStatusChange={(v) => handleFilterChange('status', v)}
         />
 
         {/* Submissions Table */}
@@ -234,12 +307,12 @@ export default function Intake() {
             {submissionsLoading ? (
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-muted/30">
-                    <TableHead className="w-[280px]">Client</TableHead>
-                    <TableHead className="w-[180px]">Division</TableHead>
-                    <TableHead className="w-[120px]">Status</TableHead>
-                    <TableHead className="w-[140px] hidden md:table-cell">Submitted</TableHead>
-                    <TableHead className="w-[100px] text-right">Actions</TableHead>
+                  <TableRow className="bg-muted/30 hover:bg-muted/30">
+                    <TableHead className="w-[280px] h-14 font-semibold">Client</TableHead>
+                    <TableHead className="w-[180px] font-semibold">Division</TableHead>
+                    <TableHead className="w-[120px] font-semibold">Status</TableHead>
+                    <TableHead className="w-[140px] hidden md:table-cell font-semibold">Submitted</TableHead>
+                    <TableHead className="w-[100px] text-right font-semibold">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -251,35 +324,72 @@ export default function Intake() {
             ) : filteredSubmissions.length === 0 ? (
               <IntakeEmptyState type="submissions" />
             ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-muted/30 hover:bg-muted/30">
-                    <TableHead className="w-[280px] font-semibold">Client</TableHead>
-                    <TableHead className="w-[180px] font-semibold">Division</TableHead>
-                    <TableHead className="w-[120px] font-semibold">Status</TableHead>
-                    <TableHead className="w-[140px] font-semibold hidden md:table-cell">Submitted</TableHead>
-                    <TableHead className="w-[100px] text-right font-semibold">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredSubmissions.map((submission) => (
-                    <IntakeSubmissionRow
-                      key={submission.id}
-                      submission={submission}
-                      onView={() => setSelectedSubmission(submission)}
-                      onMarkContacted={() => updateSubmission.mutate({
-                        id: submission.id,
-                        status: "contacted",
-                        contacted_at: new Date().toISOString()
-                      })}
-                      onConvertToContact={() => convertToContact.mutate({
-                        submission,
-                        division: submission.division
-                      })}
-                    />
-                  ))}
-                </TableBody>
-              </Table>
+              <>
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-muted/30 hover:bg-muted/30">
+                      <TableHead className="w-[280px] h-14 font-semibold">Client</TableHead>
+                      <TableHead className="w-[180px] font-semibold">Division</TableHead>
+                      <TableHead className="w-[120px] font-semibold">Status</TableHead>
+                      <TableHead className="w-[140px] font-semibold hidden md:table-cell">Submitted</TableHead>
+                      <TableHead className="w-[100px] text-right font-semibold">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {paginatedSubmissions.map((submission) => (
+                      <IntakeSubmissionRow
+                        key={submission.id}
+                        submission={submission}
+                        onView={() => setSelectedSubmission(submission)}
+                        onMarkContacted={() => updateSubmission.mutate({
+                          id: submission.id,
+                          status: "contacted",
+                          contacted_at: new Date().toISOString()
+                        })}
+                        onConvertToContact={() => convertToContact.mutate({
+                          submission,
+                          division: submission.division
+                        })}
+                      />
+                    ))}
+                  </TableBody>
+                </Table>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-between px-6 py-4 border-t border-border">
+                    <p className="text-sm text-muted-foreground">
+                      Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredSubmissions.length)} of {filteredSubmissions.length}
+                    </p>
+                    <Pagination>
+                      <PaginationContent>
+                        <PaginationItem>
+                          <PaginationPrevious 
+                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                            className={cn(currentPage === 1 && "pointer-events-none opacity-50")}
+                          />
+                        </PaginationItem>
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                          <PaginationItem key={page}>
+                            <PaginationLink
+                              onClick={() => setCurrentPage(page)}
+                              isActive={currentPage === page}
+                            >
+                              {page}
+                            </PaginationLink>
+                          </PaginationItem>
+                        ))}
+                        <PaginationItem>
+                          <PaginationNext 
+                            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                            className={cn(currentPage === totalPages && "pointer-events-none opacity-50")}
+                          />
+                        </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
+                  </div>
+                )}
+              </>
             )}
           </CardContent>
         </Card>
@@ -292,7 +402,71 @@ export default function Intake() {
           onClose={() => setSelectedSubmission(null)} 
         />
       )}
+
+      {/* QR Code Dialog */}
+      {showQR && intakeUrl && (
+        <QRCodeDialog 
+          url={intakeUrl} 
+          onClose={() => setShowQR(false)} 
+        />
+      )}
     </div>
+  );
+}
+
+// QR Code Dialog
+function QRCodeDialog({ url, onClose }: { url: string; onClose: () => void }) {
+  // Generate a simple QR code using an external service
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}`;
+
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(qrCodeUrl);
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = 'intake-qr-code.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(downloadUrl);
+      toast.success("QR code downloaded!");
+    } catch {
+      toast.error("Failed to download QR code");
+    }
+  };
+
+  return (
+    <Dialog open onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Intake Form QR Code</DialogTitle>
+          <DialogDescription>
+            Scan this code to open your client intake form
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex flex-col items-center gap-6 py-6">
+          <div className="p-4 bg-white rounded-xl shadow-inner">
+            <img 
+              src={qrCodeUrl} 
+              alt="QR Code for intake form"
+              className="w-48 h-48"
+            />
+          </div>
+          <p className="text-sm text-muted-foreground text-center max-w-xs">
+            Print this QR code for meetings, business cards, or marketing materials
+          </p>
+        </div>
+        <DialogFooter className="gap-2 sm:gap-2">
+          <Button variant="outline" onClick={onClose}>Close</Button>
+          <Button onClick={handleDownload}>
+            <Download className="h-4 w-4 mr-2" />
+            Download PNG
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -368,30 +542,30 @@ function SubmissionDetailDialog({
 
         <Separator />
 
-        <div className="space-y-6 py-2">
+        <div className="space-y-6 py-4">
           {/* Contact Info */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               Contact Information
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-4 rounded-lg bg-muted/50 border border-border/50">
+              <div className="p-4 rounded-xl bg-muted/50 border border-border/50">
                 <p className="text-xs text-muted-foreground mb-1">Email</p>
                 <p className="font-medium">{submission.client_email}</p>
               </div>
               {submission.client_phone && (
-                <div className="p-4 rounded-lg bg-muted/50 border border-border/50">
+                <div className="p-4 rounded-xl bg-muted/50 border border-border/50">
                   <p className="text-xs text-muted-foreground mb-1">Phone</p>
                   <p className="font-medium">{submission.client_phone}</p>
                 </div>
               )}
               {submission.client_company && (
-                <div className="p-4 rounded-lg bg-muted/50 border border-border/50">
+                <div className="p-4 rounded-xl bg-muted/50 border border-border/50">
                   <p className="text-xs text-muted-foreground mb-1">Company</p>
                   <p className="font-medium">{submission.client_company}</p>
                 </div>
               )}
-              <div className="p-4 rounded-lg bg-muted/50 border border-border/50">
+              <div className="p-4 rounded-xl bg-muted/50 border border-border/50">
                 <p className="text-xs text-muted-foreground mb-1">Submitted</p>
                 <p className="font-medium">{format(new Date(submission.created_at), "PPP 'at' p")}</p>
               </div>
@@ -399,13 +573,13 @@ function SubmissionDetailDialog({
           </div>
 
           {/* Criteria */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               Criteria & Requirements
             </h3>
             <div className="grid gap-3">
               {Object.entries(submission.criteria).map(([key, value]) => (
-                <div key={key} className="p-4 rounded-lg bg-muted/50 border border-border/50">
+                <div key={key} className="p-4 rounded-xl bg-muted/50 border border-border/50">
                   <p className="text-xs text-muted-foreground mb-1 capitalize">
                     {key.replace(/_/g, " ")}
                   </p>
@@ -419,11 +593,11 @@ function SubmissionDetailDialog({
 
           {/* Notes */}
           {submission.notes && (
-            <div className="space-y-3">
+            <div className="space-y-4">
               <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
                 Additional Notes
               </h3>
-              <div className="p-4 rounded-lg bg-muted/50 border border-border/50">
+              <div className="p-4 rounded-xl bg-muted/50 border border-border/50">
                 <p className="whitespace-pre-wrap">{submission.notes}</p>
               </div>
             </div>
@@ -431,8 +605,8 @@ function SubmissionDetailDialog({
 
           {/* Converted Contact Link */}
           {submission.converted_contact_id && (
-            <div className="flex items-center gap-2 p-4 rounded-lg bg-green-500/10 border border-green-500/20">
-              <CheckCircle2 className="h-5 w-5 text-green-600" />
+            <div className="flex items-center gap-3 p-4 rounded-xl bg-green-500/10 border border-green-500/20">
+              <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0" />
               <span className="text-sm font-medium text-green-700">Converted to contact</span>
               <Link 
                 to={`/portal/crm/contacts/${submission.converted_contact_id}`}

@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 interface IntakeStatsCardProps {
   title: string;
-  value: number;
+  value: number | string;
   icon: LucideIcon;
   trend?: {
     value: number;
@@ -13,6 +13,7 @@ interface IntakeStatsCardProps {
   };
   variant?: "default" | "primary" | "success" | "warning";
   isLoading?: boolean;
+  suffix?: string;
 }
 
 const variantStyles = {
@@ -45,6 +46,7 @@ export function IntakeStatsCard({
   trend,
   variant = "default",
   isLoading = false,
+  suffix,
 }: IntakeStatsCardProps) {
   const styles = variantStyles[variant];
 
@@ -71,7 +73,7 @@ export function IntakeStatsCard({
         <div className="flex items-center justify-between gap-4">
           <div className="space-y-1">
             <p className="text-sm font-medium text-muted-foreground">{title}</p>
-            <p className="text-3xl font-bold tracking-tight">{value}</p>
+            <p className="text-3xl font-bold tracking-tight">{value}{suffix}</p>
             {trend && (
               <p className={cn(
                 "text-xs font-medium",

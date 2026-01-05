@@ -10,7 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
 
 interface IntakeFiltersProps {
   searchQuery: string;
@@ -59,16 +58,16 @@ export function IntakeFilters({
   ].filter(Boolean).length;
 
   return (
-    <Card className="p-4">
+    <Card className="p-5">
       <div className="space-y-4">
         {/* Main Filters Row */}
-        <div className="flex flex-col lg:flex-row gap-3">
+        <div className="flex flex-col lg:flex-row gap-4">
           {/* Search */}
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input 
               placeholder="Search by name or email..." 
-              className="pl-9 bg-background"
+              className="pl-10 h-11 bg-background"
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
             />
@@ -76,17 +75,17 @@ export function IntakeFilters({
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+                className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
                 onClick={() => onSearchChange("")}
               >
-                <X className="h-3.5 w-3.5" />
+                <X className="h-4 w-4" />
               </Button>
             )}
           </div>
 
           {/* Division Filter */}
           <Select value={selectedDivision} onValueChange={onDivisionChange}>
-            <SelectTrigger className="w-full lg:w-[200px] bg-background">
+            <SelectTrigger className="w-full lg:w-[200px] h-11 bg-background">
               <SelectValue placeholder="All Divisions" />
             </SelectTrigger>
             <SelectContent className="bg-popover">
@@ -100,7 +99,7 @@ export function IntakeFilters({
 
           {/* Status Filter */}
           <Select value={selectedStatus} onValueChange={onStatusChange}>
-            <SelectTrigger className="w-full lg:w-[160px] bg-background">
+            <SelectTrigger className="w-full lg:w-[160px] h-11 bg-background">
               <SelectValue placeholder="All Status" />
             </SelectTrigger>
             <SelectContent className="bg-popover">
@@ -115,7 +114,7 @@ export function IntakeFilters({
 
         {/* Active Filters Chips */}
         {hasActiveFilters && (
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 pt-2">
             <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
               <Filter className="h-3.5 w-3.5" />
               <span>Active filters:</span>
@@ -124,7 +123,7 @@ export function IntakeFilters({
             {searchQuery && (
               <Badge 
                 variant="secondary" 
-                className="gap-1.5 pl-2 pr-1"
+                className="gap-1.5 pl-2.5 pr-1 py-1"
               >
                 Search: "{searchQuery}"
                 <Button
@@ -141,7 +140,7 @@ export function IntakeFilters({
             {selectedDivision !== "all" && (
               <Badge 
                 variant="secondary" 
-                className="gap-1.5 pl-2 pr-1"
+                className="gap-1.5 pl-2.5 pr-1 py-1"
               >
                 {divisions.find(d => d.value === selectedDivision)?.label}
                 <Button
@@ -158,7 +157,7 @@ export function IntakeFilters({
             {selectedStatus !== "all" && (
               <Badge 
                 variant="secondary" 
-                className="gap-1.5 pl-2 pr-1"
+                className="gap-1.5 pl-2.5 pr-1 py-1"
               >
                 {statuses.find(s => s.value === selectedStatus)?.label}
                 <Button
@@ -176,7 +175,7 @@ export function IntakeFilters({
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
+                className="h-7 px-2.5 text-xs text-muted-foreground hover:text-foreground"
                 onClick={clearFilters}
               >
                 Clear all
