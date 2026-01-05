@@ -101,6 +101,7 @@ const NewExclusive = lazy(() => import("./pages/portal/NewExclusive"));
 const ExclusiveWizard = lazy(() => import("./pages/portal/exclusives/ExclusiveWizard"));
 const Intake = lazy(() => import("./pages/portal/Intake"));
 const IntakeForm = lazy(() => import("./pages/intake/IntakeForm"));
+const UniversalIntakeForm = lazy(() => import("./pages/intake/UniversalIntakeForm"));
 const CommissionRequestsAdmin = lazy(() => import("./pages/admin/CommissionRequestsAdmin"));
 const CRMOverviewAdmin = lazy(() => import("./pages/admin/CRMOverviewAdmin"));
 const AgentPerformanceAdmin = lazy(() => import("./pages/admin/AgentPerformanceAdmin"));
@@ -186,7 +187,12 @@ const App = () => {
                     </Suspense>
                   } />
                   
-                  {/* Public Intake Form */}
+                  {/* Public Intake Forms */}
+                  <Route path="/intake" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <UniversalIntakeForm />
+                    </Suspense>
+                  } />
                   <Route path="/intake/:linkCode" element={
                     <Suspense fallback={<PageLoader />}>
                       <IntakeForm />

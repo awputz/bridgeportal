@@ -31,8 +31,16 @@ export interface IntakeSubmission {
   contacted_at: string | null;
   converted_contact_id: string | null;
   converted_deal_id: string | null;
+  is_general_inquiry: boolean;
   created_at: string;
   updated_at: string;
+}
+
+export interface AgentProfile {
+  id: string;
+  full_name: string | null;
+  email: string | null;
+  avatar_url: string | null;
 }
 
 // Generate a unique link code
@@ -45,6 +53,23 @@ const generateLinkCode = () => {
   return code;
 };
 
+// Fetch list of agents for the universal intake form
+export const useAgentsList = () => {
+  return useQuery({
+    queryKey: ["agents-list"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, full_name, email, avatar_url")
+        .eq("user_type", "agent")
+        .order("full_name");
+      
+      if (error) throw error;
+      return data as AgentProfile[];
+    },
+    staleTime: 1000 * 60 * 10, // Cache for 10 minutes
+  });
+};
 // Fetch or auto-create the agent's single intake link
 export const useMyIntakeLink = () => {
   const { user } = useAuth();
@@ -176,12 +201,12 @@ export const useIntakeStats = () => {
   });
 };
 
-// Create a submission (for public form)
+// Create a submission (for public form) - supports both agent-specific and general inquiries
 export const useCreateIntakeSubmission = () => {
   return useMutation({
     mutationFn: async (data: {
       link_id?: string;
-      agent_id: string;
+      agent_id: string | null;
       division: string;
       client_name: string;
       client_email: string;
@@ -189,12 +214,36 @@ export const useCreateIntakeSubmission = () => {
       client_company?: string;
       criteria: Record<string, unknown>;
       notes?: string;
+      is_general_inquiry?: boolean;
     }) => {
+      // For general inquiries without an agent, we need a placeholder agent_id
+      // We'll use a system account or the first admin - this should be handled properly in production
+      let agentId = data.agent_id;
+      
+      if (!agentId && data.is_general_inquiry) {
+        // Fetch first admin user as placeholder for general inquiries
+        const { data: admins } = await supabase
+          .from("user_roles")
+          .select("user_id")
+          .eq("role", "admin")
+          .limit(1);
+        
+        if (admins && admins.length > 0) {
+          agentId = admins[0].user_id;
+        } else {
+          throw new Error("No admin found to handle general inquiry");
+        }
+      }
+
+      if (!agentId) {
+        throw new Error("Agent ID is required");
+      }
+
       const { data: submission, error } = await supabase
         .from("client_intake_submissions")
         .insert({
           link_id: data.link_id || null,
-          agent_id: data.agent_id,
+          agent_id: agentId,
           division: data.division,
           client_name: data.client_name,
           client_email: data.client_email,
@@ -202,6 +251,7 @@ export const useCreateIntakeSubmission = () => {
           client_company: data.client_company || null,
           criteria: data.criteria as unknown as Record<string, never>,
           notes: data.notes || null,
+          is_general_inquiry: data.is_general_inquiry || false,
         })
         .select()
         .single();

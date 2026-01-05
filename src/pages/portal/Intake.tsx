@@ -100,14 +100,14 @@ export default function Intake() {
   const updateSubmission = useUpdateSubmission();
   const convertToContact = useConvertToContact();
 
-  // Generate the full intake URL
+  // Generate the full intake URLs
   const baseUrl = window.location.origin;
-  const intakeUrl = intakeLink ? `${baseUrl}/intake/${intakeLink.link_code}` : "";
+  const universalIntakeUrl = `${baseUrl}/intake`;
+  const personalIntakeUrl = intakeLink ? `${baseUrl}/intake/${intakeLink.link_code}` : "";
 
-  // Handle copy link
+  // Handle copy universal link
   const handleCopyLink = async () => {
-    if (!intakeUrl) return;
-    await navigator.clipboard.writeText(intakeUrl);
+    await navigator.clipboard.writeText(universalIntakeUrl);
     setCopied(true);
     toast.success("Link copied to clipboard!");
     setTimeout(() => setCopied(false), 2000);
@@ -159,90 +159,99 @@ export default function Intake() {
         </div>
       </div>
 
-      {/* Intake Link Card */}
+      {/* Universal Intake Link Card */}
       <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
         <CardHeader className="pb-6">
           <div className="flex items-center gap-2">
             <LinkIcon className="h-5 w-5 text-primary" />
-            <CardTitle className="text-lg">Your Intake Link</CardTitle>
+            <CardTitle className="text-lg">Company Intake Link</CardTitle>
           </div>
           <CardDescription>
-            Share this link with any client. They'll select their sector and submit their requirements directly to your portal.
+            Share this universal link with any client. They'll select their agent and sector, then submit requirements directly.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
-          {linkLoading ? (
-            <div className="space-y-4">
-              <Skeleton className="h-14 w-full" />
-              <div className="flex gap-3">
-                <Skeleton className="h-11 w-32" />
-                <Skeleton className="h-11 w-36" />
+          {/* Universal Link - Primary */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-4 p-4 rounded-xl bg-background border-2 border-primary/30">
+              <div className="flex-1 min-w-0">
+                <p className="font-mono text-sm truncate text-foreground select-all">
+                  {universalIntakeUrl}
+                </p>
               </div>
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={handleCopyLink}
+                className="shrink-0"
+              >
+                {copied ? (
+                  <Check className="h-4 w-4 text-green-500" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )}
+              </Button>
             </div>
-          ) : intakeLink ? (
-            <>
-              <div className="flex items-center gap-4 p-4 rounded-xl bg-background border border-border">
+            <div className="flex flex-wrap items-center gap-3">
+              <Button 
+                onClick={handleCopyLink}
+                size="lg"
+                className="shadow-sm"
+              >
+                {copied ? (
+                  <>
+                    <Check className="h-4 w-4 mr-2" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy Link
+                  </>
+                )}
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg"
+                onClick={() => window.open(universalIntakeUrl, '_blank')}
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Preview Form
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg"
+                onClick={() => setShowQR(true)}
+              >
+                <QrCode className="h-4 w-4 mr-2" />
+                QR Code
+              </Button>
+            </div>
+          </div>
+
+          {/* Personal Link - Secondary */}
+          {!linkLoading && personalIntakeUrl && (
+            <div className="pt-4 border-t border-border/50">
+              <p className="text-xs text-muted-foreground mb-2">Your personal link (skips agent selection):</p>
+              <div className="flex items-center gap-4 p-3 rounded-lg bg-muted/50 border border-border">
                 <div className="flex-1 min-w-0">
-                  <p className="font-mono text-sm truncate text-foreground select-all">
-                    {intakeUrl}
+                  <p className="font-mono text-xs truncate text-muted-foreground select-all">
+                    {personalIntakeUrl}
                   </p>
                 </div>
                 <Button 
                   variant="ghost" 
-                  size="icon"
-                  onClick={handleCopyLink}
-                  className="shrink-0"
+                  size="sm"
+                  onClick={async () => {
+                    await navigator.clipboard.writeText(personalIntakeUrl);
+                    toast.success("Personal link copied!");
+                  }}
+                  className="shrink-0 h-8"
                 >
-                  {copied ? (
-                    <Check className="h-4 w-4 text-green-500" />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
+                  <Copy className="h-3 w-3" />
                 </Button>
               </div>
-              <div className="flex flex-wrap items-center gap-3">
-                <Button 
-                  onClick={handleCopyLink}
-                  size="lg"
-                  className="shadow-sm"
-                >
-                  {copied ? (
-                    <>
-                      <Check className="h-4 w-4 mr-2" />
-                      Copied!
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="h-4 w-4 mr-2" />
-                      Copy Link
-                    </>
-                  )}
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="lg"
-                  onClick={() => window.open(intakeUrl, '_blank')}
-                >
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  Preview Form
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="lg"
-                  onClick={() => setShowQR(true)}
-                >
-                  <QrCode className="h-4 w-4 mr-2" />
-                  QR Code
-                </Button>
-              </div>
-              {intakeLink.view_count > 0 && (
-                <p className="text-sm text-muted-foreground">
-                  Link viewed {intakeLink.view_count} time{intakeLink.view_count !== 1 ? 's' : ''}
-                </p>
-              )}
-            </>
-          ) : (
-            <p className="text-sm text-muted-foreground">Unable to load your intake link. Please refresh the page.</p>
+            </div>
           )}
         </CardContent>
       </Card>
@@ -405,9 +414,9 @@ export default function Intake() {
       )}
 
       {/* QR Code Dialog */}
-      {showQR && intakeUrl && (
+      {showQR && (
         <QRCodeDialog 
-          url={intakeUrl} 
+          url={universalIntakeUrl} 
           onClose={() => setShowQR(false)} 
         />
       )}

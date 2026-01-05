@@ -816,6 +816,7 @@ export type Database = {
           criteria: Json
           division: string
           id: string
+          is_general_inquiry: boolean | null
           link_id: string | null
           notes: string | null
           status: string
@@ -834,6 +835,7 @@ export type Database = {
           criteria?: Json
           division: string
           id?: string
+          is_general_inquiry?: boolean | null
           link_id?: string | null
           notes?: string | null
           status?: string
@@ -852,6 +854,7 @@ export type Database = {
           criteria?: Json
           division?: string
           id?: string
+          is_general_inquiry?: boolean | null
           link_id?: string | null
           notes?: string | null
           status?: string
