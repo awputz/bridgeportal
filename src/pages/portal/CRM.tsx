@@ -11,6 +11,7 @@ import {
   BarChart3,
   List,
   Layers,
+  ListTodo,
 } from "lucide-react";
 import { useCRMDeals, useDealStages, useUpdateDeal, useDeleteDeal } from "@/hooks/useCRM";
 import { useCRMRealtime } from "@/hooks/useCRMRealtime";
@@ -32,6 +33,7 @@ import { CRMGroupedView } from "@/components/portal/CRMGroupedView";
 import { DealFiltersPanel, DealFilters } from "@/components/portal/DealFiltersPanel";
 import { BulkActionsBar } from "@/components/portal/BulkActionsBar";
 import { PipelineAnalytics } from "@/components/portal/PipelineAnalytics";
+import { CRMTasksPanel } from "@/components/portal/CRMTasksPanel";
 import { DIVISION_DISPLAY_NAMES } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -345,6 +347,11 @@ const CRM = () => {
             />
           </div>
         )}
+
+        {/* Tasks Panel */}
+        <div className="section-gap">
+          <CRMTasksPanel division={division} />
+        </div>
 
         {/* Filters */}
         {stages && (

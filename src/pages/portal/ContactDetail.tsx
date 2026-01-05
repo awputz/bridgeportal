@@ -119,6 +119,12 @@ const ContactDetail = () => {
       due_date: null,
       completed_at: null,
       is_completed: false,
+      division: contact?.division || 'investment-sales',
+      priority: 'medium',
+      reminder_at: null,
+      recurring_pattern: null,
+      is_all_day: false,
+      category: type,
     });
   };
 

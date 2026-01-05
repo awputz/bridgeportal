@@ -145,6 +145,17 @@ export interface CRMDeal {
   stage?: CRMDealStage | null;
 }
 
+// Lightweight types for joined data in activities
+export interface CRMActivityContact {
+  id: string;
+  full_name: string;
+}
+
+export interface CRMActivityDeal {
+  id: string;
+  property_address: string;
+}
+
 export interface CRMActivity {
   id: string;
   agent_id: string;
@@ -157,9 +168,16 @@ export interface CRMActivity {
   completed_at: string | null;
   is_completed: boolean;
   created_at: string;
-  // Joined data
-  contact?: CRMContact | null;
-  deal?: CRMDeal | null;
+  // New fields from migration
+  division: string;
+  priority: string;
+  reminder_at: string | null;
+  recurring_pattern: string | null;
+  is_all_day: boolean;
+  category: string;
+  // Joined data (lightweight)
+  contact?: CRMActivityContact | null;
+  deal?: CRMActivityDeal | null;
 }
 
 // ========== Deal Stages ==========

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { CRMContact, CRMDeal, CRMActivity, CRMDealStage } from "./useCRM";
+import { CRMContact, CRMDeal, CRMActivity, CRMActivityContact, CRMActivityDeal, CRMDealStage } from "./useCRM";
 
 export interface CRMContactWithAgent extends CRMContact {
   agent_name: string | null;
@@ -12,9 +12,11 @@ export interface CRMDealWithAgent extends CRMDeal {
   agent_email: string | null;
 }
 
-export interface CRMActivityWithAgent extends CRMActivity {
+export interface CRMActivityWithAgent extends Omit<CRMActivity, 'contact' | 'deal'> {
   agent_name: string | null;
   agent_email: string | null;
+  contact?: CRMActivityContact | null;
+  deal?: CRMActivityDeal | null;
 }
 
 // Utility to fetch profiles for agent IDs
