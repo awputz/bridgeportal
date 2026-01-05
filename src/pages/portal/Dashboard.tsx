@@ -12,12 +12,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { QuickActionCard } from "@/components/portal/QuickActionCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { DashboardStats } from "@/components/portal/DashboardStats";
-import { DealPipelinePreview } from "@/components/portal/DealPipelinePreview";
-import { InlineDivisionSwitcher } from "@/components/portal/InlineDivisionSwitcher";
-
+import { CRMCommandCenter } from "@/components/portal/CRMCommandCenter";
 import { WelcomeBanner } from "@/components/portal/WelcomeBanner";
-import { DashboardTasks } from "@/components/portal/DashboardTasks";
 import { AnnouncementsWidget } from "@/components/portal/AnnouncementsWidget";
 import { GoogleWorkspaceWidget } from "@/components/portal/GoogleWorkspaceWidget";
 import { AlertsWidget } from "@/components/portal/AlertsWidget";
@@ -92,8 +88,8 @@ const Dashboard = () => {
   return (
     <div className="flex-1 overflow-auto">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
-        {/* Welcome Banner + Division Switcher */}
-        <div className="flex flex-col gap-6 mb-8 animate-fade-in">
+        {/* 1. Welcome Banner */}
+        <div className="mb-6 animate-fade-in">
           <OnboardingTooltip
             id="dashboard-welcome"
             title="Your Command Center"
@@ -106,11 +102,10 @@ const Dashboard = () => {
           >
             <WelcomeBanner />
           </OnboardingTooltip>
-          <InlineDivisionSwitcher />
         </div>
 
-        {/* ACTIONS HUB - Primary Actions */}
-        <section className="mb-6 animate-fade-in-up" style={{ animationDelay: '0.05s' }}>
+        {/* 2. Quick Actions Hub - Primary Actions */}
+        <section className="mb-4 animate-fade-in-up" style={{ animationDelay: '0.05s' }}>
           <h2 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Quick Actions</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <a href="tel:2125319295" className="glass-card p-4 flex items-center gap-3 hover:border-primary/50 group">
@@ -153,7 +148,7 @@ const Dashboard = () => {
         </section>
 
         {/* Secondary Actions Row */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.08s' }}>
           <div className="grid grid-cols-4 gap-3">
             <Link to="/portal/crm?action=add-contact" className="glass-card p-3 flex flex-col items-center justify-center gap-1 hover:border-green-500/50 group text-center">
               <UserPlus className="h-5 w-5 text-green-400 transition-transform group-hover:scale-110" />
@@ -174,13 +169,13 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {/* CRM Stats */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
-          <DashboardStats />
+        {/* 3. CRM Command Center - Unified Section */}
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.12s' }}>
+          <CRMCommandCenter />
         </section>
 
-        {/* Google Workspace + Announcements */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+        {/* 4. Workspace & Communications */}
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.16s' }}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <GoogleWorkspaceWidget />
             <div className="space-y-4">
@@ -190,8 +185,8 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {/* AI Quick Prompt */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
+        {/* 5. AI Quick Prompt */}
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
           <form onSubmit={handleAiSubmit} className="glass-card p-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center flex-shrink-0">
@@ -210,16 +205,8 @@ const Dashboard = () => {
           </form>
         </section>
 
-        {/* Tasks + Deal Pipeline */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <DashboardTasks />
-            <DealPipelinePreview />
-          </div>
-        </section>
-
-        {/* Exclusive Listings */}
-        <section className="mb-8">
+        {/* 6. Discovery Section - Exclusive Listings */}
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.24s' }}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
               <Building2 className="h-5 w-5 text-muted-foreground" />
@@ -251,7 +238,7 @@ const Dashboard = () => {
         </section>
 
         {/* Research Tools */}
-        <section className="mb-8">
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.26s' }}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
               <Database className="h-5 w-5 text-muted-foreground" />
@@ -273,7 +260,7 @@ const Dashboard = () => {
         </section>
 
         {/* Team Tools */}
-        <section className="mb-8">
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.28s' }}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
               <Wrench className="h-5 w-5 text-muted-foreground" />
@@ -294,8 +281,8 @@ const Dashboard = () => {
           )}
         </section>
 
-        {/* Company Quick Links */}
-        <section className="mb-8">
+        {/* 7. Company Quick Links */}
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
               <Building2 className="h-5 w-5 text-muted-foreground" />
@@ -320,7 +307,7 @@ const Dashboard = () => {
         </section>
 
         {/* All Portal Pages */}
-        <section>
+        <section className="animate-fade-in-up" style={{ animationDelay: '0.32s' }}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
               <ArrowRight className="h-5 w-5 text-muted-foreground" />

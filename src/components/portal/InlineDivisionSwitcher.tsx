@@ -10,8 +10,60 @@ const divisionIcons: Record<Division, typeof TrendingUp> = {
 
 const divisionOrder: Division[] = ["investment-sales", "commercial-leasing", "residential"];
 
-export const InlineDivisionSwitcher = () => {
+interface InlineDivisionSwitcherProps {
+  compact?: boolean;
+}
+
+export const InlineDivisionSwitcher = ({ compact = false }: InlineDivisionSwitcherProps) => {
   const { division, setDivision } = useDivision();
+
+  if (compact) {
+    return (
+      <div className="flex flex-wrap gap-2">
+        {divisionOrder.map((div) => {
+          const Icon = divisionIcons[div];
+          const config = divisionConfigs[div];
+          const isSelected = division === div;
+
+          return (
+            <button
+              key={div}
+              onClick={() => setDivision(div)}
+              className={cn(
+                "flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200",
+                "border bg-card/50 hover:bg-card",
+                isSelected
+                  ? "border-primary/50 bg-primary/5"
+                  : "border-border/30 hover:border-border/50 opacity-70 hover:opacity-100"
+              )}
+              style={{
+                borderColor: isSelected ? config.color : undefined,
+              }}
+            >
+              <Icon
+                className="h-4 w-4"
+                style={{ color: isSelected ? config.color : undefined }}
+              />
+              <span
+                className={cn(
+                  "text-sm font-medium",
+                  isSelected ? "text-foreground" : "text-muted-foreground"
+                )}
+              >
+                {config.name}
+              </span>
+              {isSelected && (
+                <div
+                  className="h-1.5 w-1.5 rounded-full"
+                  style={{ backgroundColor: config.color }}
+                />
+              )}
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
     <div className="relative">
