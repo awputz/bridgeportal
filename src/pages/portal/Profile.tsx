@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { User, Mail, Phone, Lock, Save, TrendingUp, DollarSign, Building2, Calendar, FileText, ExternalLink, Home, FolderOpen, Users, Check, Loader2, Bell, Settings, LayoutGrid, CreditCard } from "lucide-react";
+import { User, Mail, Phone, Lock, Save, TrendingUp, DollarSign, Building2, Calendar, FileText, ExternalLink, Home, FolderOpen, Users, Check, Loader2, Bell, Settings, LayoutGrid, CreditCard, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -320,6 +320,51 @@ const Profile = () => {
                   </div>
                 </CardContent>
               </Card>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="grid gap-4 md:grid-cols-3">
+              <Link
+                to="/portal/commission-request"
+                className="glass-card p-5 group hover:border-white/20"
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <DollarSign className="h-5 w-5 text-emerald-400" />
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-muted-foreground group-hover:translate-x-1 transition-all" />
+                </div>
+                <h3 className="text-sm font-medium text-foreground mb-1">Submit Commission Request</h3>
+                <p className="text-xs text-muted-foreground">Request payment for closed deals</p>
+              </Link>
+
+              <Link
+                to="/portal/my-commission-requests"
+                className="glass-card p-5 group hover:border-white/20"
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <CreditCard className="h-5 w-5 text-green-400" />
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-muted-foreground group-hover:translate-x-1 transition-all" />
+                </div>
+                <h3 className="text-sm font-medium text-foreground mb-1">My Payments</h3>
+                <p className="text-xs text-muted-foreground">Track your payment requests</p>
+              </Link>
+
+              <Link
+                to="/portal/my-transactions"
+                className="glass-card p-5 group hover:border-white/20"
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <FileText className="h-5 w-5 text-blue-400" />
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-muted-foreground group-hover:translate-x-1 transition-all" />
+                </div>
+                <h3 className="text-sm font-medium text-foreground mb-1">Transaction History</h3>
+                <p className="text-xs text-muted-foreground">View your complete deal history</p>
+              </Link>
             </div>
 
             {/* Recent Activity & Earnings Breakdown */}
