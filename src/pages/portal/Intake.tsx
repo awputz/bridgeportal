@@ -142,7 +142,8 @@ export default function Intake() {
     : 0;
 
   return (
-    <div className="py-8 space-y-8 max-w-7xl mx-auto px-4 md:px-6">
+    <div className="flex-1 overflow-auto">
+      <div className="py-8 space-y-8 max-w-7xl mx-auto px-4 md:px-6 pb-24 md:pb-8">
       {/* Header */}
       <div className="space-y-2">
         <div className="flex items-center gap-4">
@@ -410,6 +411,7 @@ export default function Intake() {
           onClose={() => setShowQR(false)} 
         />
       )}
+      </div>
     </div>
   );
 }

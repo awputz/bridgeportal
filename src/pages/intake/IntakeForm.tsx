@@ -177,7 +177,7 @@ export default function IntakeForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-12 px-4 sm:px-6">
+    <div className="min-h-screen overflow-y-auto bg-gradient-to-b from-background to-muted/20 py-12 px-4 sm:px-6 pb-24">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">

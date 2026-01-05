@@ -124,8 +124,8 @@ const ContactDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pb-24 md:pb-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+      <div className="flex-1 overflow-auto">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 pb-24 md:pb-8">
           <Skeleton className="h-10 w-32 mb-6" />
           <Skeleton className="h-64 w-full rounded-xl" />
         </div>
@@ -135,8 +135,8 @@ const ContactDetail = () => {
 
   if (!contact) {
     return (
-      <div className="min-h-screen pb-24 md:pb-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 text-center">
+      <div className="flex-1 overflow-auto">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 pb-24 md:pb-8 text-center">
           <h1 className="text-2xl font-light text-foreground mb-4">Contact not found</h1>
           <Link to="/portal/crm">
             <Button variant="outline">
@@ -150,8 +150,8 @@ const ContactDetail = () => {
   }
 
   return (
-    <div className="min-h-screen pb-24 md:pb-16">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <div className="flex-1 overflow-auto">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 pb-24 md:pb-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
