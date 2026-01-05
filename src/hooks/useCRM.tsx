@@ -202,6 +202,16 @@ export const useDealStages = (division?: string) => {
   });
 };
 
+// Helper to check if user is admin
+const checkIsAdmin = async (userId: string): Promise<boolean> => {
+  const { data } = await supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", userId)
+    .single();
+  return data?.role === "admin";
+};
+
 // ========== Contacts ==========
 export const useCRMContacts = (division?: string) => {
   return useQuery({
@@ -210,12 +220,18 @@ export const useCRMContacts = (division?: string) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
+      const isAdmin = await checkIsAdmin(user.id);
+
       let query = supabase
         .from("crm_contacts")
         .select("*")
-        .eq("agent_id", user.id)
         .eq("is_active", true)
         .order("created_at", { ascending: false });
+
+      // Admins see all contacts, agents see only their own
+      if (!isAdmin) {
+        query = query.eq("agent_id", user.id);
+      }
 
       if (division) {
         query = query.eq("division", division);
@@ -325,6 +341,8 @@ export const useCRMDeals = (division?: string) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
+      const isAdmin = await checkIsAdmin(user.id);
+
       let query = supabase
         .from("crm_deals")
         .select(`
@@ -332,9 +350,13 @@ export const useCRMDeals = (division?: string) => {
           contact:crm_contacts(*),
           stage:crm_deal_stages(*)
         `)
-        .eq("agent_id", user.id)
         .eq("is_active", true)
         .order("created_at", { ascending: false });
+
+      // Admins see all deals, agents see only their own
+      if (!isAdmin) {
+        query = query.eq("agent_id", user.id);
+      }
 
       if (division) {
         query = query.eq("division", division);
@@ -460,6 +482,8 @@ export const useCRMActivities = (filters?: { contactId?: string; dealId?: string
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
+      const isAdmin = await checkIsAdmin(user.id);
+
       let query = supabase
         .from("crm_activities")
         .select(`
@@ -467,8 +491,12 @@ export const useCRMActivities = (filters?: { contactId?: string; dealId?: string
           contact:crm_contacts(id, full_name),
           deal:crm_deals(id, property_address)
         `)
-        .eq("agent_id", user.id)
         .order("created_at", { ascending: false });
+
+      // Admins see all activities, agents see only their own
+      if (!isAdmin) {
+        query = query.eq("agent_id", user.id);
+      }
 
       if (filters?.contactId) {
         query = query.eq("contact_id", filters.contactId);
