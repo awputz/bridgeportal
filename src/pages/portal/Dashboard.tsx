@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { DashboardStats } from "@/components/portal/DashboardStats";
 import { DealPipelinePreview } from "@/components/portal/DealPipelinePreview";
 import { InlineDivisionSwitcher } from "@/components/portal/InlineDivisionSwitcher";
-import { ProfileCard } from "@/components/portal/ProfileCard";
+
 import { WelcomeBanner } from "@/components/portal/WelcomeBanner";
 import { DashboardTasks } from "@/components/portal/DashboardTasks";
 import { AnnouncementsWidget } from "@/components/portal/AnnouncementsWidget";
@@ -174,18 +174,13 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {/* Profile Card */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
-          <ProfileCard />
-        </section>
-
         {/* CRM Stats */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
           <DashboardStats />
         </section>
 
         {/* Google Workspace + Announcements */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <GoogleWorkspaceWidget />
             <div className="space-y-4">
@@ -196,7 +191,7 @@ const Dashboard = () => {
         </section>
 
         {/* AI Quick Prompt */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
           <form onSubmit={handleAiSubmit} className="glass-card p-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center flex-shrink-0">
@@ -216,7 +211,7 @@ const Dashboard = () => {
         </section>
 
         {/* Tasks + Deal Pipeline */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.35s' }}>
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <DashboardTasks />
             <DealPipelinePreview />
