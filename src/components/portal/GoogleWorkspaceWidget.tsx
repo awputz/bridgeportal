@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Mail, 
   Calendar, 
@@ -11,9 +12,11 @@ import {
   Clock,
   Star,
   Check,
+  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow, format, isSameDay } from "date-fns";
+import { Link } from "react-router-dom";
 
 // Gmail hooks
 import { useGmailConnection, useGmailMessages, useConnectGmail, useModifyMessage } from "@/hooks/useGmail";
@@ -23,30 +26,93 @@ import { useGoogleCalendarConnection, useGoogleCalendarEvents, useConnectGoogleC
 import { useUpcomingEvents } from "@/hooks/useCalendarEvents";
 
 export const GoogleWorkspaceWidget = () => {
+  // Get counts for tab badges
+  const { data: gmailConnection } = useGmailConnection();
+  const { data: messagesData } = useGmailMessages({
+    labelIds: ["INBOX"],
+    maxResults: 4,
+    enabled: gmailConnection?.isConnected ?? false,
+  });
+  
+  const { data: googleCalConnection } = useGoogleCalendarConnection();
+  const today = new Date();
+  const startOfDay = new Date(today);
+  startOfDay.setHours(0, 0, 0, 0);
+  const endOfDay = new Date(today);
+  endOfDay.setHours(23, 59, 59, 999);
+  
+  const isCalConnected = googleCalConnection?.calendar_enabled && !!googleCalConnection?.access_token;
+  const { data: googleEvents = [] } = useGoogleCalendarEvents(startOfDay, endOfDay);
+  const { data: companyEvents = [] } = useUpcomingEvents(1);
+  
+  const unreadCount = messagesData?.messages?.filter(m => m.isUnread).length || 0;
+  const todaysEvents = [...companyEvents, ...googleEvents]
+    .filter(event => isSameDay(new Date(event.start_time), today));
+  const eventCount = todaysEvents.length;
+
   return (
-    <Card className="glass-card">
-      <CardHeader className="pb-1">
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <img src="/brandmark-white.png" alt="Google" className="h-5 w-5" />
-          Google Workspace
+    <Card className="glass-card overflow-hidden">
+      <CardHeader className="pb-3 pt-4">
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500/20 via-red-500/20 to-yellow-500/20 flex items-center justify-center">
+              <img src="/google-brandmark.png" alt="Google" className="h-5 w-5" />
+            </div>
+            <span className="text-base font-semibold">Google Workspace</span>
+          </div>
+          <Link 
+            to="/portal/settings/google-services" 
+            className="p-1.5 rounded-md hover:bg-muted/50 transition-colors"
+            title="Google Services Settings"
+          >
+            <Settings className="h-4 w-4 text-muted-foreground" />
+          </Link>
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="space-y-3 pt-0">
-        {/* Gmail Section - Always Open */}
-        <GmailSection />
-
-        {/* Divider */}
-        <div className="border-t border-border/30" />
-
-        {/* Calendar Section - Always Open */}
-        <CalendarSection />
+      <CardContent className="pt-0 pb-0">
+        <Tabs defaultValue="gmail" className="w-full">
+          <TabsList className="w-full grid grid-cols-2 bg-muted/30 mb-3">
+            <TabsTrigger 
+              value="gmail" 
+              className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+            >
+              <Mail className="h-3.5 w-3.5 text-red-400" />
+              <span>Gmail</span>
+              {unreadCount > 0 && (
+                <Badge className="bg-red-500/20 text-red-400 text-[10px] px-1.5 py-0 h-4 border-0">
+                  {unreadCount}
+                </Badge>
+              )}
+            </TabsTrigger>
+            <TabsTrigger 
+              value="calendar" 
+              className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+            >
+              <Calendar className="h-3.5 w-3.5 text-blue-400" />
+              <span>Calendar</span>
+              {eventCount > 0 && (
+                <Badge className="bg-blue-500/20 text-blue-400 text-[10px] px-1.5 py-0 h-4 border-0">
+                  {eventCount}
+                </Badge>
+              )}
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="gmail" className="mt-0">
+            <GmailSection />
+          </TabsContent>
+          
+          <TabsContent value="calendar" className="mt-0">
+            <CalendarSection />
+          </TabsContent>
+        </Tabs>
       </CardContent>
     </Card>
   );
 };
 
-// Gmail Section - Always visible
+// Gmail Section
 const GmailSection = () => {
   const { data: connection, isLoading: isLoadingConnection } = useGmailConnection();
   const { data: messagesData, isLoading: isLoadingMessages } = useGmailMessages({
@@ -57,7 +123,6 @@ const GmailSection = () => {
   const { mutate: connectGmail, isPending: isConnecting } = useConnectGmail();
   const { mutate: modifyMessage } = useModifyMessage();
 
-  const unreadCount = messagesData?.messages?.filter(m => m.isUnread).length || 0;
   const messages = messagesData?.messages || [];
   const isLoading = isLoadingConnection || (connection?.isConnected && isLoadingMessages);
 
@@ -77,101 +142,137 @@ const GmailSection = () => {
     }
   };
 
+  // Not connected state
+  if (!connection?.isConnected && !isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-8 px-4">
+        <div className="h-14 w-14 rounded-full bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center mb-4">
+          <Mail className="h-7 w-7 text-red-400" />
+        </div>
+        <p className="text-sm text-muted-foreground text-center mb-4">
+          Connect Gmail to preview your inbox
+        </p>
+        <Button 
+          size="sm" 
+          onClick={() => connectGmail()} 
+          disabled={isConnecting}
+          className="bg-red-500 hover:bg-red-600 text-white"
+        >
+          {isConnecting ? "Connecting..." : "Connect Gmail"}
+        </Button>
+        <FooterLink href="https://mail.google.com" label="Open Gmail" />
+      </div>
+    );
+  }
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="py-2">
+        <div className="space-y-2">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="flex gap-2 p-2">
+              <Skeleton className="h-8 w-8 rounded-full flex-shrink-0" />
+              <div className="flex-1 space-y-1.5">
+                <Skeleton className="h-3 w-24" />
+                <Skeleton className="h-3 w-full" />
+              </div>
+            </div>
+          ))}
+        </div>
+        <FooterLink href="https://mail.google.com" label="Open Gmail" />
+      </div>
+    );
+  }
+
+  // Empty state
+  if (messages.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-8">
+        <div className="h-12 w-12 rounded-full bg-muted/50 flex items-center justify-center mb-3">
+          <Inbox className="h-6 w-6 text-muted-foreground" />
+        </div>
+        <p className="text-sm text-muted-foreground">Your inbox is empty</p>
+        <FooterLink href="https://mail.google.com" label="Open Gmail" />
+      </div>
+    );
+  }
+
+  // Messages list
   return (
     <div>
-      {/* Gmail Header */}
-      <div className="flex items-center gap-2 mb-2">
-        <Mail className="h-4 w-4 text-red-400" />
-        <span className="text-sm font-medium">Gmail</span>
-        {unreadCount > 0 && (
-          <Badge variant="secondary" className="bg-red-500/20 text-red-400 text-xs">
-            {unreadCount}
-          </Badge>
-        )}
-      </div>
-
-      {/* Gmail Content */}
-      {!connection?.isConnected && !isLoading ? (
-        <div className="text-center py-4">
-          <p className="text-xs text-muted-foreground mb-2">Connect Gmail to preview emails</p>
-          <Button size="sm" variant="outline" onClick={() => connectGmail()} disabled={isConnecting}>
-            {isConnecting ? "Connecting..." : "Connect Gmail"}
-          </Button>
-        </div>
-      ) : isLoading ? (
-        <div className="space-y-2 py-2">
-          {[1, 2, 3].map(i => <Skeleton key={i} className="h-12 w-full" />)}
-        </div>
-      ) : messages.length === 0 ? (
-        <div className="text-center py-4">
-          <Inbox className="h-6 w-6 text-muted-foreground mx-auto mb-1" />
-          <p className="text-xs text-muted-foreground">Inbox is empty</p>
-        </div>
-      ) : (
-        <ScrollArea className="h-[160px]">
-          <div className="space-y-1 pr-2">
-            {messages.map((message) => (
-              <a
-                key={message.id}
-                href={`https://mail.google.com/mail/u/0/#inbox/${message.id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(
-                  "relative block p-2 rounded-md transition-colors group",
-                  "hover:bg-muted/50",
-                  message.isUnread && "bg-red-500/5"
-                )}
-              >
-                <div className="flex items-start gap-2">
-                  <div className={cn(
-                    "w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-medium",
-                    message.isUnread ? "bg-red-500/20 text-red-400" : "bg-muted text-muted-foreground"
+      <ScrollArea className="h-[180px]">
+        <div className="space-y-1 pr-2">
+          {messages.map((message) => (
+            <a
+              key={message.id}
+              href={`https://mail.google.com/mail/u/0/#inbox/${message.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                "relative flex items-start gap-2.5 p-2.5 rounded-lg transition-all group",
+                "hover:bg-muted/50 border border-transparent hover:border-border/50",
+                message.isUnread && "bg-red-500/5"
+              )}
+            >
+              <div className={cn(
+                "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-semibold",
+                message.isUnread 
+                  ? "bg-gradient-to-br from-red-500/30 to-orange-500/20 text-red-400" 
+                  : "bg-muted text-muted-foreground"
+              )}>
+                {message.from.name?.charAt(0).toUpperCase() || "?"}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2">
+                  <span className={cn(
+                    "text-xs truncate",
+                    message.isUnread ? "font-semibold text-foreground" : "text-muted-foreground"
                   )}>
-                    {message.from.name?.charAt(0).toUpperCase() || "?"}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1">
-                      <span className={cn("text-xs truncate", message.isUnread ? "font-medium" : "text-muted-foreground")}>
-                        {message.from.name || message.from.email}
-                      </span>
-                      <span className="text-[10px] text-muted-foreground flex-shrink-0">
-                        {formatDistanceToNow(new Date(message.date), { addSuffix: false })}
-                      </span>
-                    </div>
-                    <p className={cn("text-xs truncate", message.isUnread ? "text-foreground" : "text-muted-foreground")}>
-                      {message.subject || "(No subject)"}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100">
-                    {message.isUnread && (
-                      <button onClick={(e) => handleMarkRead(message.id, e)} className="p-0.5 hover:bg-muted rounded" title="Mark read">
-                        <Check className="h-3 w-3 text-muted-foreground" />
-                      </button>
-                    )}
-                    <button onClick={(e) => handleStar(message.id, message.isStarred, e)} className="p-0.5 hover:bg-muted rounded">
-                      <Star className={cn("h-3 w-3", message.isStarred ? "fill-amber-400 text-amber-400" : "text-muted-foreground")} />
-                    </button>
-                  </div>
+                    {message.from.name || message.from.email}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground flex-shrink-0">
+                    {formatDistanceToNow(new Date(message.date), { addSuffix: false })}
+                  </span>
                 </div>
-              </a>
-            ))}
-          </div>
-        </ScrollArea>
-      )}
-
-      <a
-        href="https://mail.google.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-foreground py-2 mt-1 border-t border-border/30"
-      >
-        Open Gmail <ExternalLink className="h-3 w-3" />
-      </a>
+                <p className={cn(
+                  "text-xs truncate mt-0.5",
+                  message.isUnread ? "text-foreground" : "text-muted-foreground"
+                )}>
+                  {message.subject || "(No subject)"}
+                </p>
+              </div>
+              <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                {message.isUnread && (
+                  <button 
+                    onClick={(e) => handleMarkRead(message.id, e)} 
+                    className="p-1 hover:bg-muted rounded-md transition-colors" 
+                    title="Mark as read"
+                  >
+                    <Check className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
+                  </button>
+                )}
+                <button 
+                  onClick={(e) => handleStar(message.id, message.isStarred, e)} 
+                  className="p-1 hover:bg-muted rounded-md transition-colors"
+                  title={message.isStarred ? "Unstar" : "Star"}
+                >
+                  <Star className={cn(
+                    "h-3.5 w-3.5 transition-colors",
+                    message.isStarred ? "fill-amber-400 text-amber-400" : "text-muted-foreground hover:text-amber-400"
+                  )} />
+                </button>
+              </div>
+            </a>
+          ))}
+        </div>
+      </ScrollArea>
+      <FooterLink href="https://mail.google.com" label="Open Gmail" />
     </div>
   );
 };
 
-// Calendar Section - Always visible
+// Calendar Section
 const CalendarSection = () => {
   const today = new Date();
   const { data: googleConnection, isLoading: isLoadingConnection } = useGoogleCalendarConnection();
@@ -193,58 +294,109 @@ const CalendarSection = () => {
     .sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
     .slice(0, 4);
 
-  return (
-    <div>
-      {/* Calendar Header */}
-      <div className="flex items-center gap-2 mb-2">
-        <Calendar className="h-4 w-4 text-blue-400" />
-        <span className="text-sm font-medium">Calendar</span>
-        {todaysEvents.length > 0 && (
-          <Badge variant="secondary" className="bg-blue-500/20 text-blue-400 text-xs">
-            {todaysEvents.length}
-          </Badge>
-        )}
+  // Not connected state
+  if (!isConnected && !isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-8 px-4">
+        <div className="h-14 w-14 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center mb-4">
+          <Calendar className="h-7 w-7 text-blue-400" />
+        </div>
+        <p className="text-sm text-muted-foreground text-center mb-4">
+          Connect Calendar to see today's events
+        </p>
+        <Button 
+          size="sm" 
+          onClick={() => connectGoogle()} 
+          disabled={isConnecting}
+          className="bg-blue-500 hover:bg-blue-600 text-white"
+        >
+          {isConnecting ? "Connecting..." : "Connect Calendar"}
+        </Button>
+        <FooterLink href="https://calendar.google.com" label="Open Calendar" />
       </div>
+    );
+  }
 
-      {/* Calendar Content */}
-      {!isConnected && !isLoading ? (
-        <div className="text-center py-4">
-          <p className="text-xs text-muted-foreground mb-2">Connect Calendar to see events</p>
-          <Button size="sm" variant="outline" onClick={() => connectGoogle()} disabled={isConnecting}>
-            {isConnecting ? "Connecting..." : "Connect Calendar"}
-          </Button>
-        </div>
-      ) : isLoading ? (
-        <div className="space-y-2 py-2">
-          {[1, 2, 3].map(i => <Skeleton key={i} className="h-10 w-full" />)}
-        </div>
-      ) : todaysEvents.length === 0 ? (
-        <div className="text-center py-4">
-          <Clock className="h-6 w-6 text-muted-foreground mx-auto mb-1" />
-          <p className="text-xs text-muted-foreground">No events today</p>
-        </div>
-      ) : (
-        <div className="space-y-1">
-          {todaysEvents.map((event) => (
-            <div key={event.id} className="p-2 rounded-md bg-blue-500/10 border-l-2 border-blue-500">
-              <p className="text-xs font-medium text-foreground truncate">{event.title}</p>
-              <p className="text-[10px] text-muted-foreground">
-                {event.all_day ? "All day" : format(new Date(event.start_time), "h:mm a")}
-                {event.location && ` • ${event.location}`}
-              </p>
-            </div>
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="py-2">
+        <div className="space-y-2">
+          {[1, 2, 3].map(i => (
+            <Skeleton key={i} className="h-14 w-full rounded-lg" />
           ))}
         </div>
-      )}
+        <FooterLink href="https://calendar.google.com" label="Open Calendar" />
+      </div>
+    );
+  }
 
-      <a
-        href="https://calendar.google.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-foreground py-2 mt-1 border-t border-border/30"
-      >
-        Open Google Calendar <ExternalLink className="h-3 w-3" />
-      </a>
+  // Empty state
+  if (todaysEvents.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-8">
+        <div className="h-12 w-12 rounded-full bg-muted/50 flex items-center justify-center mb-3">
+          <Clock className="h-6 w-6 text-muted-foreground" />
+        </div>
+        <p className="text-sm text-muted-foreground">No events today</p>
+        <p className="text-xs text-muted-foreground/70 mt-1">
+          {format(today, "EEEE, MMMM d")}
+        </p>
+        <FooterLink href="https://calendar.google.com" label="Open Calendar" />
+      </div>
+    );
+  }
+
+  // Events list
+  return (
+    <div>
+      <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2 px-1">
+        {format(today, "EEEE, MMMM d")}
+      </div>
+      <div className="space-y-2">
+        {todaysEvents.map((event) => (
+          <div 
+            key={event.id} 
+            className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/15 transition-colors"
+          >
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-1 h-full min-h-[2rem] rounded-full bg-blue-500" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-foreground truncate">
+                  {event.title}
+                </p>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-xs text-blue-400 font-medium">
+                    {event.all_day ? "All day" : format(new Date(event.start_time), "h:mm a")}
+                  </span>
+                  {event.location && (
+                    <>
+                      <span className="text-muted-foreground">•</span>
+                      <span className="text-xs text-muted-foreground truncate">
+                        {event.location}
+                      </span>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <FooterLink href="https://calendar.google.com" label="Open Calendar" />
     </div>
   );
 };
+
+// Reusable footer link component
+const FooterLink = ({ href, label }: { href: string; label: string }) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="flex items-center justify-center gap-2 text-xs text-muted-foreground hover:text-foreground py-3 mt-3 border-t border-border/30 hover:bg-muted/30 transition-colors rounded-b-lg -mx-1"
+  >
+    {label}
+    <ExternalLink className="h-3 w-3" />
+  </a>
+);
