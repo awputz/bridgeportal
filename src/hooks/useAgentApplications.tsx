@@ -66,10 +66,10 @@ export const useAgentApplication = (id: string) => {
         .from("agent_applications")
         .select("*")
         .eq("id", id)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
-      return data as AgentApplication;
+      return data as AgentApplication | null;
     },
     enabled: !!id,
   });

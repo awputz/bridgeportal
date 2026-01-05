@@ -90,7 +90,7 @@ const DealDetail = () => {
   const navigate = useNavigate();
   const { division } = useDivision();
 
-  const { data: deal, isLoading } = useCRMDeal(id || "");
+  const { data: deal, isLoading, error } = useCRMDeal(id || "");
   const { data: stages } = useDealStages(division);
   const { data: activities } = useCRMActivities({ dealId: id, limit: 10 });
   const updateDeal = useUpdateDeal();
@@ -228,11 +228,33 @@ const DealDetail = () => {
     );
   }
 
+  if (error) {
+    return (
+      <div className="flex-1 overflow-auto">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 pb-24 md:pb-8 text-center">
+          <h1 className="text-2xl font-light text-foreground mb-4">Unable to load deal</h1>
+          <p className="text-muted-foreground mb-4">
+            There was an error loading this deal. Please try again.
+          </p>
+          <Link to="/portal/crm">
+            <Button variant="outline">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to CRM
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   if (!deal) {
     return (
       <div className="flex-1 overflow-auto">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 pb-24 md:pb-8 text-center">
           <h1 className="text-2xl font-light text-foreground mb-4">Deal not found</h1>
+          <p className="text-muted-foreground mb-4">
+            This deal may have been deleted or you don't have permission to view it.
+          </p>
           <Link to="/portal/crm">
             <Button variant="outline">
               <ArrowLeft className="h-4 w-4 mr-2" />
