@@ -37,16 +37,14 @@ export const GoogleWorkspaceWidget = () => {
 
   return (
     <Card className="glass-card">
-      <CardHeader className="pb-2">
+      <CardHeader className="pb-1">
         <CardTitle className="flex items-center gap-2 text-lg">
-          <div className="w-6 h-6 rounded bg-gradient-to-br from-blue-500 via-red-500 to-yellow-500 flex items-center justify-center">
-            <span className="text-white text-xs font-bold">G</span>
-          </div>
+          <img src="/brandmark-white.png" alt="Google" className="h-5 w-5" />
           Google Workspace
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="space-y-2 pt-2">
+      <CardContent className="space-y-1 pt-0">
         {/* Gmail Section */}
         <GmailSection isOpen={mailOpen} onOpenChange={setMailOpen} />
 
@@ -94,7 +92,7 @@ const GmailSection = ({ isOpen, onOpenChange }: { isOpen: boolean; onOpenChange:
   return (
     <Collapsible open={isOpen} onOpenChange={onOpenChange}>
       <CollapsibleTrigger asChild>
-        <button className="w-full flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+        <button className="w-full flex items-center justify-between p-2.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
           <div className="flex items-center gap-2">
             <Mail className="h-4 w-4 text-red-400" />
             <span className="text-sm font-medium">Gmail</span>
@@ -215,7 +213,7 @@ const CalendarSection = ({ isOpen, onOpenChange }: { isOpen: boolean; onOpenChan
   return (
     <Collapsible open={isOpen} onOpenChange={onOpenChange}>
       <CollapsibleTrigger asChild>
-        <button className="w-full flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+        <button className="w-full flex items-center justify-between p-2.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-blue-400" />
             <span className="text-sm font-medium">Calendar</span>
@@ -286,7 +284,7 @@ const DriveSection = ({ isOpen, onOpenChange }: { isOpen: boolean; onOpenChange:
   return (
     <Collapsible open={isOpen} onOpenChange={onOpenChange}>
       <CollapsibleTrigger asChild>
-        <button className="w-full flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+        <button className="w-full flex items-center justify-between p-2.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
           <div className="flex items-center gap-2">
             <HardDrive className="h-4 w-4 text-yellow-400" />
             <span className="text-sm font-medium">Drive</span>
