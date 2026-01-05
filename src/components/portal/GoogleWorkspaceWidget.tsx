@@ -70,12 +70,12 @@ export const GoogleWorkspaceWidget = () => {
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="pt-0 pb-0">
+      <CardContent className="pt-0 pb-4">
         <Tabs defaultValue="gmail" className="w-full">
-          <TabsList className="w-full grid grid-cols-2 bg-muted/30 mb-2 h-8">
+          <TabsList className="w-full grid grid-cols-2 h-10 mb-3">
             <TabsTrigger 
               value="gmail" 
-              className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+              className="flex items-center gap-1.5 text-xs"
             >
               <Mail className="h-3.5 w-3.5 text-red-400" />
               <span>Gmail</span>
@@ -87,7 +87,7 @@ export const GoogleWorkspaceWidget = () => {
             </TabsTrigger>
             <TabsTrigger 
               value="calendar" 
-              className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+              className="flex items-center gap-1.5 text-xs"
             >
               <Calendar className="h-3.5 w-3.5 text-blue-400" />
               <span>Calendar</span>
@@ -145,9 +145,9 @@ const GmailSection = () => {
   // Not connected state
   if (!connection?.isConnected && !isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center py-5 px-4">
-        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center mb-3">
-          <Mail className="h-5 w-5 text-red-400" />
+      <div className="flex flex-col items-center justify-center py-6">
+        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center mb-2">
+          <Mail className="h-4 w-4 text-red-400" />
         </div>
         <p className="text-xs text-muted-foreground text-center mb-3">
           Connect Gmail to preview your inbox
@@ -168,10 +168,10 @@ const GmailSection = () => {
   // Loading state
   if (isLoading) {
     return (
-      <div className="py-2">
-        <div className="space-y-2">
+      <div className="py-3">
+        <div className="space-y-2 px-1">
           {[1, 2, 3].map(i => (
-            <div key={i} className="flex gap-2 p-2">
+            <div key={i} className="flex gap-2.5 p-2">
               <Skeleton className="h-8 w-8 rounded-full flex-shrink-0" />
               <div className="flex-1 space-y-1.5">
                 <Skeleton className="h-3 w-24" />
@@ -188,7 +188,7 @@ const GmailSection = () => {
   // Empty state
   if (messages.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-5">
+      <div className="flex flex-col items-center justify-center py-6">
         <div className="h-8 w-8 rounded-full bg-muted/50 flex items-center justify-center mb-2">
           <Inbox className="h-4 w-4 text-muted-foreground" />
         </div>
@@ -200,9 +200,9 @@ const GmailSection = () => {
 
   // Messages list
   return (
-    <div>
-      <ScrollArea className="h-[130px]">
-        <div className="space-y-1 pr-2">
+    <div className="py-1">
+      <ScrollArea className="h-[150px]">
+        <div className="space-y-1">
           {messages.map((message) => (
             <a
               key={message.id}
@@ -210,7 +210,7 @@ const GmailSection = () => {
               target="_blank"
               rel="noopener noreferrer"
               className={cn(
-                "relative flex items-start gap-2.5 p-2.5 rounded-lg transition-all group",
+                "relative flex items-start gap-2.5 p-2 rounded-lg transition-all group",
                 "hover:bg-muted/50 border border-transparent hover:border-border/50",
                 message.isUnread && "bg-red-500/5"
               )}
@@ -297,9 +297,9 @@ const CalendarSection = () => {
   // Not connected state
   if (!isConnected && !isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center py-5 px-4">
-        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center mb-3">
-          <Calendar className="h-5 w-5 text-blue-400" />
+      <div className="flex flex-col items-center justify-center py-6">
+        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center mb-2">
+          <Calendar className="h-4 w-4 text-blue-400" />
         </div>
         <p className="text-xs text-muted-foreground text-center mb-3">
           Connect Calendar to see today's events
@@ -320,10 +320,10 @@ const CalendarSection = () => {
   // Loading state
   if (isLoading) {
     return (
-      <div className="py-2">
-        <div className="space-y-2">
+      <div className="py-3">
+        <div className="space-y-2 px-1">
           {[1, 2, 3].map(i => (
-            <Skeleton key={i} className="h-14 w-full rounded-lg" />
+            <Skeleton key={i} className="h-12 w-full rounded-lg" />
           ))}
         </div>
         <FooterLink href="https://calendar.google.com" label="Open Calendar" />
@@ -334,7 +334,7 @@ const CalendarSection = () => {
   // Empty state
   if (todaysEvents.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-5">
+      <div className="flex flex-col items-center justify-center py-6">
         <div className="h-8 w-8 rounded-full bg-muted/50 flex items-center justify-center mb-2">
           <Clock className="h-4 w-4 text-muted-foreground" />
         </div>
@@ -349,30 +349,30 @@ const CalendarSection = () => {
 
   // Events list
   return (
-    <div>
+    <div className="py-1">
       <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2 px-1">
         {format(today, "EEEE, MMMM d")}
       </div>
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         {todaysEvents.map((event) => (
           <div 
             key={event.id} 
-            className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/15 transition-colors"
+            className="p-2.5 rounded-lg bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/15 transition-colors"
           >
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-1 h-full min-h-[2rem] rounded-full bg-blue-500" />
+            <div className="flex items-start gap-2.5">
+              <div className="flex-shrink-0 w-1 h-full min-h-[1.5rem] rounded-full bg-blue-500" />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground truncate">
+                <p className="text-xs font-medium text-foreground truncate">
                   {event.title}
                 </p>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="text-xs text-blue-400 font-medium">
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className="text-[10px] text-blue-400 font-medium">
                     {event.all_day ? "All day" : format(new Date(event.start_time), "h:mm a")}
                   </span>
                   {event.location && (
                     <>
                       <span className="text-muted-foreground">•</span>
-                      <span className="text-xs text-muted-foreground truncate">
+                      <span className="text-[10px] text-muted-foreground truncate">
                         {event.location}
                       </span>
                     </>
@@ -394,7 +394,7 @@ const FooterLink = ({ href, label }: { href: string; label: string }) => (
     href={href}
     target="_blank"
     rel="noopener noreferrer"
-    className="flex items-center justify-center gap-1.5 text-[10px] text-muted-foreground hover:text-foreground py-2 mt-2 border-t border-border/30 hover:bg-muted/30 transition-colors rounded-b-lg -mx-1"
+    className="flex items-center justify-center gap-1.5 text-[10px] text-muted-foreground hover:text-foreground py-2.5 mt-3 border-t border-border/30 hover:bg-muted/30 transition-colors"
   >
     {label}
     <ExternalLink className="h-2.5 w-2.5" />
