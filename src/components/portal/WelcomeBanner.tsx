@@ -46,9 +46,9 @@ export const WelcomeBanner = () => {
   const dayMessage = getDayMessage();
 
   return (
-    <div className="flex flex-col gap-4 mb-4">
-      {/* Top row: Agent + Greeting */}
-      <div className="flex items-center gap-4">
+    <div className="flex items-center justify-between gap-4 mb-4">
+      {/* Left: Agent Photo + Greeting */}
+      <div className="flex items-center gap-4 min-w-0">
         {/* Agent Photo */}
         <div className="flex-shrink-0">
           {agent?.photoUrl ? (
@@ -81,7 +81,7 @@ export const WelcomeBanner = () => {
         </div>
       </div>
 
-      {/* NYC Weather Widget */}
+      {/* Right: NYC Weather Widget */}
       <NYCWeatherWidget />
     </div>
   );
