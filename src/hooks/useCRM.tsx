@@ -373,20 +373,32 @@ export const useCreateDeal = () => {
 
   return useMutation({
     mutationFn: async (deal: Omit<CRMDeal, "id" | "created_at" | "updated_at" | "is_active" | "won" | "contact" | "stage">) => {
+      // Clean up null/undefined values and ensure contact_id is null not empty string
+      const cleanedDeal = {
+        ...deal,
+        contact_id: deal.contact_id || null,
+      };
+      
       const { data, error } = await supabase
         .from("crm_deals")
-        .insert(deal)
+        .insert(cleanedDeal)
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Deal creation error:", error);
+        throw error;
+      }
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
+      // Invalidate both general and division-specific queries
       queryClient.invalidateQueries({ queryKey: ["crm-deals"] });
+      queryClient.invalidateQueries({ queryKey: ["crm-deals", variables.division] });
       toast.success("Deal created");
     },
     onError: (error: Error) => {
+      console.error("Deal mutation error:", error);
       toast.error("Failed to create deal: " + error.message);
     },
   });
