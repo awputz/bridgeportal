@@ -39,7 +39,7 @@ export default function UniversalIntakeForm() {
   const [step, setStep] = useState<Step>("agent");
   const [criteria, setCriteria] = useState<Record<string, unknown>>({});
 
-  const { data: agents, isLoading: agentsLoading } = useAgentsList();
+  const { data: agents, isLoading: agentsLoading, error: agentsError, refetch: refetchAgents } = useAgentsList();
   const createSubmission = useCreateIntakeSubmission();
 
   const form = useForm({
@@ -237,10 +237,17 @@ export default function UniversalIntakeForm() {
                 <div className="flex items-center justify-center py-12">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 </div>
+              ) : agentsError || !agents ? (
+                <div className="flex flex-col items-center justify-center py-12 space-y-4">
+                  <p className="text-muted-foreground">Unable to load agents</p>
+                  <Button variant="outline" onClick={() => refetchAgents()}>
+                    Try Again
+                  </Button>
+                </div>
               ) : (
                 <>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    {agents?.map((agent) => (
+                    {agents.map((agent) => (
                       <button
                         key={agent.id}
                         onClick={() => handleAgentSelect(agent.id, agent.full_name || agent.email || "Agent")}

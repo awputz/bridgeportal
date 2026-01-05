@@ -18,7 +18,8 @@ import {
   Check,
   TrendingUp,
   QrCode,
-  Download
+  Download,
+  ChevronDown
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -46,6 +47,11 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
@@ -229,29 +235,35 @@ export default function Intake() {
             </div>
           </div>
 
-          {/* Personal Link - Secondary */}
+          {/* Personal Link - Collapsible Dropdown */}
           {!linkLoading && personalIntakeUrl && (
-            <div className="pt-4 border-t border-border/50">
-              <p className="text-xs text-muted-foreground mb-2">Your personal link (skips agent selection):</p>
-              <div className="flex items-center gap-4 p-3 rounded-lg bg-muted/50 border border-border">
-                <div className="flex-1 min-w-0">
-                  <p className="font-mono text-xs truncate text-muted-foreground select-all">
-                    {personalIntakeUrl}
-                  </p>
+            <Collapsible className="pt-4 border-t border-border/50">
+              <CollapsibleTrigger className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors group w-full">
+                <ChevronDown className="h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
+                <span>Advanced Options</span>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="pt-4 space-y-2">
+                <p className="text-xs text-muted-foreground">Your personal link (skips agent selection):</p>
+                <div className="flex items-center gap-4 p-3 rounded-lg bg-muted/50 border border-border">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-mono text-xs truncate text-muted-foreground select-all">
+                      {personalIntakeUrl}
+                    </p>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={async () => {
+                      await navigator.clipboard.writeText(personalIntakeUrl);
+                      toast.success("Personal link copied!");
+                    }}
+                    className="shrink-0 h-8"
+                  >
+                    <Copy className="h-3 w-3" />
+                  </Button>
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  onClick={async () => {
-                    await navigator.clipboard.writeText(personalIntakeUrl);
-                    toast.success("Personal link copied!");
-                  }}
-                  className="shrink-0 h-8"
-                >
-                  <Copy className="h-3 w-3" />
-                </Button>
-              </div>
-            </div>
+              </CollapsibleContent>
+            </Collapsible>
           )}
         </CardContent>
       </Card>
