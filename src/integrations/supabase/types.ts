@@ -1193,40 +1193,58 @@ export type Database = {
         Row: {
           activity_type: string
           agent_id: string
+          category: string | null
           completed_at: string | null
           contact_id: string | null
           created_at: string | null
           deal_id: string | null
           description: string | null
+          division: string | null
           due_date: string | null
           id: string
+          is_all_day: boolean | null
           is_completed: boolean | null
+          priority: string | null
+          recurring_pattern: string | null
+          reminder_at: string | null
           title: string
         }
         Insert: {
           activity_type: string
           agent_id: string
+          category?: string | null
           completed_at?: string | null
           contact_id?: string | null
           created_at?: string | null
           deal_id?: string | null
           description?: string | null
+          division?: string | null
           due_date?: string | null
           id?: string
+          is_all_day?: boolean | null
           is_completed?: boolean | null
+          priority?: string | null
+          recurring_pattern?: string | null
+          reminder_at?: string | null
           title: string
         }
         Update: {
           activity_type?: string
           agent_id?: string
+          category?: string | null
           completed_at?: string | null
           contact_id?: string | null
           created_at?: string | null
           deal_id?: string | null
           description?: string | null
+          division?: string | null
           due_date?: string | null
           id?: string
+          is_all_day?: boolean | null
           is_completed?: boolean | null
+          priority?: string | null
+          recurring_pattern?: string | null
+          reminder_at?: string | null
           title?: string
         }
         Relationships: [

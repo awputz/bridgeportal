@@ -114,6 +114,12 @@ export function ContactActivityTimeline({ contactId }: ContactActivityTimelinePr
         due_date: null,
         completed_at: new Date().toISOString(),
         is_completed: true,
+        division: 'investment-sales',
+        priority: 'medium',
+        reminder_at: null,
+        recurring_pattern: null,
+        is_all_day: false,
+        category: newActivityType,
       },
       {
         onSuccess: () => {

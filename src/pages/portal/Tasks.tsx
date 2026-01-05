@@ -239,6 +239,7 @@ const Tasks = () => {
       is_all_day: false,
       reminder_at: null,
       recurring_pattern: null,
+      division: 'investment-sales',
     }, {
       onSuccess: () => {
         setShowAddDialog(false);

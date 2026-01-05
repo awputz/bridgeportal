@@ -75,7 +75,13 @@ export const QuickActivityLogger = () => {
         deal_id: null,
         due_date: dueDate || null,
         is_completed: false,
-        completed_at: null
+        completed_at: null,
+        division: 'investment-sales',
+        priority: 'medium',
+        reminder_at: null,
+        recurring_pattern: null,
+        is_all_day: false,
+        category: activityType,
       });
       toast.success("Activity logged successfully");
       handleClose();

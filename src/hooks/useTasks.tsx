@@ -19,13 +19,14 @@ export interface Task {
   recurring_pattern: string | null;
   is_all_day: boolean;
   category: string;
+  division: string;
   contact?: { full_name: string } | null;
   deal?: { property_address: string } | null;
 }
 
-export const useTasks = (filter?: "today" | "week" | "overdue" | "completed" | "all") => {
+export const useTasks = (filter?: "today" | "week" | "overdue" | "completed" | "all", division?: string) => {
   return useQuery({
-    queryKey: ["tasks", filter],
+    queryKey: ["tasks", filter, division],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
@@ -39,6 +40,11 @@ export const useTasks = (filter?: "today" | "week" | "overdue" | "completed" | "
         `)
         .eq("agent_id", user.id)
         .order("due_date", { ascending: true, nullsFirst: false });
+
+      // Apply division filter if provided
+      if (division) {
+        query = query.eq("division", division);
+      }
 
       const now = new Date();
       const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
