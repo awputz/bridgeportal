@@ -14,8 +14,8 @@ serve(async (req) => {
   try {
     const { latitude, longitude, location } = await req.json();
 
-    // Use Open-Meteo API (free, no API key required)
-    const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&temperature_unit=fahrenheit&wind_speed_unit=mph`;
+    // Use Open-Meteo API (free, no API key required) - include daily forecast
+    const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code,sunrise,sunset&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=America/New_York&forecast_days=5`;
 
     const response = await fetch(weatherUrl);
     
@@ -57,15 +57,48 @@ serve(async (req) => {
       99: 'Thunderstorm with Heavy Hail',
     };
 
-    const weatherCode = data.current?.weather_code || 0;
-    const condition = weatherCodeMap[weatherCode] || 'Unknown';
+    const currentWeatherCode = data.current?.weather_code || 0;
+    const condition = weatherCodeMap[currentWeatherCode] || 'Unknown';
+
+    // Format sunrise/sunset times
+    const formatTime = (isoString: string) => {
+      const date = new Date(isoString);
+      return date.toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit',
+        hour12: true,
+        timeZone: 'America/New_York'
+      });
+    };
+
+    // Build forecast array
+    const forecast = data.daily?.time?.slice(0, 5).map((date: string, index: number) => {
+      const dayDate = new Date(date);
+      return {
+        day: dayDate.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'America/New_York' }),
+        high: Math.round(data.daily.temperature_2m_max[index]),
+        low: Math.round(data.daily.temperature_2m_min[index]),
+        condition: weatherCodeMap[data.daily.weather_code[index]] || 'Unknown',
+        weatherCode: data.daily.weather_code[index]
+      };
+    }) || [];
 
     const weather = {
-      temperature: Math.round(data.current?.temperature_2m || 0),
-      condition,
-      location: location || 'Unknown Location',
-      humidity: data.current?.relative_humidity_2m,
-      windSpeed: Math.round(data.current?.wind_speed_10m || 0),
+      current: {
+        temperature: Math.round(data.current?.temperature_2m || 0),
+        feelsLike: Math.round(data.current?.apparent_temperature || 0),
+        condition,
+        humidity: data.current?.relative_humidity_2m,
+        windSpeed: Math.round(data.current?.wind_speed_10m || 0),
+      },
+      today: {
+        high: Math.round(data.daily?.temperature_2m_max?.[0] || 0),
+        low: Math.round(data.daily?.temperature_2m_min?.[0] || 0),
+        sunrise: data.daily?.sunrise?.[0] ? formatTime(data.daily.sunrise[0]) : null,
+        sunset: data.daily?.sunset?.[0] ? formatTime(data.daily.sunset[0]) : null,
+      },
+      forecast,
+      location: location || 'New York, NY',
     };
 
     return new Response(
