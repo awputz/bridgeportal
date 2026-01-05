@@ -54,14 +54,28 @@ const generateLinkCode = () => {
 };
 
 // Fetch list of agents for the universal intake form
+// Uses user_roles table to get actual agents/admins (not investors)
 export const useAgentsList = () => {
   return useQuery({
     queryKey: ["agents-list"],
     queryFn: async () => {
+      // Get user IDs that have 'agent' or 'admin' role
+      const { data: roleUsers, error: roleError } = await supabase
+        .from("user_roles")
+        .select("user_id")
+        .in("role", ["agent", "admin"]);
+      
+      if (roleError) throw roleError;
+      
+      const userIds = roleUsers?.map(r => r.user_id) || [];
+      
+      if (userIds.length === 0) return [];
+      
+      // Fetch profiles for those users
       const { data, error } = await supabase
         .from("profiles")
         .select("id, full_name, email, avatar_url")
-        .eq("user_type", "agent")
+        .in("id", userIds)
         .order("full_name");
       
       if (error) throw error;
