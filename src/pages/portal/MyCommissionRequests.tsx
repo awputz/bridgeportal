@@ -32,11 +32,11 @@ const MyCommissionRequests = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
         {/* Back Navigation */}
         <Link
-          to="/portal/tools"
+          to="/portal/profile"
           className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"
         >
           <ArrowLeft className="h-4 w-4" />
-          <span className="text-sm font-light">Back to Tools</span>
+          <span className="text-sm font-light">Back to Profile</span>
         </Link>
 
         {/* Header */}

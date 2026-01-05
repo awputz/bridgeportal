@@ -40,20 +40,6 @@ const iconMap: Record<string, typeof Mail> = {
 // Internal productivity tools
 const internalTools = [
   {
-    name: "Commission Request",
-    path: "/portal/commission-request",
-    icon: DollarSign,
-    description: "Submit payment request",
-    color: "bg-emerald-500/20 text-emerald-400"
-  },
-  {
-    name: "My Payments",
-    path: "/portal/my-commission-requests",
-    icon: DollarSign,
-    description: "Track your commission requests",
-    color: "bg-green-500/20 text-green-400"
-  },
-  {
     name: "Generators",
     path: "/portal/generators",
     icon: Wand2,
