@@ -28,7 +28,7 @@ export const QuickActionCard = ({
         {name}
       </h3>
       {description && (
-        <p className="text-xs text-muted-foreground font-light line-clamp-2">
+        <p className="text-xs text-muted-foreground font-light line-clamp-2 mb-0">
           {description}
         </p>
       )}
