@@ -9,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCreateCommissionRequest, uploadCommissionDocument } from "@/hooks/useCommissionRequests";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const CommissionRequest = () => {
   const navigate = useNavigate();
@@ -73,9 +74,11 @@ const CommissionRequest = () => {
         contract_url,
       });
 
+      toast.success("Commission request submitted successfully!");
       navigate("/portal/my-commission-requests");
     } catch (error) {
       console.error("Error submitting commission request:", error);
+      toast.error("Failed to submit commission request. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
