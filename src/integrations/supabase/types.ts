@@ -173,6 +173,89 @@ export type Database = {
         }
         Relationships: []
       }
+      agent_expenses: {
+        Row: {
+          agent_id: string
+          amount: number
+          billable_to_client: boolean | null
+          category: string
+          created_at: string | null
+          deal_id: string | null
+          description: string
+          expense_date: string
+          id: string
+          is_tax_deductible: boolean | null
+          mileage_distance: number | null
+          mileage_from: string | null
+          mileage_rate: number | null
+          mileage_to: string | null
+          notes: string | null
+          payment_method: string | null
+          receipt_filename: string | null
+          receipt_uploaded_at: string | null
+          receipt_url: string | null
+          subcategory: string | null
+          tax_notes: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          agent_id: string
+          amount: number
+          billable_to_client?: boolean | null
+          category: string
+          created_at?: string | null
+          deal_id?: string | null
+          description: string
+          expense_date: string
+          id?: string
+          is_tax_deductible?: boolean | null
+          mileage_distance?: number | null
+          mileage_from?: string | null
+          mileage_rate?: number | null
+          mileage_to?: string | null
+          notes?: string | null
+          payment_method?: string | null
+          receipt_filename?: string | null
+          receipt_uploaded_at?: string | null
+          receipt_url?: string | null
+          subcategory?: string | null
+          tax_notes?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          agent_id?: string
+          amount?: number
+          billable_to_client?: boolean | null
+          category?: string
+          created_at?: string | null
+          deal_id?: string | null
+          description?: string
+          expense_date?: string
+          id?: string
+          is_tax_deductible?: boolean | null
+          mileage_distance?: number | null
+          mileage_from?: string | null
+          mileage_rate?: number | null
+          mileage_to?: string | null
+          notes?: string | null
+          payment_method?: string | null
+          receipt_filename?: string | null
+          receipt_uploaded_at?: string | null
+          receipt_url?: string | null
+          subcategory?: string | null
+          tax_notes?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_expenses_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agent_metrics: {
         Row: {
           activities_completed: number | null
@@ -2381,6 +2464,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      expense_categories: {
+        Row: {
+          color: string
+          created_at: string | null
+          description: string | null
+          display_order: number
+          icon: string
+          id: string
+          irs_category: string | null
+          is_active: boolean | null
+          is_tax_deductible_default: boolean | null
+          name: string
+          subcategories: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          color: string
+          created_at?: string | null
+          description?: string | null
+          display_order: number
+          icon: string
+          id?: string
+          irs_category?: string | null
+          is_active?: boolean | null
+          is_tax_deductible_default?: boolean | null
+          name: string
+          subcategories?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          color?: string
+          created_at?: string | null
+          description?: string | null
+          display_order?: number
+          icon?: string
+          id?: string
+          irs_category?: string | null
+          is_active?: boolean | null
+          is_tax_deductible_default?: boolean | null
+          name?: string
+          subcategories?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       external_tools: {
         Row: {
