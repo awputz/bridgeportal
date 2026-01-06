@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 interface WeatherData {
   temperature: number;
-  condition: string;
+  condition?: string;
   location: string;
   humidity?: number;
   windSpeed?: number;
@@ -19,7 +19,10 @@ interface WeatherWidgetProps {
   compact?: boolean;
 }
 
-const getWeatherIcon = (condition: string) => {
+const getWeatherIcon = (condition: string | undefined | null) => {
+  if (!condition) {
+    return Cloud;
+  }
   const lowerCondition = condition.toLowerCase();
   if (lowerCondition.includes('rain') || lowerCondition.includes('drizzle')) {
     return CloudRain;
@@ -104,14 +107,14 @@ export const WeatherWidget = ({
     return null;
   }
 
-  const WeatherIcon = getWeatherIcon(weather.condition);
+  const WeatherIcon = getWeatherIcon(weather?.condition);
 
   if (compact) {
     return (
       <div className={cn("flex items-center gap-2 text-sm", className)}>
         <WeatherIcon className="h-4 w-4 text-muted-foreground" />
         <span className="font-medium">{weather.temperature}°F</span>
-        <span className="text-muted-foreground">{weather.condition}</span>
+        <span className="text-muted-foreground">{weather.condition || 'Unknown'}</span>
       </div>
     );
   }
@@ -129,7 +132,7 @@ export const WeatherWidget = ({
           <div>
             <div className="flex items-center gap-2">
               <span className="text-2xl font-light">{weather.temperature}°F</span>
-              <span className="text-muted-foreground text-sm">{weather.condition}</span>
+              <span className="text-muted-foreground text-sm">{weather.condition || 'Unknown'}</span>
             </div>
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
               <MapPin className="h-3 w-3" />
