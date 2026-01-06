@@ -70,26 +70,26 @@ export function IntakeStatsCard({
   return (
     <Card className={cn("border overflow-hidden transition-all duration-200 hover:shadow-md", styles.border)}>
       <CardContent className={cn("p-6", styles.bg)}>
-        <div className="flex items-center justify-between gap-4">
-          <div className="space-y-1">
-            <p className="text-sm font-medium text-muted-foreground">{title}</p>
-            <p className="text-3xl font-bold tracking-tight">{value}{suffix}</p>
-            {trend && (
-              <p className={cn(
-                "text-xs font-medium",
-                trend.value >= 0 ? "text-green-600" : "text-red-600"
-              )}>
-                {trend.value >= 0 ? "+" : ""}{trend.value} {trend.label}
-              </p>
-            )}
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col justify-center gap-1">
+              <span className="text-sm font-medium text-muted-foreground leading-none">{title}</span>
+              <span className="text-3xl font-bold tracking-tight leading-tight">{value}{suffix}</span>
+              {trend && (
+                <span className={cn(
+                  "text-xs font-medium leading-none",
+                  trend.value >= 0 ? "text-green-600" : "text-red-600"
+                )}>
+                  {trend.value >= 0 ? "+" : ""}{trend.value} {trend.label}
+                </span>
+              )}
+            </div>
+            <div className={cn(
+              "flex h-14 w-14 items-center justify-center rounded-xl flex-shrink-0",
+              styles.bg
+            )}>
+              <Icon className={cn("h-7 w-7 flex-shrink-0", styles.icon)} />
+            </div>
           </div>
-          <div className={cn(
-            "flex h-14 w-14 items-center justify-center rounded-xl",
-            styles.bg
-          )}>
-            <Icon className={cn("h-7 w-7", styles.icon)} />
-          </div>
-        </div>
       </CardContent>
     </Card>
   );
