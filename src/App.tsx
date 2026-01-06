@@ -108,6 +108,7 @@ const CRMOverviewAdmin = lazy(() => import("./pages/admin/CRMOverviewAdmin"));
 const AgentPerformanceAdmin = lazy(() => import("./pages/admin/AgentPerformanceAdmin"));
 const ApplicationsAdmin = lazy(() => import("./pages/admin/ApplicationsAdmin"));
 const ExclusiveSubmissionsAdmin = lazy(() => import("./pages/admin/ExclusiveSubmissionsAdmin"));
+const AgentExpensesAdmin = lazy(() => import("./pages/admin/AgentExpensesAdmin"));
 
 // Service Pages - lazy loaded
 const InvestmentSales = lazy(() => import("./pages/services/InvestmentSales"));
@@ -585,6 +586,11 @@ const App = () => {
                     <Route path="exclusive-submissions" element={
                       <Suspense fallback={<PageLoader />}>
                         <ExclusiveSubmissionsAdmin />
+                      </Suspense>
+                    } />
+                    <Route path="agent-expenses" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <AgentExpensesAdmin />
                       </Suspense>
                     } />
                   </Route>

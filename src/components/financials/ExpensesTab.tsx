@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Search, Filter, Receipt, ExternalLink } from "lucide-react";
+import { Plus, Search, Filter, Receipt, ExternalLink, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -20,11 +20,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useExpenses, useDeleteExpense, type ExpenseFilters, type Expense } from "@/hooks/useExpenses";
 import { useExpenseCategories } from "@/hooks/useExpenseCategories";
 import { useReceiptUpload } from "@/hooks/useReceiptUpload";
+import { useAuth } from "@/contexts/AuthContext";
 import { ExpenseCard } from "./ExpenseCard";
 import { AddExpenseModal } from "./AddExpenseModal";
+import { exportExpensesToCSV, generateTaxSummary } from "@/lib/expenseExport";
 import { format } from "date-fns";
 import { toast } from "sonner";
 
@@ -42,8 +50,7 @@ export const ExpensesTab = () => {
   const { data: categories = [] } = useExpenseCategories();
   const deleteExpense = useDeleteExpense();
   const { getSignedUrl } = useReceiptUpload();
-
-  // Group expenses by month
+  const { user } = useAuth();
   const expensesByMonth = expenses.reduce<Record<string, Expense[]>>((acc, expense) => {
     const monthKey = format(new Date(expense.expense_date), "MMMM yyyy");
     if (!acc[monthKey]) {
@@ -127,6 +134,24 @@ export const ExpensesTab = () => {
     }
   };
 
+  // Export handlers
+  const handleExportCSV = () => {
+    if (!expenses.length) {
+      toast.error("No expenses to export");
+      return;
+    }
+    exportExpensesToCSV(expenses, `my-expenses-${format(new Date(), "yyyy-MM-dd")}.csv`);
+    toast.success(`Exported ${expenses.length} expenses to CSV`);
+  };
+
+  const handleTaxSummary = (year: number) => {
+    const agentInfo = {
+      name: user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Agent",
+      email: user?.email || "",
+    };
+    generateTaxSummary(expenses, year, agentInfo);
+  };
+
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -137,10 +162,31 @@ export const ExpensesTab = () => {
             {format(new Date(), "MMMM yyyy")}: ${currentMonthTotal.toLocaleString()}
           </p>
         </div>
-        <Button onClick={handleAddExpense} className="gap-2">
-          <Plus className="h-4 w-4" />
-          Add Expense
-        </Button>
+        <div className="flex gap-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2" disabled={!expenses.length}>
+                <Download className="h-4 w-4" />
+                Export
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handleExportCSV}>
+                Download CSV
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleTaxSummary(new Date().getFullYear())}>
+                Tax Summary ({new Date().getFullYear()})
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleTaxSummary(new Date().getFullYear() - 1)}>
+                Tax Summary ({new Date().getFullYear() - 1})
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button onClick={handleAddExpense} className="gap-2">
+            <Plus className="h-4 w-4" />
+            Add Expense
+          </Button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -179,8 +225,6 @@ export const ExpensesTab = () => {
           <Filter className="h-4 w-4" />
         </Button>
       </div>
-
-      {/* Extended Filters */}
       {showFilters && (
         <div className="flex flex-wrap gap-3 p-4 bg-muted/30 rounded-lg">
           <Select

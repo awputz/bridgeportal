@@ -1,4 +1,4 @@
-import { Users, DollarSign, LogOut, Settings, MapPin, Link2, Layers, Wrench, FileText, Home, Building2, Bell, Mail, FolderOpen, Shield, KeyRound, Activity, Newspaper, ClipboardList, Building, PieChart, UserPlus, Eye } from "lucide-react";
+import { Users, DollarSign, LogOut, Settings, MapPin, Link2, Layers, Wrench, FileText, Home, Building2, Bell, Mail, FolderOpen, Shield, KeyRound, Activity, Newspaper, ClipboardList, Building, PieChart, UserPlus, Eye, Receipt } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -28,6 +28,7 @@ const peopleItems = [
   { title: "CRM Overview", url: "/admin/crm-overview", icon: PieChart },
   { title: "Agent Requests", url: "/admin/agent-requests", icon: ClipboardList },
   { title: "Commission Requests", url: "/admin/commission-requests", icon: DollarSign },
+  { title: "Agent Expenses", url: "/admin/agent-expenses", icon: Receipt },
 ];
 
 const dealsItems = [
