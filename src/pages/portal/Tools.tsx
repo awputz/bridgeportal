@@ -18,10 +18,10 @@ import {
   StickyNote,
   ChevronRight,
   Wrench,
+  Building,
   DollarSign
 } from "lucide-react";
 import { useExternalTools } from "@/hooks/useExternalTools";
-import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
 // Icon mapping for dynamic icons from database
@@ -37,8 +37,8 @@ const iconMap: Record<string, typeof Mail> = {
   Home,
 };
 
-// Internal productivity tools
-const internalTools = [
+// Team tools essentials (internal productivity tools)
+const teamToolsEssentials = [
   {
     name: "Generators",
     path: "/portal/generators",
@@ -83,6 +83,31 @@ const internalTools = [
   },
 ];
 
+// Exclusive listings
+const exclusiveListings = [
+  {
+    name: "Residential",
+    url: "https://streeteasy.com/building/bridge-properties",
+    icon: Home,
+    description: "StreetEasy listings",
+    color: "bg-emerald-500/20 text-emerald-400"
+  },
+  {
+    name: "Commercial",
+    url: "https://bridgenyre.com/listings/commercial",
+    icon: Building,
+    description: "Office & retail spaces",
+    color: "bg-blue-500/20 text-blue-400"
+  },
+  {
+    name: "Investment Sales",
+    url: "https://bridgenyre.com/listings/investment-sales",
+    icon: DollarSign,
+    description: "Investment opportunities",
+    color: "bg-amber-500/20 text-amber-400"
+  },
+];
+
 const Tools = () => {
   const { data: externalTools, isLoading } = useExternalTools();
 
@@ -103,14 +128,14 @@ const Tools = () => {
           </p>
         </div>
 
-        {/* Internal Tools Section */}
+        {/* Team Tools Essentials Section */}
         <div className="mb-12 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
           <h2 className="text-xl font-light text-foreground mb-6 flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-emerald-500" />
-            Internal Tools
+            <Wrench className="h-4 w-4 text-muted-foreground" />
+            Team Tools Essentials
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 stagger-grid">
-            {internalTools.map((tool) => {
+            {teamToolsEssentials.map((tool) => {
               const Icon = tool.icon;
               return (
                 <Link
@@ -138,11 +163,11 @@ const Tools = () => {
           </div>
         </div>
 
-        {/* External Resources Section */}
-        <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+        {/* Research Tools Section */}
+        <div className="mb-12 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
           <h2 className="text-xl font-light text-foreground mb-6 flex items-center gap-2">
-            <ExternalLink className="h-4 w-4 text-muted-foreground" />
-            External Resources
+            <Search className="h-4 w-4 text-muted-foreground" />
+            Research Tools
           </h2>
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -190,6 +215,43 @@ const Tools = () => {
               })}
             </div>
           )}
+        </div>
+
+        {/* View Exclusive Listings Section */}
+        <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+          <h2 className="text-xl font-light text-foreground mb-6 flex items-center gap-2">
+            <Building2 className="h-4 w-4 text-muted-foreground" />
+            View Exclusive Listings
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 stagger-grid">
+            {exclusiveListings.map((listing) => {
+              const Icon = listing.icon;
+              return (
+                <a
+                  key={listing.url}
+                  href={listing.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="glass-card p-5 group hover:border-white/20"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className={`w-12 h-12 rounded-full ${listing.color.split(' ')[0]} flex items-center justify-center transition-transform duration-300 group-hover:scale-110`}>
+                      <Icon className={`h-6 w-6 ${listing.color.split(' ')[1]}`} />
+                    </div>
+                    <ExternalLink className="h-4 w-4 text-muted-foreground/50 group-hover:text-muted-foreground transition-colors duration-300" />
+                  </div>
+                  
+                  <h3 className="text-lg font-light text-foreground mb-2">
+                    {listing.name}
+                  </h3>
+                  
+                  <p className="text-sm text-muted-foreground font-light">
+                    {listing.description}
+                  </p>
+                </a>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

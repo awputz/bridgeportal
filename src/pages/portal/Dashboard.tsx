@@ -96,18 +96,18 @@ const Dashboard = () => {
         <section className="mb-4 animate-fade-in-up" style={{ animationDelay: '0.05s' }}>
           <h2 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Quick Actions</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <a href="tel:2125319295" className="glass-card px-4 h-16 flex items-center gap-3 hover:border-primary/50 group">
-              <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110">
-                <Phone className="h-4 w-4 text-primary" />
+            <Link to="/portal/calculators" className="glass-card px-4 h-16 flex items-center gap-3 hover:border-amber-500/50 group">
+              <div className="w-9 h-9 rounded-full bg-amber-500/20 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110">
+                <Calculator className="h-4 w-4 text-amber-400" />
               </div>
               <div className="min-w-0 flex flex-col justify-center">
-                <span className="text-sm font-medium text-foreground block truncate leading-tight">Call Office</span>
-                <span className="text-xs text-muted-foreground truncate leading-tight">(212) 531-9295</span>
+                <span className="text-sm font-medium text-foreground block truncate leading-tight">Calculators</span>
+                <span className="text-xs text-muted-foreground truncate leading-tight">Financial tools</span>
               </div>
-            </a>
-            <Link to="/portal/requests" className="glass-card px-4 h-16 flex items-center gap-3 hover:border-amber-500/50 group">
-              <div className="w-9 h-9 rounded-full bg-amber-500/20 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110">
-                <Send className="h-4 w-4 text-amber-400" />
+            </Link>
+            <Link to="/portal/requests" className="glass-card px-4 h-16 flex items-center gap-3 hover:border-rose-500/50 group">
+              <div className="w-9 h-9 rounded-full bg-rose-500/20 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110">
+                <Send className="h-4 w-4 text-rose-400" />
               </div>
               <div className="min-w-0 flex flex-col justify-center">
                 <span className="text-sm font-medium text-foreground block truncate leading-tight">Submit Request</span>
