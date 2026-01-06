@@ -146,7 +146,7 @@ export const GmailWidget = () => {
 
       <CardContent className="p-0">
         <ScrollArea className="h-[340px]">
-          <div className="px-3 py-2">
+          <div className="p-2 pr-3 overflow-x-hidden">
             {/* Not connected state */}
             {!isConnected && !isLoading && (
               <div className="flex flex-col items-center justify-center py-6 bg-red-500/5 rounded-lg border border-red-500/10">
@@ -171,7 +171,7 @@ export const GmailWidget = () => {
             {isLoading && (
               <div className="space-y-1.5">
                 {[1, 2, 3].map(i => (
-                  <div key={i} className="px-2.5 py-2 rounded-md border border-border/30 bg-muted/5 overflow-hidden">
+                  <div key={i} className="px-2.5 py-1.5 rounded-md border border-border/30 bg-muted/5 overflow-hidden">
                     <div className="flex items-center gap-2 mb-1">
                       <Skeleton className="h-1.5 w-1.5 rounded-full shrink-0" />
                       <Skeleton className="h-3.5 w-28" />
@@ -202,7 +202,7 @@ export const GmailWidget = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className={cn(
-                      "block px-2.5 py-2 rounded-md border border-border/30 border-l-2 overflow-hidden",
+                      "group block w-full px-2.5 py-1.5 rounded-md border border-border/30 border-l-2 overflow-hidden",
                       "hover:bg-muted/50 hover:border-border/50 transition-colors cursor-pointer",
                       message.isUnread 
                         ? "border-l-blue-500 bg-primary/5" 
@@ -213,7 +213,7 @@ export const GmailWidget = () => {
                     aria-label={`Email from ${message.from.name || message.from.email}: ${message.subject}`}
                   >
                     {/* Line 1: Unread dot + Sender + Star + Date */}
-                    <div className="flex items-center justify-between gap-2 mb-1 min-w-0">
+                    <div className="flex items-center justify-between gap-1.5 mb-0.5 min-w-0 overflow-hidden">
                       <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
                         {/* Unread indicator dot - always reserve space for alignment */}
                         <div 
@@ -267,14 +267,14 @@ export const GmailWidget = () => {
 
                     {/* Line 2: Subject */}
                     <p className={cn(
-                      "text-sm truncate mb-0.5 min-w-0",
+                      "text-sm truncate mb-px min-w-0",
                       message.isUnread ? "font-semibold text-foreground" : "text-foreground/70"
                     )}>
                       {message.subject || "(No subject)"}
                     </p>
 
                     {/* Line 3: Snippet/Preview */}
-                    <p className="text-xs text-muted-foreground truncate min-w-0">
+                    <p className="text-xs text-muted-foreground truncate min-w-0 mb-0">
                       {message.snippet || ""}
                     </p>
                   </a>
