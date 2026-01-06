@@ -15,9 +15,26 @@ const divisionIcons: Record<Division, typeof TrendingUp> = {
 };
 
 export const GlobalDivisionSwitcher = () => {
-  const { division, setDivision, divisionConfig } = useDivision();
+  const { division, setDivision, divisionConfig, isAdmin } = useDivision();
   const CurrentIcon = divisionIcons[division];
 
+  // For agents, show a static badge (non-clickable)
+  if (!isAdmin) {
+    return (
+      <div
+        className={cn(
+          "flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium",
+          "bg-white/10 border border-white/20"
+        )}
+        style={{ borderColor: divisionConfig.color + "40" }}
+      >
+        <CurrentIcon className="h-4 w-4" style={{ color: divisionConfig.color }} />
+        <span>{divisionConfig.name}</span>
+      </div>
+    );
+  }
+
+  // For admins, show the dropdown
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

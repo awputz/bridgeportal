@@ -1,4 +1,8 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useUserRole } from "@/hooks/useUserRole";
+import { toast } from "sonner";
 
 export type Division = "investment-sales" | "commercial-leasing" | "residential";
 
@@ -7,6 +11,8 @@ interface DivisionContextType {
   setDivision: (division: Division) => void;
   divisionName: string;
   divisionConfig: DivisionConfig;
+  isAdmin: boolean;
+  isLoading: boolean;
 }
 
 interface DivisionConfig {
@@ -75,28 +81,51 @@ const divisionConfigs: Record<Division, DivisionConfig> = {
 const DivisionContext = createContext<DivisionContextType | undefined>(undefined);
 
 export const DivisionProvider = ({ children }: { children: ReactNode }) => {
-  const [division, setDivisionState] = useState<Division>(() => {
-    const stored = localStorage.getItem("bridge-division");
+  const { data: role, isLoading: roleLoading } = useUserRole();
+  const isAdmin = role === "admin";
+
+  // Fetch user's assigned division from database
+  const { data: userDivision, isLoading: divisionLoading } = useQuery({
+    queryKey: ["userDivision"],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return null;
+
+      const { data } = await supabase
+        .from("user_roles")
+        .select("assigned_division")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      return data?.assigned_division as Division | null;
+    },
+    enabled: !isAdmin && !roleLoading,
+  });
+
+  // Admin's selected division (stored in localStorage for UX only)
+  const [adminSelectedDivision, setAdminSelectedDivision] = useState<Division>(() => {
+    const stored = localStorage.getItem("admin-division-preference");
     return (stored as Division) || "investment-sales";
   });
 
-  const setDivision = (newDivision: Division) => {
-    setDivisionState(newDivision);
-    localStorage.setItem("bridge-division", newDivision);
-  };
+  // Determine actual division to use
+  const division: Division = isAdmin ? adminSelectedDivision : (userDivision || "investment-sales");
 
-  useEffect(() => {
-    const stored = localStorage.getItem("bridge-division");
-    if (stored && stored !== division) {
-      setDivisionState(stored as Division);
+  const setDivision = (newDivision: Division) => {
+    if (isAdmin) {
+      setAdminSelectedDivision(newDivision);
+      localStorage.setItem("admin-division-preference", newDivision);
+    } else {
+      toast.error("Only administrators can change division assignments");
     }
-  }, []);
+  };
 
   const divisionName = divisionConfigs[division].name;
   const divisionConfig = divisionConfigs[division];
+  const isLoading = roleLoading || (!isAdmin && divisionLoading);
 
   return (
-    <DivisionContext.Provider value={{ division, setDivision, divisionName, divisionConfig }}>
+    <DivisionContext.Provider value={{ division, setDivision, divisionName, divisionConfig, isAdmin, isLoading }}>
       {children}
     </DivisionContext.Provider>
   );
