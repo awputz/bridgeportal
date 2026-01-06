@@ -348,7 +348,7 @@ export const useCRMDeals = (division?: string) => {
         .from("crm_deals")
         .select(`
           *,
-          contact:crm_contacts(*),
+          contact:crm_contacts!contact_id(*),
           stage:crm_deal_stages(*)
         `)
         .eq("is_active", true)
@@ -378,7 +378,7 @@ export const useCRMDeal = (id: string) => {
         .from("crm_deals")
         .select(`
           *,
-          contact:crm_contacts(*),
+          contact:crm_contacts!contact_id(*),
           stage:crm_deal_stages(*)
         `)
         .eq("id", id)
