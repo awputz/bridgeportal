@@ -275,8 +275,8 @@ const DealDetail = () => {
   if (isLoading) {
     return (
       <div className="flex-1 overflow-auto">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 pb-24 md:pb-8">
-          <Skeleton className="h-10 w-32 mb-6" />
+        <div className="max-w-4xl mx-auto page-content py-8 md:py-12">
+          <Skeleton className="h-10 w-32 section-gap" />
           <Skeleton className="h-64 w-full rounded-xl" />
         </div>
       </div>
@@ -286,7 +286,7 @@ const DealDetail = () => {
   if (error) {
     return (
       <div className="flex-1 overflow-auto">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 pb-24 md:pb-8 text-center">
+        <div className="max-w-4xl mx-auto page-content py-8 md:py-12 text-center">
           <h1 className="text-2xl font-light text-foreground mb-4">Unable to load deal</h1>
           <p className="text-muted-foreground mb-4">
             {(error as Error).message || "There was an error loading this deal. Please try again."}
@@ -311,7 +311,7 @@ const DealDetail = () => {
   if (!deal) {
     return (
       <div className="flex-1 overflow-auto">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 pb-24 md:pb-8 text-center">
+        <div className="max-w-4xl mx-auto page-content py-8 md:py-12 text-center">
           <h1 className="text-2xl font-light text-foreground mb-4">Deal not found</h1>
           <p className="text-muted-foreground mb-4">
             This deal may have been deleted or you don't have permission to view it.
@@ -335,10 +335,10 @@ const DealDetail = () => {
           Investment Sales Details
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="form-section">
         {isEditing ? (
           <>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="form-grid">
               <div className="space-y-2">
                 <Label>Property Type</Label>
                 <Select
@@ -372,7 +372,7 @@ const DealDetail = () => {
                 </Select>
               </div>
             </div>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 grid-gap-sm">
               <div className="space-y-2">
                 <Label>Unit Count</Label>
                 <Input
@@ -398,7 +398,7 @@ const DealDetail = () => {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="form-grid">
               <div className="space-y-2">
                 <Label>Asking Price ($)</Label>
                 <Input
@@ -416,7 +416,7 @@ const DealDetail = () => {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="form-grid">
               <div className="space-y-2">
                 <Label>NOI ($)</Label>
                 <Input
@@ -435,7 +435,7 @@ const DealDetail = () => {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="form-grid">
               <div className="space-y-2">
                 <Label>Financing Type</Label>
                 <Select
@@ -461,7 +461,7 @@ const DealDetail = () => {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="form-grid">
               <div className="space-y-2">
                 <Label>Lender</Label>
                 <Input
@@ -488,7 +488,7 @@ const DealDetail = () => {
             </div>
           </>
         ) : (
-          <div className="space-y-4">
+          <div className="list-gap-md">
             {/* Property Overview */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
               {deal.property_type && (
@@ -631,7 +631,7 @@ const DealDetail = () => {
           Lease Details
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="form-section">
         {isEditing ? (
           <>
             <div className="space-y-2">
@@ -641,7 +641,7 @@ const DealDetail = () => {
                 onChange={(e) => setFormData({ ...formData, tenant_legal_name: e.target.value })}
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="form-grid">
               <div className="space-y-2">
                 <Label>Space Type</Label>
                 <Select
@@ -667,7 +667,7 @@ const DealDetail = () => {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="form-grid">
               <div className="space-y-2">
                 <Label>Asking Rent ($/SF)</Label>
                 <Input
@@ -687,7 +687,7 @@ const DealDetail = () => {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="form-grid">
               <div className="space-y-2">
                 <Label>Lease Type</Label>
                 <Select
@@ -713,7 +713,7 @@ const DealDetail = () => {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="form-grid">
               <div className="space-y-2">
                 <Label>Commencement Date</Label>
                 <Input
@@ -731,7 +731,7 @@ const DealDetail = () => {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 grid-gap-sm">
               <div className="space-y-2">
                 <Label>Free Rent (Mo)</Label>
                 <Input
@@ -761,7 +761,7 @@ const DealDetail = () => {
             </div>
           </>
         ) : (
-          <div className="space-y-4">
+          <div className="list-gap-md">
             {/* Tenant Info */}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
               {deal.tenant_legal_name && (
@@ -907,7 +907,7 @@ const DealDetail = () => {
           Residential Details
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="form-section">
         {isEditing ? (
           <>
             {/* Styled Sale/Rental Toggle */}
@@ -937,7 +937,7 @@ const DealDetail = () => {
                 Rental
               </button>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="form-grid">
               <div className="space-y-2">
                 <Label>Property Type</Label>
                 <Select
@@ -963,7 +963,7 @@ const DealDetail = () => {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="form-grid">
               <div className="space-y-2">
                 <Label>Bedrooms</Label>
                 <Input
@@ -984,7 +984,7 @@ const DealDetail = () => {
             </div>
             {formData.is_rental ? (
               <>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="form-grid">
                   <div className="space-y-2">
                     <Label>Monthly Rent ($)</Label>
                     <Input
@@ -1050,7 +1050,7 @@ const DealDetail = () => {
             </div>
           </>
         ) : (
-          <div className="space-y-4">
+          <div className="list-gap-md">
             {/* Transaction Type Badge */}
             <div>
               <Badge variant="outline" className={deal.is_rental ? "bg-purple-500/20 text-purple-400" : "bg-green-500/20 text-green-400"}>

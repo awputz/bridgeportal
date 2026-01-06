@@ -221,7 +221,7 @@ export function CalendarEventDialog({
           </div>
         </DialogHeader>
 
-        <div className="p-4 space-y-4 max-h-[70vh] overflow-y-auto">
+        <div className="p-4 form-section max-h-[70vh] overflow-y-auto">
           {/* Title */}
           <Input
             placeholder="Add title"
@@ -366,7 +366,7 @@ export function CalendarEventDialog({
           </Button>
 
           {showMoreOptions && (
-            <div className="space-y-4 pt-2 border-t border-border/50">
+            <div className="form-section pt-2 border-t border-border/50">
               {/* Guests */}
               <div className="flex items-center gap-3">
                 <Users className="h-5 w-5 text-muted-foreground" />
