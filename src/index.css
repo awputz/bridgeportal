@@ -14,13 +14,28 @@ All colors MUST be HSL.
     --portal-bottom-nav-height: 64px; /* Mobile bottom nav h-16 = 64px */
     --portal-safe-bottom: env(safe-area-inset-bottom, 0px);
     
+    /* Complete 8px Grid Spacing Scale */
+    --space-1: 0.25rem;   /* 4px */
+    --space-2: 0.5rem;    /* 8px */
+    --space-3: 0.75rem;   /* 12px */
+    --space-4: 1rem;      /* 16px */
+    --space-5: 1.25rem;   /* 20px */
+    --space-6: 1.5rem;    /* 24px */
+    --space-8: 2rem;      /* 32px */
+    --space-10: 2.5rem;   /* 40px */
+    --space-12: 3rem;     /* 48px */
+    
     /* Content spacing standards */
     --content-padding-x-mobile: 1rem;     /* 16px - px-4 */
     --content-padding-x-tablet: 1.5rem;   /* 24px - px-6 */
     --content-padding-x-desktop: 2rem;    /* 32px - px-8 */
     --content-padding-y: 1.5rem;          /* 24px - py-6 */
     --section-gap: 2rem;                  /* 32px - space between major sections */
-    --card-padding: 1.25rem;              /* 20px - internal card padding */
+    
+    /* Card Padding Standards */
+    --card-padding-sm: var(--space-4);    /* 16px - compact cards/list items */
+    --card-padding-md: var(--space-5);    /* 20px - default cards */
+    --card-padding-lg: var(--space-6);    /* 24px - spacious cards/modals */
     
     /* BRIDGE Investment Sales - Dark Mode with Warm Off-White Tones */
     
@@ -629,9 +644,29 @@ All colors MUST be HSL.
     @apply mb-6 md:mb-8;
   }
   
-  /* Card internal padding */
+  /* Smaller section gap - for tightly coupled sections */
+  .section-gap-sm {
+    @apply mb-4 md:mb-6;
+  }
+  
+  /* Card internal padding - responsive scale */
   .card-content {
     @apply p-4 sm:p-5 md:p-6;
+  }
+  
+  /* Compact card padding - for list items, small cards */
+  .card-content-sm {
+    @apply p-3 sm:p-4;
+  }
+  
+  /* Widget card - for dashboard widgets */
+  .widget-card {
+    @apply glass-card p-4 sm:p-5;
+  }
+  
+  /* Stat card - for metric displays */
+  .stat-card {
+    @apply glass-card p-4 flex items-center gap-3;
   }
   
   /* Page header spacing */
@@ -649,15 +684,107 @@ All colors MUST be HSL.
     @apply flex gap-2 overflow-x-auto scrollbar-hide pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap;
   }
   
-  /* Stat card grid */
+  /* Stat card grid - 2 cols mobile, 4 cols desktop */
   .stat-grid {
-    @apply grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4;
+    @apply grid grid-cols-2 md:grid-cols-4 gap-4;
   }
   
-  /* Standard grid gaps */
+  /* Standard grid gaps - 16px mobile, 24px desktop */
   .grid-gap {
-    @apply gap-3 sm:gap-4 md:gap-6;
+    @apply gap-4 md:gap-6;
   }
+  
+  /* Compact grid gaps - 12px mobile, 16px desktop */
+  .grid-gap-sm {
+    @apply gap-3 md:gap-4;
+  }
+  
+  /* ========================================
+     FORM SPACING UTILITIES
+     ======================================== */
+  
+  /* Form section spacing - 24px between field groups */
+  .form-section {
+    @apply space-y-6;
+  }
+  
+  /* Form field group - label + input + helper */
+  .form-field {
+    @apply space-y-2;
+  }
+  
+  /* Form grid - 2 column layout for side-by-side fields */
+  .form-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 gap-4;
+  }
+  
+  /* Form actions - button row at bottom of forms */
+  .form-actions {
+    @apply flex justify-end gap-3 pt-4;
+  }
+  
+  /* ========================================
+     LIST & DIALOG SPACING UTILITIES
+     ======================================== */
+  
+  /* List item spacing - for contact/task/expense lists */
+  .list-gap {
+    @apply space-y-2;
+  }
+  
+  /* List item spacing - slightly more spacing for cards */
+  .list-gap-md {
+    @apply space-y-3;
+  }
+  
+  /* Dialog/Modal section padding */
+  .dialog-section {
+    @apply p-6;
+  }
+  
+  /* Dialog header */
+  .dialog-header {
+    @apply p-6 border-b border-border;
+  }
+  
+  /* Dialog footer */
+  .dialog-footer {
+    @apply p-6 border-t border-border flex gap-3 justify-end;
+  }
+  
+  /* Button group spacing */
+  .btn-group {
+    @apply flex gap-3;
+  }
+  
+  /* Button group compact */
+  .btn-group-sm {
+    @apply flex gap-2;
+  }
+  
+  /* ========================================
+     EMPTY STATE UTILITIES
+     ======================================== */
+  
+  .empty-state {
+    @apply flex flex-col items-center justify-center py-12 px-4 text-center;
+  }
+  
+  .empty-state-icon {
+    @apply h-12 w-12 text-muted-foreground mb-4;
+  }
+  
+  .empty-state-title {
+    @apply text-lg font-medium text-foreground mb-2;
+  }
+  
+  .empty-state-text {
+    @apply text-sm text-muted-foreground mb-6 max-w-md;
+  }
+  
+  /* ========================================
+     SERVICE PAGE SPACING
+     ======================================== */
   
   /* Service page hero */
   .hero-section {
