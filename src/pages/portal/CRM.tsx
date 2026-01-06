@@ -35,6 +35,7 @@ import { DealFiltersPanel, DealFilters } from "@/components/portal/DealFiltersPa
 import { BulkActionsBar } from "@/components/portal/BulkActionsBar";
 import { PipelineAnalytics } from "@/components/portal/PipelineAnalytics";
 import { CRMTasksPanel } from "@/components/portal/CRMTasksPanel";
+import { SectionErrorBoundary } from "@/components/portal/SectionErrorBoundary";
 import { DIVISION_DISPLAY_NAMES } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -451,29 +452,30 @@ const CRM = () => {
 
         {/* Pipeline View */}
         <div className="space-y-4">
-          {isLoading ? (
-            <Skeleton className="h-96 w-full rounded-xl" />
-          ) : stages && filteredDeals && filteredDeals.length > 0 ? (
-            viewMode === "grouped" ? (
-              <CRMGroupedView
-                deals={filteredDeals}
-                stages={stages}
-                onStageChange={handleStageChange}
-                onDeleteDeal={handleDeleteDeal}
-                division={division}
-              />
+          <SectionErrorBoundary sectionName="Deal Pipeline">
+            {isLoading ? (
+              <Skeleton className="h-96 w-full rounded-xl" />
+            ) : stages && filteredDeals && filteredDeals.length > 0 ? (
+              viewMode === "grouped" ? (
+                <CRMGroupedView
+                  deals={filteredDeals}
+                  stages={stages}
+                  onStageChange={handleStageChange}
+                  onDeleteDeal={handleDeleteDeal}
+                  division={division}
+                />
+              ) : (
+                <CRMTable
+                  deals={filteredDeals}
+                  stages={stages}
+                  onStageChange={handleStageChange}
+                  onDeleteDeal={handleDeleteDeal}
+                  division={division}
+                  selectedDeals={selectedDeals}
+                  onSelectionChange={handleSelectionChange}
+                />
+              )
             ) : (
-              <CRMTable
-                deals={filteredDeals}
-                stages={stages}
-                onStageChange={handleStageChange}
-                onDeleteDeal={handleDeleteDeal}
-                division={division}
-                selectedDeals={selectedDeals}
-                onSelectionChange={handleSelectionChange}
-              />
-            )
-          ) : (
             <div className="text-center py-16 glass-card">
               <Briefcase className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
               <h3 className="text-lg font-light text-foreground mb-2">
@@ -516,6 +518,7 @@ const CRM = () => {
               </div>
             </div>
           )}
+          </SectionErrorBoundary>
         </div>
       </div>
 

@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { handleQueryError } from "@/lib/errorHandler";
 
 // Types
 export interface CRMContact {
@@ -279,8 +280,8 @@ export const useCreateContact = () => {
       queryClient.invalidateQueries({ queryKey: ["crm-contacts"] });
       toast.success("Contact created");
     },
-    onError: (error: Error) => {
-      toast.error("Failed to create contact: " + error.message);
+    onError: (error: unknown) => {
+      toast.error(handleQueryError(error));
     },
   });
 };
@@ -305,8 +306,8 @@ export const useUpdateContact = () => {
       queryClient.invalidateQueries({ queryKey: ["crm-contact", data.id] });
       toast.success("Contact updated");
     },
-    onError: (error: Error) => {
-      toast.error("Failed to update contact: " + error.message);
+    onError: (error: unknown) => {
+      toast.error(handleQueryError(error));
     },
   });
 };
@@ -327,8 +328,8 @@ export const useDeleteContact = () => {
       queryClient.invalidateQueries({ queryKey: ["crm-contacts"] });
       toast.success("Contact deleted");
     },
-    onError: (error: Error) => {
-      toast.error("Failed to delete contact: " + error.message);
+    onError: (error: unknown) => {
+      toast.error(handleQueryError(error));
     },
   });
 };
@@ -419,9 +420,9 @@ export const useCreateDeal = () => {
       queryClient.invalidateQueries({ queryKey: ["crm-deals", variables.division] });
       toast.success("Deal created");
     },
-    onError: (error: Error) => {
+    onError: (error: unknown) => {
       console.error("Deal mutation error:", error);
-      toast.error("Failed to create deal: " + error.message);
+      toast.error(handleQueryError(error));
     },
   });
 };
@@ -446,8 +447,8 @@ export const useUpdateDeal = () => {
       queryClient.invalidateQueries({ queryKey: ["crm-deal", data.id] });
       toast.success("Deal updated");
     },
-    onError: (error: Error) => {
-      toast.error("Failed to update deal: " + error.message);
+    onError: (error: unknown) => {
+      toast.error(handleQueryError(error));
     },
   });
 };
@@ -468,8 +469,8 @@ export const useDeleteDeal = () => {
       queryClient.invalidateQueries({ queryKey: ["crm-deals"] });
       toast.success("Deal deleted");
     },
-    onError: (error: Error) => {
-      toast.error("Failed to delete deal: " + error.message);
+    onError: (error: unknown) => {
+      toast.error(handleQueryError(error));
     },
   });
 };
