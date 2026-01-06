@@ -272,13 +272,13 @@ const Profile = () => {
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-                      <DollarSign className="h-5 w-5 text-emerald-400" />
+                      <DollarSign className="h-5 w-5 text-emerald-400 flex-shrink-0" />
                     </div>
-                    <div className="min-w-0">
-                      <p className="text-xs text-muted-foreground leading-tight">Total Earnings</p>
-                      <p className="text-lg font-light text-foreground truncate leading-tight">
+                    <div className="min-w-0 flex flex-col justify-center">
+                      <span className="text-xs text-muted-foreground leading-none">Total Earnings</span>
+                      <span className="text-lg font-light text-foreground truncate leading-tight mt-1">
                         {formatFullCurrency(commissions.totalEarnings)}
-                      </p>
+                      </span>
                     </div>
                   </div>
                 </CardContent>
@@ -288,13 +288,13 @@ const Profile = () => {
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0">
-                      <TrendingUp className="h-5 w-5 text-blue-400" />
+                      <TrendingUp className="h-5 w-5 text-blue-400 flex-shrink-0" />
                     </div>
-                    <div className="min-w-0">
-                      <p className="text-xs text-muted-foreground leading-tight">YTD Earnings</p>
-                      <p className="text-lg font-light text-foreground truncate leading-tight">
+                    <div className="min-w-0 flex flex-col justify-center">
+                      <span className="text-xs text-muted-foreground leading-none">YTD Earnings</span>
+                      <span className="text-lg font-light text-foreground truncate leading-tight mt-1">
                         {formatFullCurrency(commissions.ytdEarnings)}
-                      </p>
+                      </span>
                     </div>
                   </div>
                 </CardContent>
@@ -304,13 +304,13 @@ const Profile = () => {
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
-                      <Building2 className="h-5 w-5 text-purple-400" />
+                      <Building2 className="h-5 w-5 text-purple-400 flex-shrink-0" />
                     </div>
-                    <div className="min-w-0">
-                      <p className="text-xs text-muted-foreground leading-tight">Total Deals</p>
-                      <p className="text-lg font-light text-foreground leading-tight">
+                    <div className="min-w-0 flex flex-col justify-center">
+                      <span className="text-xs text-muted-foreground leading-none">Total Deals</span>
+                      <span className="text-lg font-light text-foreground leading-tight mt-1">
                         {commissions.totalDeals}
-                      </p>
+                      </span>
                     </div>
                   </div>
                 </CardContent>
@@ -320,13 +320,13 @@ const Profile = () => {
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center flex-shrink-0">
-                      <Calendar className="h-5 w-5 text-amber-400" />
+                      <Calendar className="h-5 w-5 text-amber-400 flex-shrink-0" />
                     </div>
-                    <div className="min-w-0">
-                      <p className="text-xs text-muted-foreground leading-tight">YTD Deals</p>
-                      <p className="text-lg font-light text-foreground leading-tight">
+                    <div className="min-w-0 flex flex-col justify-center">
+                      <span className="text-xs text-muted-foreground leading-none">YTD Deals</span>
+                      <span className="text-lg font-light text-foreground leading-tight mt-1">
                         {commissions.ytdDeals}
-                      </p>
+                      </span>
                     </div>
                   </div>
                 </CardContent>

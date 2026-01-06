@@ -56,22 +56,22 @@ export const TemplateCard = ({
       "glass-card p-4 md:p-5 flex flex-col gap-4",
       className
     )}>
-      <div className="flex items-start gap-4">
+      <div className="flex items-center gap-4">
         <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0">
-          <Icon className={cn("h-5 w-5 md:h-6 md:w-6", iconColor)} />
+          <Icon className={cn("h-5 w-5 md:h-6 md:w-6 flex-shrink-0", iconColor)} />
         </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="text-sm md:text-base font-light text-foreground truncate">
+        <div className="flex-1 min-w-0 flex flex-col justify-center">
+          <span className="text-sm md:text-base font-light text-foreground truncate leading-tight">
             {name}
-          </h3>
+          </span>
           {description && (
-            <p className="text-xs text-muted-foreground font-light mt-1 line-clamp-2">
+            <span className="text-xs text-muted-foreground font-light mt-1 line-clamp-2 leading-tight">
               {description}
-            </p>
+            </span>
           )}
-          <p className="text-xs text-muted-foreground/60 uppercase mt-2">
+          <span className="text-xs text-muted-foreground/60 uppercase mt-2 leading-none">
             {fileType}
-          </p>
+          </span>
         </div>
       </div>
       

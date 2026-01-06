@@ -64,12 +64,12 @@ export const DashboardStats = () => {
             className="glass-card p-4 flex flex-col justify-between min-h-[88px]"
           >
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-muted-foreground font-light">
+              <span className="text-xs text-muted-foreground font-light leading-none">
                 {stat.label}
               </span>
-              <Icon className="h-4 w-4" style={{ color: stat.color }} />
+              <Icon className="h-4 w-4 flex-shrink-0" style={{ color: stat.color }} />
             </div>
-            <span className="text-2xl font-light text-foreground">
+            <span className="text-2xl font-light text-foreground leading-tight">
               {stat.value}
             </span>
           </div>

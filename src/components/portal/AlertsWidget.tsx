@@ -191,14 +191,14 @@ export const AlertsWidget = () => {
                       </div>
 
                       {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-foreground">
+                      <div className="flex-1 min-w-0 flex flex-col justify-center">
+                        <span className="text-sm font-medium text-foreground leading-tight">
                           {alert.title}
-                        </p>
+                        </span>
                         {alert.subtitle && (
-                          <p className="text-xs text-muted-foreground truncate mt-0.5">
+                          <span className="text-xs text-muted-foreground truncate mt-0.5 leading-none">
                             {alert.subtitle}
-                          </p>
+                          </span>
                         )}
                       </div>
 
@@ -212,14 +212,14 @@ export const AlertsWidget = () => {
               {/* Quick summary at bottom */}
               {taskStats && (
                 <div className="pt-3 mt-2 border-t border-border/50">
-                  <div className="grid grid-cols-2 gap-3 text-center">
-                    <div>
-                      <p className="text-lg font-semibold text-foreground">{taskStats.thisWeek || 0}</p>
-                      <p className="text-xs text-muted-foreground">This week</p>
+                    <div className="grid grid-cols-2 gap-3 text-center">
+                    <div className="flex flex-col justify-center">
+                      <span className="text-lg font-semibold text-foreground leading-tight">{taskStats.thisWeek || 0}</span>
+                      <span className="text-xs text-muted-foreground leading-none mt-1">This week</span>
                     </div>
-                    <div>
-                      <p className="text-lg font-semibold text-foreground">{taskStats.completed || 0}</p>
-                      <p className="text-xs text-muted-foreground">Completed</p>
+                    <div className="flex flex-col justify-center">
+                      <span className="text-lg font-semibold text-foreground leading-tight">{taskStats.completed || 0}</span>
+                      <span className="text-xs text-muted-foreground leading-none mt-1">Completed</span>
                     </div>
                   </div>
                 </div>

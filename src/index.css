@@ -159,6 +159,13 @@ All colors MUST be HSL.
     font-weight: 300;
     margin-bottom: 1.5rem;
   }
+  
+  /* Remove paragraph margins inside tight card layouts */
+  .glass-card p,
+  .stat-card p,
+  [class*="CardContent"] p:last-child {
+    margin-bottom: 0;
+  }
 }
 
 @layer utilities {
