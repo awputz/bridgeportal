@@ -169,11 +169,11 @@ export const GmailWidget = () => {
 
             {/* Loading state - 3 line skeleton */}
             {isLoading && (
-              <div className="divide-y divide-border">
+              <div className="space-y-1.5">
                 {[1, 2, 3].map(i => (
-                  <div key={i} className="py-2.5 overflow-hidden">
+                  <div key={i} className="px-2.5 py-2 rounded-md border border-border/30 bg-muted/5 overflow-hidden">
                     <div className="flex items-center gap-2 mb-1">
-                      <Skeleton className="h-2 w-2 rounded-full shrink-0" />
+                      <Skeleton className="h-1.5 w-1.5 rounded-full shrink-0" />
                       <Skeleton className="h-3.5 w-28" />
                       <Skeleton className="h-3 w-12 ml-auto shrink-0" />
                     </div>
@@ -192,9 +192,9 @@ export const GmailWidget = () => {
               </div>
             )}
 
-            {/* Messages list - Gmail-style 3-line layout */}
+            {/* Messages list - Gmail-style 3-line layout with bordered cards */}
             {isConnected && !isLoading && messages.length > 0 && (
-              <div className="divide-y divide-border">
+              <div className="space-y-1.5">
                 {messages.map((message) => (
                   <a
                     key={message.id}
@@ -202,9 +202,11 @@ export const GmailWidget = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className={cn(
-                      "block py-2.5 overflow-hidden",
-                      "hover:bg-muted/50 transition-colors group cursor-pointer",
-                      message.isUnread && "border-l-2 border-l-blue-500 -ml-3 pl-[calc(0.75rem-2px)] bg-primary/5"
+                      "block px-2.5 py-2 rounded-md border border-border/30 border-l-2 overflow-hidden",
+                      "hover:bg-muted/50 hover:border-border/50 transition-colors cursor-pointer",
+                      message.isUnread 
+                        ? "border-l-blue-500 bg-primary/5" 
+                        : "border-l-transparent bg-muted/5"
                     )}
                     tabIndex={0}
                     role="button"
@@ -213,12 +215,16 @@ export const GmailWidget = () => {
                     {/* Line 1: Unread dot + Sender + Star + Date */}
                     <div className="flex items-center justify-between gap-2 mb-1 min-w-0">
                       <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
-                        {/* Unread indicator dot */}
-                        {message.isUnread && (
-                          <div className="w-1.5 h-1.5 bg-blue-500 rounded-full shrink-0" aria-hidden="true">
-                            <span className="sr-only">Unread</span>
-                          </div>
-                        )}
+                        {/* Unread indicator dot - always reserve space for alignment */}
+                        <div 
+                          className={cn(
+                            "w-1.5 h-1.5 rounded-full shrink-0",
+                            message.isUnread ? "bg-blue-500" : "bg-transparent"
+                          )}
+                          aria-hidden="true"
+                        >
+                          {message.isUnread && <span className="sr-only">Unread</span>}
+                        </div>
                         
                         {/* Sender name */}
                         <span className={cn(
