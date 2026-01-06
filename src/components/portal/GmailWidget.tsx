@@ -145,8 +145,8 @@ export const GmailWidget = () => {
       </CardHeader>
 
       <CardContent className="p-0">
-        <ScrollArea className="h-[340px]">
-          <div className="p-2 pr-3 overflow-x-hidden">
+        <ScrollArea className="h-[340px] overflow-x-hidden">
+          <div className="p-2">
             {/* Not connected state */}
             {!isConnected && !isLoading && (
               <div className="flex flex-col items-center justify-center py-6 bg-red-500/5 rounded-lg border border-red-500/10">
@@ -169,7 +169,7 @@ export const GmailWidget = () => {
 
             {/* Loading state - 3 line skeleton */}
             {isLoading && (
-              <div className="space-y-1.5">
+              <div className="space-y-1.5 pr-2">
                 {[1, 2, 3].map(i => (
                   <div key={i} className="px-2.5 py-1.5 rounded-md border border-border/30 bg-muted/5 overflow-hidden">
                     <div className="flex items-center gap-2 mb-1">
@@ -194,7 +194,7 @@ export const GmailWidget = () => {
 
             {/* Messages list - Gmail-style 3-line layout with bordered cards */}
             {isConnected && !isLoading && messages.length > 0 && (
-              <div className="space-y-1.5">
+              <div className="space-y-1.5 pr-2">
                 {messages.map((message) => (
                   <a
                     key={message.id}
@@ -228,7 +228,7 @@ export const GmailWidget = () => {
                         
                         {/* Sender name */}
                         <span className={cn(
-                          "text-sm truncate min-w-0",
+                          "text-sm truncate min-w-0 flex-1",
                           message.isUnread ? "font-semibold text-foreground" : "font-medium text-foreground/70"
                         )}>
                           {message.from.name || message.from.email}
