@@ -145,8 +145,8 @@ export const GmailWidget = () => {
       </CardHeader>
 
       <CardContent className="p-0">
-        <ScrollArea className="h-[340px] overflow-x-hidden">
-          <div className="p-3 space-y-2">
+        <ScrollArea className="h-[340px]">
+          <div className="px-3 py-2">
             {/* Not connected state */}
             {!isConnected && !isLoading && (
               <div className="flex flex-col items-center justify-center py-6 bg-red-500/5 rounded-lg border border-red-500/10">
@@ -169,13 +169,13 @@ export const GmailWidget = () => {
 
             {/* Loading state - 3 line skeleton */}
             {isLoading && (
-              <div className="space-y-2">
+              <div className="divide-y divide-border">
                 {[1, 2, 3].map(i => (
-                  <div key={i} className="p-3 rounded-lg bg-muted/10 overflow-hidden">
+                  <div key={i} className="py-2.5 overflow-hidden">
                     <div className="flex items-center gap-2 mb-1">
-                      <Skeleton className="h-2 w-2 rounded-full" />
+                      <Skeleton className="h-2 w-2 rounded-full shrink-0" />
                       <Skeleton className="h-3.5 w-28" />
-                      <Skeleton className="h-3 w-12 ml-auto" />
+                      <Skeleton className="h-3 w-12 ml-auto shrink-0" />
                     </div>
                     <Skeleton className="h-3.5 w-full mb-1" />
                     <Skeleton className="h-3 w-3/4" />
@@ -194,7 +194,7 @@ export const GmailWidget = () => {
 
             {/* Messages list - Gmail-style 3-line layout */}
             {isConnected && !isLoading && messages.length > 0 && (
-              <div className="space-y-2">
+              <div className="divide-y divide-border">
                 {messages.map((message) => (
                   <a
                     key={message.id}
@@ -202,29 +202,27 @@ export const GmailWidget = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className={cn(
-                      "block p-3 rounded-lg overflow-hidden",
+                      "block py-2.5 overflow-hidden",
                       "hover:bg-muted/50 transition-colors group cursor-pointer",
-                      message.isUnread ? "bg-primary/5" : "bg-muted/10"
+                      message.isUnread && "border-l-2 border-l-blue-500 -ml-3 pl-[calc(0.75rem-2px)] bg-primary/5"
                     )}
                     tabIndex={0}
                     role="button"
                     aria-label={`Email from ${message.from.name || message.from.email}: ${message.subject}`}
                   >
                     {/* Line 1: Unread dot + Sender + Star + Date */}
-                    <div className="flex items-center justify-between gap-2 mb-1">
-                      <div className="flex items-center gap-2 min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-2 mb-1 min-w-0">
+                      <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
                         {/* Unread indicator dot */}
-                        {message.isUnread ? (
-                          <div className="w-2 h-2 bg-blue-500 rounded-full shrink-0" aria-hidden="true">
+                        {message.isUnread && (
+                          <div className="w-1.5 h-1.5 bg-blue-500 rounded-full shrink-0" aria-hidden="true">
                             <span className="sr-only">Unread</span>
                           </div>
-                        ) : (
-                          <div className="w-2 h-2 shrink-0" aria-hidden="true" />
                         )}
                         
                         {/* Sender name */}
                         <span className={cn(
-                          "text-sm truncate",
+                          "text-sm truncate min-w-0",
                           message.isUnread ? "font-semibold text-foreground" : "font-medium text-foreground/70"
                         )}>
                           {message.from.name || message.from.email}
@@ -263,14 +261,14 @@ export const GmailWidget = () => {
 
                     {/* Line 2: Subject */}
                     <p className={cn(
-                      "text-sm truncate mb-0.5",
+                      "text-sm truncate mb-0.5 min-w-0",
                       message.isUnread ? "font-semibold text-foreground" : "text-foreground/70"
                     )}>
                       {message.subject || "(No subject)"}
                     </p>
 
                     {/* Line 3: Snippet/Preview */}
-                    <p className="text-xs text-muted-foreground truncate">
+                    <p className="text-xs text-muted-foreground truncate min-w-0">
                       {message.snippet || ""}
                     </p>
                   </a>
