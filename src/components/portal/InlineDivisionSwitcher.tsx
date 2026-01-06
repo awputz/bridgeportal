@@ -15,8 +15,69 @@ interface InlineDivisionSwitcherProps {
 }
 
 export const InlineDivisionSwitcher = ({ compact = false }: InlineDivisionSwitcherProps) => {
-  const { division, setDivision } = useDivision();
+  const { division, setDivision, isAdmin } = useDivision();
 
+  // For agents, show only their assigned division
+  if (!isAdmin) {
+    const Icon = divisionIcons[division];
+    const config = divisionConfigs[division];
+
+    if (compact) {
+      return (
+        <div className="flex items-center gap-2">
+          <div
+            className={cn(
+              "flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium",
+              "bg-white/10 border border-white/20"
+            )}
+            style={{ borderColor: config.color + "40" }}
+          >
+            <Icon className="h-4 w-4" style={{ color: config.color }} />
+            <span>{config.name}</span>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="relative">
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span>Working in:</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <div
+              className={cn(
+                "flex items-center gap-3 px-4 py-3 rounded-xl",
+                "border-2 bg-card"
+              )}
+              style={{
+                borderColor: config.color,
+                boxShadow: `0 4px 20px ${config.color}30`,
+              }}
+            >
+              <div
+                className="p-2 rounded-lg"
+                style={{ backgroundColor: `${config.color}20` }}
+              >
+                <Icon className="h-5 w-5" style={{ color: config.color }} />
+              </div>
+              <div className="text-left">
+                <div className="font-semibold text-sm text-foreground">
+                  {config.name}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  Your assigned division
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // For admins, show the switcher
   if (compact) {
     return (
       <div className="flex flex-wrap gap-2">
