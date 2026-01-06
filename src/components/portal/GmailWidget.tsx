@@ -129,119 +129,126 @@ export const GmailWidget = () => {
       </CardHeader>
 
       <CardContent className="p-3 pt-0">
-        <ScrollArea className="max-h-[280px]">
-          {/* Not connected state */}
-          {!isConnected && !isLoading && (
-            <div className="flex flex-col items-center justify-center py-6 bg-red-500/5 rounded-lg border border-red-500/10">
-              <div className="h-9 w-9 rounded-full bg-red-500/10 flex items-center justify-center mb-2">
-                <Mail className="h-4 w-4 text-red-400" />
-              </div>
-              <p className="text-xs text-muted-foreground text-center mb-2">
-                Connect Gmail to see your inbox
-              </p>
-              <Button 
-                size="sm" 
-                onClick={() => connectGmail()} 
-                disabled={isConnecting}
-                className="bg-red-500 hover:bg-red-600 text-white h-8 text-xs px-3"
-              >
-                {isConnecting ? "Connecting..." : "Connect Gmail"}
-              </Button>
-            </div>
-          )}
-
-          {/* Loading state */}
-          {isLoading && (
-            <div className="space-y-1.5">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="flex gap-2 p-2 bg-muted/30 rounded-lg">
-                  <Skeleton className="h-8 w-8 rounded-full flex-shrink-0" />
-                  <div className="flex-1 space-y-1.5">
-                    <Skeleton className="h-3 w-24" />
-                    <Skeleton className="h-3 w-full" />
-                  </div>
+        <div className="relative">
+          <ScrollArea className="max-h-[280px]">
+            {/* Not connected state */}
+            {!isConnected && !isLoading && (
+              <div className="flex flex-col items-center justify-center py-6 bg-red-500/5 rounded-lg border border-red-500/10">
+                <div className="h-9 w-9 rounded-full bg-red-500/10 flex items-center justify-center mb-2">
+                  <Mail className="h-4 w-4 text-red-400" />
                 </div>
-              ))}
-            </div>
-          )}
-
-          {/* Empty state */}
-          {isConnected && !isLoading && messages.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-6 bg-muted/20 rounded-lg">
-              <Inbox className="h-7 w-7 text-muted-foreground mb-1.5" />
-              <p className="text-xs text-muted-foreground">No new emails</p>
-            </div>
-          )}
-
-          {/* Messages list */}
-          {isConnected && !isLoading && messages.length > 0 && (
-            <div className="space-y-1">
-              {messages.map((message) => (
-                <a
-                  key={message.id}
-                  href={`https://mail.google.com/mail/u/0/#inbox/${message.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={cn(
-                    "relative flex items-start gap-2 p-2 rounded-lg transition-all group",
-                    "hover:bg-muted/50 border border-transparent hover:border-border/50",
-                    message.isUnread && "bg-red-500/5 border-red-500/10"
-                  )}
+                <p className="text-xs text-muted-foreground text-center mb-2">
+                  Connect Gmail to see your inbox
+                </p>
+                <Button 
+                  size="sm" 
+                  onClick={() => connectGmail()} 
+                  disabled={isConnecting}
+                  className="bg-red-500 hover:bg-red-600 text-white h-8 text-xs px-3"
                 >
-                  {/* Unread indicator */}
-                  {message.isUnread && (
-                    <div className="absolute left-0.5 top-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-red-500" />
-                  )}
-                  
-                  {/* Avatar */}
-                  <div className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-semibold",
-                    message.isUnread 
-                      ? "bg-red-500/20 text-red-400" 
-                      : "bg-muted text-muted-foreground"
-                  )}>
-                    {message.from.name?.charAt(0).toUpperCase() || "?"}
-                  </div>
-                  
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-1">
-                      <span className={cn(
-                        "text-xs truncate",
-                        message.isUnread ? "font-semibold text-foreground" : "text-muted-foreground"
-                      )}>
-                        {message.from.name || message.from.email}
-                      </span>
-                      <span className="text-[10px] text-muted-foreground flex-shrink-0">
-                        {formatRelativeTime(new Date(message.date))}
-                      </span>
+                  {isConnecting ? "Connecting..." : "Connect Gmail"}
+                </Button>
+              </div>
+            )}
+
+            {/* Loading state */}
+            {isLoading && (
+              <div className="space-y-1.5">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="flex gap-2 p-2 bg-muted/30 rounded-lg">
+                    <Skeleton className="h-8 w-8 rounded-full flex-shrink-0" />
+                    <div className="flex-1 space-y-1.5">
+                      <Skeleton className="h-3 w-24" />
+                      <Skeleton className="h-3 w-full" />
                     </div>
-                    <p className={cn(
-                      "text-xs truncate",
-                      message.isUnread ? "text-foreground/80" : "text-muted-foreground"
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Empty state */}
+            {isConnected && !isLoading && messages.length === 0 && (
+              <div className="flex flex-col items-center justify-center py-6 bg-muted/20 rounded-lg">
+                <Inbox className="h-7 w-7 text-muted-foreground mb-1.5" />
+                <p className="text-xs text-muted-foreground">No new emails</p>
+              </div>
+            )}
+
+            {/* Messages list */}
+            {isConnected && !isLoading && messages.length > 0 && (
+              <div className="space-y-1">
+                {messages.map((message) => (
+                  <a
+                    key={message.id}
+                    href={`https://mail.google.com/mail/u/0/#inbox/${message.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(
+                      "relative flex items-start gap-2 p-2 rounded-lg transition-all group",
+                      "hover:bg-muted/50 border border-transparent hover:border-border/50",
+                      message.isUnread && "bg-red-500/5 border-red-500/10"
+                    )}
+                  >
+                    {/* Unread indicator */}
+                    {message.isUnread && (
+                      <div className="absolute left-0.5 top-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-red-500" />
+                    )}
+                    
+                    {/* Avatar */}
+                    <div className={cn(
+                      "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-semibold",
+                      message.isUnread 
+                        ? "bg-red-500/20 text-red-400" 
+                        : "bg-muted text-muted-foreground"
                     )}>
-                      {message.subject || "(No subject)"}
-                    </p>
-                  </div>
-                  
-                  {/* Star action - Desktop only */}
-                  <div className="hidden sm:flex items-center flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button 
-                      onClick={(e) => handleStar(message.id, message.isStarred, e)} 
-                      className="p-1 hover:bg-muted rounded transition-colors"
-                      title={message.isStarred ? "Unstar" : "Star"}
-                    >
-                      <Star className={cn(
-                        "h-3.5 w-3.5 transition-colors",
-                        message.isStarred ? "fill-amber-400 text-amber-400" : "text-muted-foreground hover:text-amber-400"
-                      )} />
-                    </button>
-                  </div>
-                </a>
-              ))}
-            </div>
+                      {message.from.name?.charAt(0).toUpperCase() || "?"}
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-1">
+                        <span className={cn(
+                          "text-xs truncate",
+                          message.isUnread ? "font-semibold text-foreground" : "text-muted-foreground"
+                        )}>
+                          {message.from.name || message.from.email}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground flex-shrink-0">
+                          {formatRelativeTime(new Date(message.date))}
+                        </span>
+                      </div>
+                      <p className={cn(
+                        "text-xs truncate",
+                        message.isUnread ? "text-foreground/80" : "text-muted-foreground"
+                      )}>
+                        {message.subject || "(No subject)"}
+                      </p>
+                    </div>
+                    
+                    {/* Star action - Desktop only */}
+                    <div className="hidden sm:flex items-center flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button 
+                        onClick={(e) => handleStar(message.id, message.isStarred, e)} 
+                        className="p-1 hover:bg-muted rounded transition-colors"
+                        title={message.isStarred ? "Unstar" : "Star"}
+                      >
+                        <Star className={cn(
+                          "h-3.5 w-3.5 transition-colors",
+                          message.isStarred ? "fill-amber-400 text-amber-400" : "text-muted-foreground hover:text-amber-400"
+                        )} />
+                      </button>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            )}
+          </ScrollArea>
+          
+          {/* Scroll fade indicator */}
+          {isConnected && messages.length > 4 && (
+            <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-card to-transparent pointer-events-none" />
           )}
-        </ScrollArea>
+        </div>
       </CardContent>
     </Card>
   );
