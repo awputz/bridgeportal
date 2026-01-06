@@ -2,7 +2,6 @@ import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { 
   Sparkles,
-  Clock,
   ChevronRight,
   Search,
   Filter,
@@ -27,138 +26,85 @@ import {
 import { OMGenerator } from "@/components/generators/OMGenerator";
 import { LeaseSummaryGenerator } from "@/components/generators/LeaseSummaryGenerator";
 import { EmailGenerator } from "@/components/generators/EmailGenerator";
-import { PropertyDescriptionGenerator } from "@/components/generators/PropertyDescriptionGenerator";
 import { CMAGenerator } from "@/components/generators/CMAGenerator";
 import { FollowUpEmailGenerator } from "@/components/generators/FollowUpEmailGenerator";
 import { DealSummaryGenerator } from "@/components/generators/DealSummaryGenerator";
-import { ListingTeaserGenerator } from "@/components/generators/ListingTeaserGenerator";
 
-// Import shell generators (will be created)
 // Universal
 import { ClientThankYouGenerator } from "@/components/generators/universal/ClientThankYouGenerator";
 import { MeetingPrepGenerator } from "@/components/generators/universal/MeetingPrepGenerator";
 import { ObjectionHandlerGenerator } from "@/components/generators/universal/ObjectionHandlerGenerator";
-import { SocialMediaPostGenerator } from "@/components/generators/universal/SocialMediaPostGenerator";
 import { ColdCallScriptGenerator } from "@/components/generators/universal/ColdCallScriptGenerator";
-import { AgentBioGenerator } from "@/components/generators/universal/AgentBioGenerator";
 import { MarketUpdateEmailGenerator } from "@/components/generators/universal/MarketUpdateEmailGenerator";
 
 // Investment Sales
-import { InvestmentThesisGenerator } from "@/components/generators/investment-sales/InvestmentThesisGenerator";
-import { CompNarrativeGenerator } from "@/components/generators/investment-sales/CompNarrativeGenerator";
-import { NOIProFormaGenerator } from "@/components/generators/investment-sales/NOIProFormaGenerator";
-import { RentRollAnalyzerGenerator } from "@/components/generators/investment-sales/RentRollAnalyzerGenerator";
-import { Exchange1031BriefGenerator } from "@/components/generators/investment-sales/Exchange1031BriefGenerator";
 import { BuyerMatchLetterGenerator } from "@/components/generators/investment-sales/BuyerMatchLetterGenerator";
-import { SellerPitchDeckGenerator } from "@/components/generators/investment-sales/SellerPitchDeckGenerator";
 import { DueDiligenceChecklistGenerator } from "@/components/generators/investment-sales/DueDiligenceChecklistGenerator";
-import { InvestmentComparisonGenerator } from "@/components/generators/investment-sales/InvestmentComparisonGenerator";
-import { CapRateJustificationGenerator } from "@/components/generators/investment-sales/CapRateJustificationGenerator";
-import { PortfolioAnalysisGenerator } from "@/components/generators/investment-sales/PortfolioAnalysisGenerator";
-import { DispositionStrategyGenerator } from "@/components/generators/investment-sales/DispositionStrategyGenerator";
 
-// Commercial Leasing
-import { LOIGenerator } from "@/components/generators/commercial-leasing/LOIGenerator";
-import { TenantProposalGenerator } from "@/components/generators/commercial-leasing/TenantProposalGenerator";
-import { SpaceComparisonGenerator } from "@/components/generators/commercial-leasing/SpaceComparisonGenerator";
-import { LeaseAbstractGenerator } from "@/components/generators/commercial-leasing/LeaseAbstractGenerator";
-import { TIScopeGenerator } from "@/components/generators/commercial-leasing/TIScopeGenerator";
-import { LandlordPitchGenerator } from "@/components/generators/commercial-leasing/LandlordPitchGenerator";
-import { TourConfirmationGenerator } from "@/components/generators/commercial-leasing/TourConfirmationGenerator";
-import { LeaseRenewalProposalGenerator } from "@/components/generators/commercial-leasing/LeaseRenewalProposalGenerator";
-import { SubleaseBlurbGenerator } from "@/components/generators/commercial-leasing/SubleaseBlurbGenerator";
-import { EscalationExplainerGenerator } from "@/components/generators/commercial-leasing/EscalationExplainerGenerator";
-import { CAMSummaryGenerator } from "@/components/generators/commercial-leasing/CAMSummaryGenerator";
-import { SpaceProgrammingGenerator } from "@/components/generators/commercial-leasing/SpaceProgrammingGenerator";
+// New Generators - Presentations
+import { InvestmentSalesOMDeckGenerator } from "@/components/generators/presentations/InvestmentSalesOMDeckGenerator";
+import { OfficeLeasingDeckGenerator } from "@/components/generators/presentations/OfficeLeasingDeckGenerator";
+import { RetailLeasingDeckGenerator } from "@/components/generators/presentations/RetailLeasingDeckGenerator";
+import { ResidentialListingDeckGenerator } from "@/components/generators/presentations/ResidentialListingDeckGenerator";
+import { SellerPitchDeckGenerator } from "@/components/generators/presentations/SellerPitchDeckGenerator";
 
-// Residential
-import BuyerNeedsAnalysisGenerator from "@/components/generators/residential/BuyerNeedsAnalysisGenerator";
-import NeighborhoodGuideGenerator from "@/components/generators/residential/NeighborhoodGuideGenerator";
-import OpenHouseFollowUpGenerator from "@/components/generators/residential/OpenHouseFollowUpGenerator";
-import RentalApplicationSummaryGenerator from "@/components/generators/residential/RentalApplicationSummaryGenerator";
-import SellerNetSheetGenerator from "@/components/generators/residential/SellerNetSheetGenerator";
-import BuyerOfferLetterGenerator from "@/components/generators/residential/BuyerOfferLetterGenerator";
-import RentalListingGenerator from "@/components/generators/residential/RentalListingGenerator";
-import TenantWelcomeLetterGenerator from "@/components/generators/residential/TenantWelcomeLetterGenerator";
-import LeaseViolationNoticeGenerator from "@/components/generators/residential/LeaseViolationNoticeGenerator";
-import ShowingFeedbackSummaryGenerator from "@/components/generators/residential/ShowingFeedbackSummaryGenerator";
-import PriceReductionMemoGenerator from "@/components/generators/residential/PriceReductionMemoGenerator";
-import BuildingAmenityGuideGenerator from "@/components/generators/residential/BuildingAmenityGuideGenerator";
+// New Generators - Flyers
+import { InvestmentSalesFlyerGenerator } from "@/components/generators/flyers/InvestmentSalesFlyerGenerator";
+import { OfficeSpaceFlyerGenerator } from "@/components/generators/flyers/OfficeSpaceFlyerGenerator";
+import { RetailSpaceFlyerGenerator } from "@/components/generators/flyers/RetailSpaceFlyerGenerator";
+import { ResidentialJustListedFlyerGenerator } from "@/components/generators/flyers/ResidentialJustListedFlyerGenerator";
+import { ResidentialOpenHouseFlyerGenerator } from "@/components/generators/flyers/ResidentialOpenHouseFlyerGenerator";
+import { IndustrialWarehouseFlyerGenerator } from "@/components/generators/flyers/IndustrialWarehouseFlyerGenerator";
 
-// Analytics
-import PipelineHealthGenerator from "@/components/generators/analytics/PipelineHealthGenerator";
-import LeadScoringGenerator from "@/components/generators/analytics/LeadScoringGenerator";
-import CommissionForecastGenerator from "@/components/generators/analytics/CommissionForecastGenerator";
-import WeeklyActivityDigestGenerator from "@/components/generators/analytics/WeeklyActivityDigestGenerator";
-import PerformanceInsightsGenerator from "@/components/generators/analytics/PerformanceInsightsGenerator";
-import DealRiskAssessmentGenerator from "@/components/generators/analytics/DealRiskAssessmentGenerator";
+// New Generators - Social Media
+import { InstagramJustListedGenerator } from "@/components/generators/social-media/InstagramJustListedGenerator";
+import { InstagramJustSoldGenerator } from "@/components/generators/social-media/InstagramJustSoldGenerator";
+import { LinkedInDealPostGenerator } from "@/components/generators/social-media/LinkedInDealPostGenerator";
+import { InstagramOpenHouseStoryGenerator } from "@/components/generators/social-media/InstagramOpenHouseStoryGenerator";
+
+// New Generators - Documents & Scripts
+import { InvestmentAnalysisReportGenerator } from "@/components/generators/documents/InvestmentAnalysisReportGenerator";
+import { SellerPricingScriptGenerator } from "@/components/generators/scripts/SellerPricingScriptGenerator";
 
 type DivisionFilter = Division | "all";
 
 const generatorComponents: Record<string, React.ComponentType<{ onBack: () => void }>> = {
-  // Existing live generators
+  // Documents
   "om-generator": OMGenerator,
-  "lease-summary": LeaseSummaryGenerator,
-  "email-generator": EmailGenerator,
-  "property-description": PropertyDescriptionGenerator,
-  "cma-generator": CMAGenerator,
-  "follow-up-email": FollowUpEmailGenerator,
   "deal-summary": DealSummaryGenerator,
-  "listing-teaser": ListingTeaserGenerator,
-  // Universal
-  "client-thank-you": ClientThankYouGenerator,
+  "cma-generator": CMAGenerator,
+  "lease-summary": LeaseSummaryGenerator,
   "meeting-prep": MeetingPrepGenerator,
-  "objection-handler": ObjectionHandlerGenerator,
-  "social-media-post": SocialMediaPostGenerator,
-  "cold-call-script": ColdCallScriptGenerator,
-  "agent-bio": AgentBioGenerator,
-  "market-update-email": MarketUpdateEmailGenerator,
-  // Investment Sales
-  "investment-thesis": InvestmentThesisGenerator,
-  "comp-narrative": CompNarrativeGenerator,
-  "noi-pro-forma": NOIProFormaGenerator,
-  "rent-roll-analyzer": RentRollAnalyzerGenerator,
-  "1031-exchange-brief": Exchange1031BriefGenerator,
   "buyer-match-letter": BuyerMatchLetterGenerator,
-  "seller-pitch-deck": SellerPitchDeckGenerator,
   "due-diligence-checklist": DueDiligenceChecklistGenerator,
-  "investment-comparison": InvestmentComparisonGenerator,
-  "cap-rate-justification": CapRateJustificationGenerator,
-  "portfolio-analysis": PortfolioAnalysisGenerator,
-  "disposition-strategy": DispositionStrategyGenerator,
-  // Commercial Leasing
-  "loi-generator": LOIGenerator,
-  "tenant-proposal": TenantProposalGenerator,
-  "space-comparison": SpaceComparisonGenerator,
-  "lease-abstract": LeaseAbstractGenerator,
-  "ti-scope": TIScopeGenerator,
-  "landlord-pitch": LandlordPitchGenerator,
-  "tour-confirmation": TourConfirmationGenerator,
-  "lease-renewal-proposal": LeaseRenewalProposalGenerator,
-  "sublease-blurb": SubleaseBlurbGenerator,
-  "escalation-explainer": EscalationExplainerGenerator,
-  "cam-summary": CAMSummaryGenerator,
-  "space-programming": SpaceProgrammingGenerator,
-  // Residential
-  "buyer-needs-analysis": BuyerNeedsAnalysisGenerator,
-  "neighborhood-guide": NeighborhoodGuideGenerator,
-  "open-house-follow-up": OpenHouseFollowUpGenerator,
-  "rental-application-summary": RentalApplicationSummaryGenerator,
-  "seller-net-sheet": SellerNetSheetGenerator,
-  "buyer-offer-letter": BuyerOfferLetterGenerator,
-  "rental-listing": RentalListingGenerator,
-  "tenant-welcome-letter": TenantWelcomeLetterGenerator,
-  "lease-violation-notice": LeaseViolationNoticeGenerator,
-  "showing-feedback-summary": ShowingFeedbackSummaryGenerator,
-  "price-reduction-memo": PriceReductionMemoGenerator,
-  "building-amenity-guide": BuildingAmenityGuideGenerator,
-  // Analytics
-  "pipeline-health": PipelineHealthGenerator,
-  "lead-scoring": LeadScoringGenerator,
-  "commission-forecast": CommissionForecastGenerator,
-  "weekly-activity-digest": WeeklyActivityDigestGenerator,
-  "performance-insights": PerformanceInsightsGenerator,
-  "deal-risk-assessment": DealRiskAssessmentGenerator,
+  "investment-analysis-report": InvestmentAnalysisReportGenerator,
+  // Emails
+  "email-generator": EmailGenerator,
+  "follow-up-email": FollowUpEmailGenerator,
+  "market-update-email": MarketUpdateEmailGenerator,
+  "client-thank-you": ClientThankYouGenerator,
+  // Scripts
+  "cold-call-script": ColdCallScriptGenerator,
+  "objection-handler": ObjectionHandlerGenerator,
+  "seller-pricing-script": SellerPricingScriptGenerator,
+  // Presentations
+  "investment-sales-om-deck": InvestmentSalesOMDeckGenerator,
+  "office-leasing-deck": OfficeLeasingDeckGenerator,
+  "retail-leasing-deck": RetailLeasingDeckGenerator,
+  "residential-listing-deck": ResidentialListingDeckGenerator,
+  "seller-pitch-deck": SellerPitchDeckGenerator,
+  // Flyers
+  "investment-sales-flyer": InvestmentSalesFlyerGenerator,
+  "office-space-flyer": OfficeSpaceFlyerGenerator,
+  "retail-space-flyer": RetailSpaceFlyerGenerator,
+  "residential-just-listed-flyer": ResidentialJustListedFlyerGenerator,
+  "residential-open-house-flyer": ResidentialOpenHouseFlyerGenerator,
+  "industrial-warehouse-flyer": IndustrialWarehouseFlyerGenerator,
+  // Social Media
+  "instagram-just-listed": InstagramJustListedGenerator,
+  "instagram-just-sold": InstagramJustSoldGenerator,
+  "linkedin-deal-post": LinkedInDealPostGenerator,
+  "instagram-open-house-story": InstagramOpenHouseStoryGenerator,
 };
 
 const divisionLabels: Record<DivisionFilter, string> = {
@@ -208,13 +154,12 @@ const Generators = () => {
   }, [divisionFilter, categoryFilter, search]);
 
   const liveGenerators = filteredGenerators.filter((g) => g.status === "live");
-  const shellGenerators = filteredGenerators.filter((g) => g.status === "shell");
-  const comingSoonGenerators = filteredGenerators.filter((g) => g.status === "coming-soon");
+  const underConstructionGenerators = filteredGenerators.filter((g) => g.status === "under-construction");
 
   // Recommended for current division
   const recommendedGenerators = useMemo(() => {
     return getGeneratorsForDivision(currentDivision)
-      .filter((g) => g.status === "live" || g.status === "shell")
+      .filter((g) => g.status === "live")
       .slice(0, 4);
   }, [currentDivision]);
 
@@ -233,9 +178,9 @@ const Generators = () => {
             </button>
             <div className="text-center py-12">
               <Wrench className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-              <h2 className="text-xl font-light mb-2">Generator Shell</h2>
+              <h2 className="text-xl font-light mb-2">Under Construction</h2>
               <p className="text-muted-foreground">
-                This generator is ready to be implemented. Check back soon!
+                This generator is being upgraded. Check back soon!
               </p>
             </div>
           </div>
@@ -268,7 +213,7 @@ const Generators = () => {
               AI Generators
             </h1>
             <p className="text-muted-foreground font-light">
-              {generatorRegistry.length} AI-powered tools to supercharge your productivity
+              {liveGenerators.length} AI-powered tools ready to use
             </p>
           </div>
         </div>
@@ -355,38 +300,21 @@ const Generators = () => {
           </div>
         )}
 
-        {/* Shell Generators (Ready to Implement) */}
-        {shellGenerators.length > 0 && (
+        {/* Under Construction Generators */}
+        {underConstructionGenerators.length > 0 && (
           <div className="mb-8">
             <h2 className="text-xl font-light text-foreground mb-4 flex items-center gap-2">
-              <Wrench className="h-4 w-4 text-yellow-500" />
-              Ready to Use ({shellGenerators.length})
+              <Wrench className="h-4 w-4 text-amber-500" />
+              Under Construction ({underConstructionGenerators.length})
             </h2>
+            <p className="text-sm text-muted-foreground mb-4">
+              These generators are being upgraded with enhanced prompts and features. Check back soon!
+            </p>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {shellGenerators.map((generator) => (
+              {underConstructionGenerators.map((generator) => (
                 <GeneratorCard 
                   key={generator.id} 
-                  generator={generator} 
-                  onClick={() => setActiveGenerator(generator.id)}
-                  isShell
-                />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Coming Soon */}
-        {comingSoonGenerators.length > 0 && (
-          <div>
-            <h2 className="text-xl font-light text-foreground mb-4 flex items-center gap-2">
-              <Clock className="h-4 w-4 text-muted-foreground" />
-              Coming Soon ({comingSoonGenerators.length})
-            </h2>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {comingSoonGenerators.map((generator) => (
-                <GeneratorCard 
-                  key={generator.id} 
-                  generator={generator} 
+                  generator={generator}
                   disabled
                 />
               ))}
@@ -414,34 +342,35 @@ interface GeneratorCardProps {
   generator: GeneratorDefinition;
   onClick?: () => void;
   disabled?: boolean;
-  isShell?: boolean;
 }
 
-const GeneratorCard = ({ generator, onClick, disabled, isShell }: GeneratorCardProps) => {
+const GeneratorCard = ({ generator, onClick, disabled }: GeneratorCardProps) => {
   const Icon = generator.icon;
+  const isUnderConstruction = generator.status === "under-construction";
 
   return (
     <Card
       className={`glass-card border-white/10 transition-all ${
-        disabled 
-          ? "opacity-60" 
+        disabled || isUnderConstruction
+          ? "opacity-60 cursor-not-allowed" 
           : "cursor-pointer hover:bg-white/10 group"
       }`}
-      onClick={disabled ? undefined : onClick}
+      onClick={disabled || isUnderConstruction ? undefined : onClick}
     >
       <CardContent className="p-5">
         <div className="flex items-start justify-between mb-3">
           <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${
-            disabled ? "bg-muted/20" : isShell ? "bg-yellow-500/20" : "bg-primary/20"
+            disabled || isUnderConstruction ? "bg-muted/20" : "bg-primary/20"
           }`}>
             <Icon className={`h-5 w-5 ${
-              disabled ? "text-muted-foreground" : isShell ? "text-yellow-500" : "text-primary"
+              disabled || isUnderConstruction ? "text-muted-foreground" : "text-primary"
             }`} />
           </div>
-          {disabled ? (
-            <Badge variant="secondary" className="text-xs">Coming Soon</Badge>
-          ) : isShell ? (
-            <Badge variant="outline" className="text-xs border-yellow-500/50 text-yellow-500">New</Badge>
+          {isUnderConstruction ? (
+            <Badge variant="secondary" className="text-xs gap-1">
+              <Wrench className="h-3 w-3" />
+              Upgrading
+            </Badge>
           ) : (
             <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground group-hover:translate-x-1 transition-all" />
           )}

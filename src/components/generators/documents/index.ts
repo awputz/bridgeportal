@@ -1,0 +1,1 @@
+export { InvestmentAnalysisReportGenerator } from './InvestmentAnalysisReportGenerator';
