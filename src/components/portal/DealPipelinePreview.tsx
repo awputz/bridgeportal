@@ -12,11 +12,11 @@ export const DealPipelinePreview = () => {
 
   const isLoading = dealsLoading || stagesLoading;
 
-  // Count deals by stage
+  // Count deals by stage with null safety
   const stageCounts = stages?.map((stage) => ({
     ...stage,
-    count: deals?.filter((deal) => deal.stage_id === stage.id).length || 0,
-  }));
+    count: deals?.filter((deal) => deal?.stage_id === stage?.id)?.length || 0,
+  })) || [];
 
   const totalDeals = deals?.length || 0;
 
@@ -54,17 +54,17 @@ export const DealPipelinePreview = () => {
         <>
           {/* Pipeline bar visualization */}
           <div className="flex gap-0.5 h-3 rounded-full overflow-hidden mb-3">
-            {stageCounts?.map((stage) => {
-              const width = totalDeals > 0 ? (stage.count / totalDeals) * 100 : 0;
+            {stageCounts.map((stage) => {
+              const width = totalDeals > 0 ? ((stage?.count || 0) / totalDeals) * 100 : 0;
               return (
                 <div
-                  key={stage.id}
+                  key={stage?.id || Math.random()}
                   className={cn("transition-all", width === 0 && "hidden")}
                   style={{
                     width: `${width}%`,
-                    backgroundColor: stage.color,
+                    backgroundColor: stage?.color || "#888",
                   }}
-                  title={`${stage.name}: ${stage.count}`}
+                  title={`${stage?.name || "Unknown"}: ${stage?.count || 0}`}
                 />
               );
             })}
@@ -72,22 +72,22 @@ export const DealPipelinePreview = () => {
 
           {/* Stage labels */}
           <div className="flex flex-wrap gap-2">
-            {stageCounts?.slice(0, 4).map((stage) => (
+            {stageCounts.slice(0, 4).map((stage) => (
               <div
-                key={stage.id}
+                key={stage?.id || Math.random()}
                 className="flex items-center gap-1.5 text-xs text-muted-foreground"
               >
                 <div
                   className="w-2 h-2 rounded-full"
-                  style={{ backgroundColor: stage.color }}
+                  style={{ backgroundColor: stage?.color || "#888" }}
                 />
-                <span>{stage.name}</span>
-                <span className="text-foreground font-medium">{stage.count}</span>
+                <span>{stage?.name || "Unknown"}</span>
+                <span className="text-foreground font-medium">{stage?.count || 0}</span>
               </div>
             ))}
-            {(stageCounts?.length || 0) > 4 && (
+            {stageCounts.length > 4 && (
               <span className="text-xs text-muted-foreground">
-                +{(stageCounts?.length || 0) - 4} more
+                +{stageCounts.length - 4} more
               </span>
             )}
           </div>

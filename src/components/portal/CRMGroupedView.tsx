@@ -39,32 +39,34 @@ interface CRMGroupedViewProps {
   division: string;
 }
 
-const formatDealValue = (deal: CRMDeal, division: string): string => {
+const formatDealValue = (deal: CRMDeal | null | undefined, division: string): string => {
+  if (!deal) return "—";
+  
   if (division === "investment-sales") {
-    const price = deal.asking_price || deal.offer_price || deal.value;
+    const price = deal?.asking_price || deal?.offer_price || deal?.value;
     if (!price) return "—";
     return formatInvestmentSalesPrice(price);
   }
   
   if (division === "commercial-leasing") {
-    if (deal.asking_rent_psf) {
+    if (deal?.asking_rent_psf) {
       return `$${deal.asking_rent_psf.toFixed(2)}/SF`;
     }
-    if (deal.value) return formatFullCurrency(deal.value);
+    if (deal?.value) return formatFullCurrency(deal.value);
     return "—";
   }
   
   if (division === "residential") {
-    if (deal.is_rental && deal.monthly_rent) {
+    if (deal?.is_rental && deal?.monthly_rent) {
       return formatResidentialRent(deal.monthly_rent);
     }
-    if (deal.listing_price) {
+    if (deal?.listing_price) {
       return formatFullCurrency(deal.listing_price);
     }
     return "—";
   }
   
-  return deal.value ? formatFullCurrency(deal.value) : "—";
+  return deal?.value ? formatFullCurrency(deal.value) : "—";
 };
 
 const formatDate = (dateString: string | null | undefined): string => {
@@ -83,7 +85,7 @@ export const CRMGroupedView = ({
   division,
 }: CRMGroupedViewProps) => {
   const [expandedStages, setExpandedStages] = useState<Set<string>>(
-    new Set(stages.map(s => s.id))
+    new Set(stages?.map(s => s?.id).filter(Boolean) || [])
   );
 
   const toggleStage = (stageId: string) => {
@@ -96,33 +98,37 @@ export const CRMGroupedView = ({
     setExpandedStages(newExpanded);
   };
 
-  // Group deals by stage
+  // Group deals by stage with null safety
   const dealsByStage = useMemo(() => {
     const grouped: Record<string, CRMDeal[]> = {};
-    stages.forEach(stage => {
-      grouped[stage.id] = [];
+    stages?.forEach(stage => {
+      if (stage?.id) {
+        grouped[stage.id] = [];
+      }
     });
-    deals.forEach(deal => {
-      if (deal.stage_id && grouped[deal.stage_id]) {
+    deals?.forEach(deal => {
+      if (deal?.stage_id && grouped[deal.stage_id]) {
         grouped[deal.stage_id].push(deal);
       }
     });
     return grouped;
   }, [deals, stages]);
 
-  // Calculate stage totals
+  // Calculate stage totals with null safety
   const stageTotals = useMemo(() => {
     const totals: Record<string, number> = {};
-    stages.forEach(stage => {
+    stages?.forEach(stage => {
+      if (!stage?.id) return;
       const stageDeals = dealsByStage[stage.id] || [];
       totals[stage.id] = stageDeals.reduce((sum, deal) => {
+        if (!deal) return sum;
         if (division === "investment-sales") {
-          return sum + (deal.asking_price || deal.offer_price || deal.value || 0);
+          return sum + (deal?.asking_price || deal?.offer_price || deal?.value || 0);
         }
         if (division === "residential") {
-          return sum + (deal.is_rental ? (deal.monthly_rent || 0) * 12 : (deal.listing_price || 0));
+          return sum + (deal?.is_rental ? (deal?.monthly_rent || 0) * 12 : (deal?.listing_price || 0));
         }
-        return sum + (deal.value || 0);
+        return sum + (deal?.value || 0);
       }, 0);
     });
     return totals;
@@ -138,7 +144,7 @@ export const CRMGroupedView = ({
     return formatFullCurrency(total);
   };
 
-  if (stages.length === 0) {
+  if (!stages || stages.length === 0) {
     return (
       <div className="text-center py-12 glass-card">
         <p className="text-muted-foreground">No stages configured</p>
@@ -205,11 +211,11 @@ export const CRMGroupedView = ({
                             className="flex items-center gap-2 text-foreground hover:text-foreground/80 min-w-0 flex-shrink-0"
                           >
                             <Building2 className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                            <span className="truncate max-w-[200px]">{deal.property_address}</span>
+                            <span className="truncate max-w-[200px]">{deal?.property_address || "No address"}</span>
                           </Link>
 
                           {/* Contact */}
-                          {deal.contact && (
+                          {deal?.contact?.full_name && (
                             <div className="hidden sm:flex items-center gap-1.5 text-sm text-muted-foreground min-w-0">
                               <User className="h-3.5 w-3.5 flex-shrink-0" />
                               <span className="truncate max-w-[120px]">{deal.contact.full_name}</span>

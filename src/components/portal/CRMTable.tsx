@@ -314,14 +314,14 @@ export const CRMTable = ({
           </TableHeader>
           <TableBody>
             {sortedDeals.map((deal) => {
-              const currentStage = stages.find(s => s.id === deal.stage_id);
-              const isSelected = selectedDeals.has(deal.id);
-              const dueDate = deal.due_date || deal.expected_close;
+              const currentStage = stages?.find(s => s.id === deal.stage_id);
+              const isSelected = selectedDeals?.has(deal.id) ?? false;
+              const dueDate = deal?.due_date || deal?.expected_close;
               const dueSoon = isDueSoon(dueDate);
               const overdue = isOverdue(dueDate);
-              const propertyType = propertyTypeConfig[deal.property_type || ""];
-              const condition = propertyConditionConfig[deal.property_condition || ""];
-              const isRental = deal.is_rental || deal.deal_category === "rental";
+              const propertyType = propertyTypeConfig[deal?.property_type || ""];
+              const condition = propertyConditionConfig[deal?.property_condition || ""];
+              const isRental = deal?.is_rental || deal?.deal_category === "rental";
 
               return (
                 <TableRow 
@@ -347,13 +347,13 @@ export const CRMTable = ({
                       className="flex items-center gap-2 hover:text-foreground text-foreground/90 transition-colors"
                     >
                       <div className="min-w-0">
-                        {deal.contact ? (
+                        {deal?.contact?.full_name ? (
                           <>
                             <span className="truncate block max-w-[180px] font-medium">{deal.contact.full_name}</span>
-                            <span className="text-xs text-muted-foreground truncate block max-w-[180px]">{deal.property_address}</span>
+                            <span className="text-xs text-muted-foreground truncate block max-w-[180px]">{deal.property_address || "No address"}</span>
                           </>
                         ) : (
-                          <span className="truncate block max-w-[180px]">{deal.property_address}</span>
+                          <span className="truncate block max-w-[180px]">{deal?.property_address || "No address"}</span>
                         )}
                       </div>
                     </Link>
@@ -475,14 +475,14 @@ export const CRMTable = ({
                   {/* Market */}
                   <TableCell className="py-2">
                     <span className="text-sm text-muted-foreground truncate block max-w-[100px]">
-                      {deal.neighborhood || deal.borough || "—"}
+                      {deal?.neighborhood || deal?.borough || "—"}
                     </span>
                   </TableCell>
                   {/* Referral */}
                   {config.showReferral && (
                     <TableCell className="py-2">
                       <span className="text-sm text-muted-foreground truncate block max-w-[80px]">
-                        {deal.referral_source || "—"}
+                        {deal?.referral_source || "—"}
                       </span>
                     </TableCell>
                   )}
@@ -494,7 +494,7 @@ export const CRMTable = ({
                     >
                       <SelectTrigger className="w-[130px] h-7 bg-transparent border-white/10 text-xs">
                         <div className="flex items-center gap-1.5">
-                          {currentStage && (
+                          {currentStage?.color && (
                             <div 
                               className="w-2 h-2 rounded-full flex-shrink-0"
                               style={{ backgroundColor: currentStage.color }}
@@ -504,14 +504,16 @@ export const CRMTable = ({
                         </div>
                       </SelectTrigger>
                       <SelectContent>
-                        {stages.map((stage) => (
+                        {stages?.map((stage) => (
                           <SelectItem key={stage.id} value={stage.id}>
                             <div className="flex items-center gap-2">
-                              <div 
-                                className="w-2 h-2 rounded-full"
-                                style={{ backgroundColor: stage.color }}
-                              />
-                              {stage.name}
+                              {stage?.color && (
+                                <div 
+                                  className="w-2 h-2 rounded-full"
+                                  style={{ backgroundColor: stage.color }}
+                                />
+                              )}
+                              {stage?.name || "Unknown"}
                             </div>
                           </SelectItem>
                         ))}
