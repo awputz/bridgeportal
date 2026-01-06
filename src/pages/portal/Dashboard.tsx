@@ -157,20 +157,20 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {/* 3. CRM Command Center - Unified Section */}
+        {/* 3. Gmail & Calendar - Side-by-side on desktop, swipeable on mobile */}
+        <section className="mb-6 animate-fade-in-up" style={{ animationDelay: '0.10s' }}>
+          <WorkspaceCarousel />
+        </section>
+
+        {/* 4. CRM Command Center - Unified Section */}
         <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.12s' }}>
           <SectionErrorBoundary sectionName="CRM Command Center">
             <CRMCommandCenter />
           </SectionErrorBoundary>
         </section>
 
-        {/* 4. Gmail & Calendar - Side-by-side on desktop, swipeable on mobile */}
-        <section className="mb-6 animate-fade-in-up" style={{ animationDelay: '0.16s' }}>
-          <WorkspaceCarousel />
-        </section>
-
         {/* 5. Announcements & Alerts */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.18s' }}>
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <SectionErrorBoundary sectionName="Announcements">
               <AnnouncementsWidget />
@@ -181,8 +181,8 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {/* 5. AI Quick Prompt */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+        {/* 6. AI Quick Prompt */}
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.18s' }}>
           <form onSubmit={handleAiSubmit} className="glass-card p-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center flex-shrink-0">
@@ -201,12 +201,59 @@ const Dashboard = () => {
           </form>
         </section>
 
-        {/* 6. Team Tools Essentials */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.24s' }}>
+        {/* 7. Team Tools Essentials - Static section */}
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.20s' }}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
               <Wrench className="h-5 w-5 text-muted-foreground" />
               Team Tools Essentials
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+            <Link to="/portal/generators" className="glass-card p-4 flex flex-col items-center justify-center text-center hover:border-purple-500/50 transition-all duration-300 min-h-[100px] group">
+              <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mb-2 transition-transform duration-300 group-hover:scale-110">
+                <Wand2 className="h-5 w-5 text-purple-400" />
+              </div>
+              <span className="text-sm font-medium text-foreground">Generators</span>
+              <span className="text-xs text-muted-foreground">AI-powered docs</span>
+            </Link>
+            <Link to="/portal/templates" className="glass-card p-4 flex flex-col items-center justify-center text-center hover:border-blue-500/50 transition-all duration-300 min-h-[100px] group">
+              <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mb-2 transition-transform duration-300 group-hover:scale-110">
+                <FileText className="h-5 w-5 text-blue-400" />
+              </div>
+              <span className="text-sm font-medium text-foreground">Templates</span>
+              <span className="text-xs text-muted-foreground">Division templates</span>
+            </Link>
+            <Link to="/portal/calculators" className="glass-card p-4 flex flex-col items-center justify-center text-center hover:border-amber-500/50 transition-all duration-300 min-h-[100px] group">
+              <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center mb-2 transition-transform duration-300 group-hover:scale-110">
+                <Calculator className="h-5 w-5 text-amber-400" />
+              </div>
+              <span className="text-sm font-medium text-foreground">Calculators</span>
+              <span className="text-xs text-muted-foreground">Financial tools</span>
+            </Link>
+            <Link to="/portal/resources" className="glass-card p-4 flex flex-col items-center justify-center text-center hover:border-green-500/50 transition-all duration-300 min-h-[100px] group">
+              <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mb-2 transition-transform duration-300 group-hover:scale-110">
+                <FolderOpen className="h-5 w-5 text-green-400" />
+              </div>
+              <span className="text-sm font-medium text-foreground">Resources</span>
+              <span className="text-xs text-muted-foreground">Legal & HR docs</span>
+            </Link>
+            <Link to="/portal/requests" className="glass-card p-4 flex flex-col items-center justify-center text-center hover:border-rose-500/50 transition-all duration-300 min-h-[100px] group">
+              <div className="w-10 h-10 rounded-full bg-rose-500/20 flex items-center justify-center mb-2 transition-transform duration-300 group-hover:scale-110">
+                <Send className="h-5 w-5 text-rose-400" />
+              </div>
+              <span className="text-sm font-medium text-foreground">Requests</span>
+              <span className="text-xs text-muted-foreground">Cards, marketing, BOV</span>
+            </Link>
+          </div>
+        </section>
+
+        {/* 8. Team Tools from Database */}
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.22s' }}>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
+              <Wrench className="h-5 w-5 text-muted-foreground" />
+              Productivity Tools
             </h2>
           </div>
           {isLoading ? (
@@ -223,8 +270,8 @@ const Dashboard = () => {
           )}
         </section>
 
-        {/* 7. Research Tools */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.26s' }}>
+        {/* 9. Research Tools */}
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.24s' }}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
               <Database className="h-5 w-5 text-muted-foreground" />
@@ -245,8 +292,8 @@ const Dashboard = () => {
           )}
         </section>
 
-        {/* 8. View Exclusive Listings */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.28s' }}>
+        {/* 10. View Exclusive Listings */}
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.26s' }}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
               <Building2 className="h-5 w-5 text-muted-foreground" />
@@ -277,8 +324,8 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {/* 7. Company Quick Links */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+        {/* 11. Company Quick Links */}
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.28s' }}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
               <Building2 className="h-5 w-5 text-muted-foreground" />
@@ -302,8 +349,8 @@ const Dashboard = () => {
           </div>
         </section>
 
-        {/* All Portal Pages */}
-        <section className="animate-fade-in-up" style={{ animationDelay: '0.32s' }}>
+        {/* 12. All Portal Pages */}
+        <section className="animate-fade-in-up" style={{ animationDelay: '0.30s' }}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
               <ArrowRight className="h-5 w-5 text-muted-foreground" />
