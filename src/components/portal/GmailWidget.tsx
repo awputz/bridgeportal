@@ -129,11 +129,11 @@ export const GmailWidget = () => {
       </CardHeader>
 
       <CardContent className="p-0">
-        <div className="relative">
-          <ScrollArea className="max-h-[340px]">
+        <ScrollArea className="h-[280px]">
+          <div className="p-2">
             {/* Not connected state */}
             {!isConnected && !isLoading && (
-              <div className="mx-3 mb-3 flex flex-col items-center justify-center py-6 bg-red-500/5 rounded-lg border border-red-500/10">
+              <div className="flex flex-col items-center justify-center py-6 bg-red-500/5 rounded-lg border border-red-500/10">
                 <div className="h-9 w-9 rounded-full bg-red-500/10 flex items-center justify-center mb-2">
                   <Mail className="h-4 w-4 text-red-400" />
                 </div>
@@ -153,16 +153,16 @@ export const GmailWidget = () => {
 
             {/* Loading state - 3 line skeleton */}
             {isLoading && (
-              <div>
+              <div className="space-y-1.5">
                 {[1, 2, 3].map(i => (
-                  <div key={i} className="px-3 py-2.5 border-b border-border/30 last:border-b-0">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <Skeleton className="h-2 w-2 rounded-full" />
-                      <Skeleton className="h-3.5 w-28" />
-                      <Skeleton className="h-3 w-12 ml-auto" />
+                  <div key={i} className="px-2.5 py-2 rounded-md border border-border/30 bg-muted/5">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Skeleton className="h-1.5 w-1.5 rounded-full" />
+                      <Skeleton className="h-3 w-24" />
+                      <Skeleton className="h-2.5 w-10 ml-auto" />
                     </div>
-                    <Skeleton className="h-3.5 w-full mb-1.5" />
-                    <Skeleton className="h-3 w-3/4" />
+                    <Skeleton className="h-3 w-full mb-1" />
+                    <Skeleton className="h-2.5 w-3/4" />
                   </div>
                 ))}
               </div>
@@ -170,7 +170,7 @@ export const GmailWidget = () => {
 
             {/* Empty state */}
             {isConnected && !isLoading && messages.length === 0 && (
-              <div className="mx-3 mb-3 flex flex-col items-center justify-center py-6 bg-muted/20 rounded-lg">
+              <div className="flex flex-col items-center justify-center py-6 bg-muted/20 rounded-lg">
                 <Inbox className="h-7 w-7 text-muted-foreground mb-1.5" />
                 <p className="text-xs text-muted-foreground">No new emails</p>
               </div>
@@ -178,7 +178,7 @@ export const GmailWidget = () => {
 
             {/* Messages list - Gmail-style 3-line layout */}
             {isConnected && !isLoading && messages.length > 0 && (
-              <div>
+              <div className="space-y-1.5">
                 {messages.map((message) => (
                   <a
                     key={message.id}
@@ -186,38 +186,36 @@ export const GmailWidget = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className={cn(
-                      "block px-3 py-2.5 border-b border-border/30 last:border-b-0",
-                      "hover:bg-muted/50 transition-colors group cursor-pointer",
-                      message.isUnread && "bg-primary/5"
+                      "block px-2.5 py-2 rounded-md border border-border/30",
+                      "hover:bg-muted/50 hover:border-border/50 transition-colors group cursor-pointer",
+                      message.isUnread ? "bg-primary/5 border-primary/20" : "bg-muted/5"
                     )}
                     tabIndex={0}
                     role="button"
                     aria-label={`Email from ${message.from.name || message.from.email}: ${message.subject}`}
                   >
                     {/* Line 1: Unread dot + Sender + Star + Date */}
-                    <div className="flex items-center justify-between mb-0.5">
-                      <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-px">
+                      <div className="flex items-center gap-1.5 flex-1 min-w-0">
                         {/* Unread indicator dot */}
-                        {message.isUnread && (
-                          <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" aria-hidden="true">
+                        {message.isUnread ? (
+                          <div className="w-1.5 h-1.5 bg-blue-500 rounded-full flex-shrink-0" aria-hidden="true">
                             <span className="sr-only">Unread</span>
                           </div>
-                        )}
-                        {/* Placeholder for alignment when read */}
-                        {!message.isUnread && (
-                          <div className="w-2 h-2 flex-shrink-0" aria-hidden="true" />
+                        ) : (
+                          <div className="w-1.5 h-1.5 flex-shrink-0" aria-hidden="true" />
                         )}
                         
                         {/* Sender name */}
                         <span className={cn(
-                          "text-sm truncate",
+                          "text-xs truncate",
                           message.isUnread ? "font-semibold text-foreground" : "text-muted-foreground"
                         )}>
                           {message.from.name || message.from.email}
                         </span>
                       </div>
                       
-                      <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                      <div className="flex items-center gap-1.5 flex-shrink-0 ml-2">
                         {/* Star icon - visible on hover or if starred */}
                         <button 
                           onClick={(e) => handleStar(message.id, message.isStarred, e)} 
@@ -230,7 +228,7 @@ export const GmailWidget = () => {
                           title={message.isStarred ? "Unstar" : "Star"}
                         >
                           <Star className={cn(
-                            "h-3.5 w-3.5 transition-colors",
+                            "h-3 w-3 transition-colors",
                             message.isStarred 
                               ? "fill-amber-400 text-amber-400" 
                               : "text-muted-foreground hover:text-amber-400"
@@ -240,7 +238,7 @@ export const GmailWidget = () => {
                         {/* Date/Time */}
                         <time 
                           dateTime={message.date}
-                          className="text-xs text-muted-foreground whitespace-nowrap"
+                          className="text-[10px] text-muted-foreground whitespace-nowrap"
                         >
                           {formatRelativeTime(new Date(message.date))}
                         </time>
@@ -249,27 +247,22 @@ export const GmailWidget = () => {
 
                     {/* Line 2: Subject */}
                     <p className={cn(
-                      "text-sm truncate mb-0.5",
+                      "text-xs truncate mb-px",
                       message.isUnread ? "font-medium text-foreground" : "text-muted-foreground"
                     )}>
                       {message.subject || "(No subject)"}
                     </p>
 
                     {/* Line 3: Snippet/Preview */}
-                    <p className="text-xs text-muted-foreground truncate">
+                    <p className="text-[11px] text-muted-foreground/80 truncate">
                       {message.snippet || ""}
                     </p>
                   </a>
                 ))}
               </div>
             )}
-          </ScrollArea>
-          
-          {/* Scroll fade indicator */}
-          {isConnected && messages.length > 3 && (
-            <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-card to-transparent pointer-events-none" />
-          )}
-        </div>
+          </div>
+        </ScrollArea>
       </CardContent>
     </Card>
   );
