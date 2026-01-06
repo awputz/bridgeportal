@@ -31,6 +31,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AddressAutocomplete, AddressComponents } from "@/components/ui/AddressAutocomplete";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
@@ -515,6 +516,25 @@ export function ContactProfileSlideOver({
                       onCheckedChange={(checked) => setEditedContact({ ...editedContact, do_not_contact: !!checked })}
                     />
                     <Label htmlFor="do_not_contact" className="text-sm">Do Not Contact</Label>
+                  </div>
+                  <div>
+                    <Label>Address</Label>
+                    <AddressAutocomplete
+                      value={editedContact.street_address || editedContact.address || ""}
+                      onChange={(v) => setEditedContact({ ...editedContact, street_address: v, address: v })}
+                      onAddressSelect={(addr) => {
+                        setEditedContact({
+                          ...editedContact,
+                          street_address: addr.streetAddress,
+                          address: addr.fullAddress,
+                          city: addr.city,
+                          state: addr.state,
+                          zip_code: addr.zipCode,
+                          country: addr.country,
+                        });
+                      }}
+                      placeholder="Start typing an address..."
+                    />
                   </div>
                 </div>
               ) : (
