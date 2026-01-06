@@ -181,6 +181,7 @@ export type Database = {
           category: string
           created_at: string | null
           deal_id: string | null
+          deleted_at: string | null
           description: string
           expense_date: string
           id: string
@@ -205,6 +206,7 @@ export type Database = {
           category: string
           created_at?: string | null
           deal_id?: string | null
+          deleted_at?: string | null
           description: string
           expense_date: string
           id?: string
@@ -229,6 +231,7 @@ export type Database = {
           category?: string
           created_at?: string | null
           deal_id?: string | null
+          deleted_at?: string | null
           description?: string
           expense_date?: string
           id?: string
@@ -305,6 +308,7 @@ export type Database = {
           content: string | null
           created_at: string | null
           deal_id: string | null
+          deleted_at: string | null
           folder_id: string | null
           id: string
           is_pinned: boolean | null
@@ -323,6 +327,7 @@ export type Database = {
           content?: string | null
           created_at?: string | null
           deal_id?: string | null
+          deleted_at?: string | null
           folder_id?: string | null
           id?: string
           is_pinned?: boolean | null
@@ -341,6 +346,7 @@ export type Database = {
           content?: string | null
           created_at?: string | null
           deal_id?: string | null
+          deleted_at?: string | null
           folder_id?: string | null
           id?: string
           is_pinned?: boolean | null
@@ -1168,6 +1174,7 @@ export type Database = {
           reviewed_at: string | null
           reviewed_by: string | null
           status: string
+          transaction_id: string | null
           updated_at: string
           w9_url: string | null
         }
@@ -1187,6 +1194,7 @@ export type Database = {
           reviewed_at?: string | null
           reviewed_by?: string | null
           status?: string
+          transaction_id?: string | null
           updated_at?: string
           w9_url?: string | null
         }
@@ -1206,10 +1214,19 @@ export type Database = {
           reviewed_at?: string | null
           reviewed_by?: string | null
           status?: string
+          transaction_id?: string | null
           updated_at?: string
           w9_url?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "commission_requests_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       company_announcements: {
         Row: {
@@ -1303,6 +1320,7 @@ export type Database = {
           contact_id: string | null
           created_at: string | null
           deal_id: string | null
+          deleted_at: string | null
           description: string | null
           division: string | null
           due_date: string | null
@@ -1322,6 +1340,7 @@ export type Database = {
           contact_id?: string | null
           created_at?: string | null
           deal_id?: string | null
+          deleted_at?: string | null
           description?: string | null
           division?: string | null
           due_date?: string | null
@@ -1341,6 +1360,7 @@ export type Database = {
           contact_id?: string | null
           created_at?: string | null
           deal_id?: string | null
+          deleted_at?: string | null
           description?: string | null
           division?: string | null
           due_date?: string | null
@@ -1383,6 +1403,7 @@ export type Database = {
           contact_type: string
           country: string | null
           created_at: string | null
+          deleted_at: string | null
           division: string
           do_not_contact: boolean | null
           email: string | null
@@ -1426,6 +1447,7 @@ export type Database = {
           contact_type?: string
           country?: string | null
           created_at?: string | null
+          deleted_at?: string | null
           division: string
           do_not_contact?: boolean | null
           email?: string | null
@@ -1469,6 +1491,7 @@ export type Database = {
           contact_type?: string
           country?: string | null
           created_at?: string | null
+          deleted_at?: string | null
           division?: string
           do_not_contact?: boolean | null
           email?: string | null
@@ -1500,6 +1523,81 @@ export type Database = {
           zip_code?: string | null
         }
         Relationships: []
+      }
+      crm_deal_history: {
+        Row: {
+          changed_at: string | null
+          changed_by: string
+          deal_id: string
+          field_name: string
+          id: string
+          new_stage_id: string | null
+          new_value: string | null
+          notes: string | null
+          old_stage_id: string | null
+          old_value: string | null
+        }
+        Insert: {
+          changed_at?: string | null
+          changed_by: string
+          deal_id: string
+          field_name: string
+          id?: string
+          new_stage_id?: string | null
+          new_value?: string | null
+          notes?: string | null
+          old_stage_id?: string | null
+          old_value?: string | null
+        }
+        Update: {
+          changed_at?: string | null
+          changed_by?: string
+          deal_id?: string
+          field_name?: string
+          id?: string
+          new_stage_id?: string | null
+          new_value?: string | null
+          notes?: string | null
+          old_stage_id?: string | null
+          old_value?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_deal_history_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crm_deal_history_new_stage_id_fkey"
+            columns: ["new_stage_id"]
+            isOneToOne: false
+            referencedRelation: "agent_pipeline_by_stage"
+            referencedColumns: ["stage_id"]
+          },
+          {
+            foreignKeyName: "crm_deal_history_new_stage_id_fkey"
+            columns: ["new_stage_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deal_stages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crm_deal_history_old_stage_id_fkey"
+            columns: ["old_stage_id"]
+            isOneToOne: false
+            referencedRelation: "agent_pipeline_by_stage"
+            referencedColumns: ["stage_id"]
+          },
+          {
+            foreignKeyName: "crm_deal_history_old_stage_id_fkey"
+            columns: ["old_stage_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deal_stages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       crm_deal_stages: {
         Row: {
@@ -1554,6 +1652,7 @@ export type Database = {
           created_at: string | null
           deal_category: string | null
           deal_type: string
+          deleted_at: string | null
           division: string
           due_date: string | null
           due_diligence_deadline: string | null
@@ -1593,6 +1692,7 @@ export type Database = {
           pets_allowed: boolean | null
           price_per_sf: number | null
           price_per_unit: number | null
+          primary_contact_id: string | null
           priority: string | null
           probability: number | null
           property_address: string
@@ -1632,6 +1732,7 @@ export type Database = {
           created_at?: string | null
           deal_category?: string | null
           deal_type: string
+          deleted_at?: string | null
           division: string
           due_date?: string | null
           due_diligence_deadline?: string | null
@@ -1671,6 +1772,7 @@ export type Database = {
           pets_allowed?: boolean | null
           price_per_sf?: number | null
           price_per_unit?: number | null
+          primary_contact_id?: string | null
           priority?: string | null
           probability?: number | null
           property_address: string
@@ -1710,6 +1812,7 @@ export type Database = {
           created_at?: string | null
           deal_category?: string | null
           deal_type?: string
+          deleted_at?: string | null
           division?: string
           due_date?: string | null
           due_diligence_deadline?: string | null
@@ -1749,6 +1852,7 @@ export type Database = {
           pets_allowed?: boolean | null
           price_per_sf?: number | null
           price_per_unit?: number | null
+          primary_contact_id?: string | null
           priority?: string | null
           probability?: number | null
           property_address?: string
@@ -1776,6 +1880,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "crm_contacts"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crm_deals_primary_contact_id_fkey"
+            columns: ["primary_contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crm_deals_stage_id_fkey"
+            columns: ["stage_id"]
+            isOneToOne: false
+            referencedRelation: "agent_pipeline_by_stage"
+            referencedColumns: ["stage_id"]
           },
           {
             foreignKeyName: "crm_deals_stage_id_fkey"
@@ -2061,6 +2179,53 @@ export type Database = {
             columns: ["reply_to"]
             isOneToOne: false
             referencedRelation: "division_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      document_categories: {
+        Row: {
+          color: string | null
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          division: string | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          parent_category_id: string | null
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          division?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          parent_category_id?: string | null
+        }
+        Update: {
+          color?: string | null
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          division?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          parent_category_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_categories_parent_category_id_fkey"
+            columns: ["parent_category_id"]
+            isOneToOne: false
+            referencedRelation: "document_categories"
             referencedColumns: ["id"]
           },
         ]
@@ -3262,6 +3427,40 @@ export type Database = {
       }
     }
     Views: {
+      agent_dashboard_stats: {
+        Row: {
+          active_deals: number | null
+          agent_email: string | null
+          agent_id: string | null
+          agent_name: string | null
+          avg_deal_size: number | null
+          division: string | null
+          last_contact_update: string | null
+          last_deal_update: string | null
+          lost_deals: number | null
+          overdue_tasks: number | null
+          pending_commissions: number | null
+          pipeline_value: number | null
+          refreshed_at: string | null
+          total_commissions_paid: number | null
+          total_contacts: number | null
+          upcoming_tasks: number | null
+          won_deals: number | null
+        }
+        Relationships: []
+      }
+      agent_monthly_performance: {
+        Row: {
+          agent_id: string | null
+          commissions_earned: number | null
+          deals_created: number | null
+          deals_won: number | null
+          division: string | null
+          month: string | null
+          revenue: number | null
+        }
+        Relationships: []
+      }
       agent_performance_stats: {
         Row: {
           agent_name: string | null
@@ -3273,12 +3472,36 @@ export type Database = {
         }
         Relationships: []
       }
+      agent_pipeline_by_stage: {
+        Row: {
+          agent_id: string | null
+          deal_count: number | null
+          display_order: number | null
+          division: string | null
+          stage_color: string | null
+          stage_id: string | null
+          stage_name: string | null
+          stage_value: number | null
+        }
+        Relationships: []
+      }
       division_breakdown_stats: {
         Row: {
           division_name: string | null
           total_commission: number | null
           total_volume: number | null
           transaction_count: number | null
+        }
+        Relationships: []
+      }
+      division_performance_live: {
+        Row: {
+          active_agents: number | null
+          division: string | null
+          total_contacts: number | null
+          total_deals: number | null
+          total_pipeline_value: number | null
+          won_deals: number | null
         }
         Relationships: []
       }
@@ -3488,6 +3711,8 @@ export type Database = {
       }
       is_admin_or_agent: { Args: { _user_id: string }; Returns: boolean }
       is_admin_user: { Args: { _user_id: string }; Returns: boolean }
+      is_valid_phone: { Args: { phone_number: string }; Returns: boolean }
+      refresh_agent_dashboard_stats: { Args: never; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "agent" | "user" | "investor"

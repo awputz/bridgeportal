@@ -67,7 +67,7 @@ export const useAllCRMDeals = () => {
         .from("crm_deals")
         .select(`
           *,
-          contact:crm_contacts(*),
+          contact:crm_contacts!contact_id(*),
           stage:crm_deal_stages(*)
         `)
         .eq("is_active", true)
