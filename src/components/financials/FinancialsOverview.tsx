@@ -7,6 +7,7 @@ import { useAgentTransactions } from "@/hooks/useAgentTransactions";
 import { useAgentCommissions } from "@/hooks/useAgentCommissions";
 import { formatFullCurrency } from "@/lib/formatters";
 import { useExpenseCategories } from "@/hooks/useExpenseCategories";
+import { ExpenseCharts } from "./ExpenseCharts";
 import {
   PieChart as RechartsPie,
   Pie,
@@ -138,6 +139,9 @@ export const FinancialsOverview = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Monthly Trend Chart */}
+      <ExpenseCharts expensesTrend={expenseStats.monthlyTrend} />
 
       {/* Charts Row */}
       <div className="grid gap-6 lg:grid-cols-2">
