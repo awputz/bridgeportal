@@ -250,7 +250,7 @@ export function MailCompose({ open, onOpenChange, replyTo }: MailComposeProps) {
 
           <div className="flex-1 flex flex-col overflow-hidden">
             {/* Recipients */}
-            <div className="px-4 py-2 border-b space-y-2">
+            <div className="px-4 py-2 border-b list-gap-xs">
               {/* To field */}
               <div className="flex items-center gap-2">
                 <Label htmlFor="to" className="w-12 text-sm text-muted-foreground">To</Label>

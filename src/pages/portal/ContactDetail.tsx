@@ -140,7 +140,7 @@ const ContactDetail = () => {
   if (isLoading) {
     return (
       <div className="flex-1 overflow-auto">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 pb-24 md:pb-8">
+        <div className="max-w-4xl mx-auto page-content py-8 md:py-12">
           <Skeleton className="h-10 w-32 mb-6" />
           <Skeleton className="h-64 w-full rounded-xl" />
         </div>
@@ -151,7 +151,7 @@ const ContactDetail = () => {
   if (error) {
     return (
       <div className="flex-1 overflow-auto">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 pb-24 md:pb-8 text-center">
+        <div className="max-w-4xl mx-auto page-content py-8 md:py-12 text-center">
           <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
           <h1 className="text-2xl font-light text-foreground mb-4">Unable to load contact</h1>
           <p className="text-muted-foreground mb-4">
@@ -177,7 +177,7 @@ const ContactDetail = () => {
   if (!contact) {
     return (
       <div className="flex-1 overflow-auto">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 pb-24 md:pb-8 text-center">
+        <div className="max-w-4xl mx-auto page-content py-8 md:py-12 text-center">
           <h1 className="text-2xl font-light text-foreground mb-4">Contact not found</h1>
           <p className="text-muted-foreground mb-4">
             This contact may have been deleted or you don't have permission to view it.
@@ -195,9 +195,9 @@ const ContactDetail = () => {
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 pb-24 md:pb-8">
+      <div className="max-w-4xl mx-auto page-content py-8 md:py-12">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between section-gap">
           <div className="flex items-center gap-4">
             <Link to="/portal/crm">
               <Button variant="ghost" size="icon">
@@ -249,15 +249,15 @@ const ContactDetail = () => {
           </div>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid grid-gap lg:grid-cols-3">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 section-gap-sm">
             {/* Contact Info Card */}
             <Card className="glass-card border-white/10">
               <CardHeader>
                 <CardTitle className="font-light">Contact Information</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="list-gap-md">
                 {isEditing ? (
                   <>
                     <div className="space-y-2">
@@ -268,7 +268,7 @@ const ContactDetail = () => {
                         required
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="form-grid">
                       <div className="space-y-2">
                         <Label>Email</Label>
                         <Input
@@ -286,7 +286,7 @@ const ContactDetail = () => {
                         />
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="form-grid">
                       <div className="space-y-2">
                         <Label>Company</Label>
                         <Input
@@ -311,7 +311,7 @@ const ContactDetail = () => {
                         </Select>
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="form-grid">
                       <div className="space-y-2">
                         <Label>Source</Label>
                         <Select
@@ -346,7 +346,7 @@ const ContactDetail = () => {
                     </div>
                   </>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="list-gap-md">
                     {contact.email && (
                       <div className="flex items-center gap-3">
                         <Mail className="h-5 w-5 text-muted-foreground" />
@@ -406,7 +406,7 @@ const ContactDetail = () => {
               </CardHeader>
               <CardContent>
                 {contactDeals.length > 0 ? (
-                  <div className="space-y-3">
+                  <div className="list-gap-sm">
                     {contactDeals.map((deal) => (
                       <Link
                         key={deal.id}
@@ -451,7 +451,7 @@ const ContactDetail = () => {
               </CardHeader>
               <CardContent>
                 {activities && activities.length > 0 ? (
-                  <div className="space-y-4">
+                  <div className="list-gap-md">
                     {activities.map((activity) => (
                       <div key={activity.id} className="flex gap-3 pb-4 border-b border-white/5 last:border-0">
                         <div className="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
@@ -479,13 +479,13 @@ const ContactDetail = () => {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="section-gap-sm">
             {/* Quick Actions */}
             <Card className="glass-card border-white/10">
               <CardHeader>
                 <CardTitle className="font-light text-sm">Quick Actions</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2">
+              <CardContent className="list-gap-xs">
                 {contact.phone && (
                   <a href={`tel:${contact.phone}`} className="block">
                     <Button variant="outline" className="w-full justify-start gap-2">
@@ -513,7 +513,7 @@ const ContactDetail = () => {
 
             {/* Contact Metadata */}
             <Card className="glass-card border-white/10">
-              <CardContent className="pt-6 space-y-3 text-sm">
+              <CardContent className="pt-6 list-gap-sm text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Created</span>
                   <span className="text-foreground">

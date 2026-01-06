@@ -237,7 +237,7 @@ export const NoteFoldersSidebar = ({ selectedFolder, onSelectFolder }: NoteFolde
           <DialogHeader>
             <DialogTitle>Rename Folder</DialogTitle>
           </DialogHeader>
-          <div className="py-4">
+          <div className="form-section py-0">
             <Label htmlFor="folder-name">Folder Name</Label>
             <Input
               id="folder-name"

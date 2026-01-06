@@ -199,7 +199,7 @@ export const NoteDialog = ({ note, isOpen, onClose, onSave, onUpdateAiSummary }:
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-5">
+        <div className="form-section">
           {/* Subject/Title */}
           <div>
             <Label htmlFor="title" className="text-sm font-medium">
@@ -275,7 +275,7 @@ export const NoteDialog = ({ note, isOpen, onClose, onSave, onUpdateAiSummary }:
           </div>
 
           {/* Project/Deal and Contact */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="form-grid">
             <div>
               <Label className="text-sm font-medium flex items-center gap-2">
                 <Building className="h-4 w-4" />
@@ -414,7 +414,7 @@ export const NoteDialog = ({ note, isOpen, onClose, onSave, onUpdateAiSummary }:
           )}
 
           {/* Actions */}
-          <div className="flex gap-2 pt-2">
+          <div className="form-actions">
             <Button variant="outline" onClick={onClose} className="flex-1">
               Cancel
             </Button>

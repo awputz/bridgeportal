@@ -219,7 +219,7 @@ export function ContactMergeWizard({
         </DialogHeader>
 
         {step === "select" && (
-          <div className="space-y-6 py-4">
+          <div className="form-section py-4">
             {/* Contact headers */}
             <div className="grid grid-cols-[100px_1fr_1fr] gap-4 items-center">
               <div className="text-xs font-medium text-muted-foreground uppercase">Field</div>
@@ -314,7 +314,7 @@ export function ContactMergeWizard({
         )}
 
         {step === "confirm" && (
-          <div className="space-y-4 py-4">
+          <div className="list-gap-md py-4">
             <div className="glass-card p-4 space-y-4">
               <div className="flex items-center gap-3">
                 <Avatar className="h-12 w-12">
@@ -361,7 +361,7 @@ export function ContactMergeWizard({
           </div>
         )}
 
-        <div className="flex justify-between pt-4">
+        <div className="form-actions justify-between">
           {step === "select" ? (
             <>
               <Button variant="outline" onClick={() => onOpenChange(false)}>

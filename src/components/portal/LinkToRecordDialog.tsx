@@ -94,7 +94,7 @@ export function LinkToRecordDialog({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className="form-section">
           {/* Search */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -237,7 +237,7 @@ export function LinkToRecordDialog({
           </Tabs>
         </div>
 
-        <div className="flex justify-end pt-2">
+        <div className="form-actions">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Close
           </Button>
