@@ -153,7 +153,7 @@ export const CRMGroupedView = ({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="list-gap-md">
       {stages.map((stage) => {
         const stageDeals = dealsByStage[stage.id] || [];
         const isExpanded = expandedStages.has(stage.id);

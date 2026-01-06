@@ -689,12 +689,12 @@ const Contacts = () => {
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 pb-24 md:pb-6">
+      <div className="max-w-7xl mx-auto page-content">
         {/* Header - Compact */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 section-gap">
           <div className="flex items-start justify-between md:block">
             <div>
-              <h1 className="text-2xl md:text-3xl font-extralight text-foreground mb-1">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-1 md:mb-2">
                 Contacts
               </h1>
               {!isMobile && (
@@ -770,8 +770,8 @@ const Contacts = () => {
                 <DialogHeader>
                   <DialogTitle className="font-light">New Contact</DialogTitle>
                 </DialogHeader>
-                <form onSubmit={handleCreateContact} className="space-y-4 mt-4">
-                  <div className="grid grid-cols-2 gap-4">
+                <form onSubmit={handleCreateContact} className="form-section mt-4">
+                  <div className="form-grid">
                     <div className="col-span-2 space-y-2">
                       <Label htmlFor="full_name">Full Name *</Label>
                       <Input id="full_name" name="full_name" required />

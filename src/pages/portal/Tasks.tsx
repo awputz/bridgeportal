@@ -280,7 +280,7 @@ const Tasks = () => {
               <DialogHeader>
                 <DialogTitle className="font-light">Create Task</DialogTitle>
               </DialogHeader>
-              <form onSubmit={handleCreateTask} className="space-y-4 mt-4">
+              <form onSubmit={handleCreateTask} className="form-section mt-4">
                 <div className="space-y-2">
                   <Label htmlFor="title">Title *</Label>
                   <Input id="title" name="title" required placeholder="e.g., Follow up with client" />
@@ -291,7 +291,7 @@ const Tasks = () => {
                   <Textarea id="description" name="description" rows={2} placeholder="Additional details..." />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="form-grid">
                   <div className="space-y-2">
                     <Label htmlFor="activity_type">Type</Label>
                     <Select name="activity_type" defaultValue="task">
@@ -323,7 +323,7 @@ const Tasks = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="form-grid">
                   <div className="space-y-2">
                     <Label htmlFor="due_date">Due Date</Label>
                     <Input id="due_date" name="due_date" type="date" />
@@ -334,7 +334,7 @@ const Tasks = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="form-grid">
                   <div className="space-y-2">
                     <Label htmlFor="contact_id">Link to Contact</Label>
                     <Select name="contact_id">
@@ -368,7 +368,7 @@ const Tasks = () => {
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4">
+                <div className="form-actions">
                   <Button type="button" variant="ghost" onClick={() => setShowAddDialog(false)}>
                     Cancel
                   </Button>

@@ -98,12 +98,12 @@ const Notes = () => {
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
+      <div className="max-w-7xl mx-auto page-content">
         {/* Header */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between section-gap">
           <div>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-2">Notes</h1>
-            <p className="text-muted-foreground font-light">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-1 md:mb-2">Notes</h1>
+            <p className="text-sm md:text-base text-muted-foreground font-light">
               Organize and manage your notes with folders, tags, and AI assistance
             </p>
           </div>

@@ -386,7 +386,7 @@ const CRM = () => {
 
         {/* Analytics Panel */}
         {showAnalytics && stages && filteredDeals && (
-          <div className="mb-6">
+          <div className="section-gap">
             <PipelineAnalytics 
               deals={filteredDeals} 
               stages={stages} 
@@ -439,7 +439,7 @@ const CRM = () => {
         )}
 
         {/* Contextual Instructions */}
-        <div className="glass-card p-4 mb-6 flex items-start gap-3 border-white/10">
+        <div className="glass-card p-4 section-gap flex items-start gap-3 border-white/10">
           <Info className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
           <div className="text-sm text-muted-foreground font-light">
             <strong className="text-foreground font-normal">How to use:</strong> Track your active {DIVISION_DISPLAY_NAMES[division as keyof typeof DIVISION_DISPLAY_NAMES] || division} deals here. 
@@ -450,8 +450,8 @@ const CRM = () => {
           </div>
         </div>
 
-        {/* Pipeline View */}
-        <div className="space-y-4">
+          {/* Pipeline View */}
+          <div className="list-gap-md">
           <SectionErrorBoundary sectionName="Deal Pipeline">
             {isLoading ? (
               <Skeleton className="h-96 w-full rounded-xl" />
