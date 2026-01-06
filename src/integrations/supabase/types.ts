@@ -1904,6 +1904,84 @@ export type Database = {
         }
         Relationships: []
       }
+      division_channels: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          division: string
+          id: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          division: string
+          id?: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          division?: string
+          id?: string
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      division_messages: {
+        Row: {
+          channel_id: string
+          created_at: string | null
+          deleted_at: string | null
+          edited_at: string | null
+          id: string
+          message: string
+          message_type: string | null
+          reply_to: string | null
+          user_id: string
+        }
+        Insert: {
+          channel_id: string
+          created_at?: string | null
+          deleted_at?: string | null
+          edited_at?: string | null
+          id?: string
+          message: string
+          message_type?: string | null
+          reply_to?: string | null
+          user_id: string
+        }
+        Update: {
+          channel_id?: string
+          created_at?: string | null
+          deleted_at?: string | null
+          edited_at?: string | null
+          id?: string
+          message?: string
+          message_type?: string | null
+          reply_to?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "division_messages_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "division_channels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "division_messages_reply_to_fkey"
+            columns: ["reply_to"]
+            isOneToOne: false
+            referencedRelation: "division_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       drive_documents: {
         Row: {
           agent_id: string
@@ -2542,6 +2620,38 @@ export type Database = {
             columns: ["listing_agent_id"]
             isOneToOne: false
             referencedRelation: "team_members_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      message_reactions: {
+        Row: {
+          created_at: string | null
+          emoji: string
+          id: string
+          message_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          emoji: string
+          id?: string
+          message_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          emoji?: string
+          id?: string
+          message_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_reactions_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "division_messages"
             referencedColumns: ["id"]
           },
         ]
@@ -3195,6 +3305,10 @@ export type Database = {
       }
     }
     Functions: {
+      can_access_channel: {
+        Args: { _channel_id: string; _user_id: string }
+        Returns: boolean
+      }
       cleanup_expired_cache: { Args: never; Returns: undefined }
       cleanup_old_rate_limits: { Args: never; Returns: undefined }
       get_agent_transactions: {
@@ -3235,6 +3349,7 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      get_user_channel_id: { Args: { _user_id: string }; Returns: string }
       get_user_division: { Args: { _user_id: string }; Returns: string }
       has_role: {
         Args: {
