@@ -201,12 +201,56 @@ const Dashboard = () => {
           </form>
         </section>
 
-        {/* 6. Discovery Section - Exclusive Listings */}
+        {/* 6. Team Tools Essentials */}
         <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.24s' }}>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
+              <Wrench className="h-5 w-5 text-muted-foreground" />
+              Team Tools Essentials
+            </h2>
+          </div>
+          {isLoading ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-[120px] rounded-xl" />)}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {groupedTools.productivity?.map(tool => {
+                const Icon = iconMap[tool.icon] || Mail;
+                return <QuickActionCard key={tool.id} name={tool.name} description={tool.description || undefined} icon={Icon} url={tool.url} />;
+              })}
+            </div>
+          )}
+        </section>
+
+        {/* 7. Research Tools */}
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.26s' }}>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
+              <Database className="h-5 w-5 text-muted-foreground" />
+              Research Tools
+            </h2>
+          </div>
+          {isLoading ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-[120px] rounded-xl" />)}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {groupedTools.research?.map(tool => {
+                const Icon = iconMap[tool.icon] || Database;
+                return <QuickActionCard key={tool.id} name={tool.name} description={tool.description || undefined} icon={Icon} url={tool.url} />;
+              })}
+            </div>
+          )}
+        </section>
+
+        {/* 8. View Exclusive Listings */}
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.28s' }}>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
               <Building2 className="h-5 w-5 text-muted-foreground" />
-              View Our Exclusive Listings
+              View Exclusive Listings
             </h2>
           </div>
           <div className="grid grid-cols-3 gap-3 auto-rows-fr">
@@ -231,50 +275,6 @@ const Dashboard = () => {
               );
             })}
           </div>
-        </section>
-
-        {/* Research Tools */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.26s' }}>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
-              <Database className="h-5 w-5 text-muted-foreground" />
-              Research Tools
-            </h2>
-          </div>
-          {isLoading ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-[120px] rounded-xl" />)}
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {groupedTools.research?.map(tool => {
-                const Icon = iconMap[tool.icon] || Database;
-                return <QuickActionCard key={tool.id} name={tool.name} description={tool.description || undefined} icon={Icon} url={tool.url} />;
-              })}
-            </div>
-          )}
-        </section>
-
-        {/* Team Tools */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.28s' }}>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
-              <Wrench className="h-5 w-5 text-muted-foreground" />
-              Team Tools
-            </h2>
-          </div>
-          {isLoading ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-[120px] rounded-xl" />)}
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {groupedTools.productivity?.map(tool => {
-                const Icon = iconMap[tool.icon] || Mail;
-                return <QuickActionCard key={tool.id} name={tool.name} description={tool.description || undefined} icon={Icon} url={tool.url} />;
-              })}
-            </div>
-          )}
         </section>
 
         {/* 7. Company Quick Links */}
