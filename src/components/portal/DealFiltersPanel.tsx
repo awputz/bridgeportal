@@ -157,7 +157,7 @@ export const DealFiltersPanel = ({
   const divisionPropertyTypes = propertyTypes[division as keyof typeof propertyTypes] || [];
 
   return (
-    <div className="space-y-4">
+    <div className="list-gap-md">
       {/* Quick Filters */}
       <div className="flex flex-wrap items-center gap-2">
         <Filter className="h-4 w-4 text-muted-foreground" />
@@ -208,7 +208,7 @@ export const DealFiltersPanel = ({
       {/* Advanced Filters Panel */}
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleContent>
-          <div className="glass-card p-4 space-y-6 border-white/10">
+          <div className="glass-card card-content form-section border-white/10">
             {/* Search */}
             <div className="space-y-2">
               <Label>Search</Label>
@@ -219,7 +219,7 @@ export const DealFiltersPanel = ({
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid-gap">
               {/* Stage Filter */}
               <div className="space-y-2">
                 <Label>Stage</Label>

@@ -109,7 +109,7 @@ export function DriveUploadZone({ folderId, onUploadComplete, className }: Drive
           className="hidden"
         />
 
-        <div className="p-6 text-center">
+        <div className="card-content text-center">
           <div className="w-12 h-12 rounded-full bg-muted/50 flex items-center justify-center mx-auto mb-3">
             <Upload className="h-6 w-6 text-muted-foreground" />
           </div>
@@ -132,7 +132,7 @@ export function DriveUploadZone({ folderId, onUploadComplete, className }: Drive
 
         {/* Upload Progress List */}
         {uploads.length > 0 && (
-          <div className="border-t border-border/50 p-4 space-y-3">
+          <div className="border-t border-border/50 card-content-sm list-gap-md">
             {uploads.map((upload) => (
               <div key={upload.id} className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center">

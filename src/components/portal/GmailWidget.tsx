@@ -146,7 +146,7 @@ export const GmailWidget = () => {
 
       <CardContent className="p-0">
         <ScrollArea className="h-[340px] overflow-x-hidden">
-          <div className="p-2">
+          <div className="p-3">
             {/* Not connected state */}
             {!isConnected && !isLoading && (
               <div className="flex flex-col items-center justify-center py-6 bg-red-500/5 rounded-lg border border-red-500/10">
