@@ -142,11 +142,11 @@ export const GoogleCalendarWidget = () => {
       </CardHeader>
 
       <CardContent className="p-0">
-        <div className="relative">
-          <ScrollArea className="max-h-[340px]">
+        <ScrollArea className="h-[280px]">
+          <div className="p-2">
             {/* Not connected state */}
             {!isConnected && !isLoading && (
-              <div className="mx-3 mb-3 flex flex-col items-center justify-center py-6 bg-emerald-500/5 rounded-lg border border-emerald-500/10">
+              <div className="flex flex-col items-center justify-center py-6 bg-emerald-500/5 rounded-lg border border-emerald-500/10">
                 <div className="h-9 w-9 rounded-full bg-emerald-500/10 flex items-center justify-center mb-2">
                   <Calendar className="h-4 w-4 text-emerald-400" />
                 </div>
@@ -164,17 +164,16 @@ export const GoogleCalendarWidget = () => {
               </div>
             )}
 
-            {/* Loading state - 3 line skeleton */}
+            {/* Loading state */}
             {isLoading && (
-              <div>
+              <div className="space-y-1.5">
                 {[1, 2, 3].map(i => (
-                  <div key={i} className="px-3 py-2.5 border-b border-border/30 last:border-b-0">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <Skeleton className="h-2 w-2 rounded-full" />
-                      <Skeleton className="h-3 w-24" />
+                  <div key={i} className="px-2.5 py-2 rounded-md border border-border/30 bg-muted/5">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Skeleton className="h-2.5 w-16" />
                     </div>
-                    <Skeleton className="h-3.5 w-full mb-1.5" />
-                    <Skeleton className="h-3 w-1/2" />
+                    <Skeleton className="h-3 w-full mb-1" />
+                    <Skeleton className="h-2.5 w-1/2" />
                   </div>
                 ))}
               </div>
@@ -182,7 +181,7 @@ export const GoogleCalendarWidget = () => {
 
             {/* Empty state */}
             {isConnected && !isLoading && todaysEvents.length === 0 && (
-              <div className="mx-3 mb-3 flex flex-col items-center justify-center py-6 bg-muted/20 rounded-lg">
+              <div className="flex flex-col items-center justify-center py-6 bg-muted/20 rounded-lg">
                 <Clock className="h-7 w-7 text-muted-foreground mb-1.5" />
                 <p className="text-xs text-muted-foreground">No events today</p>
                 <p className="text-[10px] text-muted-foreground/70 mt-0.5">
@@ -191,15 +190,19 @@ export const GoogleCalendarWidget = () => {
               </div>
             )}
 
-            {/* Events list - 3-line layout matching Gmail */}
+            {/* Events list - card layout with left border accent */}
             {isConnected && !isLoading && todaysEvents.length > 0 && (
-              <div>
+              <div className="space-y-1.5">
                 {todaysEvents.map((event) => {
                   const eventData = event as any;
                   const eventUrl = eventData.htmlLink || `https://calendar.google.com/calendar/u/0/r/eventedit/${event.id}`;
                   const startTime = new Date(event.start_time);
                   const endTime = event.end_time ? new Date(event.end_time) : null;
                   const isPast = startTime < new Date() && (!endTime || endTime < new Date());
+                  
+                  // Get border color class from bg color
+                  const bgColor = getEventColor(event);
+                  const borderColor = bgColor.replace('bg-', 'border-l-');
                   
                   return (
                     <a
@@ -208,55 +211,43 @@ export const GoogleCalendarWidget = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className={cn(
-                        "block px-3 py-2.5 border-b border-border/30 last:border-b-0",
-                        "hover:bg-muted/50 transition-colors cursor-pointer",
-                        isPast && "opacity-60"
+                        "block px-2.5 py-1.5 rounded-md border border-border/30 border-l-2",
+                        "hover:bg-muted/50 hover:border-border/50 transition-colors cursor-pointer bg-muted/5",
+                        borderColor,
+                        isPast && "opacity-50"
                       )}
                       tabIndex={0}
                       role="button"
                       aria-label={`Event: ${event.title} at ${format(startTime, "h:mm a")}`}
                     >
-                      {/* Line 1: Time indicator + Time range */}
-                      <div className="flex items-center gap-2 mb-0.5">
-                        {/* Color indicator dot */}
-                        <div className={cn("w-2 h-2 rounded-full flex-shrink-0", getEventColor(event))} />
-                        
-                        {/* Time range */}
-                        <time 
-                          dateTime={event.start_time}
-                          className="text-xs text-muted-foreground"
-                        >
-                          {format(startTime, "h:mm a")}
-                          {endTime && ` - ${format(endTime, "h:mm a")}`}
-                        </time>
-                      </div>
+                      {/* Line 1: Time range */}
+                      <time 
+                        dateTime={event.start_time}
+                        className="text-[10px] text-muted-foreground block mb-px"
+                      >
+                        {format(startTime, "h:mm a")}
+                        {endTime && ` - ${format(endTime, "h:mm a")}`}
+                      </time>
 
                       {/* Line 2: Event title */}
-                      <p className="text-sm font-medium text-foreground truncate mb-0.5">
+                      <p className="text-xs font-medium text-foreground truncate mb-px">
                         {event.title}
                       </p>
 
                       {/* Line 3: Location / Meeting type */}
-                      {event.location ? (
-                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      {event.location && (
+                        <div className="flex items-center gap-1 text-[10px] text-muted-foreground/80">
                           {getMeetingIcon(event)}
                           <span className="truncate">{event.location}</span>
                         </div>
-                      ) : (
-                        <div className="h-4" /> // Placeholder for consistent row height
                       )}
                     </a>
                   );
                 })}
               </div>
             )}
-          </ScrollArea>
-          
-          {/* Scroll fade indicator */}
-          {isConnected && todaysEvents.length > 3 && (
-            <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-card to-transparent pointer-events-none" />
-          )}
-        </div>
+          </div>
+        </ScrollArea>
       </CardContent>
     </Card>
   );
