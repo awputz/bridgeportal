@@ -19,6 +19,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -28,10 +35,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Search, Shield, ShieldCheck, User, Plus, X, MoreHorizontal, Briefcase } from "lucide-react";
+import { Search, Shield, ShieldCheck, User, Plus, X, Briefcase, TrendingUp, Building2, Home } from "lucide-react";
 import { format } from "date-fns";
 
 type AppRole = "admin" | "agent" | "investor" | "user";
+type Division = "investment-sales" | "commercial-leasing" | "residential";
 
 const ROLE_COLORS: Record<AppRole, string> = {
   admin: "bg-red-500/10 text-red-600 border-red-200",
@@ -47,8 +55,26 @@ const ROLE_ICONS: Record<AppRole, React.ComponentType<{ className?: string }>> =
   user: User,
 };
 
+const DIVISION_CONFIG: Record<Division, { label: string; color: string }> = {
+  "investment-sales": { label: "Investment Sales", color: "#8b5cf6" },
+  "commercial-leasing": { label: "Commercial Leasing", color: "#3b82f6" },
+  "residential": { label: "Residential", color: "#22c55e" },
+};
+
+const DivisionIcon = ({ division, className }: { division: Division; className?: string }) => {
+  const color = DIVISION_CONFIG[division].color;
+  switch (division) {
+    case "investment-sales":
+      return <TrendingUp className={className} style={{ color }} />;
+    case "commercial-leasing":
+      return <Building2 className={className} style={{ color }} />;
+    case "residential":
+      return <Home className={className} style={{ color }} />;
+  }
+};
+
 export default function UsersAdmin() {
-  const { users, isLoading, addRole, removeRole } = useUserRolesAdmin();
+  const { users, isLoading, addRole, removeRole, updateDivision } = useUserRolesAdmin();
   const [search, setSearch] = useState("");
   const [confirmDialog, setConfirmDialog] = useState<{
     open: boolean;
@@ -141,6 +167,7 @@ export default function UsersAdmin() {
                 <TableRow>
                   <TableHead>User</TableHead>
                   <TableHead>Roles</TableHead>
+                  <TableHead>Division</TableHead>
                   <TableHead>Created</TableHead>
                   <TableHead className="w-[100px]">Actions</TableHead>
                 </TableRow>
@@ -179,6 +206,36 @@ export default function UsersAdmin() {
                             })
                           )}
                         </div>
+                      </TableCell>
+                      <TableCell>
+                        {user.roles.some(r => r.role === 'agent') ? (
+                          <Select
+                            value={user.roles.find(r => r.role === 'agent')?.assigned_division || ""}
+                            onValueChange={(value) => updateDivision.mutate({ 
+                              userId: user.id, 
+                              division: value as Division 
+                            })}
+                          >
+                            <SelectTrigger className="w-[180px]">
+                              <SelectValue placeholder="Assign division..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {(Object.keys(DIVISION_CONFIG) as Division[]).map((div) => {
+                                const config = DIVISION_CONFIG[div];
+                                return (
+                                  <SelectItem key={div} value={div}>
+                                    <div className="flex items-center gap-2">
+                                      <DivisionIcon division={div} className="h-4 w-4" />
+                                      <span>{config.label}</span>
+                                    </div>
+                                  </SelectItem>
+                                );
+                              })}
+                            </SelectContent>
+                          </Select>
+                        ) : (
+                          <span className="text-muted-foreground text-sm">N/A (Admin)</span>
+                        )}
                       </TableCell>
                       <TableCell className="text-muted-foreground">
                         {user.created_at

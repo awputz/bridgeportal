@@ -11,7 +11,8 @@ import {
   BarChart3,
   List,
   Layers,
-  ListTodo,
+  AlertTriangle,
+  TrendingUp,
 } from "lucide-react";
 import { useCRMDeals, useDealStages, useUpdateDeal, useDeleteDeal } from "@/hooks/useCRM";
 import { useCRMRealtime } from "@/hooks/useCRMRealtime";
@@ -62,8 +63,14 @@ const divisionTabs = [
 
 type ViewMode = "table" | "grouped";
 
+const divisionIcons: Record<Division, typeof TrendingUp> = {
+  "investment-sales": TrendingUp,
+  "commercial-leasing": Building2,
+  "residential": Home,
+};
+
 const CRM = () => {
-  const { division, setDivision } = useDivision();
+  const { division, setDivision, divisionConfig, isAdmin, isLoading: divisionLoading, hasDivisionAssigned } = useDivision();
   const [deleteDealId, setDeleteDealId] = useState<string | null>(null);
   const [showAnalytics, setShowAnalytics] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("table");
@@ -249,6 +256,25 @@ const CRM = () => {
   };
 
   const currentDivisionTab = divisionTabs.find(d => d.key === division) || divisionTabs[0];
+  const CurrentDivisionIcon = divisionIcons[division];
+
+  // Show error state for agents without division assignment
+  if (!isAdmin && !hasDivisionAssigned && !divisionLoading) {
+    return (
+      <div className="flex-1 overflow-auto">
+        <div className="max-w-7xl mx-auto page-content">
+          <div className="flex flex-col items-center justify-center min-h-[400px] text-center glass-card p-8">
+            <AlertTriangle className="h-12 w-12 text-amber-500 mb-4" />
+            <h2 className="text-xl font-semibold mb-2">No Division Assigned</h2>
+            <p className="text-muted-foreground max-w-md">
+              Your account hasn't been assigned to a division yet. 
+              Please contact your administrator to get access to CRM features.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 overflow-auto">
@@ -308,33 +334,53 @@ const CRM = () => {
           </div>
         </div>
 
-        {/* Division Switcher */}
+        {/* Division Switcher - Admin Only OR Static Label for Agents */}
         <div className="section-gap">
-          <div className="filter-scroll">
-            {divisionTabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = division === tab.key;
-              return (
-                <button
-                  key={tab.key}
-                  onClick={() => handleDivisionChange(tab.key)}
-                  className={cn(
-                    "flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg text-sm font-light transition-all duration-200 cursor-pointer whitespace-nowrap flex-shrink-0 touch-target",
-                    isActive 
-                      ? "bg-foreground text-background" 
-                      : "bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-foreground border border-white/10"
-                  )}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span className="hidden sm:inline">{tab.label}</span>
-                  <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
-                </button>
-              );
-            })}
-          </div>
-          <p className="text-xs text-muted-foreground mt-2 ml-1 hidden sm:block">
-            {currentDivisionTab.description}
-          </p>
+          {isAdmin ? (
+            <>
+              <div className="filter-scroll">
+                {divisionTabs.map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = division === tab.key;
+                  return (
+                    <button
+                      key={tab.key}
+                      onClick={() => handleDivisionChange(tab.key)}
+                      className={cn(
+                        "flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg text-sm font-light transition-all duration-200 cursor-pointer whitespace-nowrap flex-shrink-0 touch-target",
+                        isActive 
+                          ? "bg-foreground text-background" 
+                          : "bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-foreground border border-white/10"
+                      )}
+                    >
+                      <Icon className="h-4 w-4" />
+                      <span className="hidden sm:inline">{tab.label}</span>
+                      <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="text-xs text-muted-foreground mt-2 ml-1 hidden sm:block">
+                {currentDivisionTab.description}
+              </p>
+            </>
+          ) : (
+            <div 
+              className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-xl border border-white/10 w-fit"
+              style={{ borderColor: `${divisionConfig.color}40` }}
+            >
+              <div 
+                className="p-2 rounded-lg" 
+                style={{ backgroundColor: `${divisionConfig.color}20` }}
+              >
+                <CurrentDivisionIcon className="h-5 w-5" style={{ color: divisionConfig.color }} />
+              </div>
+              <div>
+                <span className="text-foreground font-medium">{divisionConfig.name}</span>
+                <p className="text-xs text-muted-foreground">Your assigned division</p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Analytics Panel */}
