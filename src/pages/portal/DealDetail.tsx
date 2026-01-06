@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, Save, Trash2, Phone, Mail, Calendar, DollarSign, MapPin, User, Building2, Percent, Home, FileText, Calculator, Landmark } from "lucide-react";
+import { ArrowLeft, Save, Trash2, Phone, Mail, Calendar, DollarSign, MapPin, User, Building2, Percent, Home, FileText, Calculator, Landmark, RefreshCw } from "lucide-react";
+import { isValidUUID } from "@/lib/errorHandler";
 import { useCRMDeal, useUpdateDeal, useDeleteDeal, useDealStages, useCRMActivities, useCreateActivity, CRMDeal } from "@/hooks/useCRM";
 import { useDivision } from "@/contexts/DivisionContext";
 import { Button } from "@/components/ui/button";
@@ -90,7 +91,15 @@ const DealDetail = () => {
   const navigate = useNavigate();
   const { division } = useDivision();
 
-  const { data: deal, isLoading, error } = useCRMDeal(id || "");
+  // Validate UUID before making query
+  useEffect(() => {
+    if (id && !isValidUUID(id)) {
+      toast.error("Invalid deal ID format");
+      navigate("/portal/crm");
+    }
+  }, [id, navigate]);
+
+  const { data: deal, isLoading, error, refetch } = useCRMDeal(id || "");
   const { data: stages } = useDealStages(division);
   const { data: activities } = useCRMActivities({ dealId: id, limit: 10 });
   const updateDeal = useUpdateDeal();
@@ -234,14 +243,20 @@ const DealDetail = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 pb-24 md:pb-8 text-center">
           <h1 className="text-2xl font-light text-foreground mb-4">Unable to load deal</h1>
           <p className="text-muted-foreground mb-4">
-            There was an error loading this deal. Please try again.
+            {(error as Error).message || "There was an error loading this deal. Please try again."}
           </p>
-          <Link to="/portal/crm">
-            <Button variant="outline">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to CRM
+          <div className="flex justify-center gap-2">
+            <Link to="/portal/crm">
+              <Button variant="outline">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to CRM
+              </Button>
+            </Link>
+            <Button onClick={() => refetch()}>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Try Again
             </Button>
-          </Link>
+          </div>
         </div>
       </div>
     );

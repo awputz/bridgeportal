@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, Save, Trash2, Phone, Mail, Building2, MapPin, Tag, Calendar } from "lucide-react";
+import { ArrowLeft, Save, Trash2, Phone, Mail, Building2, MapPin, Tag, Calendar, AlertCircle, RefreshCw } from "lucide-react";
+import { isValidUUID } from "@/lib/errorHandler";
 import { useCRMContact, useUpdateContact, useDeleteContact, useCRMDeals, useCRMActivities, useCreateActivity } from "@/hooks/useCRM";
 import { useDivision } from "@/contexts/DivisionContext";
 import { Button } from "@/components/ui/button";
@@ -55,7 +56,15 @@ const ContactDetail = () => {
   const navigate = useNavigate();
   const { division } = useDivision();
 
-  const { data: contact, isLoading } = useCRMContact(id || "");
+  // Validate UUID before making query
+  useEffect(() => {
+    if (id && !isValidUUID(id)) {
+      toast.error("Invalid contact ID format");
+      navigate("/portal/contacts");
+    }
+  }, [id, navigate]);
+
+  const { data: contact, isLoading, error, refetch } = useCRMContact(id || "");
   const { data: allDeals } = useCRMDeals(division);
   const { data: activities } = useCRMActivities({ contactId: id, limit: 10 });
   const updateContact = useUpdateContact();
@@ -139,15 +148,44 @@ const ContactDetail = () => {
     );
   }
 
+  if (error) {
+    return (
+      <div className="flex-1 overflow-auto">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 pb-24 md:pb-8 text-center">
+          <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+          <h1 className="text-2xl font-light text-foreground mb-4">Unable to load contact</h1>
+          <p className="text-muted-foreground mb-4">
+            {(error as Error).message || "There was an error loading this contact. Please try again."}
+          </p>
+          <div className="flex justify-center gap-2">
+            <Link to="/portal/contacts">
+              <Button variant="outline">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Contacts
+              </Button>
+            </Link>
+            <Button onClick={() => refetch()}>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Try Again
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!contact) {
     return (
       <div className="flex-1 overflow-auto">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 pb-24 md:pb-8 text-center">
           <h1 className="text-2xl font-light text-foreground mb-4">Contact not found</h1>
-          <Link to="/portal/crm">
+          <p className="text-muted-foreground mb-4">
+            This contact may have been deleted or you don't have permission to view it.
+          </p>
+          <Link to="/portal/contacts">
             <Button variant="outline">
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to CRM
+              Back to Contacts
             </Button>
           </Link>
         </div>
