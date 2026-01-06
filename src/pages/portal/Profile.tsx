@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { User, Mail, Phone, Lock, Save, TrendingUp, DollarSign, Building2, Calendar, FileText, ExternalLink, Home, FolderOpen, Users, Check, Loader2, Bell, Settings, LayoutGrid, CreditCard, ChevronRight, ClipboardList, Clock } from "lucide-react";
+import { User, Mail, Phone, Lock, Save, TrendingUp, DollarSign, Building2, Calendar, FileText, ExternalLink, Home, FolderOpen, Users, Check, Loader2, Bell, Settings, LayoutGrid, CreditCard, ChevronRight, ClipboardList, Clock, Wallet } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +30,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { FinancialsOverview, IncomeTab, ExpensesTab } from "@/components/financials";
 
 // Format deal value based on division
 const formatDealValueByDivision = (tx: any): string => {
@@ -240,10 +241,14 @@ const Profile = () => {
 
         {/* Tabs Navigation */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-6">
+          <TabsList className="grid w-full grid-cols-5 mb-6">
             <TabsTrigger value="overview" className="gap-2 text-xs sm:text-sm">
               <LayoutGrid className="h-4 w-4 hidden sm:block" />
               Overview
+            </TabsTrigger>
+            <TabsTrigger value="financials" className="gap-2 text-xs sm:text-sm">
+              <Wallet className="h-4 w-4 hidden sm:block" />
+              Financials
             </TabsTrigger>
             <TabsTrigger value="transactions" className="gap-2 text-xs sm:text-sm">
               <CreditCard className="h-4 w-4 hidden sm:block" />
@@ -611,6 +616,29 @@ const Profile = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Financials Tab */}
+          <TabsContent value="financials" className="space-y-6">
+            <Tabs defaultValue="overview" className="w-full">
+              <TabsList className="w-full max-w-md">
+                <TabsTrigger value="overview" className="flex-1">Overview</TabsTrigger>
+                <TabsTrigger value="income" className="flex-1">Income</TabsTrigger>
+                <TabsTrigger value="expenses" className="flex-1">Expenses</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="overview" className="mt-6">
+                <FinancialsOverview />
+              </TabsContent>
+              
+              <TabsContent value="income" className="mt-6">
+                <IncomeTab />
+              </TabsContent>
+              
+              <TabsContent value="expenses" className="mt-6">
+                <ExpensesTab />
+              </TabsContent>
+            </Tabs>
           </TabsContent>
 
           {/* Transactions Tab */}
