@@ -19,13 +19,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -35,11 +28,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Search, Shield, ShieldCheck, User, Plus, X, Briefcase, TrendingUp, Building2, Home } from "lucide-react";
+import { Search, Shield, ShieldCheck, User, Plus, X, MoreHorizontal, Briefcase } from "lucide-react";
 import { format } from "date-fns";
 
 type AppRole = "admin" | "agent" | "investor" | "user";
-type Division = "investment-sales" | "commercial-leasing" | "residential";
 
 const ROLE_COLORS: Record<AppRole, string> = {
   admin: "bg-red-500/10 text-red-600 border-red-200",
@@ -55,14 +47,8 @@ const ROLE_ICONS: Record<AppRole, React.ComponentType<{ className?: string }>> =
   user: User,
 };
 
-const DIVISION_CONFIG: Record<Division, { label: string; icon: typeof TrendingUp; color: string }> = {
-  "investment-sales": { label: "Investment Sales", icon: TrendingUp, color: "#8b5cf6" },
-  "commercial-leasing": { label: "Commercial Leasing", icon: Building2, color: "#3b82f6" },
-  "residential": { label: "Residential", icon: Home, color: "#22c55e" },
-};
-
 export default function UsersAdmin() {
-  const { users, isLoading, addRole, removeRole, updateDivision } = useUserRolesAdmin();
+  const { users, isLoading, addRole, removeRole } = useUserRolesAdmin();
   const [search, setSearch] = useState("");
   const [confirmDialog, setConfirmDialog] = useState<{
     open: boolean;
@@ -97,22 +83,9 @@ export default function UsersAdmin() {
     setConfirmDialog(null);
   };
 
-  const getAvailableRoles = (currentRoles: Array<{ role: AppRole; assigned_division: string | null }>) => {
+  const getAvailableRoles = (currentRoles: Array<{ role: AppRole }>) => {
     const existingRoles = currentRoles.map((r) => r.role);
     return (["admin", "agent", "investor", "user"] as const).filter((r) => !existingRoles.includes(r));
-  };
-
-  const getUserAssignedDivision = (roles: Array<{ role: AppRole; assigned_division: string | null }>): string | null => {
-    const roleWithDivision = roles.find(r => r.assigned_division);
-    return roleWithDivision?.assigned_division || null;
-  };
-
-  const hasAgentRole = (roles: Array<{ role: AppRole; assigned_division: string | null }>): boolean => {
-    return roles.some(r => r.role === "agent");
-  };
-
-  const handleUpdateDivision = (userId: string, division: Division) => {
-    updateDivision.mutate({ userId, division });
   };
 
   return (
@@ -120,7 +93,7 @@ export default function UsersAdmin() {
       <div>
         <h1 className="text-3xl font-bold text-foreground">User Management</h1>
         <p className="text-muted-foreground mt-1">
-          Manage user roles and division assignments
+          Manage user roles and permissions
         </p>
       </div>
 
@@ -128,7 +101,7 @@ export default function UsersAdmin() {
         <CardHeader>
           <CardTitle>All Users</CardTitle>
           <CardDescription>
-            View and manage user roles. Admins have full access to all divisions. Agents are locked to their assigned division.
+            View and manage user roles. Admins have full access, agents can access the portal.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -168,7 +141,6 @@ export default function UsersAdmin() {
                 <TableRow>
                   <TableHead>User</TableHead>
                   <TableHead>Roles</TableHead>
-                  <TableHead>Division</TableHead>
                   <TableHead>Created</TableHead>
                   <TableHead className="w-[100px]">Actions</TableHead>
                 </TableRow>
@@ -176,8 +148,6 @@ export default function UsersAdmin() {
               <TableBody>
                 {filteredUsers.map((user) => {
                   const availableRoles = getAvailableRoles(user.roles);
-                  const assignedDivision = getUserAssignedDivision(user.roles);
-                  const isAgent = hasAgentRole(user.roles);
                   
                   return (
                     <TableRow key={user.id}>
@@ -209,49 +179,6 @@ export default function UsersAdmin() {
                             })
                           )}
                         </div>
-                      </TableCell>
-                      <TableCell>
-                        {isAgent ? (
-                          <Select
-                            value={assignedDivision || ""}
-                            onValueChange={(value) => handleUpdateDivision(user.id, value as Division)}
-                          >
-                            <SelectTrigger className="w-[180px]">
-                              <SelectValue placeholder="Select division">
-                                {assignedDivision && DIVISION_CONFIG[assignedDivision as Division] && (
-                                  <div className="flex items-center gap-2">
-                                    {(() => {
-                                      const config = DIVISION_CONFIG[assignedDivision as Division];
-                                      const Icon = config.icon;
-                                      return (
-                                        <>
-                                          <Icon className="h-4 w-4" style={{ color: config.color }} />
-                                          <span>{config.label}</span>
-                                        </>
-                                      );
-                                    })()}
-                                  </div>
-                                )}
-                              </SelectValue>
-                            </SelectTrigger>
-                            <SelectContent>
-                              {(Object.keys(DIVISION_CONFIG) as Division[]).map((div) => {
-                                const config = DIVISION_CONFIG[div];
-                                const Icon = config.icon;
-                                return (
-                                  <SelectItem key={div} value={div}>
-                                    <div className="flex items-center gap-2">
-                                      <Icon className="h-4 w-4" style={{ color: config.color }} />
-                                      <span>{config.label}</span>
-                                    </div>
-                                  </SelectItem>
-                                );
-                              })}
-                            </SelectContent>
-                          </Select>
-                        ) : (
-                          <span className="text-sm text-muted-foreground">N/A</span>
-                        )}
                       </TableCell>
                       <TableCell className="text-muted-foreground">
                         {user.created_at

@@ -3000,21 +3000,18 @@ export type Database = {
       }
       user_roles: {
         Row: {
-          assigned_division: string | null
           created_at: string | null
           id: string
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Insert: {
-          assigned_division?: string | null
           created_at?: string | null
           id?: string
           role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Update: {
-          assigned_division?: string | null
           created_at?: string | null
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
@@ -3235,7 +3232,6 @@ export type Database = {
           isSetofReturn: true
         }
       }
-      get_user_division: { Args: { _user_id: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -3244,7 +3240,6 @@ export type Database = {
         Returns: boolean
       }
       is_admin_or_agent: { Args: { _user_id: string }; Returns: boolean }
-      is_admin_user: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "agent" | "user" | "investor"

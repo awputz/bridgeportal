@@ -163,20 +163,6 @@ const ResetPassword = () => {
               )}
             </Button>
           </form>
-          
-          <div className="mt-6 pt-6 border-t border-white/10">
-            <Button
-              type="button"
-              variant="ghost"
-              className="w-full text-muted-foreground hover:text-foreground"
-              onClick={async () => {
-                await supabase.auth.signOut();
-                window.location.href = "/login";
-              }}
-            >
-              Sign out and return to login
-            </Button>
-          </div>
         </div>
 
         <p className="text-center text-xs text-muted-foreground/50 mt-8 font-light">
