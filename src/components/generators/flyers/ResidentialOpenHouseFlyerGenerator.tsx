@@ -3,6 +3,7 @@ import { Image } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { GeneratorShell } from "../GeneratorShell";
 
 interface Props {
@@ -67,10 +68,11 @@ Create urgency and excitement. Make people want to attend!
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2 col-span-2">
             <Label>Property Address *</Label>
-            <Input
-              placeholder="123 Park Avenue, Unit 15A"
+            <AddressAutocomplete
               value={formData.address}
-              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              onChange={(v) => setFormData({ ...formData, address: v })}
+              onAddressSelect={(addr) => setFormData({ ...formData, address: addr.fullAddress })}
+              placeholder="Start typing an address..."
             />
           </div>
 

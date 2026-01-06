@@ -38,6 +38,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
@@ -740,7 +741,22 @@ const ListingsAdmin = () => {
           <div className="grid grid-cols-2 gap-4 pt-4">
             <div className="col-span-2">
               <Label>Property Address *</Label>
-              <Input value={investmentForm.property_address} onChange={(e) => setInvestmentForm({ ...investmentForm, property_address: e.target.value })} />
+              <AddressAutocomplete
+                value={investmentForm.property_address}
+                onChange={(v) => setInvestmentForm({ ...investmentForm, property_address: v })}
+                onAddressSelect={(addr) => {
+                  const boroughMatch = ["Manhattan", "Brooklyn", "Queens", "Bronx", "Staten Island"].find(
+                    b => addr.fullAddress.includes(b) || addr.city === b
+                  );
+                  setInvestmentForm({
+                    ...investmentForm,
+                    property_address: addr.fullAddress,
+                    borough: boroughMatch || investmentForm.borough,
+                    neighborhood: addr.neighborhood || investmentForm.neighborhood,
+                  });
+                }}
+                placeholder="Start typing an address..."
+              />
             </div>
             <div>
               <Label>Asset Class *</Label>
@@ -823,7 +839,22 @@ const ListingsAdmin = () => {
           <div className="grid grid-cols-2 gap-4 pt-4">
             <div className="col-span-2">
               <Label>Property Address *</Label>
-              <Input value={commercialForm.property_address} onChange={(e) => setCommercialForm({ ...commercialForm, property_address: e.target.value })} />
+              <AddressAutocomplete
+                value={commercialForm.property_address}
+                onChange={(v) => setCommercialForm({ ...commercialForm, property_address: v })}
+                onAddressSelect={(addr) => {
+                  const boroughMatch = ["Manhattan", "Brooklyn", "Queens", "Bronx", "Staten Island"].find(
+                    b => addr.fullAddress.includes(b) || addr.city === b
+                  );
+                  setCommercialForm({
+                    ...commercialForm,
+                    property_address: addr.fullAddress,
+                    borough: boroughMatch || commercialForm.borough,
+                    neighborhood: addr.neighborhood || commercialForm.neighborhood,
+                  });
+                }}
+                placeholder="Start typing an address..."
+              />
             </div>
             <div>
               <Label>Listing Type *</Label>

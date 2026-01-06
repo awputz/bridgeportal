@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -185,11 +186,11 @@ Keep it concise, ${toneLabel.toLowerCase()}, and focused on the recipient's need
 
               <div className="space-y-2">
                 <Label htmlFor="property">Property Address (if relevant)</Label>
-                <Input
-                  id="property"
+                <AddressAutocomplete
                   value={formData.propertyAddress}
-                  onChange={(e) => setFormData({ ...formData, propertyAddress: e.target.value })}
-                  placeholder="123 Main Street, NY"
+                  onChange={(v) => setFormData({ ...formData, propertyAddress: v })}
+                  onAddressSelect={(addr) => setFormData({ ...formData, propertyAddress: addr.fullAddress })}
+                  placeholder="Start typing an address..."
                 />
               </div>
 

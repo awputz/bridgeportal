@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useBuildingsAdmin } from "@/hooks/useBuildingsAdmin";
 import { Input } from "@/components/ui/input";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
@@ -278,10 +279,20 @@ export default function BuildingsAdmin() {
             </div>
             <div className="col-span-2 space-y-2">
               <Label>Address *</Label>
-              <Input
+              <AddressAutocomplete
                 value={form.address}
-                onChange={(e) => setForm({ ...form, address: e.target.value })}
-                placeholder="Full street address"
+                onChange={(v) => setForm({ ...form, address: v })}
+                onAddressSelect={(addr) => {
+                  setForm({
+                    ...form,
+                    address: addr.fullAddress,
+                    borough: addr.city && ["Manhattan", "Brooklyn", "Queens", "Bronx", "Staten Island"].includes(addr.city) 
+                      ? addr.city 
+                      : form.borough,
+                    neighborhood: addr.neighborhood || form.neighborhood,
+                  });
+                }}
+                placeholder="Start typing an address..."
               />
             </div>
             <div className="space-y-2">

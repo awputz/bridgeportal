@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { GeneratorShell } from "../GeneratorShell";
 
 interface Props {
@@ -73,7 +74,12 @@ Be objective and highlight both strengths and potential concerns.`;
         </div>
         <div className="space-y-2">
           <Label>Property Address *</Label>
-          <Input value={formData.propertyAddress} onChange={(e) => setFormData({ ...formData, propertyAddress: e.target.value })} placeholder="456 Oak Street, Unit 2" />
+          <AddressAutocomplete
+            value={formData.propertyAddress}
+            onChange={(v) => setFormData({ ...formData, propertyAddress: v })}
+            onAddressSelect={(addr) => setFormData({ ...formData, propertyAddress: addr.fullAddress })}
+            placeholder="Start typing an address..."
+          />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">

@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { GeneratorShell } from "../GeneratorShell";
 
 interface Props { onBack: () => void; }
@@ -44,7 +45,12 @@ For each item, include: document needed, who provides it, and priority level.
       <div className="space-y-4">
         <div className="space-y-2">
           <Label>Property Address *</Label>
-          <Input value={formData.propertyAddress} onChange={(e) => setFormData({ ...formData, propertyAddress: e.target.value })} />
+          <AddressAutocomplete
+            value={formData.propertyAddress}
+            onChange={(v) => setFormData({ ...formData, propertyAddress: v })}
+            onAddressSelect={(addr) => setFormData({ ...formData, propertyAddress: addr.fullAddress })}
+            placeholder="Start typing an address..."
+          />
         </div>
         <div className="space-y-2">
           <Label>Property Type *</Label>
