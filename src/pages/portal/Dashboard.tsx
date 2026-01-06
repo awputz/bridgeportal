@@ -15,7 +15,8 @@ import { Button } from "@/components/ui/button";
 import { CRMCommandCenter } from "@/components/portal/CRMCommandCenter";
 import { WelcomeBanner } from "@/components/portal/WelcomeBanner";
 import { AnnouncementsWidget } from "@/components/portal/AnnouncementsWidget";
-import { GoogleWorkspaceWidget } from "@/components/portal/GoogleWorkspaceWidget";
+import { GmailWidget } from "@/components/portal/GmailWidget";
+import { GoogleCalendarWidget } from "@/components/portal/GoogleCalendarWidget";
 import { AlertsWidget } from "@/components/portal/AlertsWidget";
 import { SectionErrorBoundary } from "@/components/portal/SectionErrorBoundary";
 
@@ -164,20 +165,27 @@ const Dashboard = () => {
           </SectionErrorBoundary>
         </section>
 
-        {/* 4. Workspace & Communications */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.16s' }}>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <SectionErrorBoundary sectionName="Google Workspace">
-              <GoogleWorkspaceWidget />
+        {/* 4. Gmail & Calendar Side-by-Side */}
+        <section className="mb-6 animate-fade-in-up" style={{ animationDelay: '0.16s' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <SectionErrorBoundary sectionName="Gmail">
+              <GmailWidget />
             </SectionErrorBoundary>
-            <div className="space-y-4">
-              <SectionErrorBoundary sectionName="Announcements">
-                <AnnouncementsWidget />
-              </SectionErrorBoundary>
-              <SectionErrorBoundary sectionName="Alerts">
-                <AlertsWidget />
-              </SectionErrorBoundary>
-            </div>
+            <SectionErrorBoundary sectionName="Google Calendar">
+              <GoogleCalendarWidget />
+            </SectionErrorBoundary>
+          </div>
+        </section>
+
+        {/* 5. Announcements & Alerts */}
+        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.18s' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <SectionErrorBoundary sectionName="Announcements">
+              <AnnouncementsWidget />
+            </SectionErrorBoundary>
+            <SectionErrorBoundary sectionName="Alerts">
+              <AlertsWidget />
+            </SectionErrorBoundary>
           </div>
         </section>
 
