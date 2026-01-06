@@ -1,32 +1,47 @@
 import { useState } from "react";
-import { Plus, Search, Filter, Receipt } from "lucide-react";
+import { Plus, Search, Filter, Receipt, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useExpenses, type ExpenseFilters, type Expense } from "@/hooks/useExpenses";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useExpenses, useDeleteExpense, type ExpenseFilters, type Expense } from "@/hooks/useExpenses";
 import { useExpenseCategories } from "@/hooks/useExpenseCategories";
+import { useReceiptUpload } from "@/hooks/useReceiptUpload";
 import { ExpenseCard } from "./ExpenseCard";
+import { AddExpenseModal } from "./AddExpenseModal";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
-interface ExpensesTabProps {
-  onAddExpense?: () => void;
-  onEditExpense?: (expense: Expense) => void;
-  onDeleteExpense?: (expense: Expense) => void;
-  onViewReceipt?: (expense: Expense) => void;
-}
-
-export const ExpensesTab = ({
-  onAddExpense,
-  onEditExpense,
-  onDeleteExpense,
-  onViewReceipt,
-}: ExpensesTabProps) => {
+export const ExpensesTab = () => {
   const [filters, setFilters] = useState<ExpenseFilters>({});
   const [showFilters, setShowFilters] = useState(false);
+  
+  // Modal states
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
+  const [deletingExpense, setDeletingExpense] = useState<Expense | null>(null);
+  const [viewingReceipt, setViewingReceipt] = useState<{ url: string; filename: string } | null>(null);
 
   const { data: expenses = [], isLoading } = useExpenses(filters);
   const { data: categories = [] } = useExpenseCategories();
+  const deleteExpense = useDeleteExpense();
+  const { getSignedUrl } = useReceiptUpload();
 
   // Group expenses by month
   const expensesByMonth = expenses.reduce<Record<string, Expense[]>>((acc, expense) => {
@@ -55,6 +70,63 @@ export const ExpensesTab = ({
     })
     .reduce((sum, e) => sum + Number(e.amount), 0);
 
+  // Handlers
+  const handleAddExpense = () => {
+    setEditingExpense(null);
+    setIsModalOpen(true);
+  };
+
+  const handleEditExpense = (expense: Expense) => {
+    setEditingExpense(expense);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteExpense = (expense: Expense) => {
+    setDeletingExpense(expense);
+  };
+
+  const confirmDelete = async () => {
+    if (!deletingExpense) return;
+    
+    try {
+      await deleteExpense.mutateAsync(deletingExpense.id);
+      toast.success("Expense deleted successfully");
+      setDeletingExpense(null);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to delete expense");
+    }
+  };
+
+  const handleViewReceipt = async (expense: Expense) => {
+    if (!expense.receipt_url) {
+      toast.error("No receipt attached to this expense");
+      return;
+    }
+
+    // Check if it's already a signed URL or needs to be fetched
+    const isPDF = expense.receipt_filename?.toLowerCase().endsWith(".pdf");
+    
+    try {
+      // Get a fresh signed URL
+      const signedUrl = await getSignedUrl(expense.receipt_url);
+      
+      if (!signedUrl) {
+        toast.error("Failed to load receipt");
+        return;
+      }
+
+      if (isPDF) {
+        // Open PDF in new tab
+        window.open(signedUrl, "_blank");
+      } else {
+        // Show image in modal
+        setViewingReceipt({ url: signedUrl, filename: expense.receipt_filename || "Receipt" });
+      }
+    } catch (error) {
+      toast.error("Failed to load receipt");
+    }
+  };
+
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -65,7 +137,7 @@ export const ExpensesTab = ({
             {format(new Date(), "MMMM yyyy")}: ${currentMonthTotal.toLocaleString()}
           </p>
         </div>
-        <Button onClick={onAddExpense} className="gap-2">
+        <Button onClick={handleAddExpense} className="gap-2">
           <Plus className="h-4 w-4" />
           Add Expense
         </Button>
@@ -166,7 +238,7 @@ export const ExpensesTab = ({
           <p className="text-sm text-muted-foreground mb-4">
             Start tracking your business expenses for tax purposes
           </p>
-          <Button onClick={onAddExpense} className="gap-2">
+          <Button onClick={handleAddExpense} className="gap-2">
             <Plus className="h-4 w-4" />
             Add Your First Expense
           </Button>
@@ -190,9 +262,9 @@ export const ExpensesTab = ({
                       expense={expense}
                       categoryIcon={icon}
                       categoryColor={color}
-                      onEdit={onEditExpense}
-                      onDelete={onDeleteExpense}
-                      onViewReceipt={onViewReceipt}
+                      onEdit={handleEditExpense}
+                      onDelete={handleDeleteExpense}
+                      onViewReceipt={handleViewReceipt}
                     />
                   );
                 })}
@@ -201,6 +273,64 @@ export const ExpensesTab = ({
           ))}
         </div>
       )}
+
+      {/* Add/Edit Expense Modal */}
+      <AddExpenseModal
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        expense={editingExpense}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deletingExpense} onOpenChange={() => setDeletingExpense(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Expense</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this expense for ${deletingExpense?.amount.toLocaleString()}? 
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Receipt Viewer Dialog */}
+      <Dialog open={!!viewingReceipt} onOpenChange={() => setViewingReceipt(null)}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center justify-between">
+              <span>{viewingReceipt?.filename}</span>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-2"
+                onClick={() => window.open(viewingReceipt?.url, "_blank")}
+              >
+                <ExternalLink className="h-4 w-4" />
+                Open Full Size
+              </Button>
+            </DialogTitle>
+          </DialogHeader>
+          {viewingReceipt && (
+            <div className="flex items-center justify-center bg-muted/30 rounded-lg p-4">
+              <img
+                src={viewingReceipt.url}
+                alt="Receipt"
+                className="max-w-full max-h-[60vh] object-contain rounded"
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
