@@ -17,6 +17,7 @@ import { WelcomeBanner } from "@/components/portal/WelcomeBanner";
 import { AnnouncementsWidget } from "@/components/portal/AnnouncementsWidget";
 import { GoogleWorkspaceWidget } from "@/components/portal/GoogleWorkspaceWidget";
 import { AlertsWidget } from "@/components/portal/AlertsWidget";
+import { SectionErrorBoundary } from "@/components/portal/SectionErrorBoundary";
 
 // Icon mapping for dynamic icons from database
 const iconMap: Record<string, typeof Mail> = {
@@ -158,16 +159,24 @@ const Dashboard = () => {
 
         {/* 3. CRM Command Center - Unified Section */}
         <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.12s' }}>
-          <CRMCommandCenter />
+          <SectionErrorBoundary sectionName="CRM Command Center">
+            <CRMCommandCenter />
+          </SectionErrorBoundary>
         </section>
 
         {/* 4. Workspace & Communications */}
         <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.16s' }}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <GoogleWorkspaceWidget />
+            <SectionErrorBoundary sectionName="Google Workspace">
+              <GoogleWorkspaceWidget />
+            </SectionErrorBoundary>
             <div className="space-y-4">
-              <AnnouncementsWidget />
-              <AlertsWidget />
+              <SectionErrorBoundary sectionName="Announcements">
+                <AnnouncementsWidget />
+              </SectionErrorBoundary>
+              <SectionErrorBoundary sectionName="Alerts">
+                <AlertsWidget />
+              </SectionErrorBoundary>
             </div>
           </div>
         </section>
