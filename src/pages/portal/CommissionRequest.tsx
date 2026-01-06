@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { useCreateCommissionRequest, uploadCommissionDocument } from "@/hooks/useCommissionRequests";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -182,12 +183,11 @@ const CommissionRequest = () => {
               {/* Property Address */}
               <div className="space-y-2">
                 <Label htmlFor="property_address" className="text-foreground/80">Property Address *</Label>
-                <Input
-                  id="property_address"
+                <AddressAutocomplete
                   value={formData.property_address}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, property_address: e.target.value }))}
-                  placeholder="123 Main Street, New York, NY"
-                  required
+                  onChange={(v) => setFormData((prev) => ({ ...prev, property_address: v }))}
+                  onAddressSelect={(address) => setFormData((prev) => ({ ...prev, property_address: address.fullAddress }))}
+                  placeholder="Start typing an address..."
                   className="bg-white/5 border-white/10"
                 />
               </div>

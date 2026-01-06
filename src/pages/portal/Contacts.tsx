@@ -835,7 +835,15 @@ const Contacts = () => {
                     </div>
                     <div className="col-span-2 space-y-2">
                       <Label htmlFor="address">Address</Label>
-                      <Input id="address" name="address" />
+                      <AddressAutocomplete
+                        value={newContactAddress}
+                        onChange={setNewContactAddress}
+                        onAddressSelect={(address) => {
+                          setNewContactAddress(address.fullAddress);
+                          setNewContactAddressData(address);
+                        }}
+                        placeholder="Start typing an address..."
+                      />
                     </div>
                     <div className="col-span-2 space-y-2">
                       <Label htmlFor="notes">Notes</Label>
