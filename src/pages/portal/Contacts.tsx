@@ -78,6 +78,7 @@ import { ContactProfileSlideOver } from "@/components/portal/ContactProfileSlide
 import { ContactAlphaScroll, groupContactsByLetter } from "@/components/portal/ContactAlphaScroll";
 import { ContactMergeWizard, findDuplicateContacts } from "@/components/portal/ContactMergeWizard";
 import { AddressAutocomplete, AddressComponents } from "@/components/ui/AddressAutocomplete";
+import { SectionErrorBoundary } from "@/components/portal/SectionErrorBoundary";
 import { cn } from "@/lib/utils";
 import {
   Table,
