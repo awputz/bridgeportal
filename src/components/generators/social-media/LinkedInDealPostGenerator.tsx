@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { GeneratorShell } from "../GeneratorShell";
 
 interface Props {
@@ -93,10 +94,11 @@ Show expertise and market knowledge.
 
           <div className="space-y-2 col-span-2">
             <Label>Property/Location *</Label>
-            <Input
-              placeholder="123 Main Street, Manhattan"
+            <AddressAutocomplete
               value={formData.address}
-              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              onChange={(v) => setFormData({ ...formData, address: v })}
+              onAddressSelect={(addr) => setFormData({ ...formData, address: addr.fullAddress })}
+              placeholder="Start typing an address..."
             />
           </div>
 

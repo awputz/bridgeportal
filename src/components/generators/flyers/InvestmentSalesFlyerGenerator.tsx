@@ -3,6 +3,7 @@ import { Image } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { GeneratorShell } from "../GeneratorShell";
 
 interface Props {
@@ -65,10 +66,11 @@ Format for a professional one-page flyer layout.
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2 col-span-2">
             <Label>Property Address *</Label>
-            <Input
-              placeholder="123 Main Street, New York, NY 10001"
+            <AddressAutocomplete
               value={formData.propertyAddress}
-              onChange={(e) => setFormData({ ...formData, propertyAddress: e.target.value })}
+              onChange={(v) => setFormData({ ...formData, propertyAddress: v })}
+              onAddressSelect={(addr) => setFormData({ ...formData, propertyAddress: addr.fullAddress })}
+              placeholder="Start typing an address..."
             />
           </div>
 

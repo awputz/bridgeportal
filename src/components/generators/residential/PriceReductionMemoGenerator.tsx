@@ -3,6 +3,7 @@ import { TrendingDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { GeneratorShell } from "../GeneratorShell";
 
 interface Props {
@@ -66,7 +67,12 @@ Be honest but supportive - help the seller see the opportunity in adjusting pric
       <div className="space-y-4">
         <div className="space-y-2">
           <Label>Property Address *</Label>
-          <Input value={formData.propertyAddress} onChange={(e) => setFormData({ ...formData, propertyAddress: e.target.value })} placeholder="123 Main Street" />
+          <AddressAutocomplete
+            value={formData.propertyAddress}
+            onChange={(v) => setFormData({ ...formData, propertyAddress: v })}
+            onAddressSelect={(addr) => setFormData({ ...formData, propertyAddress: addr.fullAddress })}
+            placeholder="Start typing an address..."
+          />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">

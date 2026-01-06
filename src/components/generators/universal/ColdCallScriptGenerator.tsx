@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { GeneratorShell } from "../GeneratorShell";
 
 interface ColdCallScriptGeneratorProps {
@@ -89,10 +90,11 @@ Keep it natural and conversational. Avoid sounding scripted or pushy.
 
         <div className="space-y-2">
           <Label>Property Address</Label>
-          <Input
-            placeholder="If calling about a specific property"
+          <AddressAutocomplete
             value={formData.propertyAddress}
-            onChange={(e) => setFormData({ ...formData, propertyAddress: e.target.value })}
+            onChange={(v) => setFormData({ ...formData, propertyAddress: v })}
+            onAddressSelect={(addr) => setFormData({ ...formData, propertyAddress: addr.fullAddress })}
+            placeholder="If calling about a specific property"
           />
         </div>
 

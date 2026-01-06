@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useCreateTransaction, useUpdateTransaction } from "@/hooks/useTransactionMutations";
@@ -414,7 +415,24 @@ export function TransactionFormDialog({
                   <FormItem>
                     <FormLabel>Property Address*</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="123 Main Street" />
+                      <AddressAutocomplete
+                        value={field.value}
+                        onChange={field.onChange}
+                        onAddressSelect={(addr) => {
+                          field.onChange(addr.fullAddress);
+                          // Auto-populate borough if it matches NYC boroughs
+                          const boroughMatch = ["Manhattan", "Brooklyn", "Queens", "Bronx", "Staten Island"].find(
+                            b => addr.fullAddress.includes(b) || addr.city === b
+                          );
+                          if (boroughMatch) {
+                            form.setValue("borough", boroughMatch);
+                          }
+                          if (addr.neighborhood) {
+                            form.setValue("neighborhood", addr.neighborhood);
+                          }
+                        }}
+                        placeholder="Start typing an address..."
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
