@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { withRetry } from '@/lib/supabaseRetry';
 
 export interface DealHistoryEntry {
   id: string;
@@ -30,12 +31,15 @@ export const useDealHistory = (dealId: string) => {
   return useQuery({
     queryKey: ['deal-history', dealId],
     queryFn: async () => {
-      // First get the history entries
-      const { data: history, error: historyError } = await supabase
-        .from('crm_deal_history')
-        .select('*')
-        .eq('deal_id', dealId)
-        .order('changed_at', { ascending: false });
+      // First get the history entries with retry
+      const { data: history, error: historyError } = await withRetry(
+        async () => supabase
+          .from('crm_deal_history')
+          .select('*')
+          .eq('deal_id', dealId)
+          .order('changed_at', { ascending: false }),
+        { maxAttempts: 3 }
+      );
 
       if (historyError) {
         console.warn('Deal history query failed:', historyError.message);
@@ -77,5 +81,10 @@ export const useDealHistory = (dealId: string) => {
       })) as DealHistoryEntry[];
     },
     enabled: !!dealId,
+    staleTime: 60 * 1000, // 1 minute
+    gcTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    retry: 2,
   });
 };

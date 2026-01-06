@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { withRetry } from '@/lib/supabaseRetry';
 
 export interface AgentDashboardStats {
   agent_id: string;
@@ -31,11 +32,14 @@ export const useAgentDashboardStats = (agentId?: string) => {
     queryFn: async () => {
       if (!targetAgentId) throw new Error('No agent ID provided');
 
-      const { data, error } = await supabase
-        .from('agent_dashboard_stats')
-        .select('*')
-        .eq('agent_id', targetAgentId)
-        .single();
+      const { data, error } = await withRetry(
+        async () => supabase
+          .from('agent_dashboard_stats')
+          .select('*')
+          .eq('agent_id', targetAgentId)
+          .single(),
+        { maxAttempts: 3 }
+      );
 
       if (error) {
         // Fallback to regular queries if materialized view not available
@@ -47,5 +51,9 @@ export const useAgentDashboardStats = (agentId?: string) => {
     },
     enabled: !!targetAgentId,
     staleTime: 5 * 60 * 1000, // 5 minutes - view is refreshed daily
+    gcTime: 10 * 60 * 1000, // 10 minutes
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    retry: 2,
   });
 };

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { withRetry } from '@/lib/supabaseRetry';
 
 export interface DivisionPerformance {
   division: string;
@@ -14,9 +15,12 @@ export const useDivisionPerformance = () => {
   return useQuery({
     queryKey: ['division-performance'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('division_performance_live')
-        .select('*');
+      const { data, error } = await withRetry(
+        async () => supabase
+          .from('division_performance_live')
+          .select('*'),
+        { maxAttempts: 3 }
+      );
 
       if (error) {
         console.warn('Division performance view query failed:', error.message);
@@ -26,5 +30,9 @@ export const useDivisionPerformance = () => {
       return data as DivisionPerformance[];
     },
     staleTime: 2 * 60 * 1000, // 2 minutes
+    gcTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    retry: 2,
   });
 };
