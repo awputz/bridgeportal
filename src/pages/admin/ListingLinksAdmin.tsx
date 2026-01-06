@@ -318,14 +318,14 @@ const ListingLinksAdmin = () => {
             <div className="space-y-2">
               <Label>Parent Link (optional)</Label>
               <Select
-                value={formData.parent_id}
-                onValueChange={(value) => setFormData({ ...formData, parent_id: value })}
+                value={formData.parent_id || "__none__"}
+                onValueChange={(value) => setFormData({ ...formData, parent_id: value === "__none__" ? "" : value })}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="None (top-level)" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">None (top-level)</SelectItem>
+                  <SelectItem value="__none__">None (top-level)</SelectItem>
                   {parentLinks
                     .filter((l) => l.id !== editingLink?.id)
                     .map((link) => (

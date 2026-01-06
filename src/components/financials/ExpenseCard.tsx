@@ -26,6 +26,22 @@ const iconMap: Record<string, React.ElementType> = {
   Receipt,
 };
 
+// Map category colors to icon colors (explicit mapping for Tailwind)
+const iconColorMap: Record<string, string> = {
+  "bg-blue-500": "text-blue-400",
+  "bg-emerald-500": "text-emerald-400",
+  "bg-amber-500": "text-amber-400",
+  "bg-purple-500": "text-purple-400",
+  "bg-rose-500": "text-rose-400",
+  "bg-cyan-500": "text-cyan-400",
+  "bg-orange-500": "text-orange-400",
+  "bg-green-500": "text-green-400",
+  "bg-red-500": "text-red-400",
+  "bg-indigo-500": "text-indigo-400",
+  "bg-pink-500": "text-pink-400",
+  "bg-gray-500": "text-gray-400",
+};
+
 interface ExpenseCardProps {
   expense: Expense;
   categoryIcon?: string;
@@ -44,6 +60,7 @@ export const ExpenseCard = ({
   onViewReceipt,
 }: ExpenseCardProps) => {
   const IconComponent = iconMap[categoryIcon] || Receipt;
+  const iconColor = iconColorMap[categoryColor] || "text-gray-400";
 
   return (
     <Card className="glass-card border-border/50 hover:border-border transition-colors">
@@ -51,7 +68,7 @@ export const ExpenseCard = ({
         <div className="flex items-start gap-4">
           {/* Category Icon */}
           <div className={`w-10 h-10 rounded-full ${categoryColor}/20 flex items-center justify-center flex-shrink-0`}>
-            <IconComponent className={`h-5 w-5 text-${categoryColor.replace('bg-', '')?.replace('-500', '-400')}`} />
+            <IconComponent className={`h-5 w-5 ${iconColor}`} />
           </div>
 
           {/* Content */}

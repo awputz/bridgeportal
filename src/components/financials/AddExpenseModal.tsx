@@ -419,14 +419,17 @@ export const AddExpenseModal = ({ open, onOpenChange, expense }: AddExpenseModal
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Related Deal</FormLabel>
-                    <Select value={field.value} onValueChange={field.onChange}>
+                    <Select 
+                      value={field.value || "__none__"} 
+                      onValueChange={(v) => field.onChange(v === "__none__" ? "" : v)}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="None" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="__none__">None</SelectItem>
                         {deals.map((deal) => (
                           <SelectItem key={deal.id} value={deal.id}>
                             {deal.property_address}

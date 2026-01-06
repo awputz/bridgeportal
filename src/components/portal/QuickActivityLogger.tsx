@@ -131,12 +131,15 @@ export const QuickActivityLogger = () => {
             {/* Contact Selection */}
             <div className="space-y-2">
               <Label htmlFor="contact">Contact (optional)</Label>
-              <Select value={contactId} onValueChange={setContactId}>
+              <Select 
+                value={contactId || "__none__"} 
+                onValueChange={(v) => setContactId(v === "__none__" ? "" : v)}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select a contact..." />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">No contact</SelectItem>
+                  <SelectItem value="__none__">No contact</SelectItem>
                   {contacts?.map(contact => <SelectItem key={contact.id} value={contact.id}>
                       {contact.full_name}
                       {contact.company && ` - ${contact.company}`}
