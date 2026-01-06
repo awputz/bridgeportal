@@ -39,10 +39,14 @@ interface NotificationRequest {
     admin_notes?: string;
     request_type?: string;
     client_name?: string;
+    client_email?: string;
+    client_phone?: string;
     title?: string;
     content?: string;
     announcement_type?: string;
     recipients?: string[];
+    division?: string;
+    is_general_inquiry?: boolean;
   };
 }
 
@@ -195,6 +199,36 @@ const formatInquiryEmail = (data: NotificationRequest['data']): { html: string; 
   return { html, subject: `New ${data.inquiry_type || 'General'} Inquiry from ${data.name}` };
 };
 
+const formatIntakeSubmissionEmail = (data: NotificationRequest['data']): { html: string; subject: string } => {
+  const divisionLabel = {
+    'investment-sales': 'Investment Sales',
+    'commercial-leasing': 'Commercial Leasing',
+    'residential': 'Residential',
+  }[data.division || ''] || data.division || 'General';
+
+  const html = `
+    <!DOCTYPE html><html><head><meta charset="utf-8"><style>${emailStyles}</style></head>
+    <body><div class="container">
+      <div class="header"><div class="logo">Bridge Advisory Group</div></div>
+      <div style="text-align: center; margin-bottom: 30px;">
+        <span class="badge badge-approved">NEW CLIENT INQUIRY</span>
+        <h1 style="margin: 20px 0 10px; font-size: 24px;">New ${divisionLabel} Client</h1>
+        <p style="color: #666;">A prospective client has submitted their information through your intake form.</p>
+      </div>
+      <div class="section">
+        <h3>Client Information</h3>
+        <p><strong>Name:</strong> ${data.client_name || 'N/A'}</p>
+        <p><strong>Email:</strong> ${data.client_email || 'N/A'}</p>
+        ${data.client_phone ? `<p><strong>Phone:</strong> ${data.client_phone}</p>` : ''}
+        <p><strong>Division:</strong> ${divisionLabel}</p>
+        ${data.notes ? `<p><strong>Notes:</strong> ${data.notes}</p>` : ''}
+      </div>
+      <div style="text-align: center;"><a href="https://bridgenyre.com/portal/intake" class="cta">View Submissions</a></div>
+    </div><div class="footer"><p>Bridge Advisory Group</p></div></body></html>
+  `;
+  return { html, subject: `🔔 New Client Inquiry: ${data.client_name} - ${divisionLabel}` };
+};
+
 serve(async (req) => {
   const correlationId = getCorrelationId(req);
   const logger = createLogger('send-notification', correlationId);
@@ -243,6 +277,10 @@ serve(async (req) => {
       case 'welcome_agent':
         ({ html, subject } = formatWelcomeEmail(data));
         recipients = data.email ? [data.email] : [];
+        break;
+      case 'new_intake_submission':
+        ({ html, subject } = formatIntakeSubmissionEmail(data));
+        recipients = data.agent_email ? [data.agent_email] : [];
         break;
       default:
         logger.info(`Unknown notification type: ${type}`);

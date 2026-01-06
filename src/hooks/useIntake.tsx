@@ -231,8 +231,8 @@ export const useCreateIntakeSubmission = () => {
       is_general_inquiry?: boolean;
     }) => {
       // For general inquiries without an agent, we need a placeholder agent_id
-      // We'll use a system account or the first admin - this should be handled properly in production
       let agentId = data.agent_id;
+      let agentEmail: string | null = null;
       
       if (!agentId && data.is_general_inquiry) {
         // Fetch first admin user as placeholder for general inquiries
@@ -253,6 +253,15 @@ export const useCreateIntakeSubmission = () => {
         throw new Error("Agent ID is required");
       }
 
+      // Get agent email for notification
+      const { data: agentProfile } = await supabase
+        .from("profiles")
+        .select("email")
+        .eq("id", agentId)
+        .single();
+      
+      agentEmail = agentProfile?.email || null;
+
       const { data: submission, error } = await supabase
         .from("client_intake_submissions")
         .insert({
@@ -271,7 +280,34 @@ export const useCreateIntakeSubmission = () => {
         .single();
 
       if (error) throw error;
+
+      // Send email notification to agent
+      if (agentEmail && !data.is_general_inquiry) {
+        try {
+          await supabase.functions.invoke("send-notification", {
+            body: {
+              type: "new_intake_submission",
+              data: {
+                agent_email: agentEmail,
+                client_name: data.client_name,
+                client_email: data.client_email,
+                client_phone: data.client_phone,
+                division: data.division,
+                notes: data.notes,
+                is_general_inquiry: data.is_general_inquiry,
+              },
+            },
+          });
+        } catch (notifyError) {
+          console.error("Failed to send notification:", notifyError);
+          // Don't fail the submission if notification fails
+        }
+      }
+
       return submission as IntakeSubmission;
+    },
+    onError: (error) => {
+      toast.error("Failed to submit inquiry: " + error.message);
     },
   });
 };

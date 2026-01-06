@@ -13,6 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAgentsList, useCreateIntakeSubmission } from "@/hooks/useIntake";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const baseSchema = z.object({
   client_name: z.string().min(2, "Name is required").max(100, "Name is too long"),
@@ -104,8 +105,8 @@ export default function UniversalIntakeForm() {
         is_general_inquiry: isGeneralInquiry,
       });
       setStep("success");
-    } catch {
-      // Error handled by mutation
+    } catch (error) {
+      toast.error("Failed to submit. Please try again.");
     }
   };
 
