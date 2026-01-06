@@ -14,6 +14,7 @@ import { DivisionProvider } from "@/contexts/DivisionContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ContactSheetProvider } from "@/contexts/ContactSheetContext";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { SkipLink } from "@/components/SkipLink";
 
 // Pages - eager loaded for fast initial load
 import Login from "./pages/Login";
@@ -152,8 +153,9 @@ const App = () => {
                 <ErrorBoundary>
                   <Toaster />
                   <Sonner />
-                  <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-                <Routes>
+                <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+                    <SkipLink />
+                    <Routes>
                   {/* Root redirects to portal */}
                   <Route path="/" element={<Navigate to="/portal" replace />} />
                   
