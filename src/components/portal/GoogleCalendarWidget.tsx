@@ -100,7 +100,7 @@ export const GoogleCalendarWidget = () => {
 
   return (
     <Card className="overflow-hidden border-border/50 bg-card h-full">
-      <CardHeader className="p-3 pb-2">
+      <CardHeader className="px-3 py-2.5 pb-2">
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-emerald-400" />
@@ -141,12 +141,12 @@ export const GoogleCalendarWidget = () => {
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="p-3 pt-0">
+      <CardContent className="p-0">
         <div className="relative">
-          <ScrollArea className="max-h-[280px]">
+          <ScrollArea className="max-h-[340px]">
             {/* Not connected state */}
             {!isConnected && !isLoading && (
-              <div className="flex flex-col items-center justify-center py-6 bg-emerald-500/5 rounded-lg border border-emerald-500/10">
+              <div className="mx-3 mb-3 flex flex-col items-center justify-center py-6 bg-emerald-500/5 rounded-lg border border-emerald-500/10">
                 <div className="h-9 w-9 rounded-full bg-emerald-500/10 flex items-center justify-center mb-2">
                   <Calendar className="h-4 w-4 text-emerald-400" />
                 </div>
@@ -164,18 +164,25 @@ export const GoogleCalendarWidget = () => {
               </div>
             )}
 
-            {/* Loading state */}
+            {/* Loading state - 3 line skeleton */}
             {isLoading && (
-              <div className="space-y-1.5">
+              <div>
                 {[1, 2, 3].map(i => (
-                  <Skeleton key={i} className="h-14 w-full rounded-lg" />
+                  <div key={i} className="px-3 py-2.5 border-b border-border/30 last:border-b-0">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <Skeleton className="h-2 w-2 rounded-full" />
+                      <Skeleton className="h-3 w-24" />
+                    </div>
+                    <Skeleton className="h-3.5 w-full mb-1.5" />
+                    <Skeleton className="h-3 w-1/2" />
+                  </div>
                 ))}
               </div>
             )}
 
             {/* Empty state */}
             {isConnected && !isLoading && todaysEvents.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-6 bg-muted/20 rounded-lg">
+              <div className="mx-3 mb-3 flex flex-col items-center justify-center py-6 bg-muted/20 rounded-lg">
                 <Clock className="h-7 w-7 text-muted-foreground mb-1.5" />
                 <p className="text-xs text-muted-foreground">No events today</p>
                 <p className="text-[10px] text-muted-foreground/70 mt-0.5">
@@ -184,9 +191,9 @@ export const GoogleCalendarWidget = () => {
               </div>
             )}
 
-            {/* Events list */}
+            {/* Events list - 3-line layout matching Gmail */}
             {isConnected && !isLoading && todaysEvents.length > 0 && (
-              <div className="space-y-1">
+              <div>
                 {todaysEvents.map((event) => {
                   const eventData = event as any;
                   const eventUrl = eventData.htmlLink || `https://calendar.google.com/calendar/u/0/r/eventedit/${event.id}`;
@@ -201,36 +208,43 @@ export const GoogleCalendarWidget = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className={cn(
-                        "flex items-start gap-2 p-2 rounded-lg transition-all group",
-                        "hover:bg-muted/50 border border-transparent hover:border-border/50",
+                        "block px-3 py-2.5 border-b border-border/30 last:border-b-0",
+                        "hover:bg-muted/50 transition-colors cursor-pointer",
                         isPast && "opacity-60"
                       )}
+                      tabIndex={0}
+                      role="button"
+                      aria-label={`Event: ${event.title} at ${format(startTime, "h:mm a")}`}
                     >
-                      {/* Color indicator */}
-                      <div className={cn("w-1 h-full min-h-[36px] rounded-full flex-shrink-0", getEventColor(event))} />
-                      
-                      {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-1">
-                          <p className="text-xs font-medium text-foreground truncate">
-                            {event.title}
-                          </p>
-                          <span className="text-[10px] text-muted-foreground flex-shrink-0 whitespace-nowrap">
-                            {format(startTime, "h:mm a")}
-                            {endTime && ` - ${format(endTime, "h:mm a")}`}
-                          </span>
-                        </div>
+                      {/* Line 1: Time indicator + Time range */}
+                      <div className="flex items-center gap-2 mb-0.5">
+                        {/* Color indicator dot */}
+                        <div className={cn("w-2 h-2 rounded-full flex-shrink-0", getEventColor(event))} />
                         
-                        {/* Location / Meeting type */}
-                        {event.location && (
-                          <div className="flex items-center gap-1 mt-0.5">
-                            {getMeetingIcon(event)}
-                            <span className="text-[10px] text-muted-foreground truncate">
-                              {event.location}
-                            </span>
-                          </div>
-                        )}
+                        {/* Time range */}
+                        <time 
+                          dateTime={event.start_time}
+                          className="text-xs text-muted-foreground"
+                        >
+                          {format(startTime, "h:mm a")}
+                          {endTime && ` - ${format(endTime, "h:mm a")}`}
+                        </time>
                       </div>
+
+                      {/* Line 2: Event title */}
+                      <p className="text-sm font-medium text-foreground truncate mb-0.5">
+                        {event.title}
+                      </p>
+
+                      {/* Line 3: Location / Meeting type */}
+                      {event.location ? (
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                          {getMeetingIcon(event)}
+                          <span className="truncate">{event.location}</span>
+                        </div>
+                      ) : (
+                        <div className="h-4" /> // Placeholder for consistent row height
+                      )}
                     </a>
                   );
                 })}
@@ -239,7 +253,7 @@ export const GoogleCalendarWidget = () => {
           </ScrollArea>
           
           {/* Scroll fade indicator */}
-          {isConnected && todaysEvents.length > 4 && (
+          {isConnected && todaysEvents.length > 3 && (
             <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-card to-transparent pointer-events-none" />
           )}
         </div>
