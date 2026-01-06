@@ -204,35 +204,35 @@ const Profile = () => {
 
               {/* Agent Info */}
               <div className="flex-1 text-center sm:text-left min-w-0">
-                <h1 className="text-2xl sm:text-3xl font-extralight text-foreground mb-1 truncate">
+                <h1 className="text-2xl sm:text-3xl font-extralight text-foreground mb-1 truncate leading-tight">
                   {displayName}
                 </h1>
-                <p className="text-sm text-primary mb-2">{displayTitle}</p>
+                <p className="text-sm text-primary mb-2 leading-tight">{displayTitle}</p>
                 <div className="flex flex-wrap justify-center sm:justify-start gap-3 text-xs text-muted-foreground">
                   <div className="flex items-center gap-1.5">
-                    <Mail className="h-3 w-3" />
-                    <span className="truncate max-w-[180px]">{user?.email}</span>
+                    <Mail className="h-3 w-3 flex-shrink-0" />
+                    <span className="truncate max-w-[180px] leading-none">{user?.email}</span>
                   </div>
                   {(teamMember?.phone || profile?.phone) && (
                     <div className="flex items-center gap-1.5">
-                      <Phone className="h-3 w-3" />
-                      {teamMember?.phone || profile?.phone}
+                      <Phone className="h-3 w-3 flex-shrink-0" />
+                      <span className="leading-none">{teamMember?.phone || profile?.phone}</span>
                     </div>
                   )}
                 </div>
               </div>
 
               {/* Quick Stats */}
-              <div className="flex gap-4 sm:gap-6">
+              <div className="flex gap-4 sm:gap-6 flex-shrink-0">
                 <div className="text-center">
-                  <p className="text-2xl font-light text-foreground">{commissions.totalDeals}</p>
-                  <p className="text-xs text-muted-foreground">Deals</p>
+                  <p className="text-2xl font-light text-foreground leading-tight">{commissions.totalDeals}</p>
+                  <p className="text-xs text-muted-foreground leading-tight">Deals</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-2xl font-light text-emerald-400">
+                  <p className="text-2xl font-light text-emerald-400 leading-tight">
                     {formatFullCurrency(commissions.totalEarnings)}
                   </p>
-                  <p className="text-xs text-muted-foreground">Earnings</p>
+                  <p className="text-xs text-muted-foreground leading-tight">Earnings</p>
                 </div>
               </div>
             </div>
@@ -242,25 +242,25 @@ const Profile = () => {
         {/* Tabs Navigation */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-5 mb-6">
-            <TabsTrigger value="overview" className="gap-2 text-xs sm:text-sm">
-              <LayoutGrid className="h-4 w-4 hidden sm:block" />
-              Overview
+            <TabsTrigger value="overview" className="flex items-center gap-2 text-xs sm:text-sm">
+              <LayoutGrid className="h-4 w-4 hidden sm:block flex-shrink-0" />
+              <span className="leading-none">Overview</span>
             </TabsTrigger>
-            <TabsTrigger value="financials" className="gap-2 text-xs sm:text-sm">
-              <Wallet className="h-4 w-4 hidden sm:block" />
-              Financials
+            <TabsTrigger value="financials" className="flex items-center gap-2 text-xs sm:text-sm">
+              <Wallet className="h-4 w-4 hidden sm:block flex-shrink-0" />
+              <span className="leading-none">Financials</span>
             </TabsTrigger>
-            <TabsTrigger value="transactions" className="gap-2 text-xs sm:text-sm">
-              <CreditCard className="h-4 w-4 hidden sm:block" />
-              Transactions
+            <TabsTrigger value="transactions" className="flex items-center gap-2 text-xs sm:text-sm">
+              <CreditCard className="h-4 w-4 hidden sm:block flex-shrink-0" />
+              <span className="leading-none">Transactions</span>
             </TabsTrigger>
-            <TabsTrigger value="connections" className="gap-2 text-xs sm:text-sm">
-              <Users className="h-4 w-4 hidden sm:block" />
-              Connections
+            <TabsTrigger value="connections" className="flex items-center gap-2 text-xs sm:text-sm">
+              <Users className="h-4 w-4 hidden sm:block flex-shrink-0" />
+              <span className="leading-none">Connections</span>
             </TabsTrigger>
-            <TabsTrigger value="settings" className="gap-2 text-xs sm:text-sm">
-              <Settings className="h-4 w-4 hidden sm:block" />
-              Settings
+            <TabsTrigger value="settings" className="flex items-center gap-2 text-xs sm:text-sm">
+              <Settings className="h-4 w-4 hidden sm:block flex-shrink-0" />
+              <span className="leading-none">Settings</span>
             </TabsTrigger>
           </TabsList>
 
@@ -275,8 +275,8 @@ const Profile = () => {
                       <DollarSign className="h-5 w-5 text-emerald-400" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs text-muted-foreground">Total Earnings</p>
-                      <p className="text-lg font-light text-foreground truncate">
+                      <p className="text-xs text-muted-foreground leading-tight">Total Earnings</p>
+                      <p className="text-lg font-light text-foreground truncate leading-tight">
                         {formatFullCurrency(commissions.totalEarnings)}
                       </p>
                     </div>
@@ -291,8 +291,8 @@ const Profile = () => {
                       <TrendingUp className="h-5 w-5 text-blue-400" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs text-muted-foreground">YTD Earnings</p>
-                      <p className="text-lg font-light text-foreground truncate">
+                      <p className="text-xs text-muted-foreground leading-tight">YTD Earnings</p>
+                      <p className="text-lg font-light text-foreground truncate leading-tight">
                         {formatFullCurrency(commissions.ytdEarnings)}
                       </p>
                     </div>
@@ -307,8 +307,8 @@ const Profile = () => {
                       <Building2 className="h-5 w-5 text-purple-400" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs text-muted-foreground">Total Deals</p>
-                      <p className="text-lg font-light text-foreground">
+                      <p className="text-xs text-muted-foreground leading-tight">Total Deals</p>
+                      <p className="text-lg font-light text-foreground leading-tight">
                         {commissions.totalDeals}
                       </p>
                     </div>
@@ -323,8 +323,8 @@ const Profile = () => {
                       <Calendar className="h-5 w-5 text-amber-400" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-xs text-muted-foreground">YTD Deals</p>
-                      <p className="text-lg font-light text-foreground">
+                      <p className="text-xs text-muted-foreground leading-tight">YTD Deals</p>
+                      <p className="text-lg font-light text-foreground leading-tight">
                         {commissions.ytdDeals}
                       </p>
                     </div>
@@ -345,8 +345,8 @@ const Profile = () => {
                   </div>
                   <ChevronRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-muted-foreground group-hover:translate-x-1 transition-all" />
                 </div>
-                <h3 className="text-sm font-medium text-foreground mb-1">Submit Commission Request</h3>
-                <p className="text-xs text-muted-foreground">Request payment for closed deals</p>
+                <h3 className="text-sm font-medium text-foreground mb-1 leading-tight">Submit Commission Request</h3>
+                <p className="text-xs text-muted-foreground leading-tight">Request payment for closed deals</p>
               </Link>
 
               <Link
@@ -359,8 +359,8 @@ const Profile = () => {
                   </div>
                   <ChevronRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-muted-foreground group-hover:translate-x-1 transition-all" />
                 </div>
-                <h3 className="text-sm font-medium text-foreground mb-1">My Payments</h3>
-                <p className="text-xs text-muted-foreground">Track your payment requests</p>
+                <h3 className="text-sm font-medium text-foreground mb-1 leading-tight">My Payments</h3>
+                <p className="text-xs text-muted-foreground leading-tight">Track your payment requests</p>
               </Link>
 
               <Link
@@ -373,8 +373,8 @@ const Profile = () => {
                   </div>
                   <ChevronRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-muted-foreground group-hover:translate-x-1 transition-all" />
                 </div>
-                <h3 className="text-sm font-medium text-foreground mb-1">Transaction History</h3>
-                <p className="text-xs text-muted-foreground">View your complete deal history</p>
+                <h3 className="text-sm font-medium text-foreground mb-1 leading-tight">Transaction History</h3>
+                <p className="text-xs text-muted-foreground leading-tight">View your complete deal history</p>
               </Link>
             </div>
 
@@ -385,8 +385,8 @@ const Profile = () => {
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <CardTitle className="font-light text-base flex items-center gap-2">
-                      <DollarSign className="h-4 w-4 text-emerald-400" />
-                      Pending Payments
+                      <DollarSign className="h-4 w-4 text-emerald-400 flex-shrink-0" />
+                      <span className="leading-tight">Pending Payments</span>
                     </CardTitle>
                     <Link to="/portal/my-commission-requests">
                       <Button variant="ghost" size="sm" className="text-xs">
@@ -407,8 +407,8 @@ const Profile = () => {
                       {commissionStats.pendingRequests.slice(0, 3).map((req) => (
                         <div key={req.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
                           <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium text-foreground truncate">{req.property_address}</p>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-sm font-medium text-foreground truncate leading-tight">{req.property_address}</p>
+                            <p className="text-xs text-muted-foreground leading-tight">
                               Submitted {format(new Date(req.created_at), "MMM d, yyyy")}
                             </p>
                           </div>
@@ -446,8 +446,8 @@ const Profile = () => {
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <CardTitle className="font-light text-base flex items-center gap-2">
-                      <ClipboardList className="h-4 w-4 text-blue-400" />
-                      My Requests
+                      <ClipboardList className="h-4 w-4 text-blue-400 flex-shrink-0" />
+                      <span className="leading-tight">My Requests</span>
                     </CardTitle>
                     <Link to="/portal/requests">
                       <Button variant="ghost" size="sm" className="text-xs">
@@ -468,9 +468,9 @@ const Profile = () => {
                       {agentRequests.slice(0, 3).map((req) => (
                         <div key={req.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
                           <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium text-foreground">{req.request_type}</p>
-                            <p className="text-xs text-muted-foreground flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
+                            <p className="text-sm font-medium text-foreground leading-tight">{req.request_type}</p>
+                            <p className="text-xs text-muted-foreground flex items-center gap-1 leading-tight">
+                              <Clock className="h-3 w-3 flex-shrink-0" />
                               {format(new Date(req.created_at), "MMM d, yyyy")}
                             </p>
                           </div>
@@ -521,8 +521,8 @@ const Profile = () => {
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <CardTitle className="font-light text-base flex items-center gap-2">
-                      <FileText className="h-4 w-4" />
-                      Recent Transactions
+                      <FileText className="h-4 w-4 flex-shrink-0" />
+                      <span className="leading-tight">Recent Transactions</span>
                     </CardTitle>
                     <Button 
                       variant="ghost" 
@@ -546,10 +546,10 @@ const Profile = () => {
                       {transactions.slice(0, 3).map((tx) => (
                         <div key={tx.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
                           <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium text-foreground truncate">{tx.property_address}</p>
-                            <p className="text-xs text-muted-foreground">{tx.division}</p>
+                            <p className="text-sm font-medium text-foreground truncate leading-tight">{tx.property_address}</p>
+                            <p className="text-xs text-muted-foreground leading-tight">{tx.division}</p>
                           </div>
-                          <span className="text-sm font-medium text-emerald-400 ml-2">
+                          <span className="text-sm font-medium text-emerald-400 ml-2 leading-tight">
                             {tx.commission ? formatFullCurrency(tx.commission) : "—"}
                           </span>
                         </div>
@@ -575,10 +575,10 @@ const Profile = () => {
                       {commissions.byDivision.map((div) => (
                         <div key={div.division} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
                           <div>
-                            <span className="text-sm text-foreground">{div.division}</span>
-                            <p className="text-xs text-muted-foreground">{div.dealCount} deals</p>
+                            <span className="text-sm text-foreground leading-tight">{div.division}</span>
+                            <p className="text-xs text-muted-foreground leading-tight">{div.dealCount} deals</p>
                           </div>
-                          <span className="text-sm font-medium text-emerald-400">
+                          <span className="text-sm font-medium text-emerald-400 leading-tight">
                             {formatFullCurrency(div.earnings)}
                           </span>
                         </div>
@@ -599,18 +599,18 @@ const Profile = () => {
               <CardContent className="py-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
                       <Building2 className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-foreground">My Exclusives</p>
-                      <p className="text-xs text-muted-foreground">View your listings & documents</p>
+                      <p className="text-sm font-medium text-foreground leading-tight">My Exclusives</p>
+                      <p className="text-xs text-muted-foreground leading-tight">View your listings & documents</p>
                     </div>
                   </div>
                   <Link to="/portal/my-exclusives">
                     <Button variant="outline" size="sm" className="gap-2">
-                      View All
-                      <ExternalLink className="h-3 w-3" />
+                      <span className="leading-none">View All</span>
+                      <ExternalLink className="h-3 w-3 flex-shrink-0" />
                     </Button>
                   </Link>
                 </div>
@@ -736,10 +736,10 @@ const Profile = () => {
                     {commissions.byYear.map((year) => (
                       <div key={year.year} className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
                         <div>
-                          <span className="text-lg font-light text-foreground">{year.year}</span>
-                          <p className="text-xs text-muted-foreground">{year.dealCount} deals</p>
+                          <span className="text-lg font-light text-foreground leading-tight">{year.year}</span>
+                          <p className="text-xs text-muted-foreground leading-tight">{year.dealCount} deals</p>
                         </div>
-                        <span className="text-lg font-medium text-emerald-400">
+                        <span className="text-lg font-medium text-emerald-400 leading-tight">
                           {formatFullCurrency(year.earnings)}
                         </span>
                       </div>
@@ -768,25 +768,25 @@ const Profile = () => {
               <CardContent className="space-y-4">
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <Label className="text-muted-foreground">Email</Label>
+                    <Label className="text-muted-foreground leading-tight">Email</Label>
                     <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg">
-                      <Mail className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-foreground">{user?.email}</span>
+                      <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                      <span className="text-foreground leading-tight">{user?.email}</span>
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-muted-foreground">Phone</Label>
+                    <Label className="text-muted-foreground leading-tight">Phone</Label>
                     <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg">
-                      <Phone className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-foreground">{teamMember?.phone || profile?.phone || "Not set"}</span>
+                      <Phone className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                      <span className="text-foreground leading-tight">{teamMember?.phone || profile?.phone || "Not set"}</span>
                     </div>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-muted-foreground">Member Since</Label>
+                  <Label className="text-muted-foreground leading-tight">Member Since</Label>
                   <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-lg">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-foreground">
+                    <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                    <span className="text-foreground leading-tight">
                       {user?.created_at
                         ? new Date(user.created_at).toLocaleDateString('en-US', { 
                             month: 'long', 
@@ -953,20 +953,20 @@ const ConnectedServicesCard = () => {
             return (
               <div key={service.name} className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-full ${service.bgColor} flex items-center justify-center`}>
+                  <div className={`w-10 h-10 rounded-full ${service.bgColor} flex items-center justify-center flex-shrink-0`}>
                     <Icon className={`h-5 w-5 ${service.color}`} />
                   </div>
                   <div>
-                    <span className="text-sm font-medium text-foreground">{service.name}</span>
-                    <p className="text-xs text-muted-foreground">{service.description}</p>
+                    <span className="text-sm font-medium text-foreground leading-tight">{service.name}</span>
+                    <p className="text-xs text-muted-foreground leading-tight">{service.description}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   {service.connected ? (
                     <>
                       <div className="flex items-center gap-1 text-emerald-400">
-                        <Check className="h-4 w-4" />
-                        <span className="text-xs">Connected</span>
+                        <Check className="h-4 w-4 flex-shrink-0" />
+                        <span className="text-xs leading-none">Connected</span>
                       </div>
                       <Button
                         variant="ghost"

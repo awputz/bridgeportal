@@ -213,12 +213,12 @@ export const GmailWidget = () => {
                     aria-label={`Email from ${message.from.name || message.from.email}: ${message.subject}`}
                   >
                     {/* Line 1: Unread dot + Sender + Star + Date */}
-                    <div className="flex items-center justify-between gap-1.5 mb-0.5 min-w-0 overflow-hidden">
+                    <div className="flex items-center justify-between gap-2 mb-0.5 min-w-0 overflow-hidden">
                       <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
                         {/* Unread indicator dot - always reserve space for alignment */}
                         <div 
                           className={cn(
-                            "w-1.5 h-1.5 rounded-full shrink-0",
+                            "w-1.5 h-1.5 rounded-full flex-shrink-0",
                             message.isUnread ? "bg-blue-500" : "bg-transparent"
                           )}
                           aria-hidden="true"
@@ -228,14 +228,14 @@ export const GmailWidget = () => {
                         
                         {/* Sender name */}
                         <span className={cn(
-                          "text-sm truncate min-w-0 flex-1",
+                          "text-sm truncate min-w-0 flex-1 leading-none",
                           message.isUnread ? "font-semibold text-foreground" : "font-medium text-foreground/70"
                         )}>
                           {message.from.name || message.from.email}
                         </span>
                       </div>
                       
-                      <div className="flex items-center gap-2 shrink-0">
+                      <div className="flex items-center gap-2 flex-shrink-0">
                         {/* Star icon - visible on hover or if starred */}
                         <button 
                           onClick={(e) => handleStar(message.id, message.isStarred, e)} 
@@ -248,7 +248,7 @@ export const GmailWidget = () => {
                           title={message.isStarred ? "Unstar" : "Star"}
                         >
                           <Star className={cn(
-                            "h-3.5 w-3.5 transition-colors",
+                            "h-3.5 w-3.5 flex-shrink-0 transition-colors",
                             message.isStarred 
                               ? "fill-amber-400 text-amber-400" 
                               : "text-muted-foreground hover:text-amber-400"
@@ -258,7 +258,7 @@ export const GmailWidget = () => {
                         {/* Date/Time */}
                         <time 
                           dateTime={message.date}
-                          className="text-xs text-muted-foreground whitespace-nowrap"
+                          className="text-xs text-muted-foreground whitespace-nowrap leading-none"
                         >
                           {formatRelativeTime(new Date(message.date))}
                         </time>
@@ -267,14 +267,14 @@ export const GmailWidget = () => {
 
                     {/* Line 2: Subject */}
                     <p className={cn(
-                      "text-sm truncate mb-px min-w-0",
+                      "text-sm truncate mb-px min-w-0 leading-tight",
                       message.isUnread ? "font-semibold text-foreground" : "text-foreground/70"
                     )}>
                       {message.subject || "(No subject)"}
                     </p>
 
                     {/* Line 3: Snippet/Preview */}
-                    <p className="text-xs text-muted-foreground truncate min-w-0 mb-0">
+                    <p className="text-xs text-muted-foreground truncate min-w-0 mb-0 leading-tight">
                       {message.snippet || ""}
                     </p>
                   </a>
