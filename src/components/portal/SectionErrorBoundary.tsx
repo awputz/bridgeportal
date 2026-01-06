@@ -2,6 +2,7 @@ import React, { Component, ReactNode } from "react";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { reportErrorStatic } from "@/hooks/useErrorTelemetry";
 
 interface Props {
   children: ReactNode;
@@ -29,6 +30,12 @@ export class SectionErrorBoundary extends Component<Props, State> {
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error(`Error in ${this.props.sectionName || 'section'}:`, error, errorInfo);
     this.props.onError?.(error, errorInfo);
+    
+    // Report to error telemetry
+    reportErrorStatic(error, {
+      section: this.props.sectionName,
+      componentStack: errorInfo.componentStack || undefined,
+    });
   }
 
   handleRetry = () => {

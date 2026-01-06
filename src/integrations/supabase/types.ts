@@ -871,6 +871,45 @@ export type Database = {
         }
         Relationships: []
       }
+      client_errors: {
+        Row: {
+          component_stack: string | null
+          created_at: string | null
+          error_message: string
+          id: string
+          metadata: Json | null
+          section: string | null
+          stack_trace: string | null
+          url: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          component_stack?: string | null
+          created_at?: string | null
+          error_message: string
+          id?: string
+          metadata?: Json | null
+          section?: string | null
+          stack_trace?: string | null
+          url?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          component_stack?: string | null
+          created_at?: string | null
+          error_message?: string
+          id?: string
+          metadata?: Json | null
+          section?: string | null
+          stack_trace?: string | null
+          url?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       client_intake_links: {
         Row: {
           agent_id: string
@@ -3528,6 +3567,24 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles_public: {
+        Row: {
+          avatar_url: string | null
+          full_name: string | null
+          id: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          full_name?: string | null
+          id?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          full_name?: string | null
+          id?: string | null
+        }
+        Relationships: []
+      }
       public_investment_listings: {
         Row: {
           asking_price: number | null
@@ -3712,6 +3769,18 @@ export type Database = {
       is_admin_or_agent: { Args: { _user_id: string }; Returns: boolean }
       is_admin_user: { Args: { _user_id: string }; Returns: boolean }
       is_valid_phone: { Args: { phone_number: string }; Returns: boolean }
+      log_client_error: {
+        Args: {
+          p_component_stack: string
+          p_error_message: string
+          p_section: string
+          p_stack_trace: string
+          p_url: string
+          p_user_agent: string
+          p_user_id: string
+        }
+        Returns: undefined
+      }
       refresh_agent_dashboard_stats: { Args: never; Returns: undefined }
     }
     Enums: {

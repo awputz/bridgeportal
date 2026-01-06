@@ -6,6 +6,7 @@ import { CommandPalette, useCommandPalette } from "./CommandPalette";
 import { QuickActivityLogger } from "./QuickActivityLogger";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PoweredByBoss } from "@/components/PoweredByBoss";
+import { OfflineBanner } from "@/components/OfflineBanner";
 import { Loader2 } from "lucide-react";
 import { useStoreGoogleTokensOnLogin } from "@/hooks/useGoogleServices";
 import { useAutoSyncContacts } from "@/hooks/useAutoSyncContacts";
@@ -52,6 +53,7 @@ export const PortalLayout = () => {
 
   return (
     <div className="min-h-[100dvh] h-[100dvh] bg-background flex flex-col overflow-hidden">
+      <OfflineBanner />
       <PortalNavigation onSearchClick={() => setCommandOpen(true)} />
       {/* Main content area - increased padding: pt-[72px] mobile (nav + buffer), pt-24 desktop, pb-16 for mobile bottom nav */}
       <main id="main-content" className="flex-1 flex flex-col pt-[72px] md:pt-24 pb-16 md:pb-0 min-h-0">

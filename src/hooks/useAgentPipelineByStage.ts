@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { withRetry } from '@/lib/supabaseRetry';
 
 export interface PipelineStage {
   agent_id: string;
@@ -22,16 +23,21 @@ export const useAgentPipelineByStage = (agentId?: string, division?: string) => 
     queryFn: async () => {
       if (!targetAgentId) throw new Error('No agent ID provided');
 
-      let query = supabase
-        .from('agent_pipeline_by_stage')
-        .select('*')
-        .eq('agent_id', targetAgentId);
+      const { data, error } = await withRetry(
+        async () => {
+          let query = supabase
+            .from('agent_pipeline_by_stage')
+            .select('*')
+            .eq('agent_id', targetAgentId);
 
-      if (division) {
-        query = query.eq('division', division);
-      }
+          if (division) {
+            query = query.eq('division', division);
+          }
 
-      const { data, error } = await query.order('display_order', { ascending: true });
+          return query.order('display_order', { ascending: true });
+        },
+        { maxAttempts: 3 }
+      );
 
       if (error) {
         console.warn('Pipeline by stage view query failed:', error.message);
@@ -42,5 +48,9 @@ export const useAgentPipelineByStage = (agentId?: string, division?: string) => 
     },
     enabled: !!targetAgentId,
     staleTime: 2 * 60 * 1000, // 2 minutes
+    gcTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    retry: 2,
   });
 };
