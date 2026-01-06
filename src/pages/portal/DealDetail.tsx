@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, Save, Trash2, Phone, Mail, Calendar, DollarSign, MapPin, User, Building2, Percent, Home, FileText, Calculator, Landmark, RefreshCw } from "lucide-react";
+import { ArrowLeft, Save, Trash2, Phone, Mail, Calendar, DollarSign, MapPin, User, Building2, Percent, Home, FileText, Calculator, Landmark, RefreshCw, Clock, TrendingUp } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { isValidUUID } from "@/lib/errorHandler";
 import { useCRMDeal, useUpdateDeal, useDeleteDeal, useDealStages, useCRMActivities, useCreateActivity, CRMDeal } from "@/hooks/useCRM";
 import { useDivision } from "@/contexts/DivisionContext";
@@ -226,6 +227,51 @@ const DealDetail = () => {
     return `${value}%`;
   };
 
+  // Calculated metrics for Investment Sales
+  const calculatePricePerUnit = (d: CRMDeal) => {
+    if (d.asking_price && d.unit_count) {
+      return formatCurrency(Math.round(d.asking_price / d.unit_count));
+    }
+    return "—";
+  };
+
+  const calculatePricePerSF = (d: CRMDeal) => {
+    if (d.asking_price && d.gross_sf) {
+      return formatCurrency(Math.round(d.asking_price / d.gross_sf));
+    }
+    return "—";
+  };
+
+  // Calculated metrics for Commercial Leasing
+  const calculateLeaseValue = (d: CRMDeal) => {
+    const rent = d.negotiated_rent_psf || d.asking_rent_psf || 0;
+    const sf = d.gross_sf || 0;
+    const months = d.lease_term_months || 0;
+    if (rent && sf && months) {
+      return formatCurrency(Math.round((rent * sf * months) / 12));
+    }
+    return "—";
+  };
+
+  // Metric display component
+  const MetricItem = ({ 
+    label, 
+    value, 
+    icon: Icon 
+  }: { 
+    label: string; 
+    value: string; 
+    icon: React.ComponentType<{ className?: string }> 
+  }) => (
+    <div className="text-center p-3 rounded-lg bg-white/5">
+      <div className="flex items-center justify-center gap-1.5 mb-1">
+        <Icon className="h-4 w-4 text-muted-foreground" />
+        <span className="text-xs text-muted-foreground">{label}</span>
+      </div>
+      <p className="text-lg font-semibold text-foreground">{value}</p>
+    </div>
+  );
+
   if (isLoading) {
     return (
       <div className="flex-1 overflow-auto">
@@ -442,64 +488,135 @@ const DealDetail = () => {
             </div>
           </>
         ) : (
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            {deal.property_type && (
-              <div>
-                <span className="text-muted-foreground">Type:</span>{" "}
-                <span className="capitalize">{deal.property_type}</span>
+          <div className="space-y-4">
+            {/* Property Overview */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+              {deal.property_type && (
+                <div>
+                  <span className="text-muted-foreground">Type:</span>{" "}
+                  <span className="capitalize">{deal.property_type}</span>
+                </div>
+              )}
+              {deal.building_class && (
+                <div>
+                  <span className="text-muted-foreground">Class:</span> {deal.building_class}
+                </div>
+              )}
+              {deal.property_condition && (
+                <div>
+                  <span className="text-muted-foreground">Condition:</span>{" "}
+                  <span className="capitalize">{deal.property_condition}</span>
+                </div>
+              )}
+              {deal.year_built && (
+                <div>
+                  <span className="text-muted-foreground">Year Built:</span> {deal.year_built}
+                </div>
+              )}
+              {deal.unit_count && (
+                <div>
+                  <span className="text-muted-foreground">Units:</span> {deal.unit_count}
+                </div>
+              )}
+              {deal.gross_sf && (
+                <div>
+                  <span className="text-muted-foreground">SF:</span> {deal.gross_sf.toLocaleString()}
+                </div>
+              )}
+              {deal.zoning && (
+                <div>
+                  <span className="text-muted-foreground">Zoning:</span> {deal.zoning}
+                </div>
+              )}
+            </div>
+
+            {/* Pricing Section */}
+            <div className="pt-3 border-t border-white/10">
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Pricing</p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                {deal.asking_price && (
+                  <div>
+                    <span className="text-muted-foreground">Asking:</span> {formatCurrency(deal.asking_price)}
+                  </div>
+                )}
+                {deal.offer_price && (
+                  <div>
+                    <span className="text-muted-foreground">Offer:</span> {formatCurrency(deal.offer_price)}
+                  </div>
+                )}
+                {deal.asking_price && deal.unit_count && (
+                  <div>
+                    <span className="text-muted-foreground">Price/Unit:</span> {calculatePricePerUnit(deal)}
+                  </div>
+                )}
+                {deal.asking_price && deal.gross_sf && (
+                  <div>
+                    <span className="text-muted-foreground">Price/SF:</span> {calculatePricePerSF(deal)}
+                  </div>
+                )}
               </div>
-            )}
-            {deal.building_class && (
-              <div>
-                <span className="text-muted-foreground">Class:</span> {deal.building_class}
+            </div>
+
+            {/* Financial Section */}
+            <div className="pt-3 border-t border-white/10">
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Financials</p>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                {deal.noi && (
+                  <div>
+                    <span className="text-muted-foreground">NOI:</span> {formatCurrency(deal.noi)}
+                  </div>
+                )}
+                {deal.cap_rate && (
+                  <div>
+                    <span className="text-muted-foreground">Cap Rate:</span> {formatPercent(deal.cap_rate)}
+                  </div>
+                )}
+                {deal.financing_type && (
+                  <div>
+                    <span className="text-muted-foreground">Financing:</span>{" "}
+                    <span className="capitalize">{deal.financing_type.replace("-", " ")}</span>
+                  </div>
+                )}
+                {deal.loan_amount && (
+                  <div>
+                    <span className="text-muted-foreground">Loan:</span> {formatCurrency(deal.loan_amount)}
+                  </div>
+                )}
+                {deal.lender_name && (
+                  <div>
+                    <span className="text-muted-foreground">Lender:</span> {deal.lender_name}
+                  </div>
+                )}
               </div>
-            )}
-            {deal.unit_count && (
-              <div>
-                <span className="text-muted-foreground">Units:</span> {deal.unit_count}
+            </div>
+
+            {/* Timeline & Other */}
+            <div className="pt-3 border-t border-white/10">
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                {deal.due_diligence_deadline && (
+                  <div>
+                    <span className="text-muted-foreground">DD Deadline:</span>{" "}
+                    {format(new Date(deal.due_diligence_deadline), "MMM d, yyyy")}
+                  </div>
+                )}
+                {deal.ideal_close_date && (
+                  <div>
+                    <span className="text-muted-foreground">Ideal Close:</span>{" "}
+                    {format(new Date(deal.ideal_close_date), "MMM d, yyyy")}
+                  </div>
+                )}
+                {deal.referral_source && (
+                  <div>
+                    <span className="text-muted-foreground">Referral:</span> {deal.referral_source}
+                  </div>
+                )}
               </div>
-            )}
-            {deal.gross_sf && (
-              <div>
-                <span className="text-muted-foreground">SF:</span> {deal.gross_sf.toLocaleString()}
-              </div>
-            )}
-            {deal.asking_price && (
-              <div>
-                <span className="text-muted-foreground">Asking:</span> {formatCurrency(deal.asking_price)}
-              </div>
-            )}
-            {deal.offer_price && (
-              <div>
-                <span className="text-muted-foreground">Offer:</span> {formatCurrency(deal.offer_price)}
-              </div>
-            )}
-            {deal.noi && (
-              <div>
-                <span className="text-muted-foreground">NOI:</span> {formatCurrency(deal.noi)}
-              </div>
-            )}
-            {deal.cap_rate && (
-              <div>
-                <span className="text-muted-foreground">Cap Rate:</span> {formatPercent(deal.cap_rate)}
-              </div>
-            )}
-            {deal.financing_type && (
-              <div>
-                <span className="text-muted-foreground">Financing:</span>{" "}
-                <span className="capitalize">{deal.financing_type.replace("-", " ")}</span>
-              </div>
-            )}
-            {deal.loan_amount && (
-              <div>
-                <span className="text-muted-foreground">Loan:</span> {formatCurrency(deal.loan_amount)}
-              </div>
-            )}
-            {deal.is_1031_exchange && (
-              <div className="col-span-2">
-                <Badge variant="outline" className="bg-yellow-500/20 text-yellow-400">1031 Exchange</Badge>
-              </div>
-            )}
+              {deal.is_1031_exchange && (
+                <div className="mt-3">
+                  <Badge variant="outline" className="bg-yellow-500/20 text-yellow-400">1031 Exchange</Badge>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </CardContent>
@@ -644,66 +761,138 @@ const DealDetail = () => {
             </div>
           </>
         ) : (
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            {deal.tenant_legal_name && (
-              <div className="col-span-2">
-                <span className="text-muted-foreground">Tenant:</span> {deal.tenant_legal_name}
+          <div className="space-y-4">
+            {/* Tenant Info */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+              {deal.tenant_legal_name && (
+                <div className="col-span-2">
+                  <span className="text-muted-foreground">Tenant:</span> {deal.tenant_legal_name}
+                </div>
+              )}
+              {deal.tenant_business_type && (
+                <div>
+                  <span className="text-muted-foreground">Business:</span>{" "}
+                  <span className="capitalize">{deal.tenant_business_type}</span>
+                </div>
+              )}
+              {deal.use_clause && (
+                <div className="col-span-2">
+                  <span className="text-muted-foreground">Use Clause:</span> {deal.use_clause}
+                </div>
+              )}
+            </div>
+
+            {/* Space Details */}
+            <div className="pt-3 border-t border-white/10">
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Space</p>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                {deal.space_type && (
+                  <div>
+                    <span className="text-muted-foreground">Type:</span>{" "}
+                    <span className="capitalize">{deal.space_type}</span>
+                  </div>
+                )}
+                {deal.gross_sf && (
+                  <div>
+                    <span className="text-muted-foreground">SF:</span> {deal.gross_sf.toLocaleString()}
+                  </div>
+                )}
+                {deal.move_in_urgency && (
+                  <div>
+                    <span className="text-muted-foreground">Move-In Urgency:</span>{" "}
+                    <span className="capitalize">{deal.move_in_urgency}</span>
+                  </div>
+                )}
               </div>
-            )}
-            {deal.space_type && (
-              <div>
-                <span className="text-muted-foreground">Space Type:</span>{" "}
-                <span className="capitalize">{deal.space_type}</span>
+            </div>
+
+            {/* Rent Terms */}
+            <div className="pt-3 border-t border-white/10">
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Rent Terms</p>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                {deal.asking_rent_psf && (
+                  <div>
+                    <span className="text-muted-foreground">Asking:</span> ${deal.asking_rent_psf}/SF
+                  </div>
+                )}
+                {deal.negotiated_rent_psf && (
+                  <div>
+                    <span className="text-muted-foreground">Negotiated:</span> ${deal.negotiated_rent_psf}/SF
+                  </div>
+                )}
+                {deal.lease_type && (
+                  <div>
+                    <span className="text-muted-foreground">Lease Type:</span>{" "}
+                    <span className="capitalize">{deal.lease_type.replace("-", " ")}</span>
+                  </div>
+                )}
+                {deal.escalation_rate && (
+                  <div>
+                    <span className="text-muted-foreground">Escalation:</span> {deal.escalation_rate}%
+                  </div>
+                )}
+                {(deal.asking_rent_psf || deal.negotiated_rent_psf) && deal.gross_sf && deal.lease_term_months && (
+                  <div>
+                    <span className="text-muted-foreground">Total Value:</span> {calculateLeaseValue(deal)}
+                  </div>
+                )}
               </div>
-            )}
-            {deal.gross_sf && (
-              <div>
-                <span className="text-muted-foreground">SF:</span> {deal.gross_sf.toLocaleString()}
+            </div>
+
+            {/* Lease Timeline */}
+            <div className="pt-3 border-t border-white/10">
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Timeline</p>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                {deal.lease_term_months && (
+                  <div>
+                    <span className="text-muted-foreground">Term:</span> {deal.lease_term_months} months
+                  </div>
+                )}
+                {deal.commencement_date && (
+                  <div>
+                    <span className="text-muted-foreground">Start:</span>{" "}
+                    {format(new Date(deal.commencement_date), "MMM d, yyyy")}
+                  </div>
+                )}
+                {deal.expiration_date && (
+                  <div>
+                    <span className="text-muted-foreground">End:</span>{" "}
+                    {format(new Date(deal.expiration_date), "MMM d, yyyy")}
+                  </div>
+                )}
+                {deal.free_rent_months && (
+                  <div>
+                    <span className="text-muted-foreground">Free Rent:</span> {deal.free_rent_months} mo
+                  </div>
+                )}
               </div>
-            )}
-            {deal.asking_rent_psf && (
-              <div>
-                <span className="text-muted-foreground">Asking:</span> ${deal.asking_rent_psf}/SF
+            </div>
+
+            {/* Concessions & Brokers */}
+            <div className="pt-3 border-t border-white/10">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                {deal.ti_allowance_psf && (
+                  <div>
+                    <span className="text-muted-foreground">TI Allowance:</span> ${deal.ti_allowance_psf}/SF
+                  </div>
+                )}
+                {deal.security_deposit_months && (
+                  <div>
+                    <span className="text-muted-foreground">Security:</span> {deal.security_deposit_months} mo
+                  </div>
+                )}
+                {deal.landlord_broker && (
+                  <div>
+                    <span className="text-muted-foreground">LL Broker:</span> {deal.landlord_broker}
+                  </div>
+                )}
+                {deal.referral_source && (
+                  <div>
+                    <span className="text-muted-foreground">Referral:</span> {deal.referral_source}
+                  </div>
+                )}
               </div>
-            )}
-            {deal.negotiated_rent_psf && (
-              <div>
-                <span className="text-muted-foreground">Negotiated:</span> ${deal.negotiated_rent_psf}/SF
-              </div>
-            )}
-            {deal.lease_type && (
-              <div>
-                <span className="text-muted-foreground">Lease Type:</span>{" "}
-                <span className="capitalize">{deal.lease_type.replace("-", " ")}</span>
-              </div>
-            )}
-            {deal.lease_term_months && (
-              <div>
-                <span className="text-muted-foreground">Term:</span> {deal.lease_term_months} months
-              </div>
-            )}
-            {deal.commencement_date && (
-              <div>
-                <span className="text-muted-foreground">Start:</span>{" "}
-                {format(new Date(deal.commencement_date), "MMM d, yyyy")}
-              </div>
-            )}
-            {deal.expiration_date && (
-              <div>
-                <span className="text-muted-foreground">End:</span>{" "}
-                {format(new Date(deal.expiration_date), "MMM d, yyyy")}
-              </div>
-            )}
-            {deal.ti_allowance_psf && (
-              <div>
-                <span className="text-muted-foreground">TI:</span> ${deal.ti_allowance_psf}/SF
-              </div>
-            )}
-            {deal.free_rent_months && (
-              <div>
-                <span className="text-muted-foreground">Free Rent:</span> {deal.free_rent_months} mo
-              </div>
-            )}
+            </div>
           </div>
         )}
       </CardContent>
@@ -721,23 +910,32 @@ const DealDetail = () => {
       <CardContent className="space-y-4">
         {isEditing ? (
           <>
+            {/* Styled Sale/Rental Toggle */}
             <div className="flex gap-4">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="is_sale"
-                  checked={!formData.is_rental}
-                  onCheckedChange={() => setFormData({ ...formData, is_rental: false })}
-                />
-                <Label htmlFor="is_sale">Sale</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="is_rental"
-                  checked={formData.is_rental || false}
-                  onCheckedChange={() => setFormData({ ...formData, is_rental: true })}
-                />
-                <Label htmlFor="is_rental">Rental</Label>
-              </div>
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, is_rental: false })}
+                className={cn(
+                  "flex-1 py-3 px-4 rounded-lg border-2 transition-all text-center font-medium",
+                  !formData.is_rental 
+                    ? "border-pink-500 bg-pink-500/10 text-pink-400" 
+                    : "border-white/10 bg-white/5 text-muted-foreground hover:border-white/20"
+                )}
+              >
+                Sale
+              </button>
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, is_rental: true })}
+                className={cn(
+                  "flex-1 py-3 px-4 rounded-lg border-2 transition-all text-center font-medium",
+                  formData.is_rental 
+                    ? "border-green-500 bg-green-500/10 text-green-400" 
+                    : "border-white/10 bg-white/5 text-muted-foreground hover:border-white/20"
+                )}
+              >
+                Rental
+              </button>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -852,68 +1050,96 @@ const DealDetail = () => {
             </div>
           </>
         ) : (
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div className="col-span-2">
+          <div className="space-y-4">
+            {/* Transaction Type Badge */}
+            <div>
               <Badge variant="outline" className={deal.is_rental ? "bg-purple-500/20 text-purple-400" : "bg-green-500/20 text-green-400"}>
                 {deal.is_rental ? "Rental" : "Sale"}
               </Badge>
             </div>
-            {deal.property_type && (
-              <div>
-                <span className="text-muted-foreground">Type:</span>{" "}
-                <span className="capitalize">{deal.property_type}</span>
-              </div>
-            )}
-            {deal.gross_sf && (
-              <div>
-                <span className="text-muted-foreground">SF:</span> {deal.gross_sf.toLocaleString()}
-              </div>
-            )}
-            {deal.bedrooms != null && (
-              <div>
-                <span className="text-muted-foreground">Beds:</span> {deal.bedrooms}
-              </div>
-            )}
-            {deal.bathrooms != null && (
-              <div>
-                <span className="text-muted-foreground">Baths:</span> {deal.bathrooms}
-              </div>
-            )}
-            {deal.is_rental ? (
-              <>
-                {deal.monthly_rent && (
+
+            {/* Property Details */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+              {deal.property_type && (
+                <div>
+                  <span className="text-muted-foreground">Type:</span>{" "}
+                  <span className="capitalize">{deal.property_type}</span>
+                </div>
+              )}
+              {deal.gross_sf && (
+                <div>
+                  <span className="text-muted-foreground">SF:</span> {deal.gross_sf.toLocaleString()}
+                </div>
+              )}
+              {deal.bedrooms != null && (
+                <div>
+                  <span className="text-muted-foreground">Beds:</span> {deal.bedrooms}
+                </div>
+              )}
+              {deal.bathrooms != null && (
+                <div>
+                  <span className="text-muted-foreground">Baths:</span> {deal.bathrooms}
+                </div>
+              )}
+            </div>
+
+            {/* Pricing Section */}
+            <div className="pt-3 border-t border-white/10">
+              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Pricing</p>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                {deal.is_rental ? (
+                  <>
+                    {deal.monthly_rent && (
+                      <div>
+                        <span className="text-muted-foreground">Rent:</span> {formatCurrency(deal.monthly_rent)}/mo
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {deal.listing_price && (
+                      <div>
+                        <span className="text-muted-foreground">List Price:</span> {formatCurrency(deal.listing_price)}
+                      </div>
+                    )}
+                  </>
+                )}
+                {deal.co_broke_percent && (
                   <div>
-                    <span className="text-muted-foreground">Rent:</span> {formatCurrency(deal.monthly_rent)}/mo
+                    <span className="text-muted-foreground">Co-Broke:</span> {deal.co_broke_percent}%
                   </div>
                 )}
-                {deal.lease_length_months && (
-                  <div>
-                    <span className="text-muted-foreground">Lease:</span> {deal.lease_length_months} months
-                  </div>
-                )}
-                {deal.move_in_date && (
-                  <div>
-                    <span className="text-muted-foreground">Move-In:</span>{" "}
-                    {format(new Date(deal.move_in_date), "MMM d, yyyy")}
-                  </div>
-                )}
-                <div className="col-span-2 flex gap-2">
+              </div>
+            </div>
+
+            {/* Rental Terms */}
+            {deal.is_rental && (
+              <div className="pt-3 border-t border-white/10">
+                <p className="text-xs text-muted-foreground uppercase tracking-wider mb-2">Lease Terms</p>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  {deal.lease_length_months && (
+                    <div>
+                      <span className="text-muted-foreground">Lease:</span> {deal.lease_length_months} months
+                    </div>
+                  )}
+                  {deal.move_in_date && (
+                    <div>
+                      <span className="text-muted-foreground">Move-In:</span>{" "}
+                      {format(new Date(deal.move_in_date), "MMM d, yyyy")}
+                    </div>
+                  )}
+                </div>
+                <div className="flex gap-2 mt-3">
                   {deal.pets_allowed && <Badge variant="outline" className="text-xs">Pets OK</Badge>}
                   {deal.guarantor_required && <Badge variant="outline" className="text-xs">Guarantor Req</Badge>}
                 </div>
-              </>
-            ) : (
-              <>
-                {deal.listing_price && (
-                  <div>
-                    <span className="text-muted-foreground">Price:</span> {formatCurrency(deal.listing_price)}
-                  </div>
-                )}
-              </>
+              </div>
             )}
-            {deal.co_broke_percent && (
-              <div>
-                <span className="text-muted-foreground">Co-Broke:</span> {deal.co_broke_percent}%
+
+            {/* Referral Source */}
+            {deal.referral_source && (
+              <div className="pt-3 border-t border-white/10 text-sm">
+                <span className="text-muted-foreground">Referral:</span> {deal.referral_source}
               </div>
             )}
           </div>
@@ -940,6 +1166,23 @@ const DealDetail = () => {
               <p className="text-muted-foreground">
                 {dealTypes.find(t => t.value === deal.deal_type)?.label || deal.deal_type}
               </p>
+              {/* Division Badge & Stage */}
+              <div className="flex items-center gap-2 mt-2">
+                <Badge className={cn(
+                  deal.division === "investment-sales" && "bg-blue-500/20 text-blue-400 border-blue-500/30",
+                  deal.division === "commercial-leasing" && "bg-purple-500/20 text-purple-400 border-purple-500/30", 
+                  deal.division === "residential" && "bg-green-500/20 text-green-400 border-green-500/30"
+                )}>
+                  {deal.division === "investment-sales" && "Investment Sales"}
+                  {deal.division === "commercial-leasing" && "Commercial Leasing"}
+                  {deal.division === "residential" && "Residential"}
+                </Badge>
+                {deal.stage && (
+                  <Badge variant="outline" style={{ borderColor: deal.stage.color, color: deal.stage.color }}>
+                    {deal.stage.name}
+                  </Badge>
+                )}
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -977,6 +1220,45 @@ const DealDetail = () => {
             )}
           </div>
         </div>
+
+        {/* Key Metrics Summary */}
+        <Card className="glass-card border-white/10 mb-6 bg-gradient-to-r from-white/5 to-transparent">
+          <CardContent className="py-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {/* Investment Sales Metrics */}
+              {deal.division === "investment-sales" && (
+                <>
+                  <MetricItem label="Asking Price" value={formatCurrency(deal.asking_price)} icon={DollarSign} />
+                  <MetricItem label="Cap Rate" value={formatPercent(deal.cap_rate)} icon={Percent} />
+                  <MetricItem label="Units" value={deal.unit_count?.toLocaleString() || "—"} icon={Building2} />
+                  <MetricItem label="Price/Unit" value={calculatePricePerUnit(deal)} icon={Calculator} />
+                </>
+              )}
+              {/* Commercial Leasing Metrics */}
+              {deal.division === "commercial-leasing" && (
+                <>
+                  <MetricItem label="Space" value={deal.gross_sf ? `${deal.gross_sf.toLocaleString()} SF` : "—"} icon={Building2} />
+                  <MetricItem label="Asking Rent" value={deal.asking_rent_psf ? `$${deal.asking_rent_psf}/SF` : "—"} icon={DollarSign} />
+                  <MetricItem label="Term" value={deal.lease_term_months ? `${deal.lease_term_months} mo` : "—"} icon={Clock} />
+                  <MetricItem label="Total Value" value={calculateLeaseValue(deal)} icon={TrendingUp} />
+                </>
+              )}
+              {/* Residential Metrics */}
+              {deal.division === "residential" && (
+                <>
+                  <MetricItem label="Type" value={deal.is_rental ? "Rental" : "Sale"} icon={Home} />
+                  <MetricItem label="Layout" value={`${deal.bedrooms || 0} BD / ${deal.bathrooms || 0} BA`} icon={Home} />
+                  <MetricItem 
+                    label={deal.is_rental ? "Rent" : "Price"} 
+                    value={deal.is_rental ? (deal.monthly_rent ? `${formatCurrency(deal.monthly_rent)}/mo` : "—") : formatCurrency(deal.listing_price)} 
+                    icon={DollarSign} 
+                  />
+                  <MetricItem label="Size" value={deal.gross_sf ? `${deal.gross_sf.toLocaleString()} SF` : "—"} icon={Building2} />
+                </>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Main Content */}
