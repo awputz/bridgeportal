@@ -23,7 +23,7 @@ export const PortalLayout = () => {
   useStoreGoogleTokensOnLogin();
 
   // Auto-sync contacts from Google when connected (runs globally on login)
-  const { isSyncing, googleContactsCount } = useAutoSyncContacts();
+  useAutoSyncContacts();
   
   // Monitor online status and show toast notifications
   useOnlineStatus();

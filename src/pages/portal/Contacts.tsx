@@ -36,7 +36,9 @@ import { useCRMContacts, useCreateContact, useDeleteContact, CRMContact } from "
 import { useCRMRealtime } from "@/hooks/useCRMRealtime";
 import { useDivision, Division } from "@/contexts/DivisionContext";
 import { useAutoSyncContacts } from "@/hooks/useAutoSyncContacts";
-import { useContactsConnection, useConnectContacts, useDisconnectContacts } from "@/hooks/useGoogleContacts";
+import { useContactsConnection, useConnectContacts, useDisconnectContacts, useSyncAllContacts } from "@/hooks/useGoogleContacts";
+import { formatDistanceToNow } from "date-fns";
+import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -132,7 +134,8 @@ const GoogleSyncStatus = ({ isMobile = false }: { isMobile?: boolean }) => {
   const { data: connectionData, isLoading: isCheckingConnection, refetch } = useContactsConnection();
   const connectContacts = useConnectContacts();
   const disconnectContacts = useDisconnectContacts();
-  const { isLoading: isSyncing, googleContactsCount } = useAutoSyncContacts();
+  const syncAllContacts = useSyncAllContacts();
+  const { isLoading: isSyncing, syncCount, lastSync } = useAutoSyncContacts();
 
   if (isCheckingConnection) {
     return (
@@ -196,7 +199,7 @@ const GoogleSyncStatus = ({ isMobile = false }: { isMobile?: boolean }) => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="h-8 w-8 relative">
-            {isSyncing ? (
+            {isSyncing || syncAllContacts.isPending ? (
               <Loader2 className="h-4 w-4 animate-spin text-green-400" />
             ) : (
               <Cloud className="h-4 w-4 text-green-400" />
@@ -205,13 +208,21 @@ const GoogleSyncStatus = ({ isMobile = false }: { isMobile?: boolean }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          {syncCount > 0 && (
+            <div className="px-2 py-1.5 text-xs text-muted-foreground">
+              {syncCount} synced{lastSync && ` • ${formatDistanceToNow(new Date(lastSync), { addSuffix: true })}`}
+            </div>
+          )}
+          <DropdownMenuItem 
+            onClick={() => syncAllContacts.mutate()} 
+            disabled={syncAllContacts.isPending}
+          >
+            <RefreshCw className={cn("h-4 w-4 mr-2", syncAllContacts.isPending && "animate-spin")} />
+            Sync All Contacts
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => window.open('https://contacts.google.com', '_blank')}>
             <ExternalLink className="h-4 w-4 mr-2" />
             Open Google Contacts
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => refetch()}>
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh Sync
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem 
@@ -226,14 +237,29 @@ const GoogleSyncStatus = ({ isMobile = false }: { isMobile?: boolean }) => {
     );
   }
 
-  // Desktop: Full connected UI
+  // Desktop: Full connected UI with sync progress
+  const isSyncingNow = isSyncing || syncAllContacts.isPending;
+  const progress = syncAllContacts.progress;
+
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
           <div className="flex items-center gap-2">
+            {/* Sync progress bar during sync */}
+            {isSyncingNow && progress && (
+              <div className="flex items-center gap-2 px-2 py-1 bg-muted/50 rounded-md">
+                <Loader2 className="h-3 w-3 animate-spin text-primary" />
+                <span className="text-xs text-muted-foreground">
+                  {progress.current}/{progress.total}
+                </span>
+                <Progress value={(progress.current / progress.total) * 100} className="w-16 h-1.5" />
+              </div>
+            )}
+
+            {/* Status badge */}
             <Badge variant="outline" className="gap-1.5 bg-green-500/10 text-green-400 border-green-500/30">
-              {isSyncing ? (
+              {isSyncingNow && !progress ? (
                 <>
                   <Loader2 className="h-3 w-3 animate-spin" />
                   <span>Syncing...</span>
@@ -241,10 +267,24 @@ const GoogleSyncStatus = ({ isMobile = false }: { isMobile?: boolean }) => {
               ) : (
                 <>
                   <Cloud className="h-3 w-3" />
-                  <span>Connected</span>
+                  <span>{syncCount > 0 ? `${syncCount} synced` : 'Connected'}</span>
                 </>
               )}
             </Badge>
+
+            {/* Sync Now button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => syncAllContacts.mutate()}
+              disabled={isSyncingNow}
+              className="h-7 gap-1.5 text-xs"
+            >
+              <RefreshCw className={cn("h-3 w-3", isSyncingNow && "animate-spin")} />
+              <span className="hidden md:inline">Sync</span>
+            </Button>
+
+            {/* Dropdown menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-7 w-7">
@@ -252,13 +292,14 @@ const GoogleSyncStatus = ({ isMobile = false }: { isMobile?: boolean }) => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                {lastSync && (
+                  <div className="px-2 py-1.5 text-xs text-muted-foreground">
+                    Last sync: {formatDistanceToNow(new Date(lastSync), { addSuffix: true })}
+                  </div>
+                )}
                 <DropdownMenuItem onClick={() => window.open('https://contacts.google.com', '_blank')}>
                   <ExternalLink className="h-4 w-4 mr-2" />
                   Open Google Contacts
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => refetch()}>
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  Refresh Sync
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem 
@@ -273,9 +314,9 @@ const GoogleSyncStatus = ({ isMobile = false }: { isMobile?: boolean }) => {
           </div>
         </TooltipTrigger>
         <TooltipContent>
-          <p>Contacts auto-sync with Google</p>
-          {googleContactsCount > 0 && (
-            <p className="text-muted-foreground">{googleContactsCount} Google contacts</p>
+          <p>Google Contacts sync enabled</p>
+          {syncCount > 0 && (
+            <p className="text-muted-foreground">{syncCount} contacts from Google</p>
           )}
         </TooltipContent>
       </Tooltip>

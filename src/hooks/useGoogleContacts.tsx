@@ -2,6 +2,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { invokeWithAuthHandling } from "@/lib/auth";
+import { useDivision } from "@/contexts/DivisionContext";
+import { useState, useCallback } from "react";
 
 export interface GoogleContact {
   resourceName: string;
@@ -15,26 +17,57 @@ export interface GoogleContact {
   address?: string;
 }
 
+interface ConnectionData {
+  connected: boolean;
+  lastSync: string | null;
+  syncCount: number;
+  needsReconnect: boolean;
+}
+
 export function useContactsConnection() {
   return useQuery({
     queryKey: ["contacts-connection"],
-    queryFn: async () => {
-      // Check directly from database instead of making edge function call
+    queryFn: async (): Promise<ConnectionData> => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return { connected: false };
+      if (!user) return { connected: false, lastSync: null, syncCount: 0, needsReconnect: false };
 
-      const { data, error } = await supabase
-        .from("user_google_tokens")
-        .select("contacts_enabled, contacts_access_token, access_token")
-        .eq("user_id", user.id)
-        .maybeSingle();
+      // Call edge function to validate token (triggers refresh if needed)
+      const { data, error } = await invokeWithAuthHandling<{ connected?: boolean; needsReconnect?: boolean }>(
+        "google-contacts-list",
+        { body: { action: "check-connection" } }
+      );
 
-      if (error || !data) {
-        return { connected: false };
+      if (error || !data?.connected) {
+        return { 
+          connected: false, 
+          lastSync: null, 
+          syncCount: 0,
+          needsReconnect: data?.needsReconnect || false
+        };
       }
 
-      const hasToken = !!(data.contacts_access_token || data.access_token);
-      return { connected: !!data.contacts_enabled && hasToken };
+      // Get last sync info from contact_sync_log
+      const { data: syncLog } = await supabase
+        .from("contact_sync_log")
+        .select("last_synced_at")
+        .eq("agent_id", user.id)
+        .order("last_synced_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      // Get sync count
+      const { count } = await supabase
+        .from("crm_contacts")
+        .select("*", { count: "exact", head: true })
+        .eq("agent_id", user.id)
+        .eq("source", "google-contacts");
+
+      return {
+        connected: true,
+        lastSync: syncLog?.last_synced_at || null,
+        syncCount: count || 0,
+        needsReconnect: false,
+      };
     },
     retry: false,
     staleTime: 30000,
@@ -148,4 +181,76 @@ export function useImportGoogleContacts() {
       toast.error("Failed to import contacts: " + error.message);
     },
   });
+}
+
+// New hook for full sync with progress tracking
+export function useSyncAllContacts() {
+  const queryClient = useQueryClient();
+  const { division } = useDivision();
+  const [progress, setProgress] = useState<{ current: number; total: number } | null>(null);
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      // Step 1: Fetch all contacts from Google with full pagination
+      const { data: listData, error: listError } = await invokeWithAuthHandling<{
+        contacts?: GoogleContact[];
+      }>("google-contacts-list", {
+        body: { action: "list-all" },
+      });
+
+      if (listError) throw listError;
+
+      const contacts = listData?.contacts || [];
+      const total = contacts.length;
+
+      if (total === 0) {
+        return { imported: 0, skipped: 0, total: 0 };
+      }
+
+      // Step 2: Import in batches of 50
+      const batchSize = 50;
+      let imported = 0;
+      let skipped = 0;
+
+      for (let i = 0; i < contacts.length; i += batchSize) {
+        const batch = contacts.slice(i, i + batchSize);
+        setProgress({ current: Math.min(i + batchSize, total), total });
+
+        const { data, error } = await invokeWithAuthHandling<{
+          imported?: number;
+          skipped?: number;
+        }>("google-contacts-import", {
+          body: { contacts: batch, division },
+        });
+
+        if (!error && data) {
+          imported += data.imported || 0;
+          skipped += data.skipped || 0;
+        }
+      }
+
+      setProgress(null);
+      return { imported, skipped, total };
+    },
+    onSuccess: (data) => {
+      if (data.imported > 0) {
+        toast.success(`Synced ${data.imported} contacts${data.skipped > 0 ? ` (${data.skipped} duplicates skipped)` : ''}`);
+      } else if (data.total === 0) {
+        toast.info("No contacts found in Google Contacts");
+      } else {
+        toast.info("All contacts already synced");
+      }
+      queryClient.invalidateQueries({ queryKey: ["crm-contacts"] });
+      queryClient.invalidateQueries({ queryKey: ["contacts-connection"] });
+    },
+    onError: (error: Error) => {
+      setProgress(null);
+      toast.error("Sync failed: " + error.message);
+    },
+  });
+
+  return {
+    ...mutation,
+    progress,
+  };
 }

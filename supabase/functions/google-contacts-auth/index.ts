@@ -130,6 +130,9 @@ async function handleOAuthCallback(code: string, userId: string) {
 
     const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
     
+    // Calculate token expiry timestamp
+    const tokenExpiry = new Date(Date.now() + (tokenData.expires_in || 3600) * 1000).toISOString();
+
     const { error: upsertError } = await supabase
       .from('user_google_tokens')
       .upsert({
@@ -137,6 +140,7 @@ async function handleOAuthCallback(code: string, userId: string) {
         contacts_enabled: true,
         contacts_access_token: tokenData.access_token,
         contacts_refresh_token: tokenData.refresh_token || null,
+        token_expiry: tokenExpiry,
         updated_at: new Date().toISOString(),
       }, {
         onConflict: 'user_id'

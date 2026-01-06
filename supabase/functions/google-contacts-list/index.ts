@@ -249,6 +249,61 @@ serve(async (req) => {
       return response;
     }
 
+    // List all contacts with full pagination
+    if (action === 'list-all') {
+      const allContacts: any[] = [];
+      let nextToken: string | undefined = undefined;
+      const maxPages = 50; // Safety limit (5000 contacts max)
+      let pageCount = 0;
+
+      do {
+        const params = new URLSearchParams({
+          personFields: 'names,emailAddresses,phoneNumbers,organizations,addresses,photos',
+          pageSize: '100',
+          sortOrder: 'LAST_MODIFIED_DESCENDING',
+        });
+        if (nextToken) params.set('pageToken', nextToken);
+
+        const response = await fetchWithRetry(
+          `https://people.googleapis.com/v1/people/me/connections?${params}`
+        );
+        const data = await response.json();
+
+        if (data.error) {
+          console.error('[google-contacts-list] Pagination error:', data.error);
+          break;
+        }
+
+        const contacts = (data.connections || []).map((person: any) => ({
+          resourceName: person.resourceName,
+          etag: person.etag,
+          name: person.names?.[0]?.displayName || '',
+          email: person.emailAddresses?.[0]?.value || '',
+          phone: person.phoneNumbers?.[0]?.value || '',
+          company: person.organizations?.[0]?.name || '',
+          title: person.organizations?.[0]?.title || '',
+          photoUrl: person.photos?.[0]?.url || '',
+          address: person.addresses?.[0]?.formattedValue || '',
+        }));
+
+        allContacts.push(...contacts);
+        nextToken = data.nextPageToken;
+        pageCount++;
+
+        console.log(`[google-contacts-list] Page ${pageCount}, total: ${allContacts.length}`);
+      } while (nextToken && pageCount < maxPages);
+
+      return new Response(
+        JSON.stringify({
+          contacts: allContacts,
+          totalItems: allContacts.length,
+          complete: !nextToken,
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Regular list action (first page only)
     if (action === 'list') {
       const params = new URLSearchParams({
         personFields: 'names,emailAddresses,phoneNumbers,organizations,addresses,photos',
