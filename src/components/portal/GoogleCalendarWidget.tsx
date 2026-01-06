@@ -100,7 +100,7 @@ export const GoogleCalendarWidget = () => {
 
   return (
     <Card className="overflow-hidden border-border/50 bg-card h-full">
-      <CardHeader className="px-3 py-2.5 pb-2">
+      <CardHeader className="p-3 pb-2">
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-emerald-400" />

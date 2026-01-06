@@ -111,7 +111,7 @@ export const DashboardTasks = () => {
   ];
 
   return (
-    <div className="glass-card p-4 min-h-[280px]">
+    <div className="glass-card p-4 sm:p-5">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-light text-foreground flex items-center gap-2">
           <ListTodo className="h-5 w-5 text-muted-foreground" />
