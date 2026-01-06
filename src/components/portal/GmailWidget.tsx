@@ -129,7 +129,7 @@ export const GmailWidget = () => {
       </CardHeader>
 
       <CardContent className="p-0">
-        <ScrollArea className="h-[280px]">
+        <ScrollArea className="h-[340px]">
           <div className="p-2">
             {/* Not connected state */}
             {!isConnected && !isLoading && (
