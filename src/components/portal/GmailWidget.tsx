@@ -20,17 +20,33 @@ const formatRelativeTime = (date: Date) => {
   const now = new Date();
   const diffMins = differenceInMinutes(now, date);
   
-  if (diffMins < 1) return "Now";
-  if (diffMins < 60) return `${diffMins}m`;
+  if (diffMins < 1) return "Just now";
+  if (diffMins < 60) return `${diffMins}m ago`;
   
   const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24) return `${diffHours}h`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  
+  // Check if yesterday
+  const yesterday = new Date(now);
+  yesterday.setDate(yesterday.getDate() - 1);
+  if (date.toDateString() === yesterday.toDateString()) {
+    return "Yesterday";
+  }
   
   const diffDays = Math.floor(diffHours / 24);
-  if (diffDays === 1) return "Yesterday";
-  if (diffDays < 7) return `${diffDays}d`;
   
-  return format(date, "MMM d");
+  // This week - show day name
+  if (diffDays < 7) {
+    return format(date, "EEE"); // Mon, Tue, etc.
+  }
+  
+  // Same year - show "Jan 5"
+  if (date.getFullYear() === now.getFullYear()) {
+    return format(date, "MMM d");
+  }
+  
+  // Previous year - show "Jan 5, 2024"
+  return format(date, "MMM d, yyyy");
 };
 
 export const GmailWidget = () => {
@@ -129,8 +145,8 @@ export const GmailWidget = () => {
       </CardHeader>
 
       <CardContent className="p-0">
-        <ScrollArea className="h-[340px] pr-2">
-          <div className="pl-3 pr-2 py-2">
+        <ScrollArea className="h-[340px]">
+          <div className="px-3 py-2 pr-4">
             {/* Not connected state */}
             {!isConnected && !isLoading && (
               <div className="flex flex-col items-center justify-center py-6 bg-red-500/5 rounded-lg border border-red-500/10">
@@ -186,7 +202,7 @@ export const GmailWidget = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className={cn(
-                      "block px-2.5 py-2 rounded-md border border-border/30",
+                      "block px-2.5 py-2 rounded-lg border border-border/30",
                       "hover:bg-muted/50 hover:border-border/50 transition-colors group cursor-pointer",
                       message.isUnread ? "bg-primary/5 border-primary/20" : "bg-muted/5"
                     )}
@@ -238,7 +254,7 @@ export const GmailWidget = () => {
                         {/* Date/Time */}
                         <time 
                           dateTime={message.date}
-                          className="text-[10px] text-muted-foreground whitespace-nowrap"
+                          className="text-xs text-muted-foreground whitespace-nowrap"
                         >
                           {formatRelativeTime(new Date(message.date))}
                         </time>
