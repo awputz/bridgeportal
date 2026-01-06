@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useContactsConnection, useGoogleContactsList, GoogleContact } from "./useGoogleContacts";
+import { useContactsConnection, GoogleContact } from "./useGoogleContacts";
 import { useDivision } from "@/contexts/DivisionContext";
 import { invokeWithAuthHandling } from "@/lib/auth";
 
@@ -17,21 +17,31 @@ export function useAutoSyncContacts() {
   const failureCountRef = useRef(0);
   
   const { data: connectionData, isLoading: isCheckingConnection } = useContactsConnection();
-  const { data: googleContactsData, isLoading: isLoadingContacts } = useGoogleContactsList(
-    connectionData?.connected && !hasSyncedRef.current
-  );
 
-  const performSync = useCallback(async (contacts: GoogleContact[]) => {
+  const performSync = useCallback(async () => {
     // Prevent race conditions - strict guard
-    if (isSyncingRef.current || hasSyncedRef.current || contacts.length === 0) {
+    if (isSyncingRef.current || hasSyncedRef.current) {
       return;
     }
     
     isSyncingRef.current = true;
     
     try {
-      // Batch contacts to reduce payload size
-      const batch = contacts.slice(0, BATCH_SIZE);
+      // Fetch first batch of contacts
+      const { data: listData, error: listError } = await invokeWithAuthHandling<{
+        contacts?: GoogleContact[];
+      }>("google-contacts-list", {
+        body: { action: "list" },
+      });
+
+      if (listError || !listData?.contacts?.length) {
+        isSyncingRef.current = false;
+        hasSyncedRef.current = true; // Mark as synced even on empty
+        return;
+      }
+
+      // Import the batch
+      const batch = listData.contacts.slice(0, BATCH_SIZE);
       
       const { data, error } = await invokeWithAuthHandling("google-contacts-import", {
         body: { contacts: batch, division },
@@ -63,7 +73,7 @@ export function useAutoSyncContacts() {
     }
   }, [division, queryClient]);
 
-  // Debounced auto-sync when Google Contacts are loaded
+  // Debounced auto-sync when connected
   useEffect(() => {
     // Clear any pending sync
     if (syncTimeoutRef.current) {
@@ -72,16 +82,13 @@ export function useAutoSyncContacts() {
     
     if (
       !isCheckingConnection && 
-      !isLoadingContacts && 
       connectionData?.connected && 
-      googleContactsData?.contacts && 
-      googleContactsData.contacts.length > 0 &&
       !hasSyncedRef.current &&
       !isSyncingRef.current
     ) {
       // Debounce to prevent multiple rapid calls
       syncTimeoutRef.current = setTimeout(() => {
-        performSync(googleContactsData.contacts);
+        performSync();
       }, SYNC_DEBOUNCE_MS);
     }
     
@@ -90,7 +97,7 @@ export function useAutoSyncContacts() {
         clearTimeout(syncTimeoutRef.current);
       }
     };
-  }, [isCheckingConnection, isLoadingContacts, connectionData, googleContactsData, performSync]);
+  }, [isCheckingConnection, connectionData, performSync]);
 
   // Reset sync flag when division changes
   useEffect(() => {
@@ -100,8 +107,9 @@ export function useAutoSyncContacts() {
 
   return {
     isConnected: connectionData?.connected ?? false,
-    isLoading: isCheckingConnection || isLoadingContacts,
+    isLoading: isCheckingConnection,
     isSyncing: isSyncingRef.current,
-    googleContactsCount: googleContactsData?.contacts?.length ?? 0,
+    syncCount: connectionData?.syncCount ?? 0,
+    lastSync: connectionData?.lastSync ?? null,
   };
 }
