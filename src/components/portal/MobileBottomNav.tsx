@@ -3,7 +3,8 @@ import {
   Home, 
   Sparkles, 
   Briefcase, 
-  Users, 
+  Users,
+  MessageCircle,
   MoreHorizontal, 
   ListTodo, 
   FileText, 
@@ -37,8 +38,8 @@ import {
 const navItems = [
   { path: "/portal", icon: Home, label: "Home", external: false },
   { path: "/portal/crm", icon: Briefcase, label: "CRM", external: false },
+  { path: "/portal/chat", icon: MessageCircle, label: "Chat", external: false },
   { path: "/portal/tasks", icon: ListTodo, label: "Tasks", external: false },
-  { path: "https://mail.google.com", icon: Mail, label: "Mail", external: true },
 ];
 
 const moreItemsGrouped = [

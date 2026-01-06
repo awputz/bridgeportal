@@ -64,6 +64,7 @@ const MyCommissions = lazy(() => import("./pages/portal/MyCommissions"));
 const Tools = lazy(() => import("./pages/portal/Tools"));
 const Onboarding = lazy(() => import("./pages/portal/Onboarding"));
 const GoogleServicesSettings = lazy(() => import("./pages/portal/GoogleServicesSettings"));
+const Chat = lazy(() => import("./pages/portal/Chat"));
 
 // Company Pages - lazy loaded
 const AboutCompany = lazy(() => import("./pages/portal/company/About"));
@@ -327,6 +328,11 @@ const App = () => {
                     <Route path="tasks" element={
                       <Suspense fallback={<PageLoader />}>
                         <Tasks />
+                      </Suspense>
+                    } />
+                    <Route path="chat" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <Chat />
                       </Suspense>
                     } />
                     <Route path="mail" element={
