@@ -91,8 +91,8 @@ export function EmailSignatureEditor({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-2 gap-4">
+        <div className="form-section py-4">
+          <div className="form-grid">
             <div className="space-y-2">
               <Label htmlFor="name" className="flex items-center gap-2">
                 <User className="h-4 w-4 text-muted-foreground" />
@@ -132,7 +132,7 @@ export function EmailSignatureEditor({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="form-grid">
             <div className="space-y-2">
               <Label htmlFor="phone" className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-muted-foreground" />

@@ -143,7 +143,7 @@ export const GoogleCalendarWidget = () => {
 
       <CardContent className="p-0">
         <ScrollArea className="h-[340px]">
-          <div className="p-2">
+          <div className="p-3">
             {/* Not connected state */}
             {!isConnected && !isLoading && (
               <div className="flex flex-col items-center justify-center py-6 bg-emerald-500/5 rounded-lg border border-emerald-500/10">

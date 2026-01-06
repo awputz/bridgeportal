@@ -136,7 +136,7 @@ export function ContactActivityTimeline({ contactId }: ContactActivityTimelinePr
 
   if (isLoading) {
     return (
-      <div className="space-y-3">
+      <div className="list-gap-md">
         <div className="flex items-center justify-between">
           <Skeleton className="h-5 w-24" />
           <Skeleton className="h-6 w-16" />
@@ -150,7 +150,7 @@ export function ContactActivityTimeline({ contactId }: ContactActivityTimelinePr
 
   return (
     <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
-      <div className="space-y-4">
+      <div className="list-gap-md">
         {/* Header */}
         <div className="flex items-center justify-between">
           <CollapsibleTrigger asChild>
@@ -172,10 +172,10 @@ export function ContactActivityTimeline({ contactId }: ContactActivityTimelinePr
           </div>
         </div>
 
-        <CollapsibleContent className="space-y-4">
+        <CollapsibleContent className="list-gap-md">
           {/* Quick add activity */}
           {showAddActivity ? (
-            <div className="glass-card p-4 space-y-3">
+            <div className="glass-card card-content-sm list-gap-md">
               <div className="flex gap-2">
                 <Select value={newActivityType} onValueChange={setNewActivityType}>
                   <SelectTrigger className="w-32">

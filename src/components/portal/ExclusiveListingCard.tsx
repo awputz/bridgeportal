@@ -107,7 +107,7 @@ export const ExclusiveListingCard = ({ listing, documents, isLoadingDocuments }:
         </div>
 
         {/* Content */}
-        <div className="p-4 space-y-3">
+        <div className="card-content-sm list-gap-md">
           {/* Address & Location */}
           <div>
             <h3 className="font-medium text-foreground line-clamp-1">
@@ -177,7 +177,7 @@ export const ExclusiveListingCard = ({ listing, documents, isLoadingDocuments }:
                   {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                 </Button>
               </CollapsibleTrigger>
-              <CollapsibleContent className="pt-2 space-y-3">
+              <CollapsibleContent className="pt-2 list-gap-md">
                 {isLoadingDocuments ? (
                   <div className="text-sm text-muted-foreground text-center py-4">
                     Loading documents...
