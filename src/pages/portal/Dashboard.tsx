@@ -15,8 +15,7 @@ import { Button } from "@/components/ui/button";
 import { CRMCommandCenter } from "@/components/portal/CRMCommandCenter";
 import { WelcomeBanner } from "@/components/portal/WelcomeBanner";
 import { AnnouncementsWidget } from "@/components/portal/AnnouncementsWidget";
-import { GmailWidget } from "@/components/portal/GmailWidget";
-import { GoogleCalendarWidget } from "@/components/portal/GoogleCalendarWidget";
+import { WorkspaceCarousel } from "@/components/portal/WorkspaceCarousel";
 import { AlertsWidget } from "@/components/portal/AlertsWidget";
 import { SectionErrorBoundary } from "@/components/portal/SectionErrorBoundary";
 
@@ -165,16 +164,9 @@ const Dashboard = () => {
           </SectionErrorBoundary>
         </section>
 
-        {/* 4. Gmail & Calendar Side-by-Side */}
+        {/* 4. Gmail & Calendar - Side-by-side on desktop, swipeable on mobile */}
         <section className="mb-6 animate-fade-in-up" style={{ animationDelay: '0.16s' }}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <SectionErrorBoundary sectionName="Gmail">
-              <GmailWidget />
-            </SectionErrorBoundary>
-            <SectionErrorBoundary sectionName="Google Calendar">
-              <GoogleCalendarWidget />
-            </SectionErrorBoundary>
-          </div>
+          <WorkspaceCarousel />
         </section>
 
         {/* 5. Announcements & Alerts */}

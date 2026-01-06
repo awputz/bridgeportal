@@ -142,100 +142,107 @@ export const GoogleCalendarWidget = () => {
       </CardHeader>
 
       <CardContent className="p-3 pt-0">
-        <ScrollArea className="max-h-[280px]">
-          {/* Not connected state */}
-          {!isConnected && !isLoading && (
-            <div className="flex flex-col items-center justify-center py-6 bg-emerald-500/5 rounded-lg border border-emerald-500/10">
-              <div className="h-9 w-9 rounded-full bg-emerald-500/10 flex items-center justify-center mb-2">
-                <Calendar className="h-4 w-4 text-emerald-400" />
+        <div className="relative">
+          <ScrollArea className="max-h-[280px]">
+            {/* Not connected state */}
+            {!isConnected && !isLoading && (
+              <div className="flex flex-col items-center justify-center py-6 bg-emerald-500/5 rounded-lg border border-emerald-500/10">
+                <div className="h-9 w-9 rounded-full bg-emerald-500/10 flex items-center justify-center mb-2">
+                  <Calendar className="h-4 w-4 text-emerald-400" />
+                </div>
+                <p className="text-xs text-muted-foreground text-center mb-2">
+                  Connect Calendar to see events
+                </p>
+                <Button 
+                  size="sm" 
+                  onClick={() => connectGoogle()} 
+                  disabled={isConnecting}
+                  className="bg-emerald-500 hover:bg-emerald-600 text-white h-8 text-xs px-3"
+                >
+                  {isConnecting ? "Connecting..." : "Connect Calendar"}
+                </Button>
               </div>
-              <p className="text-xs text-muted-foreground text-center mb-2">
-                Connect Calendar to see events
-              </p>
-              <Button 
-                size="sm" 
-                onClick={() => connectGoogle()} 
-                disabled={isConnecting}
-                className="bg-emerald-500 hover:bg-emerald-600 text-white h-8 text-xs px-3"
-              >
-                {isConnecting ? "Connecting..." : "Connect Calendar"}
-              </Button>
-            </div>
-          )}
+            )}
 
-          {/* Loading state */}
-          {isLoading && (
-            <div className="space-y-1.5">
-              {[1, 2, 3].map(i => (
-                <Skeleton key={i} className="h-14 w-full rounded-lg" />
-              ))}
-            </div>
-          )}
+            {/* Loading state */}
+            {isLoading && (
+              <div className="space-y-1.5">
+                {[1, 2, 3].map(i => (
+                  <Skeleton key={i} className="h-14 w-full rounded-lg" />
+                ))}
+              </div>
+            )}
 
-          {/* Empty state */}
-          {isConnected && !isLoading && todaysEvents.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-6 bg-muted/20 rounded-lg">
-              <Clock className="h-7 w-7 text-muted-foreground mb-1.5" />
-              <p className="text-xs text-muted-foreground">No events today</p>
-              <p className="text-[10px] text-muted-foreground/70 mt-0.5">
-                {format(today, "EEEE, MMMM d")}
-              </p>
-            </div>
-          )}
+            {/* Empty state */}
+            {isConnected && !isLoading && todaysEvents.length === 0 && (
+              <div className="flex flex-col items-center justify-center py-6 bg-muted/20 rounded-lg">
+                <Clock className="h-7 w-7 text-muted-foreground mb-1.5" />
+                <p className="text-xs text-muted-foreground">No events today</p>
+                <p className="text-[10px] text-muted-foreground/70 mt-0.5">
+                  {format(today, "EEEE, MMMM d")}
+                </p>
+              </div>
+            )}
 
-          {/* Events list */}
-          {isConnected && !isLoading && todaysEvents.length > 0 && (
-            <div className="space-y-1">
-              {todaysEvents.map((event) => {
-                const eventData = event as any;
-                const eventUrl = eventData.htmlLink || `https://calendar.google.com/calendar/u/0/r/eventedit/${event.id}`;
-                const startTime = new Date(event.start_time);
-                const endTime = event.end_time ? new Date(event.end_time) : null;
-                const isPast = startTime < new Date() && (!endTime || endTime < new Date());
-                
-                return (
-                  <a
-                    key={event.id}
-                    href={eventUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cn(
-                      "flex items-start gap-2 p-2 rounded-lg transition-all group",
-                      "hover:bg-muted/50 border border-transparent hover:border-border/50",
-                      isPast && "opacity-60"
-                    )}
-                  >
-                    {/* Color indicator */}
-                    <div className={cn("w-1 h-full min-h-[36px] rounded-full flex-shrink-0", getEventColor(event))} />
-                    
-                    {/* Content */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-1">
-                        <p className="text-xs font-medium text-foreground truncate">
-                          {event.title}
-                        </p>
-                        <span className="text-[10px] text-muted-foreground flex-shrink-0 whitespace-nowrap">
-                          {format(startTime, "h:mm a")}
-                          {endTime && ` - ${format(endTime, "h:mm a")}`}
-                        </span>
-                      </div>
+            {/* Events list */}
+            {isConnected && !isLoading && todaysEvents.length > 0 && (
+              <div className="space-y-1">
+                {todaysEvents.map((event) => {
+                  const eventData = event as any;
+                  const eventUrl = eventData.htmlLink || `https://calendar.google.com/calendar/u/0/r/eventedit/${event.id}`;
+                  const startTime = new Date(event.start_time);
+                  const endTime = event.end_time ? new Date(event.end_time) : null;
+                  const isPast = startTime < new Date() && (!endTime || endTime < new Date());
+                  
+                  return (
+                    <a
+                      key={event.id}
+                      href={eventUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cn(
+                        "flex items-start gap-2 p-2 rounded-lg transition-all group",
+                        "hover:bg-muted/50 border border-transparent hover:border-border/50",
+                        isPast && "opacity-60"
+                      )}
+                    >
+                      {/* Color indicator */}
+                      <div className={cn("w-1 h-full min-h-[36px] rounded-full flex-shrink-0", getEventColor(event))} />
                       
-                      {/* Location / Meeting type */}
-                      {event.location && (
-                        <div className="flex items-center gap-1 mt-0.5">
-                          {getMeetingIcon(event)}
-                          <span className="text-[10px] text-muted-foreground truncate">
-                            {event.location}
+                      {/* Content */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-1">
+                          <p className="text-xs font-medium text-foreground truncate">
+                            {event.title}
+                          </p>
+                          <span className="text-[10px] text-muted-foreground flex-shrink-0 whitespace-nowrap">
+                            {format(startTime, "h:mm a")}
+                            {endTime && ` - ${format(endTime, "h:mm a")}`}
                           </span>
                         </div>
-                      )}
-                    </div>
-                  </a>
-                );
-              })}
-            </div>
+                        
+                        {/* Location / Meeting type */}
+                        {event.location && (
+                          <div className="flex items-center gap-1 mt-0.5">
+                            {getMeetingIcon(event)}
+                            <span className="text-[10px] text-muted-foreground truncate">
+                              {event.location}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </a>
+                  );
+                })}
+              </div>
+            )}
+          </ScrollArea>
+          
+          {/* Scroll fade indicator */}
+          {isConnected && todaysEvents.length > 4 && (
+            <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-card to-transparent pointer-events-none" />
           )}
-        </ScrollArea>
+        </div>
       </CardContent>
     </Card>
   );
