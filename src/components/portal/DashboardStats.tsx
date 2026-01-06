@@ -46,7 +46,7 @@ export const DashboardStats = () => {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="stat-grid">
         {[...Array(4)].map((_, i) => (
           <Skeleton key={i} className="h-24 rounded-xl" />
         ))}
@@ -55,7 +55,7 @@ export const DashboardStats = () => {
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="stat-grid">
       {statCards.map((stat) => {
         const Icon = stat.icon;
         return (

@@ -86,16 +86,16 @@ const Dashboard = () => {
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-8">
+      <div className="max-w-6xl mx-auto page-content">
         {/* 1. Welcome Banner */}
-        <div className="mb-6 animate-fade-in">
+        <div className="section-gap animate-fade-in">
           <WelcomeBanner />
         </div>
 
         {/* 2. Quick Actions Hub - Primary Actions */}
-        <section className="mb-4 animate-fade-in-up" style={{ animationDelay: '0.05s' }}>
+        <section className="section-gap-sm animate-fade-in-up" style={{ animationDelay: '0.05s' }}>
           <h2 className="text-sm font-medium text-muted-foreground mb-3 uppercase tracking-wider">Quick Actions</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 grid-gap-sm">
             <Link to="/portal/calculators" className="glass-card px-4 h-16 flex items-center gap-3 hover:border-amber-500/50 group">
               <div className="w-9 h-9 rounded-full bg-amber-500/20 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110">
                 <Calculator className="h-4 w-4 text-amber-400" />
@@ -136,8 +136,8 @@ const Dashboard = () => {
         </section>
 
         {/* Secondary Actions Row */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.08s' }}>
-          <div className="grid grid-cols-4 gap-3">
+        <section className="section-gap animate-fade-in-up" style={{ animationDelay: '0.08s' }}>
+          <div className="grid grid-cols-4 grid-gap-sm">
             <Link to="/portal/crm?action=add-contact" className="glass-card p-3 flex flex-col items-center justify-center gap-1 hover:border-green-500/50 group text-center">
               <UserPlus className="h-5 w-5 text-green-400 transition-transform group-hover:scale-110" />
               <span className="text-xs text-muted-foreground">Add Contact</span>
@@ -158,20 +158,20 @@ const Dashboard = () => {
         </section>
 
         {/* 3. Gmail & Calendar - Side-by-side on desktop, swipeable on mobile */}
-        <section className="mb-6 animate-fade-in-up" style={{ animationDelay: '0.10s' }}>
+        <section className="section-gap animate-fade-in-up" style={{ animationDelay: '0.10s' }}>
           <WorkspaceCarousel />
         </section>
 
         {/* 4. CRM Command Center - Unified Section */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.12s' }}>
+        <section className="section-gap animate-fade-in-up" style={{ animationDelay: '0.12s' }}>
           <SectionErrorBoundary sectionName="CRM Command Center">
             <CRMCommandCenter />
           </SectionErrorBoundary>
         </section>
 
         {/* 5. Announcements & Alerts */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <section className="section-gap animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 grid-gap-sm">
             <SectionErrorBoundary sectionName="Announcements">
               <AnnouncementsWidget />
             </SectionErrorBoundary>
@@ -182,8 +182,8 @@ const Dashboard = () => {
         </section>
 
         {/* 6. AI Quick Prompt */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.18s' }}>
-          <form onSubmit={handleAiSubmit} className="glass-card p-4">
+        <section className="section-gap animate-fade-in-up" style={{ animationDelay: '0.18s' }}>
+          <form onSubmit={handleAiSubmit} className="glass-card card-content-sm">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center flex-shrink-0">
                 <Sparkles className="h-5 w-5 text-foreground" />
@@ -202,14 +202,14 @@ const Dashboard = () => {
         </section>
 
         {/* 7. Team Tools Essentials - Static section */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.20s' }}>
-          <div className="flex items-center justify-between mb-4">
+        <section className="section-gap animate-fade-in-up" style={{ animationDelay: '0.20s' }}>
+          <div className="flex items-center justify-between section-gap-sm">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
               <Wrench className="h-5 w-5 text-muted-foreground" />
               Team Tools Essentials
             </h2>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 grid-gap-sm">
             <Link to="/portal/generators" className="glass-card p-4 flex flex-col items-center justify-center text-center hover:border-purple-500/50 transition-all duration-300 min-h-[100px] group">
               <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center mb-2 transition-transform duration-300 group-hover:scale-110">
                 <Wand2 className="h-5 w-5 text-purple-400" />
@@ -249,19 +249,19 @@ const Dashboard = () => {
         </section>
 
         {/* 8. Team Tools from Database */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.22s' }}>
-          <div className="flex items-center justify-between mb-4">
+        <section className="section-gap animate-fade-in-up" style={{ animationDelay: '0.22s' }}>
+          <div className="flex items-center justify-between section-gap-sm">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
               <Wrench className="h-5 w-5 text-muted-foreground" />
               Productivity Tools
             </h2>
           </div>
           {isLoading ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 grid-gap">
               {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-[120px] rounded-xl" />)}
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 grid-gap">
               {groupedTools.productivity?.map(tool => {
                 const Icon = iconMap[tool.icon] || Mail;
                 return <QuickActionCard key={tool.id} name={tool.name} description={tool.description || undefined} icon={Icon} url={tool.url} />;
@@ -271,19 +271,19 @@ const Dashboard = () => {
         </section>
 
         {/* 9. Research Tools */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.24s' }}>
-          <div className="flex items-center justify-between mb-4">
+        <section className="section-gap animate-fade-in-up" style={{ animationDelay: '0.24s' }}>
+          <div className="flex items-center justify-between section-gap-sm">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
               <Database className="h-5 w-5 text-muted-foreground" />
               Research Tools
             </h2>
           </div>
           {isLoading ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 grid-gap">
               {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-[120px] rounded-xl" />)}
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 grid-gap">
               {groupedTools.research?.map(tool => {
                 const Icon = iconMap[tool.icon] || Database;
                 return <QuickActionCard key={tool.id} name={tool.name} description={tool.description || undefined} icon={Icon} url={tool.url} />;
@@ -293,14 +293,14 @@ const Dashboard = () => {
         </section>
 
         {/* 10. View Exclusive Listings */}
-        <section className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.26s' }}>
-          <div className="flex items-center justify-between mb-4">
+        <section className="section-gap animate-fade-in-up" style={{ animationDelay: '0.26s' }}>
+          <div className="flex items-center justify-between section-gap-sm">
             <h2 className="text-lg md:text-xl font-light text-foreground flex items-center gap-2">
               <Building2 className="h-5 w-5 text-muted-foreground" />
               View Exclusive Listings
             </h2>
           </div>
-          <div className="grid grid-cols-3 gap-3 auto-rows-fr">
+          <div className="grid grid-cols-3 grid-gap-sm auto-rows-fr">
             {exclusiveListings.map(listing => {
               const Icon = listing.icon;
               const content = (

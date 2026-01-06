@@ -18,7 +18,7 @@ export const CRMCommandCenter = () => {
   const CurrentIcon = divisionIcons[division];
 
   return (
-    <div className="glass-card p-5 md:p-6 space-y-5">
+    <div className="glass-card p-4 sm:p-5 md:p-6 space-y-6">
       {/* Section Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -75,7 +75,7 @@ export const CRMCommandCenter = () => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="grid md:grid-cols-2 gap-4"
+        className="grid md:grid-cols-2 grid-gap"
       >
         <DealPipelinePreview />
         <DashboardTasks />
