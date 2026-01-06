@@ -332,7 +332,7 @@ export const CRMTable = ({
                   )}
                 >
                   {onSelectionChange && (
-                    <TableCell className="py-2">
+                    <TableCell className="py-3">
                       <Checkbox
                         checked={isSelected}
                         onCheckedChange={(checked) => onSelectionChange(deal.id, !!checked)}
@@ -341,7 +341,7 @@ export const CRMTable = ({
                     </TableCell>
                   )}
                   {/* Name / Property */}
-                  <TableCell className="py-2 font-light">
+                  <TableCell className="py-3 font-light">
                     <Link 
                       to={`/portal/crm/deals/${deal.id}`}
                       className="flex items-center gap-2 hover:text-foreground text-foreground/90 transition-colors"
@@ -360,7 +360,7 @@ export const CRMTable = ({
                   </TableCell>
                   {/* Due Date */}
                   {config.showDueDate && (
-                    <TableCell className="py-2">
+                    <TableCell className="py-3">
                       <div className={cn(
                         "flex items-center gap-1 text-sm",
                         overdue && "text-red-400",
@@ -373,14 +373,14 @@ export const CRMTable = ({
                     </TableCell>
                   )}
                   {/* Value/Budget */}
-                  <TableCell className="py-2">
+                  <TableCell className="py-3">
                     <div className="text-foreground/90 font-medium text-sm">
                       {formatDealValueByDivision(deal, division)}
                     </div>
                   </TableCell>
                   {/* SQFT */}
                   {config.showSF && (
-                    <TableCell className="py-2">
+                    <TableCell className="py-3">
                       {deal.gross_sf ? (
                         <span className="text-sm text-foreground/90">{deal.gross_sf.toLocaleString()}</span>
                       ) : (
@@ -390,7 +390,7 @@ export const CRMTable = ({
                   )}
                   {/* Cap Rate */}
                   {config.showCapRate && (
-                    <TableCell className="py-2">
+                    <TableCell className="py-3">
                       {deal.cap_rate ? (
                         <span className="text-sm text-foreground/90">{deal.cap_rate.toFixed(1)}%</span>
                       ) : (
@@ -400,7 +400,7 @@ export const CRMTable = ({
                   )}
                   {/* Units */}
                   {config.showUnits && (
-                    <TableCell className="py-2">
+                    <TableCell className="py-3">
                       {deal.unit_count ? (
                         <span className="text-sm text-foreground/90">{deal.unit_count}</span>
                       ) : (
@@ -410,7 +410,7 @@ export const CRMTable = ({
                   )}
                   {/* Bed/Bath (Residential) */}
                   {config.showBedBath && (
-                    <TableCell className="py-2">
+                    <TableCell className="py-3">
                       {deal.bedrooms || deal.bathrooms ? (
                         <span className="text-sm text-foreground/90">
                           {deal.bedrooms || 0}B, {deal.bathrooms || 0}B
@@ -422,7 +422,7 @@ export const CRMTable = ({
                   )}
                   {/* Deal Type (Residential) */}
                   {config.showDealType && (
-                    <TableCell className="py-2">
+                    <TableCell className="py-3">
                       <Badge 
                         variant="outline" 
                         className={cn(
@@ -438,7 +438,7 @@ export const CRMTable = ({
                   )}
                   {/* Space Type (Commercial) */}
                   {config.showSpaceType && (
-                    <TableCell className="py-2">
+                    <TableCell className="py-3">
                       {deal.space_type ? (
                         <Badge variant="outline" className="text-xs capitalize bg-purple-500/10 text-purple-400 border-purple-500/30">
                           {deal.space_type}
@@ -450,7 +450,7 @@ export const CRMTable = ({
                   )}
                   {/* Condition (Investment Sales) */}
                   {config.showCondition && (
-                    <TableCell className="py-2">
+                    <TableCell className="py-3">
                       {condition ? (
                         <Badge variant="outline" className={cn("text-xs", condition.className)}>
                           {condition.label}
@@ -462,7 +462,7 @@ export const CRMTable = ({
                   )}
                   {/* Property Type (Investment Sales) */}
                   {config.showPropertyType && (
-                    <TableCell className="py-2">
+                    <TableCell className="py-3">
                       {propertyType ? (
                         <Badge variant="outline" className={cn("text-xs", propertyType.className)}>
                           {propertyType.label}
@@ -473,21 +473,21 @@ export const CRMTable = ({
                     </TableCell>
                   )}
                   {/* Market */}
-                  <TableCell className="py-2">
+                  <TableCell className="py-3">
                     <span className="text-sm text-muted-foreground truncate block max-w-[100px]">
                       {deal?.neighborhood || deal?.borough || "—"}
                     </span>
                   </TableCell>
                   {/* Referral */}
                   {config.showReferral && (
-                    <TableCell className="py-2">
+                    <TableCell className="py-3">
                       <span className="text-sm text-muted-foreground truncate block max-w-[80px]">
                         {deal?.referral_source || "—"}
                       </span>
                     </TableCell>
                   )}
                   {/* Status */}
-                  <TableCell className="py-2">
+                  <TableCell className="py-3">
                     <Select
                       value={deal.stage_id || ""}
                       onValueChange={(value) => onStageChange(deal.id, value)}
@@ -520,7 +520,7 @@ export const CRMTable = ({
                       </SelectContent>
                     </Select>
                   </TableCell>
-                  <TableCell className="py-2">
+                  <TableCell className="py-3">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="h-8 w-8">

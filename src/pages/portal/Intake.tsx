@@ -149,16 +149,16 @@ export default function Intake() {
 
   return (
     <div className="flex-1 overflow-auto">
-      <div className="py-8 space-y-8 max-w-7xl mx-auto px-4 md:px-6 pb-24 md:pb-8">
+      <div className="max-w-7xl mx-auto page-content">
       {/* Header */}
-      <div className="space-y-2">
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 section-gap">
         <div className="flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
             <FileText className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Client Intake</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-1 md:mb-2">Client Intake</h1>
+            <p className="text-sm md:text-base text-muted-foreground font-light">
               Collect and manage client criteria submissions
             </p>
           </div>
