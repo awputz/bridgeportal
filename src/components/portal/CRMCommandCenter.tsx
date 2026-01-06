@@ -1,12 +1,22 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, LayoutGrid } from "lucide-react";
+import { ArrowRight, LayoutGrid, TrendingUp, Building2, Home } from "lucide-react";
 import { motion } from "framer-motion";
+import { useDivision, Division, divisionConfigs } from "@/contexts/DivisionContext";
 import { InlineDivisionSwitcher } from "./InlineDivisionSwitcher";
 import { DashboardStats } from "./DashboardStats";
 import { DealPipelinePreview } from "./DealPipelinePreview";
 import { DashboardTasks } from "./DashboardTasks";
 
+const divisionIcons: Record<Division, typeof TrendingUp> = {
+  "investment-sales": TrendingUp,
+  "commercial-leasing": Building2,
+  "residential": Home,
+};
+
 export const CRMCommandCenter = () => {
+  const { division, divisionConfig, isAdmin } = useDivision();
+  const CurrentIcon = divisionIcons[division];
+
   return (
     <div className="glass-card p-5 md:p-6 space-y-5">
       {/* Section Header */}
@@ -17,7 +27,9 @@ export const CRMCommandCenter = () => {
           </div>
           <div>
             <h2 className="text-lg font-medium text-foreground">CRM Command Center</h2>
-            <p className="text-xs text-muted-foreground">Manage your pipeline across divisions</p>
+            <p className="text-xs text-muted-foreground">
+              {isAdmin ? "Manage your pipeline across divisions" : `Manage your ${divisionConfig.name} pipeline`}
+            </p>
           </div>
         </div>
         <Link
@@ -29,9 +41,24 @@ export const CRMCommandCenter = () => {
         </Link>
       </div>
 
-      {/* Division Switcher - Compact */}
+      {/* Division Switcher - Admin Only gets interactive switcher */}
       <div className="pt-1">
-        <InlineDivisionSwitcher compact />
+        {isAdmin ? (
+          <InlineDivisionSwitcher compact />
+        ) : (
+          // Agent View: Static division label
+          <div 
+            className="flex items-center gap-2 px-3 py-2 rounded-lg border bg-primary/5 w-fit"
+            style={{ borderColor: `${divisionConfig.color}40` }}
+          >
+            <CurrentIcon className="h-4 w-4" style={{ color: divisionConfig.color }} />
+            <span className="text-sm font-medium text-foreground">{divisionConfig.name}</span>
+            <div 
+              className="h-1.5 w-1.5 rounded-full" 
+              style={{ backgroundColor: divisionConfig.color }} 
+            />
+          </div>
+        )}
       </div>
 
       {/* Stats Row */}

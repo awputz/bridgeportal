@@ -3,13 +3,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
 type AppRole = "admin" | "agent" | "investor" | "user";
+type Division = "investment-sales" | "commercial-leasing" | "residential";
 
 interface UserWithRole {
   id: string;
   email: string;
   full_name: string | null;
   created_at: string | null;
-  roles: Array<{ role: AppRole }>;
+  roles: Array<{ role: AppRole; assigned_division: Division | null }>;
 }
 
 export function useUserRolesAdmin() {
@@ -26,10 +27,10 @@ export function useUserRolesAdmin() {
 
       if (profilesError) throw profilesError;
 
-      // Get all user roles
+      // Get all user roles including assigned_division
       const { data: roles, error: rolesError } = await supabase
         .from("user_roles")
-        .select("user_id, role");
+        .select("user_id, role, assigned_division");
 
       if (rolesError) throw rolesError;
 
@@ -38,7 +39,10 @@ export function useUserRolesAdmin() {
         ...profile,
         roles: (roles || [])
           .filter((r) => r.user_id === profile.id)
-          .map((r) => ({ role: r.role as AppRole })),
+          .map((r) => ({ 
+            role: r.role as AppRole, 
+            assigned_division: r.assigned_division as Division | null 
+          })),
       }));
 
       return usersWithRoles;
@@ -81,10 +85,30 @@ export function useUserRolesAdmin() {
     },
   });
 
+  const updateDivision = useMutation({
+    mutationFn: async ({ userId, division }: { userId: string; division: Division | null }) => {
+      const { error } = await supabase
+        .from("user_roles")
+        .update({ assigned_division: division })
+        .eq("user_id", userId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-users-roles"] });
+      queryClient.invalidateQueries({ queryKey: ["userAssignedDivision"] });
+      toast({ title: "Division updated successfully" });
+    },
+    onError: (error: Error) => {
+      toast({ title: "Failed to update division", description: error.message, variant: "destructive" });
+    },
+  });
+
   return {
     users,
     isLoading,
     addRole,
     removeRole,
+    updateDivision,
   };
 }
