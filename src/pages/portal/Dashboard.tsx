@@ -17,6 +17,7 @@ import { WelcomeBanner } from "@/components/portal/WelcomeBanner";
 import { AnnouncementsWidget } from "@/components/portal/AnnouncementsWidget";
 import { WorkspaceCarousel } from "@/components/portal/WorkspaceCarousel";
 import { HotDealsWidget } from "@/components/portal/HotDealsWidget";
+import { DealRoomWidget } from "@/components/portal/DealRoomWidget";
 import { SectionErrorBoundary } from "@/components/portal/SectionErrorBoundary";
 
 // Icon mapping for dynamic icons from database
@@ -169,14 +170,17 @@ const Dashboard = () => {
           </SectionErrorBoundary>
         </section>
 
-        {/* 5. Announcements & Hot Deals */}
+        {/* 5. Announcements, Hot Deals & Deal Room */}
         <section className="section-gap animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
-          <div className="grid grid-cols-1 md:grid-cols-2 grid-gap-sm">
+          <div className="grid grid-cols-1 md:grid-cols-3 grid-gap-sm">
             <SectionErrorBoundary sectionName="Announcements">
               <AnnouncementsWidget />
             </SectionErrorBoundary>
             <SectionErrorBoundary sectionName="Hot Deals">
               <HotDealsWidget />
+            </SectionErrorBoundary>
+            <SectionErrorBoundary sectionName="Deal Room">
+              <DealRoomWidget />
             </SectionErrorBoundary>
           </div>
         </section>
