@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { useTaskStats } from "@/hooks/useTasks";
 import { useMyCommissions } from "@/hooks/useMyCommissions";
 import { usePinnedAnnouncements } from "@/hooks/useAnnouncements";
+import { useAgentDashboardStats } from "@/hooks/useAgentDashboardStats";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -33,11 +34,16 @@ interface AlertItem {
 
 export const AlertsWidget = () => {
   const queryClient = useQueryClient();
+  
+  // Primary: Use materialized view for fast stats
+  const { data: matViewStats, isLoading: isLoadingMatView } = useAgentDashboardStats();
+  
+  // Fallback to individual queries
   const { data: taskStats, isLoading: isLoadingTasks, isFetching: isFetchingTasks } = useTaskStats();
   const { stats: commissionStats, isLoading: isLoadingCommissions } = useMyCommissions();
   const { data: announcements, isLoading: isLoadingAnnouncements } = usePinnedAnnouncements(3);
 
-  const isLoading = isLoadingTasks || isLoadingCommissions || isLoadingAnnouncements;
+  const isLoading = isLoadingMatView && isLoadingTasks || isLoadingCommissions || isLoadingAnnouncements;
   const isRefreshing = isFetchingTasks && !isLoadingTasks;
 
   // Subscribe to realtime updates for tasks, commissions, and announcements
@@ -73,19 +79,34 @@ export const AlertsWidget = () => {
     };
   }, [queryClient]);
 
-  // Build alerts list
+  // Build alerts list - prefer matViewStats for task counts if available
   const alerts: AlertItem[] = [];
 
-  // Overdue tasks
-  if (taskStats?.overdue && taskStats.overdue > 0) {
+  // Overdue tasks - use materialized view if available, fallback to taskStats
+  const overdueCount = matViewStats?.overdue_tasks ?? taskStats?.overdue ?? 0;
+  if (overdueCount > 0) {
     alerts.push({
       id: "overdue-tasks",
       type: "overdue",
-      title: `${taskStats.overdue} overdue task${taskStats.overdue > 1 ? "s" : ""}`,
+      title: `${overdueCount} overdue task${overdueCount > 1 ? "s" : ""}`,
       subtitle: "Needs immediate attention",
       link: "/portal/tasks?filter=overdue",
       icon: AlertTriangle,
       color: "text-red-400 bg-red-500/20",
+    });
+  }
+
+  // Tasks due today/upcoming - use materialized view if available
+  const upcomingCount = matViewStats?.upcoming_tasks ?? taskStats?.today ?? 0;
+  if (upcomingCount > 0) {
+    alerts.push({
+      id: "today-tasks",
+      type: "today",
+      title: `${upcomingCount} task${upcomingCount > 1 ? "s" : ""} due soon`,
+      subtitle: "Due today or upcoming",
+      link: "/portal/tasks?filter=today",
+      icon: Clock,
+      color: "text-amber-400 bg-amber-500/20",
     });
   }
 
@@ -102,8 +123,8 @@ export const AlertsWidget = () => {
     });
   }
 
-  // Pending commission requests
-  const pendingCommissions = commissionStats?.pendingRequests?.length || 0;
+  // Pending commission requests - use materialized view if available
+  const pendingCommissions = matViewStats?.pending_commissions ?? commissionStats?.pendingRequests?.length ?? 0;
   if (pendingCommissions > 0) {
     alerts.push({
       id: "pending-commissions",

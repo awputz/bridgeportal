@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, LayoutGrid, TrendingUp, Building2, Home } from "lucide-react";
+import { ArrowRight, LayoutGrid, TrendingUp, Building2, Home, BarChart3 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useDivision, Division, divisionConfigs } from "@/contexts/DivisionContext";
 import { InlineDivisionSwitcher } from "./InlineDivisionSwitcher";
 import { DashboardStats } from "./DashboardStats";
 import { DealPipelinePreview } from "./DealPipelinePreview";
 import { DashboardTasks } from "./DashboardTasks";
+import { MonthlyPerformanceChart } from "@/components/charts/MonthlyPerformanceChart";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const divisionIcons: Record<Division, typeof TrendingUp> = {
   "investment-sales": TrendingUp,
@@ -79,6 +81,25 @@ export const CRMCommandCenter = () => {
       >
         <DealPipelinePreview />
         <DashboardTasks />
+      </motion.div>
+
+      {/* Performance Chart */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+      >
+        <Card className="glass-card">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2 text-sm font-medium">
+              <BarChart3 className="h-4 w-4 text-primary" />
+              Monthly Performance
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <MonthlyPerformanceChart division={division} height={180} />
+          </CardContent>
+        </Card>
       </motion.div>
     </div>
   );
