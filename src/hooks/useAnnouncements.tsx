@@ -28,6 +28,11 @@ export const useAnnouncements = () => {
       if (error) throw error;
       return data as Announcement[];
     },
+    retry: (failureCount, error) => {
+      const err = error as { code?: string };
+      if (err?.code === '42501' || err?.code === 'PGRST116') return false;
+      return failureCount < 2;
+    },
   });
 };
 

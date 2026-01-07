@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { QueryErrorState } from "@/components/ui/QueryErrorState";
 import { 
   Flame, Clock, Calendar, AlertTriangle, DollarSign, 
   ArrowRight, CheckCircle2, TrendingUp, Building2
@@ -45,7 +46,7 @@ const WAITING_STAGES = ["LOI Sent / Negotiation", "Negotiations", "Lease Out", "
 export const HotDealsWidget = () => {
   const [viewMode, setViewMode] = useState<"urgent" | "all">("urgent");
 
-  const { data: deals, isLoading } = useQuery({
+  const { data: deals, isLoading, error, refetch } = useQuery({
     queryKey: ["hot-deals-widget"],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -240,7 +241,14 @@ export const HotDealsWidget = () => {
         )}
 
         <ScrollArea className="h-[180px]">
-          {isLoading ? (
+          {error ? (
+            <QueryErrorState
+              error={error}
+              onRetry={() => refetch()}
+              title="Failed to load deals"
+              compact
+            />
+          ) : isLoading ? (
             <div className="space-y-3">
               {Array.from({ length: 3 }).map((_, i) => (
                 <Skeleton key={i} className="h-16 w-full rounded" />

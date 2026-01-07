@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Building2, Plus, TrendingUp, List, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState } from "@/components/ui/QueryErrorState";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDealRoomDeals, useDealRoomStats, useMyDealRoomDeals, AdvancedFilters } from "@/hooks/useDealRoom";
 import { useDealRoomRealtime } from "@/hooks/useDealRoomRealtime";
@@ -28,7 +29,7 @@ export default function DealRoom() {
   // Enable real-time updates
   useDealRoomRealtime();
 
-  const { data: deals, isLoading } = useDealRoomDeals(filters);
+  const { data: deals, isLoading, error, refetch } = useDealRoomDeals(filters);
   const { data: myDeals } = useMyDealRoomDeals();
   const { data: stats } = useDealRoomStats();
   
@@ -164,7 +165,13 @@ export default function DealRoom() {
           </div>
 
           {/* Content */}
-          {isLoading ? (
+          {error ? (
+            <QueryErrorState
+              error={error}
+              onRetry={() => refetch()}
+              title="Failed to load deals"
+            />
+          ) : isLoading ? (
             <div className="space-y-4">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="rounded-xl border bg-card p-6">

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Bell, ArrowRight, Pin, Megaphone, Building2, DollarSign, Users } from "lucide-react";
 import { useAnnouncements, Announcement } from "@/hooks/useAnnouncements";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState } from "@/components/ui/QueryErrorState";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -13,7 +14,7 @@ const typeConfig: Record<string, { icon: typeof Bell; color: string }> = {
 };
 
 export const AnnouncementsWidget = () => {
-  const { data: announcements, isLoading } = useAnnouncements();
+  const { data: announcements, isLoading, error, refetch } = useAnnouncements();
 
   // Get the 3 most recent, prioritizing pinned ones
   const topAnnouncements = announcements
@@ -23,6 +24,19 @@ export const AnnouncementsWidget = () => {
       return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     })
     .slice(0, 3);
+
+  if (error) {
+    return (
+      <div className="glass-card p-4">
+        <QueryErrorState
+          error={error}
+          onRetry={() => refetch()}
+          title="Failed to load announcements"
+          compact
+        />
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (

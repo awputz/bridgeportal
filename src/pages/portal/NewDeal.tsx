@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, AlertCircle } from "lucide-react";
 import { useCreateDeal, useDealStages, useCRMContacts } from "@/hooks/useCRM";
 import { useDivision } from "@/contexts/DivisionContext";
 import { Button } from "@/components/ui/button";
@@ -98,8 +98,8 @@ const NewDeal = () => {
 
   const preselectedContactId = searchParams.get("contact");
 
-  const { data: stages, isLoading: stagesLoading } = useDealStages(division);
-  const { data: contacts } = useCRMContacts(division);
+  const { data: stages, isLoading: stagesLoading, error: stagesError } = useDealStages(division);
+  const { data: contacts, error: contactsError } = useCRMContacts(division);
   const createDeal = useCreateDeal();
 
   const [formData, setFormData] = useState({
@@ -374,6 +374,23 @@ const NewDeal = () => {
                   </Select>
                 </div>
               </div>
+
+              {/* Dependency Warnings */}
+              {(stagesError || contactsError) && (
+                <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                  <div className="flex items-center gap-2 text-amber-400 text-sm">
+                    <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                    <span>
+                      {stagesError && contactsError
+                        ? "Couldn't load stages and contacts."
+                        : stagesError
+                        ? "Couldn't load stages."
+                        : "Couldn't load contacts."}
+                      {" "}You can still create the deal.
+                    </span>
+                  </div>
+                </div>
+              )}
 
               {/* Notes */}
               <div className="space-y-2">
