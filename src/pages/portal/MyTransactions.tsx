@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState } from "@/components/ui/QueryErrorState";
 import {
   Table,
   TableBody,
@@ -58,7 +59,7 @@ const formatDealValueByDivision = (tx: any): string => {
 };
 
 const MyTransactions = () => {
-  const { data: transactions, isLoading } = useAgentTransactions();
+  const { data: transactions, isLoading, error, refetch } = useAgentTransactions();
   const [searchTerm, setSearchTerm] = useState("");
   const [divisionFilter, setDivisionFilter] = useState<string>("all");
   const [yearFilter, setYearFilter] = useState<string>("all");
@@ -171,7 +172,13 @@ const MyTransactions = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            {isLoading ? (
+            {error ? (
+              <QueryErrorState
+                error={error}
+                onRetry={() => refetch()}
+                title="Failed to load transactions"
+              />
+            ) : isLoading ? (
               <div className="space-y-3">
                 {[...Array(10)].map((_, i) => (
                   <Skeleton key={i} className="h-16 w-full" />

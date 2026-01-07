@@ -27,6 +27,11 @@ export interface AgentTransaction {
 export const useAgentTransactions = () => {
   return useQuery({
     queryKey: ['agent-transactions'],
+    retry: (failureCount, error) => {
+      const err = error as { code?: string };
+      if (err?.code === '42501' || err?.code === 'PGRST116') return false;
+      return failureCount < 2;
+    },
     queryFn: async () => {
       // Get current user
       const { data: { user } } = await supabase.auth.getUser();

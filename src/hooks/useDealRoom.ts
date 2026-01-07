@@ -112,6 +112,11 @@ export interface DealRoomStats {
 export const useDealRoomDeals = (filters?: AdvancedFilters) => {
   return useQuery({
     queryKey: ["deal-room-deals", filters],
+    retry: (failureCount, error) => {
+      const err = error as { code?: string };
+      if (err?.code === '42501' || err?.code === 'PGRST116') return false;
+      return failureCount < 2;
+    },
     queryFn: async () => {
       let query = supabase
         .from("crm_deals")

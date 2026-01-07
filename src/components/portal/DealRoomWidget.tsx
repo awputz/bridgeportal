@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Handshake, ArrowRight, Building2, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useDealRoomDeals, useDealRoomStats } from "@/hooks/useDealRoom";
+import { QueryErrorState } from "@/components/ui/QueryErrorState";
 import { formatDistanceToNow } from "date-fns";
 
 const formatValue = (value: number | null) => {
@@ -15,7 +16,7 @@ const formatValue = (value: number | null) => {
 };
 
 export function DealRoomWidget() {
-  const { data: deals, isLoading: dealsLoading } = useDealRoomDeals();
+  const { data: deals, isLoading: dealsLoading, error: dealsError, refetch } = useDealRoomDeals();
   const { data: stats, isLoading: statsLoading } = useDealRoomStats();
 
   const latestDeals = deals?.slice(0, 5) || [];
@@ -64,7 +65,14 @@ export function DealRoomWidget() {
 
         {/* Deals List */}
         <ScrollArea className="flex-1 -mx-2 px-2">
-          {isLoading ? (
+          {dealsError ? (
+            <QueryErrorState
+              error={dealsError}
+              onRetry={() => refetch()}
+              title="Failed to load deals"
+              compact
+            />
+          ) : isLoading ? (
             <div className="space-y-3">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="p-3 rounded-lg border border-border/50 space-y-2">
