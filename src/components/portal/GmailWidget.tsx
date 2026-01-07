@@ -372,7 +372,7 @@ export const GmailWidget = () => {
 
                       {/* Line 3: Snippet/Preview */}
                       <p className="text-xs text-muted-foreground truncate min-w-0 mb-0 leading-tight">
-                        {sanitizeEmailText(message.snippet || "")}
+                        {sanitizeEmailText(decodeHtmlEntities(message.snippet || ""))}
                       </p>
                     </button>
                   ))}
