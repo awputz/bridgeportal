@@ -665,14 +665,23 @@ export const useAddDealRoomComment = () => {
       comment,
       isInternal = true,
       parentId,
+      mentionedUsers,
     }: {
       dealId: string;
       comment: string;
       isInternal?: boolean;
       parentId?: string;
+      mentionedUsers?: string[];
     }) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
+
+      // Get current user's profile for notification messages
+      const { data: userProfile } = await supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("id", user.id)
+        .single();
 
       const { data, error } = await supabase
         .from("deal_room_comments")
@@ -682,18 +691,59 @@ export const useAddDealRoomComment = () => {
           comment,
           is_internal: isInternal,
           parent_id: parentId || null,
+          mentioned_users: mentionedUsers || [],
         })
         .select()
         .single();
 
       if (error) throw error;
 
+      // Get deal info for notifications
+      const { data: deal } = await supabase
+        .from("crm_deals")
+        .select("property_address, agent_id")
+        .eq("id", dealId)
+        .single();
+
+      const commenterName = userProfile?.full_name || "Someone";
+      const propertyAddress = deal?.property_address || "a deal";
+
+      // Create notifications for mentioned users
+      if (mentionedUsers?.length) {
+        const mentionNotifications = mentionedUsers
+          .filter((userId) => userId !== user.id)
+          .map((userId) => ({
+            agent_id: userId,
+            type: "deal_room_mention",
+            title: `${commenterName} mentioned you`,
+            message: `In deal: ${propertyAddress}`,
+            action_url: `/portal/deal-room?deal=${dealId}`,
+            is_read: false,
+          }));
+
+        if (mentionNotifications.length > 0) {
+          await supabase.from("notifications").insert(mentionNotifications);
+        }
+      }
+
+      // Notify deal owner if commenter is not the owner
+      if (deal?.agent_id && deal.agent_id !== user.id) {
+        await supabase.from("notifications").insert({
+          agent_id: deal.agent_id,
+          type: "deal_room_comment",
+          title: "New comment on your deal",
+          message: `${commenterName} commented on ${propertyAddress}`,
+          action_url: `/portal/deal-room?deal=${dealId}`,
+          is_read: false,
+        });
+      }
+
       // Log activity
       await supabase.from("deal_room_activity").insert({
         deal_id: dealId,
         user_id: user.id,
         action: "comment_added",
-        details: { is_reply: !!parentId },
+        details: { is_reply: !!parentId, mentions_count: mentionedUsers?.length || 0 },
       });
 
       return data;
@@ -701,6 +751,7 @@ export const useAddDealRoomComment = () => {
     onSuccess: (_, { dealId }) => {
       queryClient.invalidateQueries({ queryKey: ["deal-room-comments", dealId] });
       queryClient.invalidateQueries({ queryKey: ["deal-room-activity", dealId] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
       toast.success("Comment added");
     },
     onError: (error: unknown) => {
@@ -890,6 +941,13 @@ export const useExpressInterest = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
+      // Get current user's profile for notification message
+      const { data: userProfile } = await supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("id", user.id)
+        .single();
+
       const { data, error } = await supabase
         .from("deal_room_interests")
         .insert({
@@ -902,6 +960,28 @@ export const useExpressInterest = () => {
         .single();
 
       if (error) throw error;
+
+      // Get deal info for notifications
+      const { data: deal } = await supabase
+        .from("crm_deals")
+        .select("property_address, agent_id")
+        .eq("id", dealId)
+        .single();
+
+      const interestedUserName = userProfile?.full_name || "Someone";
+      const propertyAddress = deal?.property_address || "a deal";
+
+      // Notify deal owner if expresser is not the owner
+      if (deal?.agent_id && deal.agent_id !== user.id) {
+        await supabase.from("notifications").insert({
+          agent_id: deal.agent_id,
+          type: "deal_room_interest",
+          title: "New interest in your deal",
+          message: `${interestedUserName} expressed ${interestType} interest in ${propertyAddress}`,
+          action_url: `/portal/deal-room?deal=${dealId}`,
+          is_read: false,
+        });
+      }
 
       // Log activity
       await supabase.from("deal_room_activity").insert({
@@ -916,6 +996,7 @@ export const useExpressInterest = () => {
     onSuccess: (_, { dealId }) => {
       queryClient.invalidateQueries({ queryKey: ["deal-room-interests", dealId] });
       queryClient.invalidateQueries({ queryKey: ["deal-room-activity", dealId] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
       toast.success("Interest expressed");
     },
     onError: (error: unknown) => {
@@ -952,5 +1033,32 @@ export const useRemoveInterest = () => {
     onError: (error: unknown) => {
       toast.error(handleQueryError(error));
     },
+  });
+};
+
+// ========== Agent List Hook ==========
+
+export interface AgentProfile {
+  id: string;
+  full_name: string | null;
+  avatar_url: string | null;
+}
+
+/**
+ * Fetch list of all agents for @mentions
+ */
+export const useAgentsList = () => {
+  return useQuery({
+    queryKey: ["agents-list"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, full_name, avatar_url")
+        .order("full_name");
+
+      if (error) throw error;
+      return (data || []) as AgentProfile[];
+    },
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 };

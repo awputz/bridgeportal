@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { MessageCircle, Reply, Trash2, Edit2, Send, X } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { MentionInput } from "./MentionInput";
 import {
   useDealRoomComments,
   useAddDealRoomComment,
@@ -170,6 +171,7 @@ function CommentItem({
 
 export function DealRoomComments({ dealId }: DealRoomCommentsProps) {
   const [newComment, setNewComment] = useState("");
+  const [mentionedUsers, setMentionedUsers] = useState<string[]>([]);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
 
   const { data: agent } = useCurrentAgent();
@@ -177,6 +179,10 @@ export function DealRoomComments({ dealId }: DealRoomCommentsProps) {
   const addComment = useAddDealRoomComment();
 
   const currentUserId = agent?.id;
+
+  const handleMentionsChange = useCallback((userIds: string[]) => {
+    setMentionedUsers(userIds);
+  }, []);
 
   const handleSubmit = async () => {
     if (!newComment.trim() || !currentUserId) return;
@@ -186,8 +192,10 @@ export function DealRoomComments({ dealId }: DealRoomCommentsProps) {
         dealId,
         comment: newComment.trim(),
         parentId: replyingTo || undefined,
+        mentionedUsers: mentionedUsers.length > 0 ? mentionedUsers : undefined,
       });
       setNewComment("");
+      setMentionedUsers([]);
       setReplyingTo(null);
       toast.success(replyingTo ? "Reply added" : "Comment added");
     } catch {
@@ -235,13 +243,15 @@ export function DealRoomComments({ dealId }: DealRoomCommentsProps) {
         )}
 
         <div className="flex gap-2">
-          <Textarea
-            placeholder={replyingTo ? "Write a reply..." : "Add a comment..."}
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            className="min-h-[60px] flex-1 resize-none"
-            maxLength={500}
-          />
+          <div className="flex-1">
+            <MentionInput
+              value={newComment}
+              onChange={setNewComment}
+              onMentionsChange={handleMentionsChange}
+              placeholder={replyingTo ? "Write a reply... (use @ to mention)" : "Add a comment... (use @ to mention)"}
+              className="min-h-[60px]"
+            />
+          </div>
           <Button
             size="icon"
             className="h-[60px] w-10"
