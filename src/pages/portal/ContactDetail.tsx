@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, Save, Trash2, Phone, Mail, Building2, MapPin, Tag, Calendar, AlertCircle, RefreshCw } from "lucide-react";
+import { ArrowLeft, Save, Trash2, Phone, Mail, Building2, MapPin, Tag, Calendar } from "lucide-react";
 import { isValidUUID } from "@/lib/errorHandler";
 import { useCRMContact, useUpdateContact, useDeleteContact, useCRMDeals, useCRMActivities, useCreateActivity } from "@/hooks/useCRM";
+import { QueryErrorState } from "@/components/ui/QueryErrorState";
 import { useDivision } from "@/contexts/DivisionContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -151,23 +152,19 @@ const ContactDetail = () => {
   if (error) {
     return (
       <div className="flex-1 overflow-auto">
-        <div className="max-w-4xl mx-auto page-content py-8 md:py-12 text-center">
-          <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
-          <h1 className="text-2xl font-light text-foreground mb-4">Unable to load contact</h1>
-          <p className="text-muted-foreground mb-4">
-            {(error as Error).message || "There was an error loading this contact. Please try again."}
-          </p>
-          <div className="flex justify-center gap-2">
+        <div className="max-w-4xl mx-auto page-content py-8 md:py-12">
+          <QueryErrorState
+            error={error}
+            onRetry={() => refetch()}
+            title="Unable to load contact"
+          />
+          <div className="flex justify-center mt-4">
             <Link to="/portal/contacts">
               <Button variant="outline">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Contacts
               </Button>
             </Link>
-            <Button onClick={() => refetch()}>
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Try Again
-            </Button>
           </div>
         </div>
       </div>

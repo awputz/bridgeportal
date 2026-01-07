@@ -112,6 +112,7 @@ const AgentPerformanceAdmin = lazy(() => import("./pages/admin/AgentPerformanceA
 const ApplicationsAdmin = lazy(() => import("./pages/admin/ApplicationsAdmin"));
 const ExclusiveSubmissionsAdmin = lazy(() => import("./pages/admin/ExclusiveSubmissionsAdmin"));
 const AgentExpensesAdmin = lazy(() => import("./pages/admin/AgentExpensesAdmin"));
+const ErrorDashboard = lazy(() => import("./pages/admin/ErrorDashboard"));
 
 // Service Pages - lazy loaded
 const InvestmentSales = lazy(() => import("./pages/services/InvestmentSales"));
@@ -127,9 +128,15 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
+      gcTime: 15 * 60 * 1000, // 15 minutes (increased for better cache hit rates)
       refetchOnWindowFocus: false,
+      refetchOnMount: "always", // Ensure fresh data on mount
       retry: 1,
+      networkMode: "online", // Disable offline queuing
+    },
+    mutations: {
+      retry: 0,
+      networkMode: "online",
     },
   },
 });
@@ -601,6 +608,11 @@ const App = () => {
                     <Route path="agent-expenses" element={
                       <Suspense fallback={<PageLoader />}>
                         <AgentExpensesAdmin />
+                      </Suspense>
+                    } />
+                    <Route path="errors" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <ErrorDashboard />
                       </Suspense>
                     } />
                   </Route>

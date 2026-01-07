@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
-import { Mail as MailIcon, Inbox, Send, FileText, Star, Trash2, Plus, RefreshCw, Settings, AlertCircle, Loader2, ChevronDown, Search as SearchIcon, ExternalLink, ArrowLeft, X } from "lucide-react";
+import { Mail as MailIcon, Inbox, Send, FileText, Star, Trash2, Plus, RefreshCw, Settings, Loader2, ChevronDown, Search as SearchIcon, ExternalLink, ArrowLeft, X, AlertCircle } from "lucide-react";
+import { QueryErrorState } from "@/components/ui/QueryErrorState";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -343,19 +344,13 @@ export default function Mail() {
       )}
 
       {dataError && (
-        <div className="mx-4 mt-3 rounded-xl border border-border/50 bg-muted/20 p-4 shrink-0">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-start gap-3">
-              <AlertCircle className="h-5 w-5 mt-0.5 text-muted-foreground shrink-0" />
-              <div>
-                <p className="text-sm font-medium">Couldn't load Gmail data</p>
-                <p className="text-xs text-muted-foreground mt-0.5">{dataError.message}</p>
-              </div>
-            </div>
-            <Button variant="outline" size="sm" onClick={hardLogout}>
-              Sign in again
-            </Button>
-          </div>
+        <div className="mx-4 mt-3 shrink-0">
+          <QueryErrorState
+            error={dataError}
+            onRetry={handleRefresh}
+            title="Couldn't load Gmail data"
+            compact
+          />
         </div>
       )}
 

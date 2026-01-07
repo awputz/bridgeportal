@@ -6,7 +6,6 @@ import {
   Clock,
   MapPin,
   Loader2,
-  AlertCircle,
   RefreshCw,
   LayoutGrid,
   List,
@@ -16,6 +15,7 @@ import {
   Plus,
   Settings,
 } from "lucide-react";
+import { QueryErrorState } from "@/components/ui/QueryErrorState";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
@@ -427,14 +427,13 @@ export default function Calendar() {
       )}
 
       {eventsError && (
-        <div className="mx-4 lg:mx-6 mt-4 rounded-xl border border-border/50 bg-muted/20 p-4 shrink-0">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <AlertCircle className="h-5 w-5 text-muted-foreground" />
-              <span className="text-sm">{(eventsError as Error).message}</span>
-            </div>
-            <Button variant="outline" size="sm" onClick={hardLogout}>Sign in again</Button>
-          </div>
+        <div className="mx-4 lg:mx-6 mt-4 shrink-0">
+          <QueryErrorState
+            error={eventsError}
+            onRetry={() => refetchEvents()}
+            title="Calendar sync issue"
+            compact
+          />
         </div>
       )}
 

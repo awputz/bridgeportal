@@ -6,6 +6,7 @@ import { useTeamMembers } from "@/hooks/useTeamMembers";
 import { Skeleton } from "@/components/ui/skeleton";
 import { downloadVCard } from "@/lib/vcard";
 import { cn } from "@/lib/utils";
+import { QueryErrorState } from "@/components/ui/QueryErrorState";
 
 const divisions = [
   { id: "all", name: "All", icon: Users },
@@ -20,7 +21,7 @@ const divisions = [
 const Directory = () => {
   const [search, setSearch] = useState("");
   const [selectedDivision, setSelectedDivision] = useState("all");
-  const { data: members, isLoading } = useTeamMembers();
+  const { data: members, isLoading, error, refetch } = useTeamMembers();
 
   const filteredMembers = useMemo(() => {
     if (!members) return [];
@@ -111,7 +112,13 @@ const Directory = () => {
         </p>
 
         {/* Directory Grid */}
-        {isLoading ? (
+        {error ? (
+          <QueryErrorState
+            error={error}
+            onRetry={() => refetch()}
+            title="Failed to load directory"
+          />
+        ) : isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {[...Array(8)].map((_, i) => (
               <Skeleton key={i} className="h-[280px] rounded-xl" />
