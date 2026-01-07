@@ -9,13 +9,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { DealRoomFilters } from "@/hooks/useDealRoom";
+import { AdvancedFilters } from "@/hooks/useDealRoom";
 import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
 
 interface DealRoomFiltersComponentProps {
-  filters: DealRoomFilters;
+  filters: AdvancedFilters;
   sortBy: "recent" | "value" | "comments";
-  onFiltersChange: (filters: DealRoomFilters) => void;
+  onFiltersChange: (filters: AdvancedFilters) => void;
   onSortChange: (sort: "recent" | "value" | "comments") => void;
   onClear: () => void;
   dealCount: number;

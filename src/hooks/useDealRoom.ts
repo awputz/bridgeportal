@@ -87,6 +87,17 @@ export interface DealRoomFilters {
   search?: string;
 }
 
+export interface AdvancedFilters extends DealRoomFilters {
+  minPrice?: number;
+  maxPrice?: number;
+  minSF?: number;
+  maxSF?: number;
+  minCapRate?: number;
+  maxCapRate?: number;
+  newThisWeek?: boolean;
+  updatedToday?: boolean;
+}
+
 export interface DealRoomStats {
   total: number;
   newThisWeek: number;
@@ -98,7 +109,7 @@ export interface DealRoomStats {
 /**
  * Fetch all off-market deals visible to the team
  */
-export const useDealRoomDeals = (filters?: DealRoomFilters) => {
+export const useDealRoomDeals = (filters?: AdvancedFilters) => {
   return useQuery({
     queryKey: ["deal-room-deals", filters],
     queryFn: async () => {
@@ -125,6 +136,9 @@ export const useDealRoomDeals = (filters?: DealRoomFilters) => {
           updated_at,
           created_at,
           is_off_market,
+          cap_rate,
+          latitude,
+          longitude,
           stage:crm_deal_stages(name, color)
         `)
         .eq("is_off_market", true)
@@ -132,6 +146,7 @@ export const useDealRoomDeals = (filters?: DealRoomFilters) => {
         .in("deal_room_visibility", ["team", "public"])
         .order("last_deal_room_update", { ascending: false, nullsFirst: false });
 
+      // Basic filters
       if (filters?.division) {
         query = query.eq("division", filters.division);
       }
@@ -143,6 +158,42 @@ export const useDealRoomDeals = (filters?: DealRoomFilters) => {
       }
       if (filters?.search) {
         query = query.or(`property_address.ilike.%${filters.search}%,neighborhood.ilike.%${filters.search}%,tenant_legal_name.ilike.%${filters.search}%`);
+      }
+
+      // Advanced filters - Price range
+      if (filters?.minPrice !== undefined) {
+        query = query.gte("value", filters.minPrice);
+      }
+      if (filters?.maxPrice !== undefined) {
+        query = query.lte("value", filters.maxPrice);
+      }
+
+      // Square footage range
+      if (filters?.minSF !== undefined) {
+        query = query.gte("gross_sf", filters.minSF);
+      }
+      if (filters?.maxSF !== undefined) {
+        query = query.lte("gross_sf", filters.maxSF);
+      }
+
+      // Cap rate range
+      if (filters?.minCapRate !== undefined) {
+        query = query.gte("cap_rate", filters.minCapRate);
+      }
+      if (filters?.maxCapRate !== undefined) {
+        query = query.lte("cap_rate", filters.maxCapRate);
+      }
+
+      // Time-based filters
+      if (filters?.newThisWeek) {
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+        query = query.gte("last_deal_room_update", oneWeekAgo.toISOString());
+      }
+      if (filters?.updatedToday) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        query = query.gte("last_deal_room_update", today.toISOString());
       }
 
       const { data, error } = await query;
