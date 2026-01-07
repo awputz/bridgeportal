@@ -1690,6 +1690,8 @@ export type Database = {
           contact_id: string | null
           created_at: string | null
           deal_category: string | null
+          deal_room_notes: string | null
+          deal_room_visibility: string | null
           deal_type: string
           deleted_at: string | null
           division: string
@@ -1707,9 +1709,11 @@ export type Database = {
           is_1031_exchange: boolean | null
           is_active: boolean | null
           is_lost: boolean | null
+          is_off_market: boolean | null
           is_rental: boolean | null
           landlord_broker: string | null
           last_activity_date: string | null
+          last_deal_room_update: string | null
           latitude: number | null
           lease_length_months: number | null
           lease_term_months: number | null
@@ -1728,6 +1732,8 @@ export type Database = {
           noi: number | null
           notes: string | null
           offer_price: number | null
+          om_file_name: string | null
+          om_file_url: string | null
           pets_allowed: boolean | null
           price_per_sf: number | null
           price_per_unit: number | null
@@ -1770,6 +1776,8 @@ export type Database = {
           contact_id?: string | null
           created_at?: string | null
           deal_category?: string | null
+          deal_room_notes?: string | null
+          deal_room_visibility?: string | null
           deal_type: string
           deleted_at?: string | null
           division: string
@@ -1787,9 +1795,11 @@ export type Database = {
           is_1031_exchange?: boolean | null
           is_active?: boolean | null
           is_lost?: boolean | null
+          is_off_market?: boolean | null
           is_rental?: boolean | null
           landlord_broker?: string | null
           last_activity_date?: string | null
+          last_deal_room_update?: string | null
           latitude?: number | null
           lease_length_months?: number | null
           lease_term_months?: number | null
@@ -1808,6 +1818,8 @@ export type Database = {
           noi?: number | null
           notes?: string | null
           offer_price?: number | null
+          om_file_name?: string | null
+          om_file_url?: string | null
           pets_allowed?: boolean | null
           price_per_sf?: number | null
           price_per_unit?: number | null
@@ -1850,6 +1862,8 @@ export type Database = {
           contact_id?: string | null
           created_at?: string | null
           deal_category?: string | null
+          deal_room_notes?: string | null
+          deal_room_visibility?: string | null
           deal_type?: string
           deleted_at?: string | null
           division?: string
@@ -1867,9 +1881,11 @@ export type Database = {
           is_1031_exchange?: boolean | null
           is_active?: boolean | null
           is_lost?: boolean | null
+          is_off_market?: boolean | null
           is_rental?: boolean | null
           landlord_broker?: string | null
           last_activity_date?: string | null
+          last_deal_room_update?: string | null
           latitude?: number | null
           lease_length_months?: number | null
           lease_term_months?: number | null
@@ -1888,6 +1904,8 @@ export type Database = {
           noi?: number | null
           notes?: string | null
           offer_price?: number | null
+          om_file_name?: string | null
+          om_file_url?: string | null
           pets_allowed?: boolean | null
           price_per_sf?: number | null
           price_per_unit?: number | null
@@ -2045,6 +2063,89 @@ export type Database = {
         }
         Relationships: []
       }
+      deal_room_activity: {
+        Row: {
+          action: string
+          created_at: string | null
+          deal_id: string
+          details: Json | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          deal_id: string
+          details?: Json | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          deal_id?: string
+          details?: Json | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_room_activity_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deal_room_comments: {
+        Row: {
+          comment: string
+          created_at: string | null
+          deal_id: string
+          id: string
+          is_internal: boolean | null
+          parent_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          comment: string
+          created_at?: string | null
+          deal_id: string
+          id?: string
+          is_internal?: boolean | null
+          parent_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          comment?: string
+          created_at?: string | null
+          deal_id?: string
+          id?: string
+          is_internal?: boolean | null
+          parent_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_room_comments_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deal_room_comments_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "deal_room_comments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deal_room_documents: {
         Row: {
           category: string
@@ -2089,6 +2190,82 @@ export type Database = {
             columns: ["listing_id"]
             isOneToOne: false
             referencedRelation: "public_investment_listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deal_room_files: {
+        Row: {
+          created_at: string | null
+          deal_id: string
+          file_name: string
+          file_size: number | null
+          file_type: string | null
+          file_url: string
+          id: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          deal_id: string
+          file_name: string
+          file_size?: number | null
+          file_type?: string | null
+          file_url: string
+          id?: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          deal_id?: string
+          file_name?: string
+          file_size?: number | null
+          file_type?: string | null
+          file_url?: string
+          id?: string
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_room_files_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deal_room_interests: {
+        Row: {
+          created_at: string | null
+          deal_id: string
+          id: string
+          interest_type: string
+          message: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          deal_id: string
+          id?: string
+          interest_type: string
+          message?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          deal_id?: string
+          id?: string
+          interest_type?: string
+          message?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_room_interests_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
             referencedColumns: ["id"]
           },
         ]
