@@ -8,7 +8,8 @@ import {
   Flame,
   MapPin,
   Eye,
-  ImageIcon
+  ImageIcon,
+  Share2
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
@@ -131,9 +132,8 @@ export const DealRoomCard = memo(function DealRoomCard({ deal, onClick }: DealRo
       aria-label={`Deal at ${deal.property_address}${deal.value ? `, ${formatCurrency(deal.value)}` : ''}`}
       className="group cursor-pointer overflow-hidden border-border/50 bg-card hover:border-primary/30 hover:shadow-lg transition-all duration-300"
     >
-      {/* Hero Image Section */}
-      <div className="deal-card-image-container relative h-40 w-full bg-muted">
-        {/* Loading skeleton */}
+      {/* Hero Image Section - Clean, focused on property */}
+      <div className="relative h-36 w-full bg-muted overflow-hidden">
         {!imageLoaded && !imageError && (
           <div className="absolute inset-0 bg-muted animate-pulse" />
         )}
@@ -145,142 +145,123 @@ export const DealRoomCard = memo(function DealRoomCard({ deal, onClick }: DealRo
           onLoad={() => setImageLoaded(true)}
           onError={() => setImageError(true)}
           className={cn(
-            "deal-card-image w-full h-full object-cover",
+            "w-full h-full object-cover transition-all duration-300",
             !imageLoaded && "blur-sm scale-105",
             imageLoaded && "blur-0 scale-100"
           )}
         />
         
-        {/* Gradient overlay for text readability */}
-        <div className="deal-card-gradient absolute inset-0 pointer-events-none" />
+        {/* Subtle gradient for badge readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/20 pointer-events-none" />
 
-        {/* Top badges - absolute positioned on image */}
-        <div className="absolute top-2 left-2 right-2 flex items-center justify-between">
-          {/* Division Badge */}
+        {/* Top row: Division badge left, New badge right */}
+        <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between">
           <Badge 
             variant="outline" 
             className={cn("text-[10px] backdrop-blur-sm border", divisionColor)}
           >
             {DIVISION_LABELS[deal.division] || deal.division}
           </Badge>
-
-          {/* New Badge */}
           {isNew && (
-            <Badge className="bg-emerald-500 text-white text-[10px] animate-pulse">
+            <Badge className="bg-emerald-500 text-white text-[10px]">
               <Flame className="h-3 w-3 mr-0.5" />
               New
             </Badge>
           )}
         </div>
 
-        {/* Agent Info - bottom left with proper spacing constraint */}
-        <div className="absolute bottom-3 left-3 max-w-[calc(100%-5rem)]">
-          <div className="flex items-center gap-2.5 bg-black/50 backdrop-blur-sm rounded-lg px-2.5 py-2">
-            <Avatar className="h-8 w-8 border-2 border-white/20 flex-shrink-0">
-              <AvatarImage src={deal.agent?.avatar_url || undefined} />
-              <AvatarFallback className="text-[10px] bg-primary text-primary-foreground">
-                {agentInitials}
-              </AvatarFallback>
-            </Avatar>
-            <div className="min-w-0 flex-1">
-              <p className="text-[13px] font-semibold text-white leading-tight drop-shadow-lg truncate">
-                {deal.agent?.full_name || "Unknown Agent"}
-              </p>
-              <p className="text-[11px] text-white/80 leading-tight mt-0.5 drop-shadow truncate">
-                {DIVISION_LABELS[deal.division] || deal.division} • {timeAgo}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Photo count badge - bottom right with clear separation */}
+        {/* Photo count - bottom right */}
         {photoCount > 1 && (
           <Badge 
             variant="secondary" 
-            className="absolute bottom-3 right-3 gap-1.5 text-xs bg-black/60 text-white backdrop-blur-sm border-0"
+            className="absolute bottom-2.5 right-2.5 gap-1 text-[10px] bg-black/60 text-white backdrop-blur-sm border-0"
           >
-            <ImageIcon className="h-3.5 w-3.5" />
+            <ImageIcon className="h-3 w-3" />
             {photoCount}
           </Badge>
         )}
 
-        {/* Hover overlay with "View Details" */}
-        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-          <div className="flex items-center gap-2 text-white font-medium">
-            <Eye className="h-5 w-5" />
+        {/* Hover overlay */}
+        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+          <div className="flex items-center gap-2 text-white text-sm font-medium">
+            <Eye className="h-4 w-4" />
             View Details
           </div>
         </div>
       </div>
 
       {/* Card Content */}
-      <CardContent className="p-3.5 space-y-2.5">
+      <CardContent className="p-3 space-y-0">
         {/* Address & Location */}
-        <div>
-          <h3 className="font-semibold text-sm leading-tight line-clamp-1 group-hover:text-primary transition-colors">
+        <div className="pb-2">
+          <h3 className="font-semibold text-sm leading-none m-0 line-clamp-1 group-hover:text-primary transition-colors">
             {deal.property_address}
           </h3>
           {(deal.neighborhood || deal.borough) && (
-            <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+            <p className="text-[11px] text-muted-foreground flex items-center gap-1 mt-1 m-0 leading-none">
               <MapPin className="h-3 w-3 flex-shrink-0" />
-              {deal.neighborhood}
-              {deal.neighborhood && deal.borough && ", "}
-              {deal.borough}
+              <span className="truncate">
+                {deal.neighborhood}
+                {deal.neighborhood && deal.borough && ", "}
+                {deal.borough}
+              </span>
             </p>
           )}
         </div>
 
-        {/* Key Metrics Grid - Consistent spacing */}
-        <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-          {deal.value && (
-            <div className="space-y-0.5">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Value</p>
-              <p className="text-sm font-semibold text-foreground">
-                {formatCurrency(deal.value)}
-              </p>
+        {/* Key Metrics - 3-column grid */}
+        <div className="grid grid-cols-3 gap-2 py-2 border-t border-border/30">
+          {deal.value ? (
+            <div>
+              <p className="text-[9px] text-muted-foreground uppercase tracking-wide m-0 leading-none">Value</p>
+              <p className="text-sm font-semibold m-0 leading-none mt-1">{formatCurrency(deal.value)}</p>
             </div>
-          )}
-          {deal.gross_sf && (
-            <div className="space-y-0.5">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Size</p>
-              <p className="text-sm font-semibold text-foreground">
-                {formatSF(deal.gross_sf)}
-              </p>
+          ) : <div />}
+          {deal.gross_sf ? (
+            <div>
+              <p className="text-[9px] text-muted-foreground uppercase tracking-wide m-0 leading-none">Size</p>
+              <p className="text-sm font-semibold m-0 leading-none mt-1">{formatSF(deal.gross_sf)}</p>
             </div>
-          )}
-          {deal.property_type && (
-            <div className="space-y-0.5">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Type</p>
-              <p className="text-sm font-medium text-foreground capitalize">
-                {deal.property_type.replace(/-/g, " ")}
-              </p>
+          ) : <div />}
+          {deal.property_type ? (
+            <div>
+              <p className="text-[9px] text-muted-foreground uppercase tracking-wide m-0 leading-none">Type</p>
+              <p className="text-xs font-medium m-0 leading-none mt-1 capitalize">{deal.property_type.replace(/-/g, " ")}</p>
             </div>
-          )}
-          {deal.deal_type && (
-            <div className="space-y-0.5">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Deal</p>
-              <p className="text-sm font-medium text-foreground capitalize">
-                {deal.deal_type.replace(/-/g, " ")}
-              </p>
-            </div>
-          )}
+          ) : <div />}
+        </div>
+
+        {/* Agent Row - Moved from photo */}
+        <div className="flex items-center gap-2 py-2 border-t border-border/30">
+          <Avatar className="h-6 w-6 flex-shrink-0">
+            <AvatarImage src={deal.agent?.avatar_url || undefined} />
+            <AvatarFallback className="text-[9px] bg-primary text-primary-foreground">
+              {agentInitials}
+            </AvatarFallback>
+          </Avatar>
+          <span className="text-xs font-medium truncate flex-1 m-0 leading-none">
+            {deal.agent?.full_name || "Unknown Agent"}
+          </span>
+          <span className="text-[10px] text-muted-foreground m-0 leading-none flex-shrink-0">
+            {timeAgo}
+          </span>
         </div>
 
         {/* Notes Preview */}
         {deal.deal_room_notes && (
-          <p className="text-xs text-muted-foreground italic line-clamp-2 border-l-2 border-muted pl-2">
+          <p className="text-[11px] text-muted-foreground italic line-clamp-2 border-l-2 border-muted pl-2 py-2 m-0 leading-relaxed">
             "{deal.deal_room_notes}"
           </p>
         )}
 
-        {/* Engagement & Actions - Tighter row */}
-        <div className="flex items-center justify-between pt-2.5 border-t border-border/30">
+        {/* Actions Row */}
+        <div className="flex items-center justify-between pt-2 border-t border-border/30">
           <EngagementBadges dealId={deal.id} />
           
           <div className="flex items-center gap-1">
             {deal.om_file_url && (
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 className="h-6 px-2 text-[10px]"
                 onClick={(e) => {
@@ -293,6 +274,18 @@ export const DealRoomCard = memo(function DealRoomCard({ deal, onClick }: DealRo
               </Button>
             )}
             <Button
+              variant="outline"
+              size="sm"
+              className="h-6 px-2 text-[10px]"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigator.clipboard.writeText(`${window.location.origin}/portal/deal-room?deal=${deal.id}`);
+              }}
+            >
+              <Share2 className="h-3 w-3 mr-1" />
+              Share
+            </Button>
+            <Button
               variant="ghost"
               size="sm"
               className="h-6 px-2 text-[10px]"
@@ -300,8 +293,7 @@ export const DealRoomCard = memo(function DealRoomCard({ deal, onClick }: DealRo
               asChild
             >
               <Link to={`/portal/crm/deals/${deal.id}`}>
-                <ExternalLink className="h-3 w-3 mr-1" />
-                CRM
+                <ExternalLink className="h-3 w-3" />
               </Link>
             </Button>
           </div>
