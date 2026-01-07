@@ -497,32 +497,47 @@ const Contacts = () => {
       return;
     }
 
+    // Validate required fields
+    const fullName = (formData.get("full_name") as string)?.trim();
+    if (!fullName) {
+      toast.error("Full name is required");
+      return;
+    }
+
+    // Email validation if provided
+    const email = (formData.get("email") as string)?.trim();
+    if (email && !email.includes('@')) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    // The hook now handles null coercion via sanitizeContactData
     createContact.mutate({
       agent_id: user.id,
-      full_name: formData.get("full_name") as string,
-      email: formData.get("email") as string || null,
-      phone: formData.get("phone") as string || null,
-      company: formData.get("company") as string || null,
-      title: formData.get("title") as string || null,
+      full_name: fullName,
+      email: formData.get("email") as string,
+      phone: formData.get("phone") as string,
+      company: formData.get("company") as string,
+      title: formData.get("title") as string,
       contact_type: formData.get("contact_type") as string || "prospect",
-      source: formData.get("source") as string || null,
+      source: formData.get("source") as string,
       division: formData.get("division") as Division || division,
       tags: [],
-      notes: formData.get("notes") as string || null,
-      address: newContactAddressData?.fullAddress || newContactAddress || null,
-      street_address: newContactAddressData?.streetAddress || null,
-      city: newContactAddressData?.city || null,
-      state: newContactAddressData?.state || null,
-      zip_code: newContactAddressData?.zipCode || null,
+      notes: formData.get("notes") as string,
+      address: newContactAddressData?.fullAddress || newContactAddress,
+      street_address: newContactAddressData?.streetAddress,
+      city: newContactAddressData?.city,
+      state: newContactAddressData?.state,
+      zip_code: newContactAddressData?.zipCode,
       country: newContactAddressData?.country || "USA",
-      linkedin_url: formData.get("linkedin_url") as string || null,
-      secondary_email: formData.get("secondary_email") as string || null,
-      secondary_phone: formData.get("secondary_phone") as string || null,
-      company_website: formData.get("company_website") as string || null,
+      linkedin_url: formData.get("linkedin_url") as string,
+      secondary_email: formData.get("secondary_email") as string,
+      secondary_phone: formData.get("secondary_phone") as string,
+      company_website: formData.get("company_website") as string,
       preferred_contact_method: formData.get("preferred_contact_method") as string || "email",
-      birthday: formData.get("birthday") as string || null,
+      birthday: formData.get("birthday") as string,
       portfolio_size: formData.get("portfolio_size") ? parseFloat(formData.get("portfolio_size") as string) : null,
-      investor_profile: formData.get("investor_profile") as string || null,
+      investor_profile: formData.get("investor_profile") as string,
     }, {
       onSuccess: () => {
         setShowContactDialog(false);
