@@ -4,6 +4,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Badge } from "@/components/ui/badge";
 import { DealRoomCard } from "./DealRoomCard";
 import { DealRoomDeal } from "@/hooks/useDealRoom";
+import { SectionErrorBoundary } from "@/components/portal/SectionErrorBoundary";
 
 interface DealRoomListProps {
   deals: DealRoomDeal[];
@@ -74,11 +75,19 @@ export function DealRoomList({ deals, onDealClick }: DealRoomListProps) {
           <CollapsibleContent>
             <div className="grid gap-4 pt-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
               {boroughDeals.map(deal => (
-                <DealRoomCard
-                  key={deal.id}
-                  deal={deal}
-                  onClick={() => onDealClick(deal.id)}
-                />
+                <SectionErrorBoundary 
+                  key={deal.id} 
+                  fallback={
+                    <div className="p-4 text-sm text-muted-foreground border border-border/50 rounded-lg bg-muted/20">
+                      Failed to load deal
+                    </div>
+                  }
+                >
+                  <DealRoomCard
+                    deal={deal}
+                    onClick={() => onDealClick(deal.id)}
+                  />
+                </SectionErrorBoundary>
               ))}
             </div>
           </CollapsibleContent>
