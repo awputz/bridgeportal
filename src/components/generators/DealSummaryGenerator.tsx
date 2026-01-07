@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -152,11 +153,11 @@ Format it cleanly for internal review or client presentation.`;
             <CardContent className="p-6 space-y-4">
               <div className="space-y-2">
                 <Label>Property Address *</Label>
-                <Input
-                  placeholder="123 Main Street, New York, NY"
+                <AddressAutocomplete
                   value={formData.propertyAddress}
-                  onChange={(e) => setFormData({ ...formData, propertyAddress: e.target.value })}
-                  className="bg-white/5 border-white/10"
+                  onChange={(value) => setFormData({ ...formData, propertyAddress: value })}
+                  onAddressSelect={(addr) => setFormData({ ...formData, propertyAddress: addr.fullAddress })}
+                  placeholder="Start typing an address..."
                 />
               </div>
 

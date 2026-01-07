@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { GeneratorShell } from "../GeneratorShell";
 
 interface Props {
@@ -70,7 +71,7 @@ Write in an inviting, professional tone that appeals to quality tenants.`;
       <div className="space-y-4">
         <div className="space-y-2">
           <Label>Property Address *</Label>
-          <Input value={formData.propertyAddress} onChange={(e) => setFormData({ ...formData, propertyAddress: e.target.value })} placeholder="456 Park Avenue, Unit 5A" />
+          <AddressAutocomplete value={formData.propertyAddress} onChange={(value) => setFormData({ ...formData, propertyAddress: value })} onAddressSelect={(addr) => setFormData({ ...formData, propertyAddress: addr.fullAddress, neighborhood: addr.neighborhood || formData.neighborhood })} placeholder="Start typing an address..." />
         </div>
         <div className="space-y-2">
           <Label>Neighborhood</Label>

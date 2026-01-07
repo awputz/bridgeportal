@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { GeneratorShell } from "../GeneratorShell";
 
 interface Props {
@@ -74,7 +75,7 @@ Write in a marketing-friendly but informative tone that helps buyers envision th
         </div>
         <div className="space-y-2">
           <Label>Building Address</Label>
-          <Input value={formData.buildingAddress} onChange={(e) => setFormData({ ...formData, buildingAddress: e.target.value })} placeholder="240 East 39th Street" />
+          <AddressAutocomplete value={formData.buildingAddress} onChange={(value) => setFormData({ ...formData, buildingAddress: value })} onAddressSelect={(addr) => setFormData({ ...formData, buildingAddress: addr.fullAddress, neighborhood: addr.neighborhood || formData.neighborhood })} placeholder="Start typing an address..." />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">

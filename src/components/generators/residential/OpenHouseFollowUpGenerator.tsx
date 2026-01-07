@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { GeneratorShell } from "../GeneratorShell";
 
 interface Props {
@@ -63,7 +64,7 @@ Keep the tone friendly and helpful, not pushy.`;
         </div>
         <div className="space-y-2">
           <Label>Property Address *</Label>
-          <Input value={formData.propertyAddress} onChange={(e) => setFormData({ ...formData, propertyAddress: e.target.value })} placeholder="123 Main Street, Apt 4B" />
+          <AddressAutocomplete value={formData.propertyAddress} onChange={(value) => setFormData({ ...formData, propertyAddress: value })} onAddressSelect={(addr) => setFormData({ ...formData, propertyAddress: addr.fullAddress })} placeholder="Start typing an address..." />
         </div>
         <div className="space-y-2">
           <Label>Open House Date</Label>

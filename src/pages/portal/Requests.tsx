@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { Send, CreditCard, Megaphone, BarChart3, HelpCircle, Loader2, DollarSign } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -167,11 +168,11 @@ const Requests = () => {
                   {["marketing-materials", "bov-request", "commission-request"].includes(formData.requestType) && (
                     <div className="space-y-2">
                       <Label htmlFor="propertyAddress">Property Address</Label>
-                      <Input
-                        id="propertyAddress"
+                      <AddressAutocomplete
                         value={formData.propertyAddress}
-                        onChange={(e) => setFormData(prev => ({ ...prev, propertyAddress: e.target.value }))}
-                        placeholder="123 Main Street, New York, NY"
+                        onChange={(value) => setFormData(prev => ({ ...prev, propertyAddress: value }))}
+                        onAddressSelect={(addr) => setFormData(prev => ({ ...prev, propertyAddress: addr.fullAddress }))}
+                        placeholder="Start typing an address..."
                       />
                     </div>
                   )}

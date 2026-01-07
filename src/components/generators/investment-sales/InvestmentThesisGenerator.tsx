@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { GeneratorShell } from "../GeneratorShell";
 
 interface Props { onBack: () => void; }
@@ -48,8 +49,10 @@ Make it persuasive but factual. Use professional investment language.
       <div className="space-y-4">
         <div className="space-y-2">
           <Label>Property Address *</Label>
-          <Input placeholder="123 Main St, New York, NY" value={formData.propertyAddress}
-            onChange={(e) => setFormData({ ...formData, propertyAddress: e.target.value })} />
+          <AddressAutocomplete value={formData.propertyAddress}
+            onChange={(value) => setFormData({ ...formData, propertyAddress: value })}
+            onAddressSelect={(addr) => setFormData({ ...formData, propertyAddress: addr.fullAddress, marketArea: addr.neighborhood || addr.city || formData.marketArea })}
+            placeholder="Start typing an address..." />
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
