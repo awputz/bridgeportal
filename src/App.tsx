@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
+import { ThemeProvider } from "next-themes";
 import { Loader2 } from "lucide-react";
 
 import { AdminLayout } from "@/components/admin/AdminLayout";
@@ -145,16 +146,17 @@ const PageLoader = () => (
 
 const App = () => {
   return (
-    <HelmetProvider>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <TooltipProvider>
-            <DivisionProvider>
-              <ContactSheetProvider>
-                <ErrorBoundary>
-                  <Toaster />
-                  <Sonner />
-                <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+      <HelmetProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <TooltipProvider>
+              <DivisionProvider>
+                <ContactSheetProvider>
+                  <ErrorBoundary>
+                    <Toaster />
+                    <Sonner />
+                  <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
                     <SkipLink />
                     <Routes>
                   {/* Root redirects to portal */}
@@ -611,9 +613,10 @@ const App = () => {
             </ContactSheetProvider>
           </DivisionProvider>
         </TooltipProvider>
-      </AuthProvider>
-    </QueryClientProvider>
-  </HelmetProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
+    </ThemeProvider>
   );
 };
 

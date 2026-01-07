@@ -33,86 +33,76 @@ All colors MUST be HSL.
 */
 
 @layer base {
+  /* LIGHT MODE (default) */
   :root {
     /* Google Places Autocomplete dropdown styling */
-    --pac-bg: 30 6% 13%;
-    --pac-border: 30 6% 20%;
-    --pac-item-hover: 30 6% 16%;
+    --pac-bg: 0 0% 100%;
+    --pac-border: 220 13% 91%;
+    --pac-item-hover: 220 14% 96%;
     
     /* Portal layout spacing - precise values matching actual nav components */
-    --portal-nav-height: 56px;        /* Mobile nav h-14 = 56px */
-    --portal-nav-height-md: 80px;     /* Desktop nav h-20 = 80px */
-    --portal-bottom-nav-height: 64px; /* Mobile bottom nav h-16 = 64px */
+    --portal-nav-height: 56px;
+    --portal-nav-height-md: 80px;
+    --portal-bottom-nav-height: 64px;
     --portal-safe-bottom: env(safe-area-inset-bottom, 0px);
     
     /* Complete 8px Grid Spacing Scale */
-    --space-1: 0.25rem;   /* 4px */
-    --space-2: 0.5rem;    /* 8px */
-    --space-3: 0.75rem;   /* 12px */
-    --space-4: 1rem;      /* 16px */
-    --space-5: 1.25rem;   /* 20px */
-    --space-6: 1.5rem;    /* 24px */
-    --space-8: 2rem;      /* 32px */
-    --space-10: 2.5rem;   /* 40px */
-    --space-12: 3rem;     /* 48px */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
     
     /* Content spacing standards */
-    --content-padding-x-mobile: 1rem;     /* 16px - px-4 */
-    --content-padding-x-tablet: 1.5rem;   /* 24px - px-6 */
-    --content-padding-x-desktop: 2rem;    /* 32px - px-8 */
-    --content-padding-y: 1.5rem;          /* 24px - py-6 */
-    --section-gap: 2rem;                  /* 32px - space between major sections */
+    --content-padding-x-mobile: 1rem;
+    --content-padding-x-tablet: 1.5rem;
+    --content-padding-x-desktop: 2rem;
+    --content-padding-y: 1.5rem;
+    --section-gap: 2rem;
     
     /* Card Padding Standards */
-    --card-padding-sm: var(--space-4);    /* 16px - compact cards/list items */
-    --card-padding-md: var(--space-5);    /* 20px - default cards */
-    --card-padding-lg: var(--space-6);    /* 24px - spacious cards/modals */
+    --card-padding-sm: var(--space-4);
+    --card-padding-md: var(--space-5);
+    --card-padding-lg: var(--space-6);
     
-    /* BRIDGE Investment Sales - Dark Mode with Warm Off-White Tones */
+    /* LIGHT MODE Colors - Professional warm whites */
+    --background: 40 20% 98%;
+    --foreground: 30 10% 15%;
     
-    --background: 30 8% 10%;
-    --foreground: 35 10% 88%;
+    --card: 0 0% 100%;
+    --card-foreground: 30 10% 15%;
     
-    /* Card surfaces - Warm dark grey */
-    --card: 30 6% 13%;
-    --card-foreground: 35 10% 88%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 30 10% 15%;
     
-    /* Popover */
-    --popover: 30 8% 7%;
-    --popover-foreground: 35 10% 88%;
+    --primary: 30 10% 15%;
+    --primary-foreground: 40 20% 98%;
     
-    /* Primary - Warm off-white for emphasis */
-    --primary: 35 10% 88%;
-    --primary-foreground: 30 8% 10%;
+    --secondary: 40 15% 94%;
+    --secondary-foreground: 30 10% 20%;
     
-    /* Secondary - Warm dark with light border */
-    --secondary: 30 6% 16%;
-    --secondary-foreground: 35 10% 88%;
+    --muted: 40 15% 94%;
+    --muted-foreground: 30 8% 45%;
     
-    /* Muted - Warmer darker gray for subtle backgrounds */
-    --muted: 30 6% 16%;
-    --muted-foreground: 35 8% 68%;
+    --accent: 35 20% 90%;
+    --accent-foreground: 30 10% 15%;
     
-    /* Accent - Warm cream */
-    --accent: 35 10% 80%;
-    --accent-foreground: 30 8% 10%;
+    --surface: 40 15% 96%;
     
-    /* Surface - Slightly lighter than background */
-    --surface: 30 6% 13%;
-    
-    /* Destructive */
     --destructive: 0 84% 60%;
-    --destructive-foreground: 35 10% 95%;
+    --destructive-foreground: 0 0% 100%;
     
-    /* Borders - Warm subtle grey */
-    --border: 30 6% 20%;
-    --input: 30 6% 20%;
-    --ring: 35 10% 88%;
+    --border: 40 10% 88%;
+    --input: 40 10% 88%;
+    --ring: 30 10% 15%;
     
-    /* Dark sections (even darker for footer contrast) */
-    --dark-bg: 30 8% 4%;
-    --dark-text: 35 10% 88%;
-    --dark-muted: 35 8% 60%;
+    --dark-bg: 40 20% 98%;
+    --dark-text: 30 10% 15%;
+    --dark-muted: 30 8% 45%;
     
     /* Radius */
     --radius: 0.5rem;
@@ -133,11 +123,61 @@ All colors MUST be HSL.
     --gdrive-pdf: 4 90% 58%;
     --gdrive-audio: 142 71% 45%;
     
-    /* Transitions - Simple and clean */
+    /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-spring: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     
-    /* Shadows - Professional depth */
+    /* Shadows - Light mode (softer) */
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.03);
+    --shadow-md: 0 4px 12px 0 hsl(0 0% 0% / 0.08);
+    --shadow-lg: 0 8px 32px 0 hsl(0 0% 0% / 0.12);
+    --shadow-xl: 0 16px 48px 0 hsl(0 0% 0% / 0.16);
+    --shadow-glow: 0 0 40px hsl(0 0% 0% / 0.03);
+  }
+
+  /* DARK MODE */
+  .dark {
+    /* Google Places Autocomplete dropdown styling */
+    --pac-bg: 30 6% 13%;
+    --pac-border: 30 6% 20%;
+    --pac-item-hover: 30 6% 16%;
+    
+    /* BRIDGE Investment Sales - Dark Mode with Warm Off-White Tones */
+    --background: 30 8% 10%;
+    --foreground: 35 10% 88%;
+    
+    --card: 30 6% 13%;
+    --card-foreground: 35 10% 88%;
+    
+    --popover: 30 8% 7%;
+    --popover-foreground: 35 10% 88%;
+    
+    --primary: 35 10% 88%;
+    --primary-foreground: 30 8% 10%;
+    
+    --secondary: 30 6% 16%;
+    --secondary-foreground: 35 10% 88%;
+    
+    --muted: 30 6% 16%;
+    --muted-foreground: 35 8% 68%;
+    
+    --accent: 35 10% 80%;
+    --accent-foreground: 30 8% 10%;
+    
+    --surface: 30 6% 13%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 35 10% 95%;
+    
+    --border: 30 6% 20%;
+    --input: 30 6% 20%;
+    --ring: 35 10% 88%;
+    
+    --dark-bg: 30 8% 4%;
+    --dark-text: 35 10% 88%;
+    --dark-muted: 35 8% 60%;
+    
+    /* Shadows - Dark mode (deeper) */
     --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
     --shadow-md: 0 4px 12px 0 hsl(0 0% 0% / 0.15);
     --shadow-lg: 0 8px 32px 0 hsl(0 0% 0% / 0.25);
