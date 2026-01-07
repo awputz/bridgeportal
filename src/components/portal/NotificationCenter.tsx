@@ -15,7 +15,25 @@ const notificationTypeIcons = {
   reminder: "⏰",
   alert: "⚠️",
   success: "✅",
-  info: "ℹ️"
+  info: "ℹ️",
+  // Deal Room notifications
+  deal_room_mention: "📣",
+  deal_room_comment: "💬",
+  deal_room_interest: "⭐",
+  // Commission notifications
+  commission_approved: "✅",
+  commission_paid: "💰",
+  commission_rejected: "❌",
+  commission_under_review: "🔍",
+  // Exclusive notifications
+  exclusive_approved: "✅",
+  exclusive_revision: "📝",
+  exclusive_rejected: "❌",
+  exclusive_under_review: "🔍",
+  // Request notifications
+  request_completed: "✅",
+  request_rejected: "❌",
+  request_in_progress: "⏳",
 };
 export const NotificationCenter = () => {
   const [isOpen, setIsOpen] = useState(false);

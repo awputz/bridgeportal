@@ -2105,6 +2105,7 @@ export type Database = {
           deal_id: string
           id: string
           is_internal: boolean | null
+          mentioned_users: string[] | null
           parent_id: string | null
           updated_at: string | null
           user_id: string
@@ -2115,6 +2116,7 @@ export type Database = {
           deal_id: string
           id?: string
           is_internal?: boolean | null
+          mentioned_users?: string[] | null
           parent_id?: string | null
           updated_at?: string | null
           user_id: string
@@ -2125,6 +2127,7 @@ export type Database = {
           deal_id?: string
           id?: string
           is_internal?: boolean | null
+          mentioned_users?: string[] | null
           parent_id?: string | null
           updated_at?: string | null
           user_id?: string
