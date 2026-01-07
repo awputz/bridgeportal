@@ -98,32 +98,45 @@ export const AddressAutocomplete = ({
   const placesService = useRef<GooglePlacesService | null>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Load Google Places script
+  // Load Google Places script (singleton - never removed)
   useEffect(() => {
     const apiKey = import.meta.env.VITE_GOOGLE_PLACES_API_KEY;
+    const SCRIPT_ID = 'google-maps-places-script';
     
     if (!apiKey) {
       console.warn("Google Places API key not found. Address autocomplete disabled.");
       return;
     }
 
+    // Already loaded
     if (window.google?.maps?.places) {
       setIsGoogleLoaded(true);
       return;
     }
 
+    // Script already exists in DOM (loading or loaded)
+    const existingScript = document.getElementById(SCRIPT_ID);
+    if (existingScript) {
+      // Wait for it to load
+      existingScript.addEventListener('load', () => setIsGoogleLoaded(true));
+      // Check if already loaded
+      if (window.google?.maps?.places) {
+        setIsGoogleLoaded(true);
+      }
+      return;
+    }
+
+    // Create new script
     const script = document.createElement("script");
+    script.id = SCRIPT_ID;
     script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
     script.async = true;
     script.defer = true;
     script.onload = () => setIsGoogleLoaded(true);
+    script.onerror = () => console.error("Failed to load Google Places script");
     document.head.appendChild(script);
-
-    return () => {
-      if (document.head.contains(script)) {
-        document.head.removeChild(script);
-      }
-    };
+    
+    // Don't remove script on unmount - it's a singleton
   }, []);
 
   // Initialize services

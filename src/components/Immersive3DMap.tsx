@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface Immersive3DMapProps {
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
   address?: string;
   className?: string;
   defaultExpanded?: boolean;
@@ -22,20 +22,35 @@ export const Immersive3DMap = ({
   const [isLoading, setIsLoading] = useState(true);
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
-  // Google Maps 3D embed URL with photorealistic tiles
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || import.meta.env.VITE_GOOGLE_PLACES_API_KEY;
+  const hasApiKey = !!apiKey && apiKey !== 'demo';
+
+  // Google Maps Embed URL - supports both coords and address
   const getMapUrl = () => {
-    const zoom = isExpanded ? 18 : 17;
-    const tilt = 45;
-    const heading = 0;
+    if (!hasApiKey) return null;
     
-    // Use satellite/3D view
-    return `https://www.google.com/maps/embed/v1/view?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'demo'}&center=${latitude},${longitude}&zoom=${zoom}&maptype=satellite`;
+    const zoom = isExpanded ? 18 : 17;
+    
+    // Use coordinates if available, otherwise use address
+    if (latitude && longitude) {
+      return `https://www.google.com/maps/embed/v1/view?key=${apiKey}&center=${latitude},${longitude}&zoom=${zoom}&maptype=satellite`;
+    } else if (address) {
+      return `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(address)}&zoom=${zoom}&maptype=satellite`;
+    }
+    return null;
   };
 
-  // Alternative: Direct link to Google Maps 3D
+  // Direct link to Google Maps 3D
   const get3DViewUrl = () => {
-    return `https://www.google.com/maps/@${latitude},${longitude},100a,35y,39.15t/data=!3m1!1e3`;
+    if (latitude && longitude) {
+      return `https://www.google.com/maps/@${latitude},${longitude},100a,35y,39.15t/data=!3m1!1e3`;
+    } else if (address) {
+      return `https://www.google.com/maps/search/${encodeURIComponent(address)}`;
+    }
+    return 'https://www.google.com/maps';
   };
+
+  const mapUrl = getMapUrl();
 
   useEffect(() => {
     // Simulate loading
@@ -93,15 +108,26 @@ export const Immersive3DMap = ({
         </div>
       )}
 
-      {/* Map Iframe */}
-      <iframe
-        src={getMapUrl()}
-        className="w-full h-full border-0"
-        allowFullScreen
-        loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
-        onLoad={() => setIsLoading(false)}
-      />
+      {/* Map Iframe or Fallback */}
+      {mapUrl ? (
+        <iframe
+          src={mapUrl}
+          className="w-full h-full border-0"
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          onLoad={() => setIsLoading(false)}
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center bg-muted/30">
+          <div className="text-center p-4">
+            <p className="text-sm text-muted-foreground mb-2">Map preview unavailable</p>
+            <Button size="sm" variant="outline" onClick={() => window.open(get3DViewUrl(), '_blank')}>
+              Open in Google Maps
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Location Label */}
       {address && (
