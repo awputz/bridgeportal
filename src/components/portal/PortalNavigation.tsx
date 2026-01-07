@@ -22,7 +22,10 @@ import {
   Search,
   ClipboardList,
   FileText,
-  Table
+  Table,
+  Wand2,
+  Calculator,
+  Send
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -59,6 +62,15 @@ const essentialsItems = [
   { name: "Intake", path: "/portal/intake", icon: ClipboardList, description: "New business opportunities" },
   { name: "Tasks", path: "/portal/tasks", icon: ListTodo, description: "Personal task management" },
   { name: "Notes", path: "/portal/notes", icon: StickyNote, description: "Quick notes and documentation" },
+];
+
+// Team Tools items with descriptions
+const teamToolsItems = [
+  { name: "Generators", path: "/portal/generators", icon: Wand2, description: "AI-powered document generation" },
+  { name: "Templates", path: "/portal/templates", icon: FileText, description: "Division-specific templates" },
+  { name: "Calculators", path: "/portal/calculators", icon: Calculator, description: "Financial calculators" },
+  { name: "Resources", path: "/portal/resources", icon: FolderOpen, description: "Legal & HR documents" },
+  { name: "Requests", path: "/portal/requests", icon: Send, description: "Business cards, marketing, BOV" },
 ];
 
 // Helper to format "Member since" date
@@ -212,17 +224,47 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Tools */}
-              <Link
-                to="/portal/tools"
-                className={cn(
-                  "relative z-10 flex items-center gap-2 text-[15px] font-light transition-all duration-200 hover:scale-105 cursor-pointer",
-                  isToolsActive ? "text-white" : "text-white/70 hover:text-white"
-                )}
-              >
-                <Wrench className="h-4 w-4" />
-                Tools
-              </Link>
+              {/* Team Tools Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className={cn(
+                    "flex items-center gap-1.5 text-[15px] font-light transition-all duration-200 hover:scale-105",
+                    isToolsActive ? "text-white" : "text-white/70 hover:text-white"
+                  )}>
+                    <Wrench className="h-4 w-4" />
+                    Team Tools
+                    <ChevronDown className="h-3 w-3 opacity-60" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center" className="w-64 p-1.5 dropdown-premium border-0" sideOffset={8}>
+                  {teamToolsItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
+                    return (
+                      <Link 
+                        key={item.name}
+                        to={item.path} 
+                        className={cn(
+                          "dropdown-premium-item group cursor-pointer",
+                          isActive && "bg-white/10"
+                        )}
+                      >
+                        <div className="h-7 w-7 rounded-md bg-white/10 flex items-center justify-center flex-shrink-0">
+                          <Icon className="h-4 w-4 text-white/80" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-[13px] font-medium text-white leading-none">
+                            {item.name}
+                          </p>
+                          <p className="text-[11px] text-white/50 leading-tight">
+                            {item.description}
+                          </p>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
 
               {/* Company */}
               <Link
@@ -258,8 +300,6 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
               >
                 <Search className="h-5 w-5" />
               </button>
-              {/* Theme Toggle */}
-              <ThemeToggle />
               
               {/* Google Apps Launcher */}
               <DropdownMenu>
@@ -293,6 +333,7 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                   </div>
                 </DropdownMenuContent>
               </DropdownMenu>
+              <ThemeToggle />
               <NotificationCenter />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
