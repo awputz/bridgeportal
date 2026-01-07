@@ -134,22 +134,17 @@ export function EmailPreviewSlideOver({
     <Sheet open={!!emailId} onOpenChange={(open) => !open && onClose()}>
       <SheetContent 
         side="right" 
-        className="w-full sm:max-w-xl p-0 flex flex-col"
+        className="w-full sm:max-w-4xl p-0 flex flex-col"
       >
         {/* Header */}
         <SheetHeader className="px-4 py-3 border-b shrink-0">
-          <div className="flex items-center justify-between">
-            <SheetTitle className="text-base font-semibold truncate pr-4">
-              {isLoading ? (
-                <Skeleton className="h-5 w-48" />
-              ) : (
-                email?.subject || "(No subject)"
-              )}
-            </SheetTitle>
-            <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={onClose}>
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
+          <SheetTitle className="text-base font-semibold truncate pr-8">
+            {isLoading ? (
+              <Skeleton className="h-5 w-48" />
+            ) : (
+              email?.subject || "(No subject)"
+            )}
+          </SheetTitle>
         </SheetHeader>
 
         {/* Actions Bar */}

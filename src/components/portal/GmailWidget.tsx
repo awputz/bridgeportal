@@ -56,7 +56,7 @@ const formatRelativeTime = (date: Date) => {
   return format(date, "MMM d, yyyy");
 };
 
-type LabelFilter = "INBOX" | "STARRED" | "SENT";
+type LabelFilter = "INBOX" | "UNREAD" | "STARRED" | "SENT";
 
 export const GmailWidget = () => {
   const queryClient = useQueryClient();
@@ -75,9 +75,9 @@ export const GmailWidget = () => {
   // Gmail connection and data
   const { data: gmailConnection, isLoading: gmailConnectionLoading } = useGmailConnection();
   const { data: messagesData, isLoading: messagesLoading, refetch: refetchMessages, isRefetching } = useGmailMessages({
-    labelIds: [labelFilter],
-    query: searchQuery || undefined,
-    maxResults: 50, // Sync 50 emails
+    labelIds: [labelFilter === "UNREAD" ? "INBOX" : labelFilter],
+    query: labelFilter === "UNREAD" ? (searchQuery ? `is:unread ${searchQuery}` : "is:unread") : (searchQuery || undefined),
+    maxResults: 100, // Sync 100 emails
     enabled: gmailConnection?.isConnected ?? false,
     refetchInterval: 30000, // 30 seconds
   });
@@ -87,7 +87,7 @@ export const GmailWidget = () => {
   const { mutate: trashMessage } = useTrashMessage();
   
   const allMessages = messagesData?.messages || [];
-  const messages = allMessages.slice(0, 15); // Display first 15
+  const messages = labelFilter === "UNREAD" ? allMessages.filter(m => m.isUnread) : allMessages; // Show ALL emails
   const unreadCount = allMessages.filter(m => m.isUnread).length;
   const isConnected = gmailConnection?.isConnected ?? false;
   const isLoading = gmailConnectionLoading || (isConnected && messagesLoading);
@@ -150,15 +150,16 @@ export const GmailWidget = () => {
     return format(lastSyncTime, 'h:mm a');
   };
 
-  const labelFilters: { id: LabelFilter; label: string }[] = [
+  const labelFilters: { id: LabelFilter; label: string; showCount?: boolean }[] = [
     { id: "INBOX", label: "Inbox" },
+    { id: "UNREAD", label: "Unread", showCount: true },
     { id: "STARRED", label: "Starred" },
     { id: "SENT", label: "Sent" },
   ];
 
   return (
     <>
-      <Card className="overflow-hidden border-border/50 bg-card h-full min-h-[600px]">
+      <Card className="overflow-hidden border-border/50 bg-card h-full">
         <CardHeader className="p-3 pb-2">
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -227,6 +228,7 @@ export const GmailWidget = () => {
                     )}
                   >
                     {filter.label}
+                    {filter.showCount && unreadCount > 0 && ` (${unreadCount})`}
                   </button>
                 ))}
               </div>
@@ -235,7 +237,7 @@ export const GmailWidget = () => {
         </CardHeader>
 
         <CardContent className="p-0">
-          <ScrollArea className="h-[520px] overflow-x-hidden">
+          <ScrollArea className="h-[440px] overflow-x-hidden">
             <div className="p-3">
               {/* Not connected state */}
               {!isConnected && !isLoading && (
@@ -261,7 +263,7 @@ export const GmailWidget = () => {
               {/* Loading state - 5 line skeleton */}
               {isLoading && (
                 <div className="space-y-1.5 pr-2">
-                  {[1, 2, 3, 4, 5].map(i => (
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
                     <div key={i} className="px-2.5 py-1.5 rounded-md border border-border/30 bg-muted/5 overflow-hidden">
                       <div className="flex items-center gap-2 mb-1">
                         <Skeleton className="h-1.5 w-1.5 rounded-full shrink-0" />
