@@ -7,10 +7,12 @@ import { useDealRoomRealtime } from "@/hooks/useDealRoomRealtime";
 import { DealRoomFiltersComponent } from "@/components/deal-room/DealRoomFilters";
 import { DealRoomList } from "@/components/deal-room/DealRoomList";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { ShareDealDialog } from "@/components/deal-room/ShareDealDialog";
 
 export default function DealRoom() {
   const [filters, setFilters] = useState<DealRoomFilters>({});
   const [sortBy, setSortBy] = useState<"recent" | "value" | "comments">("recent");
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
   // Enable real-time updates
   useDealRoomRealtime();
@@ -74,7 +76,7 @@ export default function DealRoom() {
               )}
             </div>
           )}
-          <Button size="sm" className="gap-2">
+          <Button size="sm" className="gap-2" onClick={() => setShareDialogOpen(true)}>
             <Plus className="h-4 w-4" />
             <span className="hidden sm:inline">Share Deal</span>
           </Button>
@@ -117,13 +119,13 @@ export default function DealRoom() {
               : "Be the first to share an off-market opportunity with the team"
           }
           actionLabel={!filters.search && !filters.division && !filters.propertyType ? "Share Your First Deal" : undefined}
-          onAction={!filters.search && !filters.division && !filters.propertyType ? () => {
-            // TODO: Open share deal dialog
-          } : undefined}
+          onAction={!filters.search && !filters.division && !filters.propertyType ? () => setShareDialogOpen(true) : undefined}
         />
       ) : (
         <DealRoomList deals={sortedDeals} onDealClick={handleDealClick} />
       )}
+
+      <ShareDealDialog open={shareDialogOpen} onOpenChange={setShareDialogOpen} />
     </div>
   );
 }
