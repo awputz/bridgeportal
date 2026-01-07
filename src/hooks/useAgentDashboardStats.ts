@@ -50,10 +50,15 @@ export const useAgentDashboardStats = (agentId?: string) => {
       return data as AgentDashboardStats;
     },
     enabled: !!targetAgentId,
-    staleTime: 5 * 60 * 1000, // 5 minutes - view is refreshed daily
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
-    retry: 2,
+    retry: (failureCount, error) => {
+      const err = error as { code?: string };
+      // Don't retry permission or not-found errors
+      if (err?.code === '42501' || err?.code === 'PGRST116') return false;
+      return failureCount < 2;
+    },
   });
 };

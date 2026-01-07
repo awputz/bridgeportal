@@ -3,6 +3,7 @@ import { useAgentDashboardStats } from "@/hooks/useAgentDashboardStats";
 import { useCRMStats } from "@/hooks/useCRM";
 import { useDivision } from "@/contexts/DivisionContext";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QueryErrorState } from "@/components/ui/QueryErrorState";
 
 const formatCurrency = (value: number) => {
   if (value >= 1000000) {
@@ -18,10 +19,26 @@ export const DashboardStats = () => {
   const { division } = useDivision();
   
   // Primary: Use materialized view for fast loading
-  const { data: matViewStats, isLoading: isLoadingMatView } = useAgentDashboardStats();
+  const { data: matViewStats, isLoading: isLoadingMatView, error: matViewError, refetch: refetchMatView } = useAgentDashboardStats();
   
   // Fallback: Use regular CRM stats if materialized view is unavailable
-  const { data: crmStats, isLoading: isLoadingCRM } = useCRMStats(division);
+  const { data: crmStats, isLoading: isLoadingCRM, error: crmError, refetch: refetchCRM } = useCRMStats(division);
+
+  // If both queries failed, show error state
+  if (matViewError && crmError) {
+    return (
+      <div className="stat-grid">
+        <div className="col-span-full">
+          <QueryErrorState 
+            error={matViewError}
+            onRetry={() => { refetchMatView(); refetchCRM(); }}
+            compact
+            title="Failed to load stats"
+          />
+        </div>
+      </div>
+    );
+  }
 
   // Prefer materialized view data, fallback to regular CRM stats
   const stats = matViewStats ? {

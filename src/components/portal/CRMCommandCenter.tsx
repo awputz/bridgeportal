@@ -8,6 +8,7 @@ import { DealPipelinePreview } from "./DealPipelinePreview";
 import { DashboardTasks } from "./DashboardTasks";
 import { MonthlyPerformanceChart } from "@/components/charts/MonthlyPerformanceChart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SectionErrorBoundary } from "./SectionErrorBoundary";
 
 const divisionIcons: Record<Division, typeof TrendingUp> = {
   "investment-sales": TrendingUp,
@@ -69,7 +70,9 @@ export const CRMCommandCenter = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
       >
-        <DashboardStats />
+        <SectionErrorBoundary sectionName="Dashboard Stats" className="min-h-[100px]">
+          <DashboardStats />
+        </SectionErrorBoundary>
       </motion.div>
 
       {/* Pipeline & Tasks Grid */}
@@ -79,8 +82,12 @@ export const CRMCommandCenter = () => {
         transition={{ delay: 0.1 }}
         className="grid md:grid-cols-2 grid-gap"
       >
-        <DealPipelinePreview />
-        <DashboardTasks />
+        <SectionErrorBoundary sectionName="Deal Pipeline">
+          <DealPipelinePreview />
+        </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName="Dashboard Tasks">
+          <DashboardTasks />
+        </SectionErrorBoundary>
       </motion.div>
 
       {/* Performance Chart */}
@@ -89,17 +96,19 @@ export const CRMCommandCenter = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
       >
-        <Card className="glass-card">
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2 text-sm font-medium">
-              <BarChart3 className="h-4 w-4 text-primary" />
-              Monthly Performance
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <MonthlyPerformanceChart division={division} height={180} />
-          </CardContent>
-        </Card>
+        <SectionErrorBoundary sectionName="Monthly Performance">
+          <Card className="glass-card">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-sm font-medium">
+                <BarChart3 className="h-4 w-4 text-primary" />
+                Monthly Performance
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <MonthlyPerformanceChart division={division} height={180} />
+            </CardContent>
+          </Card>
+        </SectionErrorBoundary>
       </motion.div>
     </div>
   );

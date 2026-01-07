@@ -3,6 +3,7 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 import { format } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
 import { TrendingUp } from 'lucide-react';
+import { QueryErrorState } from '@/components/ui/QueryErrorState';
 
 interface MonthlyPerformanceChartProps {
   agentId?: string;
@@ -15,7 +16,20 @@ export function MonthlyPerformanceChart({
   division,
   height = 200 
 }: MonthlyPerformanceChartProps) {
-  const { data: performance, isLoading } = useMonthlyPerformance(agentId, division);
+  const { data: performance, isLoading, error, refetch } = useMonthlyPerformance(agentId, division);
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center" style={{ height }}>
+        <QueryErrorState 
+          error={error}
+          onRetry={() => refetch()}
+          compact
+          title="Failed to load chart"
+        />
+      </div>
+    );
+  }
 
   if (isLoading) {
     return <Skeleton className="w-full" style={{ height }} />;

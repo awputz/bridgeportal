@@ -81,6 +81,15 @@ export const useTasks = (filter?: "today" | "week" | "overdue" | "completed" | "
       if (error) throw error;
       return data as Task[];
     },
+    staleTime: 30 * 1000,
+    gcTime: 2 * 60 * 1000,
+    retry: (failureCount, error) => {
+      const err = error as { code?: string };
+      if (err?.code === '42501' || err?.code === 'PGRST116') return false;
+      return failureCount < 2;
+    },
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 };
 
