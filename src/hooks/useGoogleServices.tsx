@@ -128,7 +128,7 @@ export function useUserProfile() {
       // Get profile data
       const { data: profile } = await supabase
         .from('profiles')
-        .select('full_name, email, avatar_url, phone')
+        .select('full_name, email, avatar_url, phone, created_at')
         .eq('id', user.id)
         .maybeSingle();
 
@@ -138,6 +138,7 @@ export function useUserProfile() {
         fullName: profile?.full_name || user.user_metadata?.full_name || user.user_metadata?.name,
         avatarUrl: profile?.avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture,
         phone: profile?.phone,
+        createdAt: profile?.created_at || user.created_at,
       };
     },
     staleTime: 60000,
