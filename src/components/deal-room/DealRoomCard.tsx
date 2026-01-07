@@ -175,17 +175,19 @@ export const DealRoomCard = memo(function DealRoomCard({ deal, onClick }: DealRo
 
         {/* Agent Info - bottom left on image */}
         <div className="absolute bottom-2 left-2 flex items-center gap-2">
-          <Avatar className="h-7 w-7 border-2 border-background/80">
+          <Avatar className="h-7 w-7 border-2 border-background/80 flex-shrink-0">
             <AvatarImage src={deal.agent?.avatar_url || undefined} />
             <AvatarFallback className="text-[10px] bg-primary text-primary-foreground">
               {agentInitials}
             </AvatarFallback>
           </Avatar>
-          <div className="text-white drop-shadow-lg">
-            <p className="text-xs font-medium leading-none">
+          <div className="text-white min-w-0">
+            <p className="text-xs font-semibold leading-none drop-shadow-lg mb-1 truncate">
               {deal.agent?.full_name || "Unknown Agent"}
             </p>
-            <p className="text-[10px] opacity-80 leading-tight">{timeAgo}</p>
+            <p className="text-[10px] text-white/90 leading-none drop-shadow">
+              {DIVISION_LABELS[deal.division] || deal.division} • {timeAgo}
+            </p>
           </div>
         </div>
 
