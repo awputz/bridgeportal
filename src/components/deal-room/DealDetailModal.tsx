@@ -91,7 +91,7 @@ function formatSF(sf: number): string {
   return `${sf.toLocaleString()} SF`;
 }
 
-// Metric card component
+// Metric card component - horizontal layout with icon left, label above value
 const MetricCard = memo(function MetricCard({ 
   icon: Icon, 
   label, 
@@ -103,13 +103,13 @@ const MetricCard = memo(function MetricCard({
 }) {
   if (!value) return null;
   return (
-    <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border border-border/50">
-      <div className="p-1.5 rounded-md bg-primary/10">
+    <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/40 border border-border/40">
+      <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
         <Icon className="h-4 w-4 text-primary" />
       </div>
-      <div className="min-w-0">
+      <div className="min-w-0 flex-1">
+        <p className="text-[11px] text-muted-foreground uppercase tracking-wide">{label}</p>
         <p className="text-sm font-semibold truncate">{value}</p>
-        <p className="text-xs text-muted-foreground">{label}</p>
       </div>
     </div>
   );
@@ -207,7 +207,7 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
   return (
     <>
       <Dialog key={dealId} open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-5xl w-[95vw] max-h-[90vh] p-0 gap-0 overflow-hidden flex flex-col">
+        <DialogContent className="max-w-4xl w-[90vw] max-h-[90vh] p-0 gap-0 overflow-hidden flex flex-col bg-background">
           <DialogHeader className="sr-only">
             <DialogTitle>Deal Details</DialogTitle>
             <DialogDescription>
@@ -230,12 +230,12 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
             </div>
           ) : (
             <div className="flex-1 overflow-y-auto">
-              {/* Hero Photo Section */}
-              <div className="relative aspect-video max-h-64 bg-muted">
+              {/* Hero Photo Section - Full width with proper aspect */}
+              <div className="relative w-full aspect-[16/9] max-h-72 bg-muted overflow-hidden">
                 <img
                   src={heroImage}
                   alt={`Property at ${deal.property_address}`}
-                  className="w-full h-full object-cover"
+                  className="absolute inset-0 w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
                 
@@ -277,9 +277,32 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
               </div>
 
               {/* Content Section */}
-              <div className="p-4 md:p-6 space-y-5">
+              <div className="p-5 md:p-6 space-y-6">
+                {/* Agent Info - Prominent card */}
+                <div className="flex items-center gap-4 p-4 rounded-xl bg-muted/30 border border-border/40">
+                  <Avatar className="h-12 w-12 flex-shrink-0">
+                    <AvatarImage src={deal.agent?.avatar_url || undefined} />
+                    <AvatarFallback className="text-sm bg-primary text-primary-foreground font-semibold">
+                      {deal.agent?.full_name
+                        ?.split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .toUpperCase() || "?"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-semibold text-base leading-tight">{deal.agent?.full_name}</p>
+                    <p className="text-sm text-muted-foreground mt-0.5">
+                      {DIVISION_LABELS[deal.division] || deal.division} •{" "}
+                      {deal.last_deal_room_update
+                        ? `Updated ${formatDistanceToNow(new Date(deal.last_deal_room_update), { addSuffix: true })}`
+                        : `Shared ${formatDistanceToNow(new Date(deal.created_at), { addSuffix: true })}`}
+                    </p>
+                  </div>
+                </div>
+
                 {/* Action Buttons Row */}
-                <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3">
+                <div className="flex flex-wrap gap-2.5">
                   {deal.om_file_url && (
                     <Button 
                       size="sm"
@@ -292,38 +315,15 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                   )}
                   <Button variant="outline" size="sm" onClick={handleShare} className="gap-1.5">
                     <Share2 className="h-4 w-4" />
-                    Share Deal
+                    Share
                   </Button>
                   <InterestButton dealId={deal.id} />
                   <Button variant="outline" size="sm" asChild className="gap-1.5">
                     <Link to={`/portal/crm/deals/${deal.id}`}>
                       <ExternalLink className="h-4 w-4" />
-                      View in CRM
+                      CRM
                     </Link>
                   </Button>
-                </div>
-
-                {/* Agent Info */}
-                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border/50">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={deal.agent?.avatar_url || undefined} />
-                    <AvatarFallback className="text-sm bg-primary text-primary-foreground">
-                      {deal.agent?.full_name
-                        ?.split(" ")
-                        .map((n) => n[0])
-                        .join("")
-                        .toUpperCase() || "?"}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold">{deal.agent?.full_name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {DIVISION_LABELS[deal.division] || deal.division} •{" "}
-                      {deal.last_deal_room_update
-                        ? `Updated ${formatDistanceToNow(new Date(deal.last_deal_room_update), { addSuffix: true })}`
-                        : `Shared ${formatDistanceToNow(new Date(deal.created_at), { addSuffix: true })}`}
-                    </p>
-                  </div>
                 </div>
 
                 {/* Key Metrics - Horizontal Grid */}
@@ -406,39 +406,39 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
 
                 <Separator />
 
-                {/* Tabs */}
+                {/* Tabs - Clean styling */}
                 <Tabs defaultValue="photos" className="w-full">
-                  <TabsList className="w-full justify-start flex-wrap h-auto gap-1 p-1">
-                    <TabsTrigger value="photos" className="gap-1.5 text-xs">
+                  <TabsList className="w-full h-auto p-1.5 gap-1.5 bg-muted/40 rounded-lg flex flex-wrap justify-start">
+                    <TabsTrigger value="photos" className="gap-1.5 text-xs data-[state=active]:bg-background">
                       <ImageIcon className="h-3.5 w-3.5" />
                       Photos
                       {photoCount > 0 && (
-                        <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0 h-4">
+                        <Badge variant="secondary" className="ml-0.5 text-[10px] px-1.5 py-0 h-4 min-w-[1.25rem]">
                           {photoCount}
                         </Badge>
                       )}
                     </TabsTrigger>
-                    <TabsTrigger value="files" className="gap-1.5 text-xs">
+                    <TabsTrigger value="files" className="gap-1.5 text-xs data-[state=active]:bg-background">
                       <FileText className="h-3.5 w-3.5" />
                       Files
                     </TabsTrigger>
-                    <TabsTrigger value="comments" className="gap-1.5 text-xs">
+                    <TabsTrigger value="comments" className="gap-1.5 text-xs data-[state=active]:bg-background">
                       <MessageCircle className="h-3.5 w-3.5" />
                       Comments
                     </TabsTrigger>
-                    <TabsTrigger value="interested" className="gap-1.5 text-xs">
+                    <TabsTrigger value="interested" className="gap-1.5 text-xs data-[state=active]:bg-background">
                       <Star className="h-3.5 w-3.5" />
                       Interested
                     </TabsTrigger>
-                    <TabsTrigger value="activity" className="gap-1.5 text-xs">
+                    <TabsTrigger value="activity" className="gap-1.5 text-xs data-[state=active]:bg-background">
                       <Activity className="h-3.5 w-3.5" />
                       Activity
                     </TabsTrigger>
-                    <TabsTrigger value="matches" className="gap-1.5 text-xs">
+                    <TabsTrigger value="matches" className="gap-1.5 text-xs data-[state=active]:bg-background">
                       <Target className="h-3.5 w-3.5" />
                       Matches
                       {matchCount > 0 && (
-                        <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0 h-4">
+                        <Badge variant="secondary" className="ml-0.5 text-[10px] px-1.5 py-0 h-4 min-w-[1.25rem]">
                           {matchCount}
                         </Badge>
                       )}

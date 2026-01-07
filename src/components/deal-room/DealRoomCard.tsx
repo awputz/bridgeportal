@@ -230,36 +230,36 @@ export const DealRoomCard = memo(function DealRoomCard({ deal, onClick }: DealRo
           )}
         </div>
 
-        {/* Key Metrics Grid */}
-        <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
+        {/* Key Metrics Grid - Consistent spacing */}
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2">
           {deal.value && (
-            <div>
-              <span className="text-muted-foreground">Value</span>
-              <p className="font-semibold text-foreground">
+            <div className="space-y-0.5">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Value</p>
+              <p className="text-sm font-semibold text-foreground">
                 {formatCurrency(deal.value)}
               </p>
             </div>
           )}
           {deal.gross_sf && (
-            <div>
-              <span className="text-muted-foreground">Size</span>
-              <p className="font-semibold text-foreground">
+            <div className="space-y-0.5">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Size</p>
+              <p className="text-sm font-semibold text-foreground">
                 {formatSF(deal.gross_sf)}
               </p>
             </div>
           )}
           {deal.property_type && (
-            <div>
-              <span className="text-muted-foreground">Type</span>
-              <p className="font-medium text-foreground capitalize">
+            <div className="space-y-0.5">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Type</p>
+              <p className="text-sm font-medium text-foreground capitalize">
                 {deal.property_type.replace(/-/g, " ")}
               </p>
             </div>
           )}
           {deal.deal_type && (
-            <div>
-              <span className="text-muted-foreground">Deal</span>
-              <p className="font-medium text-foreground capitalize">
+            <div className="space-y-0.5">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Deal</p>
+              <p className="text-sm font-medium text-foreground capitalize">
                 {deal.deal_type.replace(/-/g, " ")}
               </p>
             </div>
@@ -273,8 +273,8 @@ export const DealRoomCard = memo(function DealRoomCard({ deal, onClick }: DealRo
           </p>
         )}
 
-        {/* Engagement & Actions */}
-        <div className="flex items-center justify-between pt-1 border-t border-border/50">
+        {/* Engagement & Actions - Tighter row */}
+        <div className="flex items-center justify-between pt-2.5 border-t border-border/30">
           <EngagementBadges dealId={deal.id} />
           
           <div className="flex items-center gap-1">
