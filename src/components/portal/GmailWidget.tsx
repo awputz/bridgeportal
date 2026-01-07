@@ -24,6 +24,26 @@ import { SectionErrorBoundary } from "./SectionErrorBoundary";
 import { toast } from "sonner";
 import { formatSafeRelativeTime } from "@/lib/dateUtils";
 
+// Decode HTML entities (e.g., &#39; → ')
+function decodeHtmlEntities(text: string): string {
+  const textarea = document.createElement('textarea');
+  textarea.innerHTML = text;
+  return textarea.value;
+}
+
+// Sanitize plain text for encoding issues
+function sanitizeEmailText(text: string): string {
+  if (!text) return '';
+  
+  return text
+    .replace(/â€™/g, "'")
+    .replace(/â€œ/g, '"')
+    .replace(/â€/g, '"')
+    .replace(/â€"/g, '—')
+    .replace(/â€"/g, '–')
+    .replace(/Â /g, ' ');
+}
+
 type LabelFilter = "INBOX" | "UNREAD" | "STARRED" | "SENT";
 
 export const GmailWidget = () => {
@@ -347,12 +367,12 @@ export const GmailWidget = () => {
                         "text-sm truncate mb-px min-w-0 leading-tight",
                         message.isUnread ? "font-semibold text-foreground" : "text-foreground/70"
                       )}>
-                        {message.subject || "(No subject)"}
+                        {decodeHtmlEntities(message.subject || "(No subject)")}
                       </p>
 
                       {/* Line 3: Snippet/Preview */}
                       <p className="text-xs text-muted-foreground truncate min-w-0 mb-0 leading-tight">
-                        {message.snippet || ""}
+                        {sanitizeEmailText(message.snippet || "")}
                       </p>
                     </button>
                   ))}

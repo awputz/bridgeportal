@@ -1118,3 +1118,42 @@ button, [role="button"], a {
   color: hsl(var(--muted-foreground));
   font-size: 0.8rem;
 }
+
+/* ========================================
+   EMAIL CONTENT STYLES - Dark mode readability
+   ======================================== */
+
+.email-content [style*="color"] {
+  color: hsl(var(--foreground)) !important;
+}
+
+.email-content font[color] {
+  color: hsl(var(--foreground)) !important;
+}
+
+.email-content td[style*="color"],
+.email-content th[style*="color"],
+.email-content span[style*="color"],
+.email-content div[style*="color"],
+.email-content p[style*="color"] {
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Force links to be visible */
+.email-content a,
+.email-content a[style*="color"] {
+  color: hsl(var(--primary)) !important;
+}
+
+/* Handle email signatures which often have light colors */
+.email-content [style*="color:#888"],
+.email-content [style*="color:#999"],
+.email-content [style*="color:#aaa"],
+.email-content [style*="color:#bbb"],
+.email-content [style*="color:#ccc"],
+.email-content [style*="color:#ddd"],
+.email-content [style*="color:#eee"],
+.email-content [style*="color:gray"],
+.email-content [style*="color:grey"] {
+  color: hsl(var(--muted-foreground)) !important;
+}
