@@ -1,11 +1,11 @@
-import { formatDistanceToNow } from "date-fns";
-import { FileText, MessageCircle, ExternalLink, Star } from "lucide-react";
+import { formatDistanceToNow, differenceInHours } from "date-fns";
+import { FileText, MessageCircle, ExternalLink, Star, Flame } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DealRoomDeal } from "@/hooks/useDealRoom";
+import { DealRoomDeal, useDealRoomComments, useDealRoomInterests } from "@/hooks/useDealRoom";
 import { cn } from "@/lib/utils";
 
 interface DealRoomCardProps {
@@ -33,6 +33,41 @@ function formatSF(sf: number): string {
   return `${sf.toLocaleString()} SF`;
 }
 
+// Engagement badges component
+function EngagementBadges({ dealId }: { dealId: string }) {
+  const { data: comments } = useDealRoomComments(dealId);
+  const { data: interests } = useDealRoomInterests(dealId);
+
+  const commentCount = comments?.reduce((acc, c) => acc + 1 + (c.replies?.length || 0), 0) || 0;
+  const interestCount = interests?.length || 0;
+  const isHot = commentCount >= 5 || interestCount >= 3;
+
+  if (commentCount === 0 && interestCount === 0) return null;
+
+  return (
+    <div className="flex items-center gap-2">
+      {isHot && (
+        <Badge variant="destructive" className="gap-1 text-xs px-1.5">
+          <Flame className="h-3 w-3" />
+          Hot
+        </Badge>
+      )}
+      {commentCount > 0 && (
+        <Badge variant="secondary" className="gap-1 text-xs px-1.5">
+          <MessageCircle className="h-3 w-3" />
+          {commentCount}
+        </Badge>
+      )}
+      {interestCount > 0 && (
+        <Badge variant="secondary" className="gap-1 text-xs px-1.5">
+          <Star className="h-3 w-3" />
+          {interestCount}
+        </Badge>
+      )}
+    </div>
+  );
+}
+
 export function DealRoomCard({ deal, onClick }: DealRoomCardProps) {
   const timeAgo = deal.last_deal_room_update
     ? formatDistanceToNow(new Date(deal.last_deal_room_update), { addSuffix: true })
@@ -44,11 +79,16 @@ export function DealRoomCard({ deal, onClick }: DealRoomCardProps) {
     .join("")
     .toUpperCase() || "?";
 
+  // Check if deal is new (shared within 48 hours)
+  const isNew = deal.last_deal_room_update
+    ? differenceInHours(new Date(), new Date(deal.last_deal_room_update)) < 48
+    : false;
+
   return (
     <Card
       className={cn(
         "group cursor-pointer transition-all duration-200",
-        "hover:border-primary/30 hover:shadow-md"
+        "hover:border-primary/30 hover:shadow-md hover:scale-[1.01]"
       )}
       onClick={onClick}
     >
@@ -67,6 +107,11 @@ export function DealRoomCard({ deal, onClick }: DealRoomCardProps) {
             </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
+            {isNew && (
+              <Badge className="bg-green-500/20 text-green-600 border-green-500/30 text-xs">
+                New
+              </Badge>
+            )}
             <Badge variant="outline" className="text-xs">
               {DIVISION_LABELS[deal.division] || deal.division}
             </Badge>
@@ -84,8 +129,8 @@ export function DealRoomCard({ deal, onClick }: DealRoomCardProps) {
           )}
         </div>
 
-        {/* Key Metrics */}
-        <div className="flex flex-wrap gap-2">
+        {/* Key Metrics + Engagement */}
+        <div className="flex flex-wrap items-center gap-2">
           {deal.value && (
             <Badge variant="secondary">{formatCurrency(deal.value)}</Badge>
           )}
@@ -102,6 +147,8 @@ export function DealRoomCard({ deal, onClick }: DealRoomCardProps) {
               {deal.deal_type.replace(/-/g, " ")}
             </Badge>
           )}
+          <div className="flex-1" />
+          <EngagementBadges dealId={deal.id} />
         </div>
 
         {/* Notes preview */}
@@ -133,7 +180,7 @@ export function DealRoomCard({ deal, onClick }: DealRoomCardProps) {
             className="h-8 gap-1.5 text-xs"
             onClick={(e) => {
               e.stopPropagation();
-              // TODO: Open comments modal
+              onClick();
             }}
           >
             <MessageCircle className="h-3.5 w-3.5" />
@@ -157,7 +204,7 @@ export function DealRoomCard({ deal, onClick }: DealRoomCardProps) {
             className="h-8 ml-auto gap-1.5 text-xs"
             onClick={(e) => {
               e.stopPropagation();
-              // TODO: Express interest
+              onClick();
             }}
           >
             <Star className="h-3.5 w-3.5" />
