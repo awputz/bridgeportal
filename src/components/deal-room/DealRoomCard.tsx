@@ -1,13 +1,25 @@
+import { useState, memo } from "react";
 import { formatDistanceToNow, differenceInHours } from "date-fns";
-import { FileText, MessageCircle, ExternalLink, Star, Flame, ImageIcon } from "lucide-react";
+import { 
+  FileText, 
+  MessageCircle, 
+  ExternalLink, 
+  Star, 
+  Flame,
+  MapPin,
+  Eye,
+  ImageIcon
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { DealRoomDeal, useDealRoomComments, useDealRoomInterests } from "@/hooks/useDealRoom";
 import { useDealRoomPhotos } from "@/hooks/useDealRoomPhotos";
 import { cn } from "@/lib/utils";
+import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 
 interface DealRoomCardProps {
   deal: DealRoomDeal;
@@ -18,6 +30,12 @@ const DIVISION_LABELS: Record<string, string> = {
   "investment-sales": "Investment",
   "commercial-leasing": "Commercial",
   residential: "Residential",
+};
+
+const DIVISION_COLORS: Record<string, string> = {
+  "investment-sales": "bg-purple-500/20 text-purple-400 border-purple-500/30",
+  "commercial-leasing": "bg-blue-500/20 text-blue-400 border-blue-500/30",
+  residential: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
 };
 
 function formatCurrency(value: number): string {
@@ -34,46 +52,50 @@ function formatSF(sf: number): string {
   return `${sf.toLocaleString()} SF`;
 }
 
-// Engagement badges component
-function EngagementBadges({ dealId }: { dealId: string }) {
-  const { data: comments } = useDealRoomComments(dealId);
-  const { data: interests } = useDealRoomInterests(dealId);
+// Memoized engagement badges component
+const EngagementBadges = memo(function EngagementBadges({ dealId }: { dealId: string }) {
+  const { data: comments, isLoading: commentsLoading } = useDealRoomComments(dealId);
+  const { data: interests, isLoading: interestsLoading } = useDealRoomInterests(dealId);
 
   const commentCount = comments?.reduce((acc, c) => acc + 1 + (c.replies?.length || 0), 0) || 0;
   const interestCount = interests?.length || 0;
   const isHot = commentCount >= 5 || interestCount >= 3;
 
+  if (commentsLoading || interestsLoading) {
+    return <Skeleton className="h-5 w-16" />;
+  }
+
   if (commentCount === 0 && interestCount === 0) return null;
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1.5">
       {isHot && (
-        <Badge variant="destructive" className="gap-1 text-xs px-1.5">
+        <Badge variant="destructive" className="gap-1 text-[10px] px-1.5 py-0">
           <Flame className="h-3 w-3" />
           Hot
         </Badge>
       )}
       {commentCount > 0 && (
-        <Badge variant="secondary" className="gap-1 text-xs px-1.5">
+        <Badge variant="secondary" className="gap-1 text-[10px] px-1.5 py-0" aria-label={`${commentCount} comments`}>
           <MessageCircle className="h-3 w-3" />
           {commentCount}
         </Badge>
       )}
       {interestCount > 0 && (
-        <Badge variant="secondary" className="gap-1 text-xs px-1.5">
+        <Badge variant="secondary" className="gap-1 text-[10px] px-1.5 py-0" aria-label={`${interestCount} interested`}>
           <Star className="h-3 w-3" />
           {interestCount}
         </Badge>
       )}
     </div>
   );
-}
+});
 
-export function DealRoomCard({ deal, onClick }: DealRoomCardProps) {
+export const DealRoomCard = memo(function DealRoomCard({ deal, onClick }: DealRoomCardProps) {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const { data: photos } = useDealRoomPhotos(deal.id);
-  const primaryPhoto = photos?.find(p => p.is_primary) || photos?.[0];
-  const photoCount = photos?.length || 0;
-
+  
   const timeAgo = deal.last_deal_room_update
     ? formatDistanceToNow(new Date(deal.last_deal_room_update), { addSuffix: true })
     : formatDistanceToNow(new Date(deal.updated_at), { addSuffix: true });
@@ -89,153 +111,198 @@ export function DealRoomCard({ deal, onClick }: DealRoomCardProps) {
     ? differenceInHours(new Date(), new Date(deal.last_deal_room_update)) < 48
     : false;
 
+  // Get image URL - use photos, then placeholder
+  const primaryPhoto = photos?.find(p => p.is_primary) || photos?.[0];
+  const imageUrl = primaryPhoto?.image_url || PLACEHOLDER_IMAGES.building.exterior;
+  const photoCount = photos?.length || 0;
+  const divisionColor = DIVISION_COLORS[deal.division] || "bg-muted/50 text-muted-foreground";
+
   return (
     <Card
-      className={cn(
-        "group cursor-pointer transition-all duration-200 overflow-hidden",
-        "hover:border-primary/30 hover:shadow-md hover:scale-[1.01]"
-      )}
+      role="article"
+      tabIndex={0}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+      aria-label={`Deal at ${deal.property_address}${deal.value ? `, ${formatCurrency(deal.value)}` : ''}`}
+      className="group cursor-pointer overflow-hidden border-border/50 bg-card hover:border-primary/30 hover:shadow-lg transition-all duration-300"
     >
-      {/* Property Image */}
-      {primaryPhoto && (
-        <div className="relative h-40 bg-muted">
-          <img
-            src={primaryPhoto.image_url}
-            alt={deal.property_address}
-            className="w-full h-full object-cover"
-          />
-          {photoCount > 1 && (
-            <Badge 
-              variant="secondary" 
-              className="absolute bottom-2 right-2 gap-1 text-xs bg-background/80 backdrop-blur-sm"
-            >
-              <ImageIcon className="h-3 w-3" />
-              {photoCount}
+      {/* Hero Image Section */}
+      <div className="deal-card-image-container relative h-40 w-full bg-muted">
+        {/* Loading skeleton */}
+        {!imageLoaded && !imageError && (
+          <div className="absolute inset-0 bg-muted animate-pulse" />
+        )}
+        
+        <img
+          src={imageError ? PLACEHOLDER_IMAGES.building.exterior : imageUrl}
+          alt={`Property at ${deal.property_address}`}
+          loading="lazy"
+          onLoad={() => setImageLoaded(true)}
+          onError={() => setImageError(true)}
+          className={cn(
+            "deal-card-image w-full h-full object-cover",
+            !imageLoaded && "blur-sm scale-105",
+            imageLoaded && "blur-0 scale-100"
+          )}
+        />
+        
+        {/* Gradient overlay for text readability */}
+        <div className="deal-card-gradient absolute inset-0 pointer-events-none" />
+
+        {/* Top badges - absolute positioned on image */}
+        <div className="absolute top-2 left-2 right-2 flex items-center justify-between">
+          {/* Division Badge */}
+          <Badge 
+            variant="outline" 
+            className={cn("text-[10px] backdrop-blur-sm border", divisionColor)}
+          >
+            {DIVISION_LABELS[deal.division] || deal.division}
+          </Badge>
+
+          {/* New Badge */}
+          {isNew && (
+            <Badge className="bg-emerald-500 text-white text-[10px] animate-pulse">
+              <Flame className="h-3 w-3 mr-0.5" />
+              New
             </Badge>
           )}
         </div>
-      )}
-      <CardContent className="p-4 space-y-3">
-        {/* Header: Agent + Time */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 min-w-0">
-            <Avatar className="h-7 w-7 flex-shrink-0">
-              <AvatarImage src={deal.agent?.avatar_url || undefined} />
-              <AvatarFallback className="text-xs">{agentInitials}</AvatarFallback>
-            </Avatar>
-            <div className="min-w-0">
-              <p className="text-sm font-medium truncate">
-                {deal.agent?.full_name || "Unknown Agent"}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
-            {isNew && (
-              <Badge className="bg-green-500/20 text-green-600 border-green-500/30 text-xs">
-                New
-              </Badge>
-            )}
-            <Badge variant="outline" className="text-xs">
-              {DIVISION_LABELS[deal.division] || deal.division}
-            </Badge>
-            <span className="text-xs text-muted-foreground">{timeAgo}</span>
+
+        {/* Agent Info - bottom left on image */}
+        <div className="absolute bottom-2 left-2 flex items-center gap-2">
+          <Avatar className="h-7 w-7 border-2 border-background/80">
+            <AvatarImage src={deal.agent?.avatar_url || undefined} />
+            <AvatarFallback className="text-[10px] bg-primary text-primary-foreground">
+              {agentInitials}
+            </AvatarFallback>
+          </Avatar>
+          <div className="text-white drop-shadow-lg">
+            <p className="text-xs font-medium leading-none">
+              {deal.agent?.full_name || "Unknown Agent"}
+            </p>
+            <p className="text-[10px] opacity-80 leading-tight">{timeAgo}</p>
           </div>
         </div>
 
-        {/* Address */}
+        {/* Photo count badge - bottom right */}
+        {photoCount > 1 && (
+          <Badge 
+            variant="secondary" 
+            className="absolute bottom-2 right-2 gap-1 text-[10px] bg-background/80 backdrop-blur-sm"
+          >
+            <ImageIcon className="h-3 w-3" />
+            {photoCount}
+          </Badge>
+        )}
+
+        {/* Hover overlay with "View Details" */}
+        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+          <div className="flex items-center gap-2 text-white font-medium">
+            <Eye className="h-5 w-5" />
+            View Details
+          </div>
+        </div>
+      </div>
+
+      {/* Card Content */}
+      <CardContent className="p-3 space-y-2">
+        {/* Address & Location */}
         <div>
-          <h3 className="font-semibold text-base leading-tight line-clamp-1">
+          <h3 className="font-semibold text-sm leading-tight line-clamp-1 group-hover:text-primary transition-colors">
             {deal.property_address}
           </h3>
-          {deal.neighborhood && (
-            <p className="text-sm text-muted-foreground">{deal.neighborhood}</p>
+          {(deal.neighborhood || deal.borough) && (
+            <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+              <MapPin className="h-3 w-3 flex-shrink-0" />
+              {deal.neighborhood}
+              {deal.neighborhood && deal.borough && ", "}
+              {deal.borough}
+            </p>
           )}
         </div>
 
-        {/* Key Metrics + Engagement */}
-        <div className="flex flex-wrap items-center gap-2">
+        {/* Key Metrics Grid */}
+        <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
           {deal.value && (
-            <Badge variant="secondary">{formatCurrency(deal.value)}</Badge>
+            <div>
+              <span className="text-muted-foreground">Value</span>
+              <p className="font-semibold text-foreground">
+                {formatCurrency(deal.value)}
+              </p>
+            </div>
           )}
           {deal.gross_sf && (
-            <Badge variant="secondary">{formatSF(deal.gross_sf)}</Badge>
+            <div>
+              <span className="text-muted-foreground">Size</span>
+              <p className="font-semibold text-foreground">
+                {formatSF(deal.gross_sf)}
+              </p>
+            </div>
           )}
           {deal.property_type && (
-            <Badge variant="secondary" className="capitalize">
-              {deal.property_type.replace(/-/g, " ")}
-            </Badge>
+            <div>
+              <span className="text-muted-foreground">Type</span>
+              <p className="font-medium text-foreground capitalize">
+                {deal.property_type.replace(/-/g, " ")}
+              </p>
+            </div>
           )}
           {deal.deal_type && (
-            <Badge variant="outline" className="capitalize">
-              {deal.deal_type.replace(/-/g, " ")}
-            </Badge>
+            <div>
+              <span className="text-muted-foreground">Deal</span>
+              <p className="font-medium text-foreground capitalize">
+                {deal.deal_type.replace(/-/g, " ")}
+              </p>
+            </div>
           )}
-          <div className="flex-1" />
-          <EngagementBadges dealId={deal.id} />
         </div>
 
-        {/* Notes preview */}
+        {/* Notes Preview */}
         {deal.deal_room_notes && (
-          <p className="text-sm text-muted-foreground line-clamp-2 italic">
+          <p className="text-xs text-muted-foreground italic line-clamp-2 border-l-2 border-muted pl-2">
             "{deal.deal_room_notes}"
           </p>
         )}
 
-        {/* Actions */}
-        <div className="flex items-center gap-2 pt-1 border-t border-border/50">
-          {deal.om_file_url && (
+        {/* Engagement & Actions */}
+        <div className="flex items-center justify-between pt-1 border-t border-border/50">
+          <EngagementBadges dealId={deal.id} />
+          
+          <div className="flex items-center gap-1">
+            {deal.om_file_url && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-6 px-2 text-[10px]"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.open(deal.om_file_url!, "_blank");
+                }}
+              >
+                <FileText className="h-3 w-3 mr-1" />
+                OM
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 gap-1.5 text-xs"
-              onClick={(e) => {
-                e.stopPropagation();
-                window.open(deal.om_file_url!, "_blank");
-              }}
+              className="h-6 px-2 text-[10px]"
+              onClick={(e) => e.stopPropagation()}
+              asChild
             >
-              <FileText className="h-3.5 w-3.5" />
-              <span>OM</span>
+              <Link to={`/portal/crm/deals/${deal.id}`}>
+                <ExternalLink className="h-3 w-3 mr-1" />
+                CRM
+              </Link>
             </Button>
-          )}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 gap-1.5 text-xs"
-            onClick={(e) => {
-              e.stopPropagation();
-              onClick();
-            }}
-          >
-            <MessageCircle className="h-3.5 w-3.5" />
-            <span>Comments</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 gap-1.5 text-xs"
-            asChild
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Link to={`/portal/crm/deals/${deal.id}`}>
-              <ExternalLink className="h-3.5 w-3.5" />
-              <span>CRM</span>
-            </Link>
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 ml-auto gap-1.5 text-xs"
-            onClick={(e) => {
-              e.stopPropagation();
-              onClick();
-            }}
-          >
-            <Star className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Interested</span>
-          </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
   );
-}
+});

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { ExternalLink, FileText, MessageCircle, Star, Activity, Edit2, Trash2, Save, X, Target, ImageIcon } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -76,6 +76,14 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
   const [editedNotes, setEditedNotes] = useState("");
   const [showRemoveDialog, setShowRemoveDialog] = useState(false);
 
+  // Reset state when modal closes to prevent stale data
+  useEffect(() => {
+    if (!open) {
+      setIsEditingNotes(false);
+      setEditedNotes("");
+    }
+  }, [open]);
+
   const isOwner = deal?.agent_id === agent?.id;
 
   const handleStartEditNotes = () => {
@@ -100,7 +108,7 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
 
   return (
     <>
-      <Sheet open={open} onOpenChange={onOpenChange}>
+      <Sheet key={dealId} open={open} onOpenChange={onOpenChange}>
         <SheetContent className="w-full sm:max-w-lg p-0 flex flex-col">
           <SheetHeader className="px-6 pt-6 pb-4">
             <SheetTitle className="sr-only">Deal Details</SheetTitle>
