@@ -16,7 +16,7 @@ import { CRMCommandCenter } from "@/components/portal/CRMCommandCenter";
 import { WelcomeBanner } from "@/components/portal/WelcomeBanner";
 import { AnnouncementsWidget } from "@/components/portal/AnnouncementsWidget";
 import { WorkspaceCarousel } from "@/components/portal/WorkspaceCarousel";
-import { AlertsWidget } from "@/components/portal/AlertsWidget";
+import { HotDealsWidget } from "@/components/portal/HotDealsWidget";
 import { SectionErrorBoundary } from "@/components/portal/SectionErrorBoundary";
 
 // Icon mapping for dynamic icons from database
@@ -169,14 +169,14 @@ const Dashboard = () => {
           </SectionErrorBoundary>
         </section>
 
-        {/* 5. Announcements & Alerts */}
+        {/* 5. Announcements & Hot Deals */}
         <section className="section-gap animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
           <div className="grid grid-cols-1 md:grid-cols-2 grid-gap-sm">
             <SectionErrorBoundary sectionName="Announcements">
               <AnnouncementsWidget />
             </SectionErrorBoundary>
-            <SectionErrorBoundary sectionName="Alerts">
-              <AlertsWidget />
+            <SectionErrorBoundary sectionName="Hot Deals">
+              <HotDealsWidget />
             </SectionErrorBoundary>
           </div>
         </section>
