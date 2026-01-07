@@ -190,6 +190,13 @@ export function useGmailMessages(options: {
     staleTime: 30 * 1000,
     refetchInterval: enabled && isConnected ? refetchInterval : false,
     refetchIntervalInBackground: false,
+    retry: (failureCount, error) => {
+      const status = (error as any)?.status;
+      // Don't retry auth errors
+      if (status === 401 || status === 403) return false;
+      return failureCount < 2;
+    },
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
   });
 }
 
@@ -230,6 +237,11 @@ export function useGmailLabels(enabled = true) {
     },
     enabled: enabled && isConnected,
     staleTime: 60 * 1000,
+    retry: (failureCount, error) => {
+      const status = (error as any)?.status;
+      if (status === 401 || status === 403) return false;
+      return failureCount < 2;
+    },
   });
 }
 

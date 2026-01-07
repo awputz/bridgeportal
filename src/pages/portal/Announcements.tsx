@@ -5,6 +5,7 @@ import { useAnnouncements, Announcement } from "@/hooks/useAnnouncements";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { QueryErrorState } from "@/components/ui/QueryErrorState";
 
 const typeConfig: Record<string, { icon: typeof Bell; color: string; label: string }> = {
   general: { icon: Megaphone, color: "bg-blue-500/20 text-blue-400", label: "General" },
@@ -55,7 +56,7 @@ const AnnouncementCard = ({ announcement }: { announcement: Announcement }) => {
 };
 
 const Announcements = () => {
-  const { data: announcements, isLoading } = useAnnouncements();
+  const { data: announcements, isLoading, error, refetch } = useAnnouncements();
   const [filter, setFilter] = useState<string>("all");
 
   const filteredAnnouncements = announcements?.filter(
@@ -115,7 +116,13 @@ const Announcements = () => {
         </div>
 
         {/* Announcements List */}
-        {isLoading ? (
+        {error ? (
+          <QueryErrorState
+            error={error}
+            onRetry={() => refetch()}
+            title="Failed to load announcements"
+          />
+        ) : isLoading ? (
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
               <Skeleton key={i} className="h-32 rounded-xl" />
