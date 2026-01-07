@@ -54,6 +54,7 @@ const googleItems = [
 const essentialsItems = [
   { name: "CRM", path: "/portal/crm", icon: Briefcase },
   { name: "Contacts", path: "/portal/contacts", icon: Users },
+  { name: "Deal Room", path: "/portal/deal-room", icon: Building2 },
   { name: "Intake", path: "/portal/intake", icon: ClipboardList },
   { name: "Tasks", path: "/portal/tasks", icon: ListTodo },
   { name: "Notes", path: "/portal/notes", icon: StickyNote },
