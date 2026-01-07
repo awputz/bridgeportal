@@ -17,13 +17,12 @@ import {
   Trash2,
   Link2,
   Paperclip,
-  X,
   ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
 import { useGmailMessage, useModifyMessage, useTrashMessage } from "@/hooks/useGmail";
 import { toast } from "sonner";
+import { formatSafeDate } from "@/lib/dateUtils";
 
 interface EmailPreviewSlideOverProps {
   emailId: string | null;
@@ -230,8 +229,8 @@ export function EmailPreviewSlideOver({
                   <div className="flex items-baseline gap-2">
                     <span className="text-sm font-medium">From:</span>
                     <span className="text-sm text-muted-foreground">
-                      {email.from?.name || email.from?.email}
-                      {email.from?.name && (
+                      {email.from?.name || email.from?.email || 'Unknown sender'}
+                      {email.from?.name && email.from?.email && (
                         <span className="text-xs ml-1">{"<"}{email.from.email}{">"}</span>
                       )}
                     </span>
@@ -247,7 +246,7 @@ export function EmailPreviewSlideOver({
                   <div className="flex items-baseline gap-2">
                     <span className="text-sm font-medium">Date:</span>
                     <span className="text-sm text-muted-foreground">
-                      {format(new Date(email.date), "PPpp")}
+                      {formatSafeDate(email.internalDate || email.date)}
                     </span>
                   </div>
                 </div>

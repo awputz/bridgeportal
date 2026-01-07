@@ -6,18 +6,18 @@ import { invokeWithAuthHandling } from "@/lib/auth";
 export interface GmailMessage {
   id: string;
   threadId: string;
-  snippet: string;
+  snippet?: string;
   labelIds: string[];
   isUnread: boolean;
   isStarred: boolean;
   hasAttachments: boolean;
-  subject: string;
-  from: { name: string; email: string };
-  to: string;
+  subject?: string;
+  from?: { name?: string; email: string };
+  to?: string;
   cc?: string;
   bcc?: string;
-  date: string;
-  internalDate?: string;
+  date?: string;
+  internalDate?: string; // Unix timestamp in milliseconds - reliable
   bodyHtml?: string;
   bodyText?: string;
   attachments?: Array<{

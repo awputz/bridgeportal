@@ -20,41 +20,9 @@ import { useGmailConnection, useGmailMessages, useConnectGmail, useModifyMessage
 import { useQueryClient } from "@tanstack/react-query";
 import { EmailPreviewSlideOver } from "./EmailPreviewSlideOver";
 import { LinkToRecordDialog } from "./LinkToRecordDialog";
+import { SectionErrorBoundary } from "./SectionErrorBoundary";
 import { toast } from "sonner";
-
-// Format relative time helper
-const formatRelativeTime = (date: Date) => {
-  const now = new Date();
-  const diffMins = differenceInMinutes(now, date);
-  
-  if (diffMins < 1) return "Just now";
-  if (diffMins < 60) return `${diffMins}m ago`;
-  
-  const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24) return `${diffHours}h ago`;
-  
-  // Check if yesterday
-  const yesterday = new Date(now);
-  yesterday.setDate(yesterday.getDate() - 1);
-  if (date.toDateString() === yesterday.toDateString()) {
-    return "Yesterday";
-  }
-  
-  const diffDays = Math.floor(diffHours / 24);
-  
-  // This week - show day name
-  if (diffDays < 7) {
-    return format(date, "EEE"); // Mon, Tue, etc.
-  }
-  
-  // Same year - show "Jan 5"
-  if (date.getFullYear() === now.getFullYear()) {
-    return format(date, "MMM d");
-  }
-  
-  // Previous year - show "Jan 5, 2024"
-  return format(date, "MMM d, yyyy");
-};
+import { formatSafeRelativeTime } from "@/lib/dateUtils";
 
 type LabelFilter = "INBOX" | "UNREAD" | "STARRED" | "SENT";
 
@@ -301,7 +269,7 @@ export const GmailWidget = () => {
                           ? "border-l-blue-500 bg-primary/5" 
                           : "border-l-transparent bg-muted/5"
                       )}
-                      aria-label={`Email from ${message.from.name || message.from.email}: ${message.subject}`}
+                      aria-label={`Email from ${message.from?.name || message.from?.email || 'Unknown'}: ${message.subject || '(No subject)'}`}
                     >
                       {/* Line 1: Unread dot + Sender + Quick Actions + Star + Date */}
                       <div className="flex items-center justify-between gap-2 mb-0.5 min-w-0 overflow-hidden">
@@ -322,7 +290,7 @@ export const GmailWidget = () => {
                             "text-sm truncate min-w-0 flex-1 leading-none",
                             message.isUnread ? "font-semibold text-foreground" : "font-medium text-foreground/70"
                           )}>
-                            {message.from.name || message.from.email}
+                            {message.from?.name || message.from?.email || 'Unknown sender'}
                           </span>
                         </div>
                         
@@ -366,10 +334,10 @@ export const GmailWidget = () => {
                           
                           {/* Date/Time */}
                           <time 
-                            dateTime={message.date}
+                            dateTime={message.date || undefined}
                             className="text-xs text-muted-foreground whitespace-nowrap leading-none"
                           >
-                            {formatRelativeTime(new Date(message.date))}
+                            {formatSafeRelativeTime(message.internalDate || message.date) || 'No date'}
                           </time>
                         </div>
                       </div>
@@ -395,12 +363,14 @@ export const GmailWidget = () => {
         </CardContent>
       </Card>
 
-      {/* Email Preview SlideOver */}
-      <EmailPreviewSlideOver
-        emailId={selectedEmailId}
-        onClose={() => setSelectedEmailId(null)}
-        onLinkToRecord={handleLinkToRecord}
-      />
+      {/* Email Preview SlideOver - wrapped in error boundary */}
+      <SectionErrorBoundary sectionName="Email Preview">
+        <EmailPreviewSlideOver
+          emailId={selectedEmailId}
+          onClose={() => setSelectedEmailId(null)}
+          onLinkToRecord={handleLinkToRecord}
+        />
+      </SectionErrorBoundary>
 
       {/* Link to Record Dialog */}
       {linkDialogData && (
