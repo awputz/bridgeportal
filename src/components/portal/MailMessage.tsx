@@ -177,6 +177,15 @@ export function MailMessage({ messageId, onBack, onReply }: MailMessageProps) {
           >
             <Trash2 className="h-5 w-5" />
           </Button>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => window.open(`https://mail.google.com/mail/u/0/#inbox/${message.id}`, '_blank')}
+            className="h-10 w-10 text-muted-foreground hover:text-foreground"
+            title="Open in Gmail"
+          >
+            <ExternalLink className="h-5 w-5" />
+          </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="h-10 w-10 text-muted-foreground hover:text-foreground">

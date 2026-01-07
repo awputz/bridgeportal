@@ -261,6 +261,16 @@ export function EmailPreviewSlideOver({
               Link
             </Button>
           )}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 gap-1.5 text-xs"
+            onClick={() => window.open(`https://mail.google.com/mail/u/0/#inbox/${emailId}`, '_blank')}
+            title="Open in Gmail"
+          >
+            <ExternalLink className="h-3.5 w-3.5" />
+            Open in Gmail
+          </Button>
           <div className="flex-1" />
           <Button
             variant="ghost"
