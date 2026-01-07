@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { QueryErrorState } from "@/components/ui/QueryErrorState";
 
 type FilterType = "today" | "overdue" | "week" | "all";
 
@@ -99,9 +100,29 @@ const TaskItem = ({
 
 export const DashboardTasks = () => {
   const [filter, setFilter] = useState<FilterType>("today");
-  const { data: tasks, isLoading } = useTasks(filter);
+  const { data: tasks, isLoading, error, refetch } = useTasks(filter);
   const { data: stats } = useTaskStats();
   const completeTask = useCompleteTask();
+
+  // Show error state if query failed
+  if (error) {
+    return (
+      <div className="glass-card p-4 sm:p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-light text-foreground flex items-center gap-2">
+            <ListTodo className="h-5 w-5 text-muted-foreground" />
+            Tasks
+          </h2>
+        </div>
+        <QueryErrorState 
+          error={error}
+          onRetry={() => refetch()}
+          compact
+          title="Failed to load tasks"
+        />
+      </div>
+    );
+  }
 
   const filterOptions: { value: FilterType; label: string; count?: number; icon: typeof Calendar }[] = [
     { value: "today", label: "Today", count: stats?.today, icon: Calendar },

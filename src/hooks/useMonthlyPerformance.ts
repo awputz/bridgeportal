@@ -46,5 +46,12 @@ export const useMonthlyPerformance = (agentId?: string, division?: string) => {
     enabled: !!targetAgentId,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
+    retry: (failureCount, error) => {
+      const err = error as { code?: string };
+      if (err?.code === '42501' || err?.code === 'PGRST116') return false;
+      return failureCount < 2;
+    },
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 };

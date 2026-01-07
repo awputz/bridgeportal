@@ -4,13 +4,15 @@ import { useCRMDeals, useDealStages } from "@/hooks/useCRM";
 import { useDivision } from "@/contexts/DivisionContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { QueryErrorState } from "@/components/ui/QueryErrorState";
 
 export const DealPipelinePreview = () => {
   const { division } = useDivision();
-  const { data: deals, isLoading: dealsLoading } = useCRMDeals(division);
-  const { data: stages, isLoading: stagesLoading } = useDealStages(division);
+  const { data: deals, isLoading: dealsLoading, error: dealsError, refetch: refetchDeals } = useCRMDeals(division);
+  const { data: stages, isLoading: stagesLoading, error: stagesError, refetch: refetchStages } = useDealStages(division);
 
   const isLoading = dealsLoading || stagesLoading;
+  const error = dealsError || stagesError;
 
   // Count deals by stage with null safety
   const stageCounts = stages?.map((stage) => ({
@@ -19,6 +21,19 @@ export const DealPipelinePreview = () => {
   })) || [];
 
   const totalDeals = deals?.length || 0;
+
+  if (error) {
+    return (
+      <div className="glass-card p-4 sm:p-5">
+        <QueryErrorState 
+          error={error}
+          onRetry={() => { refetchDeals(); refetchStages(); }}
+          compact
+          title="Failed to load pipeline"
+        />
+      </div>
+    );
+  }
 
   if (isLoading) {
     return <Skeleton className="h-32 rounded-xl" />;
