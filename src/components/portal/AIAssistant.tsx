@@ -34,39 +34,43 @@ export const AIAssistant = () => {
           return;
         }
 
-        // Check for deals missing commission
+        // Check for deals missing commission - ONLY won deals that are active and not deleted
         const { data: dealsWithoutCommission } = await supabase
           .from("crm_deals")
           .select("id, property_address")
-          .is("commission", null)
           .eq("agent_id", user.id)
-          .eq("is_active", true);
+          .is("deleted_at", null)
+          .eq("is_active", true)
+          .eq("won", true)
+          .or("commission.is.null,commission.eq.0");
 
         if (dealsWithoutCommission && dealsWithoutCommission.length > 0) {
           newSuggestions.push({
             id: "missing-commission",
             type: "missing-data",
             title: "Missing Commission Data",
-            message: `${dealsWithoutCommission.length} deal(s) are missing commission entry. Add your actual commission to track earnings accurately.`,
+            message: `${dealsWithoutCommission.length} won deal(s) are missing commission entry. Add your actual commission to track earnings accurately.`,
             action: "/portal/crm",
             priority: "high",
           });
         }
 
-        // Check for deals missing value
+        // Check for deals missing value - only active, non-deleted, non-won deals
         const { data: dealsWithoutValue } = await supabase
           .from("crm_deals")
           .select("id, property_address")
-          .is("value", null)
           .eq("agent_id", user.id)
-          .eq("is_active", true);
+          .is("deleted_at", null)
+          .eq("is_active", true)
+          .is("won", null)
+          .is("value", null);
 
         if (dealsWithoutValue && dealsWithoutValue.length > 0) {
           newSuggestions.push({
             id: "missing-value",
             type: "missing-data",
             title: "Missing Deal Values",
-            message: `${dealsWithoutValue.length} deal(s) are missing value. Update these to track your pipeline accurately.`,
+            message: `${dealsWithoutValue.length} active deal(s) are missing value. Update these to track your pipeline accurately.`,
             action: "/portal/crm",
             priority: "medium",
           });
@@ -77,9 +81,10 @@ export const AIAssistant = () => {
         const { data: overdueTasks } = await supabase
           .from("crm_activities")
           .select("id, title")
-          .lt("due_date", today)
+          .eq("agent_id", user.id)
+          .is("deleted_at", null)
           .eq("is_completed", false)
-          .eq("agent_id", user.id);
+          .lt("due_date", today);
 
         if (overdueTasks && overdueTasks.length > 0) {
           newSuggestions.push({
@@ -98,10 +103,12 @@ export const AIAssistant = () => {
         const { data: upcomingCloses } = await supabase
           .from("crm_deals")
           .select("id, property_address, expected_close")
-          .gte("expected_close", today)
-          .lte("expected_close", nextWeek.toISOString().split('T')[0])
           .eq("agent_id", user.id)
-          .eq("is_active", true);
+          .is("deleted_at", null)
+          .eq("is_active", true)
+          .is("won", null)
+          .gte("expected_close", today)
+          .lte("expected_close", nextWeek.toISOString().split('T')[0]);
 
         if (upcomingCloses && upcomingCloses.length > 0) {
           newSuggestions.push({
@@ -117,10 +124,11 @@ export const AIAssistant = () => {
         // Check for contacts without recent activity
         const thirtyDaysAgo = new Date();
         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-        const { data: staleContacts, count: staleCount } = await supabase
+        const { count: staleCount } = await supabase
           .from("crm_contacts")
           .select("id", { count: "exact", head: true })
           .eq("agent_id", user.id)
+          .is("deleted_at", null)
           .eq("is_active", true)
           .lt("updated_at", thirtyDaysAgo.toISOString());
 
