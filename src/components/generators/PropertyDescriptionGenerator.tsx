@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -134,11 +135,11 @@ Make it engaging, professional, and optimized for the ${audienceLabel.toLowerCas
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="address">Property Address *</Label>
-                <Input
-                  id="address"
+                <AddressAutocomplete
                   value={formData.propertyAddress}
-                  onChange={(e) => setFormData({ ...formData, propertyAddress: e.target.value })}
-                  placeholder="123 Main Street, Apt 4B"
+                  onChange={(value) => setFormData({ ...formData, propertyAddress: value })}
+                  onAddressSelect={(addr) => setFormData({ ...formData, propertyAddress: addr.fullAddress, neighborhood: addr.neighborhood || formData.neighborhood })}
+                  placeholder="Start typing an address..."
                 />
               </div>
 

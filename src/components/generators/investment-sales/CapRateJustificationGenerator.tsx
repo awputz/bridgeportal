@@ -3,6 +3,7 @@ import { DollarSign } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { GeneratorShell } from "../GeneratorShell";
 
 interface Props { onBack: () => void; }
@@ -42,7 +43,10 @@ Be educational but persuasive. Help the seller understand market reality.
       <div className="space-y-4">
         <div className="space-y-2">
           <Label>Property Address *</Label>
-          <Input value={formData.propertyAddress} onChange={(e) => setFormData({ ...formData, propertyAddress: e.target.value })} />
+          <AddressAutocomplete value={formData.propertyAddress}
+            onChange={(value) => setFormData({ ...formData, propertyAddress: value })}
+            onAddressSelect={(addr) => setFormData({ ...formData, propertyAddress: addr.fullAddress })}
+            placeholder="Start typing an address..." />
         </div>
         <div className="space-y-2">
           <Label>Asking Cap Rate *</Label>

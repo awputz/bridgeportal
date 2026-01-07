@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -149,11 +150,11 @@ Make each version compelling, authentic, and ready to post. Avoid clichés like 
             <CardContent className="p-6 space-y-4">
               <div className="space-y-2">
                 <Label>Property Address *</Label>
-                <Input
-                  placeholder="123 Main Street"
+                <AddressAutocomplete
                   value={formData.propertyAddress}
-                  onChange={(e) => setFormData({ ...formData, propertyAddress: e.target.value })}
-                  className="bg-white/5 border-white/10"
+                  onChange={(value) => setFormData({ ...formData, propertyAddress: value })}
+                  onAddressSelect={(addr) => setFormData({ ...formData, propertyAddress: addr.fullAddress, neighborhood: addr.neighborhood || formData.neighborhood })}
+                  placeholder="Start typing an address..."
                 />
               </div>
 

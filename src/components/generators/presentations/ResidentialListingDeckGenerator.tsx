@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AddressAutocomplete } from "@/components/ui/AddressAutocomplete";
 import { GeneratorShell } from "../GeneratorShell";
 
 interface Props {
@@ -86,10 +87,11 @@ Use aspirational, lifestyle-focused language that helps buyers envision living t
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2 col-span-2">
             <Label>Property Address *</Label>
-            <Input
-              placeholder="123 Park Avenue, Unit 15A, New York, NY 10028"
+            <AddressAutocomplete
               value={formData.address}
-              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              onChange={(value) => setFormData({ ...formData, address: value })}
+              onAddressSelect={(addr) => setFormData({ ...formData, address: addr.fullAddress, neighborhood: addr.neighborhood || formData.neighborhood })}
+              placeholder="Start typing an address..."
             />
           </div>
 

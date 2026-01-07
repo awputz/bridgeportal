@@ -8,6 +8,11 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
+    /* Google Places Autocomplete dropdown styling */
+    --pac-bg: 30 6% 13%;
+    --pac-border: 30 6% 20%;
+    --pac-item-hover: 30 6% 16%;
+    
     /* Portal layout spacing - precise values matching actual nav components */
     --portal-nav-height: 56px;        /* Mobile nav h-14 = 56px */
     --portal-nav-height-md: 80px;     /* Desktop nav h-20 = 80px */
@@ -1058,4 +1063,58 @@ button, [role="button"], a {
 /* Text balance for better mobile line breaks */
 .text-balance {
   text-wrap: balance;
+}
+
+/* Google Places Autocomplete Dropdown */
+.pac-container {
+  background-color: hsl(var(--pac-bg));
+  border: 1px solid hsl(var(--pac-border));
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.4);
+  font-family: inherit;
+  margin-top: 4px;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.pac-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  border: none;
+  border-top: 1px solid hsl(var(--pac-border));
+  color: hsl(var(--foreground));
+  font-size: 0.875rem;
+  line-height: 1.4;
+  background: transparent;
+}
+
+.pac-item:first-child {
+  border-top: none;
+}
+
+.pac-item:hover,
+.pac-item-selected {
+  background-color: hsl(var(--pac-item-hover));
+}
+
+.pac-item-query {
+  color: hsl(var(--foreground));
+  font-weight: 500;
+}
+
+.pac-matched {
+  font-weight: 600;
+}
+
+.pac-icon {
+  display: none;
+}
+
+.pac-icon-marker {
+  display: none;
+}
+
+.pac-item-query + span {
+  color: hsl(var(--muted-foreground));
+  font-size: 0.8rem;
 }
