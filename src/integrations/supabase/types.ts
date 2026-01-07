@@ -2063,6 +2063,66 @@ export type Database = {
         }
         Relationships: []
       }
+      deal_matches: {
+        Row: {
+          ai_summary: string | null
+          contact_id: string
+          contacted_at: string | null
+          contacted_by: string | null
+          created_at: string | null
+          deal_id: string
+          id: string
+          is_contacted: boolean | null
+          is_dismissed: boolean | null
+          match_reasons: string[] | null
+          match_score: number
+          updated_at: string | null
+        }
+        Insert: {
+          ai_summary?: string | null
+          contact_id: string
+          contacted_at?: string | null
+          contacted_by?: string | null
+          created_at?: string | null
+          deal_id: string
+          id?: string
+          is_contacted?: boolean | null
+          is_dismissed?: boolean | null
+          match_reasons?: string[] | null
+          match_score: number
+          updated_at?: string | null
+        }
+        Update: {
+          ai_summary?: string | null
+          contact_id?: string
+          contacted_at?: string | null
+          contacted_by?: string | null
+          created_at?: string | null
+          deal_id?: string
+          id?: string
+          is_contacted?: boolean | null
+          is_dismissed?: boolean | null
+          match_reasons?: string[] | null
+          match_score?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_matches_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deal_matches_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deal_room_activity: {
         Row: {
           action: string

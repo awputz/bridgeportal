@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { ExternalLink, FileText, MessageCircle, Star, Activity, Edit2, Trash2, Save, X } from "lucide-react";
+import { ExternalLink, FileText, MessageCircle, Star, Activity, Edit2, Trash2, Save, X, Target } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -26,11 +26,13 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useDealRoomDeal, useUpdateDealRoomDeal, useRemoveFromDealRoom } from "@/hooks/useDealRoom";
+import { useDealMatches } from "@/hooks/useDealMatching";
 import { useCurrentAgent } from "@/hooks/useCurrentAgent";
 import { DealRoomFiles } from "./DealRoomFiles";
 import { DealRoomComments } from "./DealRoomComments";
 import { DealRoomInterested } from "./DealRoomInterested";
 import { DealRoomActivity } from "./DealRoomActivity";
+import { DealMatches } from "./DealMatches";
 
 interface DealDetailModalProps {
   dealId: string | null;
@@ -61,8 +63,10 @@ function formatSF(sf: number): string {
 export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalProps) {
   const { data: deal, isLoading } = useDealRoomDeal(dealId || "");
   const { data: agent } = useCurrentAgent();
+  const { data: matches } = useDealMatches(dealId || "", false);
   const updateDeal = useUpdateDealRoomDeal();
   const removeDeal = useRemoveFromDealRoom();
+  const matchCount = matches?.filter(m => !m.is_dismissed && m.match_score >= 70).length || 0;
 
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [editedNotes, setEditedNotes] = useState("");
@@ -270,6 +274,15 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                     <Activity className="h-3.5 w-3.5" />
                     Activity
                   </TabsTrigger>
+                  <TabsTrigger value="matches" className="gap-1.5">
+                    <Target className="h-3.5 w-3.5" />
+                    Matches
+                    {matchCount > 0 && (
+                      <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0">
+                        {matchCount}
+                      </Badge>
+                    )}
+                  </TabsTrigger>
                 </TabsList>
 
                 <div className="flex-1 min-h-0 mt-4">
@@ -292,6 +305,10 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
 
                   <TabsContent value="activity" className="h-full m-0">
                     <DealRoomActivity dealId={deal.id} />
+                  </TabsContent>
+
+                  <TabsContent value="matches" className="h-full m-0">
+                    <DealMatches dealId={deal.id} />
                   </TabsContent>
                 </div>
               </Tabs>
