@@ -118,7 +118,7 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
             </Link>
             <button 
               onClick={() => setIsOpen(!isOpen)} 
-              className="p-3 -mr-2 text-foreground hover:text-foreground/80 transition-colors touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center" 
+              className="p-3 -mr-2 text-white hover:text-white/80 transition-colors touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center" 
               aria-label="Toggle menu"
             >
               <div className="relative w-6 h-6">
@@ -154,7 +154,7 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                 to="/portal"
                 className={cn(
                   "relative z-10 flex items-center gap-2 text-[15px] font-light transition-all duration-200 hover:scale-105 cursor-pointer",
-                  location.pathname === '/portal' ? "text-foreground" : "text-foreground/70 hover:text-foreground"
+                  location.pathname === '/portal' ? "text-white" : "text-white/70 hover:text-white"
                 )}
               >
                 <LayoutDashboard className="h-4 w-4" />
@@ -166,7 +166,7 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                 <DropdownMenuTrigger asChild>
                   <button className={cn(
                     "flex items-center gap-1.5 text-[15px] font-light transition-all duration-200 hover:scale-105",
-                    isEssentialsActive ? "text-foreground" : "text-foreground/70 hover:text-foreground"
+                    isEssentialsActive ? "text-white" : "text-white/70 hover:text-white"
                   )}>
                     <Briefcase className="h-4 w-4" />
                     Essentials
@@ -200,7 +200,7 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                 to="/portal/tools"
                 className={cn(
                   "relative z-10 flex items-center gap-2 text-[15px] font-light transition-all duration-200 hover:scale-105 cursor-pointer",
-                  isToolsActive ? "text-foreground" : "text-foreground/70 hover:text-foreground"
+                  isToolsActive ? "text-white" : "text-white/70 hover:text-white"
                 )}
               >
                 <Wrench className="h-4 w-4" />
@@ -212,7 +212,7 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                 to="/portal/company"
                 className={cn(
                   "relative z-10 flex items-center gap-2 text-[15px] font-light transition-all duration-200 hover:scale-105 cursor-pointer",
-                  isCompanyActive ? "text-foreground" : "text-foreground/70 hover:text-foreground"
+                  isCompanyActive ? "text-white" : "text-white/70 hover:text-white"
                 )}
               >
                 <Building2 className="h-4 w-4" />
@@ -224,7 +224,7 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                 to="/portal/ai"
                 className={cn(
                   "relative z-10 flex items-center gap-2 text-[15px] font-light transition-all duration-200 hover:scale-105 cursor-pointer",
-                  location.pathname.startsWith('/portal/ai') ? "text-foreground" : "text-foreground/70 hover:text-foreground"
+                  location.pathname.startsWith('/portal/ai') ? "text-white" : "text-white/70 hover:text-white"
                 )}
               >
                 <Sparkles className="h-4 w-4" />
@@ -236,7 +236,7 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
             <div className="flex items-center justify-end gap-2">
               <button 
                 onClick={onSearchClick}
-                className="p-2 rounded-full hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors"
+                className="p-2 rounded-full hover:bg-white/10 text-white/60 hover:text-white transition-colors"
                 title="Search (⌘K)"
               >
                 <Search className="h-5 w-5" />
@@ -247,7 +247,7 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
               {/* Google Apps Launcher */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="p-2 rounded-full hover:bg-muted/50 transition-colors">
+                  <button className="p-2 rounded-full hover:bg-white/10 transition-colors">
                     <img 
                       src="/google-brandmark.png" 
                       alt="Google Apps" 
@@ -279,7 +279,7 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
               <NotificationCenter />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="font-light text-foreground/80 hover:text-foreground gap-2">
+                  <Button variant="ghost" size="sm" className="font-light text-white/80 hover:text-white hover:bg-white/10 gap-2">
                     {userProfile?.avatarUrl ? (
                       <Avatar className="h-6 w-6">
                         <AvatarImage src={userProfile.avatarUrl} alt={userProfile.fullName || 'User'} />
