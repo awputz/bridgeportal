@@ -279,7 +279,7 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
               {/* Content Section */}
               <div className="p-4 md:p-6 space-y-5">
                 {/* Action Buttons Row */}
-                <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
+                <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3">
                   {deal.om_file_url && (
                     <Button 
                       size="sm"

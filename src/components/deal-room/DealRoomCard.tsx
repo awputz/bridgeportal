@@ -173,31 +173,33 @@ export const DealRoomCard = memo(function DealRoomCard({ deal, onClick }: DealRo
           )}
         </div>
 
-        {/* Agent Info - bottom left on image */}
-        <div className="absolute bottom-2 left-2 flex items-center gap-2">
-          <Avatar className="h-7 w-7 border-2 border-background/80 flex-shrink-0">
-            <AvatarImage src={deal.agent?.avatar_url || undefined} />
-            <AvatarFallback className="text-[10px] bg-primary text-primary-foreground">
-              {agentInitials}
-            </AvatarFallback>
-          </Avatar>
-          <div className="text-white min-w-0">
-            <p className="text-xs font-semibold leading-none drop-shadow-lg mb-1 truncate">
-              {deal.agent?.full_name || "Unknown Agent"}
-            </p>
-            <p className="text-[10px] text-white/90 leading-none drop-shadow">
-              {DIVISION_LABELS[deal.division] || deal.division} • {timeAgo}
-            </p>
+        {/* Agent Info - bottom left with proper spacing constraint */}
+        <div className="absolute bottom-3 left-3 max-w-[calc(100%-5rem)]">
+          <div className="flex items-center gap-2.5 bg-black/50 backdrop-blur-sm rounded-lg px-2.5 py-2">
+            <Avatar className="h-8 w-8 border-2 border-white/20 flex-shrink-0">
+              <AvatarImage src={deal.agent?.avatar_url || undefined} />
+              <AvatarFallback className="text-[10px] bg-primary text-primary-foreground">
+                {agentInitials}
+              </AvatarFallback>
+            </Avatar>
+            <div className="min-w-0 flex-1">
+              <p className="text-[13px] font-semibold text-white leading-tight drop-shadow-lg truncate">
+                {deal.agent?.full_name || "Unknown Agent"}
+              </p>
+              <p className="text-[11px] text-white/80 leading-tight mt-0.5 drop-shadow truncate">
+                {DIVISION_LABELS[deal.division] || deal.division} • {timeAgo}
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Photo count badge - bottom right */}
+        {/* Photo count badge - bottom right with clear separation */}
         {photoCount > 1 && (
           <Badge 
             variant="secondary" 
-            className="absolute bottom-2 right-2 gap-1 text-[10px] bg-background/80 backdrop-blur-sm"
+            className="absolute bottom-3 right-3 gap-1.5 text-xs bg-black/60 text-white backdrop-blur-sm border-0"
           >
-            <ImageIcon className="h-3 w-3" />
+            <ImageIcon className="h-3.5 w-3.5" />
             {photoCount}
           </Badge>
         )}
@@ -212,7 +214,7 @@ export const DealRoomCard = memo(function DealRoomCard({ deal, onClick }: DealRo
       </div>
 
       {/* Card Content */}
-      <CardContent className="p-3 space-y-2">
+      <CardContent className="p-3.5 space-y-2.5">
         {/* Address & Location */}
         <div>
           <h3 className="font-semibold text-sm leading-tight line-clamp-1 group-hover:text-primary transition-colors">
