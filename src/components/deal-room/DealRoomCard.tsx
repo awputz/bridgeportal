@@ -1,11 +1,12 @@
 import { formatDistanceToNow, differenceInHours } from "date-fns";
-import { FileText, MessageCircle, ExternalLink, Star, Flame } from "lucide-react";
+import { FileText, MessageCircle, ExternalLink, Star, Flame, ImageIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DealRoomDeal, useDealRoomComments, useDealRoomInterests } from "@/hooks/useDealRoom";
+import { useDealRoomPhotos } from "@/hooks/useDealRoomPhotos";
 import { cn } from "@/lib/utils";
 
 interface DealRoomCardProps {
@@ -69,6 +70,10 @@ function EngagementBadges({ dealId }: { dealId: string }) {
 }
 
 export function DealRoomCard({ deal, onClick }: DealRoomCardProps) {
+  const { data: photos } = useDealRoomPhotos(deal.id);
+  const primaryPhoto = photos?.find(p => p.is_primary) || photos?.[0];
+  const photoCount = photos?.length || 0;
+
   const timeAgo = deal.last_deal_room_update
     ? formatDistanceToNow(new Date(deal.last_deal_room_update), { addSuffix: true })
     : formatDistanceToNow(new Date(deal.updated_at), { addSuffix: true });
@@ -87,11 +92,30 @@ export function DealRoomCard({ deal, onClick }: DealRoomCardProps) {
   return (
     <Card
       className={cn(
-        "group cursor-pointer transition-all duration-200",
+        "group cursor-pointer transition-all duration-200 overflow-hidden",
         "hover:border-primary/30 hover:shadow-md hover:scale-[1.01]"
       )}
       onClick={onClick}
     >
+      {/* Property Image */}
+      {primaryPhoto && (
+        <div className="relative h-40 bg-muted">
+          <img
+            src={primaryPhoto.image_url}
+            alt={deal.property_address}
+            className="w-full h-full object-cover"
+          />
+          {photoCount > 1 && (
+            <Badge 
+              variant="secondary" 
+              className="absolute bottom-2 right-2 gap-1 text-xs bg-background/80 backdrop-blur-sm"
+            >
+              <ImageIcon className="h-3 w-3" />
+              {photoCount}
+            </Badge>
+          )}
+        </div>
+      )}
       <CardContent className="p-4 space-y-3">
         {/* Header: Agent + Time */}
         <div className="flex items-center justify-between">

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { ExternalLink, FileText, MessageCircle, Star, Activity, Edit2, Trash2, Save, X, Target } from "lucide-react";
+import { ExternalLink, FileText, MessageCircle, Star, Activity, Edit2, Trash2, Save, X, Target, ImageIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -27,12 +27,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useDealRoomDeal, useUpdateDealRoomDeal, useRemoveFromDealRoom } from "@/hooks/useDealRoom";
 import { useDealMatches } from "@/hooks/useDealMatching";
+import { useDealRoomPhotos } from "@/hooks/useDealRoomPhotos";
 import { useCurrentAgent } from "@/hooks/useCurrentAgent";
 import { DealRoomFiles } from "./DealRoomFiles";
 import { DealRoomComments } from "./DealRoomComments";
 import { DealRoomInterested } from "./DealRoomInterested";
 import { DealRoomActivity } from "./DealRoomActivity";
 import { DealMatches } from "./DealMatches";
+import { DealRoomPhotoGallery } from "./DealRoomPhotoGallery";
 
 interface DealDetailModalProps {
   dealId: string | null;
@@ -64,9 +66,11 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
   const { data: deal, isLoading } = useDealRoomDeal(dealId || "");
   const { data: agent } = useCurrentAgent();
   const { data: matches } = useDealMatches(dealId || "", false);
+  const { data: photos } = useDealRoomPhotos(dealId || "");
   const updateDeal = useUpdateDealRoomDeal();
   const removeDeal = useRemoveFromDealRoom();
   const matchCount = matches?.filter(m => !m.is_dismissed && m.match_score >= 70).length || 0;
+  const photoCount = photos?.length || 0;
 
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [editedNotes, setEditedNotes] = useState("");
@@ -256,8 +260,17 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
               <Separator className="my-4" />
 
               {/* Tabs */}
-              <Tabs defaultValue="files" className="flex-1 flex flex-col min-h-0">
-                <TabsList className="mx-6 w-auto justify-start">
+              <Tabs defaultValue="photos" className="flex-1 flex flex-col min-h-0">
+                <TabsList className="mx-6 w-auto justify-start flex-wrap h-auto gap-1 py-1">
+                  <TabsTrigger value="photos" className="gap-1.5">
+                    <ImageIcon className="h-3.5 w-3.5" />
+                    Photos
+                    {photoCount > 0 && (
+                      <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0">
+                        {photoCount}
+                      </Badge>
+                    )}
+                  </TabsTrigger>
                   <TabsTrigger value="files" className="gap-1.5">
                     <FileText className="h-3.5 w-3.5" />
                     Files
@@ -285,7 +298,11 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                   </TabsTrigger>
                 </TabsList>
 
-                <div className="flex-1 min-h-0 mt-4">
+                <div className="flex-1 min-h-0 mt-4 overflow-y-auto">
+                  <TabsContent value="photos" className="h-full m-0">
+                    <DealRoomPhotoGallery dealId={deal.id} isOwner={isOwner} />
+                  </TabsContent>
+
                   <TabsContent value="files" className="h-full m-0">
                     <DealRoomFiles
                       dealId={deal.id}
