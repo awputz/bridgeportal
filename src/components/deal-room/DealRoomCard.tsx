@@ -21,6 +21,7 @@ import { DealRoomDeal, useDealRoomComments, useDealRoomInterests } from "@/hooks
 import { useDealRoomPhotos } from "@/hooks/useDealRoomPhotos";
 import { cn } from "@/lib/utils";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
+import { SPACING, COMPONENT_CLASSES } from "@/lib/spacing";
 
 interface DealRoomCardProps {
   deal: DealRoomDeal;
@@ -191,7 +192,7 @@ export const DealRoomCard = memo(function DealRoomCard({ deal, onClick }: DealRo
       </div>
 
       {/* Card Content */}
-      <CardContent className="p-3 space-y-0">
+      <CardContent className="p-4 space-y-0">
         {/* Address & Location */}
         <div className="pb-2">
           <h3 className="font-semibold text-sm leading-none m-0 line-clamp-1 group-hover:text-primary transition-colors">
@@ -210,29 +211,29 @@ export const DealRoomCard = memo(function DealRoomCard({ deal, onClick }: DealRo
         </div>
 
         {/* Key Metrics - 3-column grid */}
-        <div className="grid grid-cols-3 gap-2 py-2 border-t border-border/30">
+        <div className="grid grid-cols-3 gap-3 py-3 border-t border-border/30">
           {deal.value ? (
             <div>
               <p className="text-[9px] text-muted-foreground uppercase tracking-wide m-0 leading-none">Value</p>
-              <p className="text-sm font-semibold m-0 leading-none mt-1">{formatCurrency(deal.value)}</p>
+              <p className="text-sm font-semibold m-0 leading-none mt-1.5">{formatCurrency(deal.value)}</p>
             </div>
           ) : <div />}
           {deal.gross_sf ? (
             <div>
               <p className="text-[9px] text-muted-foreground uppercase tracking-wide m-0 leading-none">Size</p>
-              <p className="text-sm font-semibold m-0 leading-none mt-1">{formatSF(deal.gross_sf)}</p>
+              <p className="text-sm font-semibold m-0 leading-none mt-1.5">{formatSF(deal.gross_sf)}</p>
             </div>
           ) : <div />}
           {deal.property_type ? (
             <div>
               <p className="text-[9px] text-muted-foreground uppercase tracking-wide m-0 leading-none">Type</p>
-              <p className="text-xs font-medium m-0 leading-none mt-1 capitalize">{deal.property_type.replace(/-/g, " ")}</p>
+              <p className="text-xs font-medium m-0 leading-none mt-1.5 capitalize">{deal.property_type.replace(/-/g, " ")}</p>
             </div>
           ) : <div />}
         </div>
 
         {/* Agent Row - Moved from photo */}
-        <div className="flex items-center gap-2 py-2 border-t border-border/30">
+        <div className="flex items-center gap-3 py-3 border-t border-border/30">
           <Avatar className="h-6 w-6 flex-shrink-0">
             <AvatarImage src={deal.agent?.avatar_url || undefined} />
             <AvatarFallback className="text-[9px] bg-primary text-primary-foreground">
@@ -249,13 +250,13 @@ export const DealRoomCard = memo(function DealRoomCard({ deal, onClick }: DealRo
 
         {/* Notes Preview */}
         {deal.deal_room_notes && (
-          <p className="text-[11px] text-muted-foreground italic line-clamp-2 border-l-2 border-muted pl-2 py-2 m-0 leading-relaxed">
+          <p className="text-[11px] text-muted-foreground italic line-clamp-2 border-l-2 border-muted pl-3 py-3 m-0 leading-relaxed">
             "{deal.deal_room_notes}"
           </p>
         )}
 
         {/* Actions Row */}
-        <div className="flex items-center justify-between pt-2 border-t border-border/30">
+        <div className="flex items-center justify-between pt-3 border-t border-border/30">
           <EngagementBadges dealId={deal.id} />
           
           <div className="flex items-center gap-1">
