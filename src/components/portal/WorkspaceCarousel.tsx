@@ -31,8 +31,8 @@ export const WorkspaceCarousel = () => {
 
   return (
     <div className="w-full">
-      {/* Desktop: Side-by-side grid */}
-      <div className="hidden md:grid md:grid-cols-2 gap-3">
+      {/* Desktop: Side-by-side grid - 60/40 split for Gmail/Calendar */}
+      <div className="hidden md:grid md:grid-cols-[3fr_2fr] gap-3">
         <SectionErrorBoundary sectionName="Gmail">
           <GmailWidget />
         </SectionErrorBoundary>
