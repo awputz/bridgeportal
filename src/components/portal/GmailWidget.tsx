@@ -3,17 +3,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input";
 import { 
   Mail, 
   ExternalLink,
   Inbox,
   Star,
   RefreshCw,
+  Search,
+  Archive,
+  Trash2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { differenceInMinutes, format } from "date-fns";
-import { useGmailConnection, useGmailMessages, useConnectGmail, useModifyMessage } from "@/hooks/useGmail";
+import { useGmailConnection, useGmailMessages, useConnectGmail, useModifyMessage, useTrashMessage } from "@/hooks/useGmail";
 import { useQueryClient } from "@tanstack/react-query";
+import { EmailPreviewSlideOver } from "./EmailPreviewSlideOver";
+import { LinkToRecordDialog } from "./LinkToRecordDialog";
+import { toast } from "sonner";
 
 // Format relative time helper
 const formatRelativeTime = (date: Date) => {
@@ -49,24 +56,39 @@ const formatRelativeTime = (date: Date) => {
   return format(date, "MMM d, yyyy");
 };
 
+type LabelFilter = "INBOX" | "STARRED" | "SENT";
+
 export const GmailWidget = () => {
   const queryClient = useQueryClient();
   const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [labelFilter, setLabelFilter] = useState<LabelFilter>("INBOX");
+  const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null);
+  const [linkDialogOpen, setLinkDialogOpen] = useState(false);
+  const [linkDialogData, setLinkDialogData] = useState<{
+    emailId: string;
+    threadId: string;
+    subject: string;
+    from: string;
+  } | null>(null);
 
   // Gmail connection and data
   const { data: gmailConnection, isLoading: gmailConnectionLoading } = useGmailConnection();
   const { data: messagesData, isLoading: messagesLoading, refetch: refetchMessages, isRefetching } = useGmailMessages({
-    labelIds: ["INBOX"],
-    maxResults: 5,
+    labelIds: [labelFilter],
+    query: searchQuery || undefined,
+    maxResults: 50, // Sync 50 emails
     enabled: gmailConnection?.isConnected ?? false,
-    refetchInterval: 300000, // 5 minutes
+    refetchInterval: 30000, // 30 seconds
   });
   
   const { mutate: connectGmail, isPending: isConnecting } = useConnectGmail();
   const { mutate: modifyMessage } = useModifyMessage();
+  const { mutate: trashMessage } = useTrashMessage();
   
-  const messages = messagesData?.messages || [];
-  const unreadCount = messages.filter(m => m.isUnread).length;
+  const allMessages = messagesData?.messages || [];
+  const messages = allMessages.slice(0, 15); // Display first 15
+  const unreadCount = allMessages.filter(m => m.isUnread).length;
   const isConnected = gmailConnection?.isConnected ?? false;
   const isLoading = gmailConnectionLoading || (isConnected && messagesLoading);
 
@@ -92,6 +114,33 @@ export const GmailWidget = () => {
     }
   };
 
+  const handleArchive = (messageId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    modifyMessage(
+      { messageId, removeLabelIds: ["INBOX"] },
+      { onSuccess: () => toast.success("Email archived") }
+    );
+  };
+
+  const handleDelete = (messageId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    trashMessage(messageId, {
+      onSuccess: () => toast.success("Email moved to trash"),
+    });
+  };
+
+  const handleEmailClick = (messageId: string) => {
+    setSelectedEmailId(messageId);
+  };
+
+  const handleLinkToRecord = (emailId: string, threadId: string, subject: string, from: string) => {
+    setLinkDialogData({ emailId, threadId, subject, from });
+    setLinkDialogOpen(true);
+    setSelectedEmailId(null); // Close the preview
+  };
+
   const getSyncStatusText = () => {
     if (isRefetching) return 'Syncing...';
     if (!lastSyncTime) return '';
@@ -101,189 +150,267 @@ export const GmailWidget = () => {
     return format(lastSyncTime, 'h:mm a');
   };
 
+  const labelFilters: { id: LabelFilter; label: string }[] = [
+    { id: "INBOX", label: "Inbox" },
+    { id: "STARRED", label: "Starred" },
+    { id: "SENT", label: "Sent" },
+  ];
+
   return (
-    <Card className="overflow-hidden border-border/50 bg-card h-full">
-      <CardHeader className="p-3 pb-2">
-        <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Mail className="h-4 w-4 text-red-400" />
-            <span className="text-sm font-semibold">Gmail</span>
-            {unreadCount > 0 && (
-              <span className="text-xs bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded-full font-medium">
-                {unreadCount}
-              </span>
-            )}
-          </div>
-          <div className="flex items-center gap-1">
-            {isConnected && (
-              <>
-                <span className="text-xs text-muted-foreground hidden sm:inline">
-                  {getSyncStatusText()}
+    <>
+      <Card className="overflow-hidden border-border/50 bg-card h-full min-h-[600px]">
+        <CardHeader className="p-3 pb-2">
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Mail className="h-4 w-4 text-red-400" />
+              <span className="text-sm font-semibold">Gmail</span>
+              {unreadCount > 0 && (
+                <span className="text-xs bg-destructive/20 text-destructive px-1.5 py-0.5 rounded-full font-medium">
+                  {unreadCount}
                 </span>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7"
-                  onClick={handleRefresh}
-                  disabled={isRefetching}
-                >
-                  <RefreshCw className={cn("h-3.5 w-3.5 text-muted-foreground", isRefetching && "animate-spin")} />
-                </Button>
-                <a
-                  href="https://mail.google.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 px-1.5 py-1 rounded hover:bg-muted/50 transition-colors"
-                >
-                  <span className="hidden sm:inline">View All</span>
-                  <ExternalLink className="h-3 w-3" />
-                </a>
-              </>
-            )}
-          </div>
-        </CardTitle>
-      </CardHeader>
-
-      <CardContent className="p-0">
-        <ScrollArea className="h-[340px] overflow-x-hidden">
-          <div className="p-3">
-            {/* Not connected state */}
-            {!isConnected && !isLoading && (
-              <div className="flex flex-col items-center justify-center py-6 bg-red-500/5 rounded-lg border border-red-500/10">
-                <div className="h-9 w-9 rounded-full bg-red-500/10 flex items-center justify-center mb-2">
-                  <Mail className="h-4 w-4 text-red-400" />
-                </div>
-                <p className="text-xs text-muted-foreground text-center mb-2">
-                  Connect Gmail to see your inbox
-                </p>
-                <Button 
-                  size="sm" 
-                  onClick={() => connectGmail()} 
-                  disabled={isConnecting}
-                  className="bg-red-500 hover:bg-red-600 text-white h-8 text-xs px-3"
-                >
-                  {isConnecting ? "Connecting..." : "Connect Gmail"}
-                </Button>
-              </div>
-            )}
-
-            {/* Loading state - 3 line skeleton */}
-            {isLoading && (
-              <div className="space-y-1.5 pr-2">
-                {[1, 2, 3].map(i => (
-                  <div key={i} className="px-2.5 py-1.5 rounded-md border border-border/30 bg-muted/5 overflow-hidden">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Skeleton className="h-1.5 w-1.5 rounded-full shrink-0" />
-                      <Skeleton className="h-3.5 w-28" />
-                      <Skeleton className="h-3 w-12 ml-auto shrink-0" />
-                    </div>
-                    <Skeleton className="h-3.5 w-full mb-1" />
-                    <Skeleton className="h-3 w-3/4" />
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Empty state */}
-            {isConnected && !isLoading && messages.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-6 bg-muted/20 rounded-lg">
-                <Inbox className="h-7 w-7 text-muted-foreground mb-1.5" />
-                <p className="text-xs text-muted-foreground">No new emails</p>
-              </div>
-            )}
-
-            {/* Messages list - Gmail-style 3-line layout with bordered cards */}
-            {isConnected && !isLoading && messages.length > 0 && (
-              <div className="space-y-1.5 pr-2">
-                {messages.map((message) => (
+              )}
+            </div>
+            <div className="flex items-center gap-1">
+              {isConnected && (
+                <>
+                  <span className="text-xs text-muted-foreground hidden sm:inline">
+                    {getSyncStatusText()}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-7 w-7"
+                    onClick={handleRefresh}
+                    disabled={isRefetching}
+                  >
+                    <RefreshCw className={cn("h-3.5 w-3.5 text-muted-foreground", isRefetching && "animate-spin")} />
+                  </Button>
                   <a
-                    key={message.id}
-                    href={`https://mail.google.com/mail/u/0/#inbox/${message.id}`}
+                    href="https://mail.google.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={cn(
-                      "group block w-full px-2.5 py-1.5 rounded-md border border-border/30 border-l-2 overflow-hidden",
-                      "hover:bg-muted/50 hover:border-border/50 transition-colors cursor-pointer",
-                      message.isUnread 
-                        ? "border-l-blue-500 bg-primary/5" 
-                        : "border-l-transparent bg-muted/5"
-                    )}
-                    tabIndex={0}
-                    role="button"
-                    aria-label={`Email from ${message.from.name || message.from.email}: ${message.subject}`}
+                    className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 px-1.5 py-1 rounded hover:bg-muted/50 transition-colors"
                   >
-                    {/* Line 1: Unread dot + Sender + Star + Date */}
-                    <div className="flex items-center justify-between gap-2 mb-0.5 min-w-0 overflow-hidden">
-                      <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
-                        {/* Unread indicator dot - always reserve space for alignment */}
-                        <div 
-                          className={cn(
-                            "w-1.5 h-1.5 rounded-full flex-shrink-0",
-                            message.isUnread ? "bg-blue-500" : "bg-transparent"
-                          )}
-                          aria-hidden="true"
-                        >
-                          {message.isUnread && <span className="sr-only">Unread</span>}
-                        </div>
-                        
-                        {/* Sender name */}
-                        <span className={cn(
-                          "text-sm truncate min-w-0 flex-1 leading-none",
-                          message.isUnread ? "font-semibold text-foreground" : "font-medium text-foreground/70"
-                        )}>
-                          {message.from.name || message.from.email}
-                        </span>
-                      </div>
-                      
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        {/* Star icon - visible on hover or if starred */}
-                        <button 
-                          onClick={(e) => handleStar(message.id, message.isStarred, e)} 
-                          className={cn(
-                            "p-0.5 rounded transition-all",
-                            message.isStarred 
-                              ? "opacity-100" 
-                              : "opacity-0 group-hover:opacity-100"
-                          )}
-                          title={message.isStarred ? "Unstar" : "Star"}
-                        >
-                          <Star className={cn(
-                            "h-3.5 w-3.5 flex-shrink-0 transition-colors",
-                            message.isStarred 
-                              ? "fill-amber-400 text-amber-400" 
-                              : "text-muted-foreground hover:text-amber-400"
-                          )} />
-                        </button>
-                        
-                        {/* Date/Time */}
-                        <time 
-                          dateTime={message.date}
-                          className="text-xs text-muted-foreground whitespace-nowrap leading-none"
-                        >
-                          {formatRelativeTime(new Date(message.date))}
-                        </time>
-                      </div>
-                    </div>
-
-                    {/* Line 2: Subject */}
-                    <p className={cn(
-                      "text-sm truncate mb-px min-w-0 leading-tight",
-                      message.isUnread ? "font-semibold text-foreground" : "text-foreground/70"
-                    )}>
-                      {message.subject || "(No subject)"}
-                    </p>
-
-                    {/* Line 3: Snippet/Preview */}
-                    <p className="text-xs text-muted-foreground truncate min-w-0 mb-0 leading-tight">
-                      {message.snippet || ""}
-                    </p>
+                    <span className="hidden sm:inline">View All</span>
+                    <ExternalLink className="h-3 w-3" />
                   </a>
+                </>
+              )}
+            </div>
+          </CardTitle>
+
+          {/* Search and Filters - only show when connected */}
+          {isConnected && !isLoading && (
+            <div className="mt-2 space-y-2">
+              {/* Search Bar */}
+              <div className="relative">
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                <Input
+                  placeholder="Search emails..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="h-8 text-sm bg-muted/30 border-0 pl-8"
+                />
+              </div>
+
+              {/* Label Filter Pills */}
+              <div className="flex gap-1.5">
+                {labelFilters.map((filter) => (
+                  <button
+                    key={filter.id}
+                    onClick={() => setLabelFilter(filter.id)}
+                    className={cn(
+                      "px-2.5 py-1 text-xs rounded-full transition-colors",
+                      labelFilter === filter.id
+                        ? "bg-destructive text-destructive-foreground"
+                        : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    {filter.label}
+                  </button>
                 ))}
               </div>
-            )}
-          </div>
-        </ScrollArea>
-      </CardContent>
-    </Card>
+            </div>
+          )}
+        </CardHeader>
+
+        <CardContent className="p-0">
+          <ScrollArea className="h-[520px] overflow-x-hidden">
+            <div className="p-3">
+              {/* Not connected state */}
+              {!isConnected && !isLoading && (
+                <div className="flex flex-col items-center justify-center py-6 bg-destructive/5 rounded-lg border border-destructive/10">
+                  <div className="h-9 w-9 rounded-full bg-destructive/10 flex items-center justify-center mb-2">
+                    <Mail className="h-4 w-4 text-destructive" />
+                  </div>
+                  <p className="text-xs text-muted-foreground text-center mb-2">
+                    Connect Gmail to see your inbox
+                  </p>
+                  <Button 
+                    size="sm" 
+                    onClick={() => connectGmail()} 
+                    disabled={isConnecting}
+                    variant="destructive"
+                    className="h-8 text-xs px-3"
+                  >
+                    {isConnecting ? "Connecting..." : "Connect Gmail"}
+                  </Button>
+                </div>
+              )}
+
+              {/* Loading state - 5 line skeleton */}
+              {isLoading && (
+                <div className="space-y-1.5 pr-2">
+                  {[1, 2, 3, 4, 5].map(i => (
+                    <div key={i} className="px-2.5 py-1.5 rounded-md border border-border/30 bg-muted/5 overflow-hidden">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Skeleton className="h-1.5 w-1.5 rounded-full shrink-0" />
+                        <Skeleton className="h-3.5 w-28" />
+                        <Skeleton className="h-3 w-12 ml-auto shrink-0" />
+                      </div>
+                      <Skeleton className="h-3.5 w-full mb-1" />
+                      <Skeleton className="h-3 w-3/4" />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Empty state */}
+              {isConnected && !isLoading && messages.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-6 bg-muted/20 rounded-lg">
+                  <Inbox className="h-7 w-7 text-muted-foreground mb-1.5" />
+                  <p className="text-xs text-muted-foreground">
+                    {searchQuery ? "No emails match your search" : "No emails"}
+                  </p>
+                </div>
+              )}
+
+              {/* Messages list - Gmail-style 3-line layout with bordered cards */}
+              {isConnected && !isLoading && messages.length > 0 && (
+                <div className="space-y-1.5 pr-2">
+                  {messages.map((message) => (
+                    <button
+                      key={message.id}
+                      onClick={() => handleEmailClick(message.id)}
+                      className={cn(
+                        "group block w-full px-2.5 py-1.5 rounded-md border border-border/30 border-l-2 overflow-hidden text-left",
+                        "hover:bg-muted/50 hover:border-border/50 transition-colors cursor-pointer",
+                        message.isUnread 
+                          ? "border-l-blue-500 bg-primary/5" 
+                          : "border-l-transparent bg-muted/5"
+                      )}
+                      aria-label={`Email from ${message.from.name || message.from.email}: ${message.subject}`}
+                    >
+                      {/* Line 1: Unread dot + Sender + Quick Actions + Star + Date */}
+                      <div className="flex items-center justify-between gap-2 mb-0.5 min-w-0 overflow-hidden">
+                        <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
+                          {/* Unread indicator dot - always reserve space for alignment */}
+                          <div 
+                            className={cn(
+                              "w-1.5 h-1.5 rounded-full flex-shrink-0",
+                              message.isUnread ? "bg-blue-500" : "bg-transparent"
+                            )}
+                            aria-hidden="true"
+                          >
+                            {message.isUnread && <span className="sr-only">Unread</span>}
+                          </div>
+                          
+                          {/* Sender name */}
+                          <span className={cn(
+                            "text-sm truncate min-w-0 flex-1 leading-none",
+                            message.isUnread ? "font-semibold text-foreground" : "font-medium text-foreground/70"
+                          )}>
+                            {message.from.name || message.from.email}
+                          </span>
+                        </div>
+                        
+                        <div className="flex items-center gap-1.5 flex-shrink-0">
+                          {/* Quick actions - visible on hover */}
+                          <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              onClick={(e) => handleArchive(message.id, e)}
+                              className="p-1 rounded hover:bg-muted transition-colors"
+                              title="Archive"
+                            >
+                              <Archive className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
+                            </button>
+                            <button
+                              onClick={(e) => handleDelete(message.id, e)}
+                              className="p-1 rounded hover:bg-muted transition-colors"
+                              title="Delete"
+                            >
+                              <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
+                            </button>
+                          </div>
+
+                          {/* Star icon - visible on hover or if starred */}
+                          <button 
+                            onClick={(e) => handleStar(message.id, message.isStarred, e)} 
+                            className={cn(
+                              "p-0.5 rounded transition-all",
+                              message.isStarred 
+                                ? "opacity-100" 
+                                : "opacity-0 group-hover:opacity-100"
+                            )}
+                            title={message.isStarred ? "Unstar" : "Star"}
+                          >
+                            <Star className={cn(
+                              "h-3.5 w-3.5 flex-shrink-0 transition-colors",
+                              message.isStarred 
+                                ? "fill-amber-400 text-amber-400" 
+                                : "text-muted-foreground hover:text-amber-400"
+                            )} />
+                          </button>
+                          
+                          {/* Date/Time */}
+                          <time 
+                            dateTime={message.date}
+                            className="text-xs text-muted-foreground whitespace-nowrap leading-none"
+                          >
+                            {formatRelativeTime(new Date(message.date))}
+                          </time>
+                        </div>
+                      </div>
+
+                      {/* Line 2: Subject */}
+                      <p className={cn(
+                        "text-sm truncate mb-px min-w-0 leading-tight",
+                        message.isUnread ? "font-semibold text-foreground" : "text-foreground/70"
+                      )}>
+                        {message.subject || "(No subject)"}
+                      </p>
+
+                      {/* Line 3: Snippet/Preview */}
+                      <p className="text-xs text-muted-foreground truncate min-w-0 mb-0 leading-tight">
+                        {message.snippet || ""}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </ScrollArea>
+        </CardContent>
+      </Card>
+
+      {/* Email Preview SlideOver */}
+      <EmailPreviewSlideOver
+        emailId={selectedEmailId}
+        onClose={() => setSelectedEmailId(null)}
+        onLinkToRecord={handleLinkToRecord}
+      />
+
+      {/* Link to Record Dialog */}
+      {linkDialogData && (
+        <LinkToRecordDialog
+          open={linkDialogOpen}
+          onOpenChange={setLinkDialogOpen}
+          emailId={linkDialogData.emailId}
+          threadId={linkDialogData.threadId}
+          emailSubject={linkDialogData.subject}
+          emailFrom={linkDialogData.from}
+        />
+      )}
+    </>
   );
 };
