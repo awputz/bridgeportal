@@ -91,7 +91,7 @@ function formatSF(sf: number): string {
   return `${sf.toLocaleString()} SF`;
 }
 
-// Metric card component - horizontal layout with icon left, label above value
+// Metric card component - compact horizontal layout
 const MetricCard = memo(function MetricCard({ 
   icon: Icon, 
   label, 
@@ -103,13 +103,13 @@ const MetricCard = memo(function MetricCard({
 }) {
   if (!value) return null;
   return (
-    <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/40 border border-border/40">
-      <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-        <Icon className="h-4 w-4 text-primary" />
+    <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-muted/30 border border-border/30">
+      <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0">
+        <Icon className="h-3.5 w-3.5 text-primary" />
       </div>
-      <div className="min-w-0 flex-1">
-        <p className="text-[11px] text-muted-foreground uppercase tracking-wide">{label}</p>
-        <p className="text-sm font-semibold truncate">{value}</p>
+      <div className="min-w-0 flex-1 space-y-0">
+        <p className="text-[10px] text-muted-foreground uppercase tracking-wide m-0 leading-none">{label}</p>
+        <p className="text-sm font-semibold truncate m-0 leading-none mt-0.5">{value}</p>
       </div>
     </div>
   );
@@ -276,13 +276,35 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                 )}
               </div>
 
+              {/* Photo Thumbnail Strip - below hero */}
+              {photoCount > 1 && (
+                <div className="flex gap-1.5 p-2 px-4 border-b border-border/30 overflow-x-auto">
+                  {photos?.slice(0, 8).map((photo) => (
+                    <button
+                      key={photo.id}
+                      className={cn(
+                        "w-12 h-12 rounded-md overflow-hidden border-2 shrink-0 transition-opacity",
+                        photo.is_primary ? "border-primary" : "border-transparent opacity-70 hover:opacity-100"
+                      )}
+                    >
+                      <img src={photo.image_url} alt="" className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                  {photoCount > 8 && (
+                    <div className="w-12 h-12 rounded-md bg-muted/50 flex items-center justify-center shrink-0">
+                      <span className="text-xs text-muted-foreground">+{photoCount - 8}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Content Section */}
-              <div className="p-5 md:p-6 space-y-6">
-                {/* Agent Info - Prominent card */}
-                <div className="flex items-center gap-4 p-4 rounded-xl bg-muted/30 border border-border/40">
-                  <Avatar className="h-12 w-12 flex-shrink-0">
+              <div className="p-4 md:p-5 space-y-4">
+                {/* Agent Info - Compact card */}
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border/30">
+                  <Avatar className="h-10 w-10 flex-shrink-0">
                     <AvatarImage src={deal.agent?.avatar_url || undefined} />
-                    <AvatarFallback className="text-sm bg-primary text-primary-foreground font-semibold">
+                    <AvatarFallback className="text-xs bg-primary text-primary-foreground font-semibold">
                       {deal.agent?.full_name
                         ?.split(" ")
                         .map((n) => n[0])
@@ -291,8 +313,8 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                     </AvatarFallback>
                   </Avatar>
                   <div className="min-w-0 flex-1">
-                    <p className="font-semibold text-base leading-tight">{deal.agent?.full_name}</p>
-                    <p className="text-sm text-muted-foreground mt-0.5">
+                    <p className="font-semibold text-sm leading-none m-0">{deal.agent?.full_name}</p>
+                    <p className="text-xs text-muted-foreground leading-none m-0 mt-1">
                       {DIVISION_LABELS[deal.division] || deal.division} •{" "}
                       {deal.last_deal_room_update
                         ? `Updated ${formatDistanceToNow(new Date(deal.last_deal_room_update), { addSuffix: true })}`
@@ -302,32 +324,32 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                 </div>
 
                 {/* Action Buttons Row */}
-                <div className="flex flex-wrap gap-2.5">
-                  {deal.om_file_url && (
-                    <Button 
-                      size="sm"
-                      onClick={() => window.open(deal.om_file_url!, "_blank")}
-                      className="gap-1.5"
-                    >
-                      <Download className="h-4 w-4" />
-                      Download OM
-                    </Button>
-                  )}
+                <div className="flex flex-wrap gap-2">
+                  <Button 
+                    size="sm"
+                    variant={deal.om_file_url ? "default" : "outline"}
+                    onClick={() => deal.om_file_url && window.open(deal.om_file_url, "_blank")}
+                    disabled={!deal.om_file_url}
+                    className="gap-1.5"
+                  >
+                    <Download className="h-4 w-4 flex-shrink-0" />
+                    {deal.om_file_url ? "Download OM" : "No OM"}
+                  </Button>
                   <Button variant="outline" size="sm" onClick={handleShare} className="gap-1.5">
-                    <Share2 className="h-4 w-4" />
+                    <Share2 className="h-4 w-4 flex-shrink-0" />
                     Share
                   </Button>
                   <InterestButton dealId={deal.id} />
                   <Button variant="outline" size="sm" asChild className="gap-1.5">
                     <Link to={`/portal/crm/deals/${deal.id}`}>
-                      <ExternalLink className="h-4 w-4" />
+                      <ExternalLink className="h-4 w-4 flex-shrink-0" />
                       CRM
                     </Link>
                   </Button>
                 </div>
 
-                {/* Key Metrics - Horizontal Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {/* Key Metrics - Compact Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
                   <MetricCard 
                     icon={DollarSign} 
                     label="Value" 
@@ -357,7 +379,7 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                       value={editedNotes}
                       onChange={(e) => setEditedNotes(e.target.value)}
                       placeholder="Add notes about this deal..."
-                      className="min-h-[80px]"
+                      className="min-h-[72px]"
                     />
                     <div className="flex gap-2">
                       <Button
@@ -366,7 +388,7 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                         disabled={updateDeal.isPending}
                         className="gap-1"
                       >
-                        <Save className="h-3.5 w-3.5" />
+                        <Save className="h-3.5 w-3.5 flex-shrink-0" />
                         Save
                       </Button>
                       <Button
@@ -375,19 +397,19 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                         onClick={() => setIsEditingNotes(false)}
                         className="gap-1"
                       >
-                        <X className="h-3.5 w-3.5" />
+                        <X className="h-3.5 w-3.5 flex-shrink-0" />
                         Cancel
                       </Button>
                     </div>
                   </div>
                 ) : deal.deal_room_notes || isOwner ? (
-                  <div className="p-3 rounded-lg bg-muted/30 border border-border/50 group/notes relative">
+                  <div className="p-2.5 rounded-lg bg-muted/30 border border-border/30 group/notes relative">
                     {deal.deal_room_notes ? (
-                      <p className="text-sm italic text-muted-foreground leading-relaxed pr-8">
+                      <p className="text-sm italic text-muted-foreground leading-relaxed pr-8 m-0">
                         "{deal.deal_room_notes}"
                       </p>
                     ) : (
-                      <p className="text-sm text-muted-foreground/60">
+                      <p className="text-sm text-muted-foreground/60 m-0">
                         No notes added yet
                       </p>
                     )}
@@ -395,10 +417,10 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="absolute top-2 right-2 h-7 w-7 opacity-0 group-hover/notes:opacity-100 transition-opacity"
+                        className="absolute top-2 right-2 h-6 w-6 opacity-0 group-hover/notes:opacity-100 transition-opacity"
                         onClick={handleStartEditNotes}
                       >
-                        <Edit2 className="h-3.5 w-3.5" />
+                        <Edit2 className="h-3 w-3" />
                       </Button>
                     )}
                   </div>
@@ -406,11 +428,11 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
 
                 <Separator />
 
-                {/* Tabs - Clean styling */}
+                {/* Tabs - Pill/Bubble styling */}
                 <Tabs defaultValue="photos" className="w-full">
-                  <TabsList className="w-full h-auto p-1.5 gap-1.5 bg-muted/40 rounded-lg flex flex-wrap justify-start">
-                    <TabsTrigger value="photos" className="gap-1.5 text-xs data-[state=active]:bg-background">
-                      <ImageIcon className="h-3.5 w-3.5" />
+                  <TabsList className="w-full h-auto p-1 gap-1 bg-muted/30 rounded-xl flex flex-wrap justify-start border border-border/30">
+                    <TabsTrigger value="photos" className="gap-1.5 text-xs rounded-lg px-3 py-1.5 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                      <ImageIcon className="h-3.5 w-3.5 flex-shrink-0" />
                       Photos
                       {photoCount > 0 && (
                         <Badge variant="secondary" className="ml-0.5 text-[10px] px-1.5 py-0 h-4 min-w-[1.25rem]">
@@ -418,24 +440,24 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                         </Badge>
                       )}
                     </TabsTrigger>
-                    <TabsTrigger value="files" className="gap-1.5 text-xs data-[state=active]:bg-background">
-                      <FileText className="h-3.5 w-3.5" />
+                    <TabsTrigger value="files" className="gap-1.5 text-xs rounded-lg px-3 py-1.5 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                      <FileText className="h-3.5 w-3.5 flex-shrink-0" />
                       Files
                     </TabsTrigger>
-                    <TabsTrigger value="comments" className="gap-1.5 text-xs data-[state=active]:bg-background">
-                      <MessageCircle className="h-3.5 w-3.5" />
+                    <TabsTrigger value="comments" className="gap-1.5 text-xs rounded-lg px-3 py-1.5 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                      <MessageCircle className="h-3.5 w-3.5 flex-shrink-0" />
                       Comments
                     </TabsTrigger>
-                    <TabsTrigger value="interested" className="gap-1.5 text-xs data-[state=active]:bg-background">
-                      <Star className="h-3.5 w-3.5" />
+                    <TabsTrigger value="interested" className="gap-1.5 text-xs rounded-lg px-3 py-1.5 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                      <Star className="h-3.5 w-3.5 flex-shrink-0" />
                       Interested
                     </TabsTrigger>
-                    <TabsTrigger value="activity" className="gap-1.5 text-xs data-[state=active]:bg-background">
-                      <Activity className="h-3.5 w-3.5" />
+                    <TabsTrigger value="activity" className="gap-1.5 text-xs rounded-lg px-3 py-1.5 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                      <Activity className="h-3.5 w-3.5 flex-shrink-0" />
                       Activity
                     </TabsTrigger>
-                    <TabsTrigger value="matches" className="gap-1.5 text-xs data-[state=active]:bg-background">
-                      <Target className="h-3.5 w-3.5" />
+                    <TabsTrigger value="matches" className="gap-1.5 text-xs rounded-lg px-3 py-1.5 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                      <Target className="h-3.5 w-3.5 flex-shrink-0" />
                       Matches
                       {matchCount > 0 && (
                         <Badge variant="secondary" className="ml-0.5 text-[10px] px-1.5 py-0 h-4 min-w-[1.25rem]">
@@ -445,7 +467,7 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                     </TabsTrigger>
                   </TabsList>
 
-                  <div className="mt-4">
+                  <div className="mt-3">
                     <TabsContent value="photos" className="m-0">
                       <DealRoomPhotoGallery dealId={deal.id} isOwner={isOwner} />
                     </TabsContent>
