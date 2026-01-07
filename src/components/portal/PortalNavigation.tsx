@@ -316,7 +316,7 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                   {/* User Header Section */}
                   {userProfile && (
                     <div className="px-3 py-2 border-b border-white/10">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2.5">
                         <Avatar className="h-9 w-9 ring-1 ring-white/10 flex-shrink-0">
                           <AvatarImage src={userProfile.avatarUrl} alt={userProfile.fullName || 'User'} />
                           <AvatarFallback className="bg-white/10 text-white text-xs">
@@ -324,19 +324,19 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                           </AvatarFallback>
                         </Avatar>
                         <div className="min-w-0 flex-1">
-                          <p className="text-[13px] font-medium text-white truncate leading-tight">
+                          <p className="text-[13px] font-medium text-white truncate leading-none m-0">
                             {userProfile.fullName}
                           </p>
-                          <p className="text-[11px] text-white/50 truncate leading-tight">
+                          <p className="text-[11px] text-white/50 truncate leading-none m-0 mt-0.5">
                             {userProfile.email}
                           </p>
+                          {userProfile.createdAt && (
+                            <p className="text-[10px] text-white/40 leading-none m-0 mt-0.5">
+                              {formatMemberSince(userProfile.createdAt)}
+                            </p>
+                          )}
                         </div>
                       </div>
-                      {userProfile.createdAt && (
-                        <p className="text-[10px] text-white/40 mt-1.5 pl-12 leading-none">
-                          {formatMemberSince(userProfile.createdAt)}
-                        </p>
-                      )}
                     </div>
                   )}
                   
