@@ -1,4 +1,15 @@
 // Global error handler utility for Supabase and API errors
+import { toast } from "sonner";
+
+/**
+ * AppError interface for consistent error typing
+ */
+export interface AppError {
+  code?: string;
+  message: string;
+  userMessage: string;
+  isRetryable: boolean;
+}
 
 /**
  * Translate Supabase and API errors to user-friendly messages
@@ -19,6 +30,18 @@ export function handleQueryError(error: unknown): string {
     return 'This item was not found or the ID is invalid';
   }
   
+  if (err.code === 'PGRST204') {
+    return 'This item was not found';
+  }
+  
+  if (err.code === 'PGRST100') {
+    return 'Invalid request. Please check your input';
+  }
+  
+  if (err.code === 'PGRST000' || err.code === '08006') {
+    return 'Unable to connect to the server. Please check your connection';
+  }
+  
   if (err.code === '42501') {
     return 'You do not have permission to perform this action';
   }
@@ -29,6 +52,14 @@ export function handleQueryError(error: unknown): string {
   
   if (err.code === '23505') {
     return 'A record with this information already exists';
+  }
+  
+  if (err.code === '23502') {
+    return 'Required field is missing';
+  }
+  
+  if (err.code === '23514') {
+    return 'Invalid value provided';
   }
   
   // Network errors
@@ -46,6 +77,33 @@ export function handleQueryError(error: unknown): string {
   
   // Return the error message or a generic fallback
   return err.message || 'An unexpected error occurred. Please try again.';
+}
+
+/**
+ * Parse any error into AppError format
+ */
+export function parseError(error: unknown): AppError {
+  const err = error as { code?: string; message?: string };
+  const userMessage = handleQueryError(error);
+  
+  // Determine if retryable
+  const nonRetryableCodes = ['42501', 'PGRST116', '23505', '23503'];
+  const isRetryable = !nonRetryableCodes.includes(err?.code || '');
+  
+  return {
+    code: err?.code,
+    message: err?.message || 'Unknown error',
+    userMessage,
+    isRetryable,
+  };
+}
+
+/**
+ * Show error toast with user-friendly message
+ */
+export function showError(error: unknown, fallbackMessage?: string): void {
+  const message = handleQueryError(error) || fallbackMessage || 'An error occurred';
+  toast.error(message);
 }
 
 /**

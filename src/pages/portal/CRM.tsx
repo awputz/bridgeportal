@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useCRMDeals, useDealStages, useUpdateDeal, useDeleteDeal } from "@/hooks/useCRM";
 import { useCRMRealtime } from "@/hooks/useCRMRealtime";
+import { QueryErrorState } from "@/components/ui/QueryErrorState";
 import { useDivision, Division } from "@/contexts/DivisionContext";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -90,8 +91,8 @@ const CRM = () => {
     maxCapRate: null,
   });
 
-  const { data: deals, isLoading: dealsLoading } = useCRMDeals(division);
-  const { data: stages, isLoading: stagesLoading } = useDealStages(division);
+  const { data: deals, isLoading: dealsLoading, error: dealsError, refetch: refetchDeals } = useCRMDeals(division);
+  const { data: stages, isLoading: stagesLoading, error: stagesError } = useDealStages(division);
   const updateDeal = useUpdateDeal();
   const deleteDeal = useDeleteDeal();
 
@@ -99,6 +100,7 @@ const CRM = () => {
   useCRMRealtime(division);
 
   const isLoading = dealsLoading || stagesLoading;
+  const hasError = dealsError || stagesError;
 
   // Filter deals based on active filters
   const filteredDeals = useMemo(() => {
@@ -453,7 +455,13 @@ const CRM = () => {
           {/* Pipeline View */}
           <div className="list-gap-md">
           <SectionErrorBoundary sectionName="Deal Pipeline">
-            {isLoading ? (
+            {hasError ? (
+              <QueryErrorState 
+                error={dealsError || stagesError}
+                onRetry={() => refetchDeals()}
+                title="Failed to load deals"
+              />
+            ) : isLoading ? (
               <Skeleton className="h-96 w-full rounded-xl" />
             ) : stages && filteredDeals && filteredDeals.length > 0 ? (
               viewMode === "grouped" ? (
