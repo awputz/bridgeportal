@@ -20,6 +20,7 @@ import {
   Briefcase,
   Star,
   Ban,
+  Sparkles,
 } from "lucide-react";
 import { CRMContact, useUpdateContact, useDeleteContact } from "@/hooks/useCRM";
 import { Button } from "@/components/ui/button";
@@ -54,6 +55,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { downloadVCard } from "@/lib/vcard";
 import { ContactActivityTimeline } from "./ContactActivityTimeline";
+import { ContactMatchingDealsModal } from "./ContactMatchingDealsModal";
 
 interface ContactProfileSlideOverProps {
   contact: CRMContact | null;
@@ -104,10 +106,13 @@ export function ContactProfileSlideOver({
 }: ContactProfileSlideOverProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showMatchingDeals, setShowMatchingDeals] = useState(false);
   const [editedContact, setEditedContact] = useState<Partial<CRMContact>>({});
   
   const updateContact = useUpdateContact();
   const deleteContact = useDeleteContact();
+
+  const isBuyerType = ["buyer", "investor", "tenant"].includes(contact.contact_type);
 
   if (!contact) return null;
 
@@ -384,7 +389,7 @@ export function ContactProfileSlideOver({
 
             {/* Quick actions */}
             {!isEditing && (
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <Button
                   variant="outline"
                   size="sm"
@@ -414,6 +419,17 @@ export function ContactProfileSlideOver({
                   >
                     <Linkedin className="h-4 w-4" />
                     LinkedIn
+                  </Button>
+                )}
+                {isBuyerType && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full gap-2 mt-1"
+                    onClick={() => setShowMatchingDeals(true)}
+                  >
+                    <Sparkles className="h-4 w-4" />
+                    Find Matching Deals
                   </Button>
                 )}
               </div>
@@ -882,6 +898,14 @@ export function ContactProfileSlideOver({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Matching Deals Modal */}
+      <ContactMatchingDealsModal
+        contactId={contact.id}
+        contactName={contact.full_name}
+        open={showMatchingDeals}
+        onOpenChange={setShowMatchingDeals}
+      />
     </>
   );
 }

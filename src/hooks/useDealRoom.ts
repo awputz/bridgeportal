@@ -548,13 +548,23 @@ export const useShareDealToRoom = () => {
 
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["deal-room-deals"] });
       queryClient.invalidateQueries({ queryKey: ["my-deal-room-deals"] });
       queryClient.invalidateQueries({ queryKey: ["agent-shareable-deals"] });
       queryClient.invalidateQueries({ queryKey: ["deal-room-stats"] });
       queryClient.invalidateQueries({ queryKey: ["crm-deals"] });
       toast.success("Deal shared to Deal Room");
+
+      // Trigger AI matching in background
+      supabase.functions.invoke("match-deals", {
+        body: { deal_id: variables.dealId },
+      }).then(() => {
+        queryClient.invalidateQueries({ queryKey: ["deal-matches", variables.dealId] });
+        queryClient.invalidateQueries({ queryKey: ["deal-match-count", variables.dealId] });
+      }).catch((err) => {
+        console.error("Failed to trigger deal matching:", err);
+      });
     },
     onError: (error: unknown) => {
       toast.error(handleQueryError(error));
