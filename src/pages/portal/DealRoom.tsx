@@ -1,14 +1,16 @@
 import { useState, useMemo } from "react";
-import { Building2, Plus, TrendingUp } from "lucide-react";
+import { Building2, Plus, TrendingUp, List, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useDealRoomDeals, useDealRoomStats, useMyDealRoomDeals, DealRoomFilters } from "@/hooks/useDealRoom";
+import { useDealRoomDeals, useDealRoomStats, useMyDealRoomDeals, AdvancedFilters } from "@/hooks/useDealRoom";
 import { useDealRoomRealtime } from "@/hooks/useDealRoomRealtime";
 import { useInvestmentListings } from "@/hooks/useInvestmentListings";
 import { useCommercialListings } from "@/hooks/useCommercialListings";
 import { DealRoomFiltersComponent } from "@/components/deal-room/DealRoomFilters";
+import { DealRoomAdvancedFilters } from "@/components/deal-room/DealRoomAdvancedFilters";
 import { DealRoomList } from "@/components/deal-room/DealRoomList";
+import { DealRoomMap } from "@/components/deal-room/DealRoomMap";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ShareDealDialog } from "@/components/deal-room/ShareDealDialog";
 import { DealDetailModal } from "@/components/deal-room/DealDetailModal";
@@ -16,11 +18,12 @@ import { MySharedDeals } from "@/components/deal-room/MySharedDeals";
 import { OnMarketExclusives } from "@/components/deal-room/OnMarketExclusives";
 
 export default function DealRoom() {
-  const [filters, setFilters] = useState<DealRoomFilters>({});
+  const [filters, setFilters] = useState<AdvancedFilters>({});
   const [sortBy, setSortBy] = useState<"recent" | "value" | "comments">("recent");
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [selectedDealId, setSelectedDealId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"all" | "on-market" | "my">("all");
+  const [viewMode, setViewMode] = useState<"list" | "map">("list");
 
   // Enable real-time updates
   useDealRoomRealtime();
@@ -116,16 +119,49 @@ export default function DealRoom() {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="all" className="mt-6 space-y-6">
+        <TabsContent value="all" className="mt-6 space-y-4">
           {/* Filters */}
-          <DealRoomFiltersComponent
-            filters={filters}
-            sortBy={sortBy}
-            onFiltersChange={setFilters}
-            onSortChange={setSortBy}
-            onClear={handleClearFilters}
-            dealCount={sortedDeals.length}
-          />
+          <div className="space-y-3">
+            <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+              <DealRoomFiltersComponent
+                filters={filters}
+                sortBy={sortBy}
+                onFiltersChange={setFilters}
+                onSortChange={setSortBy}
+                onClear={handleClearFilters}
+                dealCount={sortedDeals.length}
+              />
+              
+              {/* View toggle */}
+              <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
+                <Button
+                  variant={viewMode === "list" ? "secondary" : "ghost"}
+                  size="sm"
+                  className="h-8 px-3 gap-1.5"
+                  onClick={() => setViewMode("list")}
+                >
+                  <List className="h-4 w-4" />
+                  <span className="hidden sm:inline">List</span>
+                </Button>
+                <Button
+                  variant={viewMode === "map" ? "secondary" : "ghost"}
+                  size="sm"
+                  className="h-8 px-3 gap-1.5"
+                  onClick={() => setViewMode("map")}
+                >
+                  <Map className="h-4 w-4" />
+                  <span className="hidden sm:inline">Map</span>
+                </Button>
+              </div>
+            </div>
+
+            {/* Advanced filters */}
+            <DealRoomAdvancedFilters
+              filters={filters}
+              onFiltersChange={setFilters}
+              showCapRate={filters.division === "investment-sales"}
+            />
+          </div>
 
           {/* Content */}
           {isLoading ? (
@@ -155,8 +191,16 @@ export default function DealRoom() {
               actionLabel={!filters.search && !filters.division && !filters.propertyType ? "Share Your First Deal" : undefined}
               onAction={!filters.search && !filters.division && !filters.propertyType ? () => setShareDialogOpen(true) : undefined}
             />
-          ) : (
+          ) : viewMode === "list" ? (
             <DealRoomList deals={sortedDeals} onDealClick={handleDealClick} />
+          ) : (
+            <div className="h-[600px] rounded-xl border overflow-hidden">
+              <DealRoomMap
+                deals={sortedDeals}
+                onDealClick={handleDealClick}
+                selectedDealId={selectedDealId}
+              />
+            </div>
           )}
         </TabsContent>
 
