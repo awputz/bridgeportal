@@ -5,19 +5,22 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDealRoomDeals, useDealRoomStats, useMyDealRoomDeals, DealRoomFilters } from "@/hooks/useDealRoom";
 import { useDealRoomRealtime } from "@/hooks/useDealRoomRealtime";
+import { useInvestmentListings } from "@/hooks/useInvestmentListings";
+import { useCommercialListings } from "@/hooks/useCommercialListings";
 import { DealRoomFiltersComponent } from "@/components/deal-room/DealRoomFilters";
 import { DealRoomList } from "@/components/deal-room/DealRoomList";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ShareDealDialog } from "@/components/deal-room/ShareDealDialog";
 import { DealDetailModal } from "@/components/deal-room/DealDetailModal";
 import { MySharedDeals } from "@/components/deal-room/MySharedDeals";
+import { OnMarketExclusives } from "@/components/deal-room/OnMarketExclusives";
 
 export default function DealRoom() {
   const [filters, setFilters] = useState<DealRoomFilters>({});
   const [sortBy, setSortBy] = useState<"recent" | "value" | "comments">("recent");
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [selectedDealId, setSelectedDealId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"all" | "my">("all");
+  const [activeTab, setActiveTab] = useState<"all" | "on-market" | "my">("all");
 
   // Enable real-time updates
   useDealRoomRealtime();
@@ -25,6 +28,11 @@ export default function DealRoom() {
   const { data: deals, isLoading } = useDealRoomDeals(filters);
   const { data: myDeals } = useMyDealRoomDeals();
   const { data: stats } = useDealRoomStats();
+  
+  // Fetch on-market listings for count
+  const { data: investmentListings } = useInvestmentListings();
+  const { data: commercialListings } = useCommercialListings();
+  const onMarketCount = (investmentListings?.length || 0) + (commercialListings?.length || 0);
 
   // Sort deals based on selected option
   const sortedDeals = useMemo(() => {
@@ -69,7 +77,7 @@ export default function DealRoom() {
               Agent Deal Room
             </h1>
             <p className="text-sm md:text-base text-muted-foreground font-light">
-              Weekly team off-market deals & opportunities
+              On-market exclusives & off-market opportunities
             </p>
           </div>
         <div className="flex items-center gap-3">
@@ -92,11 +100,15 @@ export default function DealRoom() {
       </div>
 
       {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "all" | "my")}>
+      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "all" | "on-market" | "my")}>
         <TabsList>
           <TabsTrigger value="all" className="gap-2">
-            All Deals
+            Off-Market
             {stats && <span className="text-xs opacity-70">({stats.total})</span>}
+          </TabsTrigger>
+          <TabsTrigger value="on-market" className="gap-2">
+            On Market
+            {onMarketCount > 0 && <span className="text-xs opacity-70">({onMarketCount})</span>}
           </TabsTrigger>
           <TabsTrigger value="my" className="gap-2">
             My Deals
@@ -146,6 +158,10 @@ export default function DealRoom() {
           ) : (
             <DealRoomList deals={sortedDeals} onDealClick={handleDealClick} />
           )}
+        </TabsContent>
+
+        <TabsContent value="on-market" className="mt-6">
+          <OnMarketExclusives />
         </TabsContent>
 
         <TabsContent value="my" className="mt-6">
