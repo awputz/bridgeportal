@@ -1738,6 +1738,7 @@ export type Database = {
           price_per_sf: number | null
           price_per_unit: number | null
           primary_contact_id: string | null
+          primary_image_url: string | null
           priority: string | null
           probability: number | null
           property_address: string
@@ -1824,6 +1825,7 @@ export type Database = {
           price_per_sf?: number | null
           price_per_unit?: number | null
           primary_contact_id?: string | null
+          primary_image_url?: string | null
           priority?: string | null
           probability?: number | null
           property_address: string
@@ -1910,6 +1912,7 @@ export type Database = {
           price_per_sf?: number | null
           price_per_unit?: number | null
           primary_contact_id?: string | null
+          primary_image_url?: string | null
           priority?: string | null
           probability?: number | null
           property_address?: string
@@ -2326,6 +2329,50 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "deal_room_interests_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deal_room_photos: {
+        Row: {
+          caption: string | null
+          category: string | null
+          created_at: string | null
+          deal_id: string
+          display_order: number | null
+          id: string
+          image_url: string
+          is_primary: boolean | null
+          uploaded_by: string | null
+        }
+        Insert: {
+          caption?: string | null
+          category?: string | null
+          created_at?: string | null
+          deal_id: string
+          display_order?: number | null
+          id?: string
+          image_url: string
+          is_primary?: boolean | null
+          uploaded_by?: string | null
+        }
+        Update: {
+          caption?: string | null
+          category?: string | null
+          created_at?: string | null
+          deal_id?: string
+          display_order?: number | null
+          id?: string
+          image_url?: string
+          is_primary?: boolean | null
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_room_photos_deal_id_fkey"
             columns: ["deal_id"]
             isOneToOne: false
             referencedRelation: "crm_deals"
