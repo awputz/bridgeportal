@@ -22,7 +22,9 @@ import {
   Search,
   ClipboardList,
   FileText,
-  Table
+  Table,
+  Moon,
+  Sun
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -39,7 +41,7 @@ import { useIsAdminOrAgent } from "@/hooks/useUserRole";
 import { NotificationCenter } from "./NotificationCenter";
 import { useUserProfile } from "@/hooks/useGoogleServices";
 import { useAuth } from "@/contexts/AuthContext";
-import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { useTheme } from "next-themes";
 
 // Google items - All open externally (expanded list for grid)
 const googleItems = [
@@ -81,6 +83,7 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
   const { isAdminOrAgent, role } = useIsAdminOrAgent();
   const { data: userProfile } = useUserProfile();
   const { signOut, hardLogout } = useAuth();
+  const { theme, setTheme } = useTheme();
 
   const handleSignOut = async () => {
     try {
@@ -258,8 +261,6 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
               >
                 <Search className="h-5 w-5" />
               </button>
-              {/* Theme Toggle */}
-              <ThemeToggle />
               
               {/* Google Apps Launcher */}
               <DropdownMenu>
@@ -355,6 +356,20 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                       <Settings className="h-4 w-4 text-white/70 flex-shrink-0" />
                       <span className="text-[13px] text-white">Google Services</span>
                     </Link>
+                    
+                    <button 
+                      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                      className="dropdown-premium-item cursor-pointer w-full text-left"
+                    >
+                      {theme === "dark" ? (
+                        <Sun className="h-4 w-4 text-white/70 flex-shrink-0" />
+                      ) : (
+                        <Moon className="h-4 w-4 text-white/70 flex-shrink-0" />
+                      )}
+                      <span className="text-[13px] text-white">
+                        {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                      </span>
+                    </button>
                     
                     {role === 'admin' && (
                       <Link 
@@ -532,6 +547,18 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                   <User className="h-5 w-5" />
                   Profile
                 </Link>
+                <button
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  className={cn(
+                    "flex items-center gap-4 text-lg font-light transition-all duration-300 py-4 min-h-[56px] active:bg-white/5 rounded-lg px-4 -mx-2 w-full text-left",
+                    "text-foreground/70 hover:text-foreground",
+                    isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                  )}
+                  style={{ transitionDelay: '525ms' }}
+                >
+                  {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                  {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                </button>
                 {role === 'admin' && (
                   <Link
                     to="/admin"
