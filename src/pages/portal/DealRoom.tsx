@@ -60,17 +60,18 @@ export default function DealRoom() {
   const myDealsCount = myDeals?.length || 0;
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-extralight tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-            Agent Deal Room
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Weekly team off-market deals & opportunities
-          </p>
-        </div>
+    <div className="flex-1 overflow-auto">
+      <div className="max-w-7xl mx-auto page-content">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-extralight text-foreground mb-1 md:mb-2">
+              Agent Deal Room
+            </h1>
+            <p className="text-sm md:text-base text-muted-foreground font-light">
+              Weekly team off-market deals & opportunities
+            </p>
+          </div>
         <div className="flex items-center gap-3">
           {stats && (
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm">
@@ -155,13 +156,14 @@ export default function DealRoom() {
         </TabsContent>
       </Tabs>
 
-      <ShareDealDialog open={shareDialogOpen} onOpenChange={setShareDialogOpen} />
-      
-      <DealDetailModal
-        dealId={selectedDealId}
-        open={!!selectedDealId}
-        onOpenChange={(open) => !open && setSelectedDealId(null)}
-      />
+        <ShareDealDialog open={shareDialogOpen} onOpenChange={setShareDialogOpen} />
+        
+        <DealDetailModal
+          dealId={selectedDealId}
+          open={!!selectedDealId}
+          onOpenChange={(open) => !open && setSelectedDealId(null)}
+        />
+      </div>
     </div>
   );
 }
