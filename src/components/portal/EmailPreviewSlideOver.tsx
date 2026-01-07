@@ -24,6 +24,79 @@ import { useGmailMessage, useModifyMessage, useTrashMessage } from "@/hooks/useG
 import { toast } from "sonner";
 import { formatSafeDate } from "@/lib/dateUtils";
 
+// Decode HTML entities (e.g., &#39; → ')
+function decodeHtmlEntities(text: string): string {
+  const textarea = document.createElement('textarea');
+  textarea.innerHTML = text;
+  return textarea.value;
+}
+
+// Sanitize email HTML for dark mode and encoding issues
+function sanitizeEmailHtml(html: string): string {
+  if (!html) return '';
+  
+  // Decode HTML entities first
+  let sanitized = decodeHtmlEntities(html);
+  
+  // Fix common UTF-8 encoding issues (fallback for cached/old emails)
+  sanitized = sanitized
+    .replace(/â€™/g, "'")
+    .replace(/â€œ/g, '"')
+    .replace(/â€/g, '"')
+    .replace(/â€"/g, '—')
+    .replace(/â€"/g, '–')
+    .replace(/Â /g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&#39;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+  
+  // Force dark mode friendly colors - replace light colors with foreground
+  sanitized = sanitized
+    .replace(/color:\s*#fff(fff)?/gi, 'color: hsl(var(--foreground))')
+    .replace(/color:\s*#f{3,6}/gi, 'color: hsl(var(--foreground))')
+    .replace(/color:\s*white/gi, 'color: hsl(var(--foreground))')
+    .replace(/color:\s*#[a-f0-9]{6}/gi, (match) => {
+      const hex = match.match(/#([a-f0-9]{6})/i)?.[1];
+      if (hex) {
+        const rgb = parseInt(hex, 16);
+        const r = (rgb >> 16) & 255;
+        const g = (rgb >> 8) & 255;
+        const b = rgb & 255;
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        if (brightness > 200) {
+          return 'color: hsl(var(--foreground))';
+        }
+      }
+      return match;
+    });
+  
+  // Fix invisible white backgrounds
+  sanitized = sanitized
+    .replace(/background-color:\s*#fff(fff)?/gi, 'background-color: transparent')
+    .replace(/background-color:\s*white/gi, 'background-color: transparent');
+  
+  // Remove restrictive width constraints
+  sanitized = sanitized.replace(/max-width:\s*\d+px/gi, 'max-width: 100%');
+  
+  return sanitized;
+}
+
+// Sanitize plain text for encoding issues
+function sanitizeEmailText(text: string): string {
+  if (!text) return '';
+  
+  return text
+    .replace(/â€™/g, "'")
+    .replace(/â€œ/g, '"')
+    .replace(/â€/g, '"')
+    .replace(/â€"/g, '—')
+    .replace(/â€"/g, '–')
+    .replace(/Â /g, ' ');
+}
+
 interface EmailPreviewSlideOverProps {
   emailId: string | null;
   onClose: () => void;
@@ -124,10 +197,7 @@ export function EmailPreviewSlideOver({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [emailId, onClose, handleReply, handleStar, handleArchive, handleDelete]);
 
-  // Create safe HTML for email body
-  const createMarkup = (html: string) => {
-    return { __html: html };
-  };
+  // No longer need createMarkup - using sanitizeEmailHtml directly
 
   return (
     <Sheet open={!!emailId} onOpenChange={(open) => !open && onClose()}>
@@ -141,7 +211,7 @@ export function EmailPreviewSlideOver({
             {isLoading ? (
               <Skeleton className="h-5 w-48" />
             ) : (
-              email?.subject || "(No subject)"
+              decodeHtmlEntities(email?.subject || "(No subject)")
             )}
           </SheetTitle>
         </SheetHeader>
@@ -256,12 +326,12 @@ export function EmailPreviewSlideOver({
                 {/* Email body */}
                 {email.bodyHtml ? (
                   <div
-                    className="prose prose-sm max-w-none dark:prose-invert prose-a:text-primary prose-img:max-w-full"
-                    dangerouslySetInnerHTML={createMarkup(email.bodyHtml)}
+                    className="prose prose-sm max-w-none dark:prose-invert prose-a:text-primary prose-img:max-w-full email-content"
+                    dangerouslySetInnerHTML={{ __html: sanitizeEmailHtml(email.bodyHtml) }}
                   />
                 ) : email.bodyText ? (
                   <pre className="text-sm whitespace-pre-wrap font-sans text-foreground">
-                    {email.bodyText}
+                    {sanitizeEmailText(email.bodyText)}
                   </pre>
                 ) : (
                   <p className="text-sm text-muted-foreground italic">

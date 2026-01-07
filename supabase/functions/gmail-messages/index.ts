@@ -132,8 +132,19 @@ function parseEmailAddress(header: string): { name: string; email: string } {
 }
 
 function decodeBase64Url(data: string): string {
-  const base64 = data.replace(/-/g, '+').replace(/_/g, '/');
-  return atob(base64);
+  try {
+    // Gmail uses base64url encoding (RFC 4648)
+    const base64 = data.replace(/-/g, '+').replace(/_/g, '/');
+    // Ensure proper padding
+    const padded = base64 + '=='.substring(0, (4 - base64.length % 4) % 4);
+    // Decode and handle UTF-8
+    const decoded = atob(padded);
+    // Convert to UTF-8 string using decodeURIComponent + escape trick
+    return decodeURIComponent(escape(decoded));
+  } catch (e) {
+    console.error('[gmail-messages] Base64 decode error:', e);
+    return data;
+  }
 }
 
 function extractBody(payload: any): { html: string; text: string } {
