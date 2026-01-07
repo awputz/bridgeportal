@@ -1,6 +1,24 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { ExternalLink, FileText, MessageCircle, Star, Activity, Edit2, Trash2, Save, X, Target, ImageIcon } from "lucide-react";
+import { 
+  ExternalLink, 
+  FileText, 
+  MessageCircle, 
+  Star, 
+  Activity, 
+  Edit2, 
+  Trash2, 
+  Save, 
+  X, 
+  Target, 
+  ImageIcon,
+  Download,
+  Share2,
+  DollarSign,
+  Ruler,
+  Building2,
+  Handshake
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -8,11 +26,12 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -25,7 +44,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useDealRoomDeal, useUpdateDealRoomDeal, useRemoveFromDealRoom } from "@/hooks/useDealRoom";
+import { toast } from "sonner";
+import { 
+  useDealRoomDeal, 
+  useUpdateDealRoomDeal, 
+  useRemoveFromDealRoom,
+  useDealRoomInterests,
+  useExpressInterest,
+  useRemoveInterest
+} from "@/hooks/useDealRoom";
 import { useDealMatches } from "@/hooks/useDealMatching";
 import { useDealRoomPhotos } from "@/hooks/useDealRoomPhotos";
 import { useCurrentAgent } from "@/hooks/useCurrentAgent";
@@ -35,6 +62,8 @@ import { DealRoomInterested } from "./DealRoomInterested";
 import { DealRoomActivity } from "./DealRoomActivity";
 import { DealMatches } from "./DealMatches";
 import { DealRoomPhotoGallery } from "./DealRoomPhotoGallery";
+import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
+import { cn } from "@/lib/utils";
 
 interface DealDetailModalProps {
   dealId: string | null;
@@ -62,6 +91,62 @@ function formatSF(sf: number): string {
   return `${sf.toLocaleString()} SF`;
 }
 
+// Metric card component
+const MetricCard = memo(function MetricCard({ 
+  icon: Icon, 
+  label, 
+  value 
+}: { 
+  icon: typeof DollarSign;
+  label: string;
+  value: string | undefined;
+}) {
+  if (!value) return null;
+  return (
+    <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border border-border/50">
+      <div className="p-1.5 rounded-md bg-primary/10">
+        <Icon className="h-4 w-4 text-primary" />
+      </div>
+      <div className="min-w-0">
+        <p className="text-sm font-semibold truncate">{value}</p>
+        <p className="text-xs text-muted-foreground">{label}</p>
+      </div>
+    </div>
+  );
+});
+
+// Interest button component
+function InterestButton({ dealId }: { dealId: string }) {
+  const { data: interests } = useDealRoomInterests(dealId);
+  const { data: agent } = useCurrentAgent();
+  const expressInterest = useExpressInterest();
+  const removeInterest = useRemoveInterest();
+  
+  const myInterest = interests?.find(i => i.user_id === agent?.id);
+  const isInterested = !!myInterest;
+  
+  const handleToggle = async () => {
+    if (isInterested && myInterest) {
+      await removeInterest.mutateAsync({ interestId: myInterest.id, dealId });
+    } else {
+      await expressInterest.mutateAsync({ dealId, interestType: "general" });
+    }
+  };
+  
+  return (
+    <Button
+      variant={isInterested ? "default" : "outline"}
+      size="sm"
+      onClick={handleToggle}
+      disabled={expressInterest.isPending || removeInterest.isPending}
+      className="gap-1.5"
+    >
+      <Star className={cn("h-4 w-4", isInterested && "fill-current")} />
+      {isInterested ? "Interested" : "Express Interest"}
+    </Button>
+  );
+}
+
 export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalProps) {
   const { data: deal, isLoading } = useDealRoomDeal(dealId || "");
   const { data: agent } = useCurrentAgent();
@@ -76,7 +161,7 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
   const [editedNotes, setEditedNotes] = useState("");
   const [showRemoveDialog, setShowRemoveDialog] = useState(false);
 
-  // Reset state when modal closes to prevent stale data
+  // Reset state when modal closes
   useEffect(() => {
     if (!open) {
       setIsEditingNotes(false);
@@ -85,6 +170,8 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
   }, [open]);
 
   const isOwner = deal?.agent_id === agent?.id;
+  const primaryPhoto = photos?.find(p => p.is_primary) || photos?.[0];
+  const heroImage = primaryPhoto?.image_url || PLACEHOLDER_IMAGES.building.exterior;
 
   const handleStartEditNotes = () => {
     setEditedNotes(deal?.deal_room_notes || "");
@@ -95,6 +182,7 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
     if (!deal) return;
     await updateDeal.mutateAsync({ dealId: deal.id, notes: editedNotes });
     setIsEditingNotes(false);
+    toast.success("Notes updated");
   };
 
   const handleRemove = async () => {
@@ -102,20 +190,34 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
     await removeDeal.mutateAsync(deal.id);
     setShowRemoveDialog(false);
     onOpenChange(false);
+    toast.success("Deal removed from Deal Room");
+  };
+
+  const handleShare = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      toast.success("Link copied to clipboard!");
+    } catch {
+      toast.error("Failed to copy link");
+    }
   };
 
   if (!dealId) return null;
 
   return (
     <>
-      <Sheet key={dealId} open={open} onOpenChange={onOpenChange}>
-        <SheetContent className="w-full sm:max-w-lg p-0 flex flex-col">
-          <SheetHeader className="px-6 pt-6 pb-4">
-            <SheetTitle className="sr-only">Deal Details</SheetTitle>
-          </SheetHeader>
+      <Dialog key={dealId} open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="max-w-5xl w-[95vw] max-h-[90vh] p-0 gap-0 overflow-hidden flex flex-col">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Deal Details</DialogTitle>
+            <DialogDescription>
+              Details for the deal at {deal?.property_address}
+            </DialogDescription>
+          </DialogHeader>
 
           {isLoading || !deal ? (
-            <div className="px-6 space-y-4">
+            <div className="p-6 space-y-4">
+              <Skeleton className="h-48 w-full rounded-lg" />
               <Skeleton className="h-6 w-3/4" />
               <Skeleton className="h-4 w-1/2" />
               <div className="flex gap-2">
@@ -127,39 +229,85 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
               </div>
             </div>
           ) : (
-            <>
-              {/* Deal Header */}
-              <div className="px-6 space-y-4">
-                {/* Address + Owner Actions */}
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <h2 className="text-xl font-semibold leading-tight">
-                      {deal.property_address}
-                    </h2>
-                    {deal.neighborhood && (
-                      <p className="text-sm text-muted-foreground mt-0.5">
-                        {deal.neighborhood}
-                        {deal.borough && `, ${deal.borough}`}
-                      </p>
-                    )}
-                  </div>
-                  {isOwner && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-destructive hover:text-destructive flex-shrink-0"
-                      onClick={() => setShowRemoveDialog(true)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+            <div className="flex-1 overflow-y-auto">
+              {/* Hero Photo Section */}
+              <div className="relative aspect-video max-h-64 bg-muted">
+                <img
+                  src={heroImage}
+                  alt={`Property at ${deal.property_address}`}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+                
+                {/* Address overlay on hero */}
+                <div className="absolute bottom-4 left-4 right-4">
+                  <h2 className="text-xl md:text-2xl font-semibold text-white drop-shadow-lg leading-tight">
+                    {deal.property_address}
+                  </h2>
+                  {deal.neighborhood && (
+                    <p className="text-sm text-white/90 drop-shadow mt-1">
+                      {deal.neighborhood}
+                      {deal.borough && `, ${deal.borough}`}
+                    </p>
                   )}
                 </div>
 
+                {/* Photo count badge */}
+                {photoCount > 1 && (
+                  <Badge 
+                    variant="secondary" 
+                    className="absolute top-4 right-4 gap-1 bg-background/80 backdrop-blur-sm"
+                  >
+                    <ImageIcon className="h-3.5 w-3.5" />
+                    {photoCount} photos
+                  </Badge>
+                )}
+
+                {/* Owner delete button */}
+                {isOwner && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-4 left-4 h-8 w-8 bg-background/80 backdrop-blur-sm hover:bg-destructive hover:text-destructive-foreground"
+                    onClick={() => setShowRemoveDialog(true)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+
+              {/* Content Section */}
+              <div className="p-4 md:p-6 space-y-5">
+                {/* Action Buttons Row */}
+                <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
+                  {deal.om_file_url && (
+                    <Button 
+                      size="sm"
+                      onClick={() => window.open(deal.om_file_url!, "_blank")}
+                      className="gap-1.5"
+                    >
+                      <Download className="h-4 w-4" />
+                      Download OM
+                    </Button>
+                  )}
+                  <Button variant="outline" size="sm" onClick={handleShare} className="gap-1.5">
+                    <Share2 className="h-4 w-4" />
+                    Share Deal
+                  </Button>
+                  <InterestButton dealId={deal.id} />
+                  <Button variant="outline" size="sm" asChild className="gap-1.5">
+                    <Link to={`/portal/crm/deals/${deal.id}`}>
+                      <ExternalLink className="h-4 w-4" />
+                      View in CRM
+                    </Link>
+                  </Button>
+                </div>
+
                 {/* Agent Info */}
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-9 w-9">
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border/50">
+                  <Avatar className="h-10 w-10">
                     <AvatarImage src={deal.agent?.avatar_url || undefined} />
-                    <AvatarFallback className="text-sm">
+                    <AvatarFallback className="text-sm bg-primary text-primary-foreground">
                       {deal.agent?.full_name
                         ?.split(" ")
                         .map((n) => n[0])
@@ -168,7 +316,7 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                     </AvatarFallback>
                   </Avatar>
                   <div className="min-w-0">
-                    <p className="text-sm font-medium">{deal.agent?.full_name}</p>
+                    <p className="text-sm font-semibold">{deal.agent?.full_name}</p>
                     <p className="text-xs text-muted-foreground">
                       {DIVISION_LABELS[deal.division] || deal.division} •{" "}
                       {deal.last_deal_room_update
@@ -178,36 +326,28 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                   </div>
                 </div>
 
-                {/* Key Metrics */}
-                <div className="grid grid-cols-4 gap-2">
-                  {deal.value && (
-                    <div className="text-center p-2 rounded-lg bg-muted/50">
-                      <p className="text-sm font-semibold">{formatCurrency(deal.value)}</p>
-                      <p className="text-xs text-muted-foreground">Value</p>
-                    </div>
-                  )}
-                  {deal.gross_sf && (
-                    <div className="text-center p-2 rounded-lg bg-muted/50">
-                      <p className="text-sm font-semibold">{formatSF(deal.gross_sf)}</p>
-                      <p className="text-xs text-muted-foreground">Size</p>
-                    </div>
-                  )}
-                  {deal.property_type && (
-                    <div className="text-center p-2 rounded-lg bg-muted/50">
-                      <p className="text-sm font-semibold capitalize">
-                        {deal.property_type.replace(/-/g, " ")}
-                      </p>
-                      <p className="text-xs text-muted-foreground">Type</p>
-                    </div>
-                  )}
-                  {deal.deal_type && (
-                    <div className="text-center p-2 rounded-lg bg-muted/50">
-                      <p className="text-sm font-semibold capitalize">
-                        {deal.deal_type.replace(/-/g, " ")}
-                      </p>
-                      <p className="text-xs text-muted-foreground">Deal</p>
-                    </div>
-                  )}
+                {/* Key Metrics - Horizontal Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <MetricCard 
+                    icon={DollarSign} 
+                    label="Value" 
+                    value={deal.value ? formatCurrency(deal.value) : undefined} 
+                  />
+                  <MetricCard 
+                    icon={Ruler} 
+                    label="Size" 
+                    value={deal.gross_sf ? formatSF(deal.gross_sf) : undefined} 
+                  />
+                  <MetricCard 
+                    icon={Building2} 
+                    label="Type" 
+                    value={deal.property_type?.replace(/-/g, " ")} 
+                  />
+                  <MetricCard 
+                    icon={Handshake} 
+                    label="Deal" 
+                    value={deal.deal_type?.replace(/-/g, " ")} 
+                  />
                 </div>
 
                 {/* Notes - Editable by owner */}
@@ -243,7 +383,7 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                 ) : deal.deal_room_notes || isOwner ? (
                   <div className="p-3 rounded-lg bg-muted/30 border border-border/50 group/notes relative">
                     {deal.deal_room_notes ? (
-                      <p className="text-sm italic text-muted-foreground leading-relaxed">
+                      <p className="text-sm italic text-muted-foreground leading-relaxed pr-8">
                         "{deal.deal_room_notes}"
                       </p>
                     ) : (
@@ -263,94 +403,84 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                     )}
                   </div>
                 ) : null}
+
+                <Separator />
+
+                {/* Tabs */}
+                <Tabs defaultValue="photos" className="w-full">
+                  <TabsList className="w-full justify-start flex-wrap h-auto gap-1 p-1">
+                    <TabsTrigger value="photos" className="gap-1.5 text-xs">
+                      <ImageIcon className="h-3.5 w-3.5" />
+                      Photos
+                      {photoCount > 0 && (
+                        <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0 h-4">
+                          {photoCount}
+                        </Badge>
+                      )}
+                    </TabsTrigger>
+                    <TabsTrigger value="files" className="gap-1.5 text-xs">
+                      <FileText className="h-3.5 w-3.5" />
+                      Files
+                    </TabsTrigger>
+                    <TabsTrigger value="comments" className="gap-1.5 text-xs">
+                      <MessageCircle className="h-3.5 w-3.5" />
+                      Comments
+                    </TabsTrigger>
+                    <TabsTrigger value="interested" className="gap-1.5 text-xs">
+                      <Star className="h-3.5 w-3.5" />
+                      Interested
+                    </TabsTrigger>
+                    <TabsTrigger value="activity" className="gap-1.5 text-xs">
+                      <Activity className="h-3.5 w-3.5" />
+                      Activity
+                    </TabsTrigger>
+                    <TabsTrigger value="matches" className="gap-1.5 text-xs">
+                      <Target className="h-3.5 w-3.5" />
+                      Matches
+                      {matchCount > 0 && (
+                        <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0 h-4">
+                          {matchCount}
+                        </Badge>
+                      )}
+                    </TabsTrigger>
+                  </TabsList>
+
+                  <div className="mt-4">
+                    <TabsContent value="photos" className="m-0">
+                      <DealRoomPhotoGallery dealId={deal.id} isOwner={isOwner} />
+                    </TabsContent>
+
+                    <TabsContent value="files" className="m-0">
+                      <DealRoomFiles
+                        dealId={deal.id}
+                        isOwner={isOwner}
+                        omFileUrl={deal.om_file_url}
+                        omFileName={deal.om_file_name}
+                      />
+                    </TabsContent>
+
+                    <TabsContent value="comments" className="m-0">
+                      <DealRoomComments dealId={deal.id} />
+                    </TabsContent>
+
+                    <TabsContent value="interested" className="m-0 px-1">
+                      <DealRoomInterested dealId={deal.id} />
+                    </TabsContent>
+
+                    <TabsContent value="activity" className="m-0">
+                      <DealRoomActivity dealId={deal.id} />
+                    </TabsContent>
+
+                    <TabsContent value="matches" className="m-0">
+                      <DealMatches dealId={deal.id} />
+                    </TabsContent>
+                  </div>
+                </Tabs>
               </div>
-
-              <Separator className="my-4" />
-
-              {/* Tabs */}
-              <Tabs defaultValue="photos" className="flex-1 flex flex-col min-h-0">
-                <TabsList className="mx-6 w-auto justify-start flex-wrap h-auto gap-1 py-1">
-                  <TabsTrigger value="photos" className="gap-1.5">
-                    <ImageIcon className="h-3.5 w-3.5" />
-                    Photos
-                    {photoCount > 0 && (
-                      <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0">
-                        {photoCount}
-                      </Badge>
-                    )}
-                  </TabsTrigger>
-                  <TabsTrigger value="files" className="gap-1.5">
-                    <FileText className="h-3.5 w-3.5" />
-                    Files
-                  </TabsTrigger>
-                  <TabsTrigger value="comments" className="gap-1.5">
-                    <MessageCircle className="h-3.5 w-3.5" />
-                    Comments
-                  </TabsTrigger>
-                  <TabsTrigger value="interested" className="gap-1.5">
-                    <Star className="h-3.5 w-3.5" />
-                    Interested
-                  </TabsTrigger>
-                  <TabsTrigger value="activity" className="gap-1.5">
-                    <Activity className="h-3.5 w-3.5" />
-                    Activity
-                  </TabsTrigger>
-                  <TabsTrigger value="matches" className="gap-1.5">
-                    <Target className="h-3.5 w-3.5" />
-                    Matches
-                    {matchCount > 0 && (
-                      <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0">
-                        {matchCount}
-                      </Badge>
-                    )}
-                  </TabsTrigger>
-                </TabsList>
-
-                <div className="flex-1 min-h-0 mt-4 overflow-y-auto">
-                  <TabsContent value="photos" className="h-full m-0">
-                    <DealRoomPhotoGallery dealId={deal.id} isOwner={isOwner} />
-                  </TabsContent>
-
-                  <TabsContent value="files" className="h-full m-0">
-                    <DealRoomFiles
-                      dealId={deal.id}
-                      isOwner={isOwner}
-                      omFileUrl={deal.om_file_url}
-                      omFileName={deal.om_file_name}
-                    />
-                  </TabsContent>
-
-                  <TabsContent value="comments" className="h-full m-0">
-                    <DealRoomComments dealId={deal.id} />
-                  </TabsContent>
-
-                  <TabsContent value="interested" className="h-full m-0 px-4">
-                    <DealRoomInterested dealId={deal.id} />
-                  </TabsContent>
-
-                  <TabsContent value="activity" className="h-full m-0">
-                    <DealRoomActivity dealId={deal.id} />
-                  </TabsContent>
-
-                  <TabsContent value="matches" className="h-full m-0">
-                    <DealMatches dealId={deal.id} />
-                  </TabsContent>
-                </div>
-              </Tabs>
-
-              {/* Footer */}
-              <div className="px-6 py-4 border-t mt-auto">
-                <Button variant="outline" className="w-full gap-2" asChild>
-                  <Link to={`/portal/crm/deals/${deal.id}`}>
-                    <ExternalLink className="h-4 w-4" />
-                    View Full Deal in CRM
-                  </Link>
-                </Button>
-              </div>
-            </>
+            </div>
           )}
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
 
       {/* Remove confirmation dialog */}
       <AlertDialog open={showRemoveDialog} onOpenChange={setShowRemoveDialog}>
