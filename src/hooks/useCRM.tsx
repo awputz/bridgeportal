@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { handleQueryError } from "@/lib/errorHandler";
+import { sanitizeContactData, sanitizeDealData, sanitizeActivityData } from "@/lib/sanitize";
 
 // Types
 export interface CRMContact {
@@ -267,9 +268,12 @@ export const useCreateContact = () => {
 
   return useMutation({
     mutationFn: async (contact: Partial<CRMContact> & { agent_id: string; full_name: string; division: string }) => {
+      // Sanitize all optional fields - convert empty strings to null
+      const sanitizedContact = sanitizeContactData(contact);
+      
       const { data, error } = await supabase
         .from("crm_contacts")
-        .insert(contact)
+        .insert(sanitizedContact)
         .select()
         .single();
 
@@ -291,9 +295,12 @@ export const useUpdateContact = () => {
 
   return useMutation({
     mutationFn: async ({ id, ...updates }: Partial<CRMContact> & { id: string }) => {
+      // Sanitize all optional fields - convert empty strings to null
+      const sanitizedUpdates = sanitizeContactData(updates);
+      
       const { data, error } = await supabase
         .from("crm_contacts")
-        .update(updates)
+        .update(sanitizedUpdates)
         .eq("id", id)
         .select()
         .single();
@@ -396,15 +403,12 @@ export const useCreateDeal = () => {
 
   return useMutation({
     mutationFn: async (deal: Omit<CRMDeal, "id" | "created_at" | "updated_at" | "is_active" | "won" | "contact" | "stage">) => {
-      // Clean up null/undefined values and ensure contact_id is null not empty string
-      const cleanedDeal = {
-        ...deal,
-        contact_id: deal.contact_id || null,
-      };
+      // Sanitize all optional fields - convert empty strings to null
+      const sanitizedDeal = sanitizeDealData(deal);
       
       const { data, error } = await supabase
         .from("crm_deals")
-        .insert(cleanedDeal)
+        .insert(sanitizedDeal)
         .select()
         .single();
 
@@ -432,9 +436,12 @@ export const useUpdateDeal = () => {
 
   return useMutation({
     mutationFn: async ({ id, ...updates }: Partial<CRMDeal> & { id: string }) => {
+      // Sanitize all optional fields - convert empty strings to null
+      const sanitizedUpdates = sanitizeDealData(updates);
+      
       const { data, error } = await supabase
         .from("crm_deals")
-        .update(updates)
+        .update(sanitizedUpdates)
         .eq("id", id)
         .select()
         .single();
@@ -551,9 +558,12 @@ export const useCreateActivity = () => {
 
   return useMutation({
     mutationFn: async (activity: Omit<CRMActivity, "id" | "created_at" | "contact" | "deal">) => {
+      // Sanitize all optional fields - convert empty strings to null
+      const sanitizedActivity = sanitizeActivityData(activity);
+      
       const { data, error } = await supabase
         .from("crm_activities")
-        .insert(activity)
+        .insert(sanitizedActivity)
         .select()
         .single();
 

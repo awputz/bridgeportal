@@ -66,17 +66,18 @@ export const QuickActivityLogger = () => {
       return;
     }
     try {
+      // The hook now handles null coercion via sanitizeActivityData
       await createActivity.mutateAsync({
         agent_id: user.id,
         activity_type: activityType,
         title: title.trim(),
-        description: description.trim() || null,
-        contact_id: contactId || null,
+        description: description.trim(),
+        contact_id: contactId,
         deal_id: null,
-        due_date: dueDate || null,
+        due_date: dueDate,
         is_completed: false,
         completed_at: null,
-        division: 'investment-sales',
+        division: division || 'investment-sales',
         priority: 'medium',
         reminder_at: null,
         recurring_pattern: null,
