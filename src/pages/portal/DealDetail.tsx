@@ -1464,11 +1464,11 @@ const DealDetail = () => {
                   className="w-full"
                 />
                 
-                {/* 3D Map */}
-                {(deal.latitude && deal.longitude) && (
+                {/* 3D Map - show if we have coords or address */}
+                {(deal.latitude && deal.longitude || deal.property_address) && (
                   <Immersive3DMap
-                    latitude={deal.latitude}
-                    longitude={deal.longitude}
+                    latitude={deal.latitude || undefined}
+                    longitude={deal.longitude || undefined}
                     address={deal.property_address}
                     className="mt-2"
                   />

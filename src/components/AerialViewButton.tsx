@@ -37,7 +37,7 @@ export const AerialViewButton = ({
     return `https://earth.google.com/web/search/${encodedAddress}`;
   };
 
-  // Create Google Maps 3D view URL
+  // Create Google Maps 3D view URL (for external links)
   const getGoogle3DUrl = () => {
     if (latitude && longitude) {
       return `https://www.google.com/maps/@${latitude},${longitude},100a,35y,39.15t/data=!3m1!1e3`;
@@ -45,6 +45,19 @@ export const AerialViewButton = ({
     const encodedAddress = encodeURIComponent(address);
     return `https://www.google.com/maps/search/${encodedAddress}/@?data=!3m1!1e3`;
   };
+
+  // Get embeddable URL using Maps Embed API
+  const getEmbedUrl = () => {
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || import.meta.env.VITE_GOOGLE_PLACES_API_KEY;
+    if (!apiKey) return null;
+    
+    if (latitude && longitude) {
+      return `https://www.google.com/maps/embed/v1/view?key=${apiKey}&center=${latitude},${longitude}&zoom=18&maptype=satellite`;
+    }
+    return `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(address)}&zoom=17&maptype=satellite`;
+  };
+
+  const embedUrl = getEmbedUrl();
 
   const handleOpenAerialView = () => {
     setIsLoading(true);
@@ -84,13 +97,21 @@ export const AerialViewButton = ({
             ) : (
               <>
                 <div className="aspect-video bg-muted/30 rounded-lg overflow-hidden relative">
-                  <iframe
-                    src={getGoogle3DUrl()}
-                    className="w-full h-full border-0"
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  />
+                  {embedUrl ? (
+                    <iframe
+                      src={embedUrl}
+                      className="w-full h-full border-0"
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <p className="text-sm text-muted-foreground text-center px-4">
+                        Map preview unavailable. Use the buttons below to open in Google Maps.
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3">

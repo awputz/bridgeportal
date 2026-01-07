@@ -50,6 +50,28 @@ export const WeatherWidget = ({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Normalize weather response - backend returns nested structure
+  const normalizeWeather = (raw: any, fallbackLocation: string): WeatherData => {
+    // Handle nested structure: { current: { temperature, condition }, location }
+    if (raw?.current) {
+      return {
+        temperature: raw.current.temperature ?? raw.current.temperature_2m ?? 0,
+        condition: raw.current.condition ?? 'Unknown',
+        location: raw.location ?? fallbackLocation,
+        humidity: raw.current.humidity ?? raw.current.relative_humidity_2m,
+        windSpeed: raw.current.windSpeed ?? raw.current.wind_speed_10m,
+      };
+    }
+    // Handle flat structure: { temperature, condition, location }
+    return {
+      temperature: raw?.temperature ?? 0,
+      condition: raw?.condition ?? 'Unknown',
+      location: raw?.location ?? fallbackLocation,
+      humidity: raw?.humidity,
+      windSpeed: raw?.windSpeed,
+    };
+  };
+
   useEffect(() => {
     const fetchWeather = async () => {
       // Default to NYC coordinates if none provided
@@ -70,7 +92,7 @@ export const WeatherWidget = ({
         }
 
         if (data?.weather) {
-          setWeather(data.weather);
+          setWeather(normalizeWeather(data.weather, locationName));
         } else {
           throw new Error('No weather data returned');
         }
