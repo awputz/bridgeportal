@@ -131,7 +131,7 @@ export function CalendarEventSlideOver({
 
   return (
     <Sheet open={!!event} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent side="right" className="w-full sm:max-w-lg p-0 flex flex-col">
+      <SheetContent side="right" className="w-full sm:max-w-lg p-0 flex flex-col border-l-border/30">
         {/* Color accent bar */}
         <div className="h-2 w-full shrink-0" style={{ backgroundColor: eventColor }} />
 

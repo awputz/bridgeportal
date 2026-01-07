@@ -133,7 +133,7 @@ export function EmailPreviewSlideOver({
     <Sheet open={!!emailId} onOpenChange={(open) => !open && onClose()}>
       <SheetContent 
         side="right" 
-        className="w-full sm:max-w-4xl p-0 flex flex-col"
+        className="w-full sm:max-w-4xl p-0 flex flex-col border-l-border/30"
       >
         {/* Header */}
         <SheetHeader className="px-4 py-3 border-b shrink-0">
