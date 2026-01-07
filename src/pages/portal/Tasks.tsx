@@ -16,6 +16,7 @@ import {
 import { format, isToday, isPast, parseISO } from "date-fns";
 import { useTasks, useCreateTask, useCompleteTask, useDeleteTask, useTaskStats, Task } from "@/hooks/useTasks";
 import { useCRMContacts, useCRMDeals } from "@/hooks/useCRM";
+import { QueryErrorState } from "@/components/ui/QueryErrorState";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -189,7 +190,7 @@ const Tasks = () => {
   const [priorityFilter, setPriorityFilter] = useState<string>("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
 
-  const { data: tasks, isLoading } = useTasks(filter);
+  const { data: tasks, isLoading, error: tasksError, refetch: refetchTasks } = useTasks(filter);
   const { data: stats } = useTaskStats();
   const { data: contacts } = useCRMContacts();
   const { data: deals } = useCRMDeals();
@@ -495,7 +496,13 @@ const Tasks = () => {
 
         {/* Task List */}
         <div className="space-y-3">
-          {isLoading ? (
+          {tasksError ? (
+            <QueryErrorState 
+              error={tasksError}
+              onRetry={() => refetchTasks()}
+              title="Failed to load tasks"
+            />
+          ) : isLoading ? (
             [...Array(5)].map((_, i) => (
               <Skeleton key={i} className="h-24 rounded-xl" />
             ))

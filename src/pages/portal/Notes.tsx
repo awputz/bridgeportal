@@ -7,6 +7,7 @@ import { NoteFoldersSidebar } from "@/components/portal/notes/NoteFoldersSidebar
 import { NoteListItem } from "@/components/portal/notes/NoteListItem";
 import { NoteDialog } from "@/components/portal/notes/NoteDialog";
 import { NoteFilters } from "@/components/portal/notes/NoteFilters";
+import { QueryErrorState } from "@/components/ui/QueryErrorState";
 import { 
   useNotes, 
   useNoteFolders,
@@ -37,7 +38,7 @@ const Notes = () => {
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const { data: notes, isLoading } = useNotes({ 
+  const { data: notes, isLoading, error, refetch } = useNotes({ 
     ...filters, 
     search: searchTerm,
     folderId: selectedFolder,
@@ -169,7 +170,13 @@ const Notes = () => {
             </div>
 
             {/* Notes Grid/List */}
-            {isLoading ? (
+            {error ? (
+              <QueryErrorState 
+                error={error}
+                onRetry={() => refetch()}
+                title="Failed to load notes"
+              />
+            ) : isLoading ? (
               <div className={cn(
                 "gap-4",
                 viewMode === "grid" 

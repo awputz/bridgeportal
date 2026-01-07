@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FAB } from "@/components/ui/fab";
+import { QueryErrorState } from "@/components/ui/QueryErrorState";
 import { useCRMContacts, useCreateContact, useDeleteContact, CRMContact } from "@/hooks/useCRM";
 import { useCRMRealtime } from "@/hooks/useCRMRealtime";
 import { useDivision, Division } from "@/contexts/DivisionContext";
@@ -359,7 +360,7 @@ const Contacts = () => {
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
 
   // Fetch contacts without division filter to get all contacts
-  const { data: allContacts, isLoading, refetch: refetchContacts } = useCRMContacts();
+  const { data: allContacts, isLoading, error: contactsError, refetch: refetchContacts } = useCRMContacts();
   const createContact = useCreateContact();
   const deleteContact = useDeleteContact();
 
@@ -1018,7 +1019,13 @@ const Contacts = () => {
 
 
         {/* Contacts Grid/List */}
-        {isLoading ? (
+        {contactsError ? (
+          <QueryErrorState 
+            error={contactsError}
+            onRetry={() => refetchContacts()}
+            title="Failed to load contacts"
+          />
+        ) : isLoading ? (
           <div className="flex flex-col gap-1.5">
             {[...Array(12)].map((_, i) => (
               <Skeleton key={i} className="h-11" />
