@@ -490,7 +490,7 @@ export const GoogleCalendarWidget = () => {
 
               {/* Multi-day Views */}
               {(viewMode === "2day" || viewMode === "3day") && (
-                <div className="h-[290px]">
+                <div className="h-[340px] overflow-hidden">
                   <CalendarWidgetMultiDayView
                     days={viewMode === "2day" ? 2 : 3}
                     startDate={selectedDate}
