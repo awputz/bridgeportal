@@ -39,6 +39,7 @@ import { useIsAdminOrAgent } from "@/hooks/useUserRole";
 import { NotificationCenter } from "./NotificationCenter";
 import { useUserProfile } from "@/hooks/useGoogleServices";
 import { useAuth } from "@/contexts/AuthContext";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 // Google items - All open externally (expanded list for grid)
 const googleItems = [
@@ -240,6 +241,9 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
               >
                 <Search className="h-5 w-5" />
               </button>
+              {/* Theme Toggle */}
+              <ThemeToggle />
+              
               {/* Google Apps Launcher */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
