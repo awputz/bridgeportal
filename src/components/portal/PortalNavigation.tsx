@@ -24,7 +24,8 @@ import {
   FileText,
   Table,
   Moon,
-  Sun
+  Sun,
+  HelpCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -314,28 +315,28 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                 <DropdownMenuContent align="end" className="w-56 dropdown-premium border-0" sideOffset={8}>
                   {/* User Header Section */}
                   {userProfile && (
-                    <div className="px-3 py-2.5 border-b border-white/10">
-                      <div className="flex items-center gap-2.5">
-                        <Avatar className="h-8 w-8 ring-1 ring-white/10">
+                    <div className="px-3 py-2 border-b border-white/10">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-9 w-9 ring-1 ring-white/10 flex-shrink-0">
                           <AvatarImage src={userProfile.avatarUrl} alt={userProfile.fullName || 'User'} />
                           <AvatarFallback className="bg-white/10 text-white text-xs">
                             {userProfile.fullName?.charAt(0) || 'U'}
                           </AvatarFallback>
                         </Avatar>
                         <div className="min-w-0 flex-1">
-                          <p className="text-[13px] font-medium text-white truncate">
+                          <p className="text-[13px] font-medium text-white truncate leading-tight">
                             {userProfile.fullName}
                           </p>
-                          <p className="text-[11px] text-white/50 truncate">
+                          <p className="text-[11px] text-white/50 truncate leading-tight">
                             {userProfile.email}
                           </p>
-                          {userProfile.createdAt && (
-                            <p className="text-[10px] text-white/40">
-                              {formatMemberSince(userProfile.createdAt)}
-                            </p>
-                          )}
                         </div>
                       </div>
+                      {userProfile.createdAt && (
+                        <p className="text-[10px] text-white/40 mt-1.5 pl-12 leading-none">
+                          {formatMemberSince(userProfile.createdAt)}
+                        </p>
+                      )}
                     </div>
                   )}
                   
@@ -370,6 +371,14 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                         {theme === "dark" ? "Light Mode" : "Dark Mode"}
                       </span>
                     </button>
+                    
+                    <Link 
+                      to="/portal/support"
+                      className="dropdown-premium-item cursor-pointer"
+                    >
+                      <HelpCircle className="h-4 w-4 text-white/70 flex-shrink-0" />
+                      <span className="text-[13px] text-white">Help & Support</span>
+                    </Link>
                     
                     {role === 'admin' && (
                       <Link 
