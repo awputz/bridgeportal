@@ -315,8 +315,8 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                 <DropdownMenuContent align="end" className="w-56 dropdown-premium border-0" sideOffset={8}>
                   {/* User Header Section */}
                   {userProfile && (
-                    <div className="px-3 py-2 border-b border-white/10">
-                      <div className="flex items-center gap-2.5">
+                    <div className="px-4 py-3 border-b border-white/10">
+                      <div className="flex items-center gap-3">
                         <Avatar className="h-9 w-9 ring-1 ring-white/10 flex-shrink-0">
                           <AvatarImage src={userProfile.avatarUrl} alt={userProfile.fullName || 'User'} />
                           <AvatarFallback className="bg-white/10 text-white text-xs">
@@ -327,11 +327,11 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                           <p className="text-[13px] font-medium text-white truncate leading-none m-0">
                             {userProfile.fullName}
                           </p>
-                          <p className="text-[11px] text-white/50 truncate leading-none m-0 mt-0.5">
+                          <p className="text-[11px] text-white/50 truncate leading-none m-0 mt-1">
                             {userProfile.email}
                           </p>
                           {userProfile.createdAt && (
-                            <p className="text-[10px] text-white/40 leading-none m-0 mt-0.5">
+                            <p className="text-[10px] text-white/40 leading-none m-0 mt-1">
                               {formatMemberSince(userProfile.createdAt)}
                             </p>
                           )}
@@ -341,7 +341,7 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                   )}
                   
                   {/* Menu Items */}
-                  <div className="p-1.5">
+                  <div className="p-2">
                     <Link 
                       to="/portal/profile"
                       className="dropdown-premium-item cursor-pointer"
@@ -390,7 +390,7 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                       </Link>
                     )}
                     
-                    <div className="h-px bg-white/10 my-1.5" />
+                    <div className="h-px bg-white/10 my-2" />
                     
                     <button 
                       onClick={handleSignOut}
