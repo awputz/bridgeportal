@@ -73,7 +73,7 @@ export function DealRoomList({ deals, onDealClick }: DealRoomListProps) {
             <ChevronDown className="h-4 w-4 ml-auto text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
           </CollapsibleTrigger>
           <CollapsibleContent>
-            <div className="grid gap-4 pt-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-5 pt-3 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
               {boroughDeals.map(deal => (
                 <SectionErrorBoundary 
                   key={deal.id} 
