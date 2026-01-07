@@ -51,15 +51,24 @@ const googleItems = [
   { name: "Contacts", path: "https://contacts.google.com", icon: Users },
 ];
 
-// Essentials items
+// Essentials items with descriptions
 const essentialsItems = [
-  { name: "CRM", path: "/portal/crm", icon: Briefcase },
-  { name: "Contacts", path: "/portal/contacts", icon: Users },
-  { name: "Deal Room", path: "/portal/deal-room", icon: Building2 },
-  { name: "Intake", path: "/portal/intake", icon: ClipboardList },
-  { name: "Tasks", path: "/portal/tasks", icon: ListTodo },
-  { name: "Notes", path: "/portal/notes", icon: StickyNote },
+  { name: "CRM", path: "/portal/crm", icon: Briefcase, description: "Pipeline management and deal tracking" },
+  { name: "Contacts", path: "/portal/contacts", icon: Users, description: "Client and prospect database" },
+  { name: "Deal Room", path: "/portal/deal-room", icon: Building2, description: "Active listings and proposals" },
+  { name: "Intake", path: "/portal/intake", icon: ClipboardList, description: "New business opportunities" },
+  { name: "Tasks", path: "/portal/tasks", icon: ListTodo, description: "Personal task management" },
+  { name: "Notes", path: "/portal/notes", icon: StickyNote, description: "Quick notes and documentation" },
 ];
+
+// Helper to format "Member since" date
+const formatMemberSince = (dateString: string | undefined) => {
+  if (!dateString) return null;
+  const date = new Date(dateString);
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = date.getFullYear();
+  return `Member since ${month} ${year}`;
+};
 
 interface PortalNavigationProps {
   onSearchClick?: () => void;
@@ -173,23 +182,31 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                     <ChevronDown className="h-3 w-3 opacity-60" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="center" className="w-44 bg-background/95 backdrop-blur-xl border-border">
+                <DropdownMenuContent align="center" className="w-80 p-2 dropdown-premium border-0" sideOffset={12}>
                   {essentialsItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
                     return (
-                      <DropdownMenuItem key={item.name} asChild>
-                        <Link 
-                          to={item.path} 
-                          className={cn(
-                            "flex items-center gap-2 cursor-pointer",
-                            isActive && "bg-accent"
-                          )}
-                        >
-                          <Icon className="h-4 w-4" />
-                          {item.name}
-                        </Link>
-                      </DropdownMenuItem>
+                      <Link 
+                        key={item.name}
+                        to={item.path} 
+                        className={cn(
+                          "dropdown-premium-item group cursor-pointer",
+                          isActive && "bg-white/10"
+                        )}
+                      >
+                        <div className="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <Icon className="h-5 w-5 text-white/80" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-[15px] font-medium text-white leading-tight">
+                            {item.name}
+                          </p>
+                          <p className="text-[13px] text-white/50 leading-snug mt-1">
+                            {item.description}
+                          </p>
+                        </div>
+                      </Link>
                     );
                   })}
                 </DropdownMenuContent>
@@ -293,42 +310,84 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                     <span className="hidden xl:inline">{userProfile?.fullName?.split(' ')[0] || 'Account'}</span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 bg-background/95 backdrop-blur-xl border-border">
+                <DropdownMenuContent align="end" className="w-64 dropdown-premium border-0" sideOffset={12}>
+                  {/* User Header Section */}
                   {userProfile && (
-                    <div className="px-2 py-1.5 text-sm">
-                      <p className="font-medium truncate">{userProfile.fullName}</p>
-                      <p className="text-xs text-muted-foreground truncate">{userProfile.email}</p>
+                    <div className="px-4 py-4 border-b border-white/10">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-11 w-11 ring-2 ring-white/10">
+                          <AvatarImage src={userProfile.avatarUrl} alt={userProfile.fullName || 'User'} />
+                          <AvatarFallback className="bg-white/10 text-white text-sm">
+                            {userProfile.fullName?.charAt(0) || 'U'}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-[15px] font-medium text-white truncate">
+                            {userProfile.fullName}
+                          </p>
+                          <p className="text-[12px] text-white/50 truncate">
+                            {userProfile.email}
+                          </p>
+                          {userProfile.createdAt && (
+                            <p className="text-[11px] text-white/40 mt-1">
+                              {formatMemberSince(userProfile.createdAt)}
+                            </p>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   )}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link to="/portal/profile" className="flex items-center gap-2 cursor-pointer">
-                      <User className="h-4 w-4" />
-                      Profile
+                  
+                  {/* Menu Items */}
+                  <div className="p-2">
+                    <Link 
+                      to="/portal/profile"
+                      className="dropdown-premium-item cursor-pointer"
+                    >
+                      <User className="h-4 w-4 text-white/70 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <p className="text-[14px] text-white">Profile</p>
+                        <p className="text-[12px] text-white/50">View and edit your profile</p>
+                      </div>
                     </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/portal/settings/google" className="flex items-center gap-2 cursor-pointer">
-                      <Settings className="h-4 w-4" />
-                      Google Services
+                    
+                    <Link 
+                      to="/portal/settings/google"
+                      className="dropdown-premium-item cursor-pointer"
+                    >
+                      <Settings className="h-4 w-4 text-white/70 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <p className="text-[14px] text-white">Google Services</p>
+                        <p className="text-[12px] text-white/50">Manage connected accounts</p>
+                      </div>
                     </Link>
-                  </DropdownMenuItem>
-                  {role === 'admin' && (
-                    <>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem asChild>
-                        <Link to="/admin" className="flex items-center gap-2 cursor-pointer">
-                          <Shield className="h-4 w-4" />
-                          Admin Portal
-                        </Link>
-                      </DropdownMenuItem>
-                    </>
-                  )}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer">
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Sign Out
-                  </DropdownMenuItem>
+                    
+                    {role === 'admin' && (
+                      <Link 
+                        to="/admin"
+                        className="dropdown-premium-item cursor-pointer"
+                      >
+                        <Shield className="h-4 w-4 text-white/70 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <p className="text-[14px] text-white">Admin Portal</p>
+                          <p className="text-[12px] text-white/50">System administration</p>
+                        </div>
+                      </Link>
+                    )}
+                    
+                    <div className="h-px bg-white/10 my-2" />
+                    
+                    <button 
+                      onClick={handleSignOut}
+                      className="dropdown-premium-item cursor-pointer w-full text-left"
+                    >
+                      <LogOut className="h-4 w-4 text-red-400 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <p className="text-[14px] text-red-400">Sign Out</p>
+                        <p className="text-[12px] text-white/40">End your session</p>
+                      </div>
+                    </button>
+                  </div>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
