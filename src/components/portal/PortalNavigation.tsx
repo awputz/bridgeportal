@@ -182,7 +182,7 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                     <ChevronDown className="h-3 w-3 opacity-60" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="center" className="w-80 p-2 dropdown-premium border-0" sideOffset={12}>
+                <DropdownMenuContent align="center" className="w-64 p-1.5 dropdown-premium border-0" sideOffset={8}>
                   {essentialsItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
@@ -195,14 +195,14 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                           isActive && "bg-white/10"
                         )}
                       >
-                        <div className="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <Icon className="h-5 w-5 text-white/80" />
+                        <div className="h-7 w-7 rounded-md bg-white/10 flex items-center justify-center flex-shrink-0">
+                          <Icon className="h-4 w-4 text-white/80" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="text-[15px] font-medium text-white leading-tight">
+                          <p className="text-[13px] font-medium text-white leading-none">
                             {item.name}
                           </p>
-                          <p className="text-[13px] text-white/50 leading-snug mt-1">
+                          <p className="text-[11px] text-white/50 leading-tight">
                             {item.description}
                           </p>
                         </div>
@@ -310,26 +310,26 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                     <span className="hidden xl:inline">{userProfile?.fullName?.split(' ')[0] || 'Account'}</span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-64 dropdown-premium border-0" sideOffset={12}>
+                <DropdownMenuContent align="end" className="w-56 dropdown-premium border-0" sideOffset={8}>
                   {/* User Header Section */}
                   {userProfile && (
-                    <div className="px-4 py-4 border-b border-white/10">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-11 w-11 ring-2 ring-white/10">
+                    <div className="px-3 py-2.5 border-b border-white/10">
+                      <div className="flex items-center gap-2.5">
+                        <Avatar className="h-8 w-8 ring-1 ring-white/10">
                           <AvatarImage src={userProfile.avatarUrl} alt={userProfile.fullName || 'User'} />
-                          <AvatarFallback className="bg-white/10 text-white text-sm">
+                          <AvatarFallback className="bg-white/10 text-white text-xs">
                             {userProfile.fullName?.charAt(0) || 'U'}
                           </AvatarFallback>
                         </Avatar>
                         <div className="min-w-0 flex-1">
-                          <p className="text-[15px] font-medium text-white truncate">
+                          <p className="text-[13px] font-medium text-white truncate">
                             {userProfile.fullName}
                           </p>
-                          <p className="text-[12px] text-white/50 truncate">
+                          <p className="text-[11px] text-white/50 truncate">
                             {userProfile.email}
                           </p>
                           {userProfile.createdAt && (
-                            <p className="text-[11px] text-white/40 mt-1">
+                            <p className="text-[10px] text-white/40">
                               {formatMemberSince(userProfile.createdAt)}
                             </p>
                           )}
@@ -339,27 +339,21 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                   )}
                   
                   {/* Menu Items */}
-                  <div className="p-2">
+                  <div className="p-1.5">
                     <Link 
                       to="/portal/profile"
                       className="dropdown-premium-item cursor-pointer"
                     >
-                      <User className="h-4 w-4 text-white/70 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <p className="text-[14px] text-white">Profile</p>
-                        <p className="text-[12px] text-white/50">View and edit your profile</p>
-                      </div>
+                      <User className="h-4 w-4 text-white/70 flex-shrink-0" />
+                      <span className="text-[13px] text-white">Profile</span>
                     </Link>
                     
                     <Link 
                       to="/portal/settings/google"
                       className="dropdown-premium-item cursor-pointer"
                     >
-                      <Settings className="h-4 w-4 text-white/70 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <p className="text-[14px] text-white">Google Services</p>
-                        <p className="text-[12px] text-white/50">Manage connected accounts</p>
-                      </div>
+                      <Settings className="h-4 w-4 text-white/70 flex-shrink-0" />
+                      <span className="text-[13px] text-white">Google Services</span>
                     </Link>
                     
                     {role === 'admin' && (
@@ -367,25 +361,19 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                         to="/admin"
                         className="dropdown-premium-item cursor-pointer"
                       >
-                        <Shield className="h-4 w-4 text-white/70 mt-0.5 flex-shrink-0" />
-                        <div>
-                          <p className="text-[14px] text-white">Admin Portal</p>
-                          <p className="text-[12px] text-white/50">System administration</p>
-                        </div>
+                        <Shield className="h-4 w-4 text-white/70 flex-shrink-0" />
+                        <span className="text-[13px] text-white">Admin Portal</span>
                       </Link>
                     )}
                     
-                    <div className="h-px bg-white/10 my-2" />
+                    <div className="h-px bg-white/10 my-1.5" />
                     
                     <button 
                       onClick={handleSignOut}
                       className="dropdown-premium-item cursor-pointer w-full text-left"
                     >
-                      <LogOut className="h-4 w-4 text-red-400 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <p className="text-[14px] text-red-400">Sign Out</p>
-                        <p className="text-[12px] text-white/40">End your session</p>
-                      </div>
+                      <LogOut className="h-4 w-4 text-red-400 flex-shrink-0" />
+                      <span className="text-[13px] text-red-400">Sign Out</span>
                     </button>
                   </div>
                 </DropdownMenuContent>
