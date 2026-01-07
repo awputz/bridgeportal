@@ -1,4 +1,5 @@
 import { TrendingUp, Users, CheckCircle2, DollarSign } from "lucide-react";
+import { useAgentDashboardStats } from "@/hooks/useAgentDashboardStats";
 import { useCRMStats } from "@/hooks/useCRM";
 import { useDivision } from "@/contexts/DivisionContext";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -15,7 +16,27 @@ const formatCurrency = (value: number) => {
 
 export const DashboardStats = () => {
   const { division } = useDivision();
-  const { data: stats, isLoading } = useCRMStats(division);
+  
+  // Primary: Use materialized view for fast loading
+  const { data: matViewStats, isLoading: isLoadingMatView } = useAgentDashboardStats();
+  
+  // Fallback: Use regular CRM stats if materialized view is unavailable
+  const { data: crmStats, isLoading: isLoadingCRM } = useCRMStats(division);
+
+  // Prefer materialized view data, fallback to regular CRM stats
+  const stats = matViewStats ? {
+    activeDeals: matViewStats.active_deals,
+    pipelineValue: matViewStats.pipeline_value,
+    totalContacts: matViewStats.total_contacts,
+    todaysTasks: matViewStats.upcoming_tasks,
+  } : crmStats ? {
+    activeDeals: crmStats.activeDeals,
+    pipelineValue: crmStats.pipelineValue,
+    totalContacts: crmStats.totalContacts,
+    todaysTasks: crmStats.todaysTasks,
+  } : null;
+
+  const isLoading = isLoadingMatView && isLoadingCRM;
 
   const statCards = [
     {
