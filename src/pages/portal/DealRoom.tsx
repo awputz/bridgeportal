@@ -8,11 +8,13 @@ import { DealRoomFiltersComponent } from "@/components/deal-room/DealRoomFilters
 import { DealRoomList } from "@/components/deal-room/DealRoomList";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ShareDealDialog } from "@/components/deal-room/ShareDealDialog";
+import { DealDetailModal } from "@/components/deal-room/DealDetailModal";
 
 export default function DealRoom() {
   const [filters, setFilters] = useState<DealRoomFilters>({});
   const [sortBy, setSortBy] = useState<"recent" | "value" | "comments">("recent");
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [selectedDealId, setSelectedDealId] = useState<string | null>(null);
 
   // Enable real-time updates
   useDealRoomRealtime();
@@ -48,8 +50,7 @@ export default function DealRoom() {
   };
 
   const handleDealClick = (dealId: string) => {
-    // TODO: Open deal detail modal (Phase 5)
-    console.log("Deal clicked:", dealId);
+    setSelectedDealId(dealId);
   };
 
   return (
@@ -126,6 +127,12 @@ export default function DealRoom() {
       )}
 
       <ShareDealDialog open={shareDialogOpen} onOpenChange={setShareDialogOpen} />
+      
+      <DealDetailModal
+        dealId={selectedDealId}
+        open={!!selectedDealId}
+        onOpenChange={(open) => !open && setSelectedDealId(null)}
+      />
     </div>
   );
 }
