@@ -4,7 +4,7 @@ import {
   Mail, Users, Calendar, HardDrive, MessageSquare, Search, ArrowRight, TrendingUp, 
   Building2, Home, FileText, Calculator, Sparkles, Palette, Database, FileSearch, 
   MapPin, Send, UserPlus, FolderPlus, ListTodo, Wand2, Wrench, FolderOpen, 
-  DollarSign, Phone, Target, Heart, Globe, Headphones, Bell, ClipboardCheck
+  DollarSign, Phone, Target, Heart, Globe, Headphones, Bell, ClipboardCheck, Handshake
 } from "lucide-react";
 import { useExternalTools, ExternalTool } from "@/hooks/useExternalTools";
 import { useIsAdminOrAgent } from "@/hooks/useUserRole";
@@ -150,9 +150,9 @@ const Dashboard = () => {
               <ListTodo className="h-5 w-5 text-orange-400 transition-transform group-hover:scale-110" />
               <span className="text-xs text-muted-foreground">New Task</span>
             </Link>
-            <Link to="/portal/ai" className="glass-card p-3 flex flex-col items-center justify-center gap-1 hover:border-primary/50 group text-center">
-              <Sparkles className="h-5 w-5 text-primary transition-transform group-hover:scale-110" />
-              <span className="text-xs text-muted-foreground">Bridge AI</span>
+            <Link to="/portal/deal-room" className="glass-card p-3 flex flex-col items-center justify-center gap-1 hover:border-cyan-500/50 group text-center">
+              <Handshake className="h-5 w-5 text-cyan-400 transition-transform group-hover:scale-110" />
+              <span className="text-xs text-muted-foreground">Deal Room</span>
             </Link>
           </div>
         </section>
