@@ -186,7 +186,7 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                     <ChevronDown className="h-3 w-3 opacity-60" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="center" className="w-64 p-1.5 dropdown-premium border-0" sideOffset={12}>
+                <DropdownMenuContent align="center" className="w-72 p-2 dropdown-premium border-0" sideOffset={12}>
                   {essentialsItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
@@ -199,14 +199,14 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                           isActive && "bg-white/10"
                         )}
                       >
-                        <div className="h-7 w-7 rounded-md bg-white/10 flex items-center justify-center flex-shrink-0">
+                        <div className="h-8 w-8 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0">
                           <Icon className="h-4 w-4 text-white/80" />
                         </div>
                         <div className="min-w-0 flex-1 space-y-0">
                           <p className="text-[13px] font-medium text-white leading-none m-0">
                             {item.name}
                           </p>
-                          <p className="text-[11px] text-white/50 leading-none m-0 mt-0.5">
+                          <p className="text-[11px] text-white/50 leading-relaxed m-0 mt-1">
                             {item.description}
                           </p>
                         </div>
