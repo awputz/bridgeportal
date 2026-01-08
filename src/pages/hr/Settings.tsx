@@ -1,19 +1,59 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { User, Lock, Bell, Palette, Users } from "lucide-react";
+import { User, Lock, Bell, Palette } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Settings() {
+  const { user } = useAuth();
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+
+  // Load profile on mount
+  useEffect(() => {
+    if (user) {
+      setEmail(user.email || "");
+      // Fetch profile data
+      supabase
+        .from("profiles")
+        .select("full_name")
+        .eq("id", user.id)
+        .single()
+        .then(({ data }) => {
+          if (data?.full_name) {
+            setFullName(data.full_name);
+          }
+        });
+    }
+  }, [user]);
+
+  const handleProfileSave = async () => {
+    if (!user) return;
+    setIsUpdatingProfile(true);
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ full_name: fullName })
+        .eq("id", user.id);
+      if (error) throw error;
+      toast.success("Profile updated successfully");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to update profile");
+    } finally {
+      setIsUpdatingProfile(false);
+    }
+  };
 
   const handlePasswordChange = async () => {
     if (newPassword !== confirmPassword) {
@@ -79,18 +119,34 @@ export default function Settings() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label>Full Name</Label>
-                  <Input placeholder="Your name" className="bg-white/5 border-white/10" />
+                  <Input 
+                    placeholder="Your name" 
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="bg-white/5 border-white/10" 
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label>Email</Label>
-                  <Input type="email" placeholder="your@email.com" className="bg-white/5 border-white/10" disabled />
+                  <Input 
+                    type="email" 
+                    value={email}
+                    className="bg-white/5 border-white/10" 
+                    disabled 
+                  />
                 </div>
               </div>
               <div className="space-y-2">
                 <Label>Role</Label>
                 <Input value="HR Administrator" className="bg-white/5 border-white/10" disabled />
               </div>
-              <Button className="bg-emerald-500 hover:bg-emerald-600">Save Changes</Button>
+              <Button 
+                onClick={handleProfileSave}
+                disabled={isUpdatingProfile}
+                className="bg-emerald-500 hover:bg-emerald-600"
+              >
+                {isUpdatingProfile ? "Saving..." : "Save Changes"}
+              </Button>
             </CardContent>
           </Card>
         </TabsContent>
