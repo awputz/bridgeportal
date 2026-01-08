@@ -366,10 +366,8 @@ const Contacts = () => {
 
   // Subscribe to real-time CRM updates
   useCRMRealtime();
-  
-  // Auto-sync Google Contacts
-  useAutoSyncContacts();
 
+  // Detect duplicates when contacts load
   // Detect duplicates when contacts load
   useEffect(() => {
     if (allContacts && allContacts.length > 0) {

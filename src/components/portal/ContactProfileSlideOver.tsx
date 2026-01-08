@@ -112,9 +112,9 @@ export function ContactProfileSlideOver({
   const updateContact = useUpdateContact();
   const deleteContact = useDeleteContact();
 
-  const isBuyerType = ["buyer", "investor", "tenant"].includes(contact.contact_type);
-
   if (!contact) return null;
+
+  const isBuyerType = ["buyer", "investor", "tenant"].includes(contact.contact_type);
 
   const getInitials = (name: string) => {
     return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
