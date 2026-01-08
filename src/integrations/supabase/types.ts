@@ -826,6 +826,48 @@ export type Database = {
         }
         Relationships: []
       }
+      calendar_event_links: {
+        Row: {
+          contact_id: string | null
+          created_at: string | null
+          deal_id: string | null
+          google_event_id: string
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          contact_id?: string | null
+          created_at?: string | null
+          deal_id?: string | null
+          google_event_id: string
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          contact_id?: string | null
+          created_at?: string | null
+          deal_id?: string | null
+          google_event_id?: string
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calendar_event_links_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calendar_event_links_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       calendar_events: {
         Row: {
           all_day: boolean | null
@@ -916,6 +958,42 @@ export type Database = {
           working_days?: number[] | null
           working_hours_end?: string | null
           working_hours_start?: string | null
+        }
+        Relationships: []
+      }
+      calendar_templates: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          is_shared: boolean | null
+          name: string
+          template_data: Json
+          updated_at: string | null
+          usage_count: number | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_shared?: boolean | null
+          name: string
+          template_data?: Json
+          updated_at?: string | null
+          usage_count?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_shared?: boolean | null
+          name?: string
+          template_data?: Json
+          updated_at?: string | null
+          usage_count?: number | null
+          user_id?: string | null
         }
         Relationships: []
       }

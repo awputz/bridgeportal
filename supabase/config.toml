@@ -1,5 +1,8 @@
 project_id = "dqqgfzarfvydcckiaqak"
 
+[functions.parse-event-title]
+verify_jwt = false
+
 [functions.create-investor-accounts]
 verify_jwt = true
 
