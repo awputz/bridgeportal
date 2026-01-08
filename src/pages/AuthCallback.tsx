@@ -76,8 +76,30 @@ const AuthCallback = () => {
             }
           }
 
-          setStatus("Success! Redirecting to portal...");
-          navigate("/portal", { replace: true });
+          // Check for stored redirect (e.g., HR portal)
+          const intendedRedirect = sessionStorage.getItem("auth_redirect");
+          sessionStorage.removeItem("auth_redirect");
+          
+          if (intendedRedirect === "/hr/dashboard") {
+            // Verify admin access before redirecting to HR
+            const { data: roleData } = await supabase
+              .from("user_roles")
+              .select("role")
+              .eq("user_id", session.user.id)
+              .eq("role", "admin")
+              .maybeSingle();
+
+            if (roleData) {
+              setStatus("Success! Redirecting to HR Portal...");
+              navigate("/hr/dashboard", { replace: true });
+            } else {
+              setStatus("Access denied. Redirecting...");
+              navigate("/hr/signin", { replace: true });
+            }
+          } else {
+            setStatus("Success! Redirecting to portal...");
+            navigate("/portal", { replace: true });
+          }
         } else {
           setStatus("No session found. Redirecting...");
           setTimeout(() => navigate("/login", { replace: true }), 2000);
