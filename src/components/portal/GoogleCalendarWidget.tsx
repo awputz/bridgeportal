@@ -51,7 +51,7 @@ export const GoogleCalendarWidget = () => {
   const [selectedEvent, setSelectedEvent] = useState<any | null>(null);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [editingEvent, setEditingEvent] = useState<any | null>(null);
-  const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [viewMode, setViewMode] = useState<ViewMode>("3day");
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [defaultEventTime, setDefaultEventTime] = useState<Date | null>(null);
 
@@ -359,7 +359,7 @@ export const GoogleCalendarWidget = () => {
           </CardTitle>
         </CardHeader>
 
-        <CardContent className="p-0 flex-1 overflow-hidden">
+        <CardContent className="p-0 flex-1 flex flex-col overflow-hidden">
           {/* Not connected state */}
           {!isConnected && !isLoading && (
             <div className="flex flex-col items-center justify-center py-6 px-3 bg-emerald-500/5 mx-3 rounded-lg border border-emerald-500/10">
@@ -400,7 +400,7 @@ export const GoogleCalendarWidget = () => {
             <>
               {/* List View */}
               {viewMode === "list" && (
-                <ScrollArea className="h-[290px]">
+                <ScrollArea className="flex-1">
                   <div className="p-3">
                     {/* Next Meeting Banner */}
                     {nextMeeting && isSameDay(selectedDate, new Date()) && (
@@ -491,7 +491,7 @@ export const GoogleCalendarWidget = () => {
 
               {/* Multi-day Views */}
               {(viewMode === "2day" || viewMode === "3day") && (
-                <div className="h-[340px] overflow-hidden">
+                <div className="flex-1 overflow-hidden">
                   <CalendarWidgetMultiDayView
                     days={viewMode === "2day" ? 2 : 3}
                     startDate={selectedDate}
