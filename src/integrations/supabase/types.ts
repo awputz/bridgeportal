@@ -3202,6 +3202,39 @@ export type Database = {
         }
         Relationships: []
       }
+      hr_email_templates: {
+        Row: {
+          body: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          subject: string
+          template_type: string
+          updated_at: string | null
+        }
+        Insert: {
+          body: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          subject: string
+          template_type: string
+          updated_at?: string | null
+        }
+        Update: {
+          body?: string
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          subject?: string
+          template_type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       hr_interactions: {
         Row: {
           agent_id: string
@@ -3290,6 +3323,70 @@ export type Database = {
           },
         ]
       }
+      hr_notifications: {
+        Row: {
+          action_url: string | null
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          message: string | null
+          notification_type: string
+          related_agent_id: string | null
+          related_interview_id: string | null
+          related_offer_id: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          action_url?: string | null
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message?: string | null
+          notification_type: string
+          related_agent_id?: string | null
+          related_interview_id?: string | null
+          related_offer_id?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          action_url?: string | null
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message?: string | null
+          notification_type?: string
+          related_agent_id?: string | null
+          related_interview_id?: string | null
+          related_offer_id?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hr_notifications_related_agent_id_fkey"
+            columns: ["related_agent_id"]
+            isOneToOne: false
+            referencedRelation: "hr_agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hr_notifications_related_interview_id_fkey"
+            columns: ["related_interview_id"]
+            isOneToOne: false
+            referencedRelation: "hr_interviews"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hr_notifications_related_offer_id_fkey"
+            columns: ["related_offer_id"]
+            isOneToOne: false
+            referencedRelation: "hr_offers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hr_offers: {
         Row: {
           agent_id: string
@@ -3343,6 +3440,44 @@ export type Database = {
           {
             foreignKeyName: "hr_offers_agent_id_fkey"
             columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "hr_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hr_reminders: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_completed: boolean | null
+          message: string
+          related_agent_id: string | null
+          reminder_date: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_completed?: boolean | null
+          message: string
+          related_agent_id?: string | null
+          reminder_date: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_completed?: boolean | null
+          message?: string
+          related_agent_id?: string | null
+          reminder_date?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hr_reminders_related_agent_id_fkey"
+            columns: ["related_agent_id"]
             isOneToOne: false
             referencedRelation: "hr_agents"
             referencedColumns: ["id"]
