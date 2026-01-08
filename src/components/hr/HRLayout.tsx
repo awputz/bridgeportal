@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Outlet, useNavigate, Link, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { HRSidebar } from "./HRSidebar";
+import { NotificationCenter } from "./NotificationCenter";
 import { Button } from "@/components/ui/button";
 import { 
   Menu, 
@@ -15,10 +16,9 @@ import {
   Calendar,
   FileText,
   BarChart3,
+  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-import { Settings } from "lucide-react";
 
 const mobileNavItems = [
   { name: "Dashboard", path: "/hr/dashboard", icon: LayoutDashboard },
@@ -170,15 +170,18 @@ export function HRLayout() {
             <h1 className="text-lg font-extralight">Welcome, {userName}</h1>
             <p className="text-xs text-muted-foreground">Bridge Careers HR Portal</p>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleSignOut}
-            className="text-muted-foreground hover:text-foreground"
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            Sign Out
-          </Button>
+          <div className="flex items-center gap-2">
+            <NotificationCenter />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleSignOut}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
         </header>
 
         {/* Main content */}
