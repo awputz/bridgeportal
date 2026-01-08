@@ -448,6 +448,16 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                       </Link>
                     )}
                     
+                    {role === 'admin' && (
+                      <Link 
+                        to="/hr/dashboard"
+                        className="dropdown-premium-item cursor-pointer"
+                      >
+                        <Users className="h-4 w-4 text-white/70 flex-shrink-0" />
+                        <span className="text-[13px] text-white">HR Portal</span>
+                      </Link>
+                    )}
+                    
                     <div className="h-px bg-white/10 my-2" />
                     
                     <button 
@@ -639,6 +649,21 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                   >
                     <Shield className="h-5 w-5" />
                     Admin Portal
+                  </Link>
+                )}
+                {role === 'admin' && (
+                  <Link
+                    to="/hr/dashboard"
+                    className={cn(
+                      "flex items-center gap-4 text-lg font-light transition-all duration-300 py-4 min-h-[56px] active:bg-white/5 rounded-lg px-4 -mx-2",
+                      location.pathname.startsWith('/hr') ? "text-foreground bg-white/5" : "text-foreground/70 hover:text-foreground",
+                      isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                    )}
+                    style={{ transitionDelay: '575ms' }}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Users className="h-5 w-5" />
+                    HR Portal
                   </Link>
                 )}
               </div>
