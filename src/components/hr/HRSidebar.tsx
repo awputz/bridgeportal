@@ -5,7 +5,7 @@ import {
   Users,
   GitBranch,
   Mail,
-  Calendar,
+  CalendarCheck,
   FileText,
   BarChart3,
 } from "lucide-react";
@@ -15,7 +15,7 @@ const navItems = [
   { name: "Agent Database", path: "/hr/agents", icon: Users },
   { name: "Pipeline", path: "/hr/pipeline", icon: GitBranch },
   { name: "Outreach", path: "/hr/outreach", icon: Mail },
-  { name: "Calendar", path: "/hr/calendar", icon: Calendar },
+  { name: "Interviews", path: "/hr/interviews", icon: CalendarCheck },
   { name: "Offers", path: "/hr/offers", icon: FileText },
   { name: "Analytics", path: "/hr/analytics", icon: BarChart3 },
 ];

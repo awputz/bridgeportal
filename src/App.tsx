@@ -44,6 +44,8 @@ const AgentProfile = lazy(() => import("./pages/hr/AgentProfile"));
 const RecruitmentPipeline = lazy(() => import("./pages/hr/RecruitmentPipeline"));
 const OutreachCampaigns = lazy(() => import("./pages/hr/OutreachCampaigns"));
 const CampaignDetail = lazy(() => import("./pages/hr/CampaignDetail"));
+const Interviews = lazy(() => import("./pages/hr/Interviews"));
+const InterviewDetail = lazy(() => import("./pages/hr/InterviewDetail"));
 
 // Auth callback - lazy loaded
 const AuthCallback = lazy(() => import("./pages/AuthCallback"));
@@ -297,6 +299,8 @@ const App = () => {
                     <Route path="pipeline" element={<Suspense fallback={<PageLoader />}><RecruitmentPipeline /></Suspense>} />
                     <Route path="outreach" element={<Suspense fallback={<PageLoader />}><OutreachCampaigns /></Suspense>} />
                     <Route path="outreach/:id" element={<Suspense fallback={<PageLoader />}><CampaignDetail /></Suspense>} />
+                    <Route path="interviews" element={<Suspense fallback={<PageLoader />}><Interviews /></Suspense>} />
+                    <Route path="interviews/:id" element={<Suspense fallback={<PageLoader />}><InterviewDetail /></Suspense>} />
                   </Route>
                   
                   {/* Portal Routes (Protected) */}
