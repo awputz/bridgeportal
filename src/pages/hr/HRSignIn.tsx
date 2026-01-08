@@ -19,12 +19,12 @@ export default function HRSignIn() {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (session?.user) {
-          // Check if user has hr_admin role
+          // Check if user has admin role (admins have HR access)
           const { data: roleData } = await supabase
             .from("user_roles")
             .select("role")
             .eq("user_id", session.user.id)
-            .eq("role", "hr_admin")
+            .eq("role", "admin")
             .maybeSingle();
 
           if (roleData) {
@@ -66,12 +66,12 @@ export default function HRSignIn() {
         throw new Error("No user returned from authentication");
       }
 
-      // Check if user has hr_admin role
+      // Check if user has admin role (admins have HR access)
       const { data: roleData, error: roleError } = await supabase
         .from("user_roles")
         .select("role")
         .eq("user_id", authData.user.id)
-        .eq("role", "hr_admin")
+        .eq("role", "admin")
         .maybeSingle();
 
       if (roleError) {

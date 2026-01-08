@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+import { Settings } from "lucide-react";
+
 const mobileNavItems = [
   { name: "Dashboard", path: "/hr/dashboard", icon: LayoutDashboard },
   { name: "Agent Database", path: "/hr/agents", icon: Users },
@@ -26,6 +28,7 @@ const mobileNavItems = [
   { name: "Calendar", path: "/hr/calendar", icon: Calendar },
   { name: "Offers", path: "/hr/offers", icon: FileText },
   { name: "Analytics", path: "/hr/analytics", icon: BarChart3 },
+  { name: "Settings", path: "/hr/settings", icon: Settings },
 ];
 
 export function HRLayout() {
@@ -45,12 +48,12 @@ export function HRLayout() {
           return;
         }
 
-        // Check for hr_admin role
+        // Check for admin role (admins have HR access)
         const { data: roleData } = await supabase
           .from("user_roles")
           .select("role")
           .eq("user_id", user.id)
-          .eq("role", "hr_admin")
+          .eq("role", "admin")
           .maybeSingle();
 
         if (!roleData) {
