@@ -8,6 +8,7 @@ import {
   CalendarCheck,
   FileText,
   BarChart3,
+  Settings,
 } from "lucide-react";
 
 const navItems = [
@@ -18,6 +19,7 @@ const navItems = [
   { name: "Interviews", path: "/hr/interviews", icon: CalendarCheck },
   { name: "Offers", path: "/hr/offers", icon: FileText },
   { name: "Analytics", path: "/hr/analytics", icon: BarChart3 },
+  { name: "Settings", path: "/hr/settings", icon: Settings },
 ];
 
 export function HRSidebar() {
