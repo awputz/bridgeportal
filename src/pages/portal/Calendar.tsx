@@ -68,6 +68,8 @@ import { useCalendarKeyboardShortcuts } from "@/hooks/useCalendarKeyboardShortcu
 import { useCalendarPreferences } from "@/hooks/useCalendarPreferences";
 import { KeyboardShortcutsModal } from "@/components/calendar/KeyboardShortcutsModal";
 import { CalendarSettingsSheet } from "@/components/calendar/CalendarSettingsSheet";
+import { CalendarSearch } from "@/components/calendar/CalendarSearch";
+import { CalendarAnalytics } from "@/components/calendar/CalendarAnalytics";
 import { addMinutes, differenceInMinutes } from "date-fns";
 
 type ViewMode = "day" | "3day" | "week" | "month" | "agenda";
@@ -82,6 +84,8 @@ export default function Calendar() {
   const [defaultEventTime, setDefaultEventTime] = useState<string | undefined>();
   const [shortcutsModalOpen, setShortcutsModalOpen] = useState(false);
   const [settingsSheetOpen, setSettingsSheetOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [analyticsOpen, setAnalyticsOpen] = useState(false);
   
   // Calendar preferences
   const { data: preferences } = useCalendarPreferences();
@@ -117,8 +121,10 @@ export default function Calendar() {
     },
     onViewChange: setViewMode,
     onCreateEvent: () => { setSelectedEvent(null); setDefaultEventTime(undefined); setEventDialogOpen(true); },
+    onOpenSearch: () => setSearchOpen(true),
     onShowHelp: () => setShortcutsModalOpen(true),
-    enabled: !eventDialogOpen && !settingsSheetOpen,
+    onOpenAnalytics: () => setAnalyticsOpen(true),
+    enabled: !eventDialogOpen && !settingsSheetOpen && !searchOpen,
   });
 
   // Calculate date range for fetching events
@@ -518,6 +524,8 @@ export default function Calendar() {
             onCreateEvent={handleCreateEvent}
             eventsByDate={eventsByDate}
             isLoadingEvents={isLoadingEvents}
+            events={events}
+            onOpenSearch={() => setSearchOpen(true)}
           />
         </div>
 
@@ -704,6 +712,21 @@ export default function Calendar() {
         open={settingsSheetOpen}
         onOpenChange={setSettingsSheetOpen}
         preferences={preferences}
+      />
+
+      {/* Search */}
+      <CalendarSearch
+        open={searchOpen}
+        onOpenChange={setSearchOpen}
+        events={events}
+        onEventSelect={handleEventClick}
+      />
+
+      {/* Analytics */}
+      <CalendarAnalytics
+        open={analyticsOpen}
+        onOpenChange={setAnalyticsOpen}
+        events={events}
       />
     </div>
   );

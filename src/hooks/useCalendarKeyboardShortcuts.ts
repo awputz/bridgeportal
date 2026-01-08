@@ -10,6 +10,7 @@ interface KeyboardShortcutsOptions {
   onCreateEvent: () => void;
   onOpenSearch?: () => void;
   onShowHelp: () => void;
+  onOpenAnalytics?: () => void;
   enabled?: boolean;
 }
 
@@ -22,6 +23,7 @@ export function useCalendarKeyboardShortcuts(options: KeyboardShortcutsOptions) 
     onCreateEvent,
     onOpenSearch,
     onShowHelp,
+    onOpenAnalytics,
     enabled = true,
   } = options;
 
@@ -106,8 +108,12 @@ export function useCalendarKeyboardShortcuts(options: KeyboardShortcutsOptions) 
         e.preventDefault();
         onShowHelp();
         break;
+      case 'i':
+        e.preventDefault();
+        onOpenAnalytics?.();
+        break;
     }
-  }, [enabled, onToday, onNext, onPrevious, onViewChange, onCreateEvent, onOpenSearch, onShowHelp]);
+  }, [enabled, onToday, onNext, onPrevious, onViewChange, onCreateEvent, onOpenSearch, onShowHelp, onOpenAnalytics]);
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);

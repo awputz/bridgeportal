@@ -20,10 +20,15 @@ import {
   Eye,
   EyeOff,
   Loader2,
+  Search,
+  Calendar,
+  Clock,
+  Target,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { CalendarEvent } from "@/hooks/useCalendarEvents";
+import { useCalendarAnalytics } from "@/hooks/useCalendarAnalytics";
 
 interface CalendarSidebarProps {
   currentDate: Date;
@@ -34,6 +39,8 @@ interface CalendarSidebarProps {
   calendars?: { id: string; name: string; color: string; enabled: boolean }[];
   onToggleCalendar?: (calendarId: string) => void;
   isLoadingEvents?: boolean;
+  events?: CalendarEvent[];
+  onOpenSearch?: () => void;
 }
 
 export function CalendarSidebar({
@@ -45,8 +52,11 @@ export function CalendarSidebar({
   calendars = [],
   onToggleCalendar,
   isLoadingEvents,
+  events = [],
+  onOpenSearch,
 }: CalendarSidebarProps) {
   const [miniCalendarMonth, setMiniCalendarMonth] = useState(currentDate);
+  const stats = useCalendarAnalytics(events);
 
   // Calculate mini calendar days
   const monthStart = startOfMonth(miniCalendarMonth);
@@ -62,7 +72,7 @@ export function CalendarSidebar({
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 p-4">
       {/* Create Button */}
       <Button
         onClick={onCreateEvent}
@@ -72,6 +82,18 @@ export function CalendarSidebar({
         <Plus className="h-5 w-5 text-gcal-blue" />
         <span className="font-medium">Create</span>
       </Button>
+
+      {/* Quick Search */}
+      {onOpenSearch && (
+        <button
+          onClick={onOpenSearch}
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg border border-border/50 bg-muted/30 hover:bg-muted/50 transition-colors text-left"
+        >
+          <Search className="h-4 w-4 text-muted-foreground" />
+          <span className="text-sm text-muted-foreground flex-1">Search events...</span>
+          <kbd className="text-xs text-muted-foreground bg-muted px-1.5 py-0.5 rounded">/</kbd>
+        </button>
+      )}
 
       {/* Mini Calendar */}
       <div className="rounded-xl border border-border/50 bg-card p-3 shadow-sm">
@@ -136,6 +158,36 @@ export function CalendarSidebar({
               </button>
             );
           })}
+        </div>
+      </div>
+
+      {/* Weekly Stats Widget */}
+      <div className="rounded-xl border border-border/50 bg-card p-3 shadow-sm">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-sm font-medium text-foreground">📊 This Week</span>
+        </div>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Calendar className="h-3.5 w-3.5" />
+              <span>Events</span>
+            </div>
+            <span className="font-medium text-foreground">{stats.weeklyEvents}</span>
+          </div>
+          <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Clock className="h-3.5 w-3.5" />
+              <span>In meetings</span>
+            </div>
+            <span className="font-medium text-foreground">{stats.weeklyHours}h</span>
+          </div>
+          <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Target className="h-3.5 w-3.5 text-purple-500" />
+              <span>Focus time</span>
+            </div>
+            <span className="font-medium text-foreground">{stats.focusTimeHours}h</span>
+          </div>
         </div>
       </div>
 
