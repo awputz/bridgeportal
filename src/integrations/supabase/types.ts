@@ -871,6 +871,54 @@ export type Database = {
         }
         Relationships: []
       }
+      calendar_preferences: {
+        Row: {
+          created_at: string | null
+          default_event_duration: number | null
+          default_reminder_minutes: number | null
+          default_view: string | null
+          show_declined_events: boolean | null
+          show_weekends: boolean | null
+          time_format: string | null
+          updated_at: string | null
+          user_id: string
+          week_starts_on: number | null
+          working_days: number[] | null
+          working_hours_end: string | null
+          working_hours_start: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          default_event_duration?: number | null
+          default_reminder_minutes?: number | null
+          default_view?: string | null
+          show_declined_events?: boolean | null
+          show_weekends?: boolean | null
+          time_format?: string | null
+          updated_at?: string | null
+          user_id: string
+          week_starts_on?: number | null
+          working_days?: number[] | null
+          working_hours_end?: string | null
+          working_hours_start?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          default_event_duration?: number | null
+          default_reminder_minutes?: number | null
+          default_view?: string | null
+          show_declined_events?: boolean | null
+          show_weekends?: boolean | null
+          time_format?: string | null
+          updated_at?: string | null
+          user_id?: string
+          week_starts_on?: number | null
+          working_days?: number[] | null
+          working_hours_end?: string | null
+          working_hours_start?: string | null
+        }
+        Relationships: []
+      }
       client_errors: {
         Row: {
           component_stack: string | null

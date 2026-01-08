@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Calendar as CalendarIcon,
   ChevronLeft,
@@ -14,6 +14,7 @@ import {
   CalendarClock,
   Plus,
   Settings,
+  Keyboard,
 } from "lucide-react";
 import { QueryErrorState } from "@/components/ui/QueryErrorState";
 import { Button } from "@/components/ui/button";
@@ -63,6 +64,11 @@ import { CalendarSidebar } from "@/components/portal/CalendarSidebar";
 import { CalendarEvent } from "@/hooks/useCalendarEvents";
 import { toast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useCalendarKeyboardShortcuts } from "@/hooks/useCalendarKeyboardShortcuts";
+import { useCalendarPreferences } from "@/hooks/useCalendarPreferences";
+import { KeyboardShortcutsModal } from "@/components/calendar/KeyboardShortcutsModal";
+import { CalendarSettingsSheet } from "@/components/calendar/CalendarSettingsSheet";
+import { addMinutes, differenceInMinutes } from "date-fns";
 
 type ViewMode = "day" | "3day" | "week" | "month" | "agenda";
 
@@ -74,6 +80,11 @@ export default function Calendar() {
   const [eventDialogOpen, setEventDialogOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [defaultEventTime, setDefaultEventTime] = useState<string | undefined>();
+  const [shortcutsModalOpen, setShortcutsModalOpen] = useState(false);
+  const [settingsSheetOpen, setSettingsSheetOpen] = useState(false);
+  
+  // Calendar preferences
+  const { data: preferences } = useCalendarPreferences();
   
   // Update view mode when mobile state changes
   React.useEffect(() => {
@@ -81,6 +92,34 @@ export default function Calendar() {
       setViewMode("3day");
     }
   }, [isMobile]);
+  
+  // Apply default view from preferences on initial load
+  useEffect(() => {
+    if (preferences?.default_view && !isMobile) {
+      setViewMode(preferences.default_view);
+    }
+  }, [preferences?.default_view]);
+  
+  // Keyboard shortcuts
+  useCalendarKeyboardShortcuts({
+    onToday: () => { setCurrentDate(new Date()); setSelectedDate(new Date()); },
+    onNext: () => {
+      if (viewMode === "day") setCurrentDate(addDays(currentDate, 1));
+      else if (viewMode === "3day") setCurrentDate(addDays(currentDate, 3));
+      else if (viewMode === "week") setCurrentDate(addWeeks(currentDate, 1));
+      else setCurrentDate(addMonths(currentDate, 1));
+    },
+    onPrevious: () => {
+      if (viewMode === "day") setCurrentDate(subDays(currentDate, 1));
+      else if (viewMode === "3day") setCurrentDate(subDays(currentDate, 3));
+      else if (viewMode === "week") setCurrentDate(subWeeks(currentDate, 1));
+      else setCurrentDate(subMonths(currentDate, 1));
+    },
+    onViewChange: setViewMode,
+    onCreateEvent: () => { setSelectedEvent(null); setDefaultEventTime(undefined); setEventDialogOpen(true); },
+    onShowHelp: () => setShortcutsModalOpen(true),
+    enabled: !eventDialogOpen && !settingsSheetOpen,
+  });
 
   // Calculate date range for fetching events
   const dateRange = useMemo(() => {
@@ -208,6 +247,28 @@ export default function Calendar() {
   const handleDeleteEvent = (eventId: string) => {
     deleteEvent.mutate(eventId);
     setEventDialogOpen(false);
+  };
+
+  // Handle event drag-and-drop rescheduling
+  const handleEventDrop = (eventId: string, newStart: Date, newEnd: Date) => {
+    const event = events?.find((e) => e.id === eventId);
+    if (!event || event.source !== "google") return;
+
+    updateEvent.mutate({
+      eventId,
+      event: {
+        title: event.title,
+        start_time: newStart.toISOString(),
+        end_time: newEnd.toISOString(),
+        description: event.description || undefined,
+        location: event.location || undefined,
+        all_day: event.all_day,
+      },
+    });
+    toast({
+      title: "Event Rescheduled",
+      description: `Moved to ${format(newStart, "MMM d, h:mm a")}`,
+    });
   };
 
   const getHeaderTitle = () => {
@@ -409,6 +470,15 @@ export default function Calendar() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setSettingsSheetOpen(true)}>
+                  <Settings className="h-4 w-4 mr-2" />
+                  Calendar Settings
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setShortcutsModalOpen(true)}>
+                  <Keyboard className="h-4 w-4 mr-2" />
+                  Keyboard Shortcuts
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => window.open('https://calendar.google.com', '_blank')}>
                   <ExternalLink className="h-4 w-4 mr-2" />
                   Open Google Calendar
@@ -621,6 +691,19 @@ export default function Calendar() {
         defaultTime={defaultEventTime}
         onSave={handleSaveEvent}
         onDelete={handleDeleteEvent}
+      />
+
+      {/* Keyboard Shortcuts Modal */}
+      <KeyboardShortcutsModal
+        open={shortcutsModalOpen}
+        onOpenChange={setShortcutsModalOpen}
+      />
+
+      {/* Calendar Settings Sheet */}
+      <CalendarSettingsSheet
+        open={settingsSheetOpen}
+        onOpenChange={setSettingsSheetOpen}
+        preferences={preferences}
       />
     </div>
   );
