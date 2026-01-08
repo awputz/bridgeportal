@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -74,6 +74,26 @@ export function ScheduleInterviewDialog({
       notes: "",
     },
   });
+
+  // Update form when preselectedAgentId changes
+  useEffect(() => {
+    if (preselectedAgentId) {
+      form.setValue('agent_id', preselectedAgentId);
+    }
+  }, [preselectedAgentId, form]);
+
+  // Reset form when dialog opens
+  useEffect(() => {
+    if (open) {
+      form.reset({
+        agent_id: preselectedAgentId || "",
+        interview_time: "10:00",
+        interviewer_name: "",
+        interview_type: "in-person",
+        notes: "",
+      });
+    }
+  }, [open, preselectedAgentId, form]);
 
   const onSubmit = async (data: FormData) => {
     const [hours, minutes] = data.interview_time.split(':').map(Number);

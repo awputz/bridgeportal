@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { format, addWeeks } from "date-fns";
 import { CalendarIcon, FileText } from "lucide-react";
@@ -66,6 +66,30 @@ export function CreateOfferDialog({ children, defaultAgentId, defaultDivision }:
       special_terms: '',
     },
   });
+
+  // Update form when defaults change
+  useEffect(() => {
+    if (defaultAgentId) {
+      setValue('agent_id', defaultAgentId);
+    }
+    if (defaultDivision) {
+      setValue('division', defaultDivision);
+    }
+  }, [defaultAgentId, defaultDivision, setValue]);
+
+  // Reset form when dialog opens
+  useEffect(() => {
+    if (open) {
+      reset({
+        agent_id: defaultAgentId || '',
+        division: defaultDivision || '',
+        commission_split: '60/40',
+        signing_bonus: '',
+        start_date: addWeeks(new Date(), 2),
+        special_terms: '',
+      });
+    }
+  }, [open, defaultAgentId, defaultDivision, reset]);
 
   const selectedAgentId = watch('agent_id');
   const commissionSplit = watch('commission_split');
