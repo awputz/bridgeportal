@@ -48,6 +48,7 @@ const Interviews = lazy(() => import("./pages/hr/Interviews"));
 const InterviewDetail = lazy(() => import("./pages/hr/InterviewDetail"));
 const Offers = lazy(() => import("./pages/hr/Offers"));
 const OfferDetail = lazy(() => import("./pages/hr/OfferDetail"));
+const HRAnalytics = lazy(() => import("./pages/hr/Analytics"));
 
 // Auth callback - lazy loaded
 const AuthCallback = lazy(() => import("./pages/AuthCallback"));
@@ -305,6 +306,7 @@ const App = () => {
                     <Route path="interviews/:id" element={<Suspense fallback={<PageLoader />}><InterviewDetail /></Suspense>} />
                     <Route path="offers" element={<Suspense fallback={<PageLoader />}><Offers /></Suspense>} />
                     <Route path="offers/:id" element={<Suspense fallback={<PageLoader />}><OfferDetail /></Suspense>} />
+                    <Route path="analytics" element={<Suspense fallback={<PageLoader />}><HRAnalytics /></Suspense>} />
                   </Route>
                   
                   {/* Portal Routes (Protected) */}
