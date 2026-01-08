@@ -15,6 +15,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SPACING, COMPONENT_CLASSES } from "@/lib/spacing";
 import { differenceInMinutes, format } from "date-fns";
 import { useGmailConnection, useGmailMessages, useConnectGmail, useModifyMessage, useTrashMessage } from "@/hooks/useGmail";
 import { useQueryClient } from "@tanstack/react-query";
@@ -203,13 +204,13 @@ export const GmailWidget = () => {
               </div>
 
               {/* Label Filter Pills */}
-              <div className="flex gap-1.5">
+              <div className="flex gap-2">
                 {labelFilters.map((filter) => (
                   <button
                     key={filter.id}
                     onClick={() => setLabelFilter(filter.id)}
                     className={cn(
-                      "px-2.5 py-1 text-xs rounded-full transition-colors",
+                      "px-3 py-1.5 text-xs rounded-full transition-colors",
                       labelFilter === filter.id
                         ? "bg-destructive text-destructive-foreground"
                         : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground"
@@ -250,9 +251,9 @@ export const GmailWidget = () => {
 
               {/* Loading state - 5 line skeleton */}
               {isLoading && (
-                <div className="space-y-1.5 pr-2">
+                <div className="space-y-2 pr-2">
                   {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
-                    <div key={i} className="px-2.5 py-1.5 rounded-md border border-border/30 bg-muted/5 overflow-hidden">
+                    <div key={i} className="px-3 py-2 rounded-md border border-border/30 bg-muted/5 overflow-hidden">
                       <div className="flex items-center gap-2 mb-1">
                         <Skeleton className="h-1.5 w-1.5 rounded-full shrink-0" />
                         <Skeleton className="h-3.5 w-28" />
@@ -277,13 +278,13 @@ export const GmailWidget = () => {
 
               {/* Messages list - Gmail-style 3-line layout with bordered cards */}
               {isConnected && !isLoading && messages.length > 0 && (
-                <div className="space-y-1.5 pr-2">
+                <div className="space-y-2 pr-2">
                   {messages.map((message) => (
                     <button
                       key={message.id}
                       onClick={() => handleEmailClick(message.id)}
                       className={cn(
-                        "group block w-full px-2.5 py-1.5 rounded-md border border-border/30 border-l-2 overflow-hidden text-left",
+                        "group block w-full px-3 py-2 rounded-md border border-border/30 border-l-2 overflow-hidden text-left",
                         "hover:bg-muted/50 hover:border-border/50 transition-colors cursor-pointer",
                         message.isUnread 
                           ? "border-l-blue-500 bg-primary/5" 

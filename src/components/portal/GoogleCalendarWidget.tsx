@@ -18,6 +18,7 @@ import {
   LayoutGrid,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SPACING, COMPONENT_CLASSES } from "@/lib/spacing";
 import { format, isSameDay, differenceInMinutes, addDays, subDays } from "date-fns";
 import { useGoogleCalendarConnection, useGoogleCalendarEvents, useConnectGoogleCalendar, useDeleteGoogleEvent, useCreateGoogleEvent } from "@/hooks/useGoogleCalendar";
 import { useUpcomingEvents } from "@/hooks/useCalendarEvents";
@@ -381,9 +382,9 @@ export const GoogleCalendarWidget = () => {
 
           {/* Loading state */}
           {isLoading && (
-            <div className="space-y-1.5 p-3">
+            <div className="space-y-2 p-3">
               {[1, 2, 3, 4, 5].map(i => (
-                <div key={i} className="px-2.5 py-2 rounded-md border border-border/30 bg-muted/5">
+                <div key={i} className="px-3 py-2 rounded-md border border-border/30 bg-muted/5">
                   <div className="flex items-center gap-2 mb-1">
                     <Skeleton className="h-2.5 w-16" />
                   </div>
@@ -403,7 +404,7 @@ export const GoogleCalendarWidget = () => {
                   <div className="p-3">
                     {/* Next Meeting Banner */}
                     {nextMeeting && isSameDay(selectedDate, new Date()) && (
-                      <div className="mb-3 p-2.5 rounded-lg bg-gcal-blue/10 border border-gcal-blue/20">
+                      <div className="mb-3 p-3 rounded-lg bg-gcal-blue/10 border border-gcal-blue/20">
                         <div className="flex items-center gap-2">
                           <span className="relative flex h-2 w-2">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gcal-blue opacity-75"></span>
@@ -442,7 +443,7 @@ export const GoogleCalendarWidget = () => {
 
                     {/* Events list */}
                     {todaysEvents.length > 0 && (
-                      <div className="space-y-1.5">
+                      <div className="space-y-2">
                         {todaysEvents.map((event) => {
                           const eventData = event as any;
                           const startTime = new Date(event.start_time);
@@ -455,7 +456,7 @@ export const GoogleCalendarWidget = () => {
                               key={event.id}
                               onClick={() => handleEventClick(eventData)}
                               className={cn(
-                                "block w-full text-left px-2.5 py-1.5 rounded-md border border-border/30 border-l-2",
+                                "block w-full text-left px-3 py-2 rounded-md border border-border/30 border-l-2",
                                 "hover:bg-muted/50 hover:border-border/50 hover:shadow-md hover:scale-[1.02]",
                                 "transition-all duration-200 cursor-pointer bg-muted/5",
                                 borderColorClass,
