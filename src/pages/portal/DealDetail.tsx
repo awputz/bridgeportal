@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Save, Trash2, Phone, Mail, Calendar, DollarSign, MapPin, User, Building2, Percent, Home, FileText, Calculator, Landmark, Clock, TrendingUp } from "lucide-react";
+import { RelatedEventsCard } from "@/components/calendar/RelatedEventsCard";
+import { useLinkedEventsForDeal } from "@/hooks/useLinkedCalendarEvents";
 import { QueryErrorState } from "@/components/ui/QueryErrorState";
 import { cn } from "@/lib/utils";
 import { isValidUUID } from "@/lib/errorHandler";
@@ -104,6 +106,7 @@ const DealDetail = () => {
   const { data: deal, isLoading, error, refetch } = useCRMDeal(id || "");
   const { data: stages } = useDealStages(division);
   const { data: activities } = useCRMActivities({ dealId: id, limit: 10 });
+  const { data: linkedEvents, isLoading: isLoadingEvents } = useLinkedEventsForDeal(id);
   const updateDeal = useUpdateDeal();
   const deleteDeal = useDeleteDeal();
   const createActivity = useCreateActivity();
@@ -1475,6 +1478,15 @@ const DealDetail = () => {
                 )}
               </CardContent>
             </Card>
+
+            {/* Related Events */}
+            <RelatedEventsCard
+              title="Related Events"
+              events={linkedEvents || []}
+              isLoading={isLoadingEvents}
+              emptyMessage="No events linked to this deal"
+              onScheduleClick={() => navigate("/portal/calendar")}
+            />
 
             {/* Stage */}
             <Card className="glass-card border-white/10">

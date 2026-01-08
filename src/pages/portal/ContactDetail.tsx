@@ -3,6 +3,8 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { ArrowLeft, Save, Trash2, Phone, Mail, Building2, MapPin, Tag, Calendar } from "lucide-react";
 import { isValidUUID } from "@/lib/errorHandler";
 import { useCRMContact, useUpdateContact, useDeleteContact, useCRMDeals, useCRMActivities, useCreateActivity } from "@/hooks/useCRM";
+import { RelatedEventsCard } from "@/components/calendar/RelatedEventsCard";
+import { useLinkedEventsForContact } from "@/hooks/useLinkedCalendarEvents";
 import { QueryErrorState } from "@/components/ui/QueryErrorState";
 import { useDivision } from "@/contexts/DivisionContext";
 import { Button } from "@/components/ui/button";
@@ -68,6 +70,7 @@ const ContactDetail = () => {
   const { data: contact, isLoading, error, refetch } = useCRMContact(id || "");
   const { data: allDeals } = useCRMDeals(division);
   const { data: activities } = useCRMActivities({ contactId: id, limit: 10 });
+  const { data: linkedEvents, isLoading: isLoadingEvents } = useLinkedEventsForContact(id);
   const updateContact = useUpdateContact();
   const deleteContact = useDeleteContact();
   const createActivity = useCreateActivity();
@@ -477,6 +480,15 @@ const ContactDetail = () => {
 
           {/* Sidebar */}
           <div className="section-gap-sm">
+            {/* Meeting History */}
+            <RelatedEventsCard
+              title="Meeting History"
+              events={linkedEvents || []}
+              isLoading={isLoadingEvents}
+              emptyMessage="No meetings linked to this contact"
+              onScheduleClick={() => navigate("/portal/calendar")}
+            />
+
             {/* Quick Actions */}
             <Card className="glass-card border-white/10">
               <CardHeader>
