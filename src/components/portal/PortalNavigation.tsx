@@ -16,6 +16,7 @@ import {
   Users,
   FolderOpen,
   ChevronDown,
+  ChevronRight,
   Calendar,
   Settings,
   Shield,
@@ -25,7 +26,10 @@ import {
   Table,
   Moon,
   Sun,
-  HelpCircle
+  HelpCircle,
+  Wand2,
+  Calculator,
+  Send
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -62,6 +66,16 @@ const essentialsItems = [
   { name: "Intake", path: "/portal/intake", icon: ClipboardList, description: "New business opportunities" },
   { name: "Tasks", path: "/portal/tasks", icon: ListTodo, description: "Personal task management" },
   { name: "Notes", path: "/portal/notes", icon: StickyNote, description: "Quick notes and documentation" },
+];
+
+// Tools items with descriptions and colors
+const toolsItems = [
+  { name: "Generators", path: "/portal/generators", icon: Wand2, description: "AI-powered documents", color: "bg-purple-500/20 text-purple-400" },
+  { name: "Templates", path: "/portal/templates", icon: FileText, description: "Division templates", color: "bg-blue-500/20 text-blue-400" },
+  { name: "Calculators", path: "/portal/calculators", icon: Calculator, description: "Financial calculators", color: "bg-amber-500/20 text-amber-400" },
+  { name: "Resources", path: "/portal/resources", icon: FolderOpen, description: "Legal & HR documents", color: "bg-orange-500/20 text-orange-400" },
+  { name: "Requests", path: "/portal/requests", icon: Send, description: "Cards, marketing, BOV", color: "bg-rose-500/20 text-rose-400" },
+  { name: "Notes", path: "/portal/notes", icon: StickyNote, description: "Personal sticky notes", color: "bg-cyan-500/20 text-cyan-400" },
 ];
 
 // Helper to format "Member since" date
@@ -216,17 +230,61 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Tools */}
-              <Link
-                to="/portal/tools"
-                className={cn(
-                  "relative z-10 flex items-center gap-2 text-[15px] font-light transition-all duration-200 hover:scale-105 cursor-pointer",
-                  isToolsActive ? "text-white" : "text-white/70 hover:text-white"
-                )}
-              >
-                <Wrench className="h-4 w-4" />
-                Tools
-              </Link>
+              {/* Tools Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className={cn(
+                    "flex items-center gap-1.5 text-[15px] font-light transition-all duration-200 hover:scale-105",
+                    isToolsActive ? "text-white" : "text-white/70 hover:text-white"
+                  )}>
+                    <Wrench className="h-4 w-4" />
+                    Tools
+                    <ChevronDown className="h-3 w-3 opacity-60" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center" className="w-[400px] p-3 dropdown-premium border-0" sideOffset={12}>
+                  <div className="grid grid-cols-2 gap-2">
+                    {toolsItems.map((item) => {
+                      const Icon = item.icon;
+                      const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
+                      return (
+                        <Link 
+                          key={item.name}
+                          to={item.path} 
+                          className={cn(
+                            "dropdown-premium-item group cursor-pointer",
+                            isActive && "bg-white/10"
+                          )}
+                        >
+                          <div className={cn(
+                            "h-8 w-8 rounded-lg flex items-center justify-center flex-shrink-0",
+                            item.color.split(' ')[0]
+                          )}>
+                            <Icon className={cn("h-4 w-4", item.color.split(' ')[1])} />
+                          </div>
+                          <div className="min-w-0 flex-1 space-y-0">
+                            <p className="text-[13px] font-medium text-white leading-none m-0">
+                              {item.name}
+                            </p>
+                            <p className="text-[11px] text-white/50 leading-relaxed m-0 mt-1">
+                              {item.description}
+                            </p>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                  <div className="border-t border-white/10 mt-3 pt-3">
+                    <Link 
+                      to="/portal/tools"
+                      className="flex items-center justify-center gap-2 text-[12px] text-white/50 hover:text-white transition-colors"
+                    >
+                      View all tools & research
+                      <ChevronRight className="h-3 w-3" />
+                    </Link>
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
               {/* Company */}
               <Link
