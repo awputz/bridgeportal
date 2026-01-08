@@ -15,6 +15,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PoachabilityScore } from "@/components/hr/PoachabilityScore";
 import { AgentFormDialog } from "@/components/hr/AgentFormDialog";
 import { LogInteractionDialog } from "@/components/hr/LogInteractionDialog";
+import { WorkflowActions } from "@/components/hr/WorkflowActions";
+import { AgentInterviewSection } from "@/components/hr/AgentInterviewSection";
+import { AgentOfferSection } from "@/components/hr/AgentOfferSection";
+import { RecruitmentTimeline } from "@/components/hr/RecruitmentTimeline";
+import { ScheduleInterviewDialog } from "@/components/hr/ScheduleInterviewDialog";
 import { 
   useHRAgent, 
   useHRInteractions,
@@ -28,6 +33,8 @@ import {
   divisionLabels,
   statusLabels
 } from "@/hooks/hr/useHRAgents";
+import { useAgentInterviews } from "@/hooks/hr/useHRInterviews";
+import { useAgentOffers } from "@/hooks/hr/useHROffers";
 import { cn } from "@/lib/utils";
 
 const interactionIcons: Record<InteractionType, React.ReactNode> = {
@@ -51,10 +58,13 @@ export default function AgentProfile() {
   
   const { data: agent, isLoading } = useHRAgent(id);
   const { data: interactions = [] } = useHRInteractions(id);
+  const { data: interviews = [], isLoading: interviewsLoading } = useAgentInterviews(id);
+  const { data: offers = [], isLoading: offersLoading } = useAgentOffers(id);
   const updateAgent = useUpdateHRAgent();
 
   const [formOpen, setFormOpen] = useState(false);
   const [interactionOpen, setInteractionOpen] = useState(false);
+  const [interviewOpen, setInterviewOpen] = useState(false);
   const [interactionType, setInteractionType] = useState<InteractionType>('call');
   const [notes, setNotes] = useState('');
   const [isSavingNotes, setIsSavingNotes] = useState(false);
@@ -235,6 +245,16 @@ export default function AgentProfile() {
             </CardContent>
           </Card>
 
+          {/* Recruitment Timeline */}
+          <RecruitmentTimeline
+            agentCreatedAt={agent.created_at}
+            interviews={interviews}
+            offers={offers}
+            interactions={interactions}
+            isHired={agent.recruitment_status === 'hired'}
+            hiredAt={offers.find(o => o.signed_at)?.signed_at}
+          />
+
           {/* Next Action */}
           {agent.next_action && (
             <Card className="border-emerald-500/30 bg-emerald-500/5">
@@ -285,6 +305,32 @@ export default function AgentProfile() {
 
         {/* Right Column */}
         <div className="space-y-6">
+          {/* Workflow Actions */}
+          <WorkflowActions
+            agentId={agent.id}
+            agentName={agent.full_name}
+            recruitmentStatus={agent.recruitment_status as RecruitmentStatus}
+            interviews={interviews}
+            offers={offers}
+            division={agent.division as string}
+            onScheduleInterview={() => setInterviewOpen(true)}
+          />
+
+          {/* Interview History */}
+          <AgentInterviewSection
+            interviews={interviews}
+            isLoading={interviewsLoading}
+            onScheduleInterview={() => setInterviewOpen(true)}
+          />
+
+          {/* Offer History */}
+          <AgentOfferSection
+            offers={offers}
+            agentId={agent.id}
+            division={agent.division as string}
+            isLoading={offersLoading}
+          />
+
           {/* Quick Actions */}
           <Card>
             <CardHeader className="pb-2">
@@ -341,7 +387,7 @@ export default function AgentProfile() {
                 </p>
               ) : (
                 <div className="space-y-4">
-                  {interactions.map((interaction) => (
+                  {interactions.slice(0, 5).map((interaction) => (
                     <div key={interaction.id} className="flex gap-3">
                       <div className="flex-shrink-0 w-8 h-8 rounded-full bg-muted flex items-center justify-center">
                         {interactionIcons[interaction.interaction_type as InteractionType]}
@@ -396,6 +442,12 @@ export default function AgentProfile() {
         agentId={agent.id}
         agentName={agent.full_name}
         defaultType={interactionType}
+      />
+
+      <ScheduleInterviewDialog
+        open={interviewOpen}
+        onOpenChange={setInterviewOpen}
+        preselectedAgentId={agent.id}
       />
     </div>
   );
