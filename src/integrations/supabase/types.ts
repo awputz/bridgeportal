@@ -3103,6 +3103,57 @@ export type Database = {
         }
         Relationships: []
       }
+      hr_campaign_agents: {
+        Row: {
+          agent_id: string
+          campaign_id: string
+          clicked_at: string | null
+          created_at: string
+          email_status: string
+          id: string
+          opened_at: string | null
+          replied_at: string | null
+          sent_at: string | null
+        }
+        Insert: {
+          agent_id: string
+          campaign_id: string
+          clicked_at?: string | null
+          created_at?: string
+          email_status?: string
+          id?: string
+          opened_at?: string | null
+          replied_at?: string | null
+          sent_at?: string | null
+        }
+        Update: {
+          agent_id?: string
+          campaign_id?: string
+          clicked_at?: string | null
+          created_at?: string
+          email_status?: string
+          id?: string
+          opened_at?: string | null
+          replied_at?: string | null
+          sent_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hr_campaign_agents_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "hr_agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hr_campaign_agents_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "hr_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hr_campaigns: {
         Row: {
           created_at: string
