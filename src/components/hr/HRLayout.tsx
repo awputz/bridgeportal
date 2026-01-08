@@ -17,11 +17,13 @@ import {
   FileText,
   BarChart3,
   Settings,
+  ClipboardList,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const mobileNavItems = [
   { name: "Dashboard", path: "/hr/dashboard", icon: LayoutDashboard },
+  { name: "Applications", path: "/hr/applications", icon: ClipboardList },
   { name: "Agent Database", path: "/hr/agents", icon: Users },
   { name: "Pipeline", path: "/hr/pipeline", icon: GitBranch },
   { name: "Outreach", path: "/hr/outreach", icon: Mail },

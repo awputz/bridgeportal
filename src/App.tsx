@@ -39,6 +39,8 @@ const InvestorListings = lazy(() => import("./pages/investor/Listings"));
 // HR pages - lazy loaded
 const HRSignIn = lazy(() => import("./pages/hr/HRSignIn"));
 const HRDashboard = lazy(() => import("./pages/hr/HRDashboard"));
+const HRApplications = lazy(() => import("./pages/hr/Applications"));
+const HRApplicationDetail = lazy(() => import("./pages/hr/ApplicationDetail"));
 const AgentDatabase = lazy(() => import("./pages/hr/AgentDatabase"));
 const AgentProfile = lazy(() => import("./pages/hr/AgentProfile"));
 const RecruitmentPipeline = lazy(() => import("./pages/hr/RecruitmentPipeline"));
@@ -298,6 +300,8 @@ const App = () => {
                   <Route path="/hr" element={<HRLayout />}>
                     <Route index element={<Navigate to="/hr/dashboard" replace />} />
                     <Route path="dashboard" element={<Suspense fallback={<PageLoader />}><HRDashboard /></Suspense>} />
+                    <Route path="applications" element={<Suspense fallback={<PageLoader />}><HRApplications /></Suspense>} />
+                    <Route path="applications/:id" element={<Suspense fallback={<PageLoader />}><HRApplicationDetail /></Suspense>} />
                     <Route path="agents" element={<Suspense fallback={<PageLoader />}><AgentDatabase /></Suspense>} />
                     <Route path="agents/:id" element={<Suspense fallback={<PageLoader />}><AgentProfile /></Suspense>} />
                     <Route path="pipeline" element={<Suspense fallback={<PageLoader />}><RecruitmentPipeline /></Suspense>} />

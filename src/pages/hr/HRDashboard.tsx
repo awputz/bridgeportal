@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, GitBranch, Calendar, FileText, Loader2, ArrowRight } from "lucide-react";
+import { Users, GitBranch, Calendar, FileText, Loader2, ArrowRight, ClipboardList } from "lucide-react";
 import { useHRAnalytics } from "@/hooks/hr/useHRAnalytics";
+import { useAgentApplications } from "@/hooks/useAgentApplications";
 
 export default function HRDashboard() {
   const { data, isLoading } = useHRAnalytics();
+  const { data: applications, isLoading: applicationsLoading } = useAgentApplications();
+  
+  const pendingApplications = applications?.filter(a => a.status === "pending") || [];
 
   const stats = [
     {
@@ -137,13 +141,69 @@ export default function HRDashboard() {
         </Card>
       </div>
 
+      {/* Pending Applications Alert */}
+      {pendingApplications.length > 0 && (
+        <Card className="bg-amber-500/5 border-amber-500/20">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle className="text-lg font-light flex items-center gap-2">
+              <ClipboardList className="h-5 w-5 text-amber-400" />
+              Pending Applications
+            </CardTitle>
+            <Link 
+              to="/hr/applications" 
+              className="text-xs text-amber-400 hover:text-amber-300 flex items-center gap-1"
+            >
+              View All <ArrowRight className="h-3 w-3" />
+            </Link>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-4">
+              {pendingApplications.length} application{pendingApplications.length !== 1 ? 's' : ''} awaiting review
+            </p>
+            <div className="space-y-2">
+              {pendingApplications.slice(0, 3).map((app) => (
+                <Link
+                  key={app.id}
+                  to={`/hr/applications/${app.id}`}
+                  className="flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    {app.headshot_url ? (
+                      <img src={app.headshot_url} alt="" className="h-8 w-8 rounded-full object-cover" />
+                    ) : (
+                      <div className="h-8 w-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                        <span className="text-emerald-400 text-xs font-medium">{app.full_name.charAt(0)}</span>
+                      </div>
+                    )}
+                    <div>
+                      <p className="text-sm font-medium">{app.full_name}</p>
+                      <p className="text-xs text-muted-foreground">{app.divisions.join(', ')}</p>
+                    </div>
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                </Link>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Quick actions */}
       <Card className="bg-white/5 border-white/10">
         <CardHeader>
           <CardTitle className="text-lg font-light">Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <Link to="/hr/applications" className="p-4 rounded-lg bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 transition-colors text-center relative">
+              <ClipboardList className="h-6 w-6 text-amber-400 mx-auto mb-2" />
+              <span className="text-sm font-light">Applications</span>
+              {pendingApplications.length > 0 && (
+                <span className="absolute -top-1 -right-1 h-5 w-5 bg-amber-500 text-xs rounded-full flex items-center justify-center text-black font-medium">
+                  {pendingApplications.length}
+                </span>
+              )}
+            </Link>
             <Link to="/hr/agents" className="p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors text-center">
               <Users className="h-6 w-6 text-emerald-400 mx-auto mb-2" />
               <span className="text-sm font-light">View Agents</span>
@@ -156,8 +216,8 @@ export default function HRDashboard() {
               <Calendar className="h-6 w-6 text-purple-400 mx-auto mb-2" />
               <span className="text-sm font-light">View Interviews</span>
             </Link>
-            <Link to="/hr/offers" className="p-4 rounded-lg bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 transition-colors text-center">
-              <FileText className="h-6 w-6 text-amber-400 mx-auto mb-2" />
+            <Link to="/hr/offers" className="p-4 rounded-lg bg-rose-500/10 border border-rose-500/20 hover:bg-rose-500/20 transition-colors text-center">
+              <FileText className="h-6 w-6 text-rose-400 mx-auto mb-2" />
               <span className="text-sm font-light">View Offers</span>
             </Link>
           </div>
