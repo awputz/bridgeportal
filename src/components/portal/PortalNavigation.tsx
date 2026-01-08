@@ -48,14 +48,14 @@ import { useUserProfile } from "@/hooks/useGoogleServices";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "next-themes";
 
-// Google items - All open externally (expanded list for grid)
+// Google items - Most open externally, Calendar is internal
 const googleItems = [
-  { name: "Gmail", path: "https://mail.google.com", icon: Mail },
-  { name: "Calendar", path: "https://calendar.google.com", icon: Calendar },
-  { name: "Drive", path: "https://drive.google.com", icon: FolderOpen },
-  { name: "Docs", path: "https://docs.google.com", icon: FileText },
-  { name: "Sheets", path: "https://sheets.google.com", icon: Table },
-  { name: "Contacts", path: "https://contacts.google.com", icon: Users },
+  { name: "Gmail", path: "https://mail.google.com", icon: Mail, internal: false },
+  { name: "Calendar", path: "/portal/calendar", icon: Calendar, internal: true },
+  { name: "Drive", path: "https://drive.google.com", icon: FolderOpen, internal: false },
+  { name: "Docs", path: "https://docs.google.com", icon: FileText, internal: false },
+  { name: "Sheets", path: "https://sheets.google.com", icon: Table, internal: false },
+  { name: "Contacts", path: "https://contacts.google.com", icon: Users, internal: false },
 ];
 
 // Essentials items with descriptions
@@ -337,6 +337,20 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                   <div className="grid grid-cols-3 gap-2">
                     {googleItems.map((item) => {
                       const Icon = item.icon;
+                      
+                      if (item.internal) {
+                        return (
+                          <Link
+                            key={item.name}
+                            to={item.path}
+                            className="flex flex-col items-center gap-1.5 p-2 rounded-lg hover:bg-muted/50 transition-colors group"
+                          >
+                            <Icon className="h-5 w-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                            <span className="text-[10px] text-muted-foreground group-hover:text-foreground transition-colors">{item.name}</span>
+                          </Link>
+                        );
+                      }
+                      
                       return (
                         <a
                           key={item.name}
