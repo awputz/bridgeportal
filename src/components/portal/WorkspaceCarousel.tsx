@@ -33,12 +33,16 @@ export const WorkspaceCarousel = () => {
     <div className="w-full">
       {/* Desktop: Side-by-side grid - 62/38 split for Gmail/Calendar */}
       <div className="hidden md:grid md:grid-cols-[62%_38%] gap-3 h-[400px]">
-        <SectionErrorBoundary sectionName="Gmail">
-          <GmailWidget />
-        </SectionErrorBoundary>
-        <SectionErrorBoundary sectionName="Google Calendar">
-          <GoogleCalendarWidget />
-        </SectionErrorBoundary>
+        <div className="min-w-0 overflow-hidden">
+          <SectionErrorBoundary sectionName="Gmail">
+            <GmailWidget />
+          </SectionErrorBoundary>
+        </div>
+        <div className="min-w-0 overflow-hidden">
+          <SectionErrorBoundary sectionName="Google Calendar">
+            <GoogleCalendarWidget />
+          </SectionErrorBoundary>
+        </div>
       </div>
 
       {/* Mobile: Swipeable carousel */}

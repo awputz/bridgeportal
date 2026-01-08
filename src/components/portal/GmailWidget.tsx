@@ -148,7 +148,7 @@ export const GmailWidget = () => {
 
   return (
     <>
-      <Card className="overflow-hidden border-border/50 bg-card h-full">
+      <Card className="overflow-hidden border-border/50 bg-card h-full w-full">
         <CardHeader className="p-3 pb-2">
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -226,7 +226,7 @@ export const GmailWidget = () => {
         </CardHeader>
 
         <CardContent className="p-0 overflow-hidden">
-          <ScrollArea className="h-[440px]">
+          <ScrollArea className="h-[440px] overflow-x-hidden">
             <div className="p-3 overflow-hidden">
               {/* Not connected state */}
               {!isConnected && !isLoading && (
@@ -365,14 +365,14 @@ export const GmailWidget = () => {
 
                       {/* Line 2: Subject */}
                       <p className={cn(
-                        "text-sm truncate mb-px min-w-0 max-w-full leading-tight overflow-hidden",
+                        "text-sm truncate mb-px min-w-0 w-full leading-tight overflow-hidden",
                         message.isUnread ? "font-semibold text-foreground" : "text-foreground/70"
                       )}>
                         {decodeHtmlEntities(message.subject || "(No subject)")}
                       </p>
 
                       {/* Line 3: Snippet/Preview */}
-                      <p className="text-xs text-muted-foreground truncate min-w-0 max-w-full mb-0 leading-tight overflow-hidden whitespace-nowrap">
+                      <p className="text-xs text-muted-foreground truncate min-w-0 w-full mb-0 leading-tight overflow-hidden whitespace-nowrap">
                         {sanitizeEmailText(decodeHtmlEntities(message.snippet || ""))}
                       </p>
                     </button>
