@@ -226,7 +226,7 @@ export const GmailWidget = () => {
         </CardHeader>
 
         <CardContent className="p-0 overflow-hidden">
-          <ScrollArea className="h-[440px] overflow-x-hidden">
+          <ScrollArea className="h-[440px]">
             <div className="p-3 overflow-hidden">
               {/* Not connected state */}
               {!isConnected && !isLoading && (
@@ -284,7 +284,7 @@ export const GmailWidget = () => {
                       key={message.id}
                       onClick={() => handleEmailClick(message.id)}
                       className={cn(
-                        "group block w-full max-w-full px-3 py-2 rounded-md border border-border/30 border-l-2 overflow-hidden text-left",
+                        "group block w-full px-3 py-2 rounded-md border border-border/30 border-l-2 overflow-hidden text-left",
                         "hover:bg-muted/50 hover:border-border/50 transition-colors cursor-pointer",
                         message.isUnread 
                           ? "border-l-blue-500 bg-primary/5" 
@@ -293,7 +293,7 @@ export const GmailWidget = () => {
                       aria-label={`Email from ${message.from?.name || message.from?.email || 'Unknown'}: ${message.subject || '(No subject)'}`}
                     >
                       {/* Line 1: Unread dot + Sender + Quick Actions + Star + Date */}
-                      <div className="flex items-center justify-between gap-2 mb-0.5 min-w-0 max-w-full overflow-hidden">
+                      <div className="flex items-center justify-between gap-2 mb-0.5 min-w-0 w-full overflow-hidden">
                         <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
                           {/* Unread indicator dot - always reserve space for alignment */}
                           <div 
@@ -308,7 +308,7 @@ export const GmailWidget = () => {
                           
                           {/* Sender name */}
                           <span className={cn(
-                            "text-sm truncate min-w-0 max-w-full flex-1 leading-none overflow-hidden",
+                            "text-sm truncate min-w-0 flex-1 leading-none overflow-hidden",
                             message.isUnread ? "font-semibold text-foreground" : "font-medium text-foreground/70"
                           )}>
                             {message.from?.name || message.from?.email || 'Unknown sender'}
