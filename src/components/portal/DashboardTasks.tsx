@@ -16,6 +16,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { QueryErrorState } from "@/components/ui/QueryErrorState";
+import { SPACING, COMPONENT_CLASSES } from "@/lib/spacing";
 
 type FilterType = "today" | "overdue" | "week" | "all";
 
@@ -78,7 +79,7 @@ const TaskItem = ({
           </span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 mt-2">
+        <div className="flex flex-wrap items-center gap-2 mt-1.5">
           <Badge variant="outline" className={cn("text-xs", priorityColors[task.priority as keyof typeof priorityColors] || priorityColors.medium)}>
             {task.priority}
           </Badge>
@@ -132,9 +133,9 @@ export const DashboardTasks = () => {
   ];
 
   return (
-    <div className="glass-card p-4 sm:p-5">
+    <div className="glass-card p-4">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-light text-foreground flex items-center gap-2">
+        <h2 className="text-lg font-light text-foreground flex items-center gap-3">
           <ListTodo className="h-5 w-5 text-muted-foreground" />
           Tasks
         </h2>

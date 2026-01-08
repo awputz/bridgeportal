@@ -4,6 +4,7 @@ import { useCRMStats } from "@/hooks/useCRM";
 import { useDivision } from "@/contexts/DivisionContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { QueryErrorState } from "@/components/ui/QueryErrorState";
+import { SPACING, COMPONENT_CLASSES } from "@/lib/spacing";
 
 const formatCurrency = (value: number) => {
   if (value >= 1000000) {
@@ -101,7 +102,7 @@ export const DashboardStats = () => {
             key={stat.label}
             className="glass-card p-4 flex flex-col justify-between min-h-[88px]"
           >
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-1.5">
               <span className="text-xs text-muted-foreground font-light leading-none">
                 {stat.label}
               </span>
