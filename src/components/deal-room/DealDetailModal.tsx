@@ -64,6 +64,7 @@ import { DealMatches } from "./DealMatches";
 import { DealRoomPhotoGallery } from "./DealRoomPhotoGallery";
 import { PLACEHOLDER_IMAGES } from "@/lib/placeholders";
 import { cn } from "@/lib/utils";
+import { SPACING, COMPONENT_CLASSES } from "@/lib/spacing";
 
 interface DealDetailModalProps {
   dealId: string | null;
@@ -103,13 +104,13 @@ const MetricCard = memo(function MetricCard({
 }) {
   if (!value) return null;
   return (
-    <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-muted/30 border border-border/30">
-      <div className="h-8 w-8 rounded-md bg-primary/10 flex items-center justify-center flex-shrink-0">
+    <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border/30">
+      <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
         <Icon className="h-3.5 w-3.5 text-primary" />
       </div>
       <div className="min-w-0 flex-1 space-y-0">
         <p className="text-[10px] text-muted-foreground uppercase tracking-wide m-0 leading-none">{label}</p>
-        <p className="text-sm font-semibold truncate m-0 leading-none mt-0.5">{value}</p>
+        <p className="text-sm font-semibold truncate m-0 leading-none mt-1.5">{value}</p>
       </div>
     </div>
   );
@@ -278,7 +279,7 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
 
               {/* Photo Thumbnail Strip - below hero */}
               {photoCount > 1 && (
-                <div className="flex gap-1.5 p-2 px-4 border-b border-border/30 overflow-x-auto">
+                <div className="flex gap-2 p-3 px-4 border-b border-border/30 overflow-x-auto">
                   {photos?.slice(0, 8).map((photo) => (
                     <button
                       key={photo.id}
@@ -299,7 +300,7 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
               )}
 
               {/* Content Section */}
-              <div className="p-4 md:p-5 space-y-4">
+              <div className="p-4 md:p-6 space-y-4">
                 {/* Agent Info - Compact card */}
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border/30">
                   <Avatar className="h-10 w-10 flex-shrink-0">
@@ -349,7 +350,7 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                 </div>
 
                 {/* Key Metrics - Compact Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   <MetricCard 
                     icon={DollarSign} 
                     label="Value" 
@@ -403,7 +404,7 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                     </div>
                   </div>
                 ) : deal.deal_room_notes || isOwner ? (
-                  <div className="p-2.5 rounded-lg bg-muted/30 border border-border/30 group/notes relative">
+                  <div className="p-3 rounded-lg bg-muted/30 border border-border/30 group/notes relative">
                     {deal.deal_room_notes ? (
                       <p className="text-sm italic text-muted-foreground leading-relaxed pr-8 m-0">
                         "{deal.deal_room_notes}"
@@ -467,7 +468,7 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                     </TabsTrigger>
                   </TabsList>
 
-                  <div className="mt-3">
+                  <div className="mt-4">
                     <TabsContent value="photos" className="m-0">
                       <DealRoomPhotoGallery dealId={deal.id} isOwner={isOwner} />
                     </TabsContent>
