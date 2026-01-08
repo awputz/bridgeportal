@@ -37,7 +37,7 @@ async function refreshAccessToken(refreshToken: string) {
   };
 }
 
-// Helper to ensure valid token (pre-emptive refresh)
+// Helper to ensure valid token (refresh only when actually expired)
 async function ensureValidToken(
   supabase: any,
   userId: string,
@@ -48,14 +48,19 @@ async function ensureValidToken(
   const refreshToken = tokenData?.contacts_refresh_token || tokenData?.refresh_token;
   const tokenExpiry = tokenData?.token_expiry ? new Date(tokenData.token_expiry) : null;
   
+  console.log('[google-contacts-list] Token check - hasAccess:', !!accessToken, 'hasRefresh:', !!refreshToken, 'expiry:', tokenExpiry?.toISOString());
+  
   if (!accessToken && !refreshToken) {
+    console.log('[google-contacts-list] No tokens available');
     return { accessToken: null, error: 'Contacts not connected', needsReconnection: true };
   }
   
-  // Check if token is expired or will expire in next 5 minutes
+  // Check if token is expired or will expire in next 10 minutes (increased buffer)
   const now = new Date();
-  const bufferMs = 5 * 60 * 1000; // 5 minutes buffer
+  const bufferMs = 10 * 60 * 1000; // 10 minutes buffer
   const isExpired = tokenExpiry && (tokenExpiry.getTime() - now.getTime()) < bufferMs;
+  
+  console.log('[google-contacts-list] Token expired:', isExpired, '- time until expiry:', tokenExpiry ? Math.round((tokenExpiry.getTime() - now.getTime()) / 1000 / 60) + ' min' : 'unknown');
   
   if (isExpired && refreshToken) {
     const refreshResult = await refreshAccessToken(refreshToken);
@@ -174,27 +179,40 @@ serve(async (req) => {
       console.error("[google-contacts-list] Token query error:", tokenError);
     }
 
-    // Handle check-connection action
+    // Handle check-connection action - just check DB status, don't trigger token refresh
     if (action === 'check-connection') {
+      console.log('[google-contacts-list] Check connection - tokenData:', !!tokenData);
+      
       if (!tokenData) {
         return new Response(
-          JSON.stringify({ connected: false, reason: 'no_tokens' }),
+          JSON.stringify({ connected: false, reason: 'no_tokens', needsReconnect: true }),
           { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
       
-      // Validate token by attempting refresh if expired
-      const tokenResult = await ensureValidToken(supabase, user.id, tokenData);
+      // Check connection status from DB only - don't trigger refresh
+      const hasTokens = !!(tokenData.contacts_access_token || tokenData.access_token);
+      const hasRefreshToken = !!(tokenData.contacts_refresh_token || tokenData.refresh_token);
+      const isEnabled = tokenData.contacts_enabled === true;
       
-      if (tokenResult.needsReconnection) {
-        return new Response(
-          JSON.stringify({ connected: false, reason: 'token_expired', message: tokenResult.error }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
+      // Check if token is expired
+      const tokenExpiry = tokenData.token_expiry ? new Date(tokenData.token_expiry) : null;
+      const now = new Date();
+      const isExpired = tokenExpiry && tokenExpiry.getTime() < now.getTime();
+      
+      console.log('[google-contacts-list] Connection status - hasTokens:', hasTokens, 'hasRefresh:', hasRefreshToken, 'enabled:', isEnabled, 'expired:', isExpired);
+      
+      // If tokens are expired but we have refresh token, consider it connected (will refresh on actual use)
+      const connected = isEnabled && (hasTokens || hasRefreshToken);
+      const needsReconnect = isExpired && !hasRefreshToken;
       
       return new Response(
-        JSON.stringify({ connected: true, contacts_enabled: tokenData.contacts_enabled }),
+        JSON.stringify({ 
+          connected, 
+          contacts_enabled: isEnabled,
+          needsReconnect,
+          reason: !connected ? (isExpired ? 'token_expired' : 'not_enabled') : undefined
+        }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
