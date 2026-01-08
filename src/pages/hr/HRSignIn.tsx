@@ -127,7 +127,7 @@ export default function HRSignIn() {
             <img 
               src="/lovable-uploads/bridge-careers-logo.png" 
               alt="Bridge Careers" 
-              className="h-16 mx-auto"
+              className="h-64 mx-auto"
             />
             <div>
               <h1 className="text-2xl font-extralight tracking-tight">
