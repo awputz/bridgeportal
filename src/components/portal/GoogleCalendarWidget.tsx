@@ -55,6 +55,18 @@ export const GoogleCalendarWidget = () => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [defaultEventTime, setDefaultEventTime] = useState<Date | null>(null);
 
+  // Get timezone abbreviation
+  const timezone = useMemo(() => {
+    try {
+      const formatter = new Intl.DateTimeFormat('en-US', { timeZoneName: 'short' });
+      const parts = formatter.formatToParts(new Date());
+      const tzPart = parts.find(p => p.type === 'timeZoneName');
+      return tzPart?.value || 'Local';
+    } catch {
+      return 'Local';
+    }
+  }, []);
+
   // Calendar connection and data
   const { data: googleCalConnection, isLoading: calConnectionLoading } = useGoogleCalendarConnection();
   
@@ -239,12 +251,10 @@ export const GoogleCalendarWidget = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-emerald-400" />
-                <span className="text-sm font-semibold">Calendar</span>
-                {allEvents.length > 0 && (
-                  <span className="text-xs bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded-full font-medium">
-                    {allEvents.length}
-                  </span>
-                )}
+                <span className="text-sm font-semibold">{format(selectedDate, "MMMM yyyy")}</span>
+                <span className="text-[10px] text-muted-foreground bg-muted/40 px-1.5 py-0.5 rounded font-medium">
+                  {timezone}
+                </span>
               </div>
               <div className="flex items-center gap-1">
                 {isConnected && (

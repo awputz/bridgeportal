@@ -164,18 +164,6 @@ export const CalendarWidgetMultiDayView = ({
 
   return (
     <div className="flex flex-col h-full">
-      {/* Month/Year Header with Timezone */}
-      <div className="flex items-center justify-between px-3 py-2 border-b border-border/30">
-        <div className="flex items-baseline gap-2">
-          <span className="text-base font-extralight tracking-wide text-foreground">
-            {format(startDate, "MMMM yyyy")}
-          </span>
-          <span className="text-[10px] text-muted-foreground bg-muted/40 px-1.5 py-0.5 rounded font-medium">
-            {timezone}
-          </span>
-        </div>
-      </div>
-
       {/* Day Headers */}
       <div className="flex border-b border-border/30">
         {/* Time column spacer */}
