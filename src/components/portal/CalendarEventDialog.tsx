@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { format, addHours, setHours, setMinutes } from "date-fns";
+import { format, addHours, setHours, setMinutes, parse, isValid } from "date-fns";
 import {
   Calendar as CalendarIcon,
   Clock,
@@ -12,6 +12,8 @@ import {
   Video,
   X,
   ChevronDown,
+  Target,
+  Link2,
 } from "lucide-react";
 import {
   Dialog,
@@ -39,6 +41,10 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { CalendarEvent } from "@/hooks/useCalendarEvents";
+import { SmartTitleInput } from "@/components/calendar/SmartTitleInput";
+import { TemplateQuickPicker } from "@/components/calendar/TemplateQuickPicker";
+import { LinkToRecordPicker } from "@/components/calendar/LinkToRecordPicker";
+import { TemplateData } from "@/hooks/useCalendarTemplates";
 
 // Google Calendar color palette
 const EVENT_COLORS = [
@@ -54,6 +60,7 @@ const EVENT_COLORS = [
   { id: "10", name: "Basil", color: "#0b8043" },
   { id: "11", name: "Tomato", color: "#d50000" },
   { id: "12", name: "Default", color: "#4285f4" },
+  { id: "focus", name: "Focus Time", color: "#9333ea" },
 ];
 
 const REMINDER_OPTIONS = [
@@ -81,7 +88,7 @@ interface CalendarEventDialogProps {
   event?: CalendarEvent | null;
   defaultDate?: Date;
   defaultTime?: string;
-  onSave?: (event: Partial<CalendarEvent>) => void;
+  onSave?: (event: Partial<CalendarEvent> & { linkedDealId?: string; linkedContactId?: string }) => void;
   onDelete?: (eventId: string) => void;
 }
 
@@ -111,6 +118,11 @@ export function CalendarEventDialog({
   const [guests, setGuests] = useState("");
   const [addMeet, setAddMeet] = useState(false);
   const [showMoreOptions, setShowMoreOptions] = useState(false);
+  const [eventType, setEventType] = useState<string>("personal");
+  
+  // CRM linking state
+  const [linkedDealId, setLinkedDealId] = useState<string | null>(null);
+  const [linkedContactId, setLinkedContactId] = useState<string | null>(null);
 
   // Reset form when dialog opens/closes or event changes
   useEffect(() => {
@@ -128,6 +140,10 @@ export function CalendarEventDialog({
           setEndTime(format(end, "HH:mm"));
         }
         setAllDay(event.all_day || false);
+        setEventType(event.event_type || "personal");
+        if (event.event_type === "focus_time") {
+          setColorId("focus");
+        }
       } else {
         // New event
         const baseDate = defaultDate || new Date();
@@ -153,9 +169,91 @@ export function CalendarEventDialog({
         setRecurrence("none");
         setGuests("");
         setAddMeet(false);
+        setEventType("personal");
+        setLinkedDealId(null);
+        setLinkedContactId(null);
       }
     }
   }, [open, event, defaultDate, defaultTime]);
+
+  // Handle template selection
+  const handleTemplateSelect = (template: TemplateData & { name: string }) => {
+    if (template.title_pattern) {
+      setTitle(template.title_pattern);
+    }
+    if (template.duration) {
+      const [hours, minutes] = startTime.split(":").map(Number);
+      const endMinutes = hours * 60 + minutes + template.duration;
+      const endHours = Math.floor(endMinutes / 60) % 24;
+      const endMins = endMinutes % 60;
+      setEndTime(`${endHours.toString().padStart(2, "0")}:${endMins.toString().padStart(2, "0")}`);
+    }
+    if (template.location) {
+      setLocation(template.location);
+    }
+    if (template.description) {
+      setDescription(template.description);
+    }
+    if (template.color) {
+      // Find matching color or default
+      const colorMatch = EVENT_COLORS.find(c => c.color.toLowerCase() === template.color?.toLowerCase());
+      if (colorMatch) setColorId(colorMatch.id);
+    }
+    if (template.event_type) {
+      setEventType(template.event_type);
+      if (template.event_type === "focus_time") {
+        setColorId("focus");
+      }
+    }
+  };
+
+  // Handle parsed natural language input
+  const handleParsedAccept = (parsed: {
+    title: string;
+    date: string | null;
+    time: string | null;
+    duration: number;
+    all_day: boolean;
+    location: string | null;
+  }) => {
+    if (parsed.date) {
+      try {
+        const parsedDate = parse(parsed.date, "yyyy-MM-dd", new Date());
+        if (isValid(parsedDate)) {
+          setStartDate(parsedDate);
+          setEndDate(parsedDate);
+        }
+      } catch {}
+    }
+    if (parsed.time) {
+      setStartTime(parsed.time);
+      // Calculate end time based on duration
+      const [hours, minutes] = parsed.time.split(":").map(Number);
+      const endMinutes = hours * 60 + minutes + parsed.duration;
+      const endHours = Math.floor(endMinutes / 60) % 24;
+      const endMins = endMinutes % 60;
+      setEndTime(`${endHours.toString().padStart(2, "0")}:${endMins.toString().padStart(2, "0")}`);
+    }
+    if (parsed.all_day) {
+      setAllDay(true);
+    }
+    if (parsed.location) {
+      setLocation(parsed.location);
+    }
+  };
+
+  // Quick Focus Time creation
+  const handleFocusTimeQuickCreate = () => {
+    setTitle("Focus Time 🎯");
+    setEventType("focus_time");
+    setColorId("focus");
+    // Set 2-hour duration
+    const [hours, minutes] = startTime.split(":").map(Number);
+    const endMinutes = hours * 60 + minutes + 120; // 2 hours
+    const endHours = Math.floor(endMinutes / 60) % 24;
+    const endMins = endMinutes % 60;
+    setEndTime(`${endHours.toString().padStart(2, "0")}:${endMins.toString().padStart(2, "0")}`);
+  };
 
   const handleSave = () => {
     if (!title.trim()) return;
@@ -179,7 +277,9 @@ export function CalendarEventDialog({
       start_time: start.toISOString(),
       end_time: end.toISOString(),
       all_day: allDay,
-      event_type: "personal",
+      event_type: eventType,
+      linkedDealId: linkedDealId || undefined,
+      linkedContactId: linkedContactId || undefined,
     });
     
     onOpenChange(false);
@@ -190,6 +290,11 @@ export function CalendarEventDialog({
       onDelete(event.id);
       onOpenChange(false);
     }
+  };
+
+  const handleUnlinkRecord = () => {
+    setLinkedDealId(null);
+    setLinkedContactId(null);
   };
 
   const selectedColor = EVENT_COLORS.find(c => c.id === colorId) || EVENT_COLORS[11];
@@ -222,17 +327,32 @@ export function CalendarEventDialog({
         </DialogHeader>
 
         <div className="p-4 form-section max-h-[70vh] overflow-y-auto">
-          {/* Title */}
-          <Input
-            placeholder="Add title"
+          {/* Template picker for new events */}
+          {!isEditing && (
+            <div className="flex items-center gap-2 mb-4">
+              <TemplateQuickPicker onSelect={handleTemplateSelect} />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleFocusTimeQuickCreate}
+                className="gap-2"
+              >
+                <Target className="h-4 w-4" />
+                Focus Time
+              </Button>
+            </div>
+          )}
+
+          {/* Smart Title Input */}
+          <SmartTitleInput
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={setTitle}
+            onParsedAccept={handleParsedAccept}
             className="text-xl border-0 border-b rounded-none px-0 focus-visible:ring-0 focus-visible:border-primary"
-            autoFocus
           />
 
           {/* Date & Time */}
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-3 mt-4">
             <Clock className="h-5 w-5 text-muted-foreground mt-2.5" />
             <div className="flex-1 space-y-2">
               <div className="flex items-center gap-2 flex-wrap">
@@ -326,21 +446,29 @@ export function CalendarEventDialog({
             />
           </div>
 
-          {/* Add Google Meet */}
+          {/* Add Google Meet / Focus Time indicator */}
           <div className="flex items-center gap-3">
             <Video className="h-5 w-5 text-muted-foreground" />
-            <Button
-              variant={addMeet ? "default" : "outline"}
-              size="sm"
-              onClick={() => setAddMeet(!addMeet)}
-              className={cn(
-                "gap-2",
-                addMeet && "bg-gcal-blue hover:bg-gcal-blue/90"
+            <div className="flex gap-2">
+              <Button
+                variant={addMeet ? "default" : "outline"}
+                size="sm"
+                onClick={() => setAddMeet(!addMeet)}
+                className={cn(
+                  "gap-2",
+                  addMeet && "bg-gcal-blue hover:bg-gcal-blue/90"
+                )}
+              >
+                <Video className="h-4 w-4" />
+                {addMeet ? "Google Meet added" : "Add Google Meet"}
+              </Button>
+              {eventType === "focus_time" && (
+                <div className="flex items-center gap-1 px-2 py-1 bg-purple-500/20 text-purple-400 rounded-md text-xs">
+                  <Target className="h-3 w-3" />
+                  Focus Time
+                </div>
               )}
-            >
-              <Video className="h-4 w-4" />
-              {addMeet ? "Google Meet added" : "Add Google Meet"}
-            </Button>
+            </div>
           </div>
 
           {/* Description */}
@@ -366,7 +494,22 @@ export function CalendarEventDialog({
           </Button>
 
           {showMoreOptions && (
-            <div className="form-section pt-2 border-t border-border/50">
+            <div className="form-section pt-2 border-t border-border/50 space-y-4">
+              {/* CRM Linking */}
+              <LinkToRecordPicker
+                linkedDealId={linkedDealId}
+                linkedContactId={linkedContactId}
+                onLinkDeal={(id) => {
+                  setLinkedDealId(id);
+                  setLinkedContactId(null);
+                }}
+                onLinkContact={(id) => {
+                  setLinkedContactId(id);
+                  setLinkedDealId(null);
+                }}
+                onUnlink={handleUnlinkRecord}
+              />
+
               {/* Guests */}
               <div className="flex items-center gap-3">
                 <Users className="h-5 w-5 text-muted-foreground" />
@@ -413,7 +556,14 @@ export function CalendarEventDialog({
                       {EVENT_COLORS.map((color) => (
                         <button
                           key={color.id}
-                          onClick={() => setColorId(color.id)}
+                          onClick={() => {
+                            setColorId(color.id);
+                            if (color.id === "focus") {
+                              setEventType("focus_time");
+                            } else if (eventType === "focus_time") {
+                              setEventType("personal");
+                            }
+                          }}
                           className={cn(
                             "w-8 h-8 rounded-full transition-all hover:scale-110",
                             colorId === color.id && "ring-2 ring-offset-2 ring-primary"
