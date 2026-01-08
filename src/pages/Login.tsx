@@ -30,6 +30,8 @@ const Login = () => {
   const [showEmailLogin, setShowEmailLogin] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const navigate = useNavigate();
+  const { data: isAdmin } = useIsAdmin();
+  
   useEffect(() => {
     const {
       data: {
@@ -179,8 +181,6 @@ const Login = () => {
         <Loader2 className="h-8 w-8 animate-spin text-foreground/60" />
       </div>;
   }
-
-  const { data: isAdmin } = useIsAdmin();
 
   // If user is already logged in, show options
   if (existingUser) {
