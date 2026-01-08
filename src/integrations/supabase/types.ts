@@ -3037,6 +3037,267 @@ export type Database = {
         }
         Relationships: []
       }
+      hr_agents: {
+        Row: {
+          annual_production: number | null
+          created_at: string
+          created_by: string | null
+          current_brokerage: string | null
+          division: string | null
+          email: string | null
+          full_name: string
+          id: string
+          last_contacted_at: string | null
+          linkedin_url: string | null
+          next_action: string | null
+          notes: string | null
+          phone: string | null
+          photo_url: string | null
+          poachability_score: number | null
+          recruitment_status: string
+          source: string | null
+          updated_at: string
+          years_experience: number | null
+        }
+        Insert: {
+          annual_production?: number | null
+          created_at?: string
+          created_by?: string | null
+          current_brokerage?: string | null
+          division?: string | null
+          email?: string | null
+          full_name: string
+          id?: string
+          last_contacted_at?: string | null
+          linkedin_url?: string | null
+          next_action?: string | null
+          notes?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          poachability_score?: number | null
+          recruitment_status?: string
+          source?: string | null
+          updated_at?: string
+          years_experience?: number | null
+        }
+        Update: {
+          annual_production?: number | null
+          created_at?: string
+          created_by?: string | null
+          current_brokerage?: string | null
+          division?: string | null
+          email?: string | null
+          full_name?: string
+          id?: string
+          last_contacted_at?: string | null
+          linkedin_url?: string | null
+          next_action?: string | null
+          notes?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          poachability_score?: number | null
+          recruitment_status?: string
+          source?: string | null
+          updated_at?: string
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
+      hr_campaigns: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          division: string | null
+          email_subject: string | null
+          email_template: string | null
+          id: string
+          name: string
+          opened_count: number | null
+          replied_count: number | null
+          sent_count: number | null
+          status: string
+          target_count: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          division?: string | null
+          email_subject?: string | null
+          email_template?: string | null
+          id?: string
+          name: string
+          opened_count?: number | null
+          replied_count?: number | null
+          sent_count?: number | null
+          status?: string
+          target_count?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          division?: string | null
+          email_subject?: string | null
+          email_template?: string | null
+          id?: string
+          name?: string
+          opened_count?: number | null
+          replied_count?: number | null
+          sent_count?: number | null
+          status?: string
+          target_count?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      hr_interactions: {
+        Row: {
+          agent_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          interaction_date: string
+          interaction_type: string
+          notes: string | null
+          outcome: string | null
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          interaction_date?: string
+          interaction_type: string
+          notes?: string | null
+          outcome?: string | null
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          interaction_date?: string
+          interaction_type?: string
+          notes?: string | null
+          outcome?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hr_interactions_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "hr_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hr_interviews: {
+        Row: {
+          agent_id: string
+          created_at: string
+          created_by: string | null
+          decision: string | null
+          id: string
+          interview_date: string
+          interview_type: string | null
+          interviewer_name: string
+          notes: string | null
+          scorecard: Json | null
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string
+          created_by?: string | null
+          decision?: string | null
+          id?: string
+          interview_date: string
+          interview_type?: string | null
+          interviewer_name: string
+          notes?: string | null
+          scorecard?: Json | null
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string
+          created_by?: string | null
+          decision?: string | null
+          id?: string
+          interview_date?: string
+          interview_type?: string | null
+          interviewer_name?: string
+          notes?: string | null
+          scorecard?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hr_interviews_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "hr_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hr_offers: {
+        Row: {
+          agent_id: string
+          commission_split: string | null
+          created_at: string
+          created_by: string | null
+          declined_at: string | null
+          division: string
+          id: string
+          sent_at: string | null
+          signed_at: string | null
+          signing_bonus: number | null
+          special_terms: string | null
+          start_date: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          agent_id: string
+          commission_split?: string | null
+          created_at?: string
+          created_by?: string | null
+          declined_at?: string | null
+          division: string
+          id?: string
+          sent_at?: string | null
+          signed_at?: string | null
+          signing_bonus?: number | null
+          special_terms?: string | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: string
+          commission_split?: string | null
+          created_at?: string
+          created_by?: string | null
+          declined_at?: string | null
+          division?: string
+          id?: string
+          sent_at?: string | null
+          signed_at?: string | null
+          signing_bonus?: number | null
+          special_terms?: string | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hr_offers_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "hr_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       inquiries: {
         Row: {
           assignment_type: string | null
@@ -4055,6 +4316,7 @@ export type Database = {
       }
       is_admin_or_agent: { Args: { _user_id: string }; Returns: boolean }
       is_admin_user: { Args: { _user_id: string }; Returns: boolean }
+      is_hr_admin: { Args: { _user_id: string }; Returns: boolean }
       is_valid_phone: { Args: { phone_number: string }; Returns: boolean }
       log_client_error: {
         Args: {
@@ -4071,7 +4333,7 @@ export type Database = {
       refresh_agent_dashboard_stats: { Args: never; Returns: undefined }
     }
     Enums: {
-      app_role: "admin" | "agent" | "user" | "investor"
+      app_role: "admin" | "agent" | "user" | "investor" | "hr_admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -4199,7 +4461,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "agent", "user", "investor"],
+      app_role: ["admin", "agent", "user", "investor", "hr_admin"],
     },
   },
 } as const

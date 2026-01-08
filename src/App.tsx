@@ -11,6 +11,7 @@ import { Loader2 } from "lucide-react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { PortalLayout } from "@/components/portal/PortalLayout";
 import { InvestorLayout } from "@/components/investor/InvestorLayout";
+import { HRLayout } from "@/components/hr/HRLayout";
 import { DivisionProvider } from "@/contexts/DivisionContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ContactSheetProvider } from "@/contexts/ContactSheetContext";
@@ -34,6 +35,10 @@ const InvestorReports = lazy(() => import("./pages/investor/Reports"));
 const InvestorAgentRequests = lazy(() => import("./pages/investor/AgentRequests"));
 const InvestorCommissionRequests = lazy(() => import("./pages/investor/CommissionRequests"));
 const InvestorListings = lazy(() => import("./pages/investor/Listings"));
+
+// HR pages - lazy loaded
+const HRSignIn = lazy(() => import("./pages/hr/HRSignIn"));
+const HRDashboard = lazy(() => import("./pages/hr/HRDashboard"));
 
 // Auth callback - lazy loaded
 const AuthCallback = lazy(() => import("./pages/AuthCallback"));
@@ -270,6 +275,20 @@ const App = () => {
                     <Route path="commissions" element={<Suspense fallback={<PageLoader />}><InvestorCommissions /></Suspense>} />
                     <Route path="reports" element={<Suspense fallback={<PageLoader />}><InvestorReports /></Suspense>} />
                   </Route>
+                  
+                  {/* HR Login */}
+                  <Route path="/hr/signin" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <HRSignIn />
+                    </Suspense>
+                  } />
+                  
+                  {/* HR Portal Routes */}
+                  <Route path="/hr" element={<HRLayout />}>
+                    <Route index element={<Navigate to="/hr/dashboard" replace />} />
+                    <Route path="dashboard" element={<Suspense fallback={<PageLoader />}><HRDashboard /></Suspense>} />
+                  </Route>
+                  
                   {/* Portal Routes (Protected) */}
                   <Route path="/portal" element={<PortalLayout />}>
                     <Route index element={<Dashboard />} />
