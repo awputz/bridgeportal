@@ -244,17 +244,17 @@ All colors MUST be HSL.
      PREMIUM DROPDOWN MENU STYLING
      ======================================== */
   
-  .dropdown-premium {
-    background: hsl(0 0% 12% / 0.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid hsl(0 0% 100% / 0.08);
-    border-radius: 16px;
-    padding: 6px;
-    box-shadow: 
-      0 25px 50px -12px rgba(0, 0, 0, 0.5),
-      0 0 0 1px rgba(255, 255, 255, 0.05);
-  }
+.dropdown-premium {
+  background: hsl(0 0% 8% / 0.98);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid hsl(0 0% 100% / 0.12);
+  border-radius: 16px;
+  padding: 6px;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
 
   .dropdown-premium-item {
     display: flex;
@@ -265,20 +265,20 @@ All colors MUST be HSL.
     transition: background 0.2s ease;
   }
 
-  .dropdown-premium-item:hover {
-    background: hsl(0 0% 100% / 0.06);
-  }
+.dropdown-premium-item:hover {
+  background: hsl(0 0% 100% / 0.10);
+}
 
   /* ========================================
      LIQUID GLASS EFFECTS
      ======================================== */
   
-  .glass-nav {
-    @apply bg-black/50 backdrop-blur-2xl border border-white/10 rounded-xl;
-    box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  }
+.glass-nav {
+  @apply bg-black/70 backdrop-blur-2xl border border-white/15 rounded-xl;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
   
   .glass-dropdown {
     @apply bg-black/70 backdrop-blur-3xl border border-white/15 rounded-xl;
