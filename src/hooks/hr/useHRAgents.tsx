@@ -183,6 +183,40 @@ export function useCreateHRInteraction() {
   });
 }
 
+export function useUpdateAgentStatus() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, status }: { id: string; status: RecruitmentStatus }) => {
+      const { data, error } = await supabase
+        .from('hr_agents')
+        .update({ recruitment_status: status })
+        .eq('id', id)
+        .select()
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    onMutate: async ({ id, status }) => {
+      await queryClient.cancelQueries({ queryKey: ['hr-agents'] });
+      const previousAgents = queryClient.getQueryData(['hr-agents']);
+      
+      queryClient.setQueryData(['hr-agents'], (old: HRAgent[] | undefined) => 
+        old?.map(a => a.id === id ? { ...a, recruitment_status: status } : a)
+      );
+      
+      return { previousAgents };
+    },
+    onError: (err, variables, context) => {
+      queryClient.setQueryData(['hr-agents'], context?.previousAgents);
+      toast.error('Failed to update status');
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['hr-agents'] });
+    },
+  });
+}
+
 // Utility functions
 export const formatProduction = (amount: number | null) => {
   if (!amount) return '-';

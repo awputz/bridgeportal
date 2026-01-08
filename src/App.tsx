@@ -41,6 +41,7 @@ const HRSignIn = lazy(() => import("./pages/hr/HRSignIn"));
 const HRDashboard = lazy(() => import("./pages/hr/HRDashboard"));
 const AgentDatabase = lazy(() => import("./pages/hr/AgentDatabase"));
 const AgentProfile = lazy(() => import("./pages/hr/AgentProfile"));
+const RecruitmentPipeline = lazy(() => import("./pages/hr/RecruitmentPipeline"));
 
 // Auth callback - lazy loaded
 const AuthCallback = lazy(() => import("./pages/AuthCallback"));
@@ -291,6 +292,7 @@ const App = () => {
                     <Route path="dashboard" element={<Suspense fallback={<PageLoader />}><HRDashboard /></Suspense>} />
                     <Route path="agents" element={<Suspense fallback={<PageLoader />}><AgentDatabase /></Suspense>} />
                     <Route path="agents/:id" element={<Suspense fallback={<PageLoader />}><AgentProfile /></Suspense>} />
+                    <Route path="pipeline" element={<Suspense fallback={<PageLoader />}><RecruitmentPipeline /></Suspense>} />
                   </Route>
                   
                   {/* Portal Routes (Protected) */}
