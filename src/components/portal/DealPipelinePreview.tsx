@@ -5,6 +5,7 @@ import { useDivision } from "@/contexts/DivisionContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { QueryErrorState } from "@/components/ui/QueryErrorState";
+import { SPACING, COMPONENT_CLASSES } from "@/lib/spacing";
 
 export const DealPipelinePreview = () => {
   const { division } = useDivision();
@@ -40,9 +41,9 @@ export const DealPipelinePreview = () => {
   }
 
   return (
-    <div className="glass-card p-4 sm:p-5">
+    <div className="glass-card p-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-light text-muted-foreground flex items-center gap-2">
+        <h3 className="text-sm font-light text-muted-foreground flex items-center gap-3">
           <Briefcase className="h-4 w-4" />
           Deal Pipeline
         </h3>

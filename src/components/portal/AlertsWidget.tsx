@@ -21,6 +21,7 @@ import { useAgentDashboardStats } from "@/hooks/useAgentDashboardStats";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { SPACING, COMPONENT_CLASSES } from "@/lib/spacing";
 
 interface AlertItem {
   id: string;
@@ -155,9 +156,9 @@ export const AlertsWidget = () => {
 
   return (
     <Card className="glass-card">
-      <CardHeader className="pb-2">
+      <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-lg">
+          <CardTitle className="flex items-center gap-3 text-lg">
             <CalendarClock className="h-5 w-5 text-primary" />
             Priorities
             {isRefreshing && (
@@ -175,7 +176,7 @@ export const AlertsWidget = () => {
       <CardContent>
         <ScrollArea className="h-[260px]">
           {isLoading ? (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {Array.from({ length: 3 }).map((_, i) => (
                 <Skeleton key={i} className="h-16 w-full rounded" />
               ))}
@@ -217,7 +218,7 @@ export const AlertsWidget = () => {
                           {alert.title}
                         </span>
                         {alert.subtitle && (
-                          <span className="text-xs text-muted-foreground truncate mt-0.5 leading-none">
+                          <span className="text-xs text-muted-foreground truncate mt-1 leading-none">
                             {alert.subtitle}
                           </span>
                         )}

@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { useDealRoomDeals, useDealRoomStats } from "@/hooks/useDealRoom";
 import { QueryErrorState } from "@/components/ui/QueryErrorState";
 import { formatDistanceToNow } from "date-fns";
+import { SPACING, COMPONENT_CLASSES } from "@/lib/spacing";
 
 const formatValue = (value: number | null) => {
   if (!value) return "—";
@@ -28,7 +29,7 @@ export function DealRoomWidget() {
     <Card className="h-full flex flex-col">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-base font-medium">
+          <CardTitle className="flex items-center gap-3 text-base font-medium">
             <Handshake className="h-4 w-4 text-cyan-500 flex-shrink-0" />
             Deal Room
           </CardTitle>
@@ -45,7 +46,7 @@ export function DealRoomWidget() {
       <CardContent className="flex-1 flex flex-col pt-0">
         {/* Quick Stats */}
         <div className="flex gap-3 mb-4">
-        <div className="flex-1 rounded-lg bg-muted/50 p-2.5 text-center">
+          <div className="flex-1 rounded-lg bg-muted/50 p-3 text-center">
             {isLoading ? (
               <Skeleton className="h-6 w-8 mx-auto mb-1" />
             ) : (
@@ -53,7 +54,7 @@ export function DealRoomWidget() {
             )}
             <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Total</p>
           </div>
-          <div className="flex-1 rounded-lg bg-cyan-500/10 p-2.5 text-center">
+          <div className="flex-1 rounded-lg bg-cyan-500/10 p-3 text-center">
             {isLoading ? (
               <Skeleton className="h-6 w-8 mx-auto mb-1" />
             ) : (
@@ -73,7 +74,7 @@ export function DealRoomWidget() {
               compact
             />
           ) : isLoading ? (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="p-3 rounded-lg border border-border/50 space-y-2">
                   <Skeleton className="h-4 w-3/4" />
@@ -110,7 +111,7 @@ export function DealRoomWidget() {
                       <p className="text-sm font-medium text-foreground truncate group-hover:text-cyan-500 transition-colors">
                         {deal.property_address}
                       </p>
-                      <div className="flex items-center gap-2 mt-1">
+                      <div className="flex items-center gap-2 mt-1.5">
                         <span className="text-xs text-muted-foreground capitalize">
                           {deal.property_type || "Property"}
                         </span>

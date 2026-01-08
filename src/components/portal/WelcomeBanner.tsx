@@ -2,6 +2,7 @@ import { useCurrentAgent } from "@/hooks/useCurrentAgent";
 import { Skeleton } from "@/components/ui/skeleton";
 import { User } from "lucide-react";
 import { NYCWeatherWidget } from "./NYCWeatherWidget";
+import { SPACING, COMPONENT_CLASSES } from "@/lib/spacing";
 
 const getGreeting = () => {
   const hour = new Date().getHours();
