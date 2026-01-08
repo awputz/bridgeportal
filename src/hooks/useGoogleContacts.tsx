@@ -28,49 +28,84 @@ export function useContactsConnection() {
   return useQuery({
     queryKey: ["contacts-connection"],
     queryFn: async (): Promise<ConnectionData> => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return { connected: false, lastSync: null, syncCount: 0, needsReconnect: false };
+      console.log("[useContactsConnection] Checking connection status...");
+      
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          console.log("[useContactsConnection] No user found");
+          return { connected: false, lastSync: null, syncCount: 0, needsReconnect: false };
+        }
 
-      // Call edge function to validate token (triggers refresh if needed)
-      const { data, error } = await invokeWithAuthHandling<{ connected?: boolean; needsReconnect?: boolean }>(
-        "google-contacts-list",
-        { body: { action: "check-connection" } }
-      );
+        // Call edge function to check connection status (doesn't trigger token refresh)
+        const { data, error } = await invokeWithAuthHandling<{ 
+          connected?: boolean; 
+          needsReconnect?: boolean;
+          reason?: string;
+        }>(
+          "google-contacts-list",
+          { body: { action: "check-connection" } }
+        );
 
-      if (error || !data?.connected) {
+        console.log("[useContactsConnection] Edge function response:", { data, error });
+
+        if (error) {
+          console.error("[useContactsConnection] Edge function error:", error);
+          return { 
+            connected: false, 
+            lastSync: null, 
+            syncCount: 0,
+            needsReconnect: true
+          };
+        }
+        
+        if (!data?.connected) {
+          console.log("[useContactsConnection] Not connected:", data?.reason);
+          return { 
+            connected: false, 
+            lastSync: null, 
+            syncCount: 0,
+            needsReconnect: data?.needsReconnect || false
+          };
+        }
+
+        // Get last sync info from contact_sync_log
+        const { data: syncLog } = await supabase
+          .from("contact_sync_log")
+          .select("last_synced_at")
+          .eq("agent_id", user.id)
+          .order("last_synced_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        // Get sync count
+        const { count } = await supabase
+          .from("crm_contacts")
+          .select("*", { count: "exact", head: true })
+          .eq("agent_id", user.id)
+          .eq("source", "google-contacts");
+
+        console.log("[useContactsConnection] Connected! syncCount:", count, "lastSync:", syncLog?.last_synced_at);
+
+        return {
+          connected: true,
+          lastSync: syncLog?.last_synced_at || null,
+          syncCount: count || 0,
+          needsReconnect: false,
+        };
+      } catch (err) {
+        console.error("[useContactsConnection] Unexpected error:", err);
         return { 
           connected: false, 
           lastSync: null, 
           syncCount: 0,
-          needsReconnect: data?.needsReconnect || false
+          needsReconnect: false
         };
       }
-
-      // Get last sync info from contact_sync_log
-      const { data: syncLog } = await supabase
-        .from("contact_sync_log")
-        .select("last_synced_at")
-        .eq("agent_id", user.id)
-        .order("last_synced_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      // Get sync count
-      const { count } = await supabase
-        .from("crm_contacts")
-        .select("*", { count: "exact", head: true })
-        .eq("agent_id", user.id)
-        .eq("source", "google-contacts");
-
-      return {
-        connected: true,
-        lastSync: syncLog?.last_synced_at || null,
-        syncCount: count || 0,
-        needsReconnect: false,
-      };
     },
-    retry: false,
-    staleTime: 30000,
+    retry: 1,
+    staleTime: 60000, // Cache for 1 minute
+    refetchOnWindowFocus: false,
   });
 }
 
