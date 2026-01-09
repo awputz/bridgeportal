@@ -5,3 +5,4 @@ export * from './useEmailCampaigns';
 export * from './useMarketingAnalytics';
 export * from './useBrandProfile';
 export * from './useScheduledPosts';
+export * from './useStaging';
