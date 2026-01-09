@@ -305,15 +305,15 @@ export type Database = {
             foreignKeyName: "agent_compliance_active_agent_id_fkey"
             columns: ["active_agent_id"]
             isOneToOne: false
-            referencedRelation: "active_agents"
+            referencedRelation: "agents"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "agent_compliance_active_agent_id_fkey"
             columns: ["active_agent_id"]
             isOneToOne: false
-            referencedRelation: "hr_production_summary"
-            referencedColumns: ["active_agent_id"]
+            referencedRelation: "agents_directory"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -623,15 +623,15 @@ export type Database = {
             foreignKeyName: "agent_onboarding_active_agent_id_fkey"
             columns: ["active_agent_id"]
             isOneToOne: true
-            referencedRelation: "active_agents"
+            referencedRelation: "agents"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "agent_onboarding_active_agent_id_fkey"
             columns: ["active_agent_id"]
             isOneToOne: true
-            referencedRelation: "hr_production_summary"
-            referencedColumns: ["active_agent_id"]
+            referencedRelation: "agents_directory"
+            referencedColumns: ["id"]
           },
         ]
       }

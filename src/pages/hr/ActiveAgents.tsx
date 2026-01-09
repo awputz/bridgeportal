@@ -151,8 +151,9 @@ export default function ActiveAgentsPage() {
                 <SelectContent>
                   <SelectItem value="all">All Divisions</SelectItem>
                   <SelectItem value="residential">Residential</SelectItem>
-                  <SelectItem value="commercial">Commercial</SelectItem>
-                  <SelectItem value="investment_sales">Investment Sales</SelectItem>
+                  <SelectItem value="commercial-leasing">Commercial Leasing</SelectItem>
+                  <SelectItem value="investment-sales">Investment Sales</SelectItem>
+                  <SelectItem value="capital-advisory">Capital Advisory</SelectItem>
                 </SelectContent>
               </Select>
             </div>

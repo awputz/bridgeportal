@@ -58,13 +58,13 @@ export const useExpiringLicenses = (days: number = 30) => {
         .from("agent_compliance")
         .select(`
           *,
-          active_agents!inner(id, full_name, email, division)
+          agents!inner(id, full_name, email, division)
         `)
         .lte("expiry_date", futureDate.toISOString().split("T")[0])
         .order("expiry_date", { ascending: true });
 
       if (error) throw error;
-      return data as (AgentCompliance & { active_agents: { id: string; full_name: string; email: string; division: string } })[];
+      return data as (AgentCompliance & { agents: { id: string; full_name: string; email: string; division: string } })[];
     },
   });
 };
