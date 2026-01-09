@@ -28,6 +28,14 @@ import { formatDistanceToNow } from "date-fns";
 
 const quickActions = [
   { 
+    name: "AI Generators", 
+    description: "Create content with AI instantly", 
+    icon: Sparkles, 
+    color: "bg-gradient-to-br from-purple-500 to-pink-500",
+    path: "/portal/marketing/generators",
+    featured: true,
+  },
+  { 
     name: "Social Media", 
     description: "Instagram, Facebook, LinkedIn posts", 
     icon: ImageIcon, 
@@ -215,18 +223,38 @@ const MarketingDashboard = () => {
       {/* Quick Actions */}
       <section>
         <h2 className="text-xl font-light text-foreground mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {quickActions.map((action) => {
             const Icon = action.icon;
+            const isFeatured = 'featured' in action && action.featured;
+            
             return (
               <Link key={action.name} to={action.path}>
-                <Card className="h-full hover:bg-muted/50 transition-colors cursor-pointer group">
+                <Card className={`h-full transition-all cursor-pointer group ${
+                  isFeatured 
+                    ? "bg-gradient-to-br from-purple-500/20 to-pink-500/20 border-purple-500/30 hover:border-purple-400/50" 
+                    : "hover:bg-muted/50"
+                }`}>
                   <CardContent className="p-5">
-                    <div className={`w-10 h-10 rounded-xl ${action.color.split(' ')[0]} flex items-center justify-center mb-3`}>
-                      <Icon className={`h-5 w-5 ${action.color.split(' ')[1]}`} />
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${
+                      isFeatured 
+                        ? "bg-gradient-to-br from-purple-500 to-pink-500" 
+                        : action.color.split(' ')[0]
+                    }`}>
+                      <Icon className={`h-5 w-5 ${
+                        isFeatured 
+                          ? "text-white" 
+                          : action.color.split(' ')[1]
+                      }`} />
                     </div>
                     <h3 className="font-medium text-foreground mb-1">{action.name}</h3>
                     <p className="text-sm text-muted-foreground">{action.description}</p>
+                    {isFeatured && (
+                      <div className="mt-3 flex items-center text-xs text-purple-400 font-medium group-hover:text-purple-300">
+                        Get Started
+                        <ArrowRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </Link>
