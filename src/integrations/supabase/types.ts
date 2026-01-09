@@ -3233,6 +3233,122 @@ export type Database = {
           },
         ]
       }
+      email_campaign_recipients: {
+        Row: {
+          campaign_id: string
+          clicked_at: string | null
+          contact_id: string | null
+          created_at: string | null
+          email: string
+          id: string
+          name: string | null
+          opened_at: string | null
+          sent_at: string | null
+          status: string | null
+        }
+        Insert: {
+          campaign_id: string
+          clicked_at?: string | null
+          contact_id?: string | null
+          created_at?: string | null
+          email: string
+          id?: string
+          name?: string | null
+          opened_at?: string | null
+          sent_at?: string | null
+          status?: string | null
+        }
+        Update: {
+          campaign_id?: string
+          clicked_at?: string | null
+          contact_id?: string | null
+          created_at?: string | null
+          email?: string
+          id?: string
+          name?: string | null
+          opened_at?: string | null
+          sent_at?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_campaign_recipients_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "email_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_campaign_recipients_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_campaigns: {
+        Row: {
+          agent_id: string
+          content: string | null
+          created_at: string | null
+          id: string
+          name: string
+          scheduled_at: string | null
+          sent_at: string | null
+          status: string | null
+          subject: string | null
+          template_id: string | null
+          total_clicked: number | null
+          total_opened: number | null
+          total_recipients: number | null
+          total_sent: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          agent_id: string
+          content?: string | null
+          created_at?: string | null
+          id?: string
+          name: string
+          scheduled_at?: string | null
+          sent_at?: string | null
+          status?: string | null
+          subject?: string | null
+          template_id?: string | null
+          total_clicked?: number | null
+          total_opened?: number | null
+          total_recipients?: number | null
+          total_sent?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          agent_id?: string
+          content?: string | null
+          created_at?: string | null
+          id?: string
+          name?: string
+          scheduled_at?: string | null
+          sent_at?: string | null
+          status?: string | null
+          subject?: string | null
+          template_id?: string | null
+          total_clicked?: number | null
+          total_opened?: number | null
+          total_recipients?: number | null
+          total_sent?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_campaigns_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_contact_links: {
         Row: {
           agent_id: string
@@ -4447,6 +4563,173 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      marketing_analytics: {
+        Row: {
+          agent_id: string
+          created_at: string | null
+          emails_clicked: number | null
+          emails_opened: number | null
+          emails_sent: number | null
+          flyers_generated: number | null
+          id: string
+          period: string
+          period_start: string
+          projects_created: number | null
+          social_posts: number | null
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string | null
+          emails_clicked?: number | null
+          emails_opened?: number | null
+          emails_sent?: number | null
+          flyers_generated?: number | null
+          id?: string
+          period: string
+          period_start: string
+          projects_created?: number | null
+          social_posts?: number | null
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string | null
+          emails_clicked?: number | null
+          emails_opened?: number | null
+          emails_sent?: number | null
+          flyers_generated?: number | null
+          id?: string
+          period?: string
+          period_start?: string
+          projects_created?: number | null
+          social_posts?: number | null
+        }
+        Relationships: []
+      }
+      marketing_assets: {
+        Row: {
+          agent_id: string
+          created_at: string | null
+          file_url: string | null
+          id: string
+          is_default: boolean | null
+          metadata: Json | null
+          name: string
+          type: string
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string | null
+          file_url?: string | null
+          id?: string
+          is_default?: boolean | null
+          metadata?: Json | null
+          name: string
+          type: string
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string | null
+          file_url?: string | null
+          id?: string
+          is_default?: boolean | null
+          metadata?: Json | null
+          name?: string
+          type?: string
+        }
+        Relationships: []
+      }
+      marketing_projects: {
+        Row: {
+          agent_id: string
+          created_at: string | null
+          design_data: Json | null
+          id: string
+          name: string
+          output_url: string | null
+          status: string | null
+          template_id: string | null
+          thumbnail_url: string | null
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string | null
+          design_data?: Json | null
+          id?: string
+          name: string
+          output_url?: string | null
+          status?: string | null
+          template_id?: string | null
+          thumbnail_url?: string | null
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string | null
+          design_data?: Json | null
+          id?: string
+          name?: string
+          output_url?: string | null
+          status?: string | null
+          template_id?: string | null
+          thumbnail_url?: string | null
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketing_projects_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketing_templates: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string | null
+          design_data: Json | null
+          id: string
+          is_featured: boolean | null
+          is_premium: boolean | null
+          name: string
+          thumbnail_url: string | null
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          description?: string | null
+          design_data?: Json | null
+          id?: string
+          is_featured?: boolean | null
+          is_premium?: boolean | null
+          name: string
+          thumbnail_url?: string | null
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          design_data?: Json | null
+          id?: string
+          is_featured?: boolean | null
+          is_premium?: boolean | null
+          name?: string
+          thumbnail_url?: string | null
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       message_reactions: {
         Row: {
