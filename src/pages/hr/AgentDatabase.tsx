@@ -14,8 +14,10 @@ import { PoachabilityScore } from "@/components/hr/PoachabilityScore";
 import { AgentFormDialog } from "@/components/hr/AgentFormDialog";
 import { LogInteractionDialog } from "@/components/hr/LogInteractionDialog";
 import { AgentTableSkeleton } from "@/components/hr/AgentTableSkeleton";
+import { MobileAgentCard } from "@/components/hr/MobileAgentCard";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { useURLFilters, parseNumber, parseString } from "@/hooks/useURLFilters";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { 
   useHRAgents, 
   useDeleteHRAgent,
@@ -43,6 +45,7 @@ const filterConfigs = {
 
 export default function AgentDatabase() {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   
   // URL-persisted filters
   const [filters, setFilters, clearFilters] = useURLFilters(filterConfigs);
@@ -124,8 +127,8 @@ export default function AgentDatabase() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
+      <div className="flex flex-col gap-3">
+        <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search by name, email, or brokerage..."
@@ -134,46 +137,73 @@ export default function AgentDatabase() {
             className="pl-9"
           />
         </div>
-        <Select 
-          value={divisionFilter} 
-          onValueChange={(v) => setFilters({ division: v as Division | 'all', page: 1 })}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Division" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Divisions</SelectItem>
-            {Object.entries(divisionLabels).map(([value, label]) => (
-              <SelectItem key={value} value={value}>{label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select 
-          value={statusFilter} 
-          onValueChange={(v) => setFilters({ status: v as RecruitmentStatus | 'all', page: 1 })}
-        >
-          <SelectTrigger className="w-[160px]">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Statuses</SelectItem>
-            {Object.entries(statusLabels).map(([value, label]) => (
-              <SelectItem key={value} value={value}>{label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {hasActiveFilters && (
-          <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1">
-            <X className="h-4 w-4" />
-            Clear
-          </Button>
-        )}
+        <div className="flex flex-wrap gap-2">
+          <Select 
+            value={divisionFilter} 
+            onValueChange={(v) => setFilters({ division: v as Division | 'all', page: 1 })}
+          >
+            <SelectTrigger className="w-full sm:w-[180px]">
+              <SelectValue placeholder="Division" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Divisions</SelectItem>
+              {Object.entries(divisionLabels).map(([value, label]) => (
+                <SelectItem key={value} value={value}>{label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select 
+            value={statusFilter} 
+            onValueChange={(v) => setFilters({ status: v as RecruitmentStatus | 'all', page: 1 })}
+          >
+            <SelectTrigger className="w-full sm:w-[160px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Statuses</SelectItem>
+              {Object.entries(statusLabels).map(([value, label]) => (
+                <SelectItem key={value} value={value}>{label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {hasActiveFilters && (
+            <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1 h-10">
+              <X className="h-4 w-4" />
+              Clear
+            </Button>
+          )}
+        </div>
       </div>
 
-      {/* Table */}
+      {/* Table / Cards */}
       {isLoading ? (
         <AgentTableSkeleton rows={pageSize} />
+      ) : isMobile ? (
+        // Mobile card view
+        <div className="space-y-3">
+          {paginatedData.length === 0 ? (
+            <div className="text-center py-12 bg-card/50 rounded-xl border border-border">
+              <User className="h-12 w-12 mx-auto text-muted-foreground/50 mb-3" />
+              <p className="text-muted-foreground">No agents found</p>
+              <Button variant="link" onClick={handleAddNew} className="text-emerald-400 mt-2">
+                Add your first agent
+              </Button>
+            </div>
+          ) : (
+            paginatedData.map((agent) => (
+              <MobileAgentCard
+                key={agent.id}
+                agent={agent}
+                onClick={() => navigate(`/hr/agents/${agent.id}`)}
+                onEdit={(e) => handleEdit(agent, e)}
+                onDelete={(e) => handleDelete(agent, e)}
+                onLogInteraction={(e) => handleLogInteraction(agent, e)}
+              />
+            ))
+          )}
+        </div>
       ) : (
+        // Desktop table view
         <div className="border rounded-lg overflow-hidden">
           <Table>
             <TableHeader>
@@ -221,7 +251,7 @@ export default function AgentDatabase() {
                 >
                   Last Contact
                 </SortableTableHead>
-                <TableHead className="w-[120px]">Actions</TableHead>
+                <TableHead className="w-[140px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -280,7 +310,7 @@ export default function AgentDatabase() {
                         <Button 
                           variant="ghost" 
                           size="icon" 
-                          className="h-8 w-8"
+                          className="h-10 w-10"
                           onClick={(e) => handleLogInteraction(agent, e)}
                         >
                           <MessageSquare className="h-4 w-4" />
@@ -288,7 +318,7 @@ export default function AgentDatabase() {
                         <Button 
                           variant="ghost" 
                           size="icon" 
-                          className="h-8 w-8"
+                          className="h-10 w-10"
                           onClick={(e) => handleEdit(agent, e)}
                         >
                           <Pencil className="h-4 w-4" />
@@ -296,7 +326,7 @@ export default function AgentDatabase() {
                         <Button 
                           variant="ghost" 
                           size="icon" 
-                          className="h-8 w-8 text-destructive"
+                          className="h-10 w-10 text-destructive"
                           onClick={(e) => handleDelete(agent, e)}
                         >
                           <Trash2 className="h-4 w-4" />
