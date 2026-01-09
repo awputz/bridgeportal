@@ -51,7 +51,7 @@ export function useHRAnalytics() {
       const startOfThisMonth = startOfMonth(now);
       const sixMonthsAgo = subMonths(now, 6);
 
-      // Fetch all data in parallel
+      // Fetch all data in parallel - using unified agents table
       const [
         { data: agents },
         { data: interviews },
@@ -59,7 +59,8 @@ export function useHRAnalytics() {
         { data: campaigns },
         { data: campaignAgents }
       ] = await Promise.all([
-        supabase.from('hr_agents').select('*'),
+        // Query unified agents table for candidates/recruited
+        supabase.from('agents').select('*').in('employment_status', ['candidate', 'recruited']),
         supabase.from('hr_interviews').select('*'),
         supabase.from('hr_offers').select('*'),
         supabase.from('hr_campaigns').select('*'),
@@ -75,16 +76,17 @@ export function useHRAnalytics() {
       // Overview metrics
       const totalAgents = agentList.length;
       const agentsThisMonth = agentList.filter(a => 
-        new Date(a.created_at) >= startOfThisMonth
+        new Date(a.created_at || '') >= startOfThisMonth
       ).length;
       const agentsInPipeline = agentList.filter(a => 
-        !['hired', 'lost', 'not-interested'].includes(a.recruitment_status)
+        !['hired', 'lost', 'not-interested'].includes(a.recruitment_status || '')
       ).length;
 
       // Pipeline breakdown by status
       const statusCounts: Record<string, number> = {};
       agentList.forEach(a => {
-        statusCounts[a.recruitment_status] = (statusCounts[a.recruitment_status] || 0) + 1;
+        const status = a.recruitment_status || 'unknown';
+        statusCounts[status] = (statusCounts[status] || 0) + 1;
       });
       const pipelineByStatus = Object.entries(statusCounts).map(([status, count]) => ({
         status,
@@ -106,7 +108,7 @@ export function useHRAnalytics() {
       // Interview metrics
       const totalInterviews = interviewList.length;
       const interviewsThisMonth = interviewList.filter(i => 
-        new Date(i.created_at) >= startOfThisMonth
+        new Date(i.created_at || '') >= startOfThisMonth
       ).length;
       
       const decidedInterviews = interviewList.filter(i => i.decision);
@@ -146,7 +148,7 @@ export function useHRAnalytics() {
       // Offer metrics
       const totalOffers = offerList.length;
       const offersThisMonth = offerList.filter(o => 
-        new Date(o.created_at) >= startOfThisMonth
+        new Date(o.created_at || '') >= startOfThisMonth
       ).length;
 
       const signedOffers = offerList.filter(o => o.signed_at);
@@ -193,7 +195,7 @@ export function useHRAnalytics() {
       const funnelData = PIPELINE_STAGES.map((stage, index) => {
         const stageIndex = PIPELINE_STAGES.indexOf(stage);
         const count = agentList.filter(a => 
-          PIPELINE_STAGES.indexOf(a.recruitment_status) >= stageIndex
+          PIPELINE_STAGES.indexOf(a.recruitment_status || 'cold') >= stageIndex
         ).length;
         const rate = index === 0 ? 100 : (totalAgents > 0 ? (count / totalAgents) * 100 : 0);
         return { stage, count, rate };
@@ -208,7 +210,7 @@ export function useHRAnalytics() {
         
         const hiredInMonth = agentList.filter(a => {
           if (a.recruitment_status !== 'hired') return false;
-          const updatedAt = new Date(a.updated_at);
+          const updatedAt = new Date(a.updated_at || '');
           return updatedAt >= monthStart && updatedAt < monthEnd;
         }).length;
         

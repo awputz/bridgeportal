@@ -765,6 +765,129 @@ export type Database = {
         }
         Relationships: []
       }
+      agents: {
+        Row: {
+          annual_production: number | null
+          bio: string | null
+          commission_split: string | null
+          contract_id: string | null
+          created_at: string | null
+          created_by: string | null
+          current_brokerage: string | null
+          date_of_birth: string | null
+          division: string | null
+          email: string
+          employee_id: string | null
+          employment_status: string
+          full_name: string
+          hire_date: string | null
+          home_address: string | null
+          hr_agent_id: string | null
+          id: string
+          last_contacted_at: string | null
+          last_deal_date: string | null
+          license_expiration: string | null
+          license_number: string | null
+          license_state: string | null
+          linkedin_url: string | null
+          next_action: string | null
+          notes: string | null
+          onboarding_completed_at: string | null
+          phone: string | null
+          photo_url: string | null
+          poachability_score: number | null
+          recruitment_status: string | null
+          source: string | null
+          start_date: string | null
+          updated_at: string | null
+          user_id: string | null
+          years_experience: number | null
+          ytd_commission: number | null
+          ytd_deals: number | null
+          ytd_volume: number | null
+        }
+        Insert: {
+          annual_production?: number | null
+          bio?: string | null
+          commission_split?: string | null
+          contract_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          current_brokerage?: string | null
+          date_of_birth?: string | null
+          division?: string | null
+          email: string
+          employee_id?: string | null
+          employment_status?: string
+          full_name: string
+          hire_date?: string | null
+          home_address?: string | null
+          hr_agent_id?: string | null
+          id?: string
+          last_contacted_at?: string | null
+          last_deal_date?: string | null
+          license_expiration?: string | null
+          license_number?: string | null
+          license_state?: string | null
+          linkedin_url?: string | null
+          next_action?: string | null
+          notes?: string | null
+          onboarding_completed_at?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          poachability_score?: number | null
+          recruitment_status?: string | null
+          source?: string | null
+          start_date?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          years_experience?: number | null
+          ytd_commission?: number | null
+          ytd_deals?: number | null
+          ytd_volume?: number | null
+        }
+        Update: {
+          annual_production?: number | null
+          bio?: string | null
+          commission_split?: string | null
+          contract_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          current_brokerage?: string | null
+          date_of_birth?: string | null
+          division?: string | null
+          email?: string
+          employee_id?: string | null
+          employment_status?: string
+          full_name?: string
+          hire_date?: string | null
+          home_address?: string | null
+          hr_agent_id?: string | null
+          id?: string
+          last_contacted_at?: string | null
+          last_deal_date?: string | null
+          license_expiration?: string | null
+          license_number?: string | null
+          license_state?: string | null
+          linkedin_url?: string | null
+          next_action?: string | null
+          notes?: string | null
+          onboarding_completed_at?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          poachability_score?: number | null
+          recruitment_status?: string | null
+          source?: string | null
+          start_date?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+          years_experience?: number | null
+          ytd_commission?: number | null
+          ytd_deals?: number | null
+          ytd_volume?: number | null
+        }
+        Relationships: []
+      }
       bridge_buildings: {
         Row: {
           address: string
@@ -4890,6 +5013,51 @@ export type Database = {
           stage_id: string | null
           stage_name: string | null
           stage_value: number | null
+        }
+        Relationships: []
+      }
+      agents_directory: {
+        Row: {
+          bio: string | null
+          division: string | null
+          email: string | null
+          employee_id: string | null
+          full_name: string | null
+          hire_date: string | null
+          id: string | null
+          license_number: string | null
+          linkedin_url: string | null
+          phone: string | null
+          photo_url: string | null
+          start_date: string | null
+        }
+        Insert: {
+          bio?: string | null
+          division?: string | null
+          email?: string | null
+          employee_id?: string | null
+          full_name?: string | null
+          hire_date?: string | null
+          id?: string | null
+          license_number?: string | null
+          linkedin_url?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          start_date?: string | null
+        }
+        Update: {
+          bio?: string | null
+          division?: string | null
+          email?: string | null
+          employee_id?: string | null
+          full_name?: string | null
+          hire_date?: string | null
+          id?: string | null
+          license_number?: string | null
+          linkedin_url?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          start_date?: string | null
         }
         Relationships: []
       }
