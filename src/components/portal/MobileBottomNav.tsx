@@ -25,7 +25,8 @@ import {
   Mail,
   ExternalLink,
   Megaphone,
-  Image
+  Image,
+  Home as HomeIcon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -67,6 +68,7 @@ const moreItemsGrouped = [
     items: [
       { path: "/portal/marketing", icon: Megaphone, label: "Marketing" },
       { path: "/portal/marketing/generators", icon: Wand2, label: "AI Generators" },
+      { path: "/portal/marketing/staging", icon: HomeIcon, label: "AI Staging" },
       { path: "/portal/marketing/projects", icon: FolderOpen, label: "Projects" },
       { path: "/portal/marketing/media", icon: Image, label: "Media" },
     ],

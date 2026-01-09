@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Upload, Wand2, Download, RefreshCw, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,7 +12,7 @@ import { StagingImageCard } from "@/components/staging/StagingImageCard";
 import { BeforeAfterComparison } from "@/components/staging/BeforeAfterComparison";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-
+import { useQueryClient } from "@tanstack/react-query";
 const ROOM_TYPES = [
   { value: "living-room", label: "Living Room" },
   { value: "bedroom", label: "Bedroom" },
@@ -37,12 +37,13 @@ const STYLE_PREFERENCES = [
 ];
 
 export default function StagingProjectDetail() {
-  const { id } = useParams<{ id: string }>();
+  const { id: projectId } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   
-  const { data: project, isLoading: projectLoading } = useStagingProject(id!);
-  const { data: images, isLoading: imagesLoading, refetch: refetchImages } = useStagingProjectImages(id!);
+  const { data: project, isLoading: projectLoading } = useStagingProject(projectId!);
+  const { data: images, isLoading: imagesLoading, refetch: refetchImages } = useStagingProjectImages(projectId!);
   const { data: templates } = useStagingTemplates();
   const stageImageMutation = useStageImage();
   
@@ -52,6 +53,34 @@ export default function StagingProjectDetail() {
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>("");
   
   const selectedImage = images?.find(img => img.id === selectedImageId);
+
+  // Real-time subscription for image status updates
+  useEffect(() => {
+    if (!projectId) return;
+    
+    const channel = supabase
+      .channel(`staging-images-${projectId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'staging_images',
+          filter: `project_id=eq.${projectId}`
+        },
+        (payload) => {
+          const newStatus = (payload.new as { status: string }).status;
+          if (newStatus === 'completed' || newStatus === 'failed') {
+            queryClient.invalidateQueries({ queryKey: ['staging-project-images', projectId] });
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [projectId, queryClient]);
   
   const handleStageImage = async () => {
     if (!selectedImageId) {
@@ -67,6 +96,13 @@ export default function StagingProjectDetail() {
     
     stageImageMutation.mutate({
       imageId: selectedImageId,
+      templateId: selectedTemplateId || undefined,
+    });
+  };
+
+  const handleRetryStaging = async (imageId: string) => {
+    stageImageMutation.mutate({
+      imageId,
       templateId: selectedTemplateId || undefined,
     });
   };
@@ -159,7 +195,7 @@ export default function StagingProjectDetail() {
             </CardHeader>
             <CardContent>
               <ImageUploadZone 
-                projectId={id!} 
+                projectId={projectId!} 
                 onUploadComplete={handleImageUploaded}
               />
             </CardContent>
@@ -185,6 +221,7 @@ export default function StagingProjectDetail() {
                       isSelected={selectedImageId === image.id}
                       onClick={() => setSelectedImageId(image.id)}
                       onDelete={() => handleDeleteImage(image.id)}
+                      onRetry={handleRetryStaging}
                     />
                   ))}
                 </div>

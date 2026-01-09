@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CheckCircle, Clock, AlertCircle, Trash2, FolderPlus } from "lucide-react";
+import { CheckCircle, Clock, AlertCircle, Trash2, FolderPlus, Loader2, RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -19,9 +19,10 @@ interface StagingImageCardProps {
   isSelected: boolean;
   onClick: () => void;
   onDelete: () => void;
+  onRetry?: (imageId: string) => void;
 }
 
-export function StagingImageCard({ image, isSelected, onClick, onDelete }: StagingImageCardProps) {
+export function StagingImageCard({ image, isSelected, onClick, onDelete, onRetry }: StagingImageCardProps) {
   const [useDialogOpen, setUseDialogOpen] = useState(false);
 
   const getStatusIcon = () => {
@@ -29,7 +30,7 @@ export function StagingImageCard({ image, isSelected, onClick, onDelete }: Stagi
       case "completed":
         return <CheckCircle className="h-4 w-4 text-green-500" />;
       case "processing":
-        return <Clock className="h-4 w-4 text-blue-500 animate-spin" />;
+        return <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />;
       case "failed":
         return <AlertCircle className="h-4 w-4 text-red-500" />;
       default:
@@ -47,7 +48,14 @@ export function StagingImageCard({ image, isSelected, onClick, onDelete }: Stagi
     setUseDialogOpen(true);
   };
 
+  const handleRetry = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onRetry?.(image.id);
+  };
+
   const isCompleted = image.status === "completed" && image.staged_url;
+  const isProcessing = image.status === "processing";
+  const isFailed = image.status === "failed";
 
   return (
     <>
@@ -80,6 +88,31 @@ export function StagingImageCard({ image, isSelected, onClick, onDelete }: Stagi
           </Badge>
         )}
 
+        {/* Processing overlay */}
+        {isProcessing && (
+          <div className="absolute inset-0 bg-blue-500/20 flex items-center justify-center backdrop-blur-sm">
+            <div className="flex flex-col items-center gap-2">
+              <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
+              <span className="text-xs text-blue-300 font-medium">Processing...</span>
+            </div>
+          </div>
+        )}
+
+        {/* Failed overlay with retry */}
+        {isFailed && onRetry && (
+          <div className="absolute inset-0 bg-red-500/20 flex items-center justify-center backdrop-blur-sm">
+            <Button 
+              size="sm" 
+              variant="destructive" 
+              onClick={handleRetry}
+              className="gap-1"
+            >
+              <RefreshCw className="h-3 w-3" />
+              Retry
+            </Button>
+          </div>
+        )}
+
         {/* Action buttons on hover */}
         <div className="absolute top-2 left-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <Button
@@ -103,7 +136,7 @@ export function StagingImageCard({ image, isSelected, onClick, onDelete }: Stagi
         </div>
 
         {/* Selection overlay */}
-        {isSelected && (
+        {isSelected && !isProcessing && !isFailed && (
           <div className="absolute inset-0 bg-primary/10 pointer-events-none" />
         )}
       </div>
