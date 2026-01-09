@@ -308,6 +308,13 @@ export type Database = {
             referencedRelation: "active_agents"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "agent_compliance_active_agent_id_fkey"
+            columns: ["active_agent_id"]
+            isOneToOne: false
+            referencedRelation: "hr_production_summary"
+            referencedColumns: ["active_agent_id"]
+          },
         ]
       }
       agent_expenses: {
@@ -617,6 +624,65 @@ export type Database = {
             columns: ["active_agent_id"]
             isOneToOne: true
             referencedRelation: "active_agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_onboarding_active_agent_id_fkey"
+            columns: ["active_agent_id"]
+            isOneToOne: true
+            referencedRelation: "hr_production_summary"
+            referencedColumns: ["active_agent_id"]
+          },
+        ]
+      }
+      agent_production_sync: {
+        Row: {
+          active_agent_id: string
+          created_at: string | null
+          id: string
+          match_method: string
+          matched_at: string | null
+          transaction_id: string
+          verified_by: string | null
+        }
+        Insert: {
+          active_agent_id: string
+          created_at?: string | null
+          id?: string
+          match_method: string
+          matched_at?: string | null
+          transaction_id: string
+          verified_by?: string | null
+        }
+        Update: {
+          active_agent_id?: string
+          created_at?: string | null
+          id?: string
+          match_method?: string
+          matched_at?: string | null
+          transaction_id?: string
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_production_sync_active_agent_id_fkey"
+            columns: ["active_agent_id"]
+            isOneToOne: false
+            referencedRelation: "active_agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_production_sync_active_agent_id_fkey"
+            columns: ["active_agent_id"]
+            isOneToOne: false
+            referencedRelation: "hr_production_summary"
+            referencedColumns: ["active_agent_id"]
+          },
+          {
+            foreignKeyName: "agent_production_sync_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
             referencedColumns: ["id"]
           },
         ]
@@ -4847,6 +4913,23 @@ export type Database = {
         }
         Relationships: []
       }
+      hr_production_summary: {
+        Row: {
+          active_agent_id: string | null
+          commission_since_hire: number | null
+          deals_since_hire: number | null
+          division: string | null
+          full_name: string | null
+          hire_date: string | null
+          last_deal_date: string | null
+          status: string | null
+          total_commission: number | null
+          total_deals: number | null
+          total_volume: number | null
+          volume_since_hire: number | null
+        }
+        Relationships: []
+      }
       investor_dashboard_stats: {
         Row: {
           active_agents: number | null
@@ -5086,6 +5169,11 @@ export type Database = {
         Returns: undefined
       }
       refresh_agent_dashboard_stats: { Args: never; Returns: undefined }
+      refresh_hr_production_summary: { Args: never; Returns: undefined }
+      sync_agent_transactions_by_name: {
+        Args: { p_active_agent_id: string }
+        Returns: number
+      }
     }
     Enums: {
       app_role: "admin" | "agent" | "user" | "investor" | "hr_admin"
