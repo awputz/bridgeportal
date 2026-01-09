@@ -17,23 +17,28 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Users, FileText, Search, X } from "lucide-react";
 import { useCRMContacts } from "@/hooks/useCRM";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface AddRecipientsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onAddRecipients: (emails: string[]) => void;
+  campaignId: string | null;
+  onSuccess?: () => void;
 }
 
 export function AddRecipientsDialog({
   open,
   onOpenChange,
-  onAddRecipients,
+  campaignId,
+  onSuccess,
 }: AddRecipientsDialogProps) {
   const [tab, setTab] = useState<'crm' | 'manual'>('crm');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedContacts, setSelectedContacts] = useState<Set<string>>(new Set());
   const [manualEmails, setManualEmails] = useState('');
   const [validatedEmails, setValidatedEmails] = useState<string[]>([]);
+  const [isAdding, setIsAdding] = useState(false);
 
   const { data: contacts, isLoading: isLoadingContacts } = useCRMContacts();
 
@@ -83,24 +88,67 @@ export function AddRecipientsDialog({
     setValidatedEmails(prev => prev.filter(e => e !== email));
   };
 
-  const handleAdd = () => {
-    let emails: string[] = [];
+  const handleAdd = async () => {
+    if (!campaignId) return;
+    
+    setIsAdding(true);
+    
+    try {
+      let recipients: { email: string; name?: string; contact_id?: string }[] = [];
 
-    if (tab === 'crm') {
-      emails = contacts
-        ?.filter(c => selectedContacts.has(c.id) && c.email)
-        .map(c => c.email!) || [];
-    } else {
-      emails = validatedEmails;
-    }
+      if (tab === 'crm') {
+        recipients = contacts
+          ?.filter(c => selectedContacts.has(c.id) && c.email)
+          .map(c => ({
+            email: c.email!,
+            name: c.full_name,
+            contact_id: c.id,
+          })) || [];
+      } else {
+        recipients = validatedEmails.map(email => ({ email }));
+      }
 
-    if (emails.length > 0) {
-      onAddRecipients(emails);
+      if (recipients.length === 0) return;
+
+      // Insert recipients
+      const { error: insertError } = await supabase
+        .from('email_campaign_recipients')
+        .insert(
+          recipients.map(r => ({
+            campaign_id: campaignId,
+            email: r.email,
+            name: r.name || null,
+            contact_id: r.contact_id || null,
+            status: 'pending',
+          }))
+        );
+
+      if (insertError) throw insertError;
+
+      // Update campaign recipient count
+      const { error: updateError } = await supabase
+        .from('email_campaigns')
+        .update({ 
+          total_recipients: recipients.length,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', campaignId);
+
+      if (updateError) throw updateError;
+
+      toast.success(`Added ${recipients.length} recipient(s)`);
       onOpenChange(false);
+      onSuccess?.();
+      
       // Reset state
       setSelectedContacts(new Set());
       setManualEmails('');
       setValidatedEmails([]);
+    } catch (error) {
+      console.error('Add recipients error:', error);
+      toast.error('Failed to add recipients');
+    } finally {
+      setIsAdding(false);
     }
   };
 
@@ -235,11 +283,18 @@ export function AddRecipientsDialog({
         </Tabs>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isAdding}>
             Cancel
           </Button>
-          <Button onClick={handleAdd} disabled={recipientCount === 0}>
-            Add {recipientCount} Recipient{recipientCount !== 1 ? 's' : ''}
+          <Button onClick={handleAdd} disabled={recipientCount === 0 || isAdding}>
+            {isAdding ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Adding...
+              </>
+            ) : (
+              `Add ${recipientCount} Recipient${recipientCount !== 1 ? 's' : ''}`
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

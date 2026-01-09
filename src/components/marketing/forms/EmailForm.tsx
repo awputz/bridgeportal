@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PropertySelector, PropertyData } from "@/components/marketing/PropertySelector";
 import { Separator } from "@/components/ui/separator";
+import { useBrandProfile } from "@/hooks/marketing/useBrandProfile";
 
 export interface EmailFormData {
   emailType: string;
@@ -32,11 +33,20 @@ const defaultData: EmailFormData = {
 };
 
 export const EmailForm = ({ data, onChange }: EmailFormProps) => {
+  const { data: brandProfile } = useBrandProfile();
+
   useEffect(() => {
     if (!data.emailType) {
       onChange({ ...defaultData, ...data });
     }
   }, []);
+
+  // Auto-fill sender name from brand profile
+  useEffect(() => {
+    if (brandProfile && !data.senderName && brandProfile.full_name) {
+      onChange({ ...data, senderName: brandProfile.full_name });
+    }
+  }, [brandProfile]);
 
   const handleChange = (field: keyof EmailFormData, value: string) => {
     onChange({ ...data, [field]: value });

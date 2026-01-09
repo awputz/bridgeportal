@@ -86,6 +86,8 @@ const marketingItems = [
   { name: "Projects", path: "/portal/marketing/projects", icon: FolderOpen, description: "Your created designs", color: "bg-violet-500/20 text-violet-400" },
   { name: "Media Library", path: "/portal/marketing/media", icon: Image, description: "Templates & assets", color: "bg-indigo-500/20 text-indigo-400" },
   { name: "Asset Library", path: "/portal/marketing/assets", icon: Image, description: "Logos & headshots", color: "bg-cyan-500/20 text-cyan-400" },
+  { name: "Brand Profile", path: "/portal/marketing/brand", icon: User, description: "Your brand info", color: "bg-emerald-500/20 text-emerald-400" },
+  { name: "Social Schedule", path: "/portal/marketing/social-schedule", icon: Calendar, description: "Scheduled posts", color: "bg-orange-500/20 text-orange-400" },
   { name: "Email Campaigns", path: "/portal/marketing/campaigns", icon: Mail, description: "Email marketing", color: "bg-rose-500/20 text-rose-400" },
 ];
 

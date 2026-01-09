@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PropertySelector, PropertyData } from "@/components/marketing/PropertySelector";
 import { Separator } from "@/components/ui/separator";
+import { useBrandProfile } from "@/hooks/marketing/useBrandProfile";
 
 export interface FlyerFormData {
   flyerType: string;
@@ -42,11 +43,32 @@ const defaultData: FlyerFormData = {
 };
 
 export const FlyerForm = ({ data, onChange }: FlyerFormProps) => {
+  const { data: brandProfile } = useBrandProfile();
+
   useEffect(() => {
     if (!data.flyerType) {
       onChange({ ...defaultData, ...data });
     }
   }, []);
+
+  // Auto-fill agent info from brand profile
+  useEffect(() => {
+    if (brandProfile) {
+      const updates: Partial<FlyerFormData> = {};
+      if (!data.agentName && brandProfile.full_name) {
+        updates.agentName = brandProfile.full_name;
+      }
+      if (!data.agentPhone && brandProfile.phone) {
+        updates.agentPhone = brandProfile.phone;
+      }
+      if (!data.agentEmail && brandProfile.email) {
+        updates.agentEmail = brandProfile.email;
+      }
+      if (Object.keys(updates).length > 0) {
+        onChange({ ...data, ...updates });
+      }
+    }
+  }, [brandProfile]);
 
   const handleChange = (field: keyof FlyerFormData, value: string) => {
     onChange({ ...data, [field]: value });

@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import type { Json } from "@/integrations/supabase/types";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, Loader2, Copy, Check, Sparkles, MoreVertical, Trash2, Copy as DuplicateIcon, Download, Send, FileText } from "lucide-react";
+import { ArrowLeft, Save, Loader2, Copy, Check, Sparkles, MoreVertical, Trash2, Copy as DuplicateIcon, Download, Send, FileText, CalendarClock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -37,6 +37,7 @@ import type { FlyerFormData } from "@/components/marketing/forms/FlyerForm";
 import type { EmailFormData } from "@/components/marketing/forms/EmailForm";
 import type { PresentationFormData } from "@/components/marketing/forms/PresentationForm";
 import { getPromptForProjectType, MARKETING_SYSTEM_PROMPT } from "@/lib/marketingPrompts";
+import { SchedulePostDialog } from "@/components/marketing/SchedulePostDialog";
 
 type FormData = SocialPostFormData | FlyerFormData | EmailFormData | PresentationFormData;
 
@@ -57,6 +58,7 @@ const ProjectEditor = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [copied, setCopied] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
 
   // Initialize form data from project
   useEffect(() => {
@@ -447,6 +449,12 @@ const ProjectEditor = () => {
                 <DuplicateIcon className="h-4 w-4 mr-2" />
                 Duplicate
               </DropdownMenuItem>
+              {project?.type === "social-post" && generatedContent && (
+                <DropdownMenuItem onClick={() => setScheduleDialogOpen(true)}>
+                  <CalendarClock className="h-4 w-4 mr-2" />
+                  Schedule to Social
+                </DropdownMenuItem>
+              )}
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => handleExport("txt")} disabled={!generatedContent}>
                 <Download className="h-4 w-4 mr-2" />
@@ -553,6 +561,16 @@ const ProjectEditor = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Schedule Post Dialog */}
+      {project?.type === "social-post" && (
+        <SchedulePostDialog
+          open={scheduleDialogOpen}
+          onOpenChange={setScheduleDialogOpen}
+          initialContent={generatedContent}
+          projectId={id}
+        />
+      )}
     </div>
   );
 };

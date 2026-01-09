@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PropertySelector, PropertyData } from "@/components/marketing/PropertySelector";
 import { Separator } from "@/components/ui/separator";
+import { useBrandProfile } from "@/hooks/marketing/useBrandProfile";
 
 export interface SocialPostFormData {
   platform: string;
@@ -32,12 +33,27 @@ const defaultData: SocialPostFormData = {
 };
 
 export const SocialPostForm = ({ data, onChange }: SocialPostFormProps) => {
+  const { data: brandProfile } = useBrandProfile();
+
   // Initialize with defaults if empty
   useEffect(() => {
     if (!data.platform) {
       onChange({ ...defaultData, ...data });
     }
   }, []);
+
+  // Auto-fill from brand profile
+  useEffect(() => {
+    if (brandProfile && !data.hashtags) {
+      const socialHandle = brandProfile.instagram_handle || brandProfile.twitter_handle;
+      if (socialHandle) {
+        onChange({
+          ...data,
+          hashtags: `@${socialHandle.replace('@', '')}`,
+        });
+      }
+    }
+  }, [brandProfile]);
 
   const handleChange = (field: keyof SocialPostFormData, value: string) => {
     onChange({ ...data, [field]: value });
