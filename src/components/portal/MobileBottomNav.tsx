@@ -53,17 +53,11 @@ const moreItemsGrouped = [
     ],
   },
   {
-    category: "Essentials",
-    items: [
-      { path: "/portal/notes", icon: StickyNote, label: "Notes" },
-    ],
-  },
-  {
     category: "Tools",
     items: [
+      { path: "/portal/notes", icon: StickyNote, label: "Notes" },
       { path: "/portal/ai", icon: Sparkles, label: "AI Assistant" },
       { path: "/portal/templates", icon: FileText, label: "Templates" },
-      { path: "/portal/generators", icon: Wand2, label: "Generators" },
       { path: "/portal/calculators", icon: Calculator, label: "Calculators" },
       { path: "/portal/tools", icon: Wrench, label: "Tools" },
     ],
@@ -72,6 +66,7 @@ const moreItemsGrouped = [
     category: "Marketing",
     items: [
       { path: "/portal/marketing", icon: Megaphone, label: "Marketing" },
+      { path: "/portal/marketing/generators", icon: Wand2, label: "AI Generators" },
       { path: "/portal/marketing/projects", icon: FolderOpen, label: "Projects" },
       { path: "/portal/marketing/media", icon: Image, label: "Media" },
     ],

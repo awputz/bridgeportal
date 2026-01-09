@@ -31,7 +31,8 @@ import {
   Calculator,
   Send,
   Megaphone,
-  Image
+  Image,
+  History
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -60,35 +61,35 @@ const googleItems = [
   { name: "Contacts", path: "https://contacts.google.com", icon: Users, internal: false },
 ];
 
-// Essentials items with descriptions
+// Essentials items with descriptions (Tasks & Notes moved to Tools)
 const essentialsItems = [
   { name: "CRM", path: "/portal/crm", icon: Briefcase, description: "Pipeline management and deal tracking" },
   { name: "Contacts", path: "/portal/contacts", icon: Users, description: "Client and prospect database" },
   { name: "Deal Room", path: "/portal/deal-room", icon: Building2, description: "Active listings and proposals" },
   { name: "Intake", path: "/portal/intake", icon: ClipboardList, description: "New business opportunities" },
-  { name: "Tasks", path: "/portal/tasks", icon: ListTodo, description: "Personal task management" },
-  { name: "Notes", path: "/portal/notes", icon: StickyNote, description: "Quick notes and documentation" },
 ];
 
-// Tools items with descriptions and colors
+// Tools items with descriptions and colors (Generators moved to Marketing, Tasks & Notes added)
 const toolsItems = [
-  { name: "Generators", path: "/portal/generators", icon: Wand2, description: "AI-powered documents", color: "bg-purple-500/20 text-purple-400" },
+  { name: "Tasks", path: "/portal/tasks", icon: ListTodo, description: "Personal task management", color: "bg-green-500/20 text-green-400" },
+  { name: "Notes", path: "/portal/notes", icon: StickyNote, description: "Personal sticky notes", color: "bg-cyan-500/20 text-cyan-400" },
   { name: "Templates", path: "/portal/templates", icon: FileText, description: "Division templates", color: "bg-blue-500/20 text-blue-400" },
   { name: "Calculators", path: "/portal/calculators", icon: Calculator, description: "Financial calculators", color: "bg-amber-500/20 text-amber-400" },
   { name: "Resources", path: "/portal/resources", icon: FolderOpen, description: "Legal & HR documents", color: "bg-orange-500/20 text-orange-400" },
   { name: "Requests", path: "/portal/requests", icon: Send, description: "Cards, marketing, BOV", color: "bg-rose-500/20 text-rose-400" },
-  { name: "Notes", path: "/portal/notes", icon: StickyNote, description: "Personal sticky notes", color: "bg-cyan-500/20 text-cyan-400" },
 ];
 
-// Marketing items with descriptions and colors
+// Marketing items with descriptions and colors (AI Generators added as 2nd item, History added at end)
 const marketingItems = [
   { name: "Overview", path: "/portal/marketing", icon: Megaphone, description: "Marketing dashboard", color: "bg-pink-500/20 text-pink-400" },
+  { name: "AI Generators", path: "/portal/marketing/generators", icon: Wand2, description: "AI-powered content creation", color: "bg-purple-500/20 text-purple-400" },
   { name: "Projects", path: "/portal/marketing/projects", icon: FolderOpen, description: "Your created designs", color: "bg-violet-500/20 text-violet-400" },
   { name: "Media Library", path: "/portal/marketing/media", icon: Image, description: "Templates & assets", color: "bg-indigo-500/20 text-indigo-400" },
   { name: "Asset Library", path: "/portal/marketing/assets", icon: Image, description: "Logos & headshots", color: "bg-cyan-500/20 text-cyan-400" },
   { name: "Brand Profile", path: "/portal/marketing/brand", icon: User, description: "Your brand info", color: "bg-emerald-500/20 text-emerald-400" },
   { name: "Social Schedule", path: "/portal/marketing/social-schedule", icon: Calendar, description: "Scheduled posts", color: "bg-orange-500/20 text-orange-400" },
   { name: "Email Campaigns", path: "/portal/marketing/campaigns", icon: Mail, description: "Email marketing", color: "bg-rose-500/20 text-rose-400" },
+  { name: "History", path: "/portal/marketing/history", icon: History, description: "Past AI generations", color: "bg-slate-500/20 text-slate-400" },
 ];
 
 // Helper to format "Member since" date
@@ -125,7 +126,8 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
   };
 
   const isToolsActive = location.pathname.startsWith('/portal/tools') ||
-    location.pathname.startsWith('/portal/generators') ||
+    location.pathname.startsWith('/portal/tasks') ||
+    location.pathname.startsWith('/portal/notes') ||
     location.pathname.startsWith('/portal/templates') ||
     location.pathname.startsWith('/portal/calculators') ||
     location.pathname.startsWith('/portal/resources') ||
