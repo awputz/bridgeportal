@@ -7,18 +7,23 @@ export type HROfferInsert = Database['public']['Tables']['hr_offers']['Insert'];
 export type HROfferUpdate = Database['public']['Tables']['hr_offers']['Update'];
 export type OfferStatus = 'draft' | 'sent' | 'signed' | 'declined';
 
+// Agent info from unified agents table
+export interface AgentInfo {
+  id: string;
+  full_name: string;
+  email: string | null;
+  phone: string | null;
+  current_brokerage: string | null;
+  annual_production: number | null;
+  years_experience: number | null;
+  poachability_score: number | null;
+  division: string | null;
+}
+
 export interface HROfferWithAgent extends HROffer {
-  hr_agents: {
-    id: string;
-    full_name: string;
-    email: string | null;
-    phone: string | null;
-    current_brokerage: string | null;
-    annual_production: number | null;
-    years_experience: number | null;
-    poachability_score: number | null;
-    division?: string | null;
-  } | null;
+  agents: AgentInfo | null;
+  // Keep backward compatibility with hr_agents key
+  hr_agents?: AgentInfo | null;
 }
 
 export const offerStatusColors: Record<OfferStatus, string> = {
@@ -52,37 +57,52 @@ export function useHROffers(filters?: OfferFilters) {
   return useQuery({
     queryKey: ['hr-offers', filters],
     queryFn: async () => {
+      // First get offers
       let query = supabase
         .from('hr_offers')
-        .select(`
-          *,
-          hr_agents (
-            id,
-            full_name,
-            email,
-            phone,
-            current_brokerage,
-            annual_production,
-            years_experience,
-            poachability_score,
-            division
-          )
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
       if (filters?.division) {
         query = query.eq('division', filters.division);
       }
 
-      if (filters?.search) {
-        query = query.or(`hr_agents.full_name.ilike.%${filters.search}%`);
-      }
-
-      const { data, error } = await query;
-
+      const { data: offers, error } = await query;
       if (error) throw error;
 
-      let result = data as HROfferWithAgent[];
+      // Get unique agent IDs
+      const agentIds = [...new Set(offers?.map(o => o.agent_id).filter(Boolean))];
+      
+      // Fetch agent info from unified agents table
+      let agentsMap: Record<string, AgentInfo> = {};
+      if (agentIds.length > 0) {
+        const { data: agents } = await supabase
+          .from('agents')
+          .select('id, full_name, email, phone, current_brokerage, annual_production, years_experience, poachability_score, division')
+          .in('id', agentIds);
+        
+        if (agents) {
+          agents.forEach(a => {
+            agentsMap[a.id] = a;
+          });
+        }
+      }
+
+      // Combine offers with agent data
+      let result: HROfferWithAgent[] = (offers || []).map(offer => ({
+        ...offer,
+        agents: offer.agent_id ? agentsMap[offer.agent_id] || null : null,
+        // Backward compatibility
+        hr_agents: offer.agent_id ? agentsMap[offer.agent_id] || null : null,
+      }));
+
+      // Filter by search (agent name)
+      if (filters?.search) {
+        const searchLower = filters.search.toLowerCase();
+        result = result.filter(o => 
+          o.agents?.full_name?.toLowerCase().includes(searchLower)
+        );
+      }
 
       // Filter by status client-side (since it's computed)
       if (filters?.status) {
@@ -100,27 +120,30 @@ export function useHROffer(id: string | undefined) {
     queryFn: async () => {
       if (!id) return null;
 
-      const { data, error } = await supabase
+      const { data: offer, error } = await supabase
         .from('hr_offers')
-        .select(`
-          *,
-          hr_agents (
-            id,
-            full_name,
-            email,
-            phone,
-            current_brokerage,
-            annual_production,
-            years_experience,
-            poachability_score,
-            division
-          )
-        `)
+        .select('*')
         .eq('id', id)
         .single();
 
       if (error) throw error;
-      return data as HROfferWithAgent;
+
+      // Fetch agent info separately
+      let agent: AgentInfo | null = null;
+      if (offer.agent_id) {
+        const { data } = await supabase
+          .from('agents')
+          .select('id, full_name, email, phone, current_brokerage, annual_production, years_experience, poachability_score, division')
+          .eq('id', offer.agent_id)
+          .single();
+        agent = data;
+      }
+
+      return {
+        ...offer,
+        agents: agent,
+        hr_agents: agent, // Backward compatibility
+      } as HROfferWithAgent;
     },
     enabled: !!id,
   });
@@ -158,10 +181,10 @@ export function useCreateHROffer() {
 
       if (error) throw error;
 
-      // Update agent status to offer-made
+      // Update agent status to offer-made in unified agents table
       if (offer.agent_id) {
         await supabase
-          .from('hr_agents')
+          .from('agents')
           .update({ recruitment_status: 'offer-made' })
           .eq('id', offer.agent_id);
       }
@@ -251,11 +274,14 @@ export function useMarkOfferSigned() {
 
       if (error) throw error;
 
-      // Update agent status to hired
+      // Update agent status to hired in unified agents table
       if (data.agent_id) {
         await supabase
-          .from('hr_agents')
-          .update({ recruitment_status: 'hired' })
+          .from('agents')
+          .update({ 
+            recruitment_status: 'hired',
+            employment_status: 'recruited'
+          })
           .eq('id', data.agent_id);
       }
 

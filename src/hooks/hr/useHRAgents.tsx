@@ -1,13 +1,73 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Database } from "@/integrations/supabase/types";
 import { toast } from "sonner";
 
-export type HRAgent = Database['public']['Tables']['hr_agents']['Row'];
-export type HRAgentInsert = Database['public']['Tables']['hr_agents']['Insert'];
-export type HRAgentUpdate = Database['public']['Tables']['hr_agents']['Update'];
-export type HRInteraction = Database['public']['Tables']['hr_interactions']['Row'];
-export type HRInteractionInsert = Database['public']['Tables']['hr_interactions']['Insert'];
+// Types for the unified agents table (recruitment view)
+export interface HRAgent {
+  id: string;
+  full_name: string;
+  email: string;
+  phone: string | null;
+  photo_url: string | null;
+  employment_status: string;
+  recruitment_status: string | null;
+  current_brokerage: string | null;
+  poachability_score: number | null;
+  annual_production: number | null;
+  years_experience: number | null;
+  last_contacted_at: string | null;
+  next_action: string | null;
+  source: string | null;
+  notes: string | null;
+  linkedin_url: string | null;
+  division: string | null;
+  license_number: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+  created_by: string | null;
+}
+
+export interface HRAgentInsert {
+  full_name: string;
+  email: string;
+  phone?: string | null;
+  photo_url?: string | null;
+  employment_status?: string;
+  recruitment_status?: string;
+  current_brokerage?: string | null;
+  poachability_score?: number | null;
+  annual_production?: number | null;
+  years_experience?: number | null;
+  last_contacted_at?: string | null;
+  next_action?: string | null;
+  source?: string | null;
+  notes?: string | null;
+  linkedin_url?: string | null;
+  division?: string | null;
+  license_number?: string | null;
+}
+
+export interface HRAgentUpdate extends Partial<HRAgentInsert> {}
+
+// Keep interaction types from the existing hr_interactions table
+export interface HRInteraction {
+  id: string;
+  agent_id: string;
+  interaction_type: string;
+  interaction_date: string;
+  notes: string | null;
+  outcome: string | null;
+  created_by: string | null;
+  created_at: string | null;
+}
+
+export interface HRInteractionInsert {
+  agent_id: string;
+  interaction_type: string;
+  interaction_date?: string;
+  notes?: string | null;
+  outcome?: string | null;
+}
 
 export type RecruitmentStatus = 'cold' | 'contacted' | 'warm' | 'qualified' | 'hot' | 'offer-made' | 'hired' | 'lost';
 export type Division = 'investment-sales' | 'commercial-leasing' | 'residential' | 'capital-advisory';
@@ -23,8 +83,10 @@ export function useHRAgents(filters?: {
     queryKey: ['hr-agents', filters],
     queryFn: async () => {
       let query = supabase
-        .from('hr_agents')
+        .from('agents')
         .select('*')
+        // Only show candidates and recruited (not active employees)
+        .in('employment_status', ['candidate', 'recruited'])
         .order('updated_at', { ascending: false });
 
       if (filters?.division) {
@@ -50,7 +112,7 @@ export function useHRAgent(id: string | undefined) {
     queryFn: async () => {
       if (!id) return null;
       const { data, error } = await supabase
-        .from('hr_agents')
+        .from('agents')
         .select('*')
         .eq('id', id)
         .single();
@@ -85,8 +147,13 @@ export function useCreateHRAgent() {
     mutationFn: async (agent: HRAgentInsert) => {
       const { data: { user } } = await supabase.auth.getUser();
       const { data, error } = await supabase
-        .from('hr_agents')
-        .insert({ ...agent, created_by: user?.id })
+        .from('agents')
+        .insert({ 
+          ...agent, 
+          created_by: user?.id,
+          employment_status: 'candidate',
+          recruitment_status: agent.recruitment_status || 'cold'
+        })
         .select()
         .single();
       if (error) throw error;
@@ -108,7 +175,7 @@ export function useUpdateHRAgent() {
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: HRAgentUpdate }) => {
       const { data, error } = await supabase
-        .from('hr_agents')
+        .from('agents')
         .update(updates)
         .eq('id', id)
         .select()
@@ -133,7 +200,7 @@ export function useDeleteHRAgent() {
   return useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
-        .from('hr_agents')
+        .from('agents')
         .delete()
         .eq('id', id);
       if (error) throw error;
@@ -163,9 +230,9 @@ export function useCreateHRInteraction() {
         .single();
       if (error) throw error;
 
-      // Update last_contacted_at on the agent
+      // Update last_contacted_at on the agent (now in unified agents table)
       await supabase
-        .from('hr_agents')
+        .from('agents')
         .update({ last_contacted_at: new Date().toISOString() })
         .eq('id', interaction.agent_id);
 
@@ -188,9 +255,15 @@ export function useUpdateAgentStatus() {
 
   return useMutation({
     mutationFn: async ({ id, status }: { id: string; status: RecruitmentStatus }) => {
+      // Update employment_status when hired
+      const updates: Record<string, string> = { recruitment_status: status };
+      if (status === 'hired') {
+        updates.employment_status = 'recruited';
+      }
+
       const { data, error } = await supabase
-        .from('hr_agents')
-        .update({ recruitment_status: status })
+        .from('agents')
+        .update(updates)
         .eq('id', id)
         .select()
         .single();
