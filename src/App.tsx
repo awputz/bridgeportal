@@ -101,6 +101,8 @@ const MarketingProjects = lazy(() => import("./pages/portal/marketing/MarketingP
 const MediaLibrary = lazy(() => import("./pages/portal/marketing/MediaLibrary"));
 const CreateProject = lazy(() => import("./pages/portal/marketing/CreateProject"));
 const ProjectEditor = lazy(() => import("./pages/portal/marketing/ProjectEditor"));
+const AssetLibrary = lazy(() => import("./pages/portal/marketing/AssetLibrary"));
+const EmailCampaigns = lazy(() => import("./pages/portal/marketing/EmailCampaigns"));
 
 // Company Pages - lazy loaded
 const AboutCompany = lazy(() => import("./pages/portal/company/About"));
@@ -522,6 +524,16 @@ const App = () => {
                     <Route path="marketing/edit/:id" element={
                       <Suspense fallback={<PageLoader />}>
                         <ProjectEditor />
+                      </Suspense>
+                    } />
+                    <Route path="marketing/assets" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <AssetLibrary />
+                      </Suspense>
+                    } />
+                    <Route path="marketing/campaigns" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <EmailCampaigns />
                       </Suspense>
                     } />
                     

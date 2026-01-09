@@ -85,6 +85,8 @@ const marketingItems = [
   { name: "Overview", path: "/portal/marketing", icon: Megaphone, description: "Marketing dashboard", color: "bg-pink-500/20 text-pink-400" },
   { name: "Projects", path: "/portal/marketing/projects", icon: FolderOpen, description: "Your created designs", color: "bg-violet-500/20 text-violet-400" },
   { name: "Media Library", path: "/portal/marketing/media", icon: Image, description: "Templates & assets", color: "bg-indigo-500/20 text-indigo-400" },
+  { name: "Asset Library", path: "/portal/marketing/assets", icon: Image, description: "Logos & headshots", color: "bg-cyan-500/20 text-cyan-400" },
+  { name: "Email Campaigns", path: "/portal/marketing/campaigns", icon: Mail, description: "Email marketing", color: "bg-rose-500/20 text-rose-400" },
 ];
 
 // Helper to format "Member since" date

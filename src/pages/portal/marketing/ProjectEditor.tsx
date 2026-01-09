@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import type { Json } from "@/integrations/supabase/types";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, Loader2, Copy, Check, Sparkles, MoreVertical, Trash2, Copy as DuplicateIcon } from "lucide-react";
+import { ArrowLeft, Save, Loader2, Copy, Check, Sparkles, MoreVertical, Trash2, Copy as DuplicateIcon, Download, Send, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -244,6 +244,46 @@ const ProjectEditor = () => {
     }
   };
 
+  const handlePublish = async () => {
+    if (!id) return;
+    
+    try {
+      await updateProject.mutateAsync({
+        id,
+        status: "published",
+      });
+      toast({ title: "Project published!", description: "Your content is now live." });
+    } catch (error) {
+      toast({
+        title: "Failed to publish",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleExport = (format: "txt" | "md") => {
+    if (!generatedContent) return;
+    
+    const filename = `${projectName || "marketing-content"}.${format}`;
+    let content = generatedContent;
+    
+    if (format === "md") {
+      content = `# ${projectName}\n\n${generatedContent}`;
+    }
+    
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    toast({ title: `Downloaded as ${format.toUpperCase()}` });
+  };
+
   const isFormValid = (): boolean => {
     if (!project) return false;
     switch (project.type) {
@@ -399,9 +439,22 @@ const ProjectEditor = () => {
                 <Check className="h-4 w-4 mr-2" />
                 Mark Complete
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={handlePublish}>
+                <Send className="h-4 w-4 mr-2" />
+                Publish
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={handleDuplicate}>
                 <DuplicateIcon className="h-4 w-4 mr-2" />
                 Duplicate
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => handleExport("txt")} disabled={!generatedContent}>
+                <Download className="h-4 w-4 mr-2" />
+                Download as TXT
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleExport("md")} disabled={!generatedContent}>
+                <FileText className="h-4 w-4 mr-2" />
+                Download as Markdown
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleDelete} className="text-destructive">
