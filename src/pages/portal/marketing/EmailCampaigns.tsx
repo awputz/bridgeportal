@@ -40,6 +40,7 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 
 const statusConfig = {
   draft: { label: "Draft", variant: "secondary" as const, icon: FileText },
@@ -106,7 +107,7 @@ export default function EmailCampaigns() {
   const selectedCampaign = campaigns?.find(c => c.id === sendingCampaignId);
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 space-y-6">
+    <MarketingLayout>
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -303,6 +304,6 @@ export default function EmailCampaigns() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </MarketingLayout>
   );
 }

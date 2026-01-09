@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Upload, Wand2, Download, RefreshCw, Trash2, CheckSquare, Square } from "lucide-react";
+import { Upload, Wand2, Download, RefreshCw, Trash2, CheckSquare, Square } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +13,7 @@ import { BeforeAfterComparison } from "@/components/staging/BeforeAfterCompariso
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 const ROOM_TYPES = [
   { value: "living-room", label: "Living Room" },
   { value: "bedroom", label: "Bedroom" },
@@ -220,19 +221,14 @@ export default function StagingProjectDetail() {
   }
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 space-y-6">
+    <MarketingLayout backTo="/portal/marketing/staging" backLabel="Back to AI Staging">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/portal/marketing/staging")}>
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold">{project.name}</h1>
-            <p className="text-muted-foreground text-sm capitalize">
-              {project.staging_type} Staging • {project.total_images} images
-            </p>
-          </div>
+        <div>
+          <h1 className="text-2xl font-bold">{project.name}</h1>
+          <p className="text-muted-foreground text-sm capitalize">
+            {project.staging_type} Staging • {project.total_images} images
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -544,6 +540,6 @@ export default function StagingProjectDetail() {
           )}
         </div>
       </div>
-    </div>
+    </MarketingLayout>
   );
 }

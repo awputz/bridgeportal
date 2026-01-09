@@ -7,6 +7,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Image, Star, Search, Grid3X3, List } from "lucide-react";
 import { useMarketingTemplates, useFeaturedTemplates } from "@/hooks/marketing";
+import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 
 const MediaLibrary = () => {
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
@@ -47,7 +48,7 @@ const MediaLibrary = () => {
   }, [allTemplates]);
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 space-y-6">
+    <MarketingLayout>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -331,7 +332,7 @@ const MediaLibrary = () => {
           </CardContent>
         </Card>
       )}
-    </div>
+    </MarketingLayout>
   );
 };
 

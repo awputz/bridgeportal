@@ -31,6 +31,7 @@ import {
   type AIGenerationRecord,
 } from "@/hooks/marketing/useAIGenerationHistory";
 import { GenerationDetailDialog } from "@/components/marketing/GenerationDetailDialog";
+import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 
 const GENERATOR_TYPES = [
   { key: "all", label: "All", icon: History },
@@ -138,7 +139,7 @@ export default function AIGenerationHistory() {
   };
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 space-y-6">
+    <MarketingLayout>
       {/* Header */}
       <div className="flex items-center gap-3">
         <div className="p-2 rounded-lg bg-primary/10">
@@ -316,6 +317,6 @@ export default function AIGenerationHistory() {
         onClose={() => setDetailRecord(null)}
         onCopy={handleCopy}
       />
-    </div>
+    </MarketingLayout>
   );
 }

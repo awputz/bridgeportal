@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Wand2, Image as ImageIcon, Mail, FileText, Presentation, Star, Loader2 } from "lucide-react";
+import { Wand2, Image as ImageIcon, Mail, FileText, Presentation, Star, Loader2 } from "lucide-react";
 import { useMarketingTemplate } from "@/hooks/marketing/useMarketingTemplates";
 import { useCreateMarketingProject } from "@/hooks/marketing/useMarketingProjects";
 import { cn } from "@/lib/utils";
 import type { Json } from "@/integrations/supabase/types";
+import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 
 const projectTypes = [
   { value: "social-post", label: "Social Media", description: "Instagram, Facebook, LinkedIn", icon: ImageIcon, color: "bg-pink-500/20 text-pink-400" },
@@ -52,20 +53,13 @@ const CreateProject = () => {
   };
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 space-y-6">
+    <MarketingLayout backTo="/portal/marketing/projects">
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <Button asChild variant="ghost" size="icon">
-          <Link to="/portal/marketing/projects">
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-        </Button>
-        <div>
-          <h1 className="text-2xl font-extralight text-foreground">Create Project</h1>
-          <p className="text-sm text-muted-foreground">
-            {template ? `Starting from "${template.name}"` : "Start from scratch or choose a template"}
-          </p>
-        </div>
+      <div>
+        <h1 className="text-2xl font-extralight text-foreground">Create Project</h1>
+        <p className="text-sm text-muted-foreground">
+          {template ? `Starting from "${template.name}"` : "Start from scratch or choose a template"}
+        </p>
       </div>
 
       {/* Two Column Layout */}
@@ -244,7 +238,7 @@ const CreateProject = () => {
           )}
         </Card>
       </div>
-    </div>
+    </MarketingLayout>
   );
 };
 

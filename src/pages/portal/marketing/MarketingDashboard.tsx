@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { 
   Megaphone, 
@@ -117,7 +118,8 @@ const MarketingDashboard = () => {
     .slice(0, 4);
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 space-y-8">
+    <MarketingLayout showBackButton={false}>
+      <div className="space-y-8">
       {/* Hero Section */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-pink-500/20 via-violet-500/10 to-indigo-500/20 p-8 md:p-12">
         <div className="relative z-10">
@@ -476,7 +478,8 @@ const MarketingDashboard = () => {
           </Card>
         )}
       </section>
-    </div>
+      </div>
+    </MarketingLayout>
   );
 };
 

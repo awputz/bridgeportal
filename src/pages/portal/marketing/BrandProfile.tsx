@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { 
   User, Building2, Share2, Palette, Save, Loader2,
@@ -13,6 +12,7 @@ import {
 import { useBrandProfile, useUpsertBrandProfile, BrandProfileInput } from "@/hooks/marketing/useBrandProfile";
 import { useMarketingAssets } from "@/hooks/marketing/useMarketingAssets";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 
 export default function BrandProfile() {
   const { data: profile, isLoading } = useBrandProfile();
@@ -88,7 +88,8 @@ export default function BrandProfile() {
   }
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 max-w-4xl mx-auto space-y-6">
+    <MarketingLayout>
+      <div className="max-w-4xl mx-auto space-y-6">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Brand Profile</h1>
           <p className="text-muted-foreground">
@@ -414,6 +415,7 @@ export default function BrandProfile() {
             </Button>
           </div>
       </form>
-    </div>
+      </div>
+    </MarketingLayout>
   );
 }
