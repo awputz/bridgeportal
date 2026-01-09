@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CheckCircle, Clock, AlertCircle, Trash2, FolderPlus, Loader2, RefreshCw, Check } from "lucide-react";
+import { CheckCircle, Clock, AlertCircle, Trash2, FolderPlus, Download, Loader2, RefreshCw, Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -54,6 +54,24 @@ export function StagingImageCard({ image, isSelected, isMultiSelect, onClick, on
     onRetry?.(image.id);
   };
 
+  const handleDownload = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      const response = await fetch(image.staged_url!);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `staged-${image.room_type || 'image'}-${Date.now()}.jpg`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Download failed:", error);
+    }
+  };
+
   const isCompleted = image.status === "completed" && image.staged_url;
   const isProcessing = image.status === "processing";
   const isFailed = image.status === "failed";
@@ -71,6 +89,7 @@ export function StagingImageCard({ image, isSelected, isMultiSelect, onClick, on
         <img
           src={image.staged_url || image.original_url}
           alt="Property"
+          loading="lazy"
           className="w-full h-full object-cover"
         />
         
@@ -137,14 +156,24 @@ export function StagingImageCard({ image, isSelected, isMultiSelect, onClick, on
             <Trash2 className="h-3 w-3" />
           </Button>
           {isCompleted && (
-            <Button
-              variant="secondary"
-              size="icon"
-              className="h-6 w-6"
-              onClick={handleUseInProject}
-            >
-              <FolderPlus className="h-3 w-3" />
-            </Button>
+            <>
+              <Button
+                variant="secondary"
+                size="icon"
+                className="h-6 w-6"
+                onClick={handleUseInProject}
+              >
+                <FolderPlus className="h-3 w-3" />
+              </Button>
+              <Button
+                variant="secondary"
+                size="icon"
+                className="h-6 w-6"
+                onClick={handleDownload}
+              >
+                <Download className="h-3 w-3" />
+              </Button>
+            </>
           )}
         </div>
 

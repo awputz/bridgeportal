@@ -508,69 +508,95 @@ const App = () => {
                     
                     {/* Marketing Center */}
                     <Route path="marketing" element={
-                      <Suspense fallback={<PageLoader />}>
-                        <MarketingDashboard />
-                      </Suspense>
+                      <ErrorBoundary>
+                        <Suspense fallback={<PageLoader />}>
+                          <MarketingDashboard />
+                        </Suspense>
+                      </ErrorBoundary>
                     } />
                     <Route path="marketing/projects" element={
-                      <Suspense fallback={<PageLoader />}>
-                        <MarketingProjects />
-                      </Suspense>
+                      <ErrorBoundary>
+                        <Suspense fallback={<PageLoader />}>
+                          <MarketingProjects />
+                        </Suspense>
+                      </ErrorBoundary>
                     } />
                     <Route path="marketing/media" element={
-                      <Suspense fallback={<PageLoader />}>
-                        <MediaLibrary />
-                      </Suspense>
+                      <ErrorBoundary>
+                        <Suspense fallback={<PageLoader />}>
+                          <MediaLibrary />
+                        </Suspense>
+                      </ErrorBoundary>
                     } />
                     <Route path="marketing/create" element={
-                      <Suspense fallback={<PageLoader />}>
-                        <CreateProject />
-                      </Suspense>
+                      <ErrorBoundary>
+                        <Suspense fallback={<PageLoader />}>
+                          <CreateProject />
+                        </Suspense>
+                      </ErrorBoundary>
                     } />
                     <Route path="marketing/edit/:id" element={
-                      <Suspense fallback={<PageLoader />}>
-                        <ProjectEditor />
-                      </Suspense>
+                      <ErrorBoundary>
+                        <Suspense fallback={<PageLoader />}>
+                          <ProjectEditor />
+                        </Suspense>
+                      </ErrorBoundary>
                     } />
                     <Route path="marketing/assets" element={
-                      <Suspense fallback={<PageLoader />}>
-                        <AssetLibrary />
-                      </Suspense>
+                      <ErrorBoundary>
+                        <Suspense fallback={<PageLoader />}>
+                          <AssetLibrary />
+                        </Suspense>
+                      </ErrorBoundary>
                     } />
                     <Route path="marketing/campaigns" element={
-                      <Suspense fallback={<PageLoader />}>
-                        <EmailCampaigns />
-                      </Suspense>
+                      <ErrorBoundary>
+                        <Suspense fallback={<PageLoader />}>
+                          <EmailCampaigns />
+                        </Suspense>
+                      </ErrorBoundary>
                     } />
                     <Route path="marketing/brand" element={
-                      <Suspense fallback={<PageLoader />}>
-                        <BrandProfile />
-                      </Suspense>
+                      <ErrorBoundary>
+                        <Suspense fallback={<PageLoader />}>
+                          <BrandProfile />
+                        </Suspense>
+                      </ErrorBoundary>
                     } />
                     <Route path="marketing/social-schedule" element={
-                      <Suspense fallback={<PageLoader />}>
-                        <SocialSchedule />
-                      </Suspense>
+                      <ErrorBoundary>
+                        <Suspense fallback={<PageLoader />}>
+                          <SocialSchedule />
+                        </Suspense>
+                      </ErrorBoundary>
                     } />
                     <Route path="marketing/generators" element={
-                      <Suspense fallback={<PageLoader />}>
-                        <AIGenerators />
-                      </Suspense>
+                      <ErrorBoundary>
+                        <Suspense fallback={<PageLoader />}>
+                          <AIGenerators />
+                        </Suspense>
+                      </ErrorBoundary>
                     } />
                     <Route path="marketing/history" element={
-                      <Suspense fallback={<PageLoader />}>
-                        <AIGenerationHistory />
-                      </Suspense>
+                      <ErrorBoundary>
+                        <Suspense fallback={<PageLoader />}>
+                          <AIGenerationHistory />
+                        </Suspense>
+                      </ErrorBoundary>
                     } />
                     <Route path="marketing/staging" element={
-                      <Suspense fallback={<PageLoader />}>
-                        <AIStaging />
-                      </Suspense>
+                      <ErrorBoundary>
+                        <Suspense fallback={<PageLoader />}>
+                          <AIStaging />
+                        </Suspense>
+                      </ErrorBoundary>
                     } />
                     <Route path="marketing/staging/:id" element={
-                      <Suspense fallback={<PageLoader />}>
-                        <StagingProjectDetail />
-                      </Suspense>
+                      <ErrorBoundary>
+                        <Suspense fallback={<PageLoader />}>
+                          <StagingProjectDetail />
+                        </Suspense>
+                      </ErrorBoundary>
                     } />
                     
                     {/* Company Pages */}

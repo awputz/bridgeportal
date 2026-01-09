@@ -43,6 +43,7 @@ export function BeforeAfterComparison({
             <img
               src={originalUrl}
               alt="Original"
+              loading="lazy"
               className="w-full h-full object-cover"
             />
           </div>
@@ -55,6 +56,7 @@ export function BeforeAfterComparison({
             <img
               src={stagedUrl}
               alt="Staged"
+              loading="lazy"
               className="w-full h-full object-cover"
             />
           </div>
