@@ -103,6 +103,8 @@ const CreateProject = lazy(() => import("./pages/portal/marketing/CreateProject"
 const ProjectEditor = lazy(() => import("./pages/portal/marketing/ProjectEditor"));
 const AssetLibrary = lazy(() => import("./pages/portal/marketing/AssetLibrary"));
 const EmailCampaigns = lazy(() => import("./pages/portal/marketing/EmailCampaigns"));
+const BrandProfile = lazy(() => import("./pages/portal/marketing/BrandProfile"));
+const SocialSchedule = lazy(() => import("./pages/portal/marketing/SocialSchedule"));
 
 // Company Pages - lazy loaded
 const AboutCompany = lazy(() => import("./pages/portal/company/About"));
@@ -534,6 +536,16 @@ const App = () => {
                     <Route path="marketing/campaigns" element={
                       <Suspense fallback={<PageLoader />}>
                         <EmailCampaigns />
+                      </Suspense>
+                    } />
+                    <Route path="marketing/brand" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <BrandProfile />
+                      </Suspense>
+                    } />
+                    <Route path="marketing/social-schedule" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <SocialSchedule />
                       </Suspense>
                     } />
                     

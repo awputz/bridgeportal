@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PropertySelector, PropertyData } from "@/components/marketing/PropertySelector";
 import { Separator } from "@/components/ui/separator";
+import { useBrandProfile } from "@/hooks/marketing/useBrandProfile";
 
 export interface PresentationFormData {
   presentationType: string;
@@ -34,11 +35,29 @@ const defaultData: PresentationFormData = {
 };
 
 export const PresentationForm = ({ data, onChange }: PresentationFormProps) => {
+  const { data: brandProfile } = useBrandProfile();
+
   useEffect(() => {
     if (!data.presentationType) {
       onChange({ ...defaultData, ...data });
     }
   }, []);
+
+  // Auto-fill experience and advantages from brand profile
+  useEffect(() => {
+    if (brandProfile) {
+      const updates: Partial<PresentationFormData> = {};
+      if (!data.agentExperience && brandProfile.bio) {
+        updates.agentExperience = brandProfile.bio;
+      }
+      if (!data.competitiveAdvantages && brandProfile.tagline) {
+        updates.competitiveAdvantages = brandProfile.tagline;
+      }
+      if (Object.keys(updates).length > 0) {
+        onChange({ ...data, ...updates });
+      }
+    }
+  }, [brandProfile]);
 
   const handleChange = (field: keyof PresentationFormData, value: string) => {
     onChange({ ...data, [field]: value });

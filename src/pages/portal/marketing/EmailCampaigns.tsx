@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useEmailCampaigns } from "@/hooks/marketing/useEmailCampaigns";
+import { useEmailCampaigns, useUpdateEmailCampaign } from "@/hooks/marketing/useEmailCampaigns";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,16 +14,32 @@ import {
   Send,
   Clock,
   FileText,
+  UserPlus,
+  Loader2,
 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { CreateCampaignDialog } from "@/components/marketing/CreateCampaignDialog";
+import { AddRecipientsDialog } from "@/components/marketing/AddRecipientsDialog";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const statusConfig = {
   draft: { label: "Draft", variant: "secondary" as const, icon: FileText },
@@ -36,15 +52,58 @@ const statusConfig = {
 export default function EmailCampaigns() {
   const [activeTab, setActiveTab] = useState("all");
   const [createOpen, setCreateOpen] = useState(false);
+  const [recipientsOpen, setRecipientsOpen] = useState(false);
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
+  const [confirmSendOpen, setConfirmSendOpen] = useState(false);
+  const [sendingCampaignId, setSendingCampaignId] = useState<string | null>(null);
+  const [isSending, setIsSending] = useState(false);
   const navigate = useNavigate();
 
-  const { data: campaigns, isLoading } = useEmailCampaigns(
+  const { data: campaigns, isLoading, refetch } = useEmailCampaigns(
     activeTab === "all" ? undefined : activeTab
   );
+  const updateCampaign = useUpdateEmailCampaign();
 
   const getStatusConfig = (status: string) => {
     return statusConfig[status as keyof typeof statusConfig] || statusConfig.draft;
   };
+
+  const handleAddRecipients = (campaignId: string) => {
+    setSelectedCampaignId(campaignId);
+    setRecipientsOpen(true);
+  };
+
+  const handleSendCampaign = (campaignId: string) => {
+    setSendingCampaignId(campaignId);
+    setConfirmSendOpen(true);
+  };
+
+  const confirmSend = async () => {
+    if (!sendingCampaignId) return;
+    
+    setIsSending(true);
+    try {
+      const response = await supabase.functions.invoke("send-campaign-email", {
+        body: { campaignId: sendingCampaignId },
+      });
+
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
+
+      toast.success("Campaign sending initiated!");
+      refetch();
+    } catch (error) {
+      console.error("Send campaign error:", error);
+      toast.error("Failed to send campaign");
+    } finally {
+      setIsSending(false);
+      setConfirmSendOpen(false);
+      setSendingCampaignId(null);
+    }
+  };
+
+  const selectedCampaign = campaigns?.find(c => c.id === sendingCampaignId);
 
   return (
     <div className="space-y-6">
@@ -113,7 +172,7 @@ export default function EmailCampaigns() {
                 return (
                   <Card
                     key={campaign.id}
-                    className="hover:bg-muted/50 transition-colors cursor-pointer"
+                    className="hover:bg-muted/50 transition-colors"
                   >
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between gap-4">
@@ -173,10 +232,20 @@ export default function EmailCampaigns() {
                               View Details
                             </DropdownMenuItem>
                             {campaign.status === "draft" && (
-                              <DropdownMenuItem>
-                                <Send className="mr-2 h-4 w-4" />
-                                Send Campaign
-                              </DropdownMenuItem>
+                              <>
+                                <DropdownMenuItem onClick={() => handleAddRecipients(campaign.id)}>
+                                  <UserPlus className="mr-2 h-4 w-4" />
+                                  Add Recipients
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem 
+                                  onClick={() => handleSendCampaign(campaign.id)}
+                                  disabled={campaign.total_recipients === 0}
+                                >
+                                  <Send className="mr-2 h-4 w-4" />
+                                  Send Campaign
+                                </DropdownMenuItem>
+                              </>
                             )}
                             {campaign.status === "sent" && (
                               <DropdownMenuItem>
@@ -198,6 +267,42 @@ export default function EmailCampaigns() {
 
       {/* Create Campaign Dialog */}
       <CreateCampaignDialog open={createOpen} onOpenChange={setCreateOpen} />
+      
+      {/* Add Recipients Dialog */}
+      <AddRecipientsDialog 
+        open={recipientsOpen} 
+        onOpenChange={setRecipientsOpen}
+        campaignId={selectedCampaignId}
+        onSuccess={() => refetch()}
+      />
+
+      {/* Confirm Send Dialog */}
+      <AlertDialog open={confirmSendOpen} onOpenChange={setConfirmSendOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Send Campaign</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to send "{selectedCampaign?.name}" to {selectedCampaign?.total_recipients || 0} recipients? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isSending}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmSend} disabled={isSending}>
+              {isSending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  <Send className="mr-2 h-4 w-4" />
+                  Send Now
+                </>
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
