@@ -392,6 +392,60 @@ export const useStageImage = () => {
   });
 };
 
+// Batch stage multiple images mutation
+export const useBatchStageImages = () => {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async ({ 
+      imageIds, 
+      roomType, 
+      stylePreference,
+      templateId 
+    }: { 
+      imageIds: string[]; 
+      roomType: string;
+      stylePreference: string;
+      templateId?: string;
+    }) => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Not authenticated');
+
+      // Update all images with room type and style
+      await supabase
+        .from("staging_images")
+        .update({ room_type: roomType, style_preference: stylePreference })
+        .in("id", imageIds);
+
+      // Stage each image (they will process in parallel on backend)
+      const results = await Promise.allSettled(
+        imageIds.map(imageId => 
+          supabase.functions.invoke('stage-property-image', {
+            body: { imageId, templateId }
+          })
+        )
+      );
+
+      const successful = results.filter(r => r.status === 'fulfilled').length;
+      const failed = results.filter(r => r.status === 'rejected').length;
+
+      return { successful, failed, total: imageIds.length };
+    },
+    onSuccess: (data) => {
+      toast({ 
+        title: 'Batch Staging Started', 
+        description: `Processing ${data.total} images.${data.failed > 0 ? ` ${data.failed} failed to start.` : ''}` 
+      });
+      queryClient.invalidateQueries({ queryKey: ['staging-project-images'] });
+      queryClient.invalidateQueries({ queryKey: ['staging-projects'] });
+    },
+    onError: (error: Error) => {
+      toast({ title: 'Batch Staging Error', description: error.message, variant: 'destructive' });
+    }
+  });
+};
+
 export const useDeleteStagingImage = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();

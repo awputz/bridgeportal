@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Upload, Wand2, Download, RefreshCw, Trash2 } from "lucide-react";
+import { ArrowLeft, Upload, Wand2, Download, RefreshCw, Trash2, CheckSquare, Square } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { useStagingProject, useStagingProjectImages, useStageImage, useStagingTemplates } from "@/hooks/marketing/useStaging";
+import { useStagingProject, useStagingProjectImages, useStageImage, useStagingTemplates, useBatchStageImages } from "@/hooks/marketing/useStaging";
 import { ImageUploadZone } from "@/components/staging/ImageUploadZone";
 import { StagingImageCard } from "@/components/staging/StagingImageCard";
 import { BeforeAfterComparison } from "@/components/staging/BeforeAfterComparison";
@@ -46,12 +46,17 @@ export default function StagingProjectDetail() {
   const { data: images, isLoading: imagesLoading, refetch: refetchImages } = useStagingProjectImages(projectId!);
   const { data: templates } = useStagingTemplates();
   const stageImageMutation = useStageImage();
+  const batchStageMutation = useBatchStageImages();
   
-  const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
+  // Selection state
+  const [selectedImageIds, setSelectedImageIds] = useState<Set<string>>(new Set());
+  const [selectionMode, setSelectionMode] = useState<'single' | 'batch'>('single');
   const [roomType, setRoomType] = useState<string>("living-room");
   const [stylePreference, setStylePreference] = useState<string>("modern");
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>("");
   
+  // For single mode, get first selected image
+  const selectedImageId = selectionMode === 'single' ? Array.from(selectedImageIds)[0] || null : null;
   const selectedImage = images?.find(img => img.id === selectedImageId);
 
   // Real-time subscription for image status updates
@@ -82,6 +87,36 @@ export default function StagingProjectDetail() {
     };
   }, [projectId, queryClient]);
   
+  const handleImageClick = (imageId: string) => {
+    if (selectionMode === 'batch') {
+      setSelectedImageIds(prev => {
+        const next = new Set(prev);
+        if (next.has(imageId)) {
+          next.delete(imageId);
+        } else {
+          next.add(imageId);
+        }
+        return next;
+      });
+    } else {
+      setSelectedImageIds(new Set([imageId]));
+    }
+  };
+
+  const handleSelectAllPending = () => {
+    const pendingIds = images?.filter(img => img.status === 'pending').map(img => img.id) || [];
+    setSelectedImageIds(new Set(pendingIds));
+  };
+
+  const handleClearSelection = () => {
+    setSelectedImageIds(new Set());
+  };
+
+  const handleToggleSelectionMode = () => {
+    setSelectionMode(prev => prev === 'single' ? 'batch' : 'single');
+    setSelectedImageIds(new Set());
+  };
+
   const handleStageImage = async () => {
     if (!selectedImageId) {
       toast({ title: "Select an image", description: "Please select an image to stage", variant: "destructive" });
@@ -98,6 +133,23 @@ export default function StagingProjectDetail() {
       imageId: selectedImageId,
       templateId: selectedTemplateId || undefined,
     });
+  };
+
+  const handleBatchStage = () => {
+    if (selectedImageIds.size === 0) {
+      toast({ title: "No images selected", description: "Please select images to stage", variant: "destructive" });
+      return;
+    }
+
+    batchStageMutation.mutate({
+      imageIds: Array.from(selectedImageIds),
+      roomType,
+      stylePreference,
+      templateId: selectedTemplateId || undefined,
+    });
+
+    // Clear selection after starting batch
+    setSelectedImageIds(new Set());
   };
 
   const handleRetryStaging = async (imageId: string) => {
@@ -132,8 +184,12 @@ export default function StagingProjectDetail() {
     // Delete from database
     await supabase.from("staging_images").delete().eq("id", imageId);
     
-    if (selectedImageId === imageId) {
-      setSelectedImageId(null);
+    if (selectedImageIds.has(imageId)) {
+      setSelectedImageIds(prev => {
+        const next = new Set(prev);
+        next.delete(imageId);
+        return next;
+      });
     }
     
     refetchImages();
@@ -166,7 +222,7 @@ export default function StagingProjectDetail() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => navigate("/portal/marketing/staging")}>
             <ArrowLeft className="h-5 w-5" />
@@ -178,9 +234,28 @@ export default function StagingProjectDetail() {
             </p>
           </div>
         </div>
-        <Badge variant={project.status === "completed" ? "default" : "secondary"} className="capitalize">
-          {project.status}
-        </Badge>
+        <div className="flex items-center gap-2">
+          <Button
+            variant={selectionMode === 'batch' ? 'default' : 'outline'}
+            size="sm"
+            onClick={handleToggleSelectionMode}
+          >
+            {selectionMode === 'batch' ? (
+              <>
+                <CheckSquare className="h-4 w-4 mr-2" />
+                Exit Batch Mode
+              </>
+            ) : (
+              <>
+                <Square className="h-4 w-4 mr-2" />
+                Select Multiple
+              </>
+            )}
+          </Button>
+          <Badge variant={project.status === "completed" ? "default" : "secondary"} className="capitalize">
+            {project.status}
+          </Badge>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -202,8 +277,21 @@ export default function StagingProjectDetail() {
           </Card>
 
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle>Project Images ({images?.length || 0})</CardTitle>
+              {selectionMode === 'batch' && (
+                <div className="flex items-center gap-2 text-sm">
+                  <Button variant="ghost" size="sm" onClick={handleSelectAllPending}>
+                    Select All Pending
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={handleClearSelection}>
+                    Clear
+                  </Button>
+                  <span className="text-muted-foreground">
+                    {selectedImageIds.size} selected
+                  </span>
+                </div>
+              )}
             </CardHeader>
             <CardContent>
               {imagesLoading ? (
@@ -218,8 +306,9 @@ export default function StagingProjectDetail() {
                     <StagingImageCard
                       key={image.id}
                       image={image}
-                      isSelected={selectedImageId === image.id}
-                      onClick={() => setSelectedImageId(image.id)}
+                      isSelected={selectedImageIds.has(image.id)}
+                      isMultiSelect={selectionMode === 'batch'}
+                      onClick={() => handleImageClick(image.id)}
                       onDelete={() => handleDeleteImage(image.id)}
                       onRetry={handleRetryStaging}
                     />
@@ -237,107 +326,208 @@ export default function StagingProjectDetail() {
 
         {/* Right Column: Staging Controls */}
         <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Wand2 className="h-5 w-5" />
-                Stage Selected Image
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {selectedImage ? (
-                <>
-                  <div className="aspect-video bg-muted rounded-lg overflow-hidden">
-                    <img
-                      src={selectedImage.original_url}
-                      alt="Selected"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Room Type</Label>
-                      <Select value={roomType} onValueChange={setRoomType}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {ROOM_TYPES.map((type) => (
-                            <SelectItem key={type.value} value={type.value}>
-                              {type.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label>Style</Label>
-                      <Select value={stylePreference} onValueChange={setStylePreference}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {STYLE_PREFERENCES.map((style) => (
-                            <SelectItem key={style.value} value={style.value}>
-                              {style.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  {templates && templates.length > 0 && (
-                    <div className="space-y-2">
-                      <Label>Template (Optional)</Label>
-                      <Select value={selectedTemplateId} onValueChange={setSelectedTemplateId}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Use custom prompt template" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="">No template</SelectItem>
-                          {templates.map((template) => (
-                            <SelectItem key={template.id} value={template.id}>
-                              {template.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+          {selectionMode === 'batch' && selectedImageIds.size > 0 ? (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Wand2 className="h-5 w-5" />
+                  Batch Stage {selectedImageIds.size} Images
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Preview of selected images */}
+                <div className="flex flex-wrap gap-2 max-h-24 overflow-y-auto">
+                  {Array.from(selectedImageIds).slice(0, 8).map(id => {
+                    const img = images?.find(i => i.id === id);
+                    return img ? (
+                      <div key={id} className="w-12 h-12 rounded overflow-hidden border">
+                        <img src={img.original_url} alt="" className="w-full h-full object-cover" />
+                      </div>
+                    ) : null;
+                  })}
+                  {selectedImageIds.size > 8 && (
+                    <div className="w-12 h-12 rounded bg-muted flex items-center justify-center text-xs">
+                      +{selectedImageIds.size - 8}
                     </div>
                   )}
-
-                  <Button 
-                    className="w-full" 
-                    onClick={handleStageImage}
-                    disabled={stageImageMutation.isPending || selectedImage.status === "processing"}
-                  >
-                    {stageImageMutation.isPending || selectedImage.status === "processing" ? (
-                      <>
-                        <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        <Wand2 className="h-4 w-4 mr-2" />
-                        Stage Image
-                      </>
-                    )}
-                  </Button>
-                </>
-              ) : (
-                <div className="text-center py-12 text-muted-foreground">
-                  <Wand2 className="h-12 w-12 mx-auto mb-4 opacity-30" />
-                  <p>Select an image to stage</p>
-                  <p className="text-sm">Click on any uploaded image to select it</p>
                 </div>
-              )}
-            </CardContent>
-          </Card>
+
+                {/* Settings applied to all */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Room Type (All)</Label>
+                    <Select value={roomType} onValueChange={setRoomType}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {ROOM_TYPES.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label>Style (All)</Label>
+                    <Select value={stylePreference} onValueChange={setStylePreference}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {STYLE_PREFERENCES.map((style) => (
+                          <SelectItem key={style.value} value={style.value}>
+                            {style.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                {templates && templates.length > 0 && (
+                  <div className="space-y-2">
+                    <Label>Template (Optional)</Label>
+                    <Select value={selectedTemplateId} onValueChange={setSelectedTemplateId}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Use custom prompt template" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">No template</SelectItem>
+                        {templates.map((template) => (
+                          <SelectItem key={template.id} value={template.id}>
+                            {template.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
+                <Button 
+                  className="w-full" 
+                  onClick={handleBatchStage}
+                  disabled={batchStageMutation.isPending}
+                >
+                  {batchStageMutation.isPending ? (
+                    <>
+                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                      Starting Batch...
+                    </>
+                  ) : (
+                    <>
+                      <Wand2 className="h-4 w-4 mr-2" />
+                      Stage All {selectedImageIds.size} Images
+                    </>
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Wand2 className="h-5 w-5" />
+                  Stage Selected Image
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {selectedImage ? (
+                  <>
+                    <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+                      <img
+                        src={selectedImage.original_url}
+                        alt="Selected"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Room Type</Label>
+                        <Select value={roomType} onValueChange={setRoomType}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {ROOM_TYPES.map((type) => (
+                              <SelectItem key={type.value} value={type.value}>
+                                {type.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label>Style</Label>
+                        <Select value={stylePreference} onValueChange={setStylePreference}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {STYLE_PREFERENCES.map((style) => (
+                              <SelectItem key={style.value} value={style.value}>
+                                {style.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    {templates && templates.length > 0 && (
+                      <div className="space-y-2">
+                        <Label>Template (Optional)</Label>
+                        <Select value={selectedTemplateId} onValueChange={setSelectedTemplateId}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Use custom prompt template" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="">No template</SelectItem>
+                            {templates.map((template) => (
+                              <SelectItem key={template.id} value={template.id}>
+                                {template.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
+
+                    <Button 
+                      className="w-full" 
+                      onClick={handleStageImage}
+                      disabled={stageImageMutation.isPending || selectedImage.status === "processing"}
+                    >
+                      {stageImageMutation.isPending || selectedImage.status === "processing" ? (
+                        <>
+                          <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          <Wand2 className="h-4 w-4 mr-2" />
+                          Stage Image
+                        </>
+                      )}
+                    </Button>
+                  </>
+                ) : (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <Wand2 className="h-12 w-12 mx-auto mb-4 opacity-30" />
+                    <p>Select an image to stage</p>
+                    <p className="text-sm">Click on any uploaded image to select it</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
 
           {/* Before/After Comparison */}
-          {selectedImage?.staged_url && (
+          {selectedImage?.staged_url && selectionMode === 'single' && (
             <Card>
               <CardHeader>
                 <CardTitle>Before / After</CardTitle>
