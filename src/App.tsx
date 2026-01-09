@@ -50,9 +50,12 @@ const Interviews = lazy(() => import("./pages/hr/Interviews"));
 const InterviewDetail = lazy(() => import("./pages/hr/InterviewDetail"));
 const Offers = lazy(() => import("./pages/hr/Offers"));
 const OfferDetail = lazy(() => import("./pages/hr/OfferDetail"));
+const HRContracts = lazy(() => import("./pages/hr/Contracts"));
 const HRAnalytics = lazy(() => import("./pages/hr/Analytics"));
 const HRSettings = lazy(() => import("./pages/hr/Settings"));
 
+// Public contract signing - lazy loaded
+const SignContract = lazy(() => import("./pages/contracts/SignContract"));
 // Auth callback - lazy loaded
 const AuthCallback = lazy(() => import("./pages/AuthCallback"));
 
@@ -311,9 +314,17 @@ const App = () => {
                     <Route path="interviews/:id" element={<Suspense fallback={<PageLoader />}><InterviewDetail /></Suspense>} />
                     <Route path="offers" element={<Suspense fallback={<PageLoader />}><Offers /></Suspense>} />
                     <Route path="offers/:id" element={<Suspense fallback={<PageLoader />}><OfferDetail /></Suspense>} />
+                    <Route path="contracts" element={<Suspense fallback={<PageLoader />}><HRContracts /></Suspense>} />
                     <Route path="analytics" element={<Suspense fallback={<PageLoader />}><HRAnalytics /></Suspense>} />
                     <Route path="settings" element={<Suspense fallback={<PageLoader />}><HRSettings /></Suspense>} />
                   </Route>
+                  
+                  {/* Public Contract Signing */}
+                  <Route path="/contracts/sign/:contractId" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <SignContract />
+                    </Suspense>
+                  } />
                   
                   {/* Portal Routes (Protected) */}
                   <Route path="/portal" element={<PortalLayout />}>
