@@ -258,3 +258,56 @@ export const useDuplicateProject = () => {
     },
   });
 };
+
+export const useAddImageToProject = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      projectId,
+      imageUrl,
+    }: {
+      projectId: string;
+      imageUrl: string;
+    }) => {
+      // First fetch current project to preserve existing design_data
+      const { data: existing, error: fetchError } = await supabase
+        .from("marketing_projects")
+        .select("design_data")
+        .eq("id", projectId)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      // Merge new image into design_data
+      const currentData = (existing?.design_data as Record<string, unknown>) || {};
+      const updatedDesignData = {
+        ...currentData,
+        featured_image: imageUrl,
+        staged_image: imageUrl,
+      };
+
+      const { data, error } = await supabase
+        .from("marketing_projects")
+        .update({
+          design_data: updatedDesignData,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", projectId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as MarketingProject;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["marketing-projects"] });
+      queryClient.invalidateQueries({ queryKey: ["marketing-project", data.id] });
+      toast.success("Image added to project");
+    },
+    onError: (error) => {
+      toast.error("Failed to add image to project");
+      console.error("Add image to project error:", error);
+    },
+  });
+};
