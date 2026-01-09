@@ -14,6 +14,90 @@ export type Database = {
   }
   public: {
     Tables: {
+      active_agents: {
+        Row: {
+          commission_split: string | null
+          contract_id: string | null
+          created_at: string | null
+          created_by: string | null
+          deals_closed: number | null
+          division: string
+          email: string
+          employee_id: string | null
+          full_name: string
+          hire_date: string
+          hr_agent_id: string | null
+          id: string
+          last_deal_date: string | null
+          onboarding_completed_at: string | null
+          phone: string | null
+          start_date: string | null
+          status: string
+          updated_at: string | null
+          user_id: string | null
+          ytd_production: number | null
+        }
+        Insert: {
+          commission_split?: string | null
+          contract_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deals_closed?: number | null
+          division: string
+          email: string
+          employee_id?: string | null
+          full_name: string
+          hire_date: string
+          hr_agent_id?: string | null
+          id?: string
+          last_deal_date?: string | null
+          onboarding_completed_at?: string | null
+          phone?: string | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string | null
+          user_id?: string | null
+          ytd_production?: number | null
+        }
+        Update: {
+          commission_split?: string | null
+          contract_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deals_closed?: number | null
+          division?: string
+          email?: string
+          employee_id?: string | null
+          full_name?: string
+          hire_date?: string
+          hr_agent_id?: string | null
+          id?: string
+          last_deal_date?: string | null
+          onboarding_completed_at?: string | null
+          phone?: string | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string | null
+          user_id?: string | null
+          ytd_production?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "active_agents_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "hr_contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "active_agents_hr_agent_id_fkey"
+            columns: ["hr_agent_id"]
+            isOneToOne: false
+            referencedRelation: "hr_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       activity_logs: {
         Row: {
           action: string
@@ -172,6 +256,59 @@ export type Database = {
           w9_submitted?: boolean | null
         }
         Relationships: []
+      }
+      agent_compliance: {
+        Row: {
+          active_agent_id: string
+          created_at: string | null
+          document_url: string | null
+          expiry_date: string
+          id: string
+          issue_date: string | null
+          license_number: string
+          license_state: string
+          license_type: string
+          renewal_reminder_sent: boolean | null
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          active_agent_id: string
+          created_at?: string | null
+          document_url?: string | null
+          expiry_date: string
+          id?: string
+          issue_date?: string | null
+          license_number: string
+          license_state?: string
+          license_type: string
+          renewal_reminder_sent?: boolean | null
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          active_agent_id?: string
+          created_at?: string | null
+          document_url?: string | null
+          expiry_date?: string
+          id?: string
+          issue_date?: string | null
+          license_number?: string
+          license_state?: string
+          license_type?: string
+          renewal_reminder_sent?: boolean | null
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_compliance_active_agent_id_fkey"
+            columns: ["active_agent_id"]
+            isOneToOne: false
+            referencedRelation: "active_agents"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       agent_expenses: {
         Row: {
@@ -376,6 +513,110 @@ export type Database = {
             columns: ["folder_id"]
             isOneToOne: false
             referencedRelation: "note_folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_onboarding: {
+        Row: {
+          active_agent_id: string
+          background_check_at: string | null
+          background_check_passed: boolean | null
+          bio_at: string | null
+          bio_submitted: boolean | null
+          bio_text: string | null
+          company_email: string | null
+          contract_signed: boolean | null
+          contract_signed_at: string | null
+          created_at: string | null
+          crm_access_at: string | null
+          crm_access_granted: boolean | null
+          direct_deposit_at: string | null
+          direct_deposit_setup: boolean | null
+          email_account_at: string | null
+          email_account_created: boolean | null
+          headshot_at: string | null
+          headshot_uploaded: boolean | null
+          headshot_url: string | null
+          id: string
+          license_expiry: string | null
+          license_number: string | null
+          license_verified: boolean | null
+          license_verified_at: string | null
+          training_completed: boolean | null
+          training_completed_at: string | null
+          updated_at: string | null
+          w9_submitted: boolean | null
+          w9_submitted_at: string | null
+        }
+        Insert: {
+          active_agent_id: string
+          background_check_at?: string | null
+          background_check_passed?: boolean | null
+          bio_at?: string | null
+          bio_submitted?: boolean | null
+          bio_text?: string | null
+          company_email?: string | null
+          contract_signed?: boolean | null
+          contract_signed_at?: string | null
+          created_at?: string | null
+          crm_access_at?: string | null
+          crm_access_granted?: boolean | null
+          direct_deposit_at?: string | null
+          direct_deposit_setup?: boolean | null
+          email_account_at?: string | null
+          email_account_created?: boolean | null
+          headshot_at?: string | null
+          headshot_uploaded?: boolean | null
+          headshot_url?: string | null
+          id?: string
+          license_expiry?: string | null
+          license_number?: string | null
+          license_verified?: boolean | null
+          license_verified_at?: string | null
+          training_completed?: boolean | null
+          training_completed_at?: string | null
+          updated_at?: string | null
+          w9_submitted?: boolean | null
+          w9_submitted_at?: string | null
+        }
+        Update: {
+          active_agent_id?: string
+          background_check_at?: string | null
+          background_check_passed?: boolean | null
+          bio_at?: string | null
+          bio_submitted?: boolean | null
+          bio_text?: string | null
+          company_email?: string | null
+          contract_signed?: boolean | null
+          contract_signed_at?: string | null
+          created_at?: string | null
+          crm_access_at?: string | null
+          crm_access_granted?: boolean | null
+          direct_deposit_at?: string | null
+          direct_deposit_setup?: boolean | null
+          email_account_at?: string | null
+          email_account_created?: boolean | null
+          headshot_at?: string | null
+          headshot_uploaded?: boolean | null
+          headshot_url?: string | null
+          id?: string
+          license_expiry?: string | null
+          license_number?: string | null
+          license_verified?: boolean | null
+          license_verified_at?: string | null
+          training_completed?: boolean | null
+          training_completed_at?: string | null
+          updated_at?: string | null
+          w9_submitted?: boolean | null
+          w9_submitted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_onboarding_active_agent_id_fkey"
+            columns: ["active_agent_id"]
+            isOneToOne: true
+            referencedRelation: "active_agents"
             referencedColumns: ["id"]
           },
         ]
