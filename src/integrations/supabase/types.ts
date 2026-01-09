@@ -981,6 +981,56 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_generation_history: {
+        Row: {
+          agent_id: string
+          created_at: string | null
+          form_data: Json | null
+          generated_content: string
+          generation_time_ms: number | null
+          generator_type: string
+          id: string
+          model_used: string | null
+          project_id: string | null
+          prompt_used: string
+          tokens_used: number | null
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string | null
+          form_data?: Json | null
+          generated_content: string
+          generation_time_ms?: number | null
+          generator_type: string
+          id?: string
+          model_used?: string | null
+          project_id?: string | null
+          prompt_used: string
+          tokens_used?: number | null
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string | null
+          form_data?: Json | null
+          generated_content?: string
+          generation_time_ms?: number | null
+          generator_type?: string
+          id?: string
+          model_used?: string | null
+          project_id?: string | null
+          prompt_used?: string
+          tokens_used?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_generation_history_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bridge_buildings: {
         Row: {
           address: string
