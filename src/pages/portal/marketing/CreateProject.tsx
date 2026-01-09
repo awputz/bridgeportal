@@ -41,7 +41,7 @@ const CreateProject = () => {
         name: projectName,
         type: effectiveType,
         template_id: templateId || undefined,
-        design_data: template?.design_data as Record<string, unknown> | undefined,
+        design_data: template?.design_data as Json | undefined,
       });
       
       // Navigate to edit page
@@ -198,7 +198,7 @@ const CreateProject = () => {
                   />
                 ) : (
                   <div className="text-center">
-                    <Image className="h-12 w-12 text-muted-foreground/50 mx-auto mb-2" />
+                    <ImageIcon className="h-12 w-12 text-muted-foreground/50 mx-auto mb-2" />
                     <p className="text-sm text-muted-foreground">Template Preview</p>
                   </div>
                 )}
