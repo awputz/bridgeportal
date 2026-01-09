@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -15,9 +15,12 @@ import {
   Check, 
   Download, 
   ArrowLeft,
-  Wand2 
+  Wand2,
+  FolderPlus 
 } from "lucide-react";
 import { toast } from "sonner";
+import { useCreateMarketingProject } from "@/hooks/marketing/useMarketingProjects";
+import { SaveProjectDialog } from "@/components/marketing/SaveProjectDialog";
 import { 
   SocialPostForm, 
   SocialPostFormData,
@@ -63,6 +66,9 @@ type GeneratedContentMap = {
 };
 
 const AIGenerators = () => {
+  const navigate = useNavigate();
+  const createProject = useCreateMarketingProject();
+  
   const [activeTab, setActiveTab] = useState<GeneratorType>("social-post");
   const [formData, setFormData] = useState<FormDataMap>({
     "social-post": {},
@@ -78,7 +84,27 @@ const AIGenerators = () => {
   });
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
+
+  const handleSaveAsProject = async (name: string) => {
+    try {
+      const project = await createProject.mutateAsync({
+        name,
+        type: activeTab,
+        design_data: {
+          formData: formData[activeTab],
+          generatedContent: generatedContent[activeTab],
+        },
+      });
+      
+      toast.success("Project saved successfully!");
+      setSaveDialogOpen(false);
+      navigate(`/portal/marketing/edit/${project.id}`);
+    } catch (error) {
+      toast.error("Failed to save project");
+    }
+  };
 
   const updateFormData = <T extends GeneratorType>(type: T, data: FormDataMap[T]) => {
     setFormData(prev => ({ ...prev, [type]: data }));
@@ -374,6 +400,15 @@ const AIGenerators = () => {
                   <Button
                     variant="outline"
                     size="sm"
+                    onClick={() => setSaveDialogOpen(true)}
+                    className="gap-1.5"
+                  >
+                    <FolderPlus className="h-3.5 w-3.5" />
+                    Save as Project
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={handleCopy}
                     className="gap-1.5"
                   >
@@ -429,6 +464,14 @@ const AIGenerators = () => {
           </CardContent>
         </Card>
       </div>
+
+      <SaveProjectDialog
+        open={saveDialogOpen}
+        onOpenChange={setSaveDialogOpen}
+        onSave={handleSaveAsProject}
+        defaultName={`${generators.find(g => g.id === activeTab)?.name} - ${new Date().toLocaleDateString()}`}
+        isLoading={createProject.isPending}
+      />
     </div>
   );
 };
