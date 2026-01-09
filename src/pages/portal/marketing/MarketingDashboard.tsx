@@ -247,7 +247,7 @@ const MarketingDashboard = () => {
                     ? "bg-gradient-to-br from-purple-500/20 to-pink-500/20 border-purple-500/30 hover:border-purple-400/50" 
                     : "hover:bg-muted/50"
                 }`}>
-                  <CardContent className="p-5">
+                  <CardContent className="p-6">
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${
                       isFeatured 
                         ? "bg-gradient-to-br from-purple-500 to-pink-500" 
@@ -278,7 +278,7 @@ const MarketingDashboard = () => {
       {/* Navigate To Section */}
       <section>
         <h2 className="text-xl font-light text-foreground mb-4">Navigate To</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
           {[
             { name: "My Projects", path: "/portal/marketing/projects", icon: FolderKanban, color: "bg-violet-500/20 text-violet-400" },
             { name: "Media Library", path: "/portal/marketing/media", icon: ImageIcon, color: "bg-indigo-500/20 text-indigo-400" },

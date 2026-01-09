@@ -99,7 +99,7 @@ export default function AIStaging() {
       {/* Stats Row */}
       <div className="grid grid-cols-3 gap-4">
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Total Projects</p>
@@ -110,7 +110,7 @@ export default function AIStaging() {
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Processing</p>
@@ -121,7 +121,7 @@ export default function AIStaging() {
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Completed</p>
@@ -145,7 +145,7 @@ export default function AIStaging() {
                 className={`cursor-pointer transition-all hover:shadow-md hover:scale-[1.02] border-2 ${type.color}`}
                 onClick={() => handleTypeClick(type.id)}
               >
-                <CardContent className="pt-6">
+                <CardContent className="p-6">
                   <div className="flex flex-col items-center text-center gap-3">
                     <div className="p-3 rounded-full bg-background">
                       <Icon className="h-6 w-6" />
@@ -171,7 +171,7 @@ export default function AIStaging() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3].map((i) => (
               <Card key={i} className="animate-pulse">
-                <CardContent className="pt-6">
+                <CardContent className="p-6">
                   <div className="h-32 bg-muted rounded-md mb-4" />
                   <div className="h-4 bg-muted rounded w-3/4 mb-2" />
                   <div className="h-3 bg-muted rounded w-1/2" />
@@ -217,7 +217,7 @@ export default function AIStaging() {
               className="cursor-pointer border-dashed hover:border-primary hover:bg-muted/50 transition-all"
               onClick={() => setCreateDialogOpen(true)}
             >
-              <CardContent className="pt-6 h-full flex flex-col items-center justify-center min-h-[200px]">
+              <CardContent className="p-6 h-full flex flex-col items-center justify-center min-h-[200px]">
                 <div className="p-4 rounded-full bg-muted mb-3">
                   <Plus className="h-6 w-6 text-muted-foreground" />
                 </div>

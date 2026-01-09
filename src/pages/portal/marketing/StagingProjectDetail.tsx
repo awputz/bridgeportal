@@ -334,7 +334,7 @@ export default function StagingProjectDetail() {
                   Batch Stage {selectedImageIds.size} Images
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
                 {/* Preview of selected images */}
                 <div className="flex flex-wrap gap-2 max-h-24 overflow-y-auto">
                   {Array.from(selectedImageIds).slice(0, 8).map(id => {
@@ -433,7 +433,7 @@ export default function StagingProjectDetail() {
                   Stage Selected Image
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
                 {selectedImage ? (
                   <>
                     <div className="aspect-video bg-muted rounded-lg overflow-hidden">
