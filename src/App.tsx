@@ -55,6 +55,8 @@ const ActiveAgents = lazy(() => import("./pages/hr/ActiveAgents"));
 const ActiveAgentProfile = lazy(() => import("./pages/hr/ActiveAgentProfile"));
 const HRAnalytics = lazy(() => import("./pages/hr/Analytics"));
 const HRPerformance = lazy(() => import("./pages/hr/Performance"));
+const HRReports = lazy(() => import("./pages/hr/Reports"));
+const HRExecutiveSummary = lazy(() => import("./pages/hr/ExecutiveSummary"));
 const HRSettings = lazy(() => import("./pages/hr/Settings"));
 
 // Public contract signing - lazy loaded
@@ -322,6 +324,8 @@ const App = () => {
                     <Route path="active-agents/:id" element={<Suspense fallback={<PageLoader />}><ActiveAgentProfile /></Suspense>} />
                     <Route path="analytics" element={<Suspense fallback={<PageLoader />}><HRAnalytics /></Suspense>} />
                     <Route path="performance" element={<Suspense fallback={<PageLoader />}><HRPerformance /></Suspense>} />
+                    <Route path="reports" element={<Suspense fallback={<PageLoader />}><HRReports /></Suspense>} />
+                    <Route path="executive-summary" element={<Suspense fallback={<PageLoader />}><HRExecutiveSummary /></Suspense>} />
                     <Route path="settings" element={<Suspense fallback={<PageLoader />}><HRSettings /></Suspense>} />
                   </Route>
                   
