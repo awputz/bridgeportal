@@ -1,5 +1,4 @@
 import { useParams, Link } from "react-router-dom";
-import { HRLayout } from "@/components/hr/HRLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -27,35 +26,30 @@ export default function ActiveAgentProfilePage() {
 
   if (isLoading) {
     return (
-      <HRLayout>
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-        </div>
-      </HRLayout>
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
     );
   }
 
   if (!agent) {
     return (
-      <HRLayout>
-        <div className="text-center py-12">
-          <h2 className="text-xl font-medium mb-2">Agent Not Found</h2>
-          <p className="text-muted-foreground mb-4">
-            The requested agent profile could not be found.
-          </p>
-          <Button asChild>
-            <Link to="/hr/active-agents">Back to Active Agents</Link>
-          </Button>
-        </div>
-      </HRLayout>
+      <div className="text-center py-12">
+        <h2 className="text-xl font-medium mb-2">Agent Not Found</h2>
+        <p className="text-muted-foreground mb-4">
+          The requested agent profile could not be found.
+        </p>
+        <Button asChild>
+          <Link to="/hr/active-agents">Back to Active Agents</Link>
+        </Button>
+      </div>
     );
   }
 
   const status = statusConfig[agent.status];
 
   return (
-    <HRLayout>
-      <div className="space-y-6">
+    <div className="space-y-6">
         {/* Back Button */}
         <Button variant="ghost" size="sm" asChild>
           <Link to="/hr/active-agents">
@@ -217,9 +211,8 @@ export default function ActiveAgentProfilePage() {
           {/* Right Column - Compliance */}
           <div className="space-y-6">
             <ComplianceCard activeAgentId={agent.id} />
-          </div>
         </div>
       </div>
-    </HRLayout>
+    </div>
   );
 }

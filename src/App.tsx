@@ -51,6 +51,8 @@ const InterviewDetail = lazy(() => import("./pages/hr/InterviewDetail"));
 const Offers = lazy(() => import("./pages/hr/Offers"));
 const OfferDetail = lazy(() => import("./pages/hr/OfferDetail"));
 const HRContracts = lazy(() => import("./pages/hr/Contracts"));
+const ActiveAgents = lazy(() => import("./pages/hr/ActiveAgents"));
+const ActiveAgentProfile = lazy(() => import("./pages/hr/ActiveAgentProfile"));
 const HRAnalytics = lazy(() => import("./pages/hr/Analytics"));
 const HRSettings = lazy(() => import("./pages/hr/Settings"));
 
@@ -315,6 +317,8 @@ const App = () => {
                     <Route path="offers" element={<Suspense fallback={<PageLoader />}><Offers /></Suspense>} />
                     <Route path="offers/:id" element={<Suspense fallback={<PageLoader />}><OfferDetail /></Suspense>} />
                     <Route path="contracts" element={<Suspense fallback={<PageLoader />}><HRContracts /></Suspense>} />
+                    <Route path="active-agents" element={<Suspense fallback={<PageLoader />}><ActiveAgents /></Suspense>} />
+                    <Route path="active-agents/:id" element={<Suspense fallback={<PageLoader />}><ActiveAgentProfile /></Suspense>} />
                     <Route path="analytics" element={<Suspense fallback={<PageLoader />}><HRAnalytics /></Suspense>} />
                     <Route path="settings" element={<Suspense fallback={<PageLoader />}><HRSettings /></Suspense>} />
                   </Route>

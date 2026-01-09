@@ -47,7 +47,7 @@ export function ConvertToActiveDialog({
   const createActiveAgent = useCreateActiveAgent();
 
   const selectedAgent = hrAgents?.find((a) => a.id === selectedAgentId);
-  const agentContracts = contracts?.filter((c) => c.hr_agent_id === selectedAgentId);
+  const agentContracts = contracts?.filter((c) => c.agent_id === selectedAgentId);
 
   const handleSubmit = async () => {
     if (!selectedAgent) return;
