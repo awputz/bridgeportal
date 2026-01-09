@@ -36,6 +36,14 @@ const quickActions = [
     featured: true,
   },
   { 
+    name: "AI Staging", 
+    description: "Virtual property staging", 
+    icon: Home, 
+    color: "bg-gradient-to-br from-teal-500 to-cyan-500",
+    path: "/portal/marketing/staging",
+    featured: true,
+  },
+  { 
     name: "Social Media", 
     description: "Instagram, Facebook, LinkedIn posts", 
     icon: ImageIcon, 
@@ -223,7 +231,7 @@ const MarketingDashboard = () => {
       {/* Quick Actions */}
       <section>
         <h2 className="text-xl font-light text-foreground mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
           {quickActions.map((action) => {
             const Icon = action.icon;
             const isFeatured = 'featured' in action && action.featured;
