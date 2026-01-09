@@ -9,6 +9,7 @@ import {
   FileText,
   FileSignature,
   BarChart3,
+  TrendingUp,
   Settings,
   ClipboardList,
 } from "lucide-react";
@@ -23,6 +24,7 @@ const navItems = [
   { name: "Offers", path: "/hr/offers", icon: FileText },
   { name: "Contracts", path: "/hr/contracts", icon: FileSignature },
   { name: "Active Agents", path: "/hr/active-agents", icon: Users },
+  { name: "Performance", path: "/hr/performance", icon: TrendingUp },
   { name: "Analytics", path: "/hr/analytics", icon: BarChart3 },
   { name: "Settings", path: "/hr/settings", icon: Settings },
 ];

@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, GitBranch, Calendar, FileText, Loader2, ArrowRight, ClipboardList } from "lucide-react";
+import { Users, GitBranch, Calendar, FileText, Loader2, ArrowRight, ClipboardList, TrendingUp } from "lucide-react";
 import { useHRAnalytics } from "@/hooks/hr/useHRAnalytics";
 import { useAgentApplications } from "@/hooks/useAgentApplications";
+import { AgentLeaderboard } from "@/components/hr/performance/AgentLeaderboard";
 
 export default function HRDashboard() {
   const { data, isLoading } = useHRAnalytics();
@@ -188,13 +189,16 @@ export default function HRDashboard() {
         </Card>
       )}
 
+      {/* Top Performers */}
+      <AgentLeaderboard compact limit={3} />
+
       {/* Quick actions */}
       <Card className="bg-white/5 border-white/10">
         <CardHeader>
           <CardTitle className="text-lg font-light">Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
             <Link to="/hr/applications" className="p-4 rounded-lg bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 transition-colors text-center relative">
               <ClipboardList className="h-6 w-6 text-amber-400 mx-auto mb-2" />
               <span className="text-sm font-light">Applications</span>
@@ -219,6 +223,10 @@ export default function HRDashboard() {
             <Link to="/hr/offers" className="p-4 rounded-lg bg-rose-500/10 border border-rose-500/20 hover:bg-rose-500/20 transition-colors text-center">
               <FileText className="h-6 w-6 text-rose-400 mx-auto mb-2" />
               <span className="text-sm font-light">View Offers</span>
+            </Link>
+            <Link to="/hr/performance" className="p-4 rounded-lg bg-cyan-500/10 border border-cyan-500/20 hover:bg-cyan-500/20 transition-colors text-center">
+              <TrendingUp className="h-6 w-6 text-cyan-400 mx-auto mb-2" />
+              <span className="text-sm font-light">Performance</span>
             </Link>
           </div>
         </CardContent>
