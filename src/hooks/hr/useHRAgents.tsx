@@ -198,21 +198,38 @@ export function useUpdateAgentStatus() {
       return data;
     },
     onMutate: async ({ id, status }) => {
-      await queryClient.cancelQueries({ queryKey: ['hr-agents'] });
-      const previousAgents = queryClient.getQueryData(['hr-agents']);
+      // Cancel ALL hr-agents queries (including filtered ones)
+      await queryClient.cancelQueries({ queryKey: ['hr-agents'], exact: false });
       
-      queryClient.setQueryData(['hr-agents'], (old: HRAgent[] | undefined) => 
-        old?.map(a => a.id === id ? { ...a, recruitment_status: status } : a)
+      // Get all cached queries matching the pattern and store for rollback
+      const previousQueries = queryClient.getQueriesData<HRAgent[]>({ 
+        queryKey: ['hr-agents'] 
+      });
+      
+      // Update all cached queries optimistically
+      previousQueries.forEach(([queryKey]) => {
+        queryClient.setQueryData<HRAgent[]>(queryKey, (old) =>
+          old?.map(a => a.id === id ? { ...a, recruitment_status: status } : a)
+        );
+      });
+      
+      // Also update the individual agent cache if it exists
+      queryClient.setQueryData<HRAgent>(['hr-agent', id], (old) =>
+        old ? { ...old, recruitment_status: status } : old
       );
       
-      return { previousAgents };
+      return { previousQueries };
     },
     onError: (err, variables, context) => {
-      queryClient.setQueryData(['hr-agents'], context?.previousAgents);
+      // Rollback all queries to their previous state
+      context?.previousQueries.forEach(([queryKey, data]) => {
+        queryClient.setQueryData(queryKey, data);
+      });
       toast.error('Failed to update status');
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['hr-agents'] });
+      // Invalidate all hr-agents queries to refetch fresh data
+      queryClient.invalidateQueries({ queryKey: ['hr-agents'], exact: false });
     },
   });
 }

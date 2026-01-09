@@ -79,3 +79,42 @@ export const TEXT_SIZES = {
   body: 'text-[13px]',
   bodyLg: 'text-sm',
 } as const;
+
+// HR Portal specific spacing and design tokens
+export const HR_SPACING = {
+  // Pipeline card dimensions
+  pipelineCard: 'w-[280px] min-w-[280px]',
+  pipelineCardPadding: 'p-3',
+  
+  // Table row heights
+  tableRowCompact: 'h-12',
+  tableRowNormal: 'h-14',
+  
+  // Form sections
+  formSection: 'space-y-4',
+  formSectionHeader: 'text-sm font-medium text-muted-foreground uppercase tracking-wider mb-3',
+  
+  // Metric cards
+  metricCardPadding: 'p-4',
+  metricCardGap: 'gap-3',
+} as const;
+
+// HR Status color tokens (for programmatic use with cn())
+export const HR_STATUS_COLORS = {
+  cold: { bg: 'bg-slate-500/10', text: 'text-slate-400', border: 'border-slate-500/20' },
+  contacted: { bg: 'bg-blue-500/10', text: 'text-blue-400', border: 'border-blue-500/20' },
+  warm: { bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/20' },
+  qualified: { bg: 'bg-orange-500/10', text: 'text-orange-400', border: 'border-orange-500/20' },
+  hot: { bg: 'bg-red-500/10', text: 'text-red-400', border: 'border-red-500/20' },
+  'offer-made': { bg: 'bg-purple-500/10', text: 'text-purple-400', border: 'border-purple-500/20' },
+  hired: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/20' },
+  lost: { bg: 'bg-gray-500/10', text: 'text-gray-400', border: 'border-gray-500/20' },
+} as const;
+
+// HR Division color tokens
+export const HR_DIVISION_COLORS = {
+  'investment-sales': { bg: 'bg-purple-500/10', text: 'text-purple-400', border: 'border-purple-500/20' },
+  'commercial-leasing': { bg: 'bg-blue-500/10', text: 'text-blue-400', border: 'border-blue-500/20' },
+  'residential': { bg: 'bg-green-500/10', text: 'text-green-400', border: 'border-green-500/20' },
+  'capital-advisory': { bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/20' },
+} as const;

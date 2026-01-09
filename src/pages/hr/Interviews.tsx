@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -39,6 +40,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { useURLFilters, parseString } from "@/hooks/useURLFilters";
 import {
   useHRInterviews,
   useDeleteHRInterview,
@@ -49,12 +51,24 @@ import {
 } from "@/hooks/hr/useHRInterviews";
 import { ScheduleInterviewDialog } from "@/components/hr/ScheduleInterviewDialog";
 
+// Filter config for URL persistence
+const filterConfigs = {
+  tab: { 
+    key: 'tab', 
+    defaultValue: 'upcoming' as 'upcoming' | 'completed' | 'all', 
+    parse: parseString('upcoming') 
+  },
+};
+
 export default function Interviews() {
-  const [activeTab, setActiveTab] = useState<'upcoming' | 'completed' | 'all'>('upcoming');
+  // URL-persisted tab state
+  const [filters, setFilters] = useURLFilters(filterConfigs);
+  const { tab: activeTab } = filters;
+  
   const [showScheduleDialog, setShowScheduleDialog] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const { data: interviews, isLoading } = useHRInterviews({ tab: activeTab });
+  const { data: interviews, isLoading } = useHRInterviews({ tab: activeTab as 'upcoming' | 'completed' | 'all' });
   const deleteInterview = useDeleteHRInterview();
 
   const now = new Date();
@@ -139,7 +153,7 @@ export default function Interviews() {
       </div>
 
       {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as typeof activeTab)}>
+      <Tabs value={activeTab} onValueChange={(v) => setFilters({ tab: v as typeof activeTab })}>
         <TabsList className="bg-white/5 border border-white/10">
           <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
           <TabsTrigger value="completed">Completed</TabsTrigger>
@@ -148,8 +162,39 @@ export default function Interviews() {
 
         <TabsContent value={activeTab} className="mt-4">
           {isLoading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-400" />
+            <div className="rounded-xl border border-white/10 overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-white/10 hover:bg-transparent">
+                    <TableHead>Date & Time</TableHead>
+                    <TableHead>Agent</TableHead>
+                    <TableHead>Interviewer</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Decision</TableHead>
+                    <TableHead className="w-[50px]"></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <TableRow key={i} className="border-white/10">
+                      <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <Skeleton className="h-8 w-8 rounded-full" />
+                          <div>
+                            <Skeleton className="h-4 w-28" />
+                            <Skeleton className="h-3 w-20 mt-1" />
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
+                      <TableCell><Skeleton className="h-8 w-8" /></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
           ) : allInterviews.length === 0 ? (
             <div className="text-center py-12 bg-white/5 rounded-xl border border-white/10">
