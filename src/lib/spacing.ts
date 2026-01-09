@@ -118,3 +118,28 @@ export const HR_DIVISION_COLORS = {
   'residential': { bg: 'bg-green-500/10', text: 'text-green-400', border: 'border-green-500/20' },
   'capital-advisory': { bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/20' },
 } as const;
+
+// Marketing Center spacing tokens
+export const MARKETING_SPACING = {
+  // Page container - standardized responsive padding
+  pageContainer: 'p-4 md:p-6 lg:p-8',
+  
+  // Section vertical spacing
+  sectionGap: 'space-y-8',        // Large sections (dashboard)
+  sectionGapSmall: 'space-y-6',   // Standard pages
+  
+  // Card padding
+  cardPadding: 'p-6',             // Standard card content
+  cardPaddingCompact: 'p-4',      // Compact cards (stats)
+  
+  // Grid gaps
+  gridSmall: 'gap-4',             // Small items (stats, tools, cards)
+  gridMedium: 'gap-6',            // Medium items (staging results, two-column)
+  
+  // Form spacing
+  formContainer: 'space-y-6',     // Form sections
+  formGroup: 'space-y-2',         // Label + input
+  
+  // Hero section
+  heroPadding: 'p-8 md:p-12',
+} as const;

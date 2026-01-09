@@ -357,7 +357,7 @@ const AIGenerators = () => {
       </div>
 
       {/* Generator Type Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {generators.map((generator) => {
           const Icon = generator.icon;
           const isActive = activeTab === generator.id;
@@ -406,7 +406,7 @@ const AIGenerators = () => {
               Fill in the details to generate your content
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             <ScrollArea className="h-[400px] pr-4">
               {renderForm()}
             </ScrollArea>
