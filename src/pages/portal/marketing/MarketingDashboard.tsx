@@ -14,11 +14,16 @@ import {
   ArrowRight,
   Sparkles,
   Clock,
-  Loader2,
-  Star
+  Star,
+  TrendingUp,
+  MousePointerClick,
+  BarChart3,
+  Home
 } from "lucide-react";
 import { useRecentProjects, useProjectStats } from "@/hooks/marketing/useMarketingProjects";
 import { useFeaturedTemplates, useMarketingTemplates } from "@/hooks/marketing/useMarketingTemplates";
+import { useMarketingPerformance } from "@/hooks/marketing/useMarketingAnalytics";
+import { useCRMDeals } from "@/hooks/useCRM";
 import { formatDistanceToNow } from "date-fns";
 
 const quickActions = [
@@ -83,6 +88,13 @@ const MarketingDashboard = () => {
   const { data: stats, isLoading: statsLoading } = useProjectStats();
   const { data: featuredTemplates, isLoading: templatesLoading } = useFeaturedTemplates();
   const { data: allTemplates } = useMarketingTemplates();
+  const { data: performance, isLoading: performanceLoading } = useMarketingPerformance();
+  const { data: recentDeals } = useCRMDeals();
+
+  // Get the 4 most recent deals with property addresses
+  const recentProperties = (recentDeals || [])
+    .filter(deal => deal.property_address)
+    .slice(0, 4);
 
   return (
     <div className="space-y-8">
@@ -118,6 +130,57 @@ const MarketingDashboard = () => {
         </div>
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-pink-500/10 to-transparent rounded-full blur-3xl" />
       </div>
+
+      {/* Performance Analytics */}
+      {!performanceLoading && performance && (
+        <section>
+          <h2 className="text-xl font-light text-foreground mb-4 flex items-center gap-2">
+            <BarChart3 className="h-5 w-5 text-primary" />
+            Your Marketing Performance
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <Card>
+              <CardContent className="p-4 text-center">
+                <p className="text-2xl font-semibold text-foreground">{performance.totalProjects}</p>
+                <p className="text-xs text-muted-foreground">Projects</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4 text-center">
+                <p className="text-2xl font-semibold text-foreground">{performance.emailsSent}</p>
+                <p className="text-xs text-muted-foreground">Emails Sent</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4 text-center">
+                <div className="flex items-center justify-center gap-1">
+                  <p className="text-2xl font-semibold text-foreground">{performance.openRate}%</p>
+                  <TrendingUp className="h-4 w-4 text-green-500" />
+                </div>
+                <p className="text-xs text-muted-foreground">Open Rate</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4 text-center">
+                <p className="text-2xl font-semibold text-foreground">{performance.socialPosts}</p>
+                <p className="text-xs text-muted-foreground">Social Posts</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4 text-center">
+                <p className="text-2xl font-semibold text-foreground">{performance.flyersGenerated}</p>
+                <p className="text-xs text-muted-foreground">Flyers</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4 text-center">
+                <p className="text-2xl font-semibold text-foreground">{performance.presentationsCreated}</p>
+                <p className="text-xs text-muted-foreground">Presentations</p>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+      )}
 
       {/* Stats Overview */}
       {!statsLoading && stats && (
@@ -171,6 +234,45 @@ const MarketingDashboard = () => {
           })}
         </div>
       </section>
+
+      {/* Quick Create from Properties */}
+      {recentProperties.length > 0 && (
+        <section>
+          <h2 className="text-xl font-light text-foreground mb-4 flex items-center gap-2">
+            <Home className="h-5 w-5 text-primary" />
+            Create Marketing for Recent Properties
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {recentProperties.map((deal) => (
+              <Card key={deal.id} className="hover:bg-muted/50 transition-colors">
+                <CardContent className="p-4">
+                  <p className="font-medium text-foreground truncate mb-1">
+                    {deal.property_address}
+                  </p>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    {deal.value ? `$${deal.value.toLocaleString()}` : ""}
+                    {deal.deal_type && ` • ${deal.deal_type}`}
+                  </p>
+                  <div className="flex gap-2">
+                    <Button asChild size="sm" variant="outline" className="flex-1">
+                      <Link to={`/portal/marketing/create?type=social-post&property=${encodeURIComponent(deal.property_address)}`}>
+                        <ImageIcon className="h-3 w-3 mr-1" />
+                        Social
+                      </Link>
+                    </Button>
+                    <Button asChild size="sm" variant="outline" className="flex-1">
+                      <Link to={`/portal/marketing/create?type=flyer&property=${encodeURIComponent(deal.property_address)}`}>
+                        <FileText className="h-3 w-3 mr-1" />
+                        Flyer
+                      </Link>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Featured Templates */}
       <section>

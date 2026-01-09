@@ -3,6 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PropertySelector, PropertyData } from "@/components/marketing/PropertySelector";
+import { Separator } from "@/components/ui/separator";
 
 export interface EmailFormData {
   emailType: string;
@@ -40,8 +42,19 @@ export const EmailForm = ({ data, onChange }: EmailFormProps) => {
     onChange({ ...data, [field]: value });
   };
 
+  const handlePropertySelect = (property: PropertyData) => {
+    onChange({
+      ...data,
+      propertyAddress: property.address,
+      keyPoints: `${property.price}${property.bedrooms ? `, ${property.bedrooms} bed` : ""}${property.bathrooms ? `, ${property.bathrooms} bath` : ""}${property.squareFeet ? `, ${property.squareFeet} sqft` : ""}`,
+    });
+  };
+
   return (
     <div className="space-y-4">
+      <PropertySelector onSelect={handlePropertySelect} />
+      <Separator className="my-4" />
+
       <div>
         <Label htmlFor="emailType">Email Type</Label>
         <Select

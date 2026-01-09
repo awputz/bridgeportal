@@ -3,6 +3,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PropertySelector, PropertyData } from "@/components/marketing/PropertySelector";
+import { Separator } from "@/components/ui/separator";
 
 export interface FlyerFormData {
   flyerType: string;
@@ -50,10 +52,24 @@ export const FlyerForm = ({ data, onChange }: FlyerFormProps) => {
     onChange({ ...data, [field]: value });
   };
 
+  const handlePropertySelect = (property: PropertyData) => {
+    onChange({
+      ...data,
+      address: property.address,
+      price: property.price,
+      bedrooms: property.bedrooms,
+      bathrooms: property.bathrooms,
+      squareFeet: property.squareFeet,
+    });
+  };
+
   const isOpenHouse = data.flyerType === "open-house";
 
   return (
     <div className="space-y-4">
+      <PropertySelector onSelect={handlePropertySelect} />
+      <Separator className="my-4" />
+
       <div>
         <Label htmlFor="flyerType">Flyer Type</Label>
         <Select
