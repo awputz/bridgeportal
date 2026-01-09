@@ -68,3 +68,6 @@ verify_jwt = true
 
 [functions.match-deals]
 verify_jwt = true
+
+[functions.stage-property-image]
+verify_jwt = false
