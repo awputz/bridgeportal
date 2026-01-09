@@ -13,24 +13,55 @@ import {
   Users,
   GitBranch,
   Mail,
-  Calendar,
   FileText,
   BarChart3,
   Settings,
   ClipboardList,
+  CalendarCheck,
+  FileSignature,
+  TrendingUp,
+  FileDown,
+  PieChart,
+  UserCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const mobileNavItems = [
-  { name: "Dashboard", path: "/hr/dashboard", icon: LayoutDashboard },
-  { name: "Applications", path: "/hr/applications", icon: ClipboardList },
-  { name: "Agent Database", path: "/hr/agents", icon: Users },
-  { name: "Pipeline", path: "/hr/pipeline", icon: GitBranch },
-  { name: "Outreach", path: "/hr/outreach", icon: Mail },
-  { name: "Calendar", path: "/hr/calendar", icon: Calendar },
-  { name: "Offers", path: "/hr/offers", icon: FileText },
-  { name: "Analytics", path: "/hr/analytics", icon: BarChart3 },
-  { name: "Settings", path: "/hr/settings", icon: Settings },
+// Section-based mobile navigation matching sidebar
+const mobileNavSections = [
+  {
+    title: "Recruitment",
+    items: [
+      { name: "Dashboard", path: "/hr/dashboard", icon: LayoutDashboard },
+      { name: "Applications", path: "/hr/applications", icon: ClipboardList },
+      { name: "Agent Database", path: "/hr/agents", icon: Users },
+      { name: "Pipeline", path: "/hr/pipeline", icon: GitBranch },
+      { name: "Outreach", path: "/hr/outreach", icon: Mail },
+      { name: "Interviews", path: "/hr/interviews", icon: CalendarCheck },
+      { name: "Offers", path: "/hr/offers", icon: FileText },
+      { name: "Contracts", path: "/hr/contracts", icon: FileSignature },
+    ],
+  },
+  {
+    title: "Team",
+    items: [
+      { name: "Active Agents", path: "/hr/active-agents", icon: UserCheck },
+      { name: "Performance", path: "/hr/performance", icon: TrendingUp },
+    ],
+  },
+  {
+    title: "Analytics",
+    items: [
+      { name: "Reports", path: "/hr/reports", icon: FileDown },
+      { name: "Executive Summary", path: "/hr/executive-summary", icon: PieChart },
+      { name: "Analytics", path: "/hr/analytics", icon: BarChart3 },
+    ],
+  },
+  {
+    title: "System",
+    items: [
+      { name: "Settings", path: "/hr/settings", icon: Settings },
+    ],
+  },
 ];
 
 export function HRLayout() {
@@ -121,47 +152,62 @@ export function HRLayout() {
             />
             <span className="text-sm font-light">HR Portal</span>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
+          <div className="flex items-center gap-2">
+            <NotificationCenter />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-10 w-10"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
+          </div>
         </header>
 
         {/* Mobile navigation drawer */}
         {mobileMenuOpen && (
-          <div className="lg:hidden fixed inset-0 top-[65px] z-30 bg-background/95 backdrop-blur-sm">
-            <nav className="p-4 space-y-1">
-              {mobileNavItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = location.pathname === item.path;
+          <div className="lg:hidden fixed inset-0 top-[65px] z-30 bg-background/95 backdrop-blur-sm overflow-y-auto pb-20">
+            <nav className="p-4 space-y-6">
+              {mobileNavSections.map((section) => (
+                <div key={section.title}>
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider px-4 mb-2">
+                    {section.title}
+                  </p>
+                  <div className="space-y-1">
+                    {section.items.map((item) => {
+                      const Icon = item.icon;
+                      const isActive = location.pathname === item.path;
 
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={cn(
-                      "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-light transition-colors",
-                      isActive
-                        ? "bg-emerald-400/10 text-emerald-400"
-                        : "text-muted-foreground hover:text-foreground hover:bg-white/5"
-                    )}
-                  >
-                    <Icon className="h-5 w-5" />
-                    {item.name}
-                  </Link>
-                );
-              })}
-              <button
-                onClick={handleSignOut}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-light text-destructive hover:bg-destructive/10 transition-colors w-full"
-              >
-                <LogOut className="h-5 w-5" />
-                Sign Out
-              </button>
+                      return (
+                        <Link
+                          key={item.path}
+                          to={item.path}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className={cn(
+                            "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-light transition-colors",
+                            isActive
+                              ? "bg-emerald-400/10 text-emerald-400"
+                              : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                          )}
+                        >
+                          <Icon className="h-5 w-5" />
+                          {item.name}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+              <div className="pt-4 border-t border-border/40">
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-light text-destructive hover:bg-destructive/10 transition-colors w-full"
+                >
+                  <LogOut className="h-5 w-5" />
+                  Sign Out
+                </button>
+              </div>
             </nav>
           </div>
         )}

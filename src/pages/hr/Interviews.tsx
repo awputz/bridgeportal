@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { format, isAfter, isBefore, startOfDay, endOfWeek, startOfMonth, endOfMonth } from "date-fns";
+import { format, isAfter, isBefore, endOfWeek, startOfMonth } from "date-fns";
 import {
   Calendar,
   Plus,
@@ -41,6 +41,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { useURLFilters, parseString } from "@/hooks/useURLFilters";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import {
   useHRInterviews,
   useDeleteHRInterview,
@@ -50,6 +51,7 @@ import {
   InterviewType,
 } from "@/hooks/hr/useHRInterviews";
 import { ScheduleInterviewDialog } from "@/components/hr/ScheduleInterviewDialog";
+import { MobileInterviewCard } from "@/components/hr/MobileInterviewCard";
 
 // Filter config for URL persistence
 const filterConfigs = {
@@ -64,17 +66,17 @@ export default function Interviews() {
   // URL-persisted tab state
   const [filters, setFilters] = useURLFilters(filterConfigs);
   const { tab: activeTab } = filters;
+  const isMobile = useIsMobile();
   
   const [showScheduleDialog, setShowScheduleDialog] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const { data: interviews, isLoading } = useHRInterviews({ tab: activeTab as 'upcoming' | 'completed' | 'all' });
+  const { data: interviews, isLoading, error } = useHRInterviews({ tab: activeTab as 'upcoming' | 'completed' | 'all' });
   const deleteInterview = useDeleteHRInterview();
 
   const now = new Date();
   const weekEnd = endOfWeek(now);
   const monthStart = startOfMonth(now);
-  const monthEnd = endOfMonth(now);
 
   // Calculate metrics
   const allInterviews = interviews || [];
@@ -162,40 +164,52 @@ export default function Interviews() {
 
         <TabsContent value={activeTab} className="mt-4">
           {isLoading ? (
-            <div className="rounded-xl border border-white/10 overflow-hidden">
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-white/10 hover:bg-transparent">
-                    <TableHead>Date & Time</TableHead>
-                    <TableHead>Agent</TableHead>
-                    <TableHead>Interviewer</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Decision</TableHead>
-                    <TableHead className="w-[50px]"></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <TableRow key={i} className="border-white/10">
-                      <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <Skeleton className="h-8 w-8 rounded-full" />
-                          <div>
-                            <Skeleton className="h-4 w-28" />
-                            <Skeleton className="h-3 w-20 mt-1" />
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-                      <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
-                      <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
-                      <TableCell><Skeleton className="h-8 w-8" /></TableCell>
+            isMobile ? (
+              <div className="space-y-3">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="p-4 bg-card/50 border border-border rounded-xl space-y-3">
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-12 w-full" />
+                    <Skeleton className="h-4 w-24" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-xl border border-white/10 overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-white/10 hover:bg-transparent">
+                      <TableHead>Date & Time</TableHead>
+                      <TableHead>Agent</TableHead>
+                      <TableHead>Interviewer</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Decision</TableHead>
+                      <TableHead className="w-[50px]"></TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                  </TableHeader>
+                  <TableBody>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <TableRow key={i} className="border-white/10">
+                        <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <Skeleton className="h-8 w-8 rounded-full" />
+                            <div>
+                              <Skeleton className="h-4 w-28" />
+                              <Skeleton className="h-3 w-20 mt-1" />
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                        <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
+                        <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
+                        <TableCell><Skeleton className="h-8 w-8" /></TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )
           ) : allInterviews.length === 0 ? (
             <div className="text-center py-12 bg-white/5 rounded-xl border border-white/10">
               <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
@@ -215,9 +229,120 @@ export default function Interviews() {
                 </Button>
               )}
             </div>
+          ) : isMobile ? (
+            // Mobile card view
+            <div className="space-y-3">
+              {allInterviews.map((interview) => (
+                <MobileInterviewCard
+                  key={interview.id}
+                  interview={interview}
+                  onDelete={() => setDeleteId(interview.id)}
+                />
+              ))}
+            </div>
           ) : (
+            // Desktop table view
             <div className="rounded-xl border border-white/10 overflow-hidden">
               <Table>
+                <TableHeader>
+                  <TableRow className="border-white/10 hover:bg-transparent">
+                    <TableHead>Date & Time</TableHead>
+                    <TableHead>Agent</TableHead>
+                    <TableHead>Interviewer</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Decision</TableHead>
+                    <TableHead className="w-[50px]"></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {allInterviews.map((interview) => (
+                    <TableRow
+                      key={interview.id}
+                      className="border-white/10 hover:bg-white/5"
+                    >
+                      <TableCell>
+                        <div>
+                          <p className="font-medium">
+                            {format(new Date(interview.interview_date), 'MMM d, yyyy')}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {format(new Date(interview.interview_date), 'h:mm a')}
+                          </p>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Link
+                          to={`/hr/agents/${interview.agent_id}`}
+                          className="flex items-center gap-3 hover:text-emerald-400 transition-colors"
+                        >
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage src={interview.hr_agents?.photo_url || ''} />
+                            <AvatarFallback className="bg-emerald-500/10 text-emerald-400 text-xs">
+                              {interview.hr_agents?.full_name?.charAt(0) || '?'}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-medium">{interview.hr_agents?.full_name || 'Unknown'}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {interview.hr_agents?.current_brokerage || 'No brokerage'}
+                            </p>
+                          </div>
+                        </Link>
+                      </TableCell>
+                      <TableCell>{interview.interviewer_name}</TableCell>
+                      <TableCell>
+                        <span
+                          className={cn(
+                            "inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs border",
+                            interviewTypeColors[interview.interview_type as InterviewType] ||
+                              interviewTypeColors['in-person']
+                          )}
+                        >
+                          {getTypeIcon(interview.interview_type || 'in-person')}
+                          {interview.interview_type || 'In-Person'}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <span
+                          className={cn(
+                            "inline-flex items-center px-2 py-1 rounded-full text-xs border capitalize",
+                            decisionColors[interview.decision || 'pending']
+                          )}
+                        >
+                          {interview.decision || 'Pending'}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-10 w-10">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem asChild>
+                              <Link to={`/hr/interviews/${interview.id}`}>
+                                <ExternalLink className="h-4 w-4 mr-2" />
+                                View Details
+                              </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              className="text-red-400"
+                              onClick={() => setDeleteId(interview.id)}
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </TabsContent>
                 <TableHeader>
                   <TableRow className="border-white/10 hover:bg-transparent">
                     <TableHead>Date & Time</TableHead>
@@ -314,9 +439,6 @@ export default function Interviews() {
                   ))}
                 </TableBody>
               </Table>
-            </div>
-          )}
-        </TabsContent>
       </Tabs>
 
       {/* Schedule Dialog */}
