@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CheckCircle, Clock, AlertCircle, Trash2, FolderPlus, Loader2, RefreshCw } from "lucide-react";
+import { CheckCircle, Clock, AlertCircle, Trash2, FolderPlus, Loader2, RefreshCw, Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -17,12 +17,13 @@ interface StagingImage {
 interface StagingImageCardProps {
   image: StagingImage;
   isSelected: boolean;
+  isMultiSelect?: boolean;
   onClick: () => void;
   onDelete: () => void;
   onRetry?: (imageId: string) => void;
 }
 
-export function StagingImageCard({ image, isSelected, onClick, onDelete, onRetry }: StagingImageCardProps) {
+export function StagingImageCard({ image, isSelected, isMultiSelect, onClick, onDelete, onRetry }: StagingImageCardProps) {
   const [useDialogOpen, setUseDialogOpen] = useState(false);
 
   const getStatusIcon = () => {
@@ -77,6 +78,18 @@ export function StagingImageCard({ image, isSelected, onClick, onDelete, onRetry
         <div className="absolute top-2 right-2">
           {getStatusIcon()}
         </div>
+
+        {/* Multi-select checkbox indicator */}
+        {isMultiSelect && (
+          <div className={cn(
+            "absolute top-2 left-2 w-5 h-5 rounded border-2 flex items-center justify-center transition-all z-10",
+            isSelected 
+              ? "bg-primary border-primary text-primary-foreground" 
+              : "bg-background/80 border-muted-foreground/50"
+          )}>
+            {isSelected && <Check className="h-3 w-3" />}
+          </div>
+        )}
 
         {/* Staged badge */}
         {image.staged_url && (
