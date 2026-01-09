@@ -1,7 +1,9 @@
-import { CheckCircle, Clock, AlertCircle, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { CheckCircle, Clock, AlertCircle, Trash2, FolderPlus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { UseInProjectDialog } from "./UseInProjectDialog";
 
 interface StagingImage {
   id: string;
@@ -20,6 +22,8 @@ interface StagingImageCardProps {
 }
 
 export function StagingImageCard({ image, isSelected, onClick, onDelete }: StagingImageCardProps) {
+  const [useDialogOpen, setUseDialogOpen] = useState(false);
+
   const getStatusIcon = () => {
     switch (image.status) {
       case "completed":
@@ -38,50 +42,80 @@ export function StagingImageCard({ image, isSelected, onClick, onDelete }: Stagi
     onDelete();
   };
 
+  const handleUseInProject = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setUseDialogOpen(true);
+  };
+
+  const isCompleted = image.status === "completed" && image.staged_url;
+
   return (
-    <div
-      className={cn(
-        "relative aspect-square rounded-lg overflow-hidden cursor-pointer transition-all group",
-        "border-2 hover:border-primary/50",
-        isSelected ? "border-primary ring-2 ring-primary/20" : "border-transparent"
-      )}
-      onClick={onClick}
-    >
-      <img
-        src={image.staged_url || image.original_url}
-        alt="Property"
-        className="w-full h-full object-cover"
-      />
-      
-      {/* Status indicator */}
-      <div className="absolute top-2 right-2">
-        {getStatusIcon()}
+    <>
+      <div
+        className={cn(
+          "relative aspect-square rounded-lg overflow-hidden cursor-pointer transition-all group",
+          "border-2 hover:border-primary/50",
+          isSelected ? "border-primary ring-2 ring-primary/20" : "border-transparent"
+        )}
+        onClick={onClick}
+      >
+        <img
+          src={image.staged_url || image.original_url}
+          alt="Property"
+          className="w-full h-full object-cover"
+        />
+        
+        {/* Status indicator */}
+        <div className="absolute top-2 right-2">
+          {getStatusIcon()}
+        </div>
+
+        {/* Staged badge */}
+        {image.staged_url && (
+          <Badge 
+            variant="default" 
+            className="absolute bottom-2 left-2 bg-green-500 text-xs"
+          >
+            Staged
+          </Badge>
+        )}
+
+        {/* Action buttons on hover */}
+        <div className="absolute top-2 left-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <Button
+            variant="destructive"
+            size="icon"
+            className="h-6 w-6"
+            onClick={handleDelete}
+          >
+            <Trash2 className="h-3 w-3" />
+          </Button>
+          {isCompleted && (
+            <Button
+              variant="secondary"
+              size="icon"
+              className="h-6 w-6"
+              onClick={handleUseInProject}
+            >
+              <FolderPlus className="h-3 w-3" />
+            </Button>
+          )}
+        </div>
+
+        {/* Selection overlay */}
+        {isSelected && (
+          <div className="absolute inset-0 bg-primary/10 pointer-events-none" />
+        )}
       </div>
 
-      {/* Staged badge */}
-      {image.staged_url && (
-        <Badge 
-          variant="default" 
-          className="absolute bottom-2 left-2 bg-green-500 text-xs"
-        >
-          Staged
-        </Badge>
+      {isCompleted && (
+        <UseInProjectDialog
+          open={useDialogOpen}
+          onOpenChange={setUseDialogOpen}
+          imageUrl={image.staged_url!}
+          imageName={image.room_type ? `${image.room_type} - ${image.style_preference}` : undefined}
+        />
       )}
-
-      {/* Delete button on hover */}
-      <Button
-        variant="destructive"
-        size="icon"
-        className="absolute top-2 left-2 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-        onClick={handleDelete}
-      >
-        <Trash2 className="h-3 w-3" />
-      </Button>
-
-      {/* Selection overlay */}
-      {isSelected && (
-        <div className="absolute inset-0 bg-primary/10 pointer-events-none" />
-      )}
-    </div>
+    </>
   );
 }

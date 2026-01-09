@@ -1,5 +1,7 @@
-import { Download, Clock } from "lucide-react";
+import { useState } from "react";
+import { Download, Clock, FolderPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { UseInProjectDialog } from "./UseInProjectDialog";
 
 interface BeforeAfterComparisonProps {
   originalUrl: string;
@@ -12,6 +14,8 @@ export function BeforeAfterComparison({
   stagedUrl,
   processingTimeMs,
 }: BeforeAfterComparisonProps) {
+  const [useDialogOpen, setUseDialogOpen] = useState(false);
+
   const handleDownload = async () => {
     try {
       const response = await fetch(stagedUrl);
@@ -65,11 +69,23 @@ export function BeforeAfterComparison({
           </div>
         )}
         
-        <Button variant="outline" size="sm" onClick={handleDownload} className="ml-auto">
-          <Download className="h-4 w-4 mr-2" />
-          Download Staged
-        </Button>
+        <div className="flex items-center gap-2 ml-auto">
+          <Button variant="outline" size="sm" onClick={() => setUseDialogOpen(true)}>
+            <FolderPlus className="h-4 w-4 mr-2" />
+            Use in Project
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleDownload}>
+            <Download className="h-4 w-4 mr-2" />
+            Download
+          </Button>
+        </div>
       </div>
+
+      <UseInProjectDialog
+        open={useDialogOpen}
+        onOpenChange={setUseDialogOpen}
+        imageUrl={stagedUrl}
+      />
     </div>
   );
 }
