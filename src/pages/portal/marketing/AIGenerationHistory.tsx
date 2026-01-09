@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
-import { History, Search, Image, Mail, FileText, Presentation, Copy, Trash2, Eye } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { History, Search, Image, Mail, FileText, Presentation, Copy, Trash2, Eye, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -65,6 +66,7 @@ const truncateContent = (content: string, maxLength = 80) => {
 };
 
 export default function AIGenerationHistory() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<AIGenerationRecord | null>(null);
@@ -72,6 +74,19 @@ export default function AIGenerationHistory() {
 
   const { data: history, isLoading } = useAIGenerationHistory({ limit: 100 });
   const deleteGeneration = useDeleteGeneration();
+
+  const handleUseAsTemplate = (record: AIGenerationRecord) => {
+    if (!record.form_data || Object.keys(record.form_data).length === 0) {
+      toast.error("No form data available for this generation");
+      return;
+    }
+    const templateData = {
+      type: record.generator_type,
+      formData: record.form_data,
+    };
+    const encodedData = encodeURIComponent(JSON.stringify(templateData));
+    navigate(`/portal/marketing/generators?template=${encodedData}`);
+  };
 
   // Filter data based on tab and search
   const filteredData = useMemo(() => {
@@ -231,14 +246,27 @@ export default function AIGenerationHistory() {
                           size="icon"
                           className="h-8 w-8"
                           onClick={() => setDetailRecord(record)}
+                          title="View Details"
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
+                        {record.form_data && Object.keys(record.form_data).length > 0 && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => handleUseAsTemplate(record)}
+                            title="Use as Template"
+                          >
+                            <Wand2 className="h-4 w-4" />
+                          </Button>
+                        )}
                         <Button
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8"
                           onClick={() => handleCopy(record.generated_content)}
+                          title="Copy Content"
                         >
                           <Copy className="h-4 w-4" />
                         </Button>
@@ -247,6 +275,7 @@ export default function AIGenerationHistory() {
                           size="icon"
                           className="h-8 w-8 text-destructive hover:text-destructive"
                           onClick={() => setDeleteTarget(record)}
+                          title="Delete"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>

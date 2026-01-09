@@ -1,4 +1,5 @@
-import { Image, Mail, FileText, Presentation, Copy, Clock, Calendar, Cpu } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Image, Mail, FileText, Presentation, Copy, Clock, Calendar, Cpu, Wand2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -46,10 +47,24 @@ export function GenerationDetailDialog({
   onClose,
   onCopy,
 }: GenerationDetailDialogProps) {
+  const navigate = useNavigate();
+
   if (!record) return null;
 
   const config = getTypeConfig(record.generator_type);
   const TypeIcon = config.icon;
+
+  const handleUseAsTemplate = () => {
+    const templateData = {
+      type: record.generator_type,
+      formData: record.form_data,
+    };
+    const encodedData = encodeURIComponent(JSON.stringify(templateData));
+    navigate(`/portal/marketing/generators?template=${encodedData}`);
+    onClose();
+  };
+
+  const hasFormData = record.form_data && Object.keys(record.form_data).length > 0;
 
   return (
     <Dialog open={!!record} onOpenChange={onClose}>
@@ -133,6 +148,18 @@ export function GenerationDetailDialog({
             )}
           </div>
         </ScrollArea>
+
+        <div className="flex justify-end gap-2 pt-4 border-t border-white/10 mt-4">
+          <Button variant="outline" onClick={onClose}>
+            Close
+          </Button>
+          {hasFormData && (
+            <Button onClick={handleUseAsTemplate} className="gap-2">
+              <Wand2 className="h-4 w-4" />
+              Use as Template
+            </Button>
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );

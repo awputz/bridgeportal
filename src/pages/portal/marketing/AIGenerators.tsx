@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -68,6 +68,7 @@ type GeneratedContentMap = {
 
 const AIGenerators = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const createProject = useCreateMarketingProject();
   const logGeneration = useLogGeneration();
   
@@ -88,6 +89,37 @@ const AIGenerators = () => {
   const [copied, setCopied] = useState(false);
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const abortControllerRef = useRef<AbortController | null>(null);
+
+  // Handle template data from URL (from "Use as Template" action)
+  useEffect(() => {
+    const templateParam = searchParams.get("template");
+    if (templateParam) {
+      try {
+        const templateData = JSON.parse(decodeURIComponent(templateParam));
+        
+        // Set the active tab to the generator type
+        if (templateData.type && generators.some(g => g.id === templateData.type)) {
+          setActiveTab(templateData.type as GeneratorType);
+        }
+        
+        // Apply the form data
+        if (templateData.formData && templateData.type) {
+          setFormData(prev => ({
+            ...prev,
+            [templateData.type]: templateData.formData,
+          }));
+        }
+        
+        // Clear the template param from URL
+        setSearchParams({}, { replace: true });
+        
+        toast.success("Template loaded! Modify the fields and generate new content.");
+      } catch (error) {
+        console.error("Failed to parse template data:", error);
+        toast.error("Failed to load template data");
+      }
+    }
+  }, [searchParams, setSearchParams]);
 
   const handleSaveAsProject = async (name: string) => {
     try {
