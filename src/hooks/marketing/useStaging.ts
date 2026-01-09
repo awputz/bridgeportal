@@ -362,6 +362,36 @@ export const useUpdateStagingImage = () => {
   });
 };
 
+// Stage image mutation - calls edge function
+export const useStageImage = () => {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async ({ imageId, templateId }: { imageId: string; templateId?: string }) => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Not authenticated');
+
+      const response = await supabase.functions.invoke('stage-property-image', {
+        body: { imageId, templateId }
+      });
+
+      if (response.error) throw response.error;
+      if (!response.data?.success) throw new Error(response.data?.error || 'Staging failed');
+      
+      return response.data;
+    },
+    onSuccess: () => {
+      toast({ title: 'Success', description: 'Image staged successfully!' });
+      queryClient.invalidateQueries({ queryKey: ['staging-project-images'] });
+      queryClient.invalidateQueries({ queryKey: ['staging-projects'] });
+    },
+    onError: (error: Error) => {
+      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+    }
+  });
+};
+
 export const useDeleteStagingImage = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
