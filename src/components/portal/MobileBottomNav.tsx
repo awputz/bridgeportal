@@ -23,7 +23,9 @@ import {
   Headphones, 
   Bell, 
   Mail,
-  ExternalLink 
+  ExternalLink,
+  Megaphone,
+  Image
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -64,6 +66,14 @@ const moreItemsGrouped = [
       { path: "/portal/generators", icon: Wand2, label: "Generators" },
       { path: "/portal/calculators", icon: Calculator, label: "Calculators" },
       { path: "/portal/tools", icon: Wrench, label: "Tools" },
+    ],
+  },
+  {
+    category: "Marketing",
+    items: [
+      { path: "/portal/marketing", icon: Megaphone, label: "Marketing" },
+      { path: "/portal/marketing/projects", icon: FolderOpen, label: "Projects" },
+      { path: "/portal/marketing/media", icon: Image, label: "Media" },
     ],
   },
   {

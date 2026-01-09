@@ -29,7 +29,9 @@ import {
   HelpCircle,
   Wand2,
   Calculator,
-  Send
+  Send,
+  Megaphone,
+  Image
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -78,6 +80,13 @@ const toolsItems = [
   { name: "Notes", path: "/portal/notes", icon: StickyNote, description: "Personal sticky notes", color: "bg-cyan-500/20 text-cyan-400" },
 ];
 
+// Marketing items with descriptions and colors
+const marketingItems = [
+  { name: "Overview", path: "/portal/marketing", icon: Megaphone, description: "Marketing dashboard", color: "bg-pink-500/20 text-pink-400" },
+  { name: "Projects", path: "/portal/marketing/projects", icon: FolderOpen, description: "Your created designs", color: "bg-violet-500/20 text-violet-400" },
+  { name: "Media Library", path: "/portal/marketing/media", icon: Image, description: "Templates & assets", color: "bg-indigo-500/20 text-indigo-400" },
+];
+
 // Helper to format "Member since" date
 const formatMemberSince = (dateString: string | undefined) => {
   if (!dateString) return null;
@@ -121,6 +130,8 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
   const isCompanyActive = location.pathname.startsWith('/portal/company') ||
     location.pathname === '/portal/directory' ||
     location.pathname === '/portal/announcements';
+
+  const isMarketingActive = location.pathname.startsWith('/portal/marketing');
 
   const isGoogleActive = googleItems.some(item => 
     location.pathname === item.path || location.pathname.startsWith(item.path + '/')
@@ -283,6 +294,51 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                       <ChevronRight className="h-3 w-3" />
                     </Link>
                   </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Marketing Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className={cn(
+                    "flex items-center gap-1.5 text-[15px] font-light transition-all duration-200 hover:scale-105",
+                    isMarketingActive ? "text-white" : "text-white/70 hover:text-white"
+                  )}>
+                    <Megaphone className="h-4 w-4" />
+                    Marketing
+                    <ChevronDown className="h-3 w-3 opacity-60" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center" className="w-72 p-2 dropdown-premium border-0" sideOffset={12}>
+                  {marketingItems.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
+                    return (
+                      <Link 
+                        key={item.name}
+                        to={item.path} 
+                        className={cn(
+                          "dropdown-premium-item group cursor-pointer",
+                          isActive && "bg-white/10"
+                        )}
+                      >
+                        <div className={cn(
+                          "h-8 w-8 rounded-lg flex items-center justify-center flex-shrink-0",
+                          item.color.split(' ')[0]
+                        )}>
+                          <Icon className={cn("h-4 w-4", item.color.split(' ')[1])} />
+                        </div>
+                        <div className="min-w-0 flex-1 space-y-0">
+                          <p className="text-[13px] font-medium text-white leading-none m-0">
+                            {item.name}
+                          </p>
+                          <p className="text-[11px] text-white/50 leading-relaxed m-0 mt-1">
+                            {item.description}
+                          </p>
+                        </div>
+                      </Link>
+                    );
+                  })}
                 </DropdownMenuContent>
               </DropdownMenu>
 

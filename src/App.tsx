@@ -95,6 +95,12 @@ const GoogleServicesSettings = lazy(() => import("./pages/portal/GoogleServicesS
 const DealRoom = lazy(() => import("./pages/portal/DealRoom"));
 const Chat = lazy(() => import("./pages/portal/Chat"));
 
+// Marketing Pages - lazy loaded
+const MarketingDashboard = lazy(() => import("./pages/portal/marketing/MarketingDashboard"));
+const MarketingProjects = lazy(() => import("./pages/portal/marketing/MarketingProjects"));
+const MediaLibrary = lazy(() => import("./pages/portal/marketing/MediaLibrary"));
+const CreateProject = lazy(() => import("./pages/portal/marketing/CreateProject"));
+
 // Company Pages - lazy loaded
 const AboutCompany = lazy(() => import("./pages/portal/company/About"));
 const MissionCompany = lazy(() => import("./pages/portal/company/Mission"));
@@ -488,6 +494,33 @@ const App = () => {
                     <Route path="intake" element={
                       <Suspense fallback={<PageLoader />}>
                         <Intake />
+                      </Suspense>
+                    } />
+                    
+                    {/* Marketing Center */}
+                    <Route path="marketing" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <MarketingDashboard />
+                      </Suspense>
+                    } />
+                    <Route path="marketing/projects" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <MarketingProjects />
+                      </Suspense>
+                    } />
+                    <Route path="marketing/media" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <MediaLibrary />
+                      </Suspense>
+                    } />
+                    <Route path="marketing/create" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <CreateProject />
+                      </Suspense>
+                    } />
+                    <Route path="marketing/edit/:id" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <CreateProject />
                       </Suspense>
                     } />
                     
