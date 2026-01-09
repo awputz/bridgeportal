@@ -257,6 +257,99 @@ export type Database = {
         }
         Relationships: []
       }
+      agent_brand_profiles: {
+        Row: {
+          agent_id: string
+          bio: string | null
+          company_name: string | null
+          company_phone: string | null
+          created_at: string | null
+          email: string | null
+          facebook_handle: string | null
+          full_name: string | null
+          headshot_asset_id: string | null
+          id: string
+          instagram_handle: string | null
+          license_number: string | null
+          linkedin_handle: string | null
+          logo_asset_id: string | null
+          office_address: string | null
+          phone: string | null
+          primary_color: string | null
+          secondary_color: string | null
+          tagline: string | null
+          title: string | null
+          twitter_handle: string | null
+          updated_at: string | null
+          website_url: string | null
+        }
+        Insert: {
+          agent_id: string
+          bio?: string | null
+          company_name?: string | null
+          company_phone?: string | null
+          created_at?: string | null
+          email?: string | null
+          facebook_handle?: string | null
+          full_name?: string | null
+          headshot_asset_id?: string | null
+          id?: string
+          instagram_handle?: string | null
+          license_number?: string | null
+          linkedin_handle?: string | null
+          logo_asset_id?: string | null
+          office_address?: string | null
+          phone?: string | null
+          primary_color?: string | null
+          secondary_color?: string | null
+          tagline?: string | null
+          title?: string | null
+          twitter_handle?: string | null
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          agent_id?: string
+          bio?: string | null
+          company_name?: string | null
+          company_phone?: string | null
+          created_at?: string | null
+          email?: string | null
+          facebook_handle?: string | null
+          full_name?: string | null
+          headshot_asset_id?: string | null
+          id?: string
+          instagram_handle?: string | null
+          license_number?: string | null
+          linkedin_handle?: string | null
+          logo_asset_id?: string | null
+          office_address?: string | null
+          phone?: string | null
+          primary_color?: string | null
+          secondary_color?: string | null
+          tagline?: string | null
+          title?: string | null
+          twitter_handle?: string | null
+          updated_at?: string | null
+          website_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_brand_profiles_headshot_asset_id_fkey"
+            columns: ["headshot_asset_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_assets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_brand_profiles_logo_asset_id_fkey"
+            columns: ["logo_asset_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agent_compliance: {
         Row: {
           active_agent_id: string
@@ -4965,6 +5058,62 @@ export type Database = {
           window_start?: string | null
         }
         Relationships: []
+      }
+      scheduled_social_posts: {
+        Row: {
+          agent_id: string
+          content: string
+          created_at: string | null
+          error_message: string | null
+          hashtags: string[] | null
+          id: string
+          image_url: string | null
+          platform: string
+          posted_at: string | null
+          project_id: string | null
+          scheduled_at: string
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          agent_id: string
+          content: string
+          created_at?: string | null
+          error_message?: string | null
+          hashtags?: string[] | null
+          id?: string
+          image_url?: string | null
+          platform: string
+          posted_at?: string | null
+          project_id?: string | null
+          scheduled_at: string
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          agent_id?: string
+          content?: string
+          created_at?: string | null
+          error_message?: string | null
+          hashtags?: string[] | null
+          id?: string
+          image_url?: string | null
+          platform?: string
+          posted_at?: string | null
+          project_id?: string | null
+          scheduled_at?: string
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheduled_social_posts_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "marketing_projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       snoozed_emails: {
         Row: {
