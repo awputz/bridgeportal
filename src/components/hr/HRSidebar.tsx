@@ -7,6 +7,7 @@ import {
   Mail,
   CalendarCheck,
   FileText,
+  FileSignature,
   BarChart3,
   Settings,
   ClipboardList,
@@ -20,6 +21,7 @@ const navItems = [
   { name: "Outreach", path: "/hr/outreach", icon: Mail },
   { name: "Interviews", path: "/hr/interviews", icon: CalendarCheck },
   { name: "Offers", path: "/hr/offers", icon: FileText },
+  { name: "Contracts", path: "/hr/contracts", icon: FileSignature },
   { name: "Analytics", path: "/hr/analytics", icon: BarChart3 },
   { name: "Settings", path: "/hr/settings", icon: Settings },
 ];
