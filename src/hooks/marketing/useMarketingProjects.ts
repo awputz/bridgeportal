@@ -60,6 +60,58 @@ export const useMarketingProjects = (status?: string) => {
   });
 };
 
+export const useRecentProjects = (limit = 6) => {
+  const { user } = useAuth();
+
+  return useQuery({
+    queryKey: ["marketing-projects", "recent", user?.id, limit],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("marketing_projects")
+        .select("*")
+        .eq("agent_id", user!.id)
+        .order("updated_at", { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+      return data as MarketingProject[];
+    },
+    enabled: !!user?.id,
+  });
+};
+
+export const useProjectStats = () => {
+  const { user } = useAuth();
+
+  return useQuery({
+    queryKey: ["marketing-projects", "stats", user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("marketing_projects")
+        .select("status")
+        .eq("agent_id", user!.id);
+
+      if (error) throw error;
+
+      const stats = {
+        total: data.length,
+        draft: 0,
+        completed: 0,
+        published: 0,
+      };
+
+      data.forEach((project) => {
+        if (project.status === "draft") stats.draft++;
+        else if (project.status === "completed") stats.completed++;
+        else if (project.status === "published") stats.published++;
+      });
+
+      return stats;
+    },
+    enabled: !!user?.id,
+  });
+};
+
 export const useMarketingProject = (id: string) => {
   const { user } = useAuth();
 
@@ -160,6 +212,49 @@ export const useDeleteMarketingProject = () => {
     onError: (error) => {
       toast.error("Failed to delete project");
       console.error("Delete project error:", error);
+    },
+  });
+};
+
+export const useDuplicateProject = () => {
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
+
+  return useMutation({
+    mutationFn: async (projectId: string) => {
+      // First fetch the project to duplicate
+      const { data: original, error: fetchError } = await supabase
+        .from("marketing_projects")
+        .select("*")
+        .eq("id", projectId)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      // Create duplicate with new name
+      const { data, error } = await supabase
+        .from("marketing_projects")
+        .insert({
+          agent_id: user!.id,
+          name: `Copy of ${original.name}`,
+          type: original.type,
+          template_id: original.template_id,
+          design_data: original.design_data,
+          status: "draft",
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as MarketingProject;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["marketing-projects"] });
+      toast.success("Project duplicated");
+    },
+    onError: (error) => {
+      toast.error("Failed to duplicate project");
+      console.error("Duplicate project error:", error);
     },
   });
 };
