@@ -5201,6 +5201,184 @@ export type Database = {
         }
         Relationships: []
       }
+      staging_images: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          model_used: string | null
+          original_height: number | null
+          original_url: string
+          original_width: number | null
+          processing_time_ms: number | null
+          project_id: string
+          room_type: string
+          staged_height: number | null
+          staged_url: string | null
+          staged_width: number | null
+          staging_prompt: string | null
+          status: string
+          style_preference: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          model_used?: string | null
+          original_height?: number | null
+          original_url: string
+          original_width?: number | null
+          processing_time_ms?: number | null
+          project_id: string
+          room_type: string
+          staged_height?: number | null
+          staged_url?: string | null
+          staged_width?: number | null
+          staging_prompt?: string | null
+          status?: string
+          style_preference: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          model_used?: string | null
+          original_height?: number | null
+          original_url?: string
+          original_width?: number | null
+          processing_time_ms?: number | null
+          project_id?: string
+          room_type?: string
+          staged_height?: number | null
+          staged_url?: string | null
+          staged_width?: number | null
+          staging_prompt?: string | null
+          status?: string
+          style_preference?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staging_images_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "staging_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      staging_projects: {
+        Row: {
+          agent_id: string
+          completed_at: string | null
+          completed_images: number
+          created_at: string
+          id: string
+          name: string
+          property_id: string | null
+          property_type: string | null
+          staging_type: string
+          status: string
+          target_audience: string | null
+          total_images: number
+          updated_at: string
+        }
+        Insert: {
+          agent_id: string
+          completed_at?: string | null
+          completed_images?: number
+          created_at?: string
+          id?: string
+          name: string
+          property_id?: string | null
+          property_type?: string | null
+          staging_type: string
+          status?: string
+          target_audience?: string | null
+          total_images?: number
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: string
+          completed_at?: string | null
+          completed_images?: number
+          created_at?: string
+          id?: string
+          name?: string
+          property_id?: string | null
+          property_type?: string | null
+          staging_type?: string
+          status?: string
+          target_audience?: string | null
+          total_images?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staging_projects_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      staging_templates: {
+        Row: {
+          created_at: string
+          description: string | null
+          example_after_url: string | null
+          example_before_url: string | null
+          id: string
+          is_active: boolean
+          is_premium: boolean
+          name: string
+          negative_prompt: string | null
+          popularity_score: number
+          prompt_template: string
+          room_type: string
+          staging_type: string
+          style_preference: string
+          thumbnail_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          example_after_url?: string | null
+          example_before_url?: string | null
+          id?: string
+          is_active?: boolean
+          is_premium?: boolean
+          name: string
+          negative_prompt?: string | null
+          popularity_score?: number
+          prompt_template: string
+          room_type: string
+          staging_type: string
+          style_preference: string
+          thumbnail_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          example_after_url?: string | null
+          example_before_url?: string | null
+          id?: string
+          is_active?: boolean
+          is_premium?: boolean
+          name?: string
+          negative_prompt?: string | null
+          popularity_score?: number
+          prompt_template?: string
+          room_type?: string
+          staging_type?: string
+          style_preference?: string
+          thumbnail_url?: string | null
+        }
+        Relationships: []
+      }
       team_members: {
         Row: {
           bio: string | null
