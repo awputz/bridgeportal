@@ -3367,6 +3367,169 @@ export type Database = {
         }
         Relationships: []
       }
+      hr_contract_templates: {
+        Row: {
+          content_html: string
+          contract_type: string
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          is_default: boolean | null
+          name: string
+          updated_at: string | null
+          variables: Json | null
+          version: string
+        }
+        Insert: {
+          content_html: string
+          contract_type: string
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_default?: boolean | null
+          name: string
+          updated_at?: string | null
+          variables?: Json | null
+          version: string
+        }
+        Update: {
+          content_html?: string
+          contract_type?: string
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_default?: boolean | null
+          name?: string
+          updated_at?: string | null
+          variables?: Json | null
+          version?: string
+        }
+        Relationships: []
+      }
+      hr_contracts: {
+        Row: {
+          agent_email: string
+          agent_id: string | null
+          agent_name: string
+          commission_split: string
+          content_html: string
+          contract_type: string
+          created_at: string | null
+          created_by: string | null
+          division: string
+          id: string
+          offer_id: string | null
+          pdf_url: string | null
+          sent_at: string | null
+          signatory_email: string | null
+          signatory_name: string | null
+          signature_data: string | null
+          signature_date: string | null
+          signature_ip: string | null
+          signature_user_agent: string | null
+          signed_at: string | null
+          signing_bonus: number | null
+          special_terms: string | null
+          start_date: string
+          status: string
+          template_id: string | null
+          template_version: string
+          updated_at: string | null
+          voided_at: string | null
+          voided_reason: string | null
+        }
+        Insert: {
+          agent_email: string
+          agent_id?: string | null
+          agent_name: string
+          commission_split: string
+          content_html: string
+          contract_type?: string
+          created_at?: string | null
+          created_by?: string | null
+          division: string
+          id?: string
+          offer_id?: string | null
+          pdf_url?: string | null
+          sent_at?: string | null
+          signatory_email?: string | null
+          signatory_name?: string | null
+          signature_data?: string | null
+          signature_date?: string | null
+          signature_ip?: string | null
+          signature_user_agent?: string | null
+          signed_at?: string | null
+          signing_bonus?: number | null
+          special_terms?: string | null
+          start_date: string
+          status?: string
+          template_id?: string | null
+          template_version: string
+          updated_at?: string | null
+          voided_at?: string | null
+          voided_reason?: string | null
+        }
+        Update: {
+          agent_email?: string
+          agent_id?: string | null
+          agent_name?: string
+          commission_split?: string
+          content_html?: string
+          contract_type?: string
+          created_at?: string | null
+          created_by?: string | null
+          division?: string
+          id?: string
+          offer_id?: string | null
+          pdf_url?: string | null
+          sent_at?: string | null
+          signatory_email?: string | null
+          signatory_name?: string | null
+          signature_data?: string | null
+          signature_date?: string | null
+          signature_ip?: string | null
+          signature_user_agent?: string | null
+          signed_at?: string | null
+          signing_bonus?: number | null
+          special_terms?: string | null
+          start_date?: string
+          status?: string
+          template_id?: string | null
+          template_version?: string
+          updated_at?: string | null
+          voided_at?: string | null
+          voided_reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hr_contracts_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "hr_agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hr_contracts_offer_id_fkey"
+            columns: ["offer_id"]
+            isOneToOne: false
+            referencedRelation: "hr_offers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hr_contracts_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "hr_contract_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hr_email_templates: {
         Row: {
           body: string
