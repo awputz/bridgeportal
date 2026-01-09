@@ -22,6 +22,7 @@ import {
   useDeleteMarketingProject,
   useDuplicateProject 
 } from "@/hooks/marketing/useMarketingProjects";
+import { useLogGeneration } from "@/hooks/marketing/useAIGenerationHistory";
 import { 
   SocialPostForm, 
   FlyerForm, 
@@ -50,6 +51,7 @@ const ProjectEditor = () => {
   const updateProject = useUpdateMarketingProject();
   const deleteProject = useDeleteMarketingProject();
   const duplicateProject = useDuplicateProject();
+  const logGeneration = useLogGeneration();
   
   const [projectName, setProjectName] = useState("");
   const [formData, setFormData] = useState<Record<string, unknown>>({});
@@ -109,6 +111,7 @@ const ProjectEditor = () => {
     
     setIsGenerating(true);
     setGeneratedContent("");
+    const startTime = Date.now();
 
     try {
       const prompt = getPromptForProjectType(project.type, formData);
@@ -177,6 +180,18 @@ const ProjectEditor = () => {
         title: "Content generated!",
         description: "Your marketing content is ready.",
       });
+
+      // Log generation to history
+      if (accumulated) {
+        logGeneration.mutate({
+          project_id: id,
+          generator_type: project.type,
+          prompt_used: prompt,
+          form_data: formData,
+          generated_content: accumulated,
+          generation_time_ms: Date.now() - startTime,
+        });
+      }
     } catch (error) {
       console.error("Generation error:", error);
       toast({

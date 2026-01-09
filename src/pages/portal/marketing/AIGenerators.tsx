@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useCreateMarketingProject } from "@/hooks/marketing/useMarketingProjects";
+import { useLogGeneration } from "@/hooks/marketing/useAIGenerationHistory";
 import { SaveProjectDialog } from "@/components/marketing/SaveProjectDialog";
 import { 
   SocialPostForm, 
@@ -68,6 +69,7 @@ type GeneratedContentMap = {
 const AIGenerators = () => {
   const navigate = useNavigate();
   const createProject = useCreateMarketingProject();
+  const logGeneration = useLogGeneration();
   
   const [activeTab, setActiveTab] = useState<GeneratorType>("social-post");
   const [formData, setFormData] = useState<FormDataMap>({
@@ -133,6 +135,7 @@ const AIGenerators = () => {
 
     setIsGenerating(true);
     setGeneratedContent(prev => ({ ...prev, [activeTab]: "" }));
+    const startTime = Date.now();
 
     try {
       abortControllerRef.current = new AbortController();
@@ -211,6 +214,17 @@ const AIGenerators = () => {
       }
 
       toast.success("Content generated successfully!");
+      
+      // Log generation to history
+      if (fullContent) {
+        logGeneration.mutate({
+          generator_type: activeTab,
+          prompt_used: prompt,
+          form_data: formData[activeTab] as Record<string, unknown>,
+          generated_content: fullContent,
+          generation_time_ms: Date.now() - startTime,
+        });
+      }
     } catch (error) {
       if ((error as Error).name === "AbortError") {
         return;
