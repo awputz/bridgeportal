@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import type { Json } from "@/integrations/supabase/types";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, Loader2, Copy, Check, Sparkles, MoreVertical, Trash2, Copy as DuplicateIcon, Download, Send, FileText, CalendarClock, RefreshCw } from "lucide-react";
+import { Save, Loader2, Copy, Check, Sparkles, MoreVertical, Trash2, Copy as DuplicateIcon, Download, Send, FileText, CalendarClock, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,6 +39,7 @@ import type { EmailFormData } from "@/components/marketing/forms/EmailForm";
 import type { PresentationFormData } from "@/components/marketing/forms/PresentationForm";
 import { getPromptForProjectType, MARKETING_SYSTEM_PROMPT } from "@/lib/marketingPrompts";
 import { SchedulePostDialog } from "@/components/marketing/SchedulePostDialog";
+import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 
 type FormData = SocialPostFormData | FlyerFormData | EmailFormData | PresentationFormData;
 
@@ -406,17 +407,10 @@ const ProjectEditor = () => {
   }
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 space-y-6">
+    <MarketingLayout backTo="/portal/marketing/projects" backLabel="Back to Projects">
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4 flex-1 min-w-0">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/portal/marketing/projects")}
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
           
           <Input
             value={projectName}
@@ -607,7 +601,7 @@ const ProjectEditor = () => {
           projectId={id}
         />
       )}
-    </div>
+    </MarketingLayout>
   );
 };
 

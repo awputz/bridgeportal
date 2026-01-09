@@ -22,6 +22,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
+import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 
 const assetTypes = [
   { value: "all", label: "All Assets", icon: Image },
@@ -64,7 +65,7 @@ export default function AssetLibrary() {
   };
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 space-y-6">
+    <MarketingLayout>
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -214,6 +215,6 @@ export default function AssetLibrary() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </MarketingLayout>
   );
 }

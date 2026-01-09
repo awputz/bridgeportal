@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Sparkles, 
   Image, 
@@ -14,7 +13,6 @@ import {
   Copy, 
   Check, 
   Download, 
-  ArrowLeft,
   Wand2,
   FolderPlus 
 } from "lucide-react";
@@ -22,6 +20,7 @@ import { toast } from "sonner";
 import { useCreateMarketingProject } from "@/hooks/marketing/useMarketingProjects";
 import { useLogGeneration } from "@/hooks/marketing/useAIGenerationHistory";
 import { SaveProjectDialog } from "@/components/marketing/SaveProjectDialog";
+import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 import { 
   SocialPostForm, 
   SocialPostFormData,
@@ -337,23 +336,17 @@ const AIGenerators = () => {
   const currentContent = generatedContent[activeTab];
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 space-y-6">
+    <MarketingLayout>
+      <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link to="/portal/marketing">
-          <Button variant="ghost" size="icon" className="shrink-0">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-2xl font-semibold flex items-center gap-2">
-            <Wand2 className="h-6 w-6 text-purple-400" />
-            AI Generators
-          </h1>
-          <p className="text-muted-foreground text-sm">
-            Create professional marketing content with AI
-          </p>
-        </div>
+      <div>
+        <h1 className="text-2xl font-semibold flex items-center gap-2">
+          <Wand2 className="h-6 w-6 text-purple-400" />
+          AI Generators
+        </h1>
+        <p className="text-muted-foreground text-sm">
+          Create professional marketing content with AI
+        </p>
       </div>
 
       {/* Generator Type Cards */}
@@ -518,7 +511,8 @@ const AIGenerators = () => {
         defaultName={`${generators.find(g => g.id === activeTab)?.name} - ${new Date().toLocaleDateString()}`}
         isLoading={createProject.isPending}
       />
-    </div>
+      </div>
+    </MarketingLayout>
   );
 };
 

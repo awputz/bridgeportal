@@ -40,6 +40,7 @@ import {
   useProjectStats
 } from "@/hooks/marketing";
 import { formatSafeRelativeTime } from "@/lib/dateUtils";
+import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 
 const MarketingProjects = () => {
   const navigate = useNavigate();
@@ -95,7 +96,7 @@ const MarketingProjects = () => {
   };
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 space-y-6">
+    <MarketingLayout>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -324,7 +325,7 @@ const MarketingProjects = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </MarketingLayout>
   );
 };
 

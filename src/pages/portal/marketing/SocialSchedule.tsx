@@ -3,7 +3,6 @@ import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   DropdownMenu,
@@ -31,6 +30,7 @@ import {
 import { useScheduledPosts, useCancelScheduledPost, ScheduledPost } from "@/hooks/marketing/useScheduledPosts";
 import { SchedulePostDialog } from "@/components/marketing/SchedulePostDialog";
 import { cn } from "@/lib/utils";
+import { MarketingLayout } from "@/components/marketing/MarketingLayout";
 
 const platformIcons = {
   instagram: Instagram,
@@ -154,7 +154,7 @@ export default function SocialSchedule() {
   }
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 space-y-6">
+    <MarketingLayout>
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -295,6 +295,6 @@ export default function SocialSchedule() {
         open={showScheduleDialog}
         onOpenChange={setShowScheduleDialog}
       />
-    </div>
+    </MarketingLayout>
   );
 }
