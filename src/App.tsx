@@ -107,6 +107,8 @@ const BrandProfile = lazy(() => import("./pages/portal/marketing/BrandProfile"))
 const SocialSchedule = lazy(() => import("./pages/portal/marketing/SocialSchedule"));
 const AIGenerators = lazy(() => import("./pages/portal/marketing/AIGenerators"));
 const AIGenerationHistory = lazy(() => import("./pages/portal/marketing/AIGenerationHistory"));
+const AIStaging = lazy(() => import("./pages/portal/marketing/AIStaging"));
+const StagingProjectDetail = lazy(() => import("./pages/portal/marketing/StagingProjectDetail"));
 
 // Company Pages - lazy loaded
 const AboutCompany = lazy(() => import("./pages/portal/company/About"));
@@ -558,6 +560,16 @@ const App = () => {
                     <Route path="marketing/history" element={
                       <Suspense fallback={<PageLoader />}>
                         <AIGenerationHistory />
+                      </Suspense>
+                    } />
+                    <Route path="marketing/staging" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <AIStaging />
+                      </Suspense>
+                    } />
+                    <Route path="marketing/staging/:id" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <StagingProjectDetail />
                       </Suspense>
                     } />
                     
