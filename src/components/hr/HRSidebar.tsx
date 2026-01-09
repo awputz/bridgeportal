@@ -22,6 +22,7 @@ const navItems = [
   { name: "Interviews", path: "/hr/interviews", icon: CalendarCheck },
   { name: "Offers", path: "/hr/offers", icon: FileText },
   { name: "Contracts", path: "/hr/contracts", icon: FileSignature },
+  { name: "Active Agents", path: "/hr/active-agents", icon: Users },
   { name: "Analytics", path: "/hr/analytics", icon: BarChart3 },
   { name: "Settings", path: "/hr/settings", icon: Settings },
 ];

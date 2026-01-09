@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import { HRLayout } from "@/components/hr/HRLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -83,7 +82,7 @@ export default function ActiveAgentsPage() {
   ];
 
   return (
-    <HRLayout>
+    <div className="space-y-6">
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -239,6 +238,6 @@ export default function ActiveAgentsPage() {
         open={showConvertDialog}
         onOpenChange={setShowConvertDialog}
       />
-    </HRLayout>
+    </div>
   );
 }
