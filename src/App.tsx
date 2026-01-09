@@ -100,6 +100,7 @@ const MarketingDashboard = lazy(() => import("./pages/portal/marketing/Marketing
 const MarketingProjects = lazy(() => import("./pages/portal/marketing/MarketingProjects"));
 const MediaLibrary = lazy(() => import("./pages/portal/marketing/MediaLibrary"));
 const CreateProject = lazy(() => import("./pages/portal/marketing/CreateProject"));
+const ProjectEditor = lazy(() => import("./pages/portal/marketing/ProjectEditor"));
 
 // Company Pages - lazy loaded
 const AboutCompany = lazy(() => import("./pages/portal/company/About"));
@@ -520,7 +521,7 @@ const App = () => {
                     } />
                     <Route path="marketing/edit/:id" element={
                       <Suspense fallback={<PageLoader />}>
-                        <CreateProject />
+                        <ProjectEditor />
                       </Suspense>
                     } />
                     

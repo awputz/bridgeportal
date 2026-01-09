@@ -1,22 +1,31 @@
 import { Link } from "react-router-dom";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { 
   Megaphone, 
   Plus, 
-  Image, 
+  Image as ImageIcon, 
   Mail, 
   FileText, 
   Presentation,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  Clock,
+  Loader2,
+  Star
 } from "lucide-react";
+import { useRecentProjects, useProjectStats } from "@/hooks/marketing/useMarketingProjects";
+import { useFeaturedTemplates, useMarketingTemplates } from "@/hooks/marketing/useMarketingTemplates";
+import { formatDistanceToNow } from "date-fns";
 
 const quickActions = [
   { 
     name: "Social Media", 
     description: "Instagram, Facebook, LinkedIn posts", 
-    icon: Image, 
+    icon: ImageIcon, 
     color: "bg-pink-500/20 text-pink-400",
     path: "/portal/marketing/create?type=social-post" 
   },
@@ -43,7 +52,38 @@ const quickActions = [
   },
 ];
 
+const getTypeIcon = (type: string) => {
+  switch (type) {
+    case "social-post":
+      return ImageIcon;
+    case "email":
+      return Mail;
+    case "flyer":
+      return FileText;
+    case "presentation":
+      return Presentation;
+    default:
+      return FileText;
+  }
+};
+
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case "completed":
+      return "bg-green-500/20 text-green-400";
+    case "published":
+      return "bg-blue-500/20 text-blue-400";
+    default:
+      return "bg-muted text-muted-foreground";
+  }
+};
+
 const MarketingDashboard = () => {
+  const { data: recentProjects, isLoading: projectsLoading } = useRecentProjects(6);
+  const { data: stats, isLoading: statsLoading } = useProjectStats();
+  const { data: featuredTemplates, isLoading: templatesLoading } = useFeaturedTemplates();
+  const { data: allTemplates } = useMarketingTemplates();
+
   return (
     <div className="space-y-8">
       {/* Hero Section */}
@@ -70,7 +110,7 @@ const MarketingDashboard = () => {
             </Button>
             <Button asChild variant="outline" size="lg" className="gap-2">
               <Link to="/portal/marketing/media">
-                <Image className="h-4 w-4" />
+                <ImageIcon className="h-4 w-4" />
                 Browse Templates
               </Link>
             </Button>
@@ -78,6 +118,36 @@ const MarketingDashboard = () => {
         </div>
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-pink-500/10 to-transparent rounded-full blur-3xl" />
       </div>
+
+      {/* Stats Overview */}
+      {!statsLoading && stats && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Card>
+            <CardContent className="p-4">
+              <p className="text-2xl font-semibold text-foreground">{stats.total}</p>
+              <p className="text-sm text-muted-foreground">Total Projects</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <p className="text-2xl font-semibold text-foreground">{stats.draft}</p>
+              <p className="text-sm text-muted-foreground">In Progress</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <p className="text-2xl font-semibold text-foreground">{stats.completed}</p>
+              <p className="text-sm text-muted-foreground">Completed</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <p className="text-2xl font-semibold text-foreground">{stats.published}</p>
+              <p className="text-sm text-muted-foreground">Published</p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Quick Actions */}
       <section>
@@ -102,7 +172,73 @@ const MarketingDashboard = () => {
         </div>
       </section>
 
-      {/* Recent Projects Placeholder */}
+      {/* Featured Templates */}
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-light text-foreground flex items-center gap-2">
+            <Star className="h-5 w-5 text-yellow-500" />
+            Featured Templates
+          </h2>
+          <Button asChild variant="ghost" size="sm" className="gap-1">
+            <Link to="/portal/marketing/media">
+              View All
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+        
+        {templatesLoading ? (
+          <div className="flex gap-4 overflow-hidden">
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton key={i} className="w-[250px] h-[180px] flex-shrink-0 rounded-xl" />
+            ))}
+          </div>
+        ) : featuredTemplates && featuredTemplates.length > 0 ? (
+          <ScrollArea className="w-full whitespace-nowrap">
+            <div className="flex gap-4 pb-4">
+              {featuredTemplates.map((template) => (
+                <Link 
+                  key={template.id} 
+                  to={`/portal/marketing/create?template=${template.id}`}
+                  className="flex-shrink-0"
+                >
+                  <Card className="w-[250px] hover:bg-muted/50 transition-colors cursor-pointer overflow-hidden">
+                    <div className="h-32 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                      {template.thumbnail_url ? (
+                        <img 
+                          src={template.thumbnail_url} 
+                          alt={template.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <Sparkles className="h-10 w-10 text-primary/50" />
+                      )}
+                    </div>
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-medium text-foreground truncate">{template.name}</h3>
+                        {template.is_premium && (
+                          <Badge variant="secondary" className="text-xs">Pro</Badge>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground capitalize">{template.category}</p>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+        ) : (
+          <Card className="border-dashed">
+            <CardContent className="flex flex-col items-center justify-center py-8 text-center">
+              <p className="text-muted-foreground">No featured templates yet.</p>
+            </CardContent>
+          </Card>
+        )}
+      </section>
+
+      {/* Recent Projects */}
       <section>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-light text-foreground">Recent Projects</h2>
@@ -113,23 +249,61 @@ const MarketingDashboard = () => {
             </Link>
           </Button>
         </div>
-        <Card className="border-dashed">
-          <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
-              <Sparkles className="h-6 w-6 text-muted-foreground" />
-            </div>
-            <h3 className="text-lg font-medium text-foreground mb-2">No projects yet</h3>
-            <p className="text-muted-foreground mb-4 max-w-sm">
-              Create your first marketing design using our templates and AI-powered tools.
-            </p>
-            <Button asChild>
-              <Link to="/portal/marketing/create">
-                <Plus className="h-4 w-4 mr-2" />
-                Create Your First Design
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
+        
+        {projectsLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} className="h-[140px] rounded-xl" />
+            ))}
+          </div>
+        ) : recentProjects && recentProjects.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {recentProjects.map((project) => {
+              const Icon = getTypeIcon(project.type);
+              return (
+                <Link key={project.id} to={`/portal/marketing/edit/${project.id}`}>
+                  <Card className="h-full hover:bg-muted/50 transition-colors cursor-pointer">
+                    <CardContent className="p-5">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                          <Icon className="h-5 w-5 text-primary" />
+                        </div>
+                        <Badge className={getStatusColor(project.status)}>
+                          {project.status}
+                        </Badge>
+                      </div>
+                      <h3 className="font-medium text-foreground mb-1 truncate">
+                        {project.name}
+                      </h3>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <Clock className="h-3 w-3" />
+                        {formatDistanceToNow(new Date(project.updated_at), { addSuffix: true })}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              );
+            })}
+          </div>
+        ) : (
+          <Card className="border-dashed">
+            <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+              <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
+                <Sparkles className="h-6 w-6 text-muted-foreground" />
+              </div>
+              <h3 className="text-lg font-medium text-foreground mb-2">No projects yet</h3>
+              <p className="text-muted-foreground mb-4 max-w-sm">
+                Create your first marketing design using our templates and AI-powered tools.
+              </p>
+              <Button asChild>
+                <Link to="/portal/marketing/create">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Your First Design
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        )}
       </section>
     </div>
   );
