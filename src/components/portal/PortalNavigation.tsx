@@ -32,7 +32,8 @@ import {
   Send,
   Megaphone,
   Image,
-  History
+  History,
+  Home
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -79,10 +80,11 @@ const toolsItems = [
   { name: "Requests", path: "/portal/requests", icon: Send, description: "Cards, marketing, BOV", color: "bg-rose-500/20 text-rose-400" },
 ];
 
-// Marketing items with descriptions and colors (AI Generators added as 2nd item, History added at end)
+// Marketing items with descriptions and colors (AI Generators added as 2nd item, AI Staging as 3rd, History added at end)
 const marketingItems = [
   { name: "Overview", path: "/portal/marketing", icon: Megaphone, description: "Marketing dashboard", color: "bg-pink-500/20 text-pink-400" },
   { name: "AI Generators", path: "/portal/marketing/generators", icon: Wand2, description: "AI-powered content creation", color: "bg-purple-500/20 text-purple-400" },
+  { name: "AI Staging", path: "/portal/marketing/staging", icon: Home, description: "Virtual property staging", color: "bg-teal-500/20 text-teal-400" },
   { name: "Projects", path: "/portal/marketing/projects", icon: FolderOpen, description: "Your created designs", color: "bg-violet-500/20 text-violet-400" },
   { name: "Media Library", path: "/portal/marketing/media", icon: Image, description: "Templates & assets", color: "bg-indigo-500/20 text-indigo-400" },
   { name: "Asset Library", path: "/portal/marketing/assets", icon: Image, description: "Logos & headshots", color: "bg-cyan-500/20 text-cyan-400" },
