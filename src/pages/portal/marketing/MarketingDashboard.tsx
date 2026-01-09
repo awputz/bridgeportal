@@ -18,7 +18,11 @@ import {
   TrendingUp,
   MousePointerClick,
   BarChart3,
-  Home
+  Home,
+  FolderKanban,
+  User,
+  Calendar,
+  History
 } from "lucide-react";
 import { useRecentProjects, useProjectStats } from "@/hooks/marketing/useMarketingProjects";
 import { useFeaturedTemplates, useMarketingTemplates } from "@/hooks/marketing/useMarketingTemplates";
@@ -113,7 +117,7 @@ const MarketingDashboard = () => {
     .slice(0, 4);
 
   return (
-    <div className="space-y-8">
+    <div className="p-4 md:p-6 lg:p-8 space-y-8">
       {/* Hero Section */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-pink-500/20 via-violet-500/10 to-indigo-500/20 p-8 md:p-12">
         <div className="relative z-10">
@@ -263,6 +267,35 @@ const MarketingDashboard = () => {
                         <ArrowRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
                       </div>
                     )}
+                  </CardContent>
+                </Card>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Navigate To Section */}
+      <section>
+        <h2 className="text-xl font-light text-foreground mb-4">Navigate To</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          {[
+            { name: "My Projects", path: "/portal/marketing/projects", icon: FolderKanban, color: "bg-violet-500/20 text-violet-400" },
+            { name: "Media Library", path: "/portal/marketing/media", icon: ImageIcon, color: "bg-indigo-500/20 text-indigo-400" },
+            { name: "Asset Library", path: "/portal/marketing/assets", icon: ImageIcon, color: "bg-cyan-500/20 text-cyan-400" },
+            { name: "Brand Profile", path: "/portal/marketing/brand", icon: User, color: "bg-emerald-500/20 text-emerald-400" },
+            { name: "Social Schedule", path: "/portal/marketing/social-schedule", icon: Calendar, color: "bg-orange-500/20 text-orange-400" },
+            { name: "AI History", path: "/portal/marketing/history", icon: History, color: "bg-slate-500/20 text-slate-400" },
+          ].map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link key={item.name} to={item.path}>
+                <Card className="h-full hover:bg-muted/50 transition-colors cursor-pointer">
+                  <CardContent className="p-4 flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${item.color.split(' ')[0]}`}>
+                      <Icon className={`h-4 w-4 ${item.color.split(' ')[1]}`} />
+                    </div>
+                    <span className="text-sm font-medium text-foreground">{item.name}</span>
                   </CardContent>
                 </Card>
               </Link>
