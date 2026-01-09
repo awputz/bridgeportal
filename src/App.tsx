@@ -105,6 +105,7 @@ const AssetLibrary = lazy(() => import("./pages/portal/marketing/AssetLibrary"))
 const EmailCampaigns = lazy(() => import("./pages/portal/marketing/EmailCampaigns"));
 const BrandProfile = lazy(() => import("./pages/portal/marketing/BrandProfile"));
 const SocialSchedule = lazy(() => import("./pages/portal/marketing/SocialSchedule"));
+const AIGenerators = lazy(() => import("./pages/portal/marketing/AIGenerators"));
 
 // Company Pages - lazy loaded
 const AboutCompany = lazy(() => import("./pages/portal/company/About"));
@@ -546,6 +547,11 @@ const App = () => {
                     <Route path="marketing/social-schedule" element={
                       <Suspense fallback={<PageLoader />}>
                         <SocialSchedule />
+                      </Suspense>
+                    } />
+                    <Route path="marketing/generators" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <AIGenerators />
                       </Suspense>
                     } />
                     
