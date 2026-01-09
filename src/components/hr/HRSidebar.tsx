@@ -12,6 +12,8 @@ import {
   TrendingUp,
   Settings,
   ClipboardList,
+  FileDown,
+  PieChart,
 } from "lucide-react";
 
 const navItems = [
@@ -25,6 +27,8 @@ const navItems = [
   { name: "Contracts", path: "/hr/contracts", icon: FileSignature },
   { name: "Active Agents", path: "/hr/active-agents", icon: Users },
   { name: "Performance", path: "/hr/performance", icon: TrendingUp },
+  { name: "Reports", path: "/hr/reports", icon: FileDown },
+  { name: "Executive Summary", path: "/hr/executive-summary", icon: PieChart },
   { name: "Analytics", path: "/hr/analytics", icon: BarChart3 },
   { name: "Settings", path: "/hr/settings", icon: Settings },
 ];
