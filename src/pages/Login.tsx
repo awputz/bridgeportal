@@ -234,7 +234,7 @@ const Login = () => {
 
           <div className="text-center mt-8 space-y-3">
             <p className="text-xs text-muted-foreground/50 font-light">
-              Bridge Advisory Group © {new Date().getFullYear()}
+              BOSS AI Group © {new Date().getFullYear()}
             </p>
             <PoweredByBoss />
           </div>
@@ -429,7 +429,7 @@ const Login = () => {
 
         <div className="text-center mt-8 space-y-3">
           <p className="text-xs text-muted-foreground/50 font-light">
-            Bridge Advisory Group © {new Date().getFullYear()}
+            BOSS AI Group © {new Date().getFullYear()}
           </p>
           <PoweredByBoss />
         </div>
