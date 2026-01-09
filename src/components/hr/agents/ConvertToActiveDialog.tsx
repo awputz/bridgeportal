@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useHRAgents } from "@/hooks/hr/useHRAgents";
-import { useCreateActiveAgent } from "@/hooks/hr/useActiveAgents";
+import { useConvertToActive } from "@/hooks/hr/useActiveAgents";
 import { useContracts } from "@/hooks/hr/useContracts";
 import { Loader2 } from "lucide-react";
 import { format } from "date-fns";
@@ -42,9 +42,10 @@ export function ConvertToActiveDialog({
     contractId: "",
   });
 
+  // Query for hired agents (recruitment_status = 'hired')
   const { data: hrAgents } = useHRAgents({ status: "hired" });
   const { data: contracts } = useContracts({ status: "signed" });
-  const createActiveAgent = useCreateActiveAgent();
+  const convertToActive = useConvertToActive();
 
   const selectedAgent = hrAgents?.find((a) => a.id === selectedAgentId);
   const agentContracts = contracts?.filter((c) => c.agent_id === selectedAgentId);
@@ -52,16 +53,13 @@ export function ConvertToActiveDialog({
   const handleSubmit = async () => {
     if (!selectedAgent) return;
 
-    await createActiveAgent.mutateAsync({
-      hr_agent_id: selectedAgent.id,
-      full_name: selectedAgent.full_name,
-      email: selectedAgent.email,
-      phone: selectedAgent.phone,
-      division: selectedAgent.division,
-      hire_date: formData.hireDate,
-      start_date: formData.startDate || null,
-      commission_split: formData.commissionSplit || null,
-      contract_id: formData.contractId || null,
+    // Update existing agent to onboarding status (unified table approach)
+    await convertToActive.mutateAsync({
+      agentId: selectedAgent.id,
+      hireDate: formData.hireDate,
+      startDate: formData.startDate || null,
+      commissionSplit: formData.commissionSplit || null,
+      contractId: formData.contractId || null,
     });
 
     onOpenChange(false);
@@ -205,9 +203,9 @@ export function ConvertToActiveDialog({
           </Button>
           <Button
             onClick={handleSubmit}
-            disabled={!selectedAgent || !formData.hireDate || createActiveAgent.isPending}
+            disabled={!selectedAgent || !formData.hireDate || convertToActive.isPending}
           >
-            {createActiveAgent.isPending && (
+            {convertToActive.isPending && (
               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
             )}
             Convert to Active
