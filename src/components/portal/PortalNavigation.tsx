@@ -305,50 +305,17 @@ export const PortalNavigation = ({ onSearchClick }: PortalNavigationProps) => {
                 </DropdownMenuContent>
               </DropdownMenu>
 
-              {/* Marketing Dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className={cn(
-                    "flex items-center gap-1.5 text-[15px] font-light transition-all duration-200 hover:scale-105",
-                    isMarketingActive ? "text-white" : "text-white/70 hover:text-white"
-                  )}>
-                    <Megaphone className="h-4 w-4" />
-                    Marketing
-                    <ChevronDown className="h-3 w-3 opacity-60" />
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="center" className="w-72 p-2 dropdown-premium border-0" sideOffset={12}>
-                  {marketingItems.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/');
-                    return (
-                      <Link 
-                        key={item.name}
-                        to={item.path} 
-                        className={cn(
-                          "dropdown-premium-item group cursor-pointer",
-                          isActive && "bg-white/10"
-                        )}
-                      >
-                        <div className={cn(
-                          "h-8 w-8 rounded-lg flex items-center justify-center flex-shrink-0",
-                          item.color.split(' ')[0]
-                        )}>
-                          <Icon className={cn("h-4 w-4", item.color.split(' ')[1])} />
-                        </div>
-                        <div className="min-w-0 flex-1 space-y-0">
-                          <p className="text-[13px] font-medium text-white leading-none m-0">
-                            {item.name}
-                          </p>
-                          <p className="text-[11px] text-white/50 leading-relaxed m-0 mt-1">
-                            {item.description}
-                          </p>
-                        </div>
-                      </Link>
-                    );
-                  })}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              {/* Marketing - Direct link to Hub */}
+              <Link
+                to="/portal/marketing"
+                className={cn(
+                  "relative z-10 flex items-center gap-2 text-[15px] font-light transition-all duration-200 hover:scale-105 cursor-pointer",
+                  isMarketingActive ? "text-white" : "text-white/70 hover:text-white"
+                )}
+              >
+                <Megaphone className="h-4 w-4" />
+                Marketing
+              </Link>
 
               {/* Company */}
               <Link

@@ -198,7 +198,7 @@ export default function StagingProjectDetail() {
   
   if (projectLoading) {
     return (
-      <div className="space-y-6 animate-pulse">
+      <div className="p-4 md:p-6 lg:p-8 space-y-6 animate-pulse">
         <div className="h-8 bg-muted rounded w-1/4" />
         <div className="grid grid-cols-2 gap-6">
           <div className="h-96 bg-muted rounded" />
@@ -210,7 +210,7 @@ export default function StagingProjectDetail() {
   
   if (!project) {
     return (
-      <div className="text-center py-12">
+      <div className="p-4 md:p-6 lg:p-8 text-center py-12">
         <p className="text-muted-foreground">Project not found</p>
         <Button variant="outline" className="mt-4" onClick={() => navigate("/portal/marketing/staging")}>
           Back to Staging
@@ -220,7 +220,7 @@ export default function StagingProjectDetail() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="p-4 md:p-6 lg:p-8 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-4">
