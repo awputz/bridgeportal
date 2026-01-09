@@ -1,11 +1,12 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { format, differenceInDays } from "date-fns";
-import { FileText, Eye, Trash2, Copy, DollarSign, CheckCircle, Clock, XCircle } from "lucide-react";
+import { FileText, Eye, Trash2, Copy, DollarSign, CheckCircle, Clock, XCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
   SelectContent,
@@ -33,6 +34,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { CreateOfferDialog } from "@/components/hr/CreateOfferDialog";
+import { useURLFilters, parseString } from "@/hooks/useURLFilters";
 import {
   useHROffers,
   useDeleteHROffer,
@@ -45,10 +47,17 @@ import {
 import { divisionLabels, Division } from "@/hooks/hr/useHRAgents";
 import { toast } from "sonner";
 
+// Filter config for URL persistence
+const filterConfigs = {
+  tab: { key: 'tab', defaultValue: 'all' as 'all' | OfferStatus, parse: parseString('all') },
+  search: { key: 'q', defaultValue: '', parse: parseString('') },
+  division: { key: 'division', defaultValue: '', parse: parseString('') },
+};
+
 export default function Offers() {
-  const [tab, setTab] = useState<'all' | OfferStatus>('all');
-  const [search, setSearch] = useState("");
-  const [divisionFilter, setDivisionFilter] = useState<string>("");
+  // URL-persisted filters
+  const [filters, setFilters, clearFilters] = useURLFilters(filterConfigs);
+  const { tab, search, division: divisionFilter } = filters;
 
   const { data: offers, isLoading } = useHROffers();
   const deleteOffer = useDeleteHROffer();
@@ -76,6 +85,9 @@ export default function Offers() {
       return true;
     });
   }, [offers, tab, search, divisionFilter]);
+
+  // Check if any filters are active
+  const hasActiveFilters = search || divisionFilter;
 
   // Metrics calculations
   const metrics = useMemo(() => {
@@ -206,7 +218,7 @@ export default function Offers() {
       </div>
 
       {/* Tabs & Filters */}
-      <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)}>
+      <Tabs value={tab} onValueChange={(v) => setFilters({ tab: v as typeof tab })}>
         <div className="flex flex-col sm:flex-row gap-4 justify-between">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
@@ -220,10 +232,10 @@ export default function Offers() {
             <Input
               placeholder="Search by agent..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => setFilters({ search: e.target.value })}
               className="w-48"
             />
-            <Select value={divisionFilter} onValueChange={setDivisionFilter}>
+            <Select value={divisionFilter} onValueChange={(v) => setFilters({ division: v })}>
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="All Divisions" />
               </SelectTrigger>
@@ -234,12 +246,46 @@ export default function Offers() {
                 ))}
               </SelectContent>
             </Select>
+            {hasActiveFilters && (
+              <Button variant="ghost" size="sm" onClick={clearFilters} className="gap-1">
+                <X className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         </div>
 
         <TabsContent value={tab} className="mt-4">
           {isLoading ? (
-            <div className="text-center py-8 text-muted-foreground">Loading offers...</div>
+            <div className="border border-border rounded-lg overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Agent</TableHead>
+                    <TableHead>Division</TableHead>
+                    <TableHead>Commission Split</TableHead>
+                    <TableHead>Signing Bonus</TableHead>
+                    <TableHead>Start Date</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Created</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <TableRow key={i}>
+                      <TableCell><Skeleton className="h-4 w-32" /></TableCell>
+                      <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                      <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+                      <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+                      <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
+                      <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+                      <TableCell><Skeleton className="h-8 w-20" /></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           ) : filteredOffers.length === 0 ? (
             <div className="text-center py-12">
               <FileText className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
