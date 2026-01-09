@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import type { Json } from "@/integrations/supabase/types";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, Loader2, Copy, Check, Sparkles, MoreVertical, Trash2, Copy as DuplicateIcon, Download, Send, FileText, CalendarClock } from "lucide-react";
+import { ArrowLeft, Save, Loader2, Copy, Check, Sparkles, MoreVertical, Trash2, Copy as DuplicateIcon, Download, Send, FileText, CalendarClock, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -515,24 +515,45 @@ const ProjectEditor = () => {
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-lg font-medium">Generated Content</CardTitle>
             {generatedContent && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleCopy}
-                className="gap-2"
-              >
-                {copied ? (
-                  <>
-                    <Check className="h-4 w-4" />
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-4 w-4" />
-                    Copy
-                  </>
-                )}
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleGenerate}
+                  disabled={!isFormValid() || isGenerating}
+                  className="gap-1.5"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      Regenerating...
+                    </>
+                  ) : (
+                    <>
+                      <RefreshCw className="h-3.5 w-3.5" />
+                      Re-generate
+                    </>
+                  )}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleCopy}
+                  className="gap-2"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="h-4 w-4" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-4 w-4" />
+                      Copy
+                    </>
+                  )}
+                </Button>
+              </div>
             )}
           </CardHeader>
           <CardContent>
