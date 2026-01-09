@@ -341,7 +341,7 @@ export default function StagingProjectDetail() {
                     const img = images?.find(i => i.id === id);
                     return img ? (
                       <div key={id} className="w-12 h-12 rounded overflow-hidden border">
-                        <img src={img.original_url} alt="" className="w-full h-full object-cover" />
+                        <img src={img.original_url} alt="" loading="lazy" className="w-full h-full object-cover" />
                       </div>
                     ) : null;
                   })}
@@ -440,6 +440,7 @@ export default function StagingProjectDetail() {
                       <img
                         src={selectedImage.original_url}
                         alt="Selected"
+                        loading="lazy"
                         className="w-full h-full object-cover"
                       />
                     </div>
