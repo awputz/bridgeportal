@@ -70,7 +70,7 @@ export const SocialPostForm = ({ data, onChange }: SocialPostFormProps) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <PropertySelector onSelect={handlePropertySelect} />
       <Separator className="my-4" />
       <div>
@@ -101,7 +101,7 @@ export const SocialPostForm = ({ data, onChange }: SocialPostFormProps) => {
         />
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-4">
         <div>
           <Label htmlFor="price">Price</Label>
           <Input
