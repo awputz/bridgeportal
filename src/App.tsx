@@ -95,6 +95,9 @@ const GoogleServicesSettings = lazy(() => import("./pages/portal/GoogleServicesS
 const DealRoom = lazy(() => import("./pages/portal/DealRoom"));
 const Chat = lazy(() => import("./pages/portal/Chat"));
 
+// eSign Pages - lazy loaded
+const ESignFieldEditor = lazy(() => import("./pages/esign/FieldEditor"));
+
 // Marketing Pages - lazy loaded
 const MarketingDashboard = lazy(() => import("./pages/portal/marketing/MarketingDashboard"));
 const MarketingProjects = lazy(() => import("./pages/portal/marketing/MarketingProjects"));
@@ -506,6 +509,12 @@ const App = () => {
                       </Suspense>
                     } />
                     
+                    {/* eSign Routes */}
+                    <Route path="esign/edit/:documentId" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <ESignFieldEditor />
+                      </Suspense>
+                    } />
                     {/* Marketing Center */}
                     <Route path="marketing" element={
                       <ErrorBoundary>
