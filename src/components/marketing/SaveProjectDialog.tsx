@@ -43,17 +43,17 @@ export const SaveProjectDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+      <DialogContent className="sm:max-w-md max-h-[90vh] flex flex-col">
+        <DialogHeader className="space-y-2 pb-4 flex-shrink-0">
+          <DialogTitle className="text-2xl font-light flex items-center gap-2">
             <FolderPlus className="h-5 w-5 text-purple-400" />
             Save as Project
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-sm">
             Save this content to your projects for later editing and management.
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-6 py-6">
+        <div className="flex-1 space-y-6 py-4">
           <div className="space-y-2">
             <Label htmlFor="project-name">Project Name</Label>
             <Input
@@ -70,7 +70,7 @@ export const SaveProjectDialog = ({
             />
           </div>
         </div>
-        <DialogFooter className="gap-2 sm:gap-0">
+        <DialogFooter className="gap-2 pt-4 border-t flex-shrink-0">
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}

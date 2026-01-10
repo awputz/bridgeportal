@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Loader2, Mail, FileText } from "lucide-react";
 
 interface CreateCampaignDialogProps {
@@ -77,80 +78,82 @@ export function CreateCampaignDialog({ open, onOpenChange, projectId }: CreateCa
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Create Email Campaign</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="sm:max-w-lg max-h-[90vh] flex flex-col">
+        <DialogHeader className="space-y-2 pb-4 flex-shrink-0">
+          <DialogTitle className="text-2xl font-light">Create Email Campaign</DialogTitle>
+          <DialogDescription className="text-sm">
             Start a new email campaign or import content from a marketing project
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-4">
-          {/* Import from Project */}
-          {emailProjects.length > 0 && (
+        <ScrollArea className="flex-1 -mx-6 px-6">
+          <div className="space-y-6 py-4">
+            {/* Import from Project */}
+            {emailProjects.length > 0 && (
+              <div className="space-y-2">
+                <Label htmlFor="project">Import from Project (Optional)</Label>
+                <Select value={selectedProjectId} onValueChange={handleProjectChange}>
+                  <SelectTrigger id="project">
+                    <SelectValue placeholder="Select a project to import" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {emailProjects.map((project) => (
+                      <SelectItem key={project.id} value={project.id}>
+                        <div className="flex items-center gap-2">
+                          <FileText className="h-4 w-4 text-muted-foreground" />
+                          {project.name}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  Importing will pre-fill the campaign with the project's content
+                </p>
+              </div>
+            )}
+
+            {/* Campaign Name */}
             <div className="space-y-2">
-              <Label htmlFor="project">Import from Project (Optional)</Label>
-              <Select value={selectedProjectId} onValueChange={handleProjectChange}>
-                <SelectTrigger id="project">
-                  <SelectValue placeholder="Select a project to import" />
-                </SelectTrigger>
-                <SelectContent>
-                  {emailProjects.map((project) => (
-                    <SelectItem key={project.id} value={project.id}>
-                      <div className="flex items-center gap-2">
-                        <FileText className="h-4 w-4 text-muted-foreground" />
-                        {project.name}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label htmlFor="campaign-name">Campaign Name *</Label>
+              <Input
+                id="campaign-name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Q1 Newsletter"
+              />
+            </div>
+
+            {/* Subject Line */}
+            <div className="space-y-2">
+              <Label htmlFor="subject">Subject Line</Label>
+              <Input
+                id="subject"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                placeholder="Your exciting email subject..."
+              />
+            </div>
+
+            {/* Content Preview */}
+            <div className="space-y-2">
+              <Label htmlFor="content">Content Preview</Label>
+              <Textarea
+                id="content"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="Email content will appear here..."
+                rows={4}
+                className="resize-none"
+              />
               <p className="text-xs text-muted-foreground">
-                Importing will pre-fill the campaign with the project's content
+                You can edit the full content after creating the campaign
               </p>
             </div>
-          )}
-
-          {/* Campaign Name */}
-          <div className="space-y-2">
-            <Label htmlFor="campaign-name">Campaign Name *</Label>
-            <Input
-              id="campaign-name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Q1 Newsletter"
-            />
           </div>
+        </ScrollArea>
 
-          {/* Subject Line */}
-          <div className="space-y-2">
-            <Label htmlFor="subject">Subject Line</Label>
-            <Input
-              id="subject"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              placeholder="Your exciting email subject..."
-            />
-          </div>
-
-          {/* Content Preview */}
-          <div className="space-y-2">
-            <Label htmlFor="content">Content Preview</Label>
-            <Textarea
-              id="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="Email content will appear here..."
-              rows={4}
-              className="resize-none"
-            />
-            <p className="text-xs text-muted-foreground">
-              You can edit the full content after creating the campaign
-            </p>
-          </div>
-        </div>
-
-        <DialogFooter>
+        <DialogFooter className="gap-2 pt-4 border-t flex-shrink-0">
           <Button variant="outline" onClick={handleClose}>
             Cancel
           </Button>

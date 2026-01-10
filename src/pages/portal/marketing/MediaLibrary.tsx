@@ -203,14 +203,14 @@ const MediaLibrary = () => {
                 key={template.id} 
                 to={`/portal/marketing/create?template=${template.id}`}
               >
-                <Card className="overflow-hidden hover:bg-muted/50 transition-colors cursor-pointer group h-full">
+                <Card className="overflow-hidden cursor-pointer group h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-primary/50">
                   <CardContent className="p-0">
                     <div className="aspect-video bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center relative overflow-hidden">
                       {template.thumbnail_url ? (
                         <img 
                           src={template.thumbnail_url} 
                           alt={template.name} 
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
                       ) : (
                         <Image className="h-8 w-8 text-muted-foreground/50" />
@@ -233,7 +233,7 @@ const MediaLibrary = () => {
                       </div>
                     </div>
                     <div className="p-3">
-                      <h3 className="font-medium text-foreground text-sm truncate">
+                      <h3 className="font-medium text-foreground text-sm truncate group-hover:text-primary transition-colors duration-300">
                         {template.name}
                       </h3>
                       <p className="text-xs text-muted-foreground capitalize">
@@ -252,7 +252,7 @@ const MediaLibrary = () => {
                 key={template.id} 
                 to={`/portal/marketing/create?template=${template.id}`}
               >
-                <Card className="overflow-hidden hover:bg-muted/50 transition-colors cursor-pointer group">
+                <Card className="overflow-hidden cursor-pointer group transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 hover:border-primary/50">
                   <CardContent className="p-0 flex items-center">
                     <div className="w-32 h-20 bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center flex-shrink-0 relative overflow-hidden">
                       {template.thumbnail_url ? (

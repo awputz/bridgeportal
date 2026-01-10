@@ -244,13 +244,13 @@ const MarketingDashboard = () => {
             
             return (
               <Link key={action.name} to={action.path}>
-                <Card className={`h-full transition-all cursor-pointer group ${
+                <Card className={`h-full cursor-pointer group transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
                   isFeatured 
                     ? "bg-gradient-to-br from-purple-500/20 to-pink-500/20 border-purple-500/30 hover:border-purple-400/50" 
-                    : "hover:bg-muted/50"
+                    : "hover:border-primary/50"
                 }`}>
                   <CardContent className="p-6 flex flex-col h-full">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 ${
                       isFeatured 
                         ? "bg-gradient-to-br from-purple-500 to-pink-500" 
                         : action.color.split(' ')[0]
@@ -262,7 +262,7 @@ const MarketingDashboard = () => {
                       }`} />
                     </div>
                     <div className="flex-1 space-y-2">
-                      <h3 className="font-medium text-foreground">{action.name}</h3>
+                      <h3 className="font-medium text-foreground group-hover:text-primary transition-colors duration-300">{action.name}</h3>
                       <p className="text-sm text-muted-foreground line-clamp-2">{action.description}</p>
                     </div>
                     {isFeatured && (
@@ -294,12 +294,12 @@ const MarketingDashboard = () => {
             const Icon = item.icon;
             return (
               <Link key={item.name} to={item.path}>
-                <Card className="h-full hover:bg-muted/50 transition-colors cursor-pointer">
+                <Card className="h-full cursor-pointer group transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-primary/50">
                   <CardContent className="p-4 flex items-center gap-3">
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${item.color.split(' ')[0]}`}>
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${item.color.split(' ')[0]}`}>
                       <Icon className={`h-4 w-4 ${item.color.split(' ')[1]}`} />
                     </div>
-                    <span className="text-sm font-medium text-foreground">{item.name}</span>
+                    <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors duration-300">{item.name}</span>
                   </CardContent>
                 </Card>
               </Link>

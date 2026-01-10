@@ -69,8 +69,8 @@ export function GenerationDetailDialog({
   return (
     <Dialog open={!!record} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+        <DialogHeader className="space-y-2 pb-4 flex-shrink-0">
+          <DialogTitle className="text-2xl font-light flex items-center gap-2">
             <TypeIcon className={`h-5 w-5 ${config.color}`} />
             {config.label} Generation
           </DialogTitle>
@@ -149,7 +149,7 @@ export function GenerationDetailDialog({
           </div>
         </ScrollArea>
 
-        <div className="flex justify-end gap-2 pt-4 border-t border-white/10 mt-4">
+        <div className="flex justify-end gap-2 pt-4 border-t border-white/10 flex-shrink-0">
           <Button variant="outline" onClick={onClose}>
             Close
           </Button>

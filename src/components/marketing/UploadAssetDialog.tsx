@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Upload, X, Image, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -126,15 +127,16 @@ export function UploadAssetDialog({ open, onOpenChange, defaultType }: UploadAss
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Upload Asset</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="sm:max-w-md max-h-[90vh] flex flex-col">
+        <DialogHeader className="space-y-2 pb-4 flex-shrink-0">
+          <DialogTitle className="text-2xl font-light">Upload Asset</DialogTitle>
+          <DialogDescription className="text-sm">
             Add a new branding asset to your library
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-4">
+        <ScrollArea className="flex-1 -mx-6 px-6">
+          <div className="space-y-6 py-4">
           {/* Drop Zone */}
           {!preview ? (
             <div
@@ -223,9 +225,10 @@ export function UploadAssetDialog({ open, onOpenChange, defaultType }: UploadAss
               </SelectContent>
             </Select>
           </div>
-        </div>
+          </div>
+        </ScrollArea>
 
-        <DialogFooter>
+        <DialogFooter className="gap-2 pt-4 border-t flex-shrink-0">
           <Button variant="outline" onClick={handleClose}>
             Cancel
           </Button>

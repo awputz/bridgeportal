@@ -156,10 +156,10 @@ export function AddRecipientsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>Add Recipients</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] flex flex-col">
+        <DialogHeader className="space-y-2 pb-4 flex-shrink-0">
+          <DialogTitle className="text-2xl font-light">Add Recipients</DialogTitle>
+          <DialogDescription className="text-sm">
             Import contacts from your CRM or enter email addresses manually
           </DialogDescription>
         </DialogHeader>
@@ -282,7 +282,7 @@ export function AddRecipientsDialog({
           </TabsContent>
         </Tabs>
 
-        <DialogFooter>
+        <DialogFooter className="gap-2 pt-4 border-t flex-shrink-0">
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isAdding}>
             Cancel
           </Button>

@@ -184,16 +184,16 @@ const MarketingProjects = () => {
           {filteredProjects.map((project) => (
             <Card 
               key={project.id} 
-              className="overflow-hidden hover:bg-muted/50 transition-colors group"
+              className="overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-primary/50"
             >
               <CardContent className="p-0">
                 <Link to={`/portal/marketing/edit/${project.id}`}>
-                  <div className="aspect-video bg-muted flex items-center justify-center cursor-pointer">
+                  <div className="aspect-video bg-muted flex items-center justify-center cursor-pointer overflow-hidden">
                     {project.thumbnail_url ? (
                       <img 
                         src={project.thumbnail_url} 
                         alt={project.name} 
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     ) : (
                       <FolderKanban className="h-8 w-8 text-muted-foreground/50" />
@@ -206,7 +206,7 @@ const MarketingProjects = () => {
                       to={`/portal/marketing/edit/${project.id}`}
                       className="flex-1 min-w-0"
                     >
-                      <h3 className="font-medium text-foreground truncate hover:underline">
+                      <h3 className="font-medium text-foreground truncate group-hover:text-primary transition-colors duration-300">
                         {project.name}
                       </h3>
                     </Link>
