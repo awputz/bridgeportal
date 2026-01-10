@@ -1,5 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import type { FormSchema } from "@/types/templates";
+import type { Json } from "@/integrations/supabase/types";
 
 export interface AgentTemplate {
   id: string;
@@ -10,9 +12,37 @@ export interface AgentTemplate {
   file_type: string | null;
   display_order: number | null;
   is_active: boolean | null;
+  is_fillable: boolean;
+  form_schema: FormSchema | null;
+  fill_count: number;
+  download_count: number;
   created_at: string | null;
   updated_at: string | null;
 }
+
+// Helper to safely cast database row to AgentTemplate
+const mapRowToTemplate = (row: {
+  id: string;
+  name: string;
+  description: string | null;
+  division: string;
+  file_url: string;
+  file_type: string | null;
+  display_order: number | null;
+  is_active: boolean | null;
+  is_fillable: boolean | null;
+  form_schema: Json | null;
+  fill_count: number | null;
+  download_count: number | null;
+  created_at: string | null;
+  updated_at: string | null;
+}): AgentTemplate => ({
+  ...row,
+  is_fillable: row.is_fillable ?? false,
+  form_schema: row.form_schema as unknown as FormSchema | null,
+  fill_count: row.fill_count ?? 0,
+  download_count: row.download_count ?? 0,
+});
 
 export const useAgentTemplates = (division?: string) => {
   return useQuery({
@@ -35,7 +65,7 @@ export const useAgentTemplates = (division?: string) => {
         throw error;
       }
 
-      return data as AgentTemplate[];
+      return (data ?? []).map(mapRowToTemplate);
     },
   });
 };
@@ -55,7 +85,7 @@ export const useAllAgentTemplates = () => {
         throw error;
       }
 
-      return data as AgentTemplate[];
+      return (data ?? []).map(mapRowToTemplate);
     },
   });
 };
@@ -65,14 +95,18 @@ export const useAgentTemplateMutations = () => {
 
   const createTemplate = useMutation({
     mutationFn: async (template: Omit<AgentTemplate, "id" | "created_at" | "updated_at">) => {
+      const { form_schema, ...rest } = template;
       const { data, error } = await supabase
         .from("agent_templates")
-        .insert(template)
+        .insert([{
+          ...rest,
+          form_schema: form_schema as unknown as Json,
+        }])
         .select()
         .single();
 
       if (error) throw error;
-      return data;
+      return mapRowToTemplate(data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["agent-templates"] });
@@ -82,15 +116,22 @@ export const useAgentTemplateMutations = () => {
 
   const updateTemplate = useMutation({
     mutationFn: async ({ id, ...updates }: Partial<AgentTemplate> & { id: string }) => {
+      const { form_schema, ...rest } = updates;
+      // Build update object compatible with Supabase types
+      const updateData = {
+        ...rest,
+        ...(form_schema !== undefined ? { form_schema: form_schema as unknown as Json } : {}),
+      };
+      
       const { data, error } = await supabase
         .from("agent_templates")
-        .update(updates)
+        .update(updateData)
         .eq("id", id)
         .select()
         .single();
 
       if (error) throw error;
-      return data;
+      return mapRowToTemplate(data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["agent-templates"] });
