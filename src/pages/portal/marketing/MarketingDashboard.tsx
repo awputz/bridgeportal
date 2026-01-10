@@ -383,6 +383,7 @@ const MarketingDashboard = () => {
                         <img 
                           src={template.thumbnail_url} 
                           alt={template.name}
+                          loading="lazy"
                           className="w-full h-full object-cover"
                         />
                       ) : (
