@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -95,11 +95,12 @@ export function CreateStagingProjectDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Create Staging Project</DialogTitle>
+      <DialogContent className="sm:max-w-[425px] max-h-[90vh] flex flex-col">
+        <DialogHeader className="space-y-2 pb-4 flex-shrink-0">
+          <DialogTitle className="text-2xl font-light">Create Staging Project</DialogTitle>
+          <DialogDescription className="text-sm">Set up a new AI staging project for your property</DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 py-4">
+        <form onSubmit={handleSubmit} className="flex-1 space-y-6 py-4">
           <div className="space-y-2">
             <Label htmlFor="name">Project Name *</Label>
             <Input
@@ -159,7 +160,7 @@ export function CreateStagingProjectDialog({
             </Select>
           </div>
 
-          <DialogFooter className="pt-4">
+          <DialogFooter className="gap-2 pt-4 border-t flex-shrink-0">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
