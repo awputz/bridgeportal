@@ -3,6 +3,11 @@ import { useMarketingAssets, useDeleteMarketingAsset } from "@/hooks/marketing/u
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Upload, Trash2, Download, Image, User, FileSignature, Camera, MoreVertical } from "lucide-react";
 import { UploadAssetDialog } from "@/components/marketing/UploadAssetDialog";
 import {
@@ -116,6 +121,7 @@ export default function AssetLibrary() {
                           <img
                             src={asset.file_url}
                             alt={asset.name}
+                            loading="lazy"
                             className="h-full w-full object-cover"
                           />
                         ) : (
@@ -125,19 +131,30 @@ export default function AssetLibrary() {
                         )}
                         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                           {asset.file_url && (
-                            <Button
-                              size="icon"
-                              variant="secondary"
-                              onClick={() => handleDownload(asset.file_url!, asset.name)}
-                            >
-                              <Download className="h-4 w-4" />
-                            </Button>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  size="icon"
+                                  variant="secondary"
+                                  aria-label="Download asset"
+                                  onClick={() => handleDownload(asset.file_url!, asset.name)}
+                                >
+                                  <Download className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>Download</TooltipContent>
+                            </Tooltip>
                           )}
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button size="icon" variant="secondary">
-                                <MoreVertical className="h-4 w-4" />
-                              </Button>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button size="icon" variant="secondary" aria-label="More options">
+                                    <MoreVertical className="h-4 w-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>More options</TooltipContent>
+                              </Tooltip>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               {asset.file_url && (

@@ -5,6 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Image, Star, Search, Grid3X3, List } from "lucide-react";
 import { useMarketingTemplates, useFeaturedTemplates } from "@/hooks/marketing";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
@@ -77,22 +82,34 @@ const MediaLibrary = () => {
             />
           </div>
           <div className="flex border rounded-lg overflow-hidden">
-            <Button 
-              variant={viewMode === "grid" ? "secondary" : "ghost"}
-              size="icon"
-              className="rounded-none h-9 w-9"
-              onClick={() => setViewMode("grid")}
-            >
-              <Grid3X3 className="h-4 w-4" />
-            </Button>
-            <Button 
-              variant={viewMode === "list" ? "secondary" : "ghost"}
-              size="icon"
-              className="rounded-none h-9 w-9"
-              onClick={() => setViewMode("list")}
-            >
-              <List className="h-4 w-4" />
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant={viewMode === "grid" ? "secondary" : "ghost"}
+                  size="icon"
+                  className="rounded-none h-9 w-9"
+                  onClick={() => setViewMode("grid")}
+                  aria-label="Grid view"
+                >
+                  <Grid3X3 className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Grid view</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant={viewMode === "list" ? "secondary" : "ghost"}
+                  size="icon"
+                  className="rounded-none h-9 w-9"
+                  onClick={() => setViewMode("list")}
+                  aria-label="List view"
+                >
+                  <List className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>List view</TooltipContent>
+            </Tooltip>
           </div>
         </div>
       </div>
@@ -116,7 +133,8 @@ const MediaLibrary = () => {
                       {template.thumbnail_url ? (
                         <img 
                           src={template.thumbnail_url} 
-                          alt={template.name} 
+                          alt={template.name}
+                          loading="lazy"
                           className="w-full h-full object-cover"
                         />
                       ) : (
@@ -209,7 +227,8 @@ const MediaLibrary = () => {
                       {template.thumbnail_url ? (
                         <img 
                           src={template.thumbnail_url} 
-                          alt={template.name} 
+                          alt={template.name}
+                          loading="lazy"
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                         />
                       ) : (
@@ -258,7 +277,8 @@ const MediaLibrary = () => {
                       {template.thumbnail_url ? (
                         <img 
                           src={template.thumbnail_url} 
-                          alt={template.name} 
+                          alt={template.name}
+                          loading="lazy"
                           className="w-full h-full object-cover"
                         />
                       ) : (

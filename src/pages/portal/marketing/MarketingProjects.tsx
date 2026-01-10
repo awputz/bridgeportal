@@ -192,7 +192,8 @@ const MarketingProjects = () => {
                     {project.thumbnail_url ? (
                       <img 
                         src={project.thumbnail_url} 
-                        alt={project.name} 
+                        alt={project.name}
+                        loading="lazy"
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     ) : (
@@ -215,6 +216,7 @@ const MarketingProjects = () => {
                         <Button 
                           variant="ghost" 
                           size="icon" 
+                          aria-label="More options"
                           className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
                         >
                           <MoreVertical className="h-4 w-4" />
