@@ -3667,6 +3667,335 @@ export type Database = {
           },
         ]
       }
+      esign_audit_log: {
+        Row: {
+          action: string
+          action_details: Json | null
+          actor_email: string | null
+          actor_name: string | null
+          created_at: string | null
+          document_id: string
+          geolocation: string | null
+          id: string
+          ip_address: unknown
+          recipient_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          action_details?: Json | null
+          actor_email?: string | null
+          actor_name?: string | null
+          created_at?: string | null
+          document_id: string
+          geolocation?: string | null
+          id?: string
+          ip_address?: unknown
+          recipient_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          action_details?: Json | null
+          actor_email?: string | null
+          actor_name?: string | null
+          created_at?: string | null
+          document_id?: string
+          geolocation?: string | null
+          id?: string
+          ip_address?: unknown
+          recipient_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "esign_audit_log_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "esign_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "esign_audit_log_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "esign_recipients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      esign_documents: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          created_by: string | null
+          deal_id: string | null
+          description: string | null
+          division: string | null
+          id: string
+          original_file_name: string
+          original_file_type: string | null
+          original_file_url: string
+          sent_at: string | null
+          signed_count: number | null
+          signed_file_url: string | null
+          status: string
+          template_id: string | null
+          title: string
+          total_signers: number | null
+          updated_at: string | null
+          void_reason: string | null
+          voided_at: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deal_id?: string | null
+          description?: string | null
+          division?: string | null
+          id?: string
+          original_file_name: string
+          original_file_type?: string | null
+          original_file_url: string
+          sent_at?: string | null
+          signed_count?: number | null
+          signed_file_url?: string | null
+          status?: string
+          template_id?: string | null
+          title: string
+          total_signers?: number | null
+          updated_at?: string | null
+          void_reason?: string | null
+          voided_at?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deal_id?: string | null
+          description?: string | null
+          division?: string | null
+          id?: string
+          original_file_name?: string
+          original_file_type?: string | null
+          original_file_url?: string
+          sent_at?: string | null
+          signed_count?: number | null
+          signed_file_url?: string | null
+          status?: string
+          template_id?: string | null
+          title?: string
+          total_signers?: number | null
+          updated_at?: string | null
+          void_reason?: string | null
+          voided_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "esign_documents_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "esign_documents_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "agent_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      esign_fields: {
+        Row: {
+          created_at: string | null
+          document_id: string
+          field_type: string
+          filled_at: string | null
+          height: number
+          id: string
+          label: string | null
+          options: Json | null
+          page_number: number
+          placeholder: string | null
+          recipient_id: string
+          required: boolean | null
+          updated_at: string | null
+          value: string | null
+          width: number
+          x_position: number
+          y_position: number
+        }
+        Insert: {
+          created_at?: string | null
+          document_id: string
+          field_type: string
+          filled_at?: string | null
+          height?: number
+          id?: string
+          label?: string | null
+          options?: Json | null
+          page_number?: number
+          placeholder?: string | null
+          recipient_id: string
+          required?: boolean | null
+          updated_at?: string | null
+          value?: string | null
+          width?: number
+          x_position: number
+          y_position: number
+        }
+        Update: {
+          created_at?: string | null
+          document_id?: string
+          field_type?: string
+          filled_at?: string | null
+          height?: number
+          id?: string
+          label?: string | null
+          options?: Json | null
+          page_number?: number
+          placeholder?: string | null
+          recipient_id?: string
+          required?: boolean | null
+          updated_at?: string | null
+          value?: string | null
+          width?: number
+          x_position?: number
+          y_position?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "esign_fields_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "esign_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "esign_fields_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "esign_recipients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      esign_recipients: {
+        Row: {
+          access_token: string | null
+          created_at: string | null
+          decline_reason: string | null
+          declined_at: string | null
+          document_id: string
+          email: string
+          id: string
+          ip_address: unknown
+          name: string
+          role: string
+          sent_at: string | null
+          signed_at: string | null
+          signer_type: string | null
+          signing_order: number | null
+          status: string
+          token_expires_at: string | null
+          updated_at: string | null
+          user_agent: string | null
+          viewed_at: string | null
+        }
+        Insert: {
+          access_token?: string | null
+          created_at?: string | null
+          decline_reason?: string | null
+          declined_at?: string | null
+          document_id: string
+          email: string
+          id?: string
+          ip_address?: unknown
+          name: string
+          role?: string
+          sent_at?: string | null
+          signed_at?: string | null
+          signer_type?: string | null
+          signing_order?: number | null
+          status?: string
+          token_expires_at?: string | null
+          updated_at?: string | null
+          user_agent?: string | null
+          viewed_at?: string | null
+        }
+        Update: {
+          access_token?: string | null
+          created_at?: string | null
+          decline_reason?: string | null
+          declined_at?: string | null
+          document_id?: string
+          email?: string
+          id?: string
+          ip_address?: unknown
+          name?: string
+          role?: string
+          sent_at?: string | null
+          signed_at?: string | null
+          signer_type?: string | null
+          signing_order?: number | null
+          status?: string
+          token_expires_at?: string | null
+          updated_at?: string | null
+          user_agent?: string | null
+          viewed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "esign_recipients_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "esign_documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      esign_signatures: {
+        Row: {
+          created_at: string | null
+          font_family: string | null
+          id: string
+          initials_data: string | null
+          initials_font_family: string | null
+          initials_type: string | null
+          signature_data: string
+          signature_type: string
+          updated_at: string | null
+          user_email: string
+        }
+        Insert: {
+          created_at?: string | null
+          font_family?: string | null
+          id?: string
+          initials_data?: string | null
+          initials_font_family?: string | null
+          initials_type?: string | null
+          signature_data: string
+          signature_type: string
+          updated_at?: string | null
+          user_email: string
+        }
+        Update: {
+          created_at?: string | null
+          font_family?: string | null
+          id?: string
+          initials_data?: string | null
+          initials_font_family?: string | null
+          initials_type?: string | null
+          signature_data?: string
+          signature_type?: string
+          updated_at?: string | null
+          user_email?: string
+        }
+        Relationships: []
+      }
       exclusive_submissions: {
         Row: {
           additional_documents: Json | null
@@ -5995,6 +6324,17 @@ export type Database = {
           p_user_id: string
         }
         Returns: undefined
+      }
+      log_esign_action: {
+        Args: {
+          p_action: string
+          p_action_details?: Json
+          p_document_id: string
+          p_ip_address?: unknown
+          p_recipient_id: string
+          p_user_agent?: string
+        }
+        Returns: string
       }
       refresh_agent_dashboard_stats: { Args: never; Returns: undefined }
       refresh_hr_production_summary: { Args: never; Returns: undefined }
