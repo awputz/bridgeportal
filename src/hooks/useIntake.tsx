@@ -55,33 +55,80 @@ const generateLinkCode = () => {
 
 // Fetch list of agents for the universal intake form
 // Uses user_roles table to get actual agents/admins (not investors)
+// Joins with team_members to get actual photos
 export const useAgentsList = () => {
   return useQuery({
     queryKey: ["agents-list"],
     queryFn: async () => {
+      console.log("[useAgentsList] Fetching agents for intake form...");
+      
       // Get user IDs that have 'agent' or 'admin' role
       const { data: roleUsers, error: roleError } = await supabase
         .from("user_roles")
         .select("user_id")
         .in("role", ["agent", "admin"]);
       
-      if (roleError) throw roleError;
+      if (roleError) {
+        console.error("[useAgentsList] Error fetching roles:", roleError);
+        throw roleError;
+      }
       
       const userIds = roleUsers?.map(r => r.user_id) || [];
+      console.log("[useAgentsList] Found", userIds.length, "agent/admin user IDs");
       
       if (userIds.length === 0) return [];
       
       // Fetch profiles for those users
-      const { data, error } = await supabase
+      const { data: profiles, error: profileError } = await supabase
         .from("profiles")
         .select("id, full_name, email, avatar_url")
         .in("id", userIds)
         .order("full_name");
       
-      if (error) throw error;
-      return data as AgentProfile[];
+      if (profileError) {
+        console.error("[useAgentsList] Error fetching profiles:", profileError);
+        throw profileError;
+      }
+      
+      console.log("[useAgentsList] Fetched", profiles?.length || 0, "profiles");
+      
+      // Fetch team members to get photos (matched by email)
+      const emails = profiles?.map(p => p.email).filter(Boolean) || [];
+      let teamMemberPhotos: Record<string, string> = {};
+      
+      if (emails.length > 0) {
+        const { data: teamMembers, error: tmError } = await supabase
+          .from("team_members")
+          .select("email, image_url")
+          .in("email", emails)
+          .eq("is_active", true);
+        
+        if (tmError) {
+          console.warn("[useAgentsList] Could not fetch team member photos:", tmError);
+          // Don't fail - continue without photos
+        } else if (teamMembers) {
+          teamMemberPhotos = teamMembers.reduce((acc, tm) => {
+            if (tm.email && tm.image_url) {
+              acc[tm.email.toLowerCase()] = tm.image_url;
+            }
+            return acc;
+          }, {} as Record<string, string>);
+          console.log("[useAgentsList] Matched", Object.keys(teamMemberPhotos).length, "photos from team_members");
+        }
+      }
+      
+      // Merge photos into profiles - prefer team_members photo over avatar_url
+      const result = (profiles || []).map(profile => ({
+        ...profile,
+        avatar_url: (profile.email ? teamMemberPhotos[profile.email.toLowerCase()] : null) || 
+          profile.avatar_url || 
+          null
+      })) as AgentProfile[];
+      
+      return result;
     },
     staleTime: 1000 * 60 * 10, // Cache for 10 minutes
+    retry: 2, // Retry on failure
   });
 };
 // Fetch or auto-create the agent's single intake link
@@ -253,14 +300,19 @@ export const useCreateIntakeSubmission = () => {
         throw new Error("Agent ID is required");
       }
 
-      // Get agent email for notification
-      const { data: agentProfile } = await supabase
-        .from("profiles")
-        .select("email")
-        .eq("id", agentId)
-        .single();
-      
-      agentEmail = agentProfile?.email || null;
+      // Get agent email for notification - handle gracefully for anonymous users
+      try {
+        const { data: agentProfile } = await supabase
+          .from("profiles")
+          .select("email")
+          .eq("id", agentId)
+          .maybeSingle();
+        
+        agentEmail = agentProfile?.email || null;
+      } catch (err) {
+        console.warn("[useCreateIntakeSubmission] Could not fetch agent email:", err);
+        // Continue without notification - don't fail the submission
+      }
 
       const { data: submission, error } = await supabase
         .from("client_intake_submissions")
