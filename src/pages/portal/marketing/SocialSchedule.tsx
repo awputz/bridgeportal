@@ -154,7 +154,7 @@ export default function SocialSchedule() {
   }
 
   return (
-    <MarketingLayout>
+    <MarketingLayout breadcrumbs={[{ label: "Social Schedule" }]}>
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>

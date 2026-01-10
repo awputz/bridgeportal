@@ -407,7 +407,7 @@ const ProjectEditor = () => {
   }
 
   return (
-    <MarketingLayout backTo="/portal/marketing/projects" backLabel="Back to Projects">
+    <MarketingLayout breadcrumbs={[{ label: "Projects", href: "/portal/marketing/projects" }, { label: project.name }]}>
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4 flex-1 min-w-0">

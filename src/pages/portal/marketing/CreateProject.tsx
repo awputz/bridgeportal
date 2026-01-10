@@ -53,7 +53,7 @@ const CreateProject = () => {
   };
 
   return (
-    <MarketingLayout backTo="/portal/marketing/projects">
+    <MarketingLayout breadcrumbs={[{ label: "Projects", href: "/portal/marketing/projects" }, { label: "Create" }]}>
       {/* Header */}
       <div>
         <h1 className="text-3xl md:text-4xl font-light tracking-tight text-foreground">Create Project</h1>

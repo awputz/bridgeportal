@@ -336,7 +336,7 @@ const AIGenerators = () => {
   const currentContent = generatedContent[activeTab];
 
   return (
-    <MarketingLayout>
+    <MarketingLayout breadcrumbs={[{ label: "AI Generators" }]}>
       <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-3">

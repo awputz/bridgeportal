@@ -77,7 +77,7 @@ export default function AIStaging() {
   };
 
   return (
-    <MarketingLayout>
+    <MarketingLayout breadcrumbs={[{ label: "AI Staging" }]}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">

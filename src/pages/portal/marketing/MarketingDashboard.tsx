@@ -118,7 +118,7 @@ const MarketingDashboard = () => {
     .slice(0, 4);
 
   return (
-    <MarketingLayout showBackButton={false}>
+    <MarketingLayout showBackButton={false} showQuickNav={false}>
       <div className="space-y-8">
       {/* Hero Section */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-pink-500/20 via-violet-500/10 to-indigo-500/20 p-8 md:p-12 lg:p-16">
