@@ -139,7 +139,7 @@ export default function AIGenerationHistory() {
   };
 
   return (
-    <MarketingLayout>
+    <MarketingLayout breadcrumbs={[{ label: "AI History" }]}>
       {/* Header */}
       <div className="flex items-center gap-3">
         <div className="p-2 rounded-lg bg-primary/10">

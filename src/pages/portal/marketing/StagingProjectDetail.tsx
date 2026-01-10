@@ -221,7 +221,7 @@ export default function StagingProjectDetail() {
   }
 
   return (
-    <MarketingLayout backTo="/portal/marketing/staging" backLabel="Back to AI Staging">
+    <MarketingLayout breadcrumbs={[{ label: "AI Staging", href: "/portal/marketing/staging" }, { label: project.name }]}>
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>

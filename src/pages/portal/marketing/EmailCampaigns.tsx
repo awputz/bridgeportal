@@ -107,7 +107,7 @@ export default function EmailCampaigns() {
   const selectedCampaign = campaigns?.find(c => c.id === sendingCampaignId);
 
   return (
-    <MarketingLayout>
+    <MarketingLayout breadcrumbs={[{ label: "Email Campaigns" }]}>
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>

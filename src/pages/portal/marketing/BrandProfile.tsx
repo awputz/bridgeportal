@@ -88,7 +88,7 @@ export default function BrandProfile() {
   }
 
   return (
-    <MarketingLayout>
+    <MarketingLayout breadcrumbs={[{ label: "Brand Profile" }]}>
       <div className="max-w-4xl mx-auto space-y-6">
         <div>
           <h1 className="text-3xl md:text-4xl font-light tracking-tight">Brand Profile</h1>

@@ -96,7 +96,7 @@ const MarketingProjects = () => {
   };
 
   return (
-    <MarketingLayout>
+    <MarketingLayout breadcrumbs={[{ label: "Projects" }]}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">

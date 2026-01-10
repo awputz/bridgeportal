@@ -65,7 +65,7 @@ export default function AssetLibrary() {
   };
 
   return (
-    <MarketingLayout>
+    <MarketingLayout breadcrumbs={[{ label: "Asset Library" }]}>
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
