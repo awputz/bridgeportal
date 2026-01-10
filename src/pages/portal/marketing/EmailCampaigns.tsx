@@ -111,8 +111,8 @@ export default function EmailCampaigns() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Email Campaigns</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl md:text-4xl font-light tracking-tight text-foreground">Email Campaigns</h1>
+          <p className="text-sm text-muted-foreground font-normal">
             Create and manage email marketing campaigns
           </p>
         </div>

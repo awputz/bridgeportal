@@ -146,8 +146,8 @@ export default function AIGenerationHistory() {
           <History className="h-6 w-6 text-primary" />
         </div>
         <div>
-          <h1 className="text-2xl font-extralight tracking-tight">AI Generation History</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-3xl md:text-4xl font-light tracking-tight">AI Generation History</h1>
+          <p className="text-sm text-muted-foreground font-normal">
             View and manage your past AI content generations
           </p>
         </div>

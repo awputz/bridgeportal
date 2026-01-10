@@ -69,8 +69,8 @@ export default function AssetLibrary() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Asset Library</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl md:text-4xl font-light tracking-tight text-foreground">Asset Library</h1>
+          <p className="text-sm text-muted-foreground font-normal">
             Manage your branding assets, logos, headshots, and more
           </p>
         </div>

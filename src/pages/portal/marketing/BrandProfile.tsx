@@ -91,8 +91,8 @@ export default function BrandProfile() {
     <MarketingLayout>
       <div className="max-w-4xl mx-auto space-y-6">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Brand Profile</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl md:text-4xl font-light tracking-tight">Brand Profile</h1>
+          <p className="text-sm text-muted-foreground font-normal">
             Set up your brand information to auto-populate marketing materials
           </p>
         </div>

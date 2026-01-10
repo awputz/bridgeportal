@@ -56,8 +56,8 @@ const MediaLibrary = () => {
             <Image className="h-5 w-5 text-indigo-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-extralight text-foreground">Media Library</h1>
-            <p className="text-sm text-muted-foreground">
+            <h1 className="text-3xl md:text-4xl font-light tracking-tight text-foreground">Media Library</h1>
+            <p className="text-sm text-muted-foreground font-normal">
               Browse templates and manage your assets
             </p>
           </div>
@@ -98,7 +98,7 @@ const MediaLibrary = () => {
       {/* Featured Templates */}
       {!searchQuery && categoryFilter === "all" && featuredTemplates && featuredTemplates.length > 0 && (
         <section>
-          <h2 className="text-lg font-medium text-foreground mb-3 flex items-center gap-2">
+          <h2 className="text-xl font-light tracking-tight text-foreground mb-3 flex items-center gap-2">
             <Star className="h-4 w-4 text-amber-400" />
             Featured Templates
           </h2>

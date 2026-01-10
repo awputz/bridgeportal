@@ -339,14 +339,16 @@ const AIGenerators = () => {
     <MarketingLayout>
       <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-semibold flex items-center gap-2">
+      <div className="flex items-center gap-3">
+        <div className="p-2 rounded-lg bg-purple-500/10">
           <Wand2 className="h-6 w-6 text-purple-400" />
-          AI Generators
-        </h1>
-        <p className="text-muted-foreground text-sm">
-          Create professional marketing content with AI
-        </p>
+        </div>
+        <div>
+          <h1 className="text-3xl md:text-4xl font-light tracking-tight">AI Generators</h1>
+          <p className="text-sm text-muted-foreground font-normal">
+            Create professional marketing content with AI
+          </p>
+        </div>
       </div>
 
       {/* Generator Type Cards */}
