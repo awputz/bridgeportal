@@ -17,5 +17,8 @@ export {
   useReorderRecipients,
 } from "./useESignRecipients";
 
+// eSign Hooks - Field management
+export { useESignFields } from "./useESignFields";
+
 // eSign Hooks - Storage utilities
 export { useESignStorage } from "./useESignStorage";
