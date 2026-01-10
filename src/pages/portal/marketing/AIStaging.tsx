@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { useStagingProjects } from "@/hooks/marketing/useStaging";
 import { CreateStagingProjectDialog } from "@/components/marketing/CreateStagingProjectDialog";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { LoadingState } from "@/components/ui/LoadingState";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { format } from "date-fns";
 
 type StagingType = "residential" | "commercial" | "architecture" | "investment";
@@ -169,17 +171,7 @@ export default function AIStaging() {
       <div>
         <h2 className="text-xl font-light tracking-tight mb-4">Recent Projects</h2>
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[1, 2, 3].map((i) => (
-              <Card key={i} className="animate-pulse">
-                <CardContent className="p-6">
-                  <div className="h-32 bg-muted rounded-md mb-4" />
-                  <div className="h-4 bg-muted rounded w-3/4 mb-2" />
-                  <div className="h-3 bg-muted rounded w-1/2" />
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <LoadingState variant="card" message="Loading staging projects..." />
         ) : projects && projects.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {projects.map((project) => (
@@ -228,21 +220,13 @@ export default function AIStaging() {
             </Card>
           </div>
         ) : (
-          <Card className="border-dashed">
-            <CardContent className="pt-12 pb-12 flex flex-col items-center justify-center">
-              <div className="p-4 rounded-full bg-muted mb-4">
-                <ImageIcon className="h-8 w-8 text-muted-foreground" />
-              </div>
-              <h3 className="font-semibold text-lg mb-1">No staging projects yet</h3>
-              <p className="text-muted-foreground text-sm mb-4">
-                Create your first project to start staging property images with AI
-              </p>
-              <Button onClick={() => setCreateDialogOpen(true)}>
-                <Plus className="h-4 w-4 mr-2" />
-                Create First Project
-              </Button>
-            </CardContent>
-          </Card>
+          <EmptyState
+            icon={ImageIcon}
+            title="No staging projects yet"
+            description="Create your first project to start staging property images with AI"
+            actionLabel="Create First Project"
+            onAction={() => setCreateDialogOpen(true)}
+          />
         )}
       </div>
 

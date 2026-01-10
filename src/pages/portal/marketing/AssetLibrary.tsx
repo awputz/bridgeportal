@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { LoadingState } from "@/components/ui/LoadingState";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 const assetTypes = [
   { value: "all", label: "All Assets", icon: Image },
@@ -93,35 +95,15 @@ export default function AssetLibrary() {
 
         <TabsContent value={activeTab} className="mt-6">
           {isLoading ? (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-              {[...Array(8)].map((_, i) => (
-                <Card key={i} className="animate-pulse">
-                  <CardContent className="p-0">
-                    <div className="aspect-square bg-muted" />
-                    <div className="p-3 space-y-2">
-                      <div className="h-4 bg-muted rounded" />
-                      <div className="h-3 bg-muted rounded w-2/3" />
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            <LoadingState variant="card" message="Loading assets..." />
           ) : !assets?.length ? (
-            <Card className="border-dashed">
-              <CardContent className="flex flex-col items-center justify-center py-16">
-                <div className="rounded-full bg-muted p-4 mb-4">
-                  <Image className="h-8 w-8 text-muted-foreground" />
-                </div>
-                <h3 className="text-lg font-semibold mb-1">No assets yet</h3>
-                <p className="text-muted-foreground text-center mb-4">
-                  Upload your first {activeTab === "all" ? "asset" : activeTab} to get started
-                </p>
-                <Button onClick={() => setUploadOpen(true)} variant="outline" className="gap-2">
-                  <Upload className="h-4 w-4" />
-                  Upload Asset
-                </Button>
-              </CardContent>
-            </Card>
+            <EmptyState
+              icon={Image}
+              title="No assets yet"
+              description={`Upload your first ${activeTab === "all" ? "asset" : activeTab} to get started`}
+              actionLabel="Upload Asset"
+              onAction={() => setUploadOpen(true)}
+            />
           ) : (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
               {assets.map((asset) => {

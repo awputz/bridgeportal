@@ -22,8 +22,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import { LoadingState } from "@/components/ui/LoadingState";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { formatSafeRelativeTime } from "@/lib/dateUtils";
 import {
   useAIGenerationHistory,
@@ -184,22 +185,15 @@ export default function AIGenerationHistory() {
 
       {/* Table */}
       {isLoading ? (
-        <div className="space-y-3">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className="h-16 w-full" />
-          ))}
-        </div>
+        <LoadingState variant="card" message="Loading generation history..." />
       ) : filteredData.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <History className="h-12 w-12 text-muted-foreground/30 mb-4" />
-          <h3 className="text-lg font-medium text-muted-foreground">No generations yet</h3>
-          <p className="text-sm text-muted-foreground/70 mt-1">
-            Content you generate with AI will appear here
-          </p>
-          <Button variant="outline" className="mt-4" asChild>
-            <a href="/portal/marketing/generators">Go to AI Generators</a>
-          </Button>
-        </div>
+        <EmptyState
+          icon={History}
+          title="No generations yet"
+          description="Content you generate with AI will appear here"
+          actionLabel="Go to AI Generators"
+          actionHref="/portal/marketing/generators"
+        />
       ) : (
         <div className="rounded-lg border border-white/10 overflow-hidden">
           <Table>

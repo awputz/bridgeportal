@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
@@ -7,6 +8,7 @@ interface EmptyStateProps {
   title: string;
   description?: string;
   actionLabel?: string;
+  actionHref?: string;
   onAction?: () => void;
   className?: string;
 }
@@ -16,6 +18,7 @@ export function EmptyState({
   title,
   description,
   actionLabel,
+  actionHref,
   onAction,
   className,
 }: EmptyStateProps) {
@@ -33,10 +36,16 @@ export function EmptyState({
       {description && (
         <p className="text-sm text-muted-foreground max-w-sm mb-4">{description}</p>
       )}
-      {actionLabel && onAction && (
-        <Button onClick={onAction} variant="outline" size="sm">
-          {actionLabel}
-        </Button>
+      {actionLabel && (actionHref || onAction) && (
+        actionHref ? (
+          <Button asChild variant="outline" size="sm">
+            <Link to={actionHref}>{actionLabel}</Link>
+          </Button>
+        ) : (
+          <Button onClick={onAction} variant="outline" size="sm">
+            {actionLabel}
+          </Button>
+        )
       )}
     </div>
   );
