@@ -121,7 +121,7 @@ const MarketingDashboard = () => {
     <MarketingLayout showBackButton={false}>
       <div className="space-y-8">
       {/* Hero Section */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-pink-500/20 via-violet-500/10 to-indigo-500/20 p-8 md:p-12">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-pink-500/20 via-violet-500/10 to-indigo-500/20 p-8 md:p-12 lg:p-16">
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-3 rounded-xl bg-pink-500/20">
@@ -249,8 +249,8 @@ const MarketingDashboard = () => {
                     ? "bg-gradient-to-br from-purple-500/20 to-pink-500/20 border-purple-500/30 hover:border-purple-400/50" 
                     : "hover:bg-muted/50"
                 }`}>
-                  <CardContent className="p-6">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${
+                  <CardContent className="p-6 flex flex-col h-full">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${
                       isFeatured 
                         ? "bg-gradient-to-br from-purple-500 to-pink-500" 
                         : action.color.split(' ')[0]
@@ -261,10 +261,12 @@ const MarketingDashboard = () => {
                           : action.color.split(' ')[1]
                       }`} />
                     </div>
-                    <h3 className="font-medium text-foreground mb-1">{action.name}</h3>
-                    <p className="text-sm text-muted-foreground">{action.description}</p>
+                    <div className="flex-1 space-y-2">
+                      <h3 className="font-medium text-foreground">{action.name}</h3>
+                      <p className="text-sm text-muted-foreground line-clamp-2">{action.description}</p>
+                    </div>
                     {isFeatured && (
-                      <div className="mt-3 flex items-center text-xs text-purple-400 font-medium group-hover:text-purple-300">
+                      <div className="mt-4 pt-4 border-t flex items-center text-xs text-purple-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
                         Get Started
                         <ArrowRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform" />
                       </div>

@@ -88,7 +88,7 @@ export const FlyerForm = ({ data, onChange }: FlyerFormProps) => {
   const isOpenHouse = data.flyerType === "open-house";
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <PropertySelector onSelect={handlePropertySelect} />
       <Separator className="my-4" />
 
@@ -120,7 +120,7 @@ export const FlyerForm = ({ data, onChange }: FlyerFormProps) => {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-4">
         <div>
           <Label htmlFor="price">Listing Price</Label>
           <Input
@@ -141,7 +141,7 @@ export const FlyerForm = ({ data, onChange }: FlyerFormProps) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-4">
         <div>
           <Label htmlFor="bedrooms">Bedrooms</Label>
           <Input
@@ -163,7 +163,7 @@ export const FlyerForm = ({ data, onChange }: FlyerFormProps) => {
       </div>
 
       {isOpenHouse && (
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-4">
           <div>
             <Label htmlFor="openHouseDate">Open House Date</Label>
             <Input
@@ -208,7 +208,7 @@ export const FlyerForm = ({ data, onChange }: FlyerFormProps) => {
               onChange={(e) => handleChange("agentName", e.target.value)}
             />
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="agentPhone">Phone</Label>
               <Input

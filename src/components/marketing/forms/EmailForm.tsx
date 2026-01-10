@@ -61,7 +61,7 @@ export const EmailForm = ({ data, onChange }: EmailFormProps) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <PropertySelector onSelect={handlePropertySelect} />
       <Separator className="my-4" />
 
