@@ -262,7 +262,7 @@ const MarketingDashboard = () => {
                       }`} />
                     </div>
                     <div className="flex-1 space-y-2">
-                      <h3 className="font-medium text-foreground group-hover:text-primary transition-colors duration-300">{action.name}</h3>
+                      <h3 className="text-xs font-medium text-foreground group-hover:text-primary transition-colors duration-300 break-words">{action.name}</h3>
                       <p className="text-sm text-muted-foreground line-clamp-2">{action.description}</p>
                     </div>
                     {isFeatured && (
