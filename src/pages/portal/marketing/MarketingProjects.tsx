@@ -104,8 +104,8 @@ const MarketingProjects = () => {
             <FolderKanban className="h-5 w-5 text-violet-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-extralight text-foreground">My Projects</h1>
-            <p className="text-sm text-muted-foreground">
+            <h1 className="text-3xl md:text-4xl font-light tracking-tight text-foreground">My Projects</h1>
+            <p className="text-sm text-muted-foreground font-normal">
               Manage your marketing designs and campaigns
             </p>
           </div>

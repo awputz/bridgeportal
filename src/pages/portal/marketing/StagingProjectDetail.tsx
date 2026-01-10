@@ -225,8 +225,8 @@ export default function StagingProjectDetail() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-bold">{project.name}</h1>
-          <p className="text-muted-foreground text-sm capitalize">
+          <h1 className="text-3xl md:text-4xl font-light tracking-tight">{project.name}</h1>
+          <p className="text-sm text-muted-foreground font-normal capitalize">
             {project.staging_type} Staging • {project.total_images} images
           </p>
         </div>

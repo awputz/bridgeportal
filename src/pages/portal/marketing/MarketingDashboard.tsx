@@ -127,7 +127,7 @@ const MarketingDashboard = () => {
             <div className="p-3 rounded-xl bg-pink-500/20">
               <Megaphone className="h-6 w-6 text-pink-400" />
             </div>
-            <h1 className="text-3xl md:text-4xl font-extralight text-foreground">
+            <h1 className="text-3xl md:text-4xl font-light tracking-tight text-foreground">
               Marketing Center
             </h1>
           </div>

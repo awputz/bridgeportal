@@ -85,8 +85,8 @@ export default function AIStaging() {
             <ImageIcon className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold">AI Property Staging</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-3xl md:text-4xl font-light tracking-tight">AI Property Staging</h1>
+            <p className="text-sm text-muted-foreground font-normal">
               Transform empty rooms into beautifully staged spaces using AI
             </p>
           </div>
@@ -136,7 +136,7 @@ export default function AIStaging() {
 
       {/* Staging Type Selection */}
       <div>
-        <h2 className="text-lg font-semibold mb-4">Choose Staging Type</h2>
+        <h2 className="text-xl font-light tracking-tight mb-4">Choose Staging Type</h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {STAGING_TYPES.map((type) => {
             const Icon = type.icon;
@@ -152,7 +152,7 @@ export default function AIStaging() {
                       <Icon className="h-6 w-6" />
                     </div>
                     <div>
-                      <h3 className="font-semibold">{type.name}</h3>
+                      <h3 className="font-medium">{type.name}</h3>
                       <p className="text-xs text-muted-foreground mt-1">
                         {type.description}
                       </p>
@@ -167,7 +167,7 @@ export default function AIStaging() {
 
       {/* Recent Projects */}
       <div>
-        <h2 className="text-lg font-semibold mb-4">Recent Projects</h2>
+        <h2 className="text-xl font-light tracking-tight mb-4">Recent Projects</h2>
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1, 2, 3].map((i) => (

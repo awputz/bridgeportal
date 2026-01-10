@@ -56,8 +56,8 @@ const CreateProject = () => {
     <MarketingLayout backTo="/portal/marketing/projects">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-extralight text-foreground">Create Project</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="text-3xl md:text-4xl font-light tracking-tight text-foreground">Create Project</h1>
+        <p className="text-sm text-muted-foreground font-normal">
           {template ? `Starting from "${template.name}"` : "Start from scratch or choose a template"}
         </p>
       </div>
