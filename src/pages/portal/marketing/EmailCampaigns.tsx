@@ -41,6 +41,8 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { LoadingState } from "@/components/ui/LoadingState";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 const statusConfig = {
   draft: { label: "Draft", variant: "secondary" as const, icon: FileText },
@@ -133,37 +135,15 @@ export default function EmailCampaigns() {
 
         <TabsContent value={activeTab} className="mt-6">
           {isLoading ? (
-            <div className="space-y-4">
-              {[...Array(3)].map((_, i) => (
-                <Card key={i} className="animate-pulse">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-2 flex-1">
-                        <div className="h-5 bg-muted rounded w-1/3" />
-                        <div className="h-4 bg-muted rounded w-1/4" />
-                      </div>
-                      <div className="h-6 bg-muted rounded w-16" />
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            <LoadingState variant="card" message="Loading campaigns..." />
           ) : !campaigns?.length ? (
-            <Card className="border-dashed">
-              <CardContent className="flex flex-col items-center justify-center py-16">
-                <div className="rounded-full bg-muted p-4 mb-4">
-                  <Mail className="h-8 w-8 text-muted-foreground" />
-                </div>
-                <h3 className="text-lg font-semibold mb-1">No campaigns yet</h3>
-                <p className="text-muted-foreground text-center mb-4">
-                  Create your first email campaign to reach your contacts
-                </p>
-                <Button onClick={() => setCreateOpen(true)} variant="outline" className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  New Campaign
-                </Button>
-              </CardContent>
-            </Card>
+            <EmptyState
+              icon={Mail}
+              title="No campaigns yet"
+              description="Create your first email campaign to reach your contacts"
+              actionLabel="New Campaign"
+              onAction={() => setCreateOpen(true)}
+            />
           ) : (
             <div className="space-y-4">
               {campaigns.map((campaign) => {

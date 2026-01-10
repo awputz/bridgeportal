@@ -31,6 +31,8 @@ import { useScheduledPosts, useCancelScheduledPost, ScheduledPost } from "@/hook
 import { SchedulePostDialog } from "@/components/marketing/SchedulePostDialog";
 import { cn } from "@/lib/utils";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { LoadingState } from "@/components/ui/LoadingState";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 const platformIcons = {
   instagram: Instagram,
@@ -147,9 +149,9 @@ export default function SocialSchedule() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
+      <MarketingLayout breadcrumbs={[{ label: "Social Schedule" }]}>
+        <LoadingState variant="page" message="Loading schedule..." />
+      </MarketingLayout>
     );
   }
 
@@ -274,19 +276,13 @@ export default function SocialSchedule() {
                 {posts.map(renderPostCard)}
               </div>
             ) : (
-              <Card>
-                <CardContent className="flex flex-col items-center justify-center py-12">
-                  <CalendarIcon className="h-12 w-12 text-muted-foreground/50 mb-4" />
-                  <h3 className="font-medium text-lg">No scheduled posts</h3>
-                  <p className="text-muted-foreground text-sm mb-4">
-                    Create your first scheduled post to get started
-                  </p>
-                  <Button onClick={() => setShowScheduleDialog(true)}>
-                    <Plus className="mr-2 h-4 w-4" />
-                    Schedule Post
-                  </Button>
-                </CardContent>
-              </Card>
+              <EmptyState
+                icon={CalendarIcon}
+                title="No scheduled posts"
+                description="Create your first scheduled post to get started"
+                actionLabel="Schedule Post"
+                onAction={() => setShowScheduleDialog(true)}
+              />
             )}
           </TabsContent>
         </Tabs>

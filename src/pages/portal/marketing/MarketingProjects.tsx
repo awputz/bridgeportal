@@ -41,6 +41,8 @@ import {
 } from "@/hooks/marketing";
 import { formatSafeRelativeTime } from "@/lib/dateUtils";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { LoadingState } from "@/components/ui/LoadingState";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 const MarketingProjects = () => {
   const navigate = useNavigate();
@@ -176,19 +178,7 @@ const MarketingProjects = () => {
 
       {/* Projects Grid */}
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[1, 2, 3].map((i) => (
-            <Card key={i} className="animate-pulse">
-              <CardContent className="p-0">
-                <div className="aspect-video bg-muted" />
-                <div className="p-4 space-y-2">
-                  <div className="h-4 bg-muted rounded w-3/4" />
-                  <div className="h-3 bg-muted rounded w-1/2" />
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <LoadingState variant="card" message="Loading projects..." />
       ) : filteredProjects && filteredProjects.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredProjects.map((project) => (
@@ -278,31 +268,17 @@ const MarketingProjects = () => {
           ))}
         </div>
       ) : (
-        <Card className="border-dashed">
-          <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
-              <Sparkles className="h-6 w-6 text-muted-foreground" />
-            </div>
-            <h3 className="text-lg font-medium text-foreground mb-2">
-              {searchQuery ? "No projects found" : "No projects yet"}
-            </h3>
-            <p className="text-muted-foreground mb-4 max-w-sm">
-              {searchQuery 
-                ? `No projects match "${searchQuery}". Try a different search.`
-                : statusFilter === "all" 
-                ? "Start creating marketing materials with our templates."
-                : `No ${statusFilter} projects yet.`}
-            </p>
-            {!searchQuery && (
-              <Button asChild>
-                <Link to="/portal/marketing/create">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create Project
-                </Link>
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={Sparkles}
+          title={searchQuery ? "No projects found" : "No projects yet"}
+          description={searchQuery 
+            ? `No projects match "${searchQuery}". Try a different search.`
+            : statusFilter === "all" 
+            ? "Start creating marketing materials with our templates."
+            : `No ${statusFilter} projects yet.`}
+          actionLabel={!searchQuery ? "Create Project" : undefined}
+          actionHref={!searchQuery ? "/portal/marketing/create" : undefined}
+        />
       )}
 
       {/* Delete Confirmation Dialog */}

@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Image, Star, Search, Grid3X3, List } from "lucide-react";
 import { useMarketingTemplates, useFeaturedTemplates } from "@/hooks/marketing";
 import { MarketingLayout } from "@/components/marketing/MarketingLayout";
+import { LoadingState } from "@/components/ui/LoadingState";
+import { EmptyState } from "@/components/ui/EmptyState";
 
 const MediaLibrary = () => {
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
@@ -192,22 +194,7 @@ const MediaLibrary = () => {
 
       {/* Templates Grid/List */}
       {isLoading ? (
-        <div className={viewMode === "grid" 
-          ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
-          : "space-y-3"
-        }>
-          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-            <Card key={i} className="animate-pulse">
-              <CardContent className={viewMode === "grid" ? "p-0" : "p-0 flex"}>
-                <div className={viewMode === "grid" ? "aspect-video bg-muted" : "w-32 h-20 bg-muted flex-shrink-0"} />
-                <div className={viewMode === "grid" ? "p-3 space-y-2" : "p-3 flex-1 space-y-2"}>
-                  <div className="h-4 bg-muted rounded w-3/4" />
-                  <div className="h-3 bg-muted rounded w-1/2" />
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <LoadingState variant="card" message="Loading templates..." />
       ) : filteredTemplates && filteredTemplates.length > 0 ? (
         viewMode === "grid" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -316,21 +303,15 @@ const MediaLibrary = () => {
           </div>
         )
       ) : (
-        <Card className="border-dashed">
-          <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
-              <Image className="h-6 w-6 text-muted-foreground" />
-            </div>
-            <h3 className="text-lg font-medium text-foreground mb-2">No templates found</h3>
-            <p className="text-muted-foreground max-w-sm">
-              {searchQuery 
-                ? `No templates match "${searchQuery}". Try a different search.`
-                : categoryFilter === "all" 
-                ? "Templates will appear here once they are added."
-                : `No ${categoryFilter} templates available.`}
-            </p>
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={Image}
+          title="No templates found"
+          description={searchQuery 
+            ? `No templates match "${searchQuery}". Try a different search.`
+            : categoryFilter === "all" 
+            ? "Templates will appear here once they are added."
+            : `No ${categoryFilter} templates available.`}
+        />
       )}
     </MarketingLayout>
   );
