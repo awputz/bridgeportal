@@ -825,10 +825,14 @@ export type Database = {
           description: string | null
           display_order: number | null
           division: string
+          download_count: number | null
           file_type: string | null
           file_url: string
+          fill_count: number | null
+          form_schema: Json | null
           id: string
           is_active: boolean | null
+          is_fillable: boolean | null
           name: string
           updated_at: string | null
         }
@@ -837,10 +841,14 @@ export type Database = {
           description?: string | null
           display_order?: number | null
           division: string
+          download_count?: number | null
           file_type?: string | null
           file_url: string
+          fill_count?: number | null
+          form_schema?: Json | null
           id?: string
           is_active?: boolean | null
+          is_fillable?: boolean | null
           name: string
           updated_at?: string | null
         }
@@ -849,10 +857,14 @@ export type Database = {
           description?: string | null
           display_order?: number | null
           division?: string
+          download_count?: number | null
           file_type?: string | null
           file_url?: string
+          fill_count?: number | null
+          form_schema?: Json | null
           id?: string
           is_active?: boolean | null
+          is_fillable?: boolean | null
           name?: string
           updated_at?: string | null
         }
@@ -4181,6 +4193,60 @@ export type Database = {
         }
         Relationships: []
       }
+      filled_templates: {
+        Row: {
+          created_at: string | null
+          deal_id: string | null
+          form_data: Json
+          generated_file_name: string | null
+          generated_file_url: string | null
+          id: string
+          status: string | null
+          template_id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          deal_id?: string | null
+          form_data?: Json
+          generated_file_name?: string | null
+          generated_file_url?: string | null
+          id?: string
+          status?: string | null
+          template_id: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          deal_id?: string | null
+          form_data?: Json
+          generated_file_name?: string | null
+          generated_file_url?: string | null
+          id?: string
+          status?: string | null
+          template_id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "filled_templates_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "crm_deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "filled_templates_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "agent_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hr_agents: {
         Row: {
           annual_production: number | null
@@ -6308,6 +6374,14 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      increment_template_download_count: {
+        Args: { p_template_id: string }
+        Returns: undefined
+      }
+      increment_template_fill_count: {
+        Args: { p_template_id: string }
+        Returns: undefined
       }
       is_admin_or_agent: { Args: { _user_id: string }; Returns: boolean }
       is_admin_user: { Args: { _user_id: string }; Returns: boolean }
