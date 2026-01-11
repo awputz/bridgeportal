@@ -1,5 +1,6 @@
 import { useState, useEffect, memo } from "react";
 import { formatDistanceToNow } from "date-fns";
+import { useNavigate } from "react-router-dom";
 import { 
   ExternalLink, 
   FileText, 
@@ -17,7 +18,8 @@ import {
   DollarSign,
   Ruler,
   Building2,
-  Handshake
+  Handshake,
+  FileSignature
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -149,6 +151,7 @@ function InterestButton({ dealId }: { dealId: string }) {
 }
 
 export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalProps) {
+  const navigate = useNavigate();
   const { data: deal, isLoading } = useDealRoomDeal(dealId || "");
   const { data: agent } = useCurrentAgent();
   const { data: matches } = useDealMatches(dealId || "", false);
@@ -335,6 +338,18 @@ export function DealDetailModal({ dealId, open, onOpenChange }: DealDetailModalP
                   >
                     <Download className="h-4 w-4 flex-shrink-0" />
                     {deal.om_file_url ? "Download OM" : "No OM"}
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => {
+                      onOpenChange(false);
+                      navigate(`/portal/esign?dealId=${deal.id}`);
+                    }} 
+                    className="gap-1.5"
+                  >
+                    <FileSignature className="h-4 w-4 flex-shrink-0" />
+                    Request Signature
                   </Button>
                   <Button variant="outline" size="sm" onClick={handleShare} className="gap-1.5">
                     <Share2 className="h-4 w-4 flex-shrink-0" />
