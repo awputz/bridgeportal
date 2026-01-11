@@ -22,3 +22,12 @@ export { useESignFields } from "./useESignFields";
 
 // eSign Hooks - Storage utilities
 export { useESignStorage } from "./useESignStorage";
+
+// eSign Hooks - Email notifications
+export {
+  useSendESignNotification,
+  useSendAllSigningRequests,
+  useSendReminder,
+  useSendCompletionNotifications,
+  useSendVoidNotifications,
+} from "./useESignNotifications";

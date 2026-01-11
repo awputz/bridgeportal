@@ -26,7 +26,8 @@ import {
   ExternalLink,
   Megaphone,
   Image,
-  Home as HomeIcon
+  Home as HomeIcon,
+  FileSignature,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -57,6 +58,7 @@ const moreItemsGrouped = [
     category: "Tools",
     items: [
       { path: "/portal/notes", icon: StickyNote, label: "Notes" },
+      { path: "/portal/esign", icon: FileSignature, label: "eSign" },
       { path: "/portal/ai", icon: Sparkles, label: "AI Assistant" },
       { path: "/portal/templates", icon: FileText, label: "Templates" },
       { path: "/portal/calculators", icon: Calculator, label: "Calculators" },

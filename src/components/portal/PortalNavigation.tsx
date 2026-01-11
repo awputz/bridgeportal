@@ -30,6 +30,7 @@ import {
   Wand2,
   Calculator,
   Send,
+  FileSignature,
   Megaphone,
   Image,
   History,
@@ -67,6 +68,7 @@ const essentialsItems = [
   { name: "CRM", path: "/portal/crm", icon: Briefcase, description: "Pipeline management and deal tracking" },
   { name: "Contacts", path: "/portal/contacts", icon: Users, description: "Client and prospect database" },
   { name: "Deal Room", path: "/portal/deal-room", icon: Building2, description: "Active listings and proposals" },
+  { name: "eSign", path: "/portal/esign", icon: FileSignature, description: "Electronic signature documents" },
   { name: "Intake", path: "/portal/intake", icon: ClipboardList, description: "New business opportunities" },
 ];
 
