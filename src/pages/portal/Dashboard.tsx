@@ -4,7 +4,8 @@ import {
   Mail, Users, Calendar, HardDrive, MessageSquare, Search, ArrowRight, TrendingUp, 
   Building2, Home, FileText, Calculator, Sparkles, Palette, Database, FileSearch, 
   MapPin, Send, UserPlus, FolderPlus, ListTodo, Wand2, Wrench, FolderOpen, 
-  DollarSign, Phone, Target, Heart, Globe, Headphones, Bell, ClipboardCheck, Handshake
+  DollarSign, Phone, Target, Heart, Globe, Headphones, Bell, ClipboardCheck, Handshake,
+  FileSignature,
 } from "lucide-react";
 import { useExternalTools, ExternalTool } from "@/hooks/useExternalTools";
 import { useIsAdminOrAgent } from "@/hooks/useUserRole";
@@ -138,7 +139,7 @@ const Dashboard = () => {
 
         {/* Secondary Actions Row */}
         <section className="section-gap animate-fade-in-up" style={{ animationDelay: '0.08s' }}>
-          <div className="grid grid-cols-4 grid-gap-sm">
+          <div className="grid grid-cols-5 grid-gap-sm">
             <Link to="/portal/crm?action=add-contact" className="glass-card p-3 flex flex-col items-center justify-center gap-1 hover:border-green-500/50 group text-center">
               <UserPlus className="h-5 w-5 text-green-400 transition-transform group-hover:scale-110" />
               <span className="text-xs text-muted-foreground">Add Contact</span>
@@ -150,6 +151,10 @@ const Dashboard = () => {
             <Link to="/portal/tasks?action=new" className="glass-card p-3 flex flex-col items-center justify-center gap-1 hover:border-orange-500/50 group text-center">
               <ListTodo className="h-5 w-5 text-orange-400 transition-transform group-hover:scale-110" />
               <span className="text-xs text-muted-foreground">New Task</span>
+            </Link>
+            <Link to="/portal/esign" className="glass-card p-3 flex flex-col items-center justify-center gap-1 hover:border-indigo-500/50 group text-center">
+              <FileSignature className="h-5 w-5 text-indigo-400 transition-transform group-hover:scale-110" />
+              <span className="text-xs text-muted-foreground">eSign</span>
             </Link>
             <Link to="/portal/deal-room" className="glass-card p-3 flex flex-col items-center justify-center gap-1 hover:border-cyan-500/50 group text-center">
               <Handshake className="h-5 w-5 text-cyan-400 transition-transform group-hover:scale-110" />

@@ -29,6 +29,7 @@ import {
   useESignDocuments,
   useVoidESignDocument,
 } from "@/hooks/esign/useESignDocuments";
+import { useSendReminder } from "@/hooks/esign/useESignNotifications";
 import { formatDistanceToNow } from "date-fns";
 import type { ESignDocumentStatus } from "@/types/esign";
 import type { LucideIcon } from "lucide-react";
@@ -73,6 +74,7 @@ const ESignDashboard = () => {
   const navigate = useNavigate();
   const { data: documents, isLoading } = useESignDocuments();
   const voidDocument = useVoidESignDocument();
+  const sendReminder = useSendReminder();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -106,6 +108,10 @@ const ESignDashboard = () => {
     if (confirm("Are you sure you want to void this document?")) {
       voidDocument.mutate({ id, reason: "Voided by sender" });
     }
+  };
+
+  const handleResendReminder = (id: string) => {
+    sendReminder.mutate(id);
   };
 
   return (
@@ -255,9 +261,12 @@ const ESignDashboard = () => {
                       )}
                       {(doc.status === "pending" ||
                         doc.status === "in_progress") && (
-                        <DropdownMenuItem>
+                        <DropdownMenuItem 
+                          onClick={() => handleResendReminder(doc.id)}
+                          disabled={sendReminder.isPending}
+                        >
                           <Send className="h-4 w-4 mr-2" />
-                          Resend Reminder
+                          {sendReminder.isPending ? "Sending..." : "Resend Reminder"}
                         </DropdownMenuItem>
                       )}
                       {doc.status !== "voided" && doc.status !== "completed" && (

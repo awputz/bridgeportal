@@ -71,3 +71,6 @@ verify_jwt = true
 
 [functions.stage-property-image]
 verify_jwt = false
+
+[functions.send-esign-notification]
+verify_jwt = true
