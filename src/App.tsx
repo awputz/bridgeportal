@@ -96,6 +96,7 @@ const DealRoom = lazy(() => import("./pages/portal/DealRoom"));
 const Chat = lazy(() => import("./pages/portal/Chat"));
 
 // eSign Pages - lazy loaded
+const ESignDashboard = lazy(() => import("./pages/portal/ESignDashboard"));
 const ESignFieldEditor = lazy(() => import("./pages/esign/FieldEditor"));
 const SignDocument = lazy(() => import("./pages/esign/SignDocument"));
 
@@ -518,6 +519,16 @@ const App = () => {
                     } />
                     
                     {/* eSign Routes */}
+                    <Route path="esign" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <ESignDashboard />
+                      </Suspense>
+                    } />
+                    <Route path="esign/:documentId" element={
+                      <Suspense fallback={<PageLoader />}>
+                        <ESignDashboard />
+                      </Suspense>
+                    } />
                     <Route path="esign/edit/:documentId" element={
                       <Suspense fallback={<PageLoader />}>
                         <ESignFieldEditor />
