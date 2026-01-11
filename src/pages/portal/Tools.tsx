@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { Mail, Users, Calendar, HardDrive, MessageSquare, Search, TrendingUp, Building2, Home, ExternalLink, Wand2, FileText, Calculator, FolderOpen, Send, StickyNote, ChevronRight, Wrench, Building, DollarSign } from "lucide-react";
+import { Mail, Users, Calendar, HardDrive, MessageSquare, Search, TrendingUp, Building2, Home, ExternalLink, Wand2, FileText, Calculator, FolderOpen, Send, StickyNote, ChevronRight, Wrench, Building, DollarSign, FileSignature } from "lucide-react";
 import { useExternalTools } from "@/hooks/useExternalTools";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 // Icon mapping for dynamic icons from database
 const iconMap: Record<string, typeof Mail> = {
@@ -18,6 +19,13 @@ const iconMap: Record<string, typeof Mail> = {
 
 // Team tools essentials (internal productivity tools)
 const teamToolsEssentials = [{
+  name: "eSign Suite",
+  path: "/portal/esign",
+  icon: FileSignature,
+  description: "Electronic signatures & documents",
+  color: "bg-indigo-500/20 text-indigo-400",
+  isNew: true
+}, {
   name: "Generators",
   path: "/portal/generators",
   icon: Wand2,
@@ -107,12 +115,17 @@ const Tools = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 stagger-grid">
             {teamToolsEssentials.map(tool => {
             const Icon = tool.icon;
-            return <Link key={tool.path} to={tool.path} className="glass-card p-5 group hover:border-white/20">
+            return <Link key={tool.path} to={tool.path} className="glass-card p-5 group hover:border-white/20 relative">
                   <div className="flex items-start justify-between mb-4">
                     <div className={`w-12 h-12 rounded-full ${tool.color.split(' ')[0]} flex items-center justify-center transition-transform duration-300 group-hover:scale-110`}>
                       <Icon className={`h-6 w-6 ${tool.color.split(' ')[1]}`} />
                     </div>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-muted-foreground group-hover:translate-x-1 transition-all duration-300" />
+                    <div className="flex items-center gap-2">
+                      {'isNew' in tool && tool.isNew && (
+                        <Badge className="bg-emerald-500 text-white text-[10px] px-1.5 py-0">New</Badge>
+                      )}
+                      <ChevronRight className="h-4 w-4 text-muted-foreground/50 group-hover:text-muted-foreground group-hover:translate-x-1 transition-all duration-300" />
+                    </div>
                   </div>
                   
                   <h3 className="text-lg font-light text-foreground mb-2">
