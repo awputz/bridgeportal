@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { FormSchema } from "@/types/templates";
+import type { FormSchema, TemplateCategory } from "@/types/templates";
 import type { Json } from "@/integrations/supabase/types";
 
 export interface AgentTemplate {
@@ -16,6 +16,8 @@ export interface AgentTemplate {
   form_schema: FormSchema | null;
   fill_count: number;
   download_count: number;
+  category: TemplateCategory | null;
+  version: string | null;
   created_at: string | null;
   updated_at: string | null;
 }
@@ -34,6 +36,8 @@ const mapRowToTemplate = (row: {
   form_schema: Json | null;
   fill_count: number | null;
   download_count: number | null;
+  category?: string | null;
+  version?: string | null;
   created_at: string | null;
   updated_at: string | null;
 }): AgentTemplate => ({
@@ -42,6 +46,8 @@ const mapRowToTemplate = (row: {
   form_schema: row.form_schema as unknown as FormSchema | null,
   fill_count: row.fill_count ?? 0,
   download_count: row.download_count ?? 0,
+  category: (row.category as TemplateCategory) ?? null,
+  version: row.version ?? null,
 });
 
 export const useAgentTemplates = (division?: string) => {
@@ -55,7 +61,8 @@ export const useAgentTemplates = (division?: string) => {
         .order("display_order", { ascending: true });
 
       if (division) {
-        query = query.eq("division", division);
+        // Include templates for this division OR 'all' divisions
+        query = query.or(`division.eq.${division},division.eq.all`);
       }
 
       const { data, error } = await query;

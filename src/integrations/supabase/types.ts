@@ -821,6 +821,7 @@ export type Database = {
       }
       agent_templates: {
         Row: {
+          category: string | null
           created_at: string | null
           description: string | null
           display_order: number | null
@@ -835,8 +836,10 @@ export type Database = {
           is_fillable: boolean | null
           name: string
           updated_at: string | null
+          version: string | null
         }
         Insert: {
+          category?: string | null
           created_at?: string | null
           description?: string | null
           display_order?: number | null
@@ -851,8 +854,10 @@ export type Database = {
           is_fillable?: boolean | null
           name: string
           updated_at?: string | null
+          version?: string | null
         }
         Update: {
+          category?: string | null
           created_at?: string | null
           description?: string | null
           display_order?: number | null
@@ -867,6 +872,7 @@ export type Database = {
           is_fillable?: boolean | null
           name?: string
           updated_at?: string | null
+          version?: string | null
         }
         Relationships: []
       }
@@ -5827,6 +5833,36 @@ export type Database = {
           phone?: string | null
           slug?: string | null
           title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      template_categories: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          display_order: number | null
+          icon: string | null
+          id: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          icon?: string | null
+          id: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          name?: string
           updated_at?: string | null
         }
         Relationships: []
