@@ -1,3 +1,22 @@
+export type TemplateCategory = 
+  | 'commission-agreements'
+  | 'lois'
+  | 'exclusive-agreements'
+  | 'referral-agreements'
+  | 'leases'
+  | 'co-broke'
+  | 'nda'
+  | 'email-templates'
+  | 'general';
+
+export interface TemplateCategoryInfo {
+  id: string;
+  name: string;
+  description: string | null;
+  icon: string | null;
+  display_order: number;
+}
+
 export interface FormFieldValidation {
   min?: number;
   max?: number;
@@ -41,6 +60,8 @@ export interface AgentTemplate {
   form_schema: FormSchema | null;
   fill_count: number;
   download_count: number;
+  category: TemplateCategory | null;
+  version: string | null;
   created_at: string | null;
   updated_at: string | null;
 }
